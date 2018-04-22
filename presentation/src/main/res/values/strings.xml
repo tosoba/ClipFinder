@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">FindClips</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="search">Search</string>
+    <string name="favourites">Favourites</string>
+    <string name="dashboard">Dashboard</string>
+
+    <string name="spotify_base_url">https://api.spotify.com/v1/</string>
+</resources>
