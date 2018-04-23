@@ -9,4 +9,5 @@
     <string name="dashboard">Dashboard</string>
 
     <string name="spotify_base_url">https://api.spotify.com/v1/</string>
+    <string name="access_token_base_url">https://accounts.spotify.com/api/</string>
 </resources>

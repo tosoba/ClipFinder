@@ -8,6 +8,7 @@ import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
 import com.example.there.findclips.di.modules.AppModule
+import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
 import com.example.there.findclips.di.search.SearchSubComponent
@@ -35,7 +36,8 @@ class FindClipsApp : Application() {
     private fun initAppComponent() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(applicationContext))
-                .networkModule(NetworkModule(getString(R.string.spotify_base_url)))
+                .dataModule(DataModule())
+                .networkModule(NetworkModule(getString(R.string.spotify_base_url), getString(R.string.access_token_base_url)))
                 .build()
     }
 

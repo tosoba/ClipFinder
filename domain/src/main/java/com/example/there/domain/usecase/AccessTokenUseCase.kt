@@ -1,0 +1,34 @@
+package com.example.there.domain.usecase
+
+import com.example.there.domain.SpotifyRepository
+import com.example.there.domain.common.Transformer
+import com.example.there.domain.common.UseCase
+import io.reactivex.Observable
+import java.lang.IllegalArgumentException
+
+class AccessTokenUseCase(transformer: Transformer<String>,
+                         private val repository: SpotifyRepository) : UseCase<String>(transformer) {
+
+    override fun createObservable(data: Map<String, Any>?): Observable<String> {
+        val clientId = data?.get(PARAM_CLIENT_ID) as? String
+        val clientSecret = data?.get(PARAM_CLIENT_SECRET) as? String
+        return if (clientId != null && clientSecret != null) {
+            repository.getAccessToken(clientId, clientSecret)
+        } else {
+            Observable.error({ IllegalArgumentException("ClientId and ClientSecret must be provided.") })
+        }
+    }
+
+    fun getAccessToken(clientId: String, clientSecret: String): Observable<String> {
+        val data = HashMap<String, String>().apply {
+            put(PARAM_CLIENT_ID, clientId)
+            put(PARAM_CLIENT_SECRET, clientSecret)
+        }
+        return observable(withData = data)
+    }
+
+    companion object {
+        private const val PARAM_CLIENT_ID = "PARAM_CLIENT_ID"
+        private const val PARAM_CLIENT_SECRET = "PARAM_CLIENT_SECRET"
+    }
+}
