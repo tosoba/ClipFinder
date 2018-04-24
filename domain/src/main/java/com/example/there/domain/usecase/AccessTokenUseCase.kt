@@ -3,13 +3,14 @@ package com.example.there.domain.usecase
 import com.example.there.domain.SpotifyRepository
 import com.example.there.domain.common.Transformer
 import com.example.there.domain.common.UseCase
+import com.example.there.domain.entities.AccessTokenEntity
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class AccessTokenUseCase(transformer: Transformer<String>,
-                         private val repository: SpotifyRepository) : UseCase<String>(transformer) {
+class AccessTokenUseCase(transformer: Transformer<AccessTokenEntity>,
+                         private val repository: SpotifyRepository) : UseCase<AccessTokenEntity>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<String> {
+    override fun createObservable(data: Map<String, Any>?): Observable<AccessTokenEntity> {
         val clientId = data?.get(PARAM_CLIENT_ID) as? String
         val clientSecret = data?.get(PARAM_CLIENT_SECRET) as? String
         return if (clientId != null && clientSecret != null) {
@@ -19,7 +20,7 @@ class AccessTokenUseCase(transformer: Transformer<String>,
         }
     }
 
-    fun getAccessToken(clientId: String, clientSecret: String): Observable<String> {
+    fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> {
         val data = HashMap<String, String>().apply {
             put(PARAM_CLIENT_ID, clientId)
             put(PARAM_CLIENT_SECRET, clientSecret)

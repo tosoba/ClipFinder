@@ -1,5 +1,6 @@
 package com.example.there.findclips.dashboard
 
+import com.example.there.domain.entities.AccessTokenEntity
 import com.example.there.domain.usecase.AccessTokenUseCase
 import com.example.there.domain.usecase.CategoriesUseCase
 import com.example.there.findclips.base.BaseViewModel
@@ -11,27 +12,26 @@ class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
     val viewState: DashboardViewState = DashboardViewState()
     val errorState: SingleLiveEvent<Throwable?> = SingleLiveEvent()
 
-    fun loadDashboardData(accessToken: String?) {
-        if (accessToken != null) {
-            //TODO: what if accessToken is expired -> handle errors
-            loadCategories(accessToken)
+    fun loadDashboardData(accessToken: AccessTokenEntity?) {
+        if (accessToken != null && accessToken.isValid) {
+            accessTokenLiveData.value = accessToken
+            loadData(accessTokenLiveData.value!!)
         } else {
-            loadAccessToken {
-                loadCategories(it)
-            }
+            loadAccessToken { loadData(it) }
         }
     }
 
-    private fun loadCategories(accessToken: String) {
+    private fun loadData(accessToken: AccessTokenEntity) = with(accessToken) {
+        loadCategories(this)
+    }
+
+    private fun loadCategories(accessToken: AccessTokenEntity) {
         addDisposable(categoriesUseCase.getCategories(accessToken)
                 .subscribe({
                     viewState.categories.addAll(it)
                 }, {
                     errorState.value = it
+                    handleErrors(it, onErrorsResolved = this::loadDashboardData)
                 }))
-    }
-
-    private fun onAccessTokenExpired() {
-
     }
 }

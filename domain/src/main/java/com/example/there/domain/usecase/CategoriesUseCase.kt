@@ -3,6 +3,7 @@ package com.example.there.domain.usecase
 import com.example.there.domain.SpotifyRepository
 import com.example.there.domain.common.Transformer
 import com.example.there.domain.common.UseCase
+import com.example.there.domain.entities.AccessTokenEntity
 import com.example.there.domain.entities.CategoryEntity
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
@@ -19,8 +20,8 @@ class CategoriesUseCase(transformer: Transformer<List<CategoryEntity>>,
         }
     }
 
-    fun getCategories(accessToken: String): Observable<List<CategoryEntity>> {
-        val data = HashMap<String, String>().apply { put(PARAM_ACCESS_TOKEN, accessToken) }
+    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
+        val data = HashMap<String, String>().apply { put(PARAM_ACCESS_TOKEN, accessToken.token) }
         return observable(withData = data)
     }
 

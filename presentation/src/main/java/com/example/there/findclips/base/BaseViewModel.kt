@@ -3,11 +3,13 @@ package com.example.there.findclips.base
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
+import com.example.there.domain.entities.AccessTokenEntity
 import com.example.there.domain.usecase.AccessTokenUseCase
 import com.example.there.findclips.util.SingleLiveEvent
-import com.example.there.findclips.util.orDefault
+import com.example.there.findclips.util.messageOrDefault
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import retrofit2.HttpException
 
 open class BaseViewModel(private val accessTokenUseCase: AccessTokenUseCase) : ViewModel() {
 
@@ -25,18 +27,35 @@ open class BaseViewModel(private val accessTokenUseCase: AccessTokenUseCase) : V
         clearDisposables()
     }
 
-    val accessTokenLiveData: MutableLiveData<String> = MutableLiveData()
+    val accessTokenLiveData: MutableLiveData<AccessTokenEntity> = MutableLiveData()
     val accessTokenError: SingleLiveEvent<Throwable?> = SingleLiveEvent()
 
-    protected fun loadAccessToken(onSuccess: (String) -> Unit) {
-        addDisposable(accessTokenUseCase.getAccessToken(CLIENT_ID, CLIENT_SECRET)
-                .subscribe({
-                    accessTokenLiveData.value = it
-                    onSuccess(it)
-                }, {
-                    accessTokenError.value = it
-                    Log.e(javaClass.name, it.message.orDefault("Error loading access token."))
-                }))
+    private var accessTokenLoading = false
+    protected fun loadAccessToken(onAccessTokenLoaded: (AccessTokenEntity) -> Unit) {
+        if (!accessTokenLoading) {
+            clearDisposables()
+            accessTokenLoading = true
+            addDisposable(accessTokenUseCase.getAccessToken(CLIENT_ID, CLIENT_SECRET)
+                    .doFinally { accessTokenLoading = false }
+                    .subscribe({
+                        accessTokenLiveData.value = it
+                        onAccessTokenLoaded(it)
+                    }, {
+                        accessTokenError.value = it
+                        Log.e(javaClass.name, it.messageOrDefault("Error loading access token."))
+                    }))
+        }
+    }
+
+    protected fun handleErrors(t: Throwable, onErrorsResolved: (AccessTokenEntity) -> Unit) {
+        if (t is HttpException) {
+            // Unauthorized
+            if (t.code() == 401) {
+                loadAccessToken { onErrorsResolved(it) }
+            }
+        } else {
+            Log.e("ERROR", t.messageOrDefault("Unknown error."))
+        }
     }
 
     companion object {

@@ -7,15 +7,16 @@ import com.example.there.data.entities.AccessTokenData
 import com.example.there.data.entities.CategoryData
 import com.example.there.domain.common.Mapper
 import com.example.there.domain.SpotifyDataStore
+import com.example.there.domain.entities.AccessTokenEntity
 import com.example.there.domain.entities.CategoryEntity
 import io.reactivex.Observable
 
 class RemoteSpotifyDataStore(private val api: SpotifyApi,
                              private val accountsApi: SpotifyAccountsApi,
                              private val categoryMapper: Mapper<CategoryData, CategoryEntity>,
-                             private val accessTokenMapper: Mapper<AccessTokenData, String>) : SpotifyDataStore {
+                             private val accessTokenMapper: Mapper<AccessTokenData, AccessTokenEntity>) : SpotifyDataStore {
 
-    override fun getAccessToken(clientId: String, clientSecret: String): Observable<String> =
+    override fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> =
             accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret)).map(accessTokenMapper::mapFrom)
 
     override fun getCategories(accessToken: String): Observable<List<CategoryEntity>> =

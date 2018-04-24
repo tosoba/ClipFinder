@@ -48,9 +48,11 @@ class NetworkModule(private val spotifyApiBaseUrl: String, private val accessTok
 
     @Provides
     @Singleton
-    fun spotifyApi(@Named(Dependencies.SPOTIFY_API_RETROFIT) retrofit: Retrofit): SpotifyApi = retrofit.create(SpotifyApi::class.java)
+    fun spotifyApi(@Named(Dependencies.SPOTIFY_API_RETROFIT) retrofit: Retrofit): SpotifyApi =
+            retrofit.create(SpotifyApi::class.java)
 
     @Provides
     @Singleton
-    fun spotifyAccountsApi(@Named(Dependencies.SPOTIFY_ACCOUNTS_API_RETROFIT) retrofit: Retrofit): SpotifyAccountsApi = retrofit.create(SpotifyAccountsApi::class.java)
+    fun spotifyAccountsApi(@Named(Dependencies.SPOTIFY_ACCOUNTS_API_RETROFIT) retrofit: Retrofit): SpotifyAccountsApi =
+            retrofit.create(SpotifyAccountsApi::class.java)
 }
