@@ -4,6 +4,7 @@ import com.example.there.domain.SpotifyRepository
 import com.example.there.domain.entities.CategoryEntity
 import com.example.there.domain.usecase.AccessTokenUseCase
 import com.example.there.domain.usecase.CategoriesUseCase
+import com.example.there.domain.usecase.FeaturedPlaylistsUseCase
 import com.example.there.findclips.dashboard.DashboardViewModelFactory
 import com.example.there.findclips.util.AsyncTransformer
 import dagger.Module
@@ -17,6 +18,11 @@ class DashboardModule {
     fun categoriesUseCase(repository: SpotifyRepository): CategoriesUseCase = CategoriesUseCase(AsyncTransformer(), repository)
 
     @Provides
-    fun dashboardViewModelFactory(accessTokenUseCase: AccessTokenUseCase, categoriesUseCase: CategoriesUseCase): DashboardViewModelFactory =
-            DashboardViewModelFactory(accessTokenUseCase, categoriesUseCase)
+    fun featuredPlaylistsUseCase(repository: SpotifyRepository): FeaturedPlaylistsUseCase = FeaturedPlaylistsUseCase(AsyncTransformer(), repository)
+
+    @Provides
+    fun dashboardViewModelFactory(accessTokenUseCase: AccessTokenUseCase,
+                                  featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
+                                  categoriesUseCase: CategoriesUseCase): DashboardViewModelFactory =
+            DashboardViewModelFactory(accessTokenUseCase, featuredPlaylistsUseCase, categoriesUseCase)
 }

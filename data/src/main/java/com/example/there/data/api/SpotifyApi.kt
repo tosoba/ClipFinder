@@ -1,6 +1,7 @@
 package com.example.there.data.api
 
 import com.example.there.data.response.CategoriesResponse
+import com.example.there.data.response.PlaylistsResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -15,6 +16,12 @@ interface SpotifyApi {
                       @Query("locale") locale: String = DEFAULT_LOCALE,
                       @Query("offset") offset: String = DEFAULT_OFFSET,
                       @Query("limit") limit: String = DEFAULT_LIMIT): Observable<CategoriesResponse>
+
+    @GET("browse/featured-playlists")
+    fun getFeaturedPlaylists(@Header("Authorization") authorization: String,
+                             @Query("country") country: String = DEFAULT_COUNTRY,
+                             @Query("offset") offset: String = DEFAULT_OFFSET,
+                             @Query("limit") limit: String = DEFAULT_LIMIT): Observable<PlaylistsResponse>
 
     companion object {
         private const val DEFAULT_LIMIT = "50"

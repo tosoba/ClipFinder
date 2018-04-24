@@ -1,6 +1,7 @@
 package com.example.there.findclips.dashboard
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -37,7 +38,7 @@ class DashboardFragment : BaseMainFragment<DashboardViewModel>() {
     }
 
     override fun initViewModel() {
-        viewModel = viewModelFactory.create(DashboardViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DashboardViewModel::class.java)
     }
 
     override fun releaseComponent() {

@@ -28,7 +28,7 @@ open class BaseViewModel(private val accessTokenUseCase: AccessTokenUseCase) : V
     }
 
     val accessTokenLiveData: MutableLiveData<AccessTokenEntity> = MutableLiveData()
-    val accessTokenError: SingleLiveEvent<Throwable?> = SingleLiveEvent()
+    val errorState: SingleLiveEvent<Throwable?> = SingleLiveEvent()
 
     private var accessTokenLoading = false
     protected fun loadAccessToken(onAccessTokenLoaded: (AccessTokenEntity) -> Unit) {
@@ -41,7 +41,7 @@ open class BaseViewModel(private val accessTokenUseCase: AccessTokenUseCase) : V
                         accessTokenLiveData.value = it
                         onAccessTokenLoaded(it)
                     }, {
-                        accessTokenError.value = it
+                        errorState.value = it
                         Log.e(javaClass.name, it.messageOrDefault("Error loading access token."))
                     }))
         }

@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="category"
-            type="com.example.there.domain.entities.CategoryEntity" />
+            name="playlist"
+            type="com.example.there.domain.entities.PlaylistEntity" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:layout_marginRight="3dp">
 
         <ImageView
-            imageUrl="@{category.iconUrl}"
+            imageUrl="@{playlist.iconUrl}"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="fitXY" />
@@ -32,7 +32,7 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="50"
-            android:text="@{category.name}"
+            android:text="@{playlist.name}"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,4 +40,5 @@
             app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
+
 </layout>

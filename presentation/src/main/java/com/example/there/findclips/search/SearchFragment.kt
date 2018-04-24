@@ -1,5 +1,6 @@
 package com.example.there.findclips.search
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class SearchFragment : BaseMainFragment<SearchViewModel>() {
 
     @Inject
-    lateinit var searchViewModelFactory: SearchViewModelFactory
+    lateinit var viewModelFactory: SearchViewModelFactory
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)
@@ -24,7 +25,7 @@ class SearchFragment : BaseMainFragment<SearchViewModel>() {
     }
 
     override fun initViewModel() {
-        viewModel = searchViewModelFactory.create(SearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel::class.java)
     }
 
     override fun releaseComponent() {

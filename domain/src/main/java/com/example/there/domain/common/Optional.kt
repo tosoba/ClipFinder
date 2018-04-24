@@ -1,6 +1,5 @@
 package com.example.there.domain.common
 
-//TODO: use Maybe<> instead of this
 class Optional<out T>(val value: T? = null) {
 
     companion object {
@@ -16,5 +15,4 @@ class Optional<out T>(val value: T? = null) {
     fun hasValue(): Boolean {
         return value != null
     }
-
 }

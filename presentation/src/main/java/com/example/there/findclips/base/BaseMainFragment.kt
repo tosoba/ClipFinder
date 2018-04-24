@@ -3,6 +3,8 @@ package com.example.there.findclips.base
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.widget.Toast
+import com.example.there.findclips.util.messageOrDefault
 import com.example.there.findclips.util.saveAccessToken
 
 abstract class BaseMainFragment<T : BaseViewModel> : Fragment() {
@@ -36,6 +38,12 @@ abstract class BaseMainFragment<T : BaseViewModel> : Fragment() {
         viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
             accessToken?.let {
                 activity?.saveAccessToken(it)
+            }
+        })
+
+        viewModel.errorState.observe(this, Observer { error ->
+            error?.let {
+                Toast.makeText(this.activity, it.messageOrDefault(), Toast.LENGTH_LONG).show()
             }
         })
     }

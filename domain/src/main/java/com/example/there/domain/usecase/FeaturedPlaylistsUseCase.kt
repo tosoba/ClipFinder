@@ -5,23 +5,23 @@ import com.example.there.domain.common.Transformer
 import com.example.there.domain.common.UseCase
 import com.example.there.domain.common.UseCaseParams
 import com.example.there.domain.entities.AccessTokenEntity
-import com.example.there.domain.entities.CategoryEntity
+import com.example.there.domain.entities.PlaylistEntity
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class CategoriesUseCase(transformer: Transformer<List<CategoryEntity>>,
-                        private val repository: SpotifyRepository) : UseCase<List<CategoryEntity>>(transformer) {
+class FeaturedPlaylistsUseCase(transformer: Transformer<List<PlaylistEntity>>,
+                               private val repository: SpotifyRepository) : UseCase<List<PlaylistEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<List<CategoryEntity>> {
+    override fun createObservable(data: Map<String, Any>?): Observable<List<PlaylistEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
         return if (accessToken != null) {
-            repository.getCategories(accessToken)
+            repository.getFeaturedPlaylists(accessToken)
         } else {
             Observable.error({ IllegalArgumentException("AccessToken must be provided.") })
         }
     }
 
-    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
+    fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> {
         val data = HashMap<String, Any>().apply { put(UseCaseParams.PARAM_ACCESS_TOKEN, accessToken) }
         return observable(withData = data)
     }

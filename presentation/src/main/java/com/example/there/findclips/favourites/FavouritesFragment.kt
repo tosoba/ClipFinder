@@ -1,6 +1,7 @@
 package com.example.there.findclips.favourites
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,7 @@ class FavouritesFragment : BaseMainFragment<FavouritesViewModel>() {
     }
 
     override fun initViewModel() {
-        viewModel = viewModelFactory.create(FavouritesViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FavouritesViewModel::class.java)
     }
 
     override fun releaseComponent() {
