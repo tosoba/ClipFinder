@@ -36,6 +36,7 @@ dependencies {
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
+    implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.room
     kapt "android.arch.persistence.room:compiler:1.0.0"
 

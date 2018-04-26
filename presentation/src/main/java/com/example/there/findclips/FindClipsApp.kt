@@ -37,8 +37,11 @@ class FindClipsApp : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(applicationContext))
                 .dataModule(DataModule())
-                .networkModule(NetworkModule(getString(R.string.spotify_base_url), getString(R.string.access_token_base_url)))
-                .build()
+                .networkModule(NetworkModule(
+                        getString(R.string.spotify_base_url),
+                        getString(R.string.access_token_base_url),
+                        getString(R.string.spotify_charts_base_url))
+                ).build()
     }
 
     private var dashboardSubComponent: DashboardSubComponent? = null

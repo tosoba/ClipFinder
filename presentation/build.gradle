@@ -43,6 +43,7 @@ dependencies {
     implementation rootProject.ext.rxJava
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter
+    implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
     implementation rootProject.ext.room
 

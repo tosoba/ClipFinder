@@ -3,12 +3,14 @@ package com.example.there.findclips.dashboard
 import com.example.there.domain.entities.AccessTokenEntity
 import com.example.there.domain.usecase.AccessTokenUseCase
 import com.example.there.domain.usecase.CategoriesUseCase
+import com.example.there.domain.usecase.DailyViralTracksUseCase
 import com.example.there.domain.usecase.FeaturedPlaylistsUseCase
 import com.example.there.findclips.base.BaseViewModel
 
 class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
                          private val featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
-                         private val categoriesUseCase: CategoriesUseCase) : BaseViewModel(accessTokenUseCase) {
+                         private val categoriesUseCase: CategoriesUseCase,
+                         private val dailyViralTracksUseCase: DailyViralTracksUseCase) : BaseViewModel(accessTokenUseCase) {
 
     val viewState: DashboardViewState = DashboardViewState()
 
@@ -24,29 +26,32 @@ class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
     private fun loadData(accessToken: AccessTokenEntity) {
         loadCategories(accessToken)
         loadFeaturedPlaylists(accessToken)
+        loadDailyViralTracks(accessToken)
     }
 
     private fun loadCategories(accessToken: AccessTokenEntity) {
         viewState.categoriesLoadingInProgress.set(true)
         addDisposable(categoriesUseCase.getCategories(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
-                .subscribe({
-                    viewState.addCategoriesSorted(it)
-                }, {
-                    errorState.value = it
-                    handleErrors(it, onErrorsResolved = this::loadDashboardData)
-                }))
+                .subscribe({ viewState.addCategoriesSorted(it) }, this::onError))
     }
 
     private fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
         addDisposable(featuredPlaylistsUseCase.getFeaturedPlaylists(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
-                .subscribe({
-                    viewState.addFeaturedPlaylistsSorted(it)
-                }, {
-                    errorState.value = it
-                    handleErrors(it, onErrorsResolved = this::loadDashboardData)
-                }))
+                .subscribe({ viewState.addFeaturedPlaylistsSorted(it) }, this::onError))
+    }
+
+    private fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
+        viewState.topTracksLoadingInProgress.set(true)
+        addDisposable(dailyViralTracksUseCase.getTracks(accessToken)
+                .doFinally { viewState.topTracksLoadingInProgress.set(false) }
+                .subscribe({ viewState.topTracks.addAll(it) }, this::onError))
+    }
+
+    private fun onError(t: Throwable) {
+        errorState.value = t
+        handleErrors(t, onErrorsResolved = this::loadDashboardData)
     }
 }

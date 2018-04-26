@@ -17,7 +17,7 @@ class FeaturedPlaylistsUseCase(transformer: Transformer<List<PlaylistEntity>>,
         return if (accessToken != null) {
             repository.getFeaturedPlaylists(accessToken)
         } else {
-            Observable.error({ IllegalArgumentException("AccessToken must be provided.") })
+            Observable.error { IllegalArgumentException("AccessToken must be provided.") }
         }
     }
 

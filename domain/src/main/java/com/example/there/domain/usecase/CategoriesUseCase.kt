@@ -17,7 +17,7 @@ class CategoriesUseCase(transformer: Transformer<List<CategoryEntity>>,
         return if (accessToken != null) {
             repository.getCategories(accessToken)
         } else {
-            Observable.error({ IllegalArgumentException("AccessToken must be provided.") })
+            Observable.error { IllegalArgumentException("AccessToken must be provided.") }
         }
     }
 

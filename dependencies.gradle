@@ -12,6 +12,7 @@ ext {
     daggerCompiler = "com.google.dagger:dagger-compiler:2.13"
     retrofit = "com.squareup.retrofit2:retrofit:2.3.0"
     retrofitGsonConverter = "com.squareup.retrofit2:converter-gson:2.3.0"
+    retrofitScalarsConverter = "com.squareup.retrofit2:converter-scalars:2.3.0"
     retrofitRxJava2Adapter = "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
 
     // Testing

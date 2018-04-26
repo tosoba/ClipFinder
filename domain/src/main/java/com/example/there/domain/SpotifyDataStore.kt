@@ -1,8 +1,6 @@
 package com.example.there.domain
 
-import com.example.there.domain.entities.AccessTokenEntity
-import com.example.there.domain.entities.CategoryEntity
-import com.example.there.domain.entities.PlaylistEntity
+import com.example.there.domain.entities.*
 import io.reactivex.Observable
 
 interface SpotifyDataStore {
@@ -11,4 +9,8 @@ interface SpotifyDataStore {
     fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
 
     fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>
+
+    fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity>
+
+    fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
 }

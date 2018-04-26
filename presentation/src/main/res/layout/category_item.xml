@@ -31,7 +31,7 @@
             android:shadowColor="@android:color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="50"
+            android:shadowRadius="8"
             android:text="@{category.name}"
             android:textAlignment="center"
             android:textColor="@android:color/white"
