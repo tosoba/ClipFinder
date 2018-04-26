@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.search
 
-import com.example.there.domain.usecase.AccessTokenUseCase
+import com.example.there.domain.usecase.spotify.AccessTokenUseCase
 import com.example.there.findclips.search.SearchViewModelFactory
 import dagger.Module
 import dagger.Provides

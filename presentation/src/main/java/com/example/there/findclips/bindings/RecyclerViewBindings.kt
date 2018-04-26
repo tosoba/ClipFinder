@@ -6,9 +6,9 @@ import android.databinding.ObservableList
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.example.there.domain.entities.CategoryEntity
-import com.example.there.domain.entities.PlaylistEntity
-import com.example.there.domain.entities.TopTrackEntity
+import com.example.there.domain.entities.spotify.CategoryEntity
+import com.example.there.domain.entities.spotify.PlaylistEntity
+import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.dashboard.adapter.CategoriesListAdapter
 import com.example.there.findclips.dashboard.adapter.PlaylistsListAdapter
 import com.example.there.findclips.dashboard.adapter.TopTracksListAdapter

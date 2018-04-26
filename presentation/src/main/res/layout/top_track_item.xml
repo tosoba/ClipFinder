@@ -6,7 +6,7 @@
 
         <variable
             name="track"
-            type="com.example.there.domain.entities.TopTrackEntity" />
+            type="com.example.there.domain.entities.spotify.TopTrackEntity" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -2,9 +2,9 @@ package com.example.there.findclips.dashboard
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
-import com.example.there.domain.entities.CategoryEntity
-import com.example.there.domain.entities.PlaylistEntity
-import com.example.there.domain.entities.TopTrackEntity
+import com.example.there.domain.entities.spotify.CategoryEntity
+import com.example.there.domain.entities.spotify.PlaylistEntity
+import com.example.there.domain.entities.spotify.TopTrackEntity
 
 data class DashboardViewState(
         val categories: ObservableArrayList<CategoryEntity> = ObservableArrayList(),

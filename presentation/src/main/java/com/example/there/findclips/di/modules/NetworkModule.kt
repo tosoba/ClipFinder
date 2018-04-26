@@ -1,8 +1,9 @@
 package com.example.there.findclips.di.modules
 
-import com.example.there.data.api.SpotifyAccountsApi
-import com.example.there.data.api.SpotifyApi
-import com.example.there.data.api.SpotifyChartsApi
+import com.example.there.data.api.spotify.SpotifyAccountsApi
+import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.data.api.spotify.SpotifyChartsApi
+import com.example.there.data.api.youtube.YoutubeApi
 import com.example.there.findclips.di.Dependencies
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,8 @@ import javax.inject.Singleton
 @Module
 class NetworkModule(private val spotifyApiBaseUrl: String,
                     private val accessTokenBaseUrl: String,
-                    private val spotifyChartsBaseUrl: String) {
+                    private val spotifyChartsBaseUrl: String,
+                    private val youtubeBaseUrl: String) {
 
     @Provides
     @Singleton
@@ -62,6 +64,16 @@ class NetworkModule(private val spotifyApiBaseUrl: String,
 
     @Provides
     @Singleton
+    @Named(Dependencies.YOUTUBE_API_RETROFIT)
+    fun youtubeApiRetrofit(): Retrofit = Retrofit.Builder()
+            .client(OkHttpClient())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(youtubeBaseUrl)
+            .build()
+
+    @Provides
+    @Singleton
     fun spotifyApi(@Named(Dependencies.SPOTIFY_API_RETROFIT) retrofit: Retrofit): SpotifyApi =
             retrofit.create(SpotifyApi::class.java)
 
@@ -74,4 +86,9 @@ class NetworkModule(private val spotifyApiBaseUrl: String,
     @Singleton
     fun spotifyChartsApi(@Named(Dependencies.SPOTIFY_CHARTS_RETROFIT) retrofit: Retrofit): SpotifyChartsApi =
             retrofit.create(SpotifyChartsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun youtubeApi(@Named(Dependencies.YOUTUBE_API_RETROFIT) retrofit: Retrofit): YoutubeApi =
+            retrofit.create(YoutubeApi::class.java)
 }

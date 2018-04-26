@@ -4,7 +4,7 @@ import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.there.domain.entities.CategoryEntity
+import com.example.there.domain.entities.spotify.CategoryEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.CategoryItemBinding
 

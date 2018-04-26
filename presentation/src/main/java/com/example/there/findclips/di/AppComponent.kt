@@ -9,6 +9,8 @@ import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
 import com.example.there.findclips.di.search.SearchSubComponent
+import com.example.there.findclips.di.videos.VideosModule
+import com.example.there.findclips.di.videos.VideosSubComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -22,4 +24,6 @@ interface AppComponent {
     fun plus(dashboardModule: DashboardModule): DashboardSubComponent
     fun plus(favouritesModule: FavouritesModule): FavouritesSubComponent
     fun plus(searchModule: SearchModule): SearchSubComponent
+
+    fun plus(videosModule: VideosModule): VideosSubComponent
 }

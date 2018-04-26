@@ -12,6 +12,8 @@ import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
 import com.example.there.findclips.di.search.SearchSubComponent
+import com.example.there.findclips.di.videos.VideosModule
+import com.example.there.findclips.di.videos.VideosSubComponent
 import com.squareup.leakcanary.LeakCanary
 
 class FindClipsApp : Application() {
@@ -38,9 +40,10 @@ class FindClipsApp : Application() {
                 .appModule(AppModule(applicationContext))
                 .dataModule(DataModule())
                 .networkModule(NetworkModule(
-                        getString(R.string.spotify_base_url),
-                        getString(R.string.access_token_base_url),
-                        getString(R.string.spotify_charts_base_url))
+                        spotifyApiBaseUrl = getString(R.string.spotify_base_url),
+                        accessTokenBaseUrl = getString(R.string.access_token_base_url),
+                        spotifyChartsBaseUrl = getString(R.string.spotify_charts_base_url),
+                        youtubeBaseUrl = getString(R.string.youtube_base_url))
                 ).build()
     }
 
@@ -72,5 +75,15 @@ class FindClipsApp : Application() {
 
     fun releaseSearchComponent() {
         searchSubComponent = null
+    }
+
+    private var videosComponent: VideosSubComponent? = null
+    fun createVideosComponent(): VideosSubComponent {
+        videosComponent = appComponent.plus(VideosModule())
+        return videosComponent!!
+    }
+
+    fun releaseVideosComponent() {
+        videosComponent = null
     }
 }

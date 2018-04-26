@@ -2,7 +2,7 @@ package com.example.there.findclips.util
 
 import android.app.Activity
 import android.content.Context
-import com.example.there.domain.entities.AccessTokenEntity
+import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
 
 val Activity.app: FindClipsApp

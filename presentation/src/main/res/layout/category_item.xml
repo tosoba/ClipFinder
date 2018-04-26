@@ -6,7 +6,7 @@
 
         <variable
             name="category"
-            type="com.example.there.domain.entities.CategoryEntity" />
+            type="com.example.there.domain.entities.spotify.CategoryEntity" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
