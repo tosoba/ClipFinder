@@ -11,5 +11,11 @@ val List<IconData>.firstIconUrlOrDefault: String
 val List<IconData>.secondIconUrlOrDefault: String
     get() = getOrNull(1)?.url ?: getOrNull(0)?.url ?: DEFAULT_ICON_URL
 
+val Thumbnails.urlHigh: String
+    get() = maxres?.url ?: high?.url ?: medium?.url ?: default?.url ?: fallbackURL
+
+val Thumbnails.urlMedium: String
+    get() = medium?.url ?: high?.url ?: default?.url ?: fallbackURL
+
 val Thumbnails.fallbackURL: String
     get() = "https://i.ytimg.com/vi/T0Jqdjbed40/sddefault.jpg"

@@ -5,7 +5,7 @@
 
         <variable
             name="video"
-            type="com.example.there.domain.entities.videos.VideoEntity" />
+            type="com.example.there.findclips.entities.Video" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,6 +36,7 @@
 
         <ImageView
             android:id="@+id/video_channel_thumbnail_imageview"
+            imageUrl="@{video.channelThumbnailUrl}"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="5dp"

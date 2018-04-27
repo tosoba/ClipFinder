@@ -10,9 +10,9 @@ fun bindImageUrl(view: ImageView, url: String?) {
     if (url != null && !url.isEmpty()) {
         Picasso.with(view.context)
                 .load(url)
+                .fit()
+                .centerCrop()
                 .error(R.drawable.placeholder)
                 .into(view)
-    } else {
-        view.setImageResource(R.drawable.placeholder)
     }
 }

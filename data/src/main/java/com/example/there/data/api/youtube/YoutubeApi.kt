@@ -1,5 +1,6 @@
 package com.example.there.data.api.youtube
 
+import com.example.there.data.response.videos.ChannelsResponse
 import com.example.there.data.response.videos.VideosResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -11,4 +12,10 @@ interface YoutubeApi {
                        @Query("id") ids: String,
                        @Query("maxResults") maxResults: String = "50",
                        @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"): Observable<VideosResponse>
+
+    @GET("channels")
+    fun loadChannelsInfo(@Query("part") part: String = "snippet",
+                         @Query("id") ids: String,
+                         @Query("maxResults") maxResults: String = "50",
+                         @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"): Observable<ChannelsResponse>
 }

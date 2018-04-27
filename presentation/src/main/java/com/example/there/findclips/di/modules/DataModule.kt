@@ -8,6 +8,7 @@ import com.example.there.data.api.yahoo.YahooScraper
 import com.example.there.data.api.youtube.YoutubeApi
 import com.example.there.data.entities.videos.VideoData
 import com.example.there.data.mapper.spotify.*
+import com.example.there.data.mapper.videos.ChannelThumbnailUrlMapper
 import com.example.there.data.mapper.videos.VideoMapper
 import com.example.there.data.repos.videos.VideosRepositoryImpl
 import com.example.there.domain.common.Mapper
@@ -39,8 +40,9 @@ class DataModule {
     @Singleton
     fun videosRepository(api: YoutubeApi,
                          scraper: YahooScraper,
-                         videoMapper: VideoMapper): VideosRepository =
-            VideosRepositoryImpl(api, scraper, videoMapper)
+                         videoMapper: VideoMapper,
+                         channelThumbnailUrlMapper: ChannelThumbnailUrlMapper): VideosRepository =
+            VideosRepositoryImpl(api, scraper, videoMapper, channelThumbnailUrlMapper)
 
     @Provides
     @Singleton

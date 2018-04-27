@@ -15,6 +15,7 @@ import com.example.there.findclips.dashboard.lists.CategoriesListAdapter
 import com.example.there.findclips.dashboard.lists.PlaylistsListAdapter
 import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.dashboard.lists.toptracks.TopTracksListAdapter
+import com.example.there.findclips.entities.Video
 import com.example.there.findclips.util.ItemClickSupport
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.videos.VideosAdapter
@@ -76,13 +77,13 @@ fun bindOnTopTrackClickListener(recycler: RecyclerView, listener: TopTrackItemCl
 }
 
 @BindingAdapter("videos")
-fun bindVideos(recycler: RecyclerView, videos: ObservableArrayList<VideoEntity>) {
+fun bindVideos(recycler: RecyclerView, videos: ObservableArrayList<Video>) {
     recycler.layoutManager = if (recycler.context.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
         GridLayoutManager(recycler.context, 2, GridLayoutManager.VERTICAL, false)
     } else {
         LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
     }
-    videos.addOnListChangedCallback(makeOnListChangedCallback<VideoEntity>(recycler))
+    videos.addOnListChangedCallback(makeOnListChangedCallback<Video>(recycler))
     recycler.adapter = VideosAdapter(videos)
 }
 
