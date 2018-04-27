@@ -2,25 +2,20 @@ package com.example.there.findclips.base
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.example.there.findclips.util.messageOrDefault
 import com.example.there.findclips.util.saveAccessToken
 
-abstract class BaseMainFragment<T : BaseViewModel> : Fragment() {
+abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity() {
 
     protected lateinit var viewModel: T
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setTitle()
-        setupObservers()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initComponent()
         initViewModel()
+        setupObservers()
     }
 
     override fun onDestroy() {
@@ -37,16 +32,14 @@ abstract class BaseMainFragment<T : BaseViewModel> : Fragment() {
     protected open fun setupObservers() {
         viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
             accessToken?.let {
-                activity?.saveAccessToken(it)
+                saveAccessToken(it)
             }
         })
 
         viewModel.errorState.observe(this, Observer { error ->
             error?.let {
-                Toast.makeText(this.activity, it.messageOrDefault(), Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it.messageOrDefault(), Toast.LENGTH_LONG).show()
             }
         })
     }
-
-    private fun setTitle() = tag?.let { activity?.title = it }
 }

@@ -50,8 +50,8 @@ class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
                 .subscribe({ viewState.topTracks.addAll(it) }, this::onError))
     }
 
-    private fun onError(t: Throwable) {
-        errorState.value = t
+    override fun onError(t: Throwable) {
+        super.onError(t)
         handleErrors(t, onErrorsResolved = this::loadDashboardData)
     }
 }

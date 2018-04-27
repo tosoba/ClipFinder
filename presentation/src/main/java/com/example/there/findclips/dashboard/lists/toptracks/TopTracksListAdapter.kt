@@ -1,4 +1,4 @@
-package com.example.there.findclips.dashboard.adapter
+package com.example.there.findclips.dashboard.lists.toptracks
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
@@ -8,7 +8,8 @@ import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.TopTrackItemBinding
 
-class TopTracksListAdapter(private val tracks: List<TopTrackEntity>) : RecyclerView.Adapter<TopTracksListAdapter.TopTracksViewHolder>() {
+class TopTracksListAdapter(val tracks: List<TopTrackEntity>) : RecyclerView.Adapter<TopTracksListAdapter.TopTracksViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopTracksViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding: TopTrackItemBinding = DataBindingUtil.inflate(inflater, R.layout.top_track_item, parent, false)

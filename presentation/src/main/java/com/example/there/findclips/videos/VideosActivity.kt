@@ -3,25 +3,43 @@ package com.example.there.findclips.videos
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.example.there.findclips.R
+import com.example.there.findclips.base.BaseVMActivity
+import com.example.there.findclips.databinding.ActivityVideosBinding
 import com.example.there.findclips.util.app
 import javax.inject.Inject
 
-class VideosActivity : AppCompatActivity() {
+class VideosActivity : BaseVMActivity<VideosViewModel>() {
 
     @Inject
     lateinit var viewModelFactory: VideosViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_videos)
 
+        initBinding()
+        if (savedInstanceState == null) {
+            viewModel.getVideos(query = intent.getStringExtra(EXTRA_QUERY))
+        }
+    }
+
+    private fun initBinding() {
+        val binding: ActivityVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_videos)
+        binding.viewState = viewModel.viewState
+    }
+
+    override fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosViewModel::class.java)
+    }
+
+    override fun initComponent() {
         app.createVideosComponent().inject(this)
+    }
 
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosViewModel::class.java)
-        viewModel.getVideos(intent.getStringExtra(EXTRA_QUERY))
+    override fun releaseComponent() {
+        app.releaseVideosComponent()
     }
 
     companion object {

@@ -39,6 +39,8 @@ class RemoteSpotifyDataStore(private val api: SpotifyApi,
             api.getTrack(authorization = getAccessTokenHeader(accessToken.token), id = id)
                     .map(trackMapper::mapFrom)
 
+
+    //TODO: buffer -> chunked
     override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> {
         val trackIdsChunked: Observable<MutableList<List<String>>> = chartsApi.getDailyViralTracks()
                 .map { it.split('\n').drop(1) }

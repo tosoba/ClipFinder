@@ -1,4 +1,4 @@
-package com.example.there.findclips.dashboard.adapter
+package com.example.there.findclips.dashboard.lists
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView

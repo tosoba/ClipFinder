@@ -1,5 +1,6 @@
 package com.example.there.findclips.bindings
 
+import android.content.res.Configuration
 import android.databinding.BindingAdapter
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableList
@@ -9,9 +10,15 @@ import android.support.v7.widget.RecyclerView
 import com.example.there.domain.entities.spotify.CategoryEntity
 import com.example.there.domain.entities.spotify.PlaylistEntity
 import com.example.there.domain.entities.spotify.TopTrackEntity
-import com.example.there.findclips.dashboard.adapter.CategoriesListAdapter
-import com.example.there.findclips.dashboard.adapter.PlaylistsListAdapter
-import com.example.there.findclips.dashboard.adapter.TopTracksListAdapter
+import com.example.there.domain.entities.videos.VideoEntity
+import com.example.there.findclips.dashboard.lists.CategoriesListAdapter
+import com.example.there.findclips.dashboard.lists.PlaylistsListAdapter
+import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
+import com.example.there.findclips.dashboard.lists.toptracks.TopTracksListAdapter
+import com.example.there.findclips.util.ItemClickSupport
+import com.example.there.findclips.util.screenOrientation
+import com.example.there.findclips.videos.VideosAdapter
+
 
 fun <T> makeOnListChangedCallback(recycler: RecyclerView): ObservableList.OnListChangedCallback<ObservableArrayList<T>> =
         object : ObservableList.OnListChangedCallback<ObservableArrayList<T>>() {
@@ -55,5 +62,27 @@ fun bindTopTracks(recycler: RecyclerView, tracks: ObservableArrayList<TopTrackEn
     recycler.layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.HORIZONTAL, false)
     tracks.addOnListChangedCallback(makeOnListChangedCallback<TopTrackEntity>(recycler))
     recycler.adapter = TopTracksListAdapter(tracks)
+}
+
+@BindingAdapter("onTopTrackClickListener")
+fun bindOnTopTrackClickListener(recycler: RecyclerView, listener: TopTrackItemClickListener) {
+    ItemClickSupport.addTo(recycler).setOnItemClickListener { recyclerView, position, _ ->
+        val adapter = recyclerView.adapter as? TopTracksListAdapter
+        adapter?.let {
+            val track = adapter.tracks[position]
+            listener.onClick(track)
+        }
+    }
+}
+
+@BindingAdapter("videos")
+fun bindVideos(recycler: RecyclerView, videos: ObservableArrayList<VideoEntity>) {
+    recycler.layoutManager = if (recycler.context.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        GridLayoutManager(recycler.context, 2, GridLayoutManager.VERTICAL, false)
+    } else {
+        LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
+    }
+    videos.addOnListChangedCallback(makeOnListChangedCallback<VideoEntity>(recycler))
+    recycler.adapter = VideosAdapter(videos)
 }
 

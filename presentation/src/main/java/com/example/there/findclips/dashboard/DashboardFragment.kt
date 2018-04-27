@@ -7,22 +7,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseMainFragment
+import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
+import com.example.there.findclips.videos.VideosActivity
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseMainFragment<DashboardViewModel>() {
+class DashboardFragment : BaseVMFragment<DashboardViewModel>() {
 
     @Inject
     lateinit var viewModelFactory: DashboardViewModelFactory
 
+    private val onTopTrackClickListener = object : TopTrackItemClickListener {
+        override fun onClick(track: TopTrackEntity) {
+            activity?.startActivity(VideosActivity.startingIntent(activity!!, query = track.track.query))
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         binding.viewState = viewModel.viewState
+        binding.onTopTrackClickListener = onTopTrackClickListener
         return binding.root
     }
 
@@ -33,12 +43,12 @@ class DashboardFragment : BaseMainFragment<DashboardViewModel>() {
         }
     }
 
-    override fun initComponent() {
-        activity?.app?.createDashboardComponent()?.inject(this)
-    }
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DashboardViewModel::class.java)
+    }
+
+    override fun initComponent() {
+        activity?.app?.createDashboardComponent()?.inject(this)
     }
 
     override fun releaseComponent() {

@@ -7,6 +7,10 @@
         <variable
             name="viewState"
             type="com.example.there.findclips.dashboard.DashboardViewState" />
+
+        <variable
+            name="onTopTrackClickListener"
+            type="com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener" />
     </data>
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -89,6 +93,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/top_tracks_recyclerview"
                 topTracks="@{viewState.topTracks}"
+                onTopTrackClickListener="@{onTopTrackClickListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"

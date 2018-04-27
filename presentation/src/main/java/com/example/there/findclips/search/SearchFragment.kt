@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseMainFragment
+import com.example.there.findclips.base.BaseVMFragment
 import com.example.there.findclips.util.app
 import javax.inject.Inject
 
 
-class SearchFragment : BaseMainFragment<SearchViewModel>() {
+class SearchFragment : BaseVMFragment<SearchViewModel>() {
 
     @Inject
     lateinit var viewModelFactory: SearchViewModelFactory

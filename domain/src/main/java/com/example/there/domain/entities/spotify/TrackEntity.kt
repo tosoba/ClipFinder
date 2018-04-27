@@ -10,6 +10,9 @@ data class TrackEntity(
 ) {
     val artistNamesText: String
         get() = artists.joinToString(separator = ", ") { it.name }
+
+    val query: String
+        get() = "$name $albumName"
 }
 
 data class TrackArtistEntity(

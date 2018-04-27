@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="video"
+            type="com.example.there.domain.entities.videos.VideoEntity" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/video_thumbnail_imageview"
+            imageUrl="@{video.thumbnailUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/black75Alpha"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/video_title_txt" />
+
+        <ImageView
+            android:id="@+id/video_channel_thumbnail_imageview"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/channel_thumbnail_placeholder"
+            app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
+            app:layout_constraintLeft_toLeftOf="@id/video_thumbnail_imageview"
+            app:layout_constraintTop_toTopOf="@id/video_title_txt" />
+
+        <TextView
+            android:id="@+id/video_title_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{video.title}"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/video_description_txt"
+            app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
+            app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
+
+        <TextView
+            android:id="@+id/video_description_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{video.description}"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
+            app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
+            app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

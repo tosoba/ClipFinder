@@ -33,3 +33,6 @@ fun Activity.saveAccessToken(accessToken: AccessTokenEntity) {
 fun Throwable.messageOrDefault(message: String = "Unknown error."): String {
     return this.message ?: message
 }
+
+val Context.screenOrientation: Int
+    get() = resources.configuration.orientation
