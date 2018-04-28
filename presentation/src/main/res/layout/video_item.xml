@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -8,11 +8,10 @@
             type="com.example.there.findclips.entities.Video" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:padding="10dp">
+        android:layout_margin="10dp">
 
         <ImageView
             android:id="@+id/video_thumbnail_imageview"
@@ -28,11 +27,11 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/black75Alpha"
+            android:background="@drawable/bottom_dark_gradient"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/video_title_txt" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/video_channel_thumbnail_imageview"
@@ -41,20 +40,17 @@
             android:layout_height="35dp"
             android:layout_margin="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/channel_thumbnail_placeholder"
             app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
             app:layout_constraintLeft_toLeftOf="@id/video_thumbnail_imageview"
             app:layout_constraintTop_toTopOf="@id/video_title_txt" />
 
         <TextView
             android:id="@+id/video_title_txt"
+            style="@style/VideoItemTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:ellipsize="end"
             android:maxLines="2"
             android:text="@{video.title}"
-            android:textColor="@android:color/white"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/video_description_txt"
@@ -63,16 +59,26 @@
 
         <TextView
             android:id="@+id/video_description_txt"
+            style="@style/VideoItemTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{video.description}"
-            android:textColor="@android:color/white"
+            android:text="@{video.details}"
             app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
             app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
             app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
+
+        <TextView
+            style="@style/ShadowText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@{video.duration.toString()}"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

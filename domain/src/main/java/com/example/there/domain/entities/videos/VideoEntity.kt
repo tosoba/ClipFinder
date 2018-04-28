@@ -9,6 +9,5 @@ data class VideoEntity(val id: String,
                        val description: String,
                        val publishedAt: String,
                        val thumbnailUrl: String,
-                       var duration: Duration = Duration(""),
-                       var viewCount: BigInteger = BigInteger.ZERO,
-                       var channelThumbnailUrl: String? = null)
+                       val duration: Duration = Duration(""),
+                       val viewCount: BigInteger = BigInteger.ZERO)

@@ -16,4 +16,5 @@
     <string name="genres">Genres</string>
     <string name="featured_playlists">Featured playlists</string>
     <string name="top_tracks">Top tracks</string>
+    <string name="youtube">YouTube</string>
 </resources>

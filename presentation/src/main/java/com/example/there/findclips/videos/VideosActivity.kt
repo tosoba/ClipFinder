@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.view.MenuItem
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseVMActivity
 import com.example.there.findclips.databinding.ActivityVideosBinding
@@ -20,6 +21,9 @@ class VideosActivity : BaseVMActivity<VideosViewModel>() {
         super.onCreate(savedInstanceState)
 
         initBinding()
+
+        setUpDisplayHome()
+
         if (savedInstanceState == null) {
             viewModel.getVideos(query = intent.getStringExtra(EXTRA_QUERY))
         }
@@ -28,6 +32,19 @@ class VideosActivity : BaseVMActivity<VideosViewModel>() {
     private fun initBinding() {
         val binding: ActivityVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_videos)
         binding.viewState = viewModel.viewState
+    }
+
+    private fun setUpDisplayHome() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun initViewModel() {

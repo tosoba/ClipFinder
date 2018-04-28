@@ -21,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".videos.VideosActivity" />
+        <activity
+            android:name=".videos.VideosActivity"
+            android:label="@string/youtube" />
     </application>
 
 </manifest>

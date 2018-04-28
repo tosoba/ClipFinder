@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.databinding.BindingAdapter
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableList
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -78,11 +79,15 @@ fun bindOnTopTrackClickListener(recycler: RecyclerView, listener: TopTrackItemCl
 
 @BindingAdapter("videos")
 fun bindVideos(recycler: RecyclerView, videos: ObservableArrayList<Video>) {
-    recycler.layoutManager = if (recycler.context.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-        GridLayoutManager(recycler.context, 2, GridLayoutManager.VERTICAL, false)
+    if (recycler.context.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        recycler.layoutManager = GridLayoutManager(recycler.context, 2, GridLayoutManager.VERTICAL, false)
+        recycler.addItemDecoration(DividerItemDecoration(recycler.context, RecyclerView.HORIZONTAL))
     } else {
-        LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
+        recycler.layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
     }
+
+    recycler.addItemDecoration(DividerItemDecoration(recycler.context, RecyclerView.VERTICAL))
+
     videos.addOnListChangedCallback(makeOnListChangedCallback<Video>(recycler))
     recycler.adapter = VideosAdapter(videos)
 }
