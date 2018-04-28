@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="@{video.title}"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/video_description_txt"
             app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
