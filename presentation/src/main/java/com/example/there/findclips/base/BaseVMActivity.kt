@@ -30,12 +30,6 @@ abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity() {
     protected abstract fun initViewModel()
 
     protected open fun setupObservers() {
-        viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
-            accessToken?.let {
-                saveAccessToken(it)
-            }
-        })
-
         viewModel.errorState.observe(this, Observer { error ->
             error?.let {
                 Toast.makeText(this, it.messageOrDefault(), Toast.LENGTH_LONG).show()

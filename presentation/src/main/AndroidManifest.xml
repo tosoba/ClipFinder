@@ -22,8 +22,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".videos.VideosActivity"
-            android:label="@string/youtube" />
+            android:name=".videoslist.VideosListActivity"
+            android:label="@string/youtube"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
     </application>
 
 </manifest>

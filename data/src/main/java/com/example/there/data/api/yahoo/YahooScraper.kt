@@ -8,6 +8,7 @@ import org.jsoup.Jsoup
 
 @Singleton
 class YahooScraper @Inject constructor() {
+
     fun getVideoIds(query: String): Observable<List<String>> = Observable.fromCallable {
         val document = Jsoup.connect(getUrlForQuery(query)).get()
         val videoLinks = document.select("a[data-rurl]")

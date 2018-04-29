@@ -2,13 +2,16 @@ package com.example.there.findclips.util
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.widget.EditText
+import android.widget.SearchView
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.findclips.FindClipsApp
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
 import java.math.BigInteger
 import java.util.*
+
 
 val Activity.app: FindClipsApp
     get() = this.application as FindClipsApp
@@ -84,4 +87,11 @@ fun Long.getPublishedAgoString(prefix: String): String {
     } else {
         "$this ${prefix}s ago"
     }
+}
+
+fun SearchView.setTextColors(textColor: Int = Color.WHITE, hintTextColor: Int = Color.LTGRAY) {
+    val searchSrcTextId = resources.getIdentifier("android:id/search_src_text", null, null)
+    val searchEditText = findViewById<EditText>(searchSrcTextId)
+    searchEditText.setTextColor(textColor)
+    searchEditText.setHintTextColor(hintTextColor)
 }

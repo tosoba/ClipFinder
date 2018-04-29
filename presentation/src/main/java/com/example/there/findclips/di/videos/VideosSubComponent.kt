@@ -1,10 +1,10 @@
 package com.example.there.findclips.di.videos
 
-import com.example.there.findclips.videos.VideosActivity
+import com.example.there.findclips.videoslist.VideosListActivity
 import dagger.Subcomponent
 
 @VideosScope
 @Subcomponent(modules = [VideosModule::class])
 interface VideosSubComponent {
-    fun inject(videosActivity: VideosActivity)
+    fun inject(videosListActivity: VideosListActivity)
 }

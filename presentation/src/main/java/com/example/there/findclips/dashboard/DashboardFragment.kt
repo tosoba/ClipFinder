@@ -9,29 +9,29 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
-import com.example.there.findclips.videos.VideosActivity
+import com.example.there.findclips.videoslist.VideosListActivity
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseVMFragment<DashboardViewModel>() {
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
 
     @Inject
-    lateinit var viewModelFactory: DashboardViewModelFactory
+    lateinit var VMFactory: DashboardVMFactory
 
     private val onTopTrackClickListener = object : TopTrackItemClickListener {
         override fun onClick(track: TopTrackEntity) {
-            activity?.startActivity(VideosActivity.startingIntent(activity!!, query = track.track.query))
+            activity?.startActivity(VideosListActivity.startingIntent(activity!!, query = track.track.query))
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        binding.viewState = viewModel.viewState
+        binding.viewState = mainViewModel.viewState
         binding.onTopTrackClickListener = onTopTrackClickListener
         return binding.root
     }
@@ -39,12 +39,12 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) {
-            viewModel.loadDashboardData(activity?.accessToken)
+            mainViewModel.loadDashboardData(activity?.accessToken)
         }
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DashboardViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(this, VMFactory).get(DashboardViewModel::class.java)
     }
 
     override fun initComponent() {

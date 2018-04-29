@@ -7,7 +7,7 @@
 
         <variable
             name="viewState"
-            type="com.example.there.findclips.videos.VideosViewState" />
+            type="com.example.there.findclips.videossearch.VideosSearchViewState" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.videos.VideosActivity">
+        android:background="@drawable/main_background_gradient"
+        tools:context="com.example.there.findclips.videoslist.VideosListActivity">
 
         <android.support.v7.widget.RecyclerView
             videos="@{viewState.videos}"

@@ -5,7 +5,7 @@ import com.example.there.domain.usecase.spotify.AccessTokenUseCase
 import com.example.there.domain.usecase.spotify.CategoriesUseCase
 import com.example.there.domain.usecase.spotify.DailyViralTracksUseCase
 import com.example.there.domain.usecase.spotify.FeaturedPlaylistsUseCase
-import com.example.there.findclips.dashboard.DashboardViewModelFactory
+import com.example.there.findclips.dashboard.DashboardVMFactory
 import com.example.there.findclips.util.AsyncTransformer
 import dagger.Module
 import dagger.Provides
@@ -27,6 +27,6 @@ class DashboardModule {
     fun dashboardViewModelFactory(accessTokenUseCase: AccessTokenUseCase,
                                   featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
                                   categoriesUseCase: CategoriesUseCase,
-                                  dailyViralTracksUseCase: DailyViralTracksUseCase): DashboardViewModelFactory =
-            DashboardViewModelFactory(accessTokenUseCase, featuredPlaylistsUseCase, categoriesUseCase, dailyViralTracksUseCase)
+                                  dailyViralTracksUseCase: DailyViralTracksUseCase): DashboardVMFactory =
+            DashboardVMFactory(accessTokenUseCase, featuredPlaylistsUseCase, categoriesUseCase, dailyViralTracksUseCase)
 }

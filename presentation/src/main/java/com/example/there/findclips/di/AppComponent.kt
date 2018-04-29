@@ -5,6 +5,7 @@ import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
 import com.example.there.findclips.di.modules.AppModule
+import com.example.there.findclips.di.modules.CommonUseCasesModule
 import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
@@ -18,7 +19,8 @@ import javax.inject.Singleton
 @Component(modules = [
     AppModule::class,
     NetworkModule::class,
-    DataModule::class
+    DataModule::class,
+    CommonUseCasesModule::class
 ])
 interface AppComponent {
     fun plus(dashboardModule: DashboardModule): DashboardSubComponent

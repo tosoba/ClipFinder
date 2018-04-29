@@ -5,12 +5,13 @@ import com.example.there.domain.usecase.spotify.AccessTokenUseCase
 import com.example.there.domain.usecase.spotify.CategoriesUseCase
 import com.example.there.domain.usecase.spotify.DailyViralTracksUseCase
 import com.example.there.domain.usecase.spotify.FeaturedPlaylistsUseCase
+import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.base.BaseViewModel
 
 class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
                          private val featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
                          private val categoriesUseCase: CategoriesUseCase,
-                         private val dailyViralTracksUseCase: DailyViralTracksUseCase) : BaseViewModel(accessTokenUseCase) {
+                         private val dailyViralTracksUseCase: DailyViralTracksUseCase) : BaseSpotifyViewModel(accessTokenUseCase) {
 
     val viewState: DashboardViewState = DashboardViewState()
 

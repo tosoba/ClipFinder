@@ -43,8 +43,4 @@ class DataModule {
                          videoMapper: VideoMapper,
                          channelThumbnailUrlMapper: ChannelThumbnailUrlMapper): VideosRepository =
             VideosRepositoryImpl(api, scraper, videoMapper, channelThumbnailUrlMapper)
-
-    @Provides
-    @Singleton
-    fun accessTokenUseCase(repository: SpotifyRepository): AccessTokenUseCase = AccessTokenUseCase(AsyncTransformer(), repository)
 }

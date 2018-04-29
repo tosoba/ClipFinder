@@ -8,6 +8,7 @@ import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
 import com.example.there.findclips.di.modules.AppModule
+import com.example.there.findclips.di.modules.CommonUseCasesModule
 import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
@@ -43,8 +44,8 @@ class FindClipsApp : Application() {
                         spotifyApiBaseUrl = getString(R.string.spotify_base_url),
                         accessTokenBaseUrl = getString(R.string.access_token_base_url),
                         spotifyChartsBaseUrl = getString(R.string.spotify_charts_base_url),
-                        youtubeBaseUrl = getString(R.string.youtube_base_url))
-                ).build()
+                        youtubeBaseUrl = getString(R.string.youtube_base_url)))
+                .commonUseCasesModule(CommonUseCasesModule()).build()
     }
 
     private var dashboardSubComponent: DashboardSubComponent? = null

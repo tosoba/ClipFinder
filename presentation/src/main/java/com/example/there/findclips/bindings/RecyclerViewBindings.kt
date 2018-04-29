@@ -4,22 +4,22 @@ import android.content.res.Configuration
 import android.databinding.BindingAdapter
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableList
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.example.there.domain.entities.spotify.CategoryEntity
 import com.example.there.domain.entities.spotify.PlaylistEntity
 import com.example.there.domain.entities.spotify.TopTrackEntity
-import com.example.there.domain.entities.videos.VideoEntity
+import com.example.there.findclips.R
 import com.example.there.findclips.dashboard.lists.CategoriesListAdapter
 import com.example.there.findclips.dashboard.lists.PlaylistsListAdapter
 import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.dashboard.lists.toptracks.TopTracksListAdapter
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.util.ItemClickSupport
+import com.example.there.findclips.util.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
-import com.example.there.findclips.videos.VideosAdapter
+import com.example.there.findclips.videoslist.VideosListAdapter
 
 
 fun <T> makeOnListChangedCallback(recycler: RecyclerView): ObservableList.OnListChangedCallback<ObservableArrayList<T>> =
@@ -81,14 +81,13 @@ fun bindOnTopTrackClickListener(recycler: RecyclerView, listener: TopTrackItemCl
 fun bindVideos(recycler: RecyclerView, videos: ObservableArrayList<Video>) {
     if (recycler.context.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
         recycler.layoutManager = GridLayoutManager(recycler.context, 2, GridLayoutManager.VERTICAL, false)
-        recycler.addItemDecoration(DividerItemDecoration(recycler.context, RecyclerView.HORIZONTAL))
     } else {
         recycler.layoutManager = LinearLayoutManager(recycler.context, LinearLayoutManager.VERTICAL, false)
     }
 
-    recycler.addItemDecoration(DividerItemDecoration(recycler.context, RecyclerView.VERTICAL))
+    recycler.addItemDecoration(SeparatorDecoration(recycler.context, recycler.context.resources.getColor(R.color.colorAccent), 2f))
 
     videos.addOnListChangedCallback(makeOnListChangedCallback<Video>(recycler))
-    recycler.adapter = VideosAdapter(videos)
+    recycler.adapter = VideosListAdapter(videos)
 }
 

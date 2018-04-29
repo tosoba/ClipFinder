@@ -1,7 +1,7 @@
 package com.example.there.findclips.di.search
 
 import com.example.there.domain.usecase.spotify.AccessTokenUseCase
-import com.example.there.findclips.search.SearchViewModelFactory
+import com.example.there.findclips.spotifysearch.SpotifySearchVMFactory
 import dagger.Module
 import dagger.Provides
 
@@ -10,5 +10,5 @@ import dagger.Provides
 class SearchModule {
 
     @Provides
-    fun searchViewModelFactory(accessTokenUseCase: AccessTokenUseCase): SearchViewModelFactory = SearchViewModelFactory(accessTokenUseCase)
+    fun searchViewModelFactory(accessTokenUseCase: AccessTokenUseCase): SpotifySearchVMFactory = SpotifySearchVMFactory(accessTokenUseCase)
 }

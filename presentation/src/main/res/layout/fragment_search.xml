@@ -1,13 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.there.findclips.search.SearchFragment">
+<layout>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="videosViewState"
+            type="com.example.there.findclips.videossearch.VideosSearchViewState" />
+
+        <variable
+            name="spotifyViewState"
+            type="com.example.there.findclips.spotifysearch.SpotifySearchViewState" />
+
+        <variable
+            name="searchViewState"
+            type="com.example.there.findclips.search.SearchViewState" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Search" />
+        tools:context="com.example.there.findclips.search.SearchFragment">
 
-</FrameLayout>
+        <fragment
+            android:id="@+id/search_view_fragment"
+            android:name="com.example.there.findclips.searchview.SearchViewFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            videos="@{videosViewState.videos}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{searchViewState.spinnerSelection == 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_view_fragment" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{(videosViewState.videosLoadingInProgress &amp;&amp; searchViewState.spinnerSelection == 1) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
