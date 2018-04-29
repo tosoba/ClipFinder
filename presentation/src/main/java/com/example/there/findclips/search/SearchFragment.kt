@@ -5,14 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSearchBinding
-import com.example.there.findclips.searchview.SearchViewFragment
 import com.example.there.findclips.spotifysearch.SpotifySearchVMFactory
 import com.example.there.findclips.spotifysearch.SpotifySearchViewModel
 import com.example.there.findclips.util.app
@@ -32,28 +28,27 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>() {
 
     private lateinit var videosSearchViewModel: VideosSearchViewModel
 
-    private val searchViewFragment: SearchViewFragment? by lazy {
-        childFragmentManager.findFragmentById(R.id.search_view_fragment) as? SearchViewFragment
-    }
+    private val onQuerySearchListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            query?.let {
+                if (shouldSearchYoutube(query)) {
+                    videosSearchViewModel.getVideos(query)
+                    videosSearchViewModel.viewState.videos.clear()
+                } else if (shouldSearchSpotify(query)) {
 
-    private var previousQuery: String = ""
-
-    private val onSearchListener = object : SearchViewFragment.OnSearchListener {
-        override fun onSearch(query: String) {
-            if (shouldSearchYoutube(query)) {
-                videosSearchViewModel.getVideos(query)
-                videosSearchViewModel.viewState.videos.clear()
-            } else if (shouldSearchSpotify(query)) {
-
+                }
             }
+            return false
         }
 
-        private fun shouldSearchYoutube(query: String): Boolean {
-            return searchViewState.spinnerSelection.get() == 1 && query != previousQuery && query.isNotBlank()
+        override fun onQueryTextChange(newText: String?): Boolean = true
+
+        fun shouldSearchYoutube(query: String): Boolean {
+            return searchViewState.spinnerSelection.get() == 1 && query != searchViewState.lastQuery && query.isNotBlank()
         }
 
-        private fun shouldSearchSpotify(query: String): Boolean {
-            return searchViewState.spinnerSelection.get() == 0 && query != previousQuery && query.isNotBlank()
+        fun shouldSearchSpotify(query: String): Boolean {
+            return searchViewState.spinnerSelection.get() == 0 && query != searchViewState.lastQuery && query.isNotBlank()
         }
     }
 
@@ -62,6 +57,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>() {
         binding.videosViewState = videosSearchViewModel.viewState
         binding.spotifyViewState = mainViewModel.viewState
         binding.searchViewState = searchViewState
+        binding.onQueryTextListener = onQuerySearchListener
         return binding.root
     }
 
@@ -71,20 +67,13 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>() {
         initFromSavedState(savedInstanceState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        searchViewFragment?.onSearchListener = onSearchListener
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putParcelable(KEY_SEARCH_VIEW_STATE, searchViewState)
-        outState.putString(KEY_PREVIOUS_QUERY, previousQuery)
     }
 
     private fun initFromSavedState(savedInstanceState: Bundle?) {
         searchViewState = savedInstanceState?.getParcelable(KEY_SEARCH_VIEW_STATE) ?: SearchViewState()
-        previousQuery = savedInstanceState?.getString(KEY_PREVIOUS_QUERY) ?: ""
     }
 
     private var searchViewState: SearchViewState = SearchViewState()
@@ -96,7 +85,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>() {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             searchViewState.spinnerSelection.set(position)
-            searchViewFragment?.setQueryHint("Search ${menuItems[position]}")
+            searchViewState.updateQueryHint(position)
         }
     }
 
@@ -141,6 +130,5 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>() {
         private val menuItems = arrayOf("Spotify", "Youtube")
 
         private const val KEY_SEARCH_VIEW_STATE = "KEY_SEARCH_VIEW_STATE"
-        private const val KEY_PREVIOUS_QUERY = "KEY_PREVIOUS_QUERY"
     }
 }

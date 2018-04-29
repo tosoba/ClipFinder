@@ -13,7 +13,6 @@ class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
-
     fun getVideos(query: String) {
         viewState.videosLoadingInProgress.set(true)
 
