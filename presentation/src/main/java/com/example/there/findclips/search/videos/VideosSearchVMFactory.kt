@@ -1,4 +1,4 @@
-package com.example.there.findclips.videossearch
+package com.example.there.findclips.search.videos
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

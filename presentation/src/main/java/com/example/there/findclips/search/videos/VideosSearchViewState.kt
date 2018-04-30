@@ -1,4 +1,4 @@
-package com.example.there.findclips.videossearch
+package com.example.there.findclips.search.videos
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField

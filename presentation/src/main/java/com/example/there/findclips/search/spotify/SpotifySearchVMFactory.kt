@@ -1,4 +1,4 @@
-package com.example.there.findclips.spotifysearch
+package com.example.there.findclips.search.spotify
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

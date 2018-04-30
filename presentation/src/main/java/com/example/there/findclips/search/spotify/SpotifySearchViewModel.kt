@@ -1,4 +1,4 @@
-package com.example.there.findclips.spotifysearch
+package com.example.there.findclips.search.spotify
 
 import com.example.there.domain.usecase.spotify.AccessTokenUseCase
 import com.example.there.findclips.base.BaseSpotifyViewModel

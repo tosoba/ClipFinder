@@ -6,11 +6,11 @@
 
         <variable
             name="videosViewState"
-            type="com.example.there.findclips.videossearch.VideosSearchViewState" />
+            type="com.example.there.findclips.search.videos.VideosSearchViewState" />
 
         <variable
             name="spotifyViewState"
-            type="com.example.there.findclips.spotifysearch.SpotifySearchViewState" />
+            type="com.example.there.findclips.search.spotify.SpotifySearchViewState" />
 
         <variable
             name="searchViewState"
@@ -33,7 +33,6 @@
             onQueryTextListener="@{onQueryTextListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
             android:queryHint="@{searchViewState.queryHint}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

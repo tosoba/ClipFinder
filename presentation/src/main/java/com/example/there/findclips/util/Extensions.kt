@@ -3,10 +3,13 @@ package com.example.there.findclips.util
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.app.Fragment
 import android.widget.EditText
 import android.widget.SearchView
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
+import com.example.there.findclips.main.MainActivity
+import com.example.there.findclips.main.MainRouter
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
 import java.math.BigInteger
@@ -95,3 +98,9 @@ fun SearchView.setTextColors(textColor: Int = Color.WHITE, hintTextColor: Int = 
     searchEditText.setTextColor(textColor)
     searchEditText.setHintTextColor(hintTextColor)
 }
+
+val Fragment.mainActivity: MainActivity?
+    get() = activity as? MainActivity
+
+val Fragment.mainRouter: MainRouter?
+    get() = mainActivity?.router

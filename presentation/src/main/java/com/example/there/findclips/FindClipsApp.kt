@@ -13,8 +13,6 @@ import com.example.there.findclips.di.modules.DataModule
 import com.example.there.findclips.di.modules.NetworkModule
 import com.example.there.findclips.di.search.SearchModule
 import com.example.there.findclips.di.search.SearchSubComponent
-import com.example.there.findclips.di.videos.VideosModule
-import com.example.there.findclips.di.videos.VideosSubComponent
 import com.squareup.leakcanary.LeakCanary
 
 class FindClipsApp : Application() {
@@ -76,15 +74,5 @@ class FindClipsApp : Application() {
 
     fun releaseSearchComponent() {
         searchSubComponent = null
-    }
-
-    private var videosComponent: VideosSubComponent? = null
-    fun createVideosComponent(): VideosSubComponent {
-        videosComponent = appComponent.plus(VideosModule())
-        return videosComponent!!
-    }
-
-    fun releaseVideosComponent() {
-        videosComponent = null
     }
 }

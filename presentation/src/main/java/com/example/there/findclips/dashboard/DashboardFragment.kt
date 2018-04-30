@@ -1,6 +1,5 @@
 package com.example.there.findclips.dashboard
 
-
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -12,20 +11,27 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.databinding.FragmentDashboardBinding
+import com.example.there.findclips.main.MainActivity
+import com.example.there.findclips.main.MainFragment
+import com.example.there.findclips.main.MainRouter
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
-import com.example.there.findclips.videoslist.VideosListActivity
+import com.example.there.findclips.util.mainActivity
+import com.example.there.findclips.util.mainRouter
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragment {
+
+    override val bottomNavigationItemId: Int
+        get() = R.id.action_dashboard
 
     @Inject
-    lateinit var VMFactory: DashboardVMFactory
+    lateinit var vmFactory: DashboardVMFactory
 
     private val onTopTrackClickListener = object : TopTrackItemClickListener {
         override fun onClick(track: TopTrackEntity) {
-            activity?.startActivity(VideosListActivity.startingIntent(activity!!, query = track.track.query))
+            mainRouter?.goToSearchFragmentWithVideosQuery(mainActivity!!, query = track.track.query)
         }
     }
 
@@ -44,7 +50,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
     }
 
     override fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, VMFactory).get(DashboardViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
     }
 
     override fun initComponent() {

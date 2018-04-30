@@ -8,7 +8,8 @@ data class SearchViewState(val spinnerSelection: ObservableField<Int> = Observab
                            val lastQuery: String = "",
                            val queryHint: ObservableField<String> = ObservableField("Search Spotify")) : Parcelable {
 
-    fun updateQueryHint(position: Int) {
+    fun setSpinnerSelection(position: Int) {
+        spinnerSelection.set(position)
         if (position == 0) {
             queryHint.set(SEARCH_SPOTIFY)
         } else if (position == 1) {
@@ -33,7 +34,7 @@ data class SearchViewState(val spinnerSelection: ObservableField<Int> = Observab
 
         override fun newArray(size: Int): Array<SearchViewState?> = arrayOfNulls(size)
 
-        private const val SEARCH_SPOTIFY = "Search Spotify"
-        private const val SEARCH_YOUTUBE = "Search Youtube"
+        const val SEARCH_SPOTIFY = "Search Spotify"
+        const val SEARCH_YOUTUBE = "Search Youtube"
     }
 }

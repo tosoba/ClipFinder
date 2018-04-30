@@ -1,4 +1,4 @@
-package com.example.there.findclips.videossearch
+package com.example.there.findclips.search.videos
 
 import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.videos.VideoEntity
