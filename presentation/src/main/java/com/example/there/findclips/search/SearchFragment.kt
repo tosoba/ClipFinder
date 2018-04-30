@@ -5,12 +5,15 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
+import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.view.*
 import android.widget.*
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSearchBinding
 import com.example.there.findclips.main.MainFragment
+import com.example.there.findclips.search.spotify.SpotifyFragmentStatePagerAdapter
 import com.example.there.findclips.search.spotify.SpotifySearchVMFactory
 import com.example.there.findclips.search.spotify.SpotifySearchViewModel
 import com.example.there.findclips.util.app
@@ -59,12 +62,37 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
         }
     }
 
+    private val onSpotifyTabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+        override fun onTabSelected(tab: TabLayout.Tab?) {
+            tab?.let { spotify_tab_view_pager?.currentItem = it.position }
+        }
+    }
+
+    private val onSpotifyPageSelectedListener = object : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) = Unit
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+
+        override fun onPageSelected(position: Int) {
+            spotify_tab_layout.getTabAt(position)?.select()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        binding.videosViewState = videosSearchViewModel.viewState
-        binding.spotifyViewState = mainViewModel.viewState
-        binding.searchViewState = searchViewState
-        binding.onQueryTextListener = onQuerySearchListener
+        with(binding) {
+            videosViewState = videosSearchViewModel.viewState
+            spotifyViewState = mainViewModel.viewState
+            searchViewState = this@SearchFragment.searchViewState
+            onQueryTextListener = onQuerySearchListener
+            onTabSelectedListener = onSpotifyTabSelectedListener
+            pagerAdapter = SpotifyFragmentStatePagerAdapter(childFragmentManager)
+            onPageChangeListener = onSpotifyPageSelectedListener
+        }
         return binding.root
     }
 

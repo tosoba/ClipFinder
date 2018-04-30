@@ -8,6 +8,8 @@ data class SearchViewState(val spinnerSelection: ObservableField<Int> = Observab
                            val lastQuery: String = "",
                            val queryHint: ObservableField<String> = ObservableField("Search Spotify")) : Parcelable {
 
+    val spotifyFragmentTabs = arrayOf("Albums", "Artists", "Playlists", "Tracks")
+
     fun setSpinnerSelection(position: Int) {
         spinnerSelection.set(position)
         if (position == 0) {

@@ -17,7 +17,4 @@
     <string name="featured_playlists">Featured playlists</string>
     <string name="top_tracks">Top tracks</string>
     <string name="youtube">YouTube</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank dashboardFragment</string>
 </resources>
