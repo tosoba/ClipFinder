@@ -1,4 +1,4 @@
-package com.example.there.findclips.videoslist
+package com.example.there.findclips.search.videos
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView

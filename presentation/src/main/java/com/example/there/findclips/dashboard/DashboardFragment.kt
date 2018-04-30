@@ -11,13 +11,11 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener
 import com.example.there.findclips.databinding.FragmentDashboardBinding
-import com.example.there.findclips.main.MainActivity
 import com.example.there.findclips.main.MainFragment
 import com.example.there.findclips.main.MainRouter
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.mainActivity
-import com.example.there.findclips.util.mainRouter
 import javax.inject.Inject
 
 
@@ -31,7 +29,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
 
     private val onTopTrackClickListener = object : TopTrackItemClickListener {
         override fun onClick(track: TopTrackEntity) {
-            mainRouter?.goToSearchFragmentWithVideosQuery(mainActivity!!, query = track.track.query)
+            MainRouter.goToSearchFragmentWithVideosQuery(mainActivity, query = track.track.query)
         }
     }
 

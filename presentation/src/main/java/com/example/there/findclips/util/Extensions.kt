@@ -9,7 +9,6 @@ import android.widget.SearchView
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.main.MainActivity
-import com.example.there.findclips.main.MainRouter
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
 import java.math.BigInteger
@@ -101,6 +100,3 @@ fun SearchView.setTextColors(textColor: Int = Color.WHITE, hintTextColor: Int = 
 
 val Fragment.mainActivity: MainActivity?
     get() = activity as? MainActivity
-
-val Fragment.mainRouter: MainRouter?
-    get() = mainActivity?.router

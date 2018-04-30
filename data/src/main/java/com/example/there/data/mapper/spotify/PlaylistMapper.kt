@@ -4,11 +4,8 @@ import com.example.there.data.entities.spotify.PlaylistData
 import com.example.there.data.util.firstIconUrlOrDefault
 import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.spotify.PlaylistEntity
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PlaylistMapper @Inject constructor() : Mapper<PlaylistData, PlaylistEntity>() {
+object PlaylistMapper : Mapper<PlaylistData, PlaylistEntity>() {
     override fun mapFrom(from: PlaylistData): PlaylistEntity = PlaylistEntity(
             id = from.id,
             name = from.name,

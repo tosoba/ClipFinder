@@ -19,7 +19,7 @@ import com.example.there.findclips.entities.Video
 import com.example.there.findclips.util.ItemClickSupport
 import com.example.there.findclips.util.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
-import com.example.there.findclips.videoslist.VideosListAdapter
+import com.example.there.findclips.search.videos.VideosListAdapter
 
 
 fun <T> makeOnListChangedCallback(recycler: RecyclerView): ObservableList.OnListChangedCallback<ObservableArrayList<T>> =

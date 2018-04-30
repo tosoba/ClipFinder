@@ -1,15 +1,13 @@
 package com.example.there.findclips.search.videos
 
-import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrlsUseCase
 import com.example.there.domain.usecase.videos.SearchVideosUseCase
 import com.example.there.findclips.base.BaseViewModel
-import com.example.there.findclips.entities.Video
+import com.example.there.findclips.mappers.VideoEntityMapper
 
 class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase,
-                            private val getChannelsThumbnailUrlsUseCase: GetChannelsThumbnailUrlsUseCase,
-                            private val videoEntityMapper: Mapper<VideoEntity, Video>) : BaseViewModel() {
+                            private val getChannelsThumbnailUrlsUseCase: GetChannelsThumbnailUrlsUseCase) : BaseViewModel() {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
@@ -19,7 +17,7 @@ class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase
         addDisposable(searchVideosUseCase.getVideos(query)
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
                 .subscribe({
-                    viewState.videos.addAll(it.map(videoEntityMapper::mapFrom))
+                    viewState.videos.addAll(it.map(VideoEntityMapper::mapFrom))
                     getChannelThumbnails(it)
                 }, this::onError))
     }

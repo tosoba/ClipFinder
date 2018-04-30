@@ -4,25 +4,19 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
-import com.example.there.findclips.dashboard.DashboardFragment
-import com.example.there.findclips.favourites.FavouritesFragment
-import com.example.there.findclips.search.SearchFragment
-import com.squareup.haha.perflib.Main
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val router: MainRouter = MainRouter
-
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         if (item.itemId == bottom_navigation_view.selectedItemId) {
             return@OnNavigationItemSelectedListener false
         }
 
         when (item.itemId) {
-            R.id.action_dashboard -> router.goToDashboardFragment(this)
-            R.id.action_favorites -> router.goToFavouritesFragment(this)
-            R.id.action_search -> router.goToSearchFragment(this)
+            R.id.action_dashboard -> MainRouter.goToDashboardFragment(this)
+            R.id.action_favorites -> MainRouter.goToFavouritesFragment(this)
+            R.id.action_search -> MainRouter.goToSearchFragment(this)
         }
 
         return@OnNavigationItemSelectedListener true
@@ -33,10 +27,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            router.goToDashboardFragment(this)
+            MainRouter.goToDashboardFragment(this)
         }
 
-        bottom_navigation_view.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        bottom_navigation_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
     fun updateBottomNavigationSelectedItemId(id: Int) {

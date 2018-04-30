@@ -5,11 +5,8 @@ import com.example.there.data.util.secondIconUrlOrDefault
 import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.spotify.TrackArtistEntity
 import com.example.there.domain.entities.spotify.TrackEntity
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class TrackMapper @Inject constructor() : Mapper<TrackData, TrackEntity>() {
+object TrackMapper : Mapper<TrackData, TrackEntity>() {
     override fun mapFrom(from: TrackData): TrackEntity = TrackEntity(
             id = from.id,
             name = from.name,

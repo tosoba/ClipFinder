@@ -8,37 +8,35 @@ import com.example.there.findclips.search.SearchFragment
 
 object MainRouter {
 
-    fun goToDashboardFragment(activity: MainActivity) {
+    fun goToDashboardFragment(activity: MainActivity?) {
         val dashboardFragment = DashboardFragment()
         goToFragment(activity, dashboardFragment, MainFragmentTags.dashboard)
         updateBottomNavigationSelectedItemId(activity, dashboardFragment)
     }
 
-    fun goToFavouritesFragment(activity: MainActivity) {
+    fun goToFavouritesFragment(activity: MainActivity?) {
         val favouritesFragment = FavouritesFragment()
         goToFragment(activity, favouritesFragment, MainFragmentTags.favourites)
         updateBottomNavigationSelectedItemId(activity, favouritesFragment)
     }
 
-    fun goToSearchFragment(activity: MainActivity) {
+    fun goToSearchFragment(activity: MainActivity?) {
         val searchFragment = SearchFragment()
         goToFragment(activity, searchFragment, MainFragmentTags.search)
         updateBottomNavigationSelectedItemId(activity, searchFragment)
     }
 
-    fun goToSearchFragmentWithVideosQuery(activity: MainActivity, query: String) {
+    fun goToSearchFragmentWithVideosQuery(activity: MainActivity?, query: String) {
         val searchFragment = SearchFragment.newInstanceVideosSearch(query)
         goToFragment(activity, searchFragment, MainFragmentTags.search)
         updateBottomNavigationSelectedItemId(activity, searchFragment)
     }
 
-    private fun goToFragment(activity: MainActivity, fragment: Fragment, tag: String) {
-        activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment, tag)
-                .commit()
+    private fun goToFragment(activity: MainActivity?, fragment: Fragment, tag: String) {
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, fragment, tag)?.commit()
     }
 
-    private fun updateBottomNavigationSelectedItemId(activity: MainActivity, fragment: MainFragment) {
-        activity.updateBottomNavigationSelectedItemId(fragment.bottomNavigationItemId)
+    private fun updateBottomNavigationSelectedItemId(activity: MainActivity?, fragment: MainFragment) {
+        activity?.updateBottomNavigationSelectedItemId(fragment.bottomNavigationItemId)
     }
 }

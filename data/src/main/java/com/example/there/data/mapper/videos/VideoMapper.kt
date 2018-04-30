@@ -6,11 +6,8 @@ import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.util.Duration
 import java.math.BigInteger
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class VideoMapper @Inject constructor() : Mapper<VideoData, VideoEntity>() {
+object VideoMapper : Mapper<VideoData, VideoEntity>() {
     override fun mapFrom(from: VideoData): VideoEntity = VideoEntity(
             id = from.id,
             channelId = from.snippet.channelId,
