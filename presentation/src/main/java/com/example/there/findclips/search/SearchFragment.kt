@@ -9,9 +9,12 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.view.*
 import android.widget.*
+import android.widget.SearchView
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSearchBinding
+import com.example.there.findclips.entities.Video
+import com.example.there.findclips.lists.VideosList
 import com.example.there.findclips.main.MainFragment
 import com.example.there.findclips.search.spotify.SpotifyFragmentStatePagerAdapter
 import com.example.there.findclips.search.spotify.SpotifySearchVMFactory
@@ -84,6 +87,12 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
         }
     }
 
+    private val videoItemClickListener = object : VideosList.OnItemClickListener {
+        override fun onClick(item: Video) {
+
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         with(binding) {
@@ -94,6 +103,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
             onTabSelectedListener = onSpotifyTabSelectedListener
             pagerAdapter = SpotifyFragmentStatePagerAdapter(childFragmentManager)
             onPageChangeListener = onSpotifyPageSelectedListener
+            videosAdapter = VideosList.Adapter(videosSearchViewModel.viewState.videos, R.layout.video_item, videoItemClickListener)
         }
         return binding.root
     }

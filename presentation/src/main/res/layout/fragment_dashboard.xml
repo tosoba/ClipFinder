@@ -5,12 +5,20 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewState"
-            type="com.example.there.findclips.dashboard.DashboardViewState" />
+            name="categoriesAdapter"
+            type="com.example.there.findclips.lists.CategoriesList.Adapter"/>
 
         <variable
-            name="onTopTrackClickListener"
-            type="com.example.there.findclips.dashboard.lists.toptracks.TopTrackItemClickListener" />
+            name="playlistsAdapter"
+            type="com.example.there.findclips.lists.PlaylistsList.Adapter"/>
+
+        <variable
+            name="topTracksAdapter"
+            type="com.example.there.findclips.lists.TopTracksList.Adapter"/>
+
+        <variable
+            name="viewState"
+            type="com.example.there.findclips.dashboard.DashboardViewState" />
     </data>
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,7 +45,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/genres_recycler_view"
                 style="@style/HorizontalGridRecyclerViewSpan2"
-                categories="@{viewState.categories}"
+                categoriesAdapter="@{categoriesAdapter}"
                 android:layout_width="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -65,7 +73,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/featured_playlists_recyclerview"
                 style="@style/HorizontalGridRecyclerViewSpan2"
-                featuredPlaylists="@{viewState.featuredPlaylists}"
+                playlistsAdapter="@{playlistsAdapter}"
                 android:layout_width="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -92,8 +100,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/top_tracks_recyclerview"
-                topTracks="@{viewState.topTracks}"
-                onTopTrackClickListener="@{onTopTrackClickListener}"
+                topTracksAdapter="@{topTracksAdapter}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"

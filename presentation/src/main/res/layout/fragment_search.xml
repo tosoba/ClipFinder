@@ -31,6 +31,10 @@
         <variable
             name="onPageChangeListener"
             type="android.support.v4.view.ViewPager.OnPageChangeListener" />
+
+        <variable
+            name="videosAdapter"
+            type="com.example.there.findclips.lists.VideosList.Adapter" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -78,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@id/search_view" />
 
         <android.support.v7.widget.RecyclerView
-            videos="@{videosViewState.videos}"
+            videosAdapter="@{videosAdapter}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="@{searchViewState.spinnerSelection == 1 ? View.VISIBLE : View.GONE}"
