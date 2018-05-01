@@ -5,36 +5,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="videosViewState"
-            type="com.example.there.findclips.search.videos.VideosSearchViewState" />
-
-        <variable
-            name="spotifyViewState"
-            type="com.example.there.findclips.search.spotify.SpotifySearchViewState" />
-
-        <variable
-            name="searchViewState"
-            type="com.example.there.findclips.search.SearchViewState" />
-
-        <variable
-            name="onQueryTextListener"
-            type="android.widget.SearchView.OnQueryTextListener" />
-
-        <variable
-            name="onTabSelectedListener"
-            type="android.support.design.widget.TabLayout.OnTabSelectedListener" />
-
-        <variable
-            name="pagerAdapter"
-            type="android.support.v4.app.FragmentStatePagerAdapter" />
-
-        <variable
-            name="onPageChangeListener"
-            type="android.support.v4.view.ViewPager.OnPageChangeListener" />
-
-        <variable
-            name="videosAdapter"
-            type="com.example.there.findclips.lists.VideosList.Adapter" />
+            name="searchFragmentView"
+            type="com.example.there.findclips.search.SearchFragmentView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -46,14 +18,14 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/spotify_tab_layout"
-            onTabSelectedListener="@{onTabSelectedListener}"
-            tabs="@{searchViewState.spotifyFragmentTabs}"
+            onTabSelectedListener="@{searchFragmentView.onTabSelectedListener}"
+            tabs="@{searchFragmentView.state.spotifyFragmentTabs}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:visibility="@{searchViewState.spinnerSelection == 0 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{searchFragmentView.state.spinnerSelection == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,31 +33,33 @@
 
         <SearchView
             android:id="@+id/search_view"
-            onQueryTextListener="@{onQueryTextListener}"
+            onQueryTextListener="@{searchFragmentView.onQueryTextListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:queryHint="@{searchViewState.queryHint}"
+            android:queryHint="@{searchFragmentView.state.queryHint}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spotify_tab_layout" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/spotify_tab_view_pager"
-            onPageChangeListener="@{onPageChangeListener}"
+            onPageChangeListener="@{searchFragmentView.onPageChangeListener}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:adapter="@{pagerAdapter}"
-            android:visibility="@{searchViewState.spinnerSelection == 0 ? View.VISIBLE : View.GONE}"
+            android:adapter="@{searchFragmentView.pagerAdapter}"
+            android:visibility="@{searchFragmentView.state.spinnerSelection == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_view" />
 
         <android.support.v7.widget.RecyclerView
-            videosAdapter="@{videosAdapter}"
+            itemDecoration="@{searchFragmentView.videosItemDecoration}"
+            layoutManager="@{searchFragmentView.videosLayoutManager}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="@{searchViewState.spinnerSelection == 1 ? View.VISIBLE : View.GONE}"
+            android:adapter="@{searchFragmentView.videosAdapter}"
+            android:visibility="@{searchFragmentView.state.spinnerSelection == 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -94,7 +68,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{(videosViewState.videosLoadingInProgress &amp;&amp; searchViewState.spinnerSelection == 1) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{(searchFragmentView.videosSearchViewState.videosLoadingInProgress &amp;&amp; searchFragmentView.state.spinnerSelection == 1) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

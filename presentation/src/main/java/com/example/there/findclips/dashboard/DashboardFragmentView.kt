@@ -5,7 +5,7 @@ import com.example.there.findclips.lists.CategoriesList
 import com.example.there.findclips.lists.PlaylistsList
 import com.example.there.findclips.lists.TopTracksList
 
-data class DashboardView(
+data class DashboardFragmentView(
         val state: DashboardViewState,
         val categoriesAdapter: CategoriesList.Adapter,
         val categoriesLayoutManager: RecyclerView.LayoutManager,

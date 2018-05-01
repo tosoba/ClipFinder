@@ -2,11 +2,14 @@ package com.example.there.findclips.search
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.*
 import android.widget.SearchView
@@ -19,12 +22,9 @@ import com.example.there.findclips.main.MainFragment
 import com.example.there.findclips.search.spotify.SpotifyFragmentStatePagerAdapter
 import com.example.there.findclips.search.spotify.SpotifySearchVMFactory
 import com.example.there.findclips.search.spotify.SpotifySearchViewModel
-import com.example.there.findclips.util.app
-import com.example.there.findclips.util.messageOrDefault
 import com.example.there.findclips.search.videos.VideosSearchVMFactory
 import com.example.there.findclips.search.videos.VideosSearchViewModel
-import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.setTextColors
+import com.example.there.findclips.util.*
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
@@ -77,7 +77,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
         }
     }
 
-    private val onSpotifyPageSelectedListener = object : ViewPager.OnPageChangeListener {
+    private val onSpotifyPageChangedListener = object : ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) = Unit
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
@@ -93,18 +93,27 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
         }
     }
 
+    private val view: SearchFragmentView
+        get() = SearchFragmentView(
+                state = searchViewState,
+                videosSearchViewState = videosSearchViewModel.viewState,
+                spotifySearchViewState = mainViewModel.viewState,
+                videosAdapter = VideosList.Adapter(videosSearchViewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
+                videosLayoutManager = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+                } else {
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                },
+                videosItemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f),
+                pagerAdapter = SpotifyFragmentStatePagerAdapter(childFragmentManager),
+                onQueryTextListener = onQuerySearchListener,
+                onTabSelectedListener = onSpotifyTabSelectedListener,
+                onPageChangeListener = onSpotifyPageChangedListener
+        )
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
-        with(binding) {
-            videosViewState = videosSearchViewModel.viewState
-            spotifyViewState = mainViewModel.viewState
-            searchViewState = this@SearchFragment.searchViewState
-            onQueryTextListener = onQuerySearchListener
-            onTabSelectedListener = onSpotifyTabSelectedListener
-            pagerAdapter = SpotifyFragmentStatePagerAdapter(childFragmentManager)
-            onPageChangeListener = onSpotifyPageSelectedListener
-            videosAdapter = VideosList.Adapter(videosSearchViewModel.viewState.videos, R.layout.video_item, videoItemClickListener)
-        }
+        binding.searchFragmentView = view
         return binding.root
     }
 

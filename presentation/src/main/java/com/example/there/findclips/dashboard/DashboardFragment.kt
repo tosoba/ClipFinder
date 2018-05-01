@@ -3,6 +3,8 @@ package com.example.there.findclips.dashboard
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,12 +49,20 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
         }
     }
 
+    private val view: DashboardFragmentView
+        get() = DashboardFragmentView(
+                state = mainViewModel.viewState,
+                categoriesAdapter = CategoriesList.Adapter(mainViewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
+                categoriesLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false),
+                playlistsAdapter = PlaylistsList.Adapter(mainViewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener),
+                playlistsLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false),
+                topTracksAdapter = TopTracksList.Adapter(mainViewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener),
+                topTracksLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        )
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        binding.viewState = mainViewModel.viewState
-        binding.categoriesAdapter = CategoriesList.Adapter(mainViewModel.viewState.categories, R.layout.category_item, categoryItemClickListener)
-        binding.playlistsAdapter = PlaylistsList.Adapter(mainViewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener)
-        binding.topTracksAdapter = TopTracksList.Adapter(mainViewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener)
+        binding.dashboardFragmentView = view
         return binding.root
     }
 
