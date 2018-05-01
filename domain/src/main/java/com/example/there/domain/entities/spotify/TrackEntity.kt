@@ -6,7 +6,7 @@ data class TrackEntity(
         val iconUrl: String,
         val albumId: String,
         val albumName: String,
-        val artists: List<TrackArtistEntity>
+        val artists: List<SimpleArtistEntity>
 ) {
     val artistNamesText: String
         get() = artists.joinToString(separator = ", ") { it.name }
@@ -15,7 +15,3 @@ data class TrackEntity(
         get() = "$name $albumName"
 }
 
-data class TrackArtistEntity(
-        val id: String,
-        val name: String
-)

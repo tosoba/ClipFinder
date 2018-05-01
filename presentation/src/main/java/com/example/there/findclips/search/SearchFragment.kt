@@ -20,6 +20,7 @@ import com.example.there.findclips.util.app
 import com.example.there.findclips.util.messageOrDefault
 import com.example.there.findclips.search.videos.VideosSearchVMFactory
 import com.example.there.findclips.search.videos.VideosSearchViewModel
+import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.setTextColors
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
@@ -45,7 +46,8 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
                     videosSearchViewModel.getVideos(it)
                     videosSearchViewModel.viewState.videos.clear()
                 } else if (shouldSearchSpotify(it)) {
-
+                    mainViewModel.searchAll(activity?.accessToken, it)
+                    mainViewModel.viewState.clearAll()
                 }
             }
             return false
@@ -106,8 +108,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
     private fun initFromArguments() {
         arguments?.let {
             if (it.containsKey(ARG_YOUTUBE_QUERY)) {
-                searchViewState = SearchViewState(
-                        spinnerSelection = ObservableField(1),
+                searchViewState = SearchViewState(spinnerSelection = ObservableField(1),
                         queryHint = ObservableField(SearchViewState.SEARCH_YOUTUBE))
                 videosSearchViewModel.getVideos(query = it.getString(ARG_YOUTUBE_QUERY))
             } // else if (it.contains(ARG_SPOTIFY_PLAYLIST...) ...

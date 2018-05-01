@@ -13,4 +13,6 @@ interface SpotifyRepository {
     fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity>
 
     fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
+
+    fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
 }

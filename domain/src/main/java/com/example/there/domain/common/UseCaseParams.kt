@@ -11,4 +11,6 @@ object UseCaseParams {
     const val PARAM_VIDEO_QUERY = "PARAM_VIDEO_QUERY"
 
     const val PARAM_VIDEOS = "PARAM_VIDEOS"
+
+    const val PARAM_SEARCH_ALL_QUERY = "PARAM_SEARCH_ALL_QUERY"
 }

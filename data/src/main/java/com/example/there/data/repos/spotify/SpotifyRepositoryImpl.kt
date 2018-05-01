@@ -29,4 +29,7 @@ class SpotifyRepositoryImpl(api: SpotifyApi,
 
     override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> =
             remoteSpotifyDataStore.getDailyViralTracks(accessToken)
+
+    override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
+            remoteSpotifyDataStore.searchAll(accessToken, query)
 }
