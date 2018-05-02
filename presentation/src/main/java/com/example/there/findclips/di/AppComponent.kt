@@ -4,12 +4,11 @@ import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
-import com.example.there.findclips.di.modules.AppModule
-import com.example.there.findclips.di.modules.CommonUseCasesModule
-import com.example.there.findclips.di.modules.DataModule
-import com.example.there.findclips.di.modules.NetworkModule
-import com.example.there.findclips.di.search.SearchModule
-import com.example.there.findclips.di.search.SearchSubComponent
+import com.example.there.findclips.di.modules.*
+import com.example.there.findclips.di.spotifysearch.SpotifySearchModule
+import com.example.there.findclips.di.spotifysearch.SpotifySearchSubComponent
+import com.example.there.findclips.di.videossearch.VideosSearchModule
+import com.example.there.findclips.di.videossearch.VideosSearchSubComponent
 import dagger.Component
 import javax.inject.Singleton
 
@@ -23,5 +22,6 @@ import javax.inject.Singleton
 interface AppComponent {
     fun plus(dashboardModule: DashboardModule): DashboardSubComponent
     fun plus(favouritesModule: FavouritesModule): FavouritesSubComponent
-    fun plus(searchModule: SearchModule): SearchSubComponent
+    fun plus(spotifySearchModule: SpotifySearchModule): SpotifySearchSubComponent
+    fun plus(videosSearchModule: VideosSearchModule): VideosSearchSubComponent
 }

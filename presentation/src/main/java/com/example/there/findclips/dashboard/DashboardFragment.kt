@@ -16,14 +16,15 @@ import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.lists.*
 import com.example.there.findclips.main.MainFragment
-import com.example.there.findclips.main.MainRouter
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
-import com.example.there.findclips.util.mainActivity
 import javax.inject.Inject
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragment {
+
+    override val title: String
+        get() = "Dashboard"
 
     override val bottomNavigationItemId: Int
         get() = R.id.action_dashboard
@@ -33,7 +34,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
 
     private val topTrackItemClickListener = object : TopTracksList.OnItemClickListener {
         override fun onClick(item: TopTrackEntity) {
-            MainRouter.goToSearchFragmentWithVideosQuery(mainActivity, query = item.track.query)
+
         }
     }
 
@@ -49,8 +50,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
         }
     }
 
-    private val view: DashboardFragmentView
-        get() = DashboardFragmentView(
+    private val view: DashboardFragmentView by lazy {
+        DashboardFragmentView(
                 state = mainViewModel.viewState,
                 categoriesAdapter = CategoriesList.Adapter(mainViewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
                 categoriesLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false),
@@ -59,6 +60,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
                 topTracksAdapter = TopTracksList.Adapter(mainViewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener),
                 topTracksLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)

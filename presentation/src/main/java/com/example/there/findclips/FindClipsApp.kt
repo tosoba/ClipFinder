@@ -7,13 +7,13 @@ import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
-import com.example.there.findclips.di.modules.AppModule
-import com.example.there.findclips.di.modules.CommonUseCasesModule
-import com.example.there.findclips.di.modules.DataModule
-import com.example.there.findclips.di.modules.NetworkModule
-import com.example.there.findclips.di.search.SearchModule
-import com.example.there.findclips.di.search.SearchSubComponent
+import com.example.there.findclips.di.modules.*
+import com.example.there.findclips.di.spotifysearch.SpotifySearchModule
+import com.example.there.findclips.di.spotifysearch.SpotifySearchSubComponent
+import com.example.there.findclips.di.videossearch.VideosSearchModule
+import com.example.there.findclips.di.videossearch.VideosSearchSubComponent
 import com.squareup.leakcanary.LeakCanary
+
 
 class FindClipsApp : Application() {
 
@@ -23,7 +23,6 @@ class FindClipsApp : Application() {
         super.onCreate()
 
         initLeakCanary()
-
         initAppComponent()
     }
 
@@ -38,12 +37,12 @@ class FindClipsApp : Application() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(applicationContext))
                 .dataModule(DataModule())
-                .networkModule(NetworkModule(
-                        spotifyApiBaseUrl = getString(R.string.spotify_base_url),
+                .networkModule(NetworkModule(spotifyApiBaseUrl = getString(R.string.spotify_base_url),
                         accessTokenBaseUrl = getString(R.string.access_token_base_url),
                         spotifyChartsBaseUrl = getString(R.string.spotify_charts_base_url),
                         youtubeBaseUrl = getString(R.string.youtube_base_url)))
-                .commonUseCasesModule(CommonUseCasesModule()).build()
+                .commonUseCasesModule(CommonUseCasesModule())
+                .build()
     }
 
     private var dashboardSubComponent: DashboardSubComponent? = null
@@ -66,13 +65,23 @@ class FindClipsApp : Application() {
         favouritesSubComponent = null
     }
 
-    private var searchSubComponent: SearchSubComponent? = null
-    fun createSearchComponent(): SearchSubComponent {
-        searchSubComponent = appComponent.plus(SearchModule())
-        return searchSubComponent!!
+    private var spotifySearchSubComponent: SpotifySearchSubComponent? = null
+    fun createSpotifySearchComponent(): SpotifySearchSubComponent {
+        spotifySearchSubComponent = appComponent.plus(SpotifySearchModule())
+        return spotifySearchSubComponent!!
     }
 
-    fun releaseSearchComponent() {
-        searchSubComponent = null
+    fun releaseSpotifySearchComponent() {
+        spotifySearchSubComponent = null
+    }
+
+    private var videosSearchSubComponent: VideosSearchSubComponent? = null
+    fun createVideosSearchComponent(): VideosSearchSubComponent {
+        videosSearchSubComponent = appComponent.plus(VideosSearchModule())
+        return videosSearchSubComponent!!
+    }
+
+    fun releaseVideosSearchComponent() {
+        videosSearchSubComponent = null
     }
 }

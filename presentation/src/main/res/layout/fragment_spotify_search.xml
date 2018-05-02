@@ -1,0 +1,43 @@
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="spotifySearchView"
+            type="com.example.there.findclips.search.spotify.SpotifySearchView" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.there.findclips.search.spotify.SpotifySearchFragment">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/spotify_tab_layout"
+            onTabSelectedListener="@{spotifySearchView.onTabSelectedListener}"
+            tabs="@{spotifySearchView.fragmentTabs}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="fill" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/spotify_tab_view_pager"
+            onPageChangeListener="@{spotifySearchView.onPageChangeListener}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adapter="@{spotifySearchView.pagerAdapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spotify_tab_layout" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

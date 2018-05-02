@@ -10,30 +10,24 @@ object MainRouter {
 
     fun goToDashboardFragment(activity: MainActivity?) {
         val dashboardFragment = DashboardFragment()
-        goToFragment(activity, dashboardFragment, MainFragmentTags.dashboard)
+        goToFragment(activity, dashboardFragment)
         updateBottomNavigationSelectedItemId(activity, dashboardFragment)
     }
 
     fun goToFavouritesFragment(activity: MainActivity?) {
         val favouritesFragment = FavouritesFragment()
-        goToFragment(activity, favouritesFragment, MainFragmentTags.favourites)
+        goToFragment(activity, favouritesFragment)
         updateBottomNavigationSelectedItemId(activity, favouritesFragment)
     }
 
     fun goToSearchFragment(activity: MainActivity?) {
         val searchFragment = SearchFragment()
-        goToFragment(activity, searchFragment, MainFragmentTags.search)
+        goToFragment(activity, searchFragment)
         updateBottomNavigationSelectedItemId(activity, searchFragment)
     }
 
-    fun goToSearchFragmentWithVideosQuery(activity: MainActivity?, query: String) {
-        val searchFragment = SearchFragment.newInstanceVideosSearch(query)
-        goToFragment(activity, searchFragment, MainFragmentTags.search)
-        updateBottomNavigationSelectedItemId(activity, searchFragment)
-    }
-
-    private fun goToFragment(activity: MainActivity?, fragment: Fragment, tag: String) {
-        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, fragment, tag)?.commit()
+    private fun goToFragment(activity: MainActivity?, fragment: Fragment) {
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.container, fragment)?.commit()
     }
 
     private fun updateBottomNavigationSelectedItemId(activity: MainActivity?, fragment: MainFragment) {
