@@ -10,9 +10,12 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.view.*
-import android.widget.*
-import android.widget.SearchView
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSearchBinding
@@ -41,31 +44,6 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
     lateinit var videosSearchVMFactory: VideosSearchVMFactory
 
     private lateinit var videosSearchViewModel: VideosSearchViewModel
-
-    private val onQuerySearchListener = object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String?): Boolean {
-            query?.let {
-                if (shouldSearchYoutube(it)) {
-                    videosSearchViewModel.getVideos(it)
-                    videosSearchViewModel.viewState.videos.clear()
-                } else if (shouldSearchSpotify(it)) {
-                    mainViewModel.searchAll(activity?.accessToken, it)
-                    mainViewModel.viewState.clearAll()
-                }
-            }
-            return false
-        }
-
-        override fun onQueryTextChange(newText: String?): Boolean = true
-
-        fun shouldSearchYoutube(query: String): Boolean {
-            return searchViewState.spinnerSelection.get() == 1 && query != searchViewState.lastQuery && query.isNotBlank()
-        }
-
-        fun shouldSearchSpotify(query: String): Boolean {
-            return searchViewState.spinnerSelection.get() == 0 && query != searchViewState.lastQuery && query.isNotBlank()
-        }
-    }
 
     private val onSpotifyTabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -106,7 +84,6 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
                 },
                 videosItemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f),
                 pagerAdapter = SpotifyFragmentStatePagerAdapter(childFragmentManager),
-                onQueryTextListener = onQuerySearchListener,
                 onTabSelectedListener = onSpotifyTabSelectedListener,
                 onPageChangeListener = onSpotifyPageChangedListener
         )
@@ -130,7 +107,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
                 searchViewState = SearchViewState(spinnerSelection = ObservableField(1),
                         queryHint = ObservableField(SearchViewState.SEARCH_YOUTUBE))
                 videosSearchViewModel.getVideos(query = it.getString(ARG_YOUTUBE_QUERY))
-            } // else if (it.contains(ARG_SPOTIFY_PLAYLIST...) ...
+            }
         }
     }
 
@@ -147,21 +124,7 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        initSearchView()
-    }
-
-    private fun initSearchView() = with(search_view) {
-        setTextColors()
-        isFocusable = false
-        isIconified = false
-        clearFocus()
-    }
-
     private var searchViewState: SearchViewState = SearchViewState()
-
-    private lateinit var menuSpinner: Spinner
 
     private val onMenuItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -172,17 +135,58 @@ class SearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainFrag
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.search_spinner_menu, menu)
+        fun initSpinner(menu: Menu?) {
+            val spinnerItem = menu?.findItem(R.id.spinner_menu_item)
+            val menuSpinner = spinnerItem?.actionView as? Spinner
 
-        val item = menu?.findItem(R.id.spinner)
-        menuSpinner = item?.actionView as Spinner
-
-        with(menuSpinner) {
-            adapter = ArrayAdapter<String>(context, R.layout.spinner_item, menuItems)
-            setSelection(searchViewState.spinnerSelection.get() ?: 0)
-            onItemSelectedListener = onMenuItemSelectedListener
+            menuSpinner?.let {
+                it.adapter = ArrayAdapter<String>(context, R.layout.spinner_item, menuItems)
+                it.setSelection(searchViewState.spinnerSelection.get() ?: 0)
+                it.onItemSelectedListener = onMenuItemSelectedListener
+            }
         }
 
+        fun initSearchView(menu: Menu?) {
+            val searchViewItem = menu?.findItem(R.id.search_view_menu_item)
+            val searchView = searchViewItem?.actionView as? SearchView
+
+            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    if (!searchView.isIconified) {
+                        searchView.isIconified = true
+                    }
+                    searchViewItem.collapseActionView()
+
+                    processQuery(query)
+
+                    return false
+                }
+
+                override fun onQueryTextChange(s: String): Boolean = true
+
+                fun processQuery(query: String) {
+                    fun shouldSearchSpotify(query: String): Boolean {
+                        return searchViewState.spinnerSelection.get() == 0 && query != searchViewState.lastQuery
+                    }
+
+                    fun shouldSearchYoutube(query: String): Boolean {
+                        return searchViewState.spinnerSelection.get() == 1 && query != searchViewState.lastQuery
+                    }
+
+                    if (shouldSearchYoutube(query)) {
+                        videosSearchViewModel.getVideos(query)
+                        videosSearchViewModel.viewState.videos.clear()
+                    } else if (shouldSearchSpotify(query)) {
+                        mainViewModel.searchAll(activity?.accessToken, query)
+                        mainViewModel.viewState.clearAll()
+                    }
+                }
+            })
+        }
+
+        inflater?.inflate(R.menu.search_fragment_menu, menu)
+        initSpinner(menu)
+        initSearchView(menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

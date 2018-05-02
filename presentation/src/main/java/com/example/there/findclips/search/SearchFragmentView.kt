@@ -17,7 +17,6 @@ data class SearchFragmentView(
         val videosLayoutManager: RecyclerView.LayoutManager,
         val videosItemDecoration: RecyclerView.ItemDecoration,
         val pagerAdapter: FragmentStatePagerAdapter,
-        val onQueryTextListener: SearchView.OnQueryTextListener,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
         val onPageChangeListener: ViewPager.OnPageChangeListener
 )
