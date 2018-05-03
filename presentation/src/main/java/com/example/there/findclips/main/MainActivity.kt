@@ -1,9 +1,11 @@
 package com.example.there.findclips.main
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
+import com.example.there.findclips.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,15 +24,16 @@ class MainActivity : AppCompatActivity() {
         return@OnNavigationItemSelectedListener true
     }
 
+    private val view: MainActivityView by lazy { MainActivityView(onNavigationItemSelectedListener) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.mainActivityView = view
 
         if (savedInstanceState == null) {
             MainRouter.goToDashboardFragment(this)
         }
-
-        bottom_navigation_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
     fun updateBottomNavigationSelectedItemId(id: Int) {

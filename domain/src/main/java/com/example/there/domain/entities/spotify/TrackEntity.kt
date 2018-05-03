@@ -7,11 +7,5 @@ data class TrackEntity(
         val albumId: String,
         val albumName: String,
         val artists: List<SimpleArtistEntity>
-) {
-    val artistNamesText: String
-        get() = artists.joinToString(separator = ", ") { it.name }
-
-    val query: String
-        get() = "$name $albumName"
-}
+)
 

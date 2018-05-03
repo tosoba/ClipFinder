@@ -10,12 +10,9 @@ abstract class BaseVMFragment<T : BaseViewModel> : Fragment() {
 
     protected lateinit var mainViewModel: T
 
-    protected abstract val title: String
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupObservers()
-        activity?.title = title
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

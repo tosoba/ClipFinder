@@ -4,6 +4,10 @@ import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.AccessTokenUseCase
 import com.example.there.domain.usecase.spotify.SearchAllUseCase
 import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.mappers.AlbumEntityMapper
+import com.example.there.findclips.mappers.ArtistEntityMapper
+import com.example.there.findclips.mappers.PlaylistEntityMapper
+import com.example.there.findclips.mappers.TrackEntityMapper
 
 class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
                              private val searchAllUseCase: SearchAllUseCase) : BaseSpotifyViewModel(accessTokenUseCase) {
@@ -24,10 +28,10 @@ class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
         addDisposable(searchAllUseCase.searchAll(accessTokenEntity, query)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribe({
-                    viewState.addAlbumsSorted(it.albums)
-                    viewState.addArtistsSorted(it.artists)
-                    viewState.addPlaylistsSorted(it.playlists)
-                    viewState.addTracksSorted(it.tracks)
+                    viewState.addAlbumsSorted(it.albums.map(AlbumEntityMapper::mapFrom))
+                    viewState.addArtistsSorted(it.artists.map(ArtistEntityMapper::mapFrom))
+                    viewState.addPlaylistsSorted(it.playlists.map(PlaylistEntityMapper::mapFrom))
+                    viewState.addTracksSorted(it.tracks.map(TrackEntityMapper::mapFrom))
                 }, this::onError))
     }
 }

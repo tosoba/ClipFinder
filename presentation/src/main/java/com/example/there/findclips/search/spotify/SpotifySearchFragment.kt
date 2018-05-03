@@ -15,13 +15,12 @@ import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
+import com.example.there.findclips.util.OnPageChangeListener
+import com.example.there.findclips.util.OnTabSelectedListener
 import javax.inject.Inject
 
 
 class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainSearchFragment {
-
-    override val title: String
-        get() = "Search"
 
     override var query: String = ""
         set(value) {
@@ -34,23 +33,15 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     @Inject
     lateinit var spotifySearchVMFactory: SpotifySearchVMFactory
 
-    private val onSpotifyTabSelectedListener = object : TabLayout.OnTabSelectedListener {
-        override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-
-        override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
-
+    private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { spotify_tab_view_pager?.currentItem = it.position }
         }
     }
 
-    private val onSpotifyPageChangedListener = object : ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) = Unit
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
-
+    private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
-            spotify_tab_layout.getTabAt(position)?.select()
+            spotify_tab_layout?.getTabAt(position)?.select()
         }
     }
 

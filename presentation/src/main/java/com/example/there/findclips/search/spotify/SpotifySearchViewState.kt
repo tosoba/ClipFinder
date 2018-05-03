@@ -2,31 +2,31 @@ package com.example.there.findclips.search.spotify
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
-import com.example.there.domain.entities.spotify.AlbumEntity
-import com.example.there.domain.entities.spotify.ArtistEntity
-import com.example.there.domain.entities.spotify.PlaylistEntity
-import com.example.there.domain.entities.spotify.TrackEntity
+import com.example.there.findclips.entities.Album
+import com.example.there.findclips.entities.Artist
+import com.example.there.findclips.entities.Playlist
+import com.example.there.findclips.entities.Track
 
 data class SpotifySearchViewState(
-        val albums: ObservableArrayList<AlbumEntity> = ObservableArrayList(),
-        val artists: ObservableArrayList<ArtistEntity> = ObservableArrayList(),
-        val playlists: ObservableArrayList<PlaylistEntity> = ObservableArrayList(),
-        val tracks: ObservableArrayList<TrackEntity> = ObservableArrayList(),
+        val albums: ObservableArrayList<Album> = ObservableArrayList(),
+        val artists: ObservableArrayList<Artist> = ObservableArrayList(),
+        val playlists: ObservableArrayList<Playlist> = ObservableArrayList(),
+        val tracks: ObservableArrayList<Track> = ObservableArrayList(),
         val loadingInProgress: ObservableField<Boolean> = ObservableField(false)
 ) {
-    fun addAlbumsSorted(newAlbums: List<AlbumEntity>) {
+    fun addAlbumsSorted(newAlbums: List<Album>) {
         albums.addAll(newAlbums.sortedBy { it.name })
     }
 
-    fun addArtistsSorted(newArtists: List<ArtistEntity>) {
+    fun addArtistsSorted(newArtists: List<Artist>) {
         artists.addAll(newArtists.sortedBy { it.name })
     }
 
-    fun addPlaylistsSorted(newPlaylists: List<PlaylistEntity>) {
+    fun addPlaylistsSorted(newPlaylists: List<Playlist>) {
         playlists.addAll(newPlaylists.sortedBy { it.name })
     }
 
-    fun addTracksSorted(newTracks: List<TrackEntity>) {
+    fun addTracksSorted(newTracks: List<Track>) {
         tracks.addAll(newTracks.sortedBy { it.name })
     }
 

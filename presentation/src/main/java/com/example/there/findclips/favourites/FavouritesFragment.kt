@@ -15,9 +15,6 @@ import javax.inject.Inject
 
 class FavouritesFragment : BaseSpotifyVMFragment<FavouritesViewModel>(), MainFragment {
 
-    override val title: String
-        get() = "Favourites"
-
     override val bottomNavigationItemId: Int
         get() = R.id.action_favorites
 

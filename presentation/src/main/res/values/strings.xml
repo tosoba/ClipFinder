@@ -17,4 +17,7 @@
     <string name="featured_playlists">Featured playlists</string>
     <string name="top_tracks">Top tracks</string>
     <string name="youtube">YouTube</string>
+    <string name="no_clips_loaded_yet">No clips loaded yet.</string>
+    <string name="search_for_some">Search for some using the bar above.</string>
+    <string name="title_activity_track_videos">TrackVideosActivity</string>
 </resources>

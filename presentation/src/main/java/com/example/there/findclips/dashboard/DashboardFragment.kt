@@ -14,17 +14,19 @@ import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
+import com.example.there.findclips.entities.Category
+import com.example.there.findclips.entities.Playlist
+import com.example.there.findclips.entities.TopTrack
 import com.example.there.findclips.lists.*
 import com.example.there.findclips.main.MainFragment
+import com.example.there.findclips.main.MainRouter
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
+import com.example.there.findclips.util.mainActivity
 import javax.inject.Inject
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragment {
-
-    override val title: String
-        get() = "Dashboard"
 
     override val bottomNavigationItemId: Int
         get() = R.id.action_dashboard
@@ -33,19 +35,19 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
     lateinit var vmFactory: DashboardVMFactory
 
     private val topTrackItemClickListener = object : TopTracksList.OnItemClickListener {
-        override fun onClick(item: TopTrackEntity) {
-
+        override fun onClick(item: TopTrack) {
+            MainRouter.goToTrackVideosActivity(mainActivity, item.track)
         }
     }
 
     private val categoryItemClickListener = object : CategoriesList.OnItemClickListener {
-        override fun onClick(item: CategoryEntity) {
+        override fun onClick(item: Category) {
 
         }
     }
 
     private val playlistItemClickListener = object : PlaylistsList.OnItemClickListener {
-        override fun onClick(item: PlaylistEntity) {
+        override fun onClick(item: Playlist) {
 
         }
     }

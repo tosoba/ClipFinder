@@ -23,9 +23,6 @@ import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 
 class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearchFragment {
 
-    override val title: String
-        get() = "Search"
-
     override var query: String = ""
         set(value) {
             if (field == value) return
@@ -62,6 +59,19 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) initFromArguments()
+    }
+
+    private fun initFromArguments() {
+        arguments?.let {
+            if (it.containsKey(ARG_QUERY)) {
+                query = it.getString(ARG_QUERY)
+            }
+        }
+    }
+
     override fun initComponent() {
         activity?.app?.createVideosSearchComponent()?.inject(this)
     }
@@ -72,5 +82,13 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     override fun initViewModel() {
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosSearchViewModel::class.java)
+    }
+
+    companion object {
+        private const val ARG_QUERY = "ARG_QUERY"
+
+        fun newInstanceWithQuery(query: String): VideosSearchFragment = VideosSearchFragment().apply {
+            arguments = Bundle().apply { putString(ARG_QUERY, query) }
+        }
     }
 }

@@ -1,11 +1,12 @@
-package com.example.there.findclips.search.videos
+package com.example.there.findclips.trackvideos
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
-import android.view.View
+import com.example.there.findclips.entities.Track
 import com.example.there.findclips.entities.Video
 
-data class VideosSearchViewState(
+data class TrackVideosViewState(
+        val track: Track,
         val videos: ObservableArrayList<Video> = ObservableArrayList(),
         val videosLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
 )

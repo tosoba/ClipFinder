@@ -1,4 +1,5 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,17 +11,17 @@
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.there.findclips.search.videos.VideosSearchFragment">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             itemDecoration="@{videosSearchView.videosItemDecoration}"
-            app:layoutManager="@{videosSearchView.videosLayoutManager}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{videosSearchView.videosAdapter}"
+            app:layoutManager="@{videosSearchView.videosLayoutManager}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -34,6 +35,40 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/no_clips_loaded_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_clips_loaded_yet"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:visibility="@{(videosSearchView.state.videos.size() == 0 &amp;&amp; !videosSearchView.state.videosLoadingInProgress) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/search_for_some_txt"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+        <TextView
+            android:id="@+id/search_for_some_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="@string/search_for_some"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="20sp"
+            android:visibility="@{(videosSearchView.state.videos.size() == 0 &amp;&amp; !videosSearchView.state.videosLoadingInProgress) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/no_clips_loaded_txt"
+            app:layout_constraintVertical_chainStyle="packed" />
 
     </android.support.constraint.ConstraintLayout>
 
