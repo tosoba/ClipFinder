@@ -1,10 +1,10 @@
 package com.example.there.findclips.di.dashboard
 
 import com.example.there.domain.repos.spotify.SpotifyRepository
-import com.example.there.domain.usecase.spotify.AccessTokenUseCase
-import com.example.there.domain.usecase.spotify.CategoriesUseCase
-import com.example.there.domain.usecase.spotify.DailyViralTracksUseCase
-import com.example.there.domain.usecase.spotify.FeaturedPlaylistsUseCase
+import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.CategoriesUseCase
+import com.example.there.domain.usecases.spotify.DailyViralTracksUseCase
+import com.example.there.domain.usecases.spotify.FeaturedPlaylistsUseCase
 import com.example.there.findclips.dashboard.DashboardVMFactory
 import com.example.there.findclips.util.AsyncTransformer
 import dagger.Module

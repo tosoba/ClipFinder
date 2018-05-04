@@ -52,7 +52,7 @@ class TrackVideosActivity : AppCompatActivity() {
         val binding: ActivityTrackVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_track_videos)
         binding.view = view
         initToolbar()
-        title = ""
+        title = track.name
     }
 
     private fun initToolbar() {

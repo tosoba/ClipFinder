@@ -1,7 +1,7 @@
 package com.example.there.findclips.entities
 
 import android.databinding.ObservableField
-import com.example.there.domain.util.Duration
+import com.example.there.domain.entities.videos.Duration
 import com.example.there.findclips.util.*
 import org.joda.time.Instant
 import java.math.BigInteger

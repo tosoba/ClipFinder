@@ -1,8 +1,8 @@
 package com.example.there.findclips.search.videos
 
 import com.example.there.domain.entities.videos.VideoEntity
-import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrlsUseCase
-import com.example.there.domain.usecase.videos.SearchVideosUseCase
+import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
+import com.example.there.domain.usecases.videos.SearchVideosUseCase
 import com.example.there.findclips.base.BaseViewModel
 import com.example.there.findclips.mappers.VideoEntityMapper
 

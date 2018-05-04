@@ -2,7 +2,9 @@ package com.example.there.findclips.main
 
 import android.support.v4.app.Fragment
 import com.example.there.findclips.R
+import com.example.there.findclips.category.CategoryActivity
 import com.example.there.findclips.dashboard.DashboardFragment
+import com.example.there.findclips.entities.Category
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.favourites.FavouritesFragment
 import com.example.there.findclips.search.SearchFragment
@@ -44,5 +46,9 @@ object MainRouter {
             val intent = TrackVideosActivity.startingIntent(it, track)
             it.startActivity(intent)
         }
+    }
+
+    fun goToCategoryActivity(activity: MainActivity?, category: Category) {
+        activity?.let { CategoryActivity.start(it, category) }
     }
 }

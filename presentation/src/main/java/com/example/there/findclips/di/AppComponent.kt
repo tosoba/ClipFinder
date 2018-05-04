@@ -1,5 +1,7 @@
 package com.example.there.findclips.di
 
+import com.example.there.findclips.di.category.CategoryModule
+import com.example.there.findclips.di.category.CategorySubComponent
 import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
@@ -24,4 +26,5 @@ interface AppComponent {
     fun plus(favouritesModule: FavouritesModule): FavouritesSubComponent
     fun plus(spotifySearchModule: SpotifySearchModule): SpotifySearchSubComponent
     fun plus(videosSearchModule: VideosSearchModule): VideosSearchSubComponent
+    fun plus(categoryModule: CategoryModule): CategorySubComponent
 }

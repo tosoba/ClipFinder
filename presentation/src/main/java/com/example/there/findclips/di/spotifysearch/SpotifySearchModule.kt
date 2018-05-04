@@ -1,8 +1,8 @@
 package com.example.there.findclips.di.spotifysearch
 
 import com.example.there.domain.repos.spotify.SpotifyRepository
-import com.example.there.domain.usecase.spotify.AccessTokenUseCase
-import com.example.there.domain.usecase.spotify.SearchAllUseCase
+import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.SearchAllUseCase
 import com.example.there.findclips.search.spotify.SpotifySearchVMFactory
 import com.example.there.findclips.util.AsyncTransformer
 import dagger.Module

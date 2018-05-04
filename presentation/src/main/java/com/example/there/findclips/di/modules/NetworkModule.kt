@@ -1,9 +1,9 @@
 package com.example.there.findclips.di.modules
 
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
-import com.example.there.data.api.youtube.YoutubeApi
+import com.example.there.data.apis.spotify.SpotifyAccountsApi
+import com.example.there.data.apis.spotify.SpotifyApi
+import com.example.there.data.apis.spotify.SpotifyChartsApi
+import com.example.there.data.apis.youtube.YoutubeApi
 import com.example.there.findclips.di.Dependencies
 import dagger.Module
 import dagger.Provides

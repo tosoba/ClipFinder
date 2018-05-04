@@ -1,8 +1,8 @@
 package com.example.there.data.repos.spotify
 
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
+import com.example.there.data.apis.spotify.SpotifyAccountsApi
+import com.example.there.data.apis.spotify.SpotifyApi
+import com.example.there.data.apis.spotify.SpotifyChartsApi
 import com.example.there.data.repos.spotify.stores.RemoteSpotifyDataStore
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.SpotifyDataStore
@@ -32,4 +32,7 @@ class SpotifyRepositoryImpl(api: SpotifyApi,
 
     override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
             remoteSpotifyDataStore.searchAll(accessToken, query)
+
+    override fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>> =
+            remoteSpotifyDataStore.getPlaylistsForCategory(accessToken, categoryId)
 }

@@ -3,6 +3,8 @@ package com.example.there.findclips
 import android.app.Application
 import com.example.there.findclips.di.AppComponent
 import com.example.there.findclips.di.DaggerAppComponent
+import com.example.there.findclips.di.category.CategoryModule
+import com.example.there.findclips.di.category.CategorySubComponent
 import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
@@ -83,5 +85,15 @@ class FindClipsApp : Application() {
 
     fun releaseVideosSearchComponent() {
         videosSearchSubComponent = null
+    }
+
+    private var categorySubComponent: CategorySubComponent? = null
+    fun createCategoryComponent(): CategorySubComponent {
+        categorySubComponent = appComponent.plus(CategoryModule())
+        return categorySubComponent!!
+    }
+
+    fun releaseCategoryComponent() {
+        categorySubComponent = null
     }
 }

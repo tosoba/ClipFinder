@@ -1,11 +1,11 @@
 package com.example.there.data.repos.spotify.stores
 
 import android.util.Base64
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
+import com.example.there.data.apis.spotify.SpotifyAccountsApi
+import com.example.there.data.apis.spotify.SpotifyApi
+import com.example.there.data.apis.spotify.SpotifyChartsApi
 import com.example.there.data.entities.spotify.TrackData
-import com.example.there.data.mapper.spotify.*
+import com.example.there.data.mappers.spotify.*
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.SpotifyDataStore
 import io.reactivex.Observable
@@ -50,20 +50,24 @@ class RemoteSpotifyDataStore(private val api: SpotifyApi,
             api.searchAll(authorization = getAccessTokenHeader(accessToken.token), query = query)
                     .map {
                         SearchAllEntity(
-                                albums = it.albumsResponse?.albums?.map(AlbumMapper::mapFrom)
+                                albums = it.albumsResult?.albums?.map(AlbumMapper::mapFrom)
                                         ?: emptyList(),
-                                artists = it.artistsResponse?.artists?.map(ArtistMapper::mapFrom)
+                                artists = it.artistsResult?.artists?.map(ArtistMapper::mapFrom)
                                         ?: emptyList(),
-                                playlists = it.playlistsResponse?.playlists?.map(PlaylistMapper::mapFrom)
+                                playlists = it.playlistsResult?.playlists?.map(PlaylistMapper::mapFrom)
                                         ?: emptyList(),
-                                tracks = it.tracksResponse?.tracks?.map(TrackMapper::mapFrom)
+                                tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
                                         ?: emptyList(),
-                                albumsNextPageUrl = it.albumsResponse?.nextPageUrl,
-                                artistsNextPageUrl = it.artistsResponse?.nextPageUrl,
-                                playlistsNextPageUrl = it.playlistsResponse?.nextPageUrl,
-                                tracksNextPageUrl = it.tracksResponse?.nextPageUrl
+                                albumsNextPageUrl = it.albumsResult?.nextPageUrl,
+                                artistsNextPageUrl = it.artistsResult?.nextPageUrl,
+                                playlistsNextPageUrl = it.playlistsResult?.nextPageUrl,
+                                tracksNextPageUrl = it.tracksResult?.nextPageUrl
                         )
                     }
+
+    override fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>> =
+            api.getPlaylistsForCategory(authorization = getAccessTokenHeader(accessToken.token), categoryId = categoryId)
+                    .map { it.result.playlists.map(PlaylistMapper::mapFrom) }
 
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"

@@ -1,7 +1,7 @@
 package com.example.there.data.repos.videos
 
-import com.example.there.data.api.yahoo.YahooScraper
-import com.example.there.data.api.youtube.YoutubeApi
+import com.example.there.data.apis.yahoo.YahooScraper
+import com.example.there.data.apis.youtube.YoutubeApi
 import com.example.there.data.repos.videos.stores.RemoteVideosDataStore
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.repos.videos.VideosRepository

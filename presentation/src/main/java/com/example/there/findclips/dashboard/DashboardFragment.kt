@@ -42,7 +42,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
 
     private val categoryItemClickListener = object : CategoriesList.OnItemClickListener {
         override fun onClick(item: Category) {
-
+            MainRouter.goToCategoryActivity(mainActivity, category = item)
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.there.domain.entities.videos
 
-import com.example.there.domain.util.Duration
 import java.math.BigInteger
 
 data class VideoEntity(val id: String,

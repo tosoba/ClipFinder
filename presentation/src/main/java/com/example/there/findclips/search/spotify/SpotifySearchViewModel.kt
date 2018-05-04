@@ -1,8 +1,8 @@
 package com.example.there.findclips.search.spotify
 
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecase.spotify.AccessTokenUseCase
-import com.example.there.domain.usecase.spotify.SearchAllUseCase
+import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.SearchAllUseCase
 import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.mappers.AlbumEntityMapper
 import com.example.there.findclips.mappers.ArtistEntityMapper

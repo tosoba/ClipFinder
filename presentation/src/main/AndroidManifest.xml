@@ -25,7 +25,11 @@
         <activity
             android:name=".trackvideos.TrackVideosActivity"
             android:label="@string/title_activity_track_videos"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".category.CategoryActivity"
+            android:label="@string/title_activity_category"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

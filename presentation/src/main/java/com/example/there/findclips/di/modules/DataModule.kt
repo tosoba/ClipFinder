@@ -1,10 +1,10 @@
 package com.example.there.findclips.di.modules
 
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
-import com.example.there.data.api.yahoo.YahooScraper
-import com.example.there.data.api.youtube.YoutubeApi
+import com.example.there.data.apis.spotify.SpotifyAccountsApi
+import com.example.there.data.apis.spotify.SpotifyApi
+import com.example.there.data.apis.spotify.SpotifyChartsApi
+import com.example.there.data.apis.yahoo.YahooScraper
+import com.example.there.data.apis.youtube.YoutubeApi
 import com.example.there.data.repos.spotify.SpotifyRepositoryImpl
 import com.example.there.data.repos.videos.VideosRepositoryImpl
 import com.example.there.domain.repos.spotify.SpotifyRepository

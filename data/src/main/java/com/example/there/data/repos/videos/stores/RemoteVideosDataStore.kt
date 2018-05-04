@@ -1,9 +1,9 @@
 package com.example.there.data.repos.videos.stores
 
-import com.example.there.data.api.yahoo.YahooScraper
-import com.example.there.data.api.youtube.YoutubeApi
-import com.example.there.data.mapper.videos.ChannelThumbnailUrlMapper
-import com.example.there.data.mapper.videos.VideoMapper
+import com.example.there.data.apis.yahoo.YahooScraper
+import com.example.there.data.apis.youtube.YoutubeApi
+import com.example.there.data.mappers.videos.ChannelThumbnailUrlMapper
+import com.example.there.data.mappers.videos.VideoMapper
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.repos.videos.VideosDataStore
 import io.reactivex.Observable

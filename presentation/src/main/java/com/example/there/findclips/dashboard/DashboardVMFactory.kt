@@ -2,10 +2,10 @@ package com.example.there.findclips.dashboard
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.example.there.domain.usecase.spotify.AccessTokenUseCase
-import com.example.there.domain.usecase.spotify.CategoriesUseCase
-import com.example.there.domain.usecase.spotify.DailyViralTracksUseCase
-import com.example.there.domain.usecase.spotify.FeaturedPlaylistsUseCase
+import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.CategoriesUseCase
+import com.example.there.domain.usecases.spotify.DailyViralTracksUseCase
+import com.example.there.domain.usecases.spotify.FeaturedPlaylistsUseCase
 
 class DashboardVMFactory(private val accessTokenUseCase: AccessTokenUseCase,
                          private val featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
