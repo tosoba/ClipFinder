@@ -30,7 +30,7 @@ class FavouritesFragment : BaseSpotifyVMFragment<FavouritesViewModel>(), MainFra
     }
 
     override fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, vmFactory).get(FavouritesViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, vmFactory).get(FavouritesViewModel::class.java)
     }
 
     override fun releaseComponent() {

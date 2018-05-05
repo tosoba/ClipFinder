@@ -1,10 +1,10 @@
 package com.example.there.findclips.search.spotify
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +15,10 @@ import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
+import com.example.there.findclips.listfragments.SpotifyAlbumsFragment
+import com.example.there.findclips.listfragments.SpotifyArtistsFragment
+import com.example.there.findclips.listfragments.SpotifyPlaylistsFragment
+import com.example.there.findclips.listfragments.SpotifyTracksFragment
 import com.example.there.findclips.util.OnPageChangeListener
 import com.example.there.findclips.util.OnTabSelectedListener
 import javax.inject.Inject
@@ -26,8 +30,8 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         set(value) {
             if (field == value) return
             field = value
-            mainViewModel.searchAll(activity?.accessToken, query)
-            mainViewModel.viewState.clearAll()
+            viewModel.searchAll(activity?.accessToken, query)
+            viewModel.viewState.clearAll()
         }
 
     @Inject
@@ -42,13 +46,32 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_tab_layout?.getTabAt(position)?.select()
+            updateCurrentFragment()
         }
     }
 
+    private fun updateCurrentFragment() {
+        val fragment = pagerAdapter.currentFragment
+
+        when (fragment) {
+            is SpotifyAlbumsFragment -> fragment.addItems(viewModel.viewState.albums)
+            is SpotifyArtistsFragment -> fragment.addItems(viewModel.viewState.artists)
+            is SpotifyPlaylistsFragment -> fragment.addItems(viewModel.viewState.playlists)
+            is SpotifyTracksFragment -> fragment.addItems(viewModel.viewState.tracks)
+        }
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.loadedFlag.observe(this, Observer { updateCurrentFragment() })
+    }
+
+    private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy { SpotifyFragmentPagerAdapter(childFragmentManager) }
+
     private val view: SpotifySearchView by lazy {
         SpotifySearchView(
-                state = mainViewModel.viewState,
-                pagerAdapter = SpotifyFragmentPagerAdapter(childFragmentManager),
+                state = viewModel.viewState,
+                pagerAdapter = pagerAdapter,
                 onTabSelectedListener = onSpotifyTabSelectedListener,
                 onPageChangeListener = onSpotifyPageChangedListener
         )
@@ -69,6 +92,6 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     }
 
     override fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, spotifySearchVMFactory).get(SpotifySearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, spotifySearchVMFactory).get(SpotifySearchViewModel::class.java)
     }
 }

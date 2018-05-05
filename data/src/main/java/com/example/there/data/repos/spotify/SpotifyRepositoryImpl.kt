@@ -35,4 +35,7 @@ class SpotifyRepositoryImpl(api: SpotifyApi,
 
     override fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>> =
             remoteSpotifyDataStore.getPlaylistsForCategory(accessToken, categoryId)
+
+    override fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String): Observable<List<TrackEntity>> =
+            remoteSpotifyDataStore.getPlaylistTracks(accessToken, playlistId, userId)
 }

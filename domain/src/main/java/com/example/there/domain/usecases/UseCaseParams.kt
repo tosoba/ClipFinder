@@ -15,4 +15,7 @@ object UseCaseParams {
     const val PARAM_SEARCH_ALL_QUERY = "PARAM_SEARCH_ALL_QUERY"
 
     const val PARAM_CATEGORY_ID = "PARAM_CATEGORY_ID"
+
+    const val PARAM_PLAYLIST_ID = "PARAM_PLAYLIST_ID"
+    const val PARAM_USER_ID = "PARAM_USER_ID"
 }

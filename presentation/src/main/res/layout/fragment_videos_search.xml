@@ -16,12 +16,11 @@
         tools:context="com.example.there.findclips.search.videos.VideosSearchFragment">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/videos_recycler_view"
             itemDecoration="@{videosSearchView.videosItemDecoration}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{videosSearchView.videosAdapter}"
-            app:layoutManager="@{videosSearchView.videosLayoutManager}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -46,15 +45,15 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:visibility="@{(videosSearchView.state.videos.size() == 0 &amp;&amp; !videosSearchView.state.videosLoadingInProgress) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/search_for_some_txt"
+            app:layout_constraintBottom_toTopOf="@+id/search_for_some_clips_txt"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+            app:layout_constraintTop_toBottomOf="@+id/videos_recycler_view" />
 
         <TextView
-            android:id="@+id/search_for_some_txt"
+            android:id="@+id/search_for_some_clips_txt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
@@ -63,7 +62,7 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="20sp"
             android:visibility="@{(videosSearchView.state.videos.size() == 0 &amp;&amp; !videosSearchView.state.videosLoadingInProgress) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            app:layout_constraintBottom_toTopOf="@+id/videos_recycler_view"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

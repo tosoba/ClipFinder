@@ -1,4 +1,4 @@
-package com.example.there.findclips.category.fragment
+package com.example.there.findclips.category
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

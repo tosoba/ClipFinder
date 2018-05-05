@@ -6,6 +6,5 @@ import com.example.there.findclips.lists.VideosList
 data class VideosSearchView(
         val state: VideosSearchViewState,
         val videosAdapter: VideosList.Adapter,
-        val videosLayoutManager: RecyclerView.LayoutManager,
         val videosItemDecoration: RecyclerView.ItemDecoration
 )

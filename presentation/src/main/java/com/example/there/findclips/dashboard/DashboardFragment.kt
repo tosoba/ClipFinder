@@ -8,9 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.there.domain.entities.spotify.CategoryEntity
-import com.example.there.domain.entities.spotify.PlaylistEntity
-import com.example.there.domain.entities.spotify.TopTrackEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
@@ -19,7 +16,7 @@ import com.example.there.findclips.entities.Playlist
 import com.example.there.findclips.entities.TopTrack
 import com.example.there.findclips.lists.*
 import com.example.there.findclips.main.MainFragment
-import com.example.there.findclips.main.MainRouter
+import com.example.there.findclips.Router
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.mainActivity
@@ -36,49 +33,50 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragm
 
     private val topTrackItemClickListener = object : TopTracksList.OnItemClickListener {
         override fun onClick(item: TopTrack) {
-            MainRouter.goToTrackVideosActivity(mainActivity, item.track)
+            Router.goToTrackVideosActivity(mainActivity, track = item.track)
         }
     }
 
     private val categoryItemClickListener = object : CategoriesList.OnItemClickListener {
         override fun onClick(item: Category) {
-            MainRouter.goToCategoryActivity(mainActivity, category = item)
+            Router.goToCategoryActivity(mainActivity, category = item)
         }
     }
 
     private val playlistItemClickListener = object : PlaylistsList.OnItemClickListener {
         override fun onClick(item: Playlist) {
-
+            Router.goToPlaylistActivity(mainActivity, playlist = item)
         }
     }
 
     private val view: DashboardFragmentView by lazy {
         DashboardFragmentView(
-                state = mainViewModel.viewState,
-                categoriesAdapter = CategoriesList.Adapter(mainViewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
-                categoriesLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false),
-                playlistsAdapter = PlaylistsList.Adapter(mainViewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener),
-                playlistsLayoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false),
-                topTracksAdapter = TopTracksList.Adapter(mainViewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener),
-                topTracksLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                state = viewModel.viewState,
+                categoriesAdapter = CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
+                playlistsAdapter = PlaylistsList.Adapter(viewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener),
+                topTracksAdapter = TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener)
         )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         binding.dashboardFragmentView = view
+
+        binding.genresRecyclerView.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+        binding.featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+        binding.topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState == null) {
-            mainViewModel.loadDashboardData(activity?.accessToken)
+            viewModel.loadDashboardData(activity?.accessToken)
         }
     }
 
     override fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
     }
 
     override fun initComponent() {

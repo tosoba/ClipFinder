@@ -8,9 +8,6 @@ import com.example.there.findclips.lists.TopTracksList
 data class DashboardFragmentView(
         val state: DashboardViewState,
         val categoriesAdapter: CategoriesList.Adapter,
-        val categoriesLayoutManager: RecyclerView.LayoutManager,
         val playlistsAdapter: PlaylistsList.Adapter,
-        val playlistsLayoutManager: RecyclerView.LayoutManager,
-        val topTracksAdapter: TopTracksList.Adapter,
-        val topTracksLayoutManager: RecyclerView.LayoutManager
+        val topTracksAdapter: TopTracksList.Adapter
 )

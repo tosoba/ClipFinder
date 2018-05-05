@@ -1,13 +1,63 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.there.findclips.search.spotify.fragments.SpotifyTracksFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="view"
+            type="com.example.there.findclips.listfragments.SpotifyTracksFragment.View" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="tracks" />
+        tools:context="com.example.there.findclips.listfragments.SpotifyTracksFragment">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tracks_recycler_view"
+            itemDecoration="@{view.itemDecoration}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adapter="@{view.adapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/no_tracks_loaded_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_tracks_loaded_yet"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:visibility="@{view.state.items.size() == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/search_for_some_tracks_txt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tracks_recycler_view" />
+
+        <TextView
+            android:id="@+id/search_for_some_tracks_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/search_for_some"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="20sp"
+            android:visibility="@{view.state.items.size() == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/tracks_recycler_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/no_tracks_loaded_txt" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
+

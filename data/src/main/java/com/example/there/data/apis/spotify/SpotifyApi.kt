@@ -1,10 +1,7 @@
 package com.example.there.data.apis.spotify
 
 import com.example.there.data.entities.spotify.TrackData
-import com.example.there.data.responses.CategoriesResponse
-import com.example.there.data.responses.PlaylistsResponse
-import com.example.there.data.responses.SearchAllResponse
-import com.example.there.data.responses.TracksOnlyResponse
+import com.example.there.data.responses.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -41,6 +38,11 @@ interface SpotifyApi {
     @GET("browse/categories/{category_id}/playlists")
     fun getPlaylistsForCategory(@Header("Authorization") authorization: String,
                                 @Path("category_id") categoryId: String): Observable<PlaylistsResponse>
+
+    @GET("users/{user_id}/playlists/{playlist_id}/tracks")
+    fun getPlaylistTracks(@Header("Authorization") authorization: String,
+                          @Path("user_id") userId: String,
+                          @Path("playlist_id") playlistId: String): Observable<PlaylistTracksResponse>
 
     companion object {
         private const val DEFAULT_LIMIT = "50"

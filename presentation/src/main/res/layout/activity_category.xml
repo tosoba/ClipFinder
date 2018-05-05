@@ -3,9 +3,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="view"
-            type="com.example.there.findclips.category.CategoryActivityView" />
+            type="com.example.there.findclips.category.CategoryView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -59,11 +61,25 @@
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
-            android:id="@+id/category_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/main_background_gradient"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <fragment
+                android:id="@+id/category_spotify_playlists_fragment"
+                android:name="com.example.there.findclips.listfragments.SpotifyPlaylistsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="100dp"
+                android:visibility="@{view.state.loadingInProgress ? View.VISIBLE : View.GONE}" />
+
+        </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/category_favourite_fab"

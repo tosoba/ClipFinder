@@ -1,5 +1,6 @@
 package com.example.there.findclips.search.spotify
 
+import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.AccessTokenUseCase
 import com.example.there.domain.usecases.spotify.SearchAllUseCase
@@ -13,6 +14,8 @@ class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
                              private val searchAllUseCase: SearchAllUseCase) : BaseSpotifyViewModel(accessTokenUseCase) {
 
     val viewState: SpotifySearchViewState = SpotifySearchViewState()
+
+    val loadedFlag: MutableLiveData<Unit> = MutableLiveData()
 
     fun searchAll(accessToken: AccessTokenEntity?, query: String) {
         if (accessToken != null && accessToken.isValid) {
@@ -32,6 +35,7 @@ class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
                     viewState.addArtistsSorted(it.artists.map(ArtistEntityMapper::mapFrom))
                     viewState.addPlaylistsSorted(it.playlists.map(PlaylistEntityMapper::mapFrom))
                     viewState.addTracksSorted(it.tracks.map(TrackEntityMapper::mapFrom))
+                    loadedFlag.value = Unit
                 }, this::onError))
     }
 }

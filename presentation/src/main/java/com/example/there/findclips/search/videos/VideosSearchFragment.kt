@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.lists.VideosList
 import com.example.there.findclips.search.MainSearchFragment
@@ -18,7 +19,6 @@ import com.example.there.findclips.util.SeparatorDecoration
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import javax.inject.Inject
-import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 
 
 class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearchFragment {
@@ -27,8 +27,8 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         set(value) {
             if (field == value) return
             field = value
-            mainViewModel.getVideos(value)
-            mainViewModel.viewState.videos.clear()
+            viewModel.getVideos(value)
+            viewModel.viewState.videos.clear()
         }
 
     @Inject
@@ -42,13 +42,8 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     private val view: VideosSearchView by lazy {
         VideosSearchView(
-                state = mainViewModel.viewState,
-                videosAdapter = VideosList.Adapter(mainViewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
-                videosLayoutManager = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-                } else {
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                },
+                state = viewModel.viewState,
+                videosAdapter = VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
                 videosItemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f)
         )
     }
@@ -56,6 +51,11 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_search, container, false)
         binding.videosSearchView = view
+        binding.videosRecyclerView.layoutManager = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        } else {
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
         return binding.root
     }
 
@@ -81,7 +81,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     }
 
     override fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosSearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosSearchViewModel::class.java)
     }
 
     companion object {

@@ -17,4 +17,6 @@ interface SpotifyDataStore {
     fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>>
+
+    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String): Observable<List<TrackEntity>>
 }

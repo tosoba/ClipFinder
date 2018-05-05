@@ -1,10 +1,10 @@
 package com.example.there.findclips.trackvideos
 
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
@@ -49,23 +49,30 @@ class TrackVideosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initBinding()
+        initToolbar()
+    }
+
+    private fun initBinding() {
         val binding: ActivityTrackVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_track_videos)
         binding.view = view
-        initToolbar()
-        title = track.name
     }
 
     private fun initToolbar() {
         setSupportActionBar(track_videos_toolbar)
         track_videos_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
         track_videos_toolbar.setNavigationOnClickListener { onBackPressed() }
+        title = track.name
     }
 
     companion object {
         private const val EXTRA_TRACK = "EXTRA_TRACK"
 
-        fun startingIntent(context: Context, track: Track): Intent = Intent(context, TrackVideosActivity::class.java).apply {
-            putExtra(EXTRA_TRACK, track)
+        fun start(activity: FragmentActivity, track: Track) {
+            val intent = Intent(activity, TrackVideosActivity::class.java).apply {
+                putExtra(EXTRA_TRACK, track)
+            }
+            activity.startActivity(intent)
         }
     }
 }

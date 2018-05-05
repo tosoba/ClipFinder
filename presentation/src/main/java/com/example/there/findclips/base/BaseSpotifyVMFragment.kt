@@ -8,7 +8,7 @@ abstract class BaseSpotifyVMFragment<T : BaseSpotifyViewModel>: BaseVMFragment<T
     override fun setupObservers() {
         super.setupObservers()
 
-        mainViewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
+        viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
             accessToken?.let {
                 activity?.saveAccessToken(it)
             }

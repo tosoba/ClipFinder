@@ -2,16 +2,16 @@ package com.example.there.findclips.search.spotify
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import com.example.there.findclips.search.spotify.fragments.SpotifyAlbumsFragment
-import com.example.there.findclips.search.spotify.fragments.SpotifyArtistsFragment
-import com.example.there.findclips.search.spotify.fragments.SpotifyPlaylistsFragment
-import com.example.there.findclips.search.spotify.fragments.SpotifyTracksFragment
+import com.example.there.findclips.listfragments.SpotifyAlbumsFragment
+import com.example.there.findclips.listfragments.SpotifyArtistsFragment
+import com.example.there.findclips.listfragments.SpotifyPlaylistsFragment
+import com.example.there.findclips.listfragments.SpotifyTracksFragment
+import com.example.there.findclips.util.CurrentFragmentStatePagerAdapter
 
 
-class SpotifyFragmentPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
+class SpotifyFragmentPagerAdapter(fragmentManager: FragmentManager) : CurrentFragmentStatePagerAdapter(fragmentManager) {
 
-    private val fragments = arrayOf(
+    val fragments: Array<Fragment> = arrayOf(
             SpotifyAlbumsFragment(),
             SpotifyArtistsFragment(),
             SpotifyPlaylistsFragment(),

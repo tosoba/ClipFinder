@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -16,9 +17,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         when (item.itemId) {
-            R.id.action_dashboard -> MainRouter.goToDashboardFragment(this)
-            R.id.action_favorites -> MainRouter.goToFavouritesFragment(this)
-            R.id.action_search -> MainRouter.goToSearchFragment(this)
+            R.id.action_dashboard -> MainFragmentsRouter.goToDashboardFragment(this)
+            R.id.action_favorites -> MainFragmentsRouter.goToFavouritesFragment(this)
+            R.id.action_search -> MainFragmentsRouter.goToSearchFragment(this)
         }
 
         return@OnNavigationItemSelectedListener true
@@ -32,11 +33,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainActivityView = view
 
         if (savedInstanceState == null) {
-            MainRouter.goToDashboardFragment(this)
+            MainFragmentsRouter.goToDashboardFragment(this)
         }
-    }
-
-    fun updateBottomNavigationSelectedItemId(id: Int) {
-        bottom_navigation_view?.menu?.findItem(id)?.isChecked = true
     }
 }

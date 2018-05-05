@@ -8,6 +8,7 @@ object PlaylistEntityMapper : Mapper<PlaylistEntity, Playlist>() {
     override fun mapFrom(from: PlaylistEntity): Playlist = Playlist(
             id = from.id,
             name = from.name,
-            iconUrl = from.iconUrl
+            iconUrl = from.iconUrl,
+            userId = from.userId
     )
 }

@@ -2,6 +2,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="spotifySearchView"
             type="com.example.there.findclips.search.spotify.SpotifySearchView" />
@@ -19,6 +21,7 @@
             tabs="@{spotifySearchView.fragmentTabs}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:minHeight="?android:attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,10 +35,20 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{spotifySearchView.pagerAdapter}"
+            android:visibility="@{spotifySearchView.state.loadingInProgress ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spotify_tab_layout" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{spotifySearchView.state.loadingInProgress ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

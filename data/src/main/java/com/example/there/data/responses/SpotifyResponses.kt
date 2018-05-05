@@ -10,13 +10,11 @@ data class SearchAllResponse(
         @SerializedName("tracks") val tracksResult: TracksResult?
 )
 
-data class PlaylistsResponse(@SerializedName("playlists") val result: PlaylistsResult)
-
 data class TracksOnlyResponse(val tracks: List<TrackData>)
 
-data class CategoriesResponse(
-        @SerializedName("categories") val result: CategoriesResult
-)
+data class CategoriesResponse(@SerializedName("categories") val result: CategoriesResult)
+
+data class CategoriesResult(@SerializedName("items") val categories: List<CategoryData>)
 
 data class AlbumsResult(@SerializedName("items") val albums: List<AlbumData>,
                         @SerializedName("previous") val previousPageUrl: String?,
@@ -28,6 +26,8 @@ data class ArtistsResult(@SerializedName("items") val artists: List<ArtistData>,
                          @SerializedName("next") val nextPageUrl: String?,
                          @SerializedName("total") val totalItems: Int)
 
+data class PlaylistsResponse(@SerializedName("playlists") val result: PlaylistsResult)
+
 data class PlaylistsResult(@SerializedName("items") val playlists: List<PlaylistData>,
                            @SerializedName("previous") val previousPageUrl: String?,
                            @SerializedName("next") val nextPageUrl: String?,
@@ -38,6 +38,8 @@ data class TracksResult(@SerializedName("items") val tracks: List<TrackData>,
                         @SerializedName("next") val nextPageUrl: String?,
                         @SerializedName("total") val totalItems: Int)
 
-data class CategoriesResult(
-        @SerializedName("items") val categories: List<CategoryData>
-)
+data class PlaylistTracksResponse(@SerializedName("items") val playlistTracks: List<PlaylistTrackData>,
+                                  @SerializedName("previous") val previousPageUrl: String?,
+                                  @SerializedName("next") val nextPageUrl: String?,
+                                  @SerializedName("total") val totalItems: Int)
+

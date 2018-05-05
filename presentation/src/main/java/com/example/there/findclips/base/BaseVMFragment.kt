@@ -8,7 +8,7 @@ import com.example.there.findclips.util.messageOrDefault
 
 abstract class BaseVMFragment<T : BaseViewModel> : Fragment() {
 
-    protected lateinit var mainViewModel: T
+    protected lateinit var viewModel: T
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -33,7 +33,7 @@ abstract class BaseVMFragment<T : BaseViewModel> : Fragment() {
     protected abstract fun initViewModel()
 
     protected open fun setupObservers() {
-        mainViewModel.errorState.observe(this, Observer { error ->
+        viewModel.errorState.observe(this, Observer { error ->
             error?.let {
                 Toast.makeText(this.activity, it.messageOrDefault(), Toast.LENGTH_LONG).show()
             }

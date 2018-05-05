@@ -30,6 +30,10 @@
             android:name=".category.CategoryActivity"
             android:label="@string/title_activity_category"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".playlist.PlaylistActivity"
+            android:label="@string/title_activity_playlist"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
