@@ -3,6 +3,7 @@ package com.example.there.findclips.util
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.widget.EditText
 import android.widget.SearchView
@@ -91,12 +92,9 @@ fun Long.getPublishedAgoString(prefix: String): String {
     }
 }
 
-fun SearchView.setTextColors(textColor: Int = Color.WHITE, hintTextColor: Int = Color.LTGRAY) {
-    val searchSrcTextId = resources.getIdentifier("android:id/search_src_text", null, null)
-    val searchEditText = findViewById<EditText>(searchSrcTextId)
-    searchEditText.setTextColor(textColor)
-    searchEditText.setHintTextColor(hintTextColor)
-}
-
 val Fragment.mainActivity: MainActivity?
     get() = activity as? MainActivity
+
+fun BottomNavigationView.checkItem(id: Int) {
+    menu.findItem(id)?.isChecked = true
+}

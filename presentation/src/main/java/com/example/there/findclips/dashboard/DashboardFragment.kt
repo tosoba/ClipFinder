@@ -15,7 +15,6 @@ import com.example.there.findclips.entities.Category
 import com.example.there.findclips.entities.Playlist
 import com.example.there.findclips.entities.TopTrack
 import com.example.there.findclips.lists.*
-import com.example.there.findclips.main.MainFragment
 import com.example.there.findclips.Router
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
@@ -23,10 +22,7 @@ import com.example.there.findclips.util.mainActivity
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), MainFragment {
-
-    override val bottomNavigationItemId: Int
-        get() = R.id.action_dashboard
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
 
     @Inject
     lateinit var vmFactory: DashboardVMFactory

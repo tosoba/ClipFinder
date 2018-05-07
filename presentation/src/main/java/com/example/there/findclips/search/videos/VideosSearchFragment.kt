@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.entities.Video
@@ -36,7 +37,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     private val videoItemClickListener = object : VideosList.OnItemClickListener {
         override fun onClick(item: Video) {
-
+            Router.goToPlayerActivity(activity, video = item)
         }
     }
 

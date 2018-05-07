@@ -10,14 +10,10 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.FragmentSearchBinding
-import com.example.there.findclips.main.MainFragment
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
-class SearchFragment : Fragment(), MainFragment {
-
-    override val bottomNavigationItemId: Int
-        get() = R.id.action_search
+class SearchFragment : Fragment() {
 
     private val pagerAdapter: SearchFragmentPagerAdapter by lazy { SearchFragmentPagerAdapter(childFragmentManager) }
 

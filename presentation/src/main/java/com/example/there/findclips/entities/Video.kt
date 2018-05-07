@@ -1,11 +1,13 @@
 package com.example.there.findclips.entities
 
+import android.annotation.SuppressLint
 import android.databinding.ObservableField
-import com.example.there.domain.entities.videos.Duration
 import com.example.there.findclips.util.*
+import io.mironov.smuggler.AutoParcelable
 import org.joda.time.Instant
 import java.math.BigInteger
 
+@SuppressLint("ParcelCreator")
 data class Video(
         val id: String,
         val channelId: String,
@@ -13,10 +15,11 @@ data class Video(
         val description: String,
         val publishedAt: String,
         val thumbnailUrl: String,
-        val duration: Duration,
+        val duration: String,
         val viewCount: BigInteger,
         var channelThumbnailUrl: ObservableField<String> = ObservableField("")
-) {
+): AutoParcelable {
+
     val details: String
         get() = "$publishedAgo • ${viewCount.formattedString} views"
 

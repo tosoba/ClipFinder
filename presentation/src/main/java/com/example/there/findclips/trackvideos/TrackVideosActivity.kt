@@ -1,10 +1,10 @@
 package com.example.there.findclips.trackvideos
 
+import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
@@ -68,7 +68,7 @@ class TrackVideosActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_TRACK = "EXTRA_TRACK"
 
-        fun start(activity: FragmentActivity, track: Track) {
+        fun start(activity: Activity, track: Track) {
             val intent = Intent(activity, TrackVideosActivity::class.java).apply {
                 putExtra(EXTRA_TRACK, track)
             }

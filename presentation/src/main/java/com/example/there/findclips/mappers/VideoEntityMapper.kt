@@ -12,7 +12,7 @@ object VideoEntityMapper : Mapper<VideoEntity, Video>() {
             description = from.description,
             publishedAt = from.publishedAt,
             thumbnailUrl = from.thumbnailUrl,
-            duration = from.duration,
+            duration = from.duration.toString(),
             viewCount = from.viewCount
     )
 }

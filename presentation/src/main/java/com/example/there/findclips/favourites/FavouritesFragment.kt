@@ -8,15 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
-import com.example.there.findclips.main.MainFragment
 import com.example.there.findclips.util.app
 import javax.inject.Inject
 
 
-class FavouritesFragment : BaseSpotifyVMFragment<FavouritesViewModel>(), MainFragment {
-
-    override val bottomNavigationItemId: Int
-        get() = R.id.action_favorites
+class FavouritesFragment : BaseSpotifyVMFragment<FavouritesViewModel>() {
 
     @Inject
     lateinit var vmFactory: FavouritesVMFactory

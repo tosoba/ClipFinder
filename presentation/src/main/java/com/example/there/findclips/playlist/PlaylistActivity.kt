@@ -1,11 +1,11 @@
 package com.example.there.findclips.playlist
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.Toast
@@ -82,7 +82,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
     companion object {
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"
 
-        fun start(activity: FragmentActivity, playlist: Playlist) {
+        fun start(activity: Activity, playlist: Playlist) {
             val intent = Intent(activity, PlaylistActivity::class.java).apply {
                 putExtra(EXTRA_PLAYLIST, playlist)
             }

@@ -1,13 +1,12 @@
 package com.example.there.findclips.category
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
@@ -83,7 +82,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
     companion object {
         private const val EXTRA_CATEGORY = "EXTRA_CATEGORY"
 
-        fun start(activity: FragmentActivity, category: Category) {
+        fun start(activity: Activity, category: Category) {
             val intent = Intent(activity, CategoryActivity::class.java).apply {
                 putExtra(EXTRA_CATEGORY, category)
             }
