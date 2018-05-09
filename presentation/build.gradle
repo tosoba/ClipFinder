@@ -68,4 +68,6 @@ dependencies {
     implementation project(':domain')
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+
+    implementation 'com.github.pedrovgs:draggablepanel:1.9'
 }

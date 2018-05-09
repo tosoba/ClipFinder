@@ -34,7 +34,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initBinding()
+        initView()
         initToolbar()
 
         if (savedInstanceState == null) {
@@ -42,7 +42,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         }
     }
 
-    private fun initBinding() {
+    private fun initView() {
         val binding: ActivityPlaylistBinding = DataBindingUtil.setContentView(this, R.layout.activity_playlist)
         binding.view = view
     }

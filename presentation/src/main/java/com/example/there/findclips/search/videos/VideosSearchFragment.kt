@@ -10,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.lists.VideosList
 import com.example.there.findclips.search.MainSearchFragment
 import com.example.there.findclips.util.SeparatorDecoration
+import com.example.there.findclips.util.VideoPlayerHost
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     private val videoItemClickListener = object : VideosList.OnItemClickListener {
         override fun onClick(item: Video) {
-            Router.goToPlayerActivity(activity, video = item)
+            (activity as? VideoPlayerHost)?.playVideo(video = item)
         }
     }
 
@@ -57,6 +57,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         } else {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
+
         return binding.root
     }
 

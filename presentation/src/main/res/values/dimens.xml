@@ -5,4 +5,10 @@
     <dimen name="app_bar_height">256dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <item name="x_scale_factor" format="float" type="dimen">2.3</item>
+    <item name="y_scale_factor" format="float" type="dimen">2.3</item>
+    <dimen name="top_fragment_height">200dp</dimen>
+    <dimen name="top_fragment_margin">10dp</dimen>
+    <dimen name="video_player_fragment_height">325dp</dimen>
 </resources>

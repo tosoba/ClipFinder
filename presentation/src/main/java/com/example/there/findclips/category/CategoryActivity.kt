@@ -34,7 +34,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initBinding()
+        initView()
         initToolbar()
 
         if (savedInstanceState == null) {
@@ -42,7 +42,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         }
     }
 
-    private fun initBinding() {
+    private fun initView() {
         val binding: ActivityCategoryBinding = DataBindingUtil.setContentView(this, R.layout.activity_category)
         binding.view = view
     }

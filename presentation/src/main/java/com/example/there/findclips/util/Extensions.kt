@@ -2,9 +2,14 @@ package com.example.there.findclips.util
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Point
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.util.TypedValue
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.SearchView
 import com.example.there.domain.entities.spotify.AccessTokenEntity
@@ -97,4 +102,30 @@ val Fragment.mainActivity: MainActivity?
 
 fun BottomNavigationView.checkItem(id: Int) {
     menu.findItem(id)?.isChecked = true
+}
+
+fun Resources.getDimenFloat(id: Int): Float {
+    val typedValue = TypedValue()
+    getValue(id, typedValue, true)
+    return typedValue.float
+}
+
+fun Activity.showStatusBar() {
+    window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+}
+
+fun Activity.hideStatusBar() {
+    window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+}
+
+fun ViewGroup.changeParams(width: Int, height: Int) {
+    layoutParams.width = width
+    layoutParams.height = height
+    requestLayout()
+}
+
+fun ViewGroup.changeMarginParams(left: Int, top: Int, right: Int, bottom: Int) {
+    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+    marginLayoutParams.setMargins(left, top, right, bottom)
+    requestLayout()
 }
