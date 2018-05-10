@@ -34,7 +34,6 @@
             android:name=".playlist.PlaylistActivity"
             android:label="@string/title_activity_playlist"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".player.PlayerActivity"></activity>
     </application>
 
 </manifest>

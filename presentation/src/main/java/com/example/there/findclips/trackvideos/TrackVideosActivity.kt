@@ -10,7 +10,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.Keys
@@ -21,6 +20,7 @@ import com.example.there.findclips.draggablefragment.DraggableListener
 import com.example.there.findclips.draggablefragment.DraggablePanel
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.entities.Video
+import com.example.there.findclips.player.PlayerHost
 import com.example.there.findclips.search.videos.VideosSearchFragment
 import com.example.there.findclips.trackdetails.TrackDetailsFragment
 import com.example.there.findclips.util.*
@@ -30,7 +30,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_track_videos.*
 
 
-class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
+class TrackVideosActivity : AppCompatActivity(), PlayerHost {
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
@@ -73,19 +73,17 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
 
     private fun initFromSavedState(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            viewState.videoIsOpen.set(it.getBoolean(KEY_SAVED_VIEW_STATE))
+            viewState.videoIsOpen.set(it.getBoolean(KEY_SAVED_VIDEO_IS_OPEN))
             lastVideo = it.getParcelable(KEY_SAVED_LAST_VIDEO)
             lastSeekTime = it.getInt(KEY_SAVED_LAST_SEEK_TIME)
-            isMaximized = it.getBoolean(KEY_SAVED_IS_MAXIMIZED)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putBoolean(KEY_SAVED_VIEW_STATE, viewState.videoIsOpen.get() ?: false)
+        outState?.putBoolean(KEY_SAVED_VIDEO_IS_OPEN, viewState.videoIsOpen.get() ?: false)
         outState?.putParcelable(KEY_SAVED_LAST_VIDEO, lastVideo)
         outState?.putInt(KEY_SAVED_LAST_SEEK_TIME, lastSeekTime)
-        outState?.putBoolean(KEY_SAVED_IS_MAXIMIZED, isMaximized)
     }
 
     private fun initView() {
@@ -95,29 +93,32 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
         initYoutubeFragment(binding)
         if (binding is ActivityTrackVideosBindingLandImpl) {
             if (!isMaximized) minimizeLandscapeFragmentContainer()
-
-            enlarge_player_btn?.setOnClickListener {
-                if (!isMaximized) {
-                    maximizeLandscapeFragmentContainer()
-                    isMaximized = true
-                }
-            }
-
-            close_player_btn?.setOnClickListener {
-                pause()
-                view.state.videoIsOpen.set(false)
-            }
+            player_fragment?.view?.setOnTouchListener(onYoutubeFragmentTouchListener)
         } else {
             initDraggablePanel(binding.draggablePanel!!)
         }
     }
 
+    private val onYoutubeFragmentTouchListener by lazy {
+        object : OnSwipeTouchListener(this@TrackVideosActivity) {
+            override fun onSingleTap() {
+                if (youtubePlayer?.isPlaying == true) youtubePlayer?.pause()
+                else youtubePlayer?.play()
+            }
+
+            override fun onSwipeRight() = closeVideo()
+            override fun onSwipeLeft() = closeVideo()
+            override fun onSwipeTop() = maximizeLandscapeFragmentContainer()
+            override fun onSwipeBottom() = minimizeLandscapeFragmentContainer()
+        }
+    }
+
     private fun maximizeLandscapeFragmentContainer() {
-        player_fragment_container?.changeParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        player_fragment_container?.changeMarginParams(0, 0, 0, 0)
-        enlarge_player_btn?.visibility = View.GONE
-        close_player_btn?.visibility = View.GONE
-        youtubePlayer?.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT)
+        if (!isMaximized) {
+            player_fragment_container?.changeParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            player_fragment_container?.changeMarginParams(0, 0, 0, 0)
+            isMaximized = true
+        }
     }
 
     private fun initYoutubeFragment(binding: ActivityTrackVideosBinding) {
@@ -130,6 +131,13 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
         youtubePlayerFragment?.initialize(Keys.youtubeApi, onPlayerInitializedListener)
     }
 
+    private fun closeVideo() {
+        pause()
+        view.state.videoIsOpen.set(false)
+        lastVideo = null
+        maximizeLandscapeFragmentContainer()
+    }
+
     private val draggableListener = object : DraggableListener {
         override fun onMaximized() {
             play()
@@ -140,15 +148,9 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
             isMaximized = false
         }
 
-        override fun onClosedToLeft() {
-            pause()
-            view.state.videoIsOpen.set(false)
-        }
+        override fun onClosedToLeft() = closeVideo()
 
-        override fun onClosedToRight() {
-            pause()
-            view.state.videoIsOpen.set(false)
-        }
+        override fun onClosedToRight() = closeVideo()
     }
 
     private fun pause() {
@@ -216,7 +218,6 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
             if (viewState.videoIsOpen.get() == true && lastVideo != null) {
                 youtubePlayer?.loadVideo(lastVideo!!.id, lastSeekTime)
                 play()
-                if (!isMaximized) draggable_panel?.minimize()
             }
         }
 
@@ -243,13 +244,13 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
     }
 
     private fun minimizeLandscapeFragmentContainer() {
-        player_fragment_container?.changeParams(
-                width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300f, resources.displayMetrics).toInt(),
-                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 225f, resources.displayMetrics).toInt())
-        player_fragment_container?.changeMarginParams(0, 0, 20, 20)
-        enlarge_player_btn?.visibility = View.VISIBLE
-        close_player_btn?.visibility = View.VISIBLE
-        youtubePlayer?.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS)
+        if (isMaximized) {
+            player_fragment_container?.changeParams(
+                    width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300f, resources.displayMetrics).toInt(),
+                    height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 225f, resources.displayMetrics).toInt())
+            player_fragment_container?.changeMarginParams(0, 0, 20, 20)
+            isMaximized = false
+        }
     }
 
     override fun onBackPressed() {
@@ -258,8 +259,8 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
                 minimizeLandscapeFragmentContainer()
             } else {
                 draggable_panel?.minimize()
+                isMaximized = false
             }
-            isMaximized = false
         } else {
             super.onBackPressed()
         }
@@ -268,10 +269,9 @@ class TrackVideosActivity : AppCompatActivity(), VideoPlayerHost {
     companion object {
         private const val EXTRA_TRACK = "EXTRA_TRACK"
 
-        private const val KEY_SAVED_VIEW_STATE = "KEY_SAVED_VIEW_STATE"
+        private const val KEY_SAVED_VIDEO_IS_OPEN = "KEY_SAVED_VIDEO_IS_OPEN"
         private const val KEY_SAVED_LAST_VIDEO = "KEY_SAVED_LAST_VIDEO"
         private const val KEY_SAVED_LAST_SEEK_TIME = "KEY_SAVED_LAST_SEEK_TIME"
-        private const val KEY_SAVED_IS_MAXIMIZED = "KEY_SAVED_IS_MAXIMIZED"
 
         private const val RECOVERY_DIALOG_REQUEST = 1
 

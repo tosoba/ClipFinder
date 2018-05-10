@@ -1,13 +1,11 @@
 package com.example.there.findclips
 
 import android.app.Activity
-import android.support.v4.app.FragmentActivity
 import com.example.there.findclips.category.CategoryActivity
 import com.example.there.findclips.entities.Category
 import com.example.there.findclips.entities.Playlist
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.entities.Video
-import com.example.there.findclips.player.PlayerActivity
 import com.example.there.findclips.playlist.PlaylistActivity
 import com.example.there.findclips.trackvideos.TrackVideosActivity
 
@@ -22,9 +20,5 @@ object Router {
 
     fun goToPlaylistActivity(activity: Activity?, playlist: Playlist) {
         activity?.let { PlaylistActivity.start(it, playlist) }
-    }
-
-    fun goToPlayerActivity(activity: Activity?, video: Video) {
-        activity?.let { PlayerActivity.start(it, video) }
     }
 }

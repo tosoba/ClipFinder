@@ -31,6 +31,11 @@ abstract class OnSwipeTouchListener(ctx: Context) : OnTouchListener {
 
         override fun onDown(e: MotionEvent): Boolean = true
 
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            onSingleTap()
+            return true
+        }
+
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             var result = false
             try {
@@ -68,4 +73,5 @@ abstract class OnSwipeTouchListener(ctx: Context) : OnTouchListener {
     abstract fun onSwipeLeft()
     abstract fun onSwipeTop()
     abstract fun onSwipeBottom()
+    abstract fun onSingleTap()
 }

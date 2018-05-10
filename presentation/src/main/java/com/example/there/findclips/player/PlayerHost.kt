@@ -1,7 +1,7 @@
-package com.example.there.findclips.util
+package com.example.there.findclips.player
 
 import com.example.there.findclips.entities.Video
 
-interface VideoPlayerHost {
+interface PlayerHost {
     fun playVideo(video: Video)
 }
