@@ -38,19 +38,33 @@
             android:visibility="@{(mainActivityView.state.videoIsOpen &amp;&amp; mainActivityView.state.isMaximized) ? View.GONE : View.VISIBLE}"
             app:itemIconTint="@color/bottom_navigation_color"
             app:itemTextColor="@color/bottom_navigation_color"
-            app:layout_constraintTop_toBottomOf="@id/main_view_pager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_view_pager"
             app:menu="@menu/bottom_navigation" />
 
-        <com.example.there.findclips.draggablefragment.DraggablePanel
-            android:id="@+id/main_draggable_panel"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/main_player_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
             android:visibility="@{mainActivityView.state.videoIsOpen ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/main_bottom_navigation_view"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent">
+
+            <fragment
+                android:id="@+id/main_player_fragment"
+                android:name="com.example.there.findclips.player.SwipeablePlayerFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

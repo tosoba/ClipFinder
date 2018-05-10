@@ -91,7 +91,7 @@
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/player_fragment_container"
+            android:id="@+id/track_videos_player_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end"
@@ -100,7 +100,7 @@
             android:visibility="@{view.state.videoIsOpen ? View.VISIBLE : View.GONE}">
 
             <fragment
-                android:id="@+id/player_fragment"
+                android:id="@+id/track_videos_player_fragment"
                 android:name="com.example.there.findclips.player.SwipeablePlayerFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

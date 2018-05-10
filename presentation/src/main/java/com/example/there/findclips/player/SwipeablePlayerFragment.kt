@@ -13,9 +13,7 @@ class SwipeablePlayerFragment: YouTubePlayerSupportFragment() {
     override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View? {
         val view = super.onCreateView(layoutInflater, viewGroup, bundle)
         val wrapper = object : FrameLayout(layoutInflater.context) {
-            override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-                return true
-            }
+            override fun onInterceptTouchEvent(ev: MotionEvent): Boolean = true
         }
         wrapper.addView(view)
         return wrapper

@@ -91,7 +91,7 @@
         </android.support.design.widget.CoordinatorLayout>
 
         <com.example.there.findclips.draggablefragment.DraggablePanel
-            android:id="@+id/draggable_panel"
+            android:id="@+id/track_videos_draggable_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{view.state.videoIsOpen ? View.VISIBLE : View.GONE}" />
