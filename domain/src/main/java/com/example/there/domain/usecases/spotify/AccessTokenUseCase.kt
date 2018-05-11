@@ -11,7 +11,7 @@ import java.lang.IllegalArgumentException
 class AccessTokenUseCase(transformer: Transformer<AccessTokenEntity>,
                          private val repository: SpotifyRepository) : UseCase<AccessTokenEntity>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<AccessTokenEntity> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<AccessTokenEntity> {
         val clientId = data?.get(UseCaseParams.PARAM_CLIENT_ID) as? String
         val clientSecret = data?.get(UseCaseParams.PARAM_CLIENT_SECRET) as? String
         return if (clientId != null && clientSecret != null) {
@@ -21,11 +21,11 @@ class AccessTokenUseCase(transformer: Transformer<AccessTokenEntity>,
         }
     }
 
-    fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> {
+    fun execute(clientId: String, clientSecret: String): Observable<AccessTokenEntity> {
         val data = HashMap<String, String>().apply {
             put(UseCaseParams.PARAM_CLIENT_ID, clientId)
             put(UseCaseParams.PARAM_CLIENT_SECRET, clientSecret)
         }
-        return observable(withData = data)
+        return execute(withData = data)
     }
 }

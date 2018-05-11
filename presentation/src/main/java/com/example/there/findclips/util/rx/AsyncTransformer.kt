@@ -1,4 +1,4 @@
-package com.example.there.findclips.util
+package com.example.there.findclips.util.rx
 
 import com.example.there.domain.common.Transformer
 import io.reactivex.Observable

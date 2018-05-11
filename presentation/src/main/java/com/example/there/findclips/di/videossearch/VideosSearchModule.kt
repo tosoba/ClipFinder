@@ -4,7 +4,7 @@ import com.example.there.domain.repos.videos.VideosRepository
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
 import com.example.there.domain.usecases.videos.SearchVideosUseCase
 import com.example.there.findclips.search.videos.VideosSearchVMFactory
-import com.example.there.findclips.util.AsyncTransformer
+import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides
 

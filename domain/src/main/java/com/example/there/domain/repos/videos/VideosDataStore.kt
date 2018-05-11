@@ -6,5 +6,7 @@ import io.reactivex.Observable
 interface VideosDataStore {
     fun getVideos(query: String): Observable<List<VideoEntity>>
 
+    fun getVideos(query: String, pageToken: String? = null): Observable<Pair<String?, List<VideoEntity>>>
+
     fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>>
 }

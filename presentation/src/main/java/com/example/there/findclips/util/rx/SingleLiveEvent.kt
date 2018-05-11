@@ -1,4 +1,4 @@
-package com.example.there.findclips.util
+package com.example.there.findclips.util.rx
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData

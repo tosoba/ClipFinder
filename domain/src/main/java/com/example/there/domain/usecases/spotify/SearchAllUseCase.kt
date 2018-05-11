@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 class SearchAllUseCase(transformer: Transformer<SearchAllEntity>,
                        private val repository: SpotifyRepository) : UseCase<SearchAllEntity>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<SearchAllEntity> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<SearchAllEntity> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
         val query = data?.get(UseCaseParams.PARAM_SEARCH_ALL_QUERY) as? String
         return if (accessToken != null && query != null) {
@@ -22,11 +22,11 @@ class SearchAllUseCase(transformer: Transformer<SearchAllEntity>,
         }
     }
 
-    fun searchAll(accessTokenEntity: AccessTokenEntity, query: String): Observable<SearchAllEntity> {
+    fun execute(accessTokenEntity: AccessTokenEntity, query: String): Observable<SearchAllEntity> {
         val data = HashMap<String, Any>().apply {
             put(UseCaseParams.PARAM_ACCESS_TOKEN, accessTokenEntity)
             put(UseCaseParams.PARAM_SEARCH_ALL_QUERY, query)
         }
-        return observable(withData = data)
+        return execute(withData = data)
     }
 }

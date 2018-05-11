@@ -35,21 +35,21 @@ class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
 
     private fun loadCategories(accessToken: AccessTokenEntity) {
         viewState.categoriesLoadingInProgress.set(true)
-        addDisposable(categoriesUseCase.getCategories(accessToken)
+        addDisposable(categoriesUseCase.execute(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribe({ viewState.addCategoriesSorted(it.map(CategoryEntityMapper::mapFrom)) }, this::onError))
     }
 
     private fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
-        addDisposable(featuredPlaylistsUseCase.getFeaturedPlaylists(accessToken)
+        addDisposable(featuredPlaylistsUseCase.execute(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribe({ viewState.addFeaturedPlaylistsSorted(it.map(PlaylistEntityMapper::mapFrom)) }, this::onError))
     }
 
     private fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
         viewState.topTracksLoadingInProgress.set(true)
-        addDisposable(dailyViralTracksUseCase.getTracks(accessToken)
+        addDisposable(dailyViralTracksUseCase.execute(accessToken)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, this::onError))
     }

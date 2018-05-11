@@ -3,7 +3,6 @@ package com.example.there.findclips.listfragments
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,7 +12,7 @@ import com.example.there.findclips.Router
 import com.example.there.findclips.databinding.FragmentSpotifyTracksBinding
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.lists.GridTracksList
-import com.example.there.findclips.util.SeparatorDecoration
+import com.example.there.findclips.util.recyclerview.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
 
 

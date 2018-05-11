@@ -12,7 +12,7 @@ class GetChannelsThumbnailUrlsUseCase(transformer: Transformer<List<String>>,
                                       private val repository: VideosRepository) : UseCase<List<String>>(transformer) {
 
     @Suppress("UNCHECKED_CAST")
-    override fun createObservable(data: Map<String, Any>?): Observable<List<String>> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<List<String>> {
         val videos = data?.get(UseCaseParams.PARAM_VIDEOS) as? List<VideoEntity>
         return if (videos != null) {
             repository.getChannelsThumbnailUrls(videos)
@@ -21,10 +21,10 @@ class GetChannelsThumbnailUrlsUseCase(transformer: Transformer<List<String>>,
         }
     }
 
-    fun getUrls(videos: List<VideoEntity>): Observable<List<String>> {
-        val data = HashMap<String, Any>().apply {
+    fun execute(videos: List<VideoEntity>): Observable<List<String>> {
+        val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_VIDEOS, videos)
         }
-        return observable(withData = data)
+        return execute(withData = data)
     }
 }

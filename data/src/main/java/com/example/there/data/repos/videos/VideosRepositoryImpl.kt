@@ -15,4 +15,7 @@ class VideosRepositoryImpl(api: YoutubeApi, scraper: YahooScraper) : VideosRepos
 
     override fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>> =
             remoteVideosDataStore.getChannelsThumbnailUrls(videos)
+
+    override fun getVideos(query: String, pageToken: String?): Observable<Pair<String?, List<VideoEntity>>> =
+            remoteVideosDataStore.getVideos(query, pageToken)
 }

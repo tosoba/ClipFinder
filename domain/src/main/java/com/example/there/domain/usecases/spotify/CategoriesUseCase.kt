@@ -12,7 +12,7 @@ import java.lang.IllegalArgumentException
 class CategoriesUseCase(transformer: Transformer<List<CategoryEntity>>,
                         private val repository: SpotifyRepository) : UseCase<List<CategoryEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<List<CategoryEntity>> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<List<CategoryEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
         return if (accessToken != null) {
             repository.getCategories(accessToken)
@@ -21,8 +21,8 @@ class CategoriesUseCase(transformer: Transformer<List<CategoryEntity>>,
         }
     }
 
-    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
+    fun execute(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
         val data = HashMap<String, Any>().apply { put(UseCaseParams.PARAM_ACCESS_TOKEN, accessToken) }
-        return observable(withData = data)
+        return execute(withData = data)
     }
 }

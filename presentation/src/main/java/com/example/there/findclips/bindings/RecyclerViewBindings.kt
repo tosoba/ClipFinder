@@ -8,3 +8,8 @@ import android.support.v7.widget.RecyclerView
 fun bindItemDecoration(recycler: RecyclerView, decoration: RecyclerView.ItemDecoration) {
     recycler.addItemDecoration(decoration)
 }
+
+@BindingAdapter("onScrollListener")
+fun bindOnScrollListener(recycler: RecyclerView, listener: RecyclerView.OnScrollListener) {
+    recycler.addOnScrollListener(listener)
+}

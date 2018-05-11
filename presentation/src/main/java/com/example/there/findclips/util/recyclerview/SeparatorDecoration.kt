@@ -1,4 +1,4 @@
-package com.example.there.findclips.util
+package com.example.there.findclips.util.recyclerview
 
 import android.content.Context
 import android.graphics.Canvas

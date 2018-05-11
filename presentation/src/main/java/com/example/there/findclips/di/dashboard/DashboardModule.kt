@@ -6,7 +6,7 @@ import com.example.there.domain.usecases.spotify.CategoriesUseCase
 import com.example.there.domain.usecases.spotify.DailyViralTracksUseCase
 import com.example.there.domain.usecases.spotify.FeaturedPlaylistsUseCase
 import com.example.there.findclips.dashboard.DashboardVMFactory
-import com.example.there.findclips.util.AsyncTransformer
+import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides
 

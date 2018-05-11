@@ -1,7 +1,7 @@
 package com.example.there.findclips.base
 
 import android.arch.lifecycle.ViewModel
-import com.example.there.findclips.util.SingleLiveEvent
+import com.example.there.findclips.util.rx.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 

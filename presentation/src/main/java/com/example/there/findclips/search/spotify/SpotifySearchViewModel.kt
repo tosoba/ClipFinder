@@ -28,7 +28,7 @@ class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
 
     private fun loadData(accessTokenEntity: AccessTokenEntity, query: String) {
         viewState.loadingInProgress.set(true)
-        addDisposable(searchAllUseCase.searchAll(accessTokenEntity, query)
+        addDisposable(searchAllUseCase.execute(accessTokenEntity, query)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribe({
                     viewState.addAlbumsSorted(it.albums.map(AlbumEntityMapper::mapFrom))

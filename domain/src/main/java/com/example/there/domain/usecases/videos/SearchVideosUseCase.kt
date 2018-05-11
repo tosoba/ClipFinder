@@ -8,22 +8,24 @@ import com.example.there.domain.repos.videos.VideosRepository
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class SearchVideosUseCase(transformer: Transformer<List<VideoEntity>>,
-                          private val repository: VideosRepository) : UseCase<List<VideoEntity>>(transformer) {
+class SearchVideosUseCase(transformer: Transformer<Pair<String?, List<VideoEntity>>>,
+                          private val repository: VideosRepository) : UseCase<Pair<String?, List<VideoEntity>>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any>?): Observable<List<VideoEntity>> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<Pair<String?, List<VideoEntity>>> {
         val query = data?.get(UseCaseParams.PARAM_VIDEO_QUERY) as? String
+        val pageToken = data?.get(UseCaseParams.PARAM_PAGE_TOKEN) as? String?
         return if (query != null) {
-            repository.getVideos(query)
+            repository.getVideos(query, pageToken)
         } else {
             Observable.error { IllegalArgumentException("Query for videos search must be provided.") }
         }
     }
 
-    fun getVideos(query: String): Observable<List<VideoEntity>> {
-        val data = HashMap<String, String>().apply {
+    fun execute(query: String, pageToken: String? = null): Observable<Pair<String?, List<VideoEntity>>> {
+        val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_VIDEO_QUERY, query)
+            put(UseCaseParams.PARAM_PAGE_TOKEN, pageToken)
         }
-        return observable(withData = data)
+        return execute(withData = data)
     }
 }

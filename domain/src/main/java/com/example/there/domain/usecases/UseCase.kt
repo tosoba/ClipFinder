@@ -5,9 +5,9 @@ import io.reactivex.Observable
 
 abstract class UseCase<T>(private val transformer: Transformer<T>) {
 
-    protected abstract fun createObservable(data: Map<String, Any>? = null): Observable<T>
+    protected abstract fun createObservable(data: Map<String, Any?>? = null): Observable<T>
 
-    protected fun observable(withData: Map<String, Any>? = null): Observable<T> {
+    fun execute(withData: Map<String, Any?>? = null): Observable<T> {
         return createObservable(withData).compose(transformer)
     }
 }

@@ -4,7 +4,7 @@ import com.example.there.domain.repos.spotify.SpotifyRepository
 import com.example.there.domain.usecases.spotify.AccessTokenUseCase
 import com.example.there.domain.usecases.spotify.PlaylistsForCategoryUseCase
 import com.example.there.findclips.category.CategoryVMFactory
-import com.example.there.findclips.util.AsyncTransformer
+import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides
 

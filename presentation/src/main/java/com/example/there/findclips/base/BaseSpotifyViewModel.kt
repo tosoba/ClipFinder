@@ -16,7 +16,7 @@ open class BaseSpotifyViewModel(private val accessTokenUseCase: AccessTokenUseCa
         if (!accessTokenLoading) {
             clearDisposables()
             accessTokenLoading = true
-            addDisposable(accessTokenUseCase.getAccessToken(CLIENT_ID, CLIENT_SECRET)
+            addDisposable(accessTokenUseCase.execute(CLIENT_ID, CLIENT_SECRET)
                     .doFinally { accessTokenLoading = false }
                     .subscribe({
                         accessTokenLiveData.value = it

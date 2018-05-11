@@ -11,7 +11,7 @@ import com.example.there.findclips.R
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.entities.Album
 import com.example.there.findclips.lists.GridAlbumsList
-import com.example.there.findclips.util.SeparatorDecoration
+import com.example.there.findclips.util.recyclerview.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
 
 

@@ -6,6 +6,8 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +17,10 @@ import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.lists.VideosList
 import com.example.there.findclips.search.MainSearchFragment
-import com.example.there.findclips.util.SeparatorDecoration
+import com.example.there.findclips.util.recyclerview.SeparatorDecoration
 import com.example.there.findclips.player.BasePlayerActivity
 import com.example.there.findclips.util.app
+import com.example.there.findclips.util.recyclerview.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.util.screenOrientation
 import javax.inject.Inject
 
@@ -28,7 +31,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         set(value) {
             if (field == value) return
             field = value
-            viewModel.getVideos(value)
+            viewModel.searchVideos(value)
             viewModel.viewState.videos.clear()
         }
 
@@ -41,10 +44,15 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         }
     }
 
+    private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
+        override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
+    }
+
     private val view: VideosSearchView by lazy {
         VideosSearchView(
                 state = viewModel.viewState,
                 videosAdapter = VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
+                onScrollListener = onScrollListener,
                 videosItemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f)
         )
     }

@@ -27,7 +27,7 @@ class PlaylistViewModel(accessTokenUseCase: AccessTokenUseCase,
 
     private fun loadData(accessToken: AccessTokenEntity, playlist: Playlist) {
         viewState.loadingInProgress.set(true)
-        addDisposable(playlistTracksUseCase.getTracks(accessToken, playlist.id, playlist.userId)
+        addDisposable(playlistTracksUseCase.execute(accessToken, playlist.id, playlist.userId)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribe({
                     tracks.value = it.map(TrackEntityMapper::mapFrom).sortedBy { it.name }

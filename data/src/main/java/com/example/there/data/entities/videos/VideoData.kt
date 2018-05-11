@@ -1,5 +1,7 @@
 package com.example.there.data.entities.videos
 
+import com.google.gson.annotations.SerializedName
+
 data class VideoData(
         val id: String,
         val snippet: VideoSnippet,
@@ -27,4 +29,12 @@ data class Statistics(
         val dislikeCount: String?,
         val favoriteCount: String?,
         val commentCount: String?
+)
+
+data class VideoSearchData(
+        val id: VideoSearchId
+)
+
+data class VideoSearchId(
+        @SerializedName("videoId") val id: String
 )

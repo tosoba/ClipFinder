@@ -11,19 +11,36 @@ class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
-    fun getVideos(query: String) {
-        viewState.videosLoadingInProgress.set(true)
+    private var nextPageToken: String? = null
 
-        addDisposable(searchVideosUseCase.getVideos(query)
+    private var lastQuery: String? = null
+
+    fun searchVideos(query: String) {
+        viewState.videosLoadingInProgress.set(true)
+        lastQuery = query
+        loadData(query, null)
+    }
+
+    fun searchVideosWithLastQuery() {
+        if (lastQuery != null && nextPageToken != null) {
+            viewState.videosLoadingInProgress.set(true)
+            loadData(lastQuery!!, nextPageToken)
+        }
+    }
+
+    private fun loadData(query: String, pageToken: String?) {
+        addDisposable(searchVideosUseCase.execute(query, pageToken)
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
                 .subscribe({
-                    viewState.videos.addAll(it.map(VideoEntityMapper::mapFrom))
-                    getChannelThumbnails(it)
+                    val (newNextPageToken, videos) = it
+                    nextPageToken = newNextPageToken
+                    viewState.videos.addAll(videos.map(VideoEntityMapper::mapFrom))
+                    getChannelThumbnails(videos)
                 }, this::onError))
     }
 
     private fun getChannelThumbnails(videos: List<VideoEntity>) {
-        addDisposable(getChannelsThumbnailUrlsUseCase.getUrls(videos)
+        addDisposable(getChannelsThumbnailUrlsUseCase.execute(videos)
                 .subscribe({
                     it.forEachIndexed { index, url -> viewState.videos.getOrNull(index)?.channelThumbnailUrl?.set(url) }
                 }, this::onError))

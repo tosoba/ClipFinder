@@ -28,4 +28,12 @@ class RemoteVideosDataStore(private val api: YoutubeApi,
                 .map { it.map { it.channels.map(ChannelThumbnailUrlMapper::mapFrom) } })
                 .switchMap { it }
     }
+
+    override fun getVideos(query: String, pageToken: String?): Observable<Pair<String?, List<VideoEntity>>> =
+            api.searchVideos(query = query, pageToken = pageToken)
+                    .flatMap { searchResponse ->
+                        api.loadVideosInfo(ids = searchResponse.videos.joinToString(",") { it.id.id })
+                                .map { it.videos.map(VideoMapper::mapFrom) }
+                                .map { Pair(searchResponse.nextPageToken, it) }
+                    }
 }
