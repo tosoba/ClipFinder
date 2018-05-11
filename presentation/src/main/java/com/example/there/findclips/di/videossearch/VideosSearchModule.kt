@@ -20,8 +20,4 @@ class VideosSearchModule {
 
     @Provides
     fun searchVideosUseCase(repository: VideosRepository): SearchVideosUseCase = SearchVideosUseCase(AsyncTransformer(), repository)
-
-    @Provides
-    fun getChannelsThumbnailUrlsUseCase(repository: VideosRepository): GetChannelsThumbnailUrlsUseCase =
-            GetChannelsThumbnailUrlsUseCase(AsyncTransformer(), repository)
 }

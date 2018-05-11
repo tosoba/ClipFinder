@@ -2,6 +2,7 @@ package com.example.there.findclips.search.videos
 
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
+import com.example.there.domain.usecases.videos.SearchRelatedVideosUseCase
 import com.example.there.domain.usecases.videos.SearchVideosUseCase
 import com.example.there.findclips.base.BaseViewModel
 import com.example.there.findclips.mappers.VideoEntityMapper
@@ -11,29 +12,28 @@ class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
-    private var nextPageToken: String? = null
-
+    private var lastSearchVideosNextPageToken: String? = null
     private var lastQuery: String? = null
 
     fun searchVideos(query: String) {
         viewState.videosLoadingInProgress.set(true)
         lastQuery = query
-        loadData(query, null)
+        addSearchVideosDisposable(query, null)
     }
 
     fun searchVideosWithLastQuery() {
-        if (lastQuery != null && nextPageToken != null) {
+        if (lastQuery != null && lastSearchVideosNextPageToken != null) {
             viewState.videosLoadingInProgress.set(true)
-            loadData(lastQuery!!, nextPageToken)
+            addSearchVideosDisposable(lastQuery!!, lastSearchVideosNextPageToken)
         }
     }
 
-    private fun loadData(query: String, pageToken: String?) {
+    private fun addSearchVideosDisposable(query: String, pageToken: String?) {
         addDisposable(searchVideosUseCase.execute(query, pageToken)
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
                 .subscribe({
                     val (newNextPageToken, videos) = it
-                    nextPageToken = newNextPageToken
+                    lastSearchVideosNextPageToken = newNextPageToken
                     viewState.videos.addAll(videos.map(VideoEntityMapper::mapFrom))
                     getChannelThumbnails(videos)
                 }, this::onError))

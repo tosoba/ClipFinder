@@ -22,6 +22,14 @@ interface YoutubeApi {
                      @Query("pageToken") pageToken: String? = null,
                      @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"): Observable<VideosSearchResponse>
 
+    @GET("search")
+    fun searchRelatedVideos(@Query("part") part: String = "snippet",
+                            @Query("relatedToVideoId") toVideoId: String,
+                            @Query("type") type: String = "video",
+                            @Query("maxResults") maxResults: String = "50",
+                            @Query("pageToken") pageToken: String? = null,
+                            @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"): Observable<VideosSearchResponse>
+
     @GET("channels")
     fun loadChannelsInfo(@Query("part") part: String = "snippet",
                          @Query("id") ids: String,

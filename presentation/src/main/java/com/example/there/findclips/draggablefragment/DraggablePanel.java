@@ -57,6 +57,11 @@ public class DraggablePanel extends FrameLayout {
 
     private FragmentManager fragmentManager;
     private Fragment topFragment;
+
+    public Fragment getBottomFragment() {
+        return bottomFragment;
+    }
+
     private Fragment bottomFragment;
     private int topFragmentHeight;
     private int topFragmentMarginRight;

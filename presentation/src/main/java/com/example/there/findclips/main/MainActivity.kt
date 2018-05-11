@@ -103,6 +103,7 @@ class MainActivity : BasePlayerActivity() {
         view.state.videoIsOpen.set(true)
         youtubePlayer?.loadVideo(video.id)
         main_draggable_panel?.maximize()
+        main_draggable_panel?.relatedVideosFragment?.videoId = video.id
         hideStatusBar()
         supportActionBar?.hide()
     }

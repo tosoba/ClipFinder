@@ -121,6 +121,7 @@ class TrackVideosActivity : BasePlayerActivity() {
         view.state.videoIsOpen.set(true)
         youtubePlayer?.loadVideo(video.id)
         track_videos_draggable_panel?.maximize()
+        track_videos_draggable_panel?.relatedVideosFragment?.videoId = video.id
         hideStatusBar()
     }
 

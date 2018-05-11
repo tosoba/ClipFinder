@@ -10,9 +10,11 @@ import com.example.there.findclips.R
 import com.example.there.findclips.draggablefragment.DraggableListener
 import com.example.there.findclips.draggablefragment.DraggablePanel
 import com.example.there.findclips.entities.Video
+import com.example.there.findclips.relatedvideos.RelatedVideosFragment
 import com.example.there.findclips.trackdetails.TrackDetailsFragment
 import com.example.there.findclips.util.OnSwipeTouchListener
 import com.example.there.findclips.util.getDimenFloat
+import com.example.there.findclips.util.relatedVideosFragment
 import com.example.there.findclips.util.showStatusBar
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -74,6 +76,7 @@ abstract class BasePlayerActivity : AppCompatActivity() {
         super.onPause()
         if (viewState.videoIsOpen.get() == true) lastSeekTime = youtubePlayer?.currentTimeMillis ?: 0
         youtubePlayer = null
+        draggablePanel = null
     }
 
     private val draggableListener = object : DraggableListener {
@@ -92,10 +95,14 @@ abstract class BasePlayerActivity : AppCompatActivity() {
         override fun onClosedToRight() = closeVideo()
     }
 
+    private var draggablePanel: DraggablePanel? = null
+
     protected fun initDraggablePanel(draggablePanel: DraggablePanel) = with(draggablePanel) {
+        this@BasePlayerActivity.draggablePanel = this
+
         setFragmentManager(supportFragmentManager)
         setTopFragment(youtubePlayerFragment)
-        val bottomFragment = TrackDetailsFragment()
+        val bottomFragment = RelatedVideosFragment()
         setBottomFragment(bottomFragment)
 
         setDraggableListener(draggableListener)
@@ -120,6 +127,7 @@ abstract class BasePlayerActivity : AppCompatActivity() {
                 youtubePlayer?.loadVideo(lastVideo!!.id, lastSeekTime)
                 supportActionBar?.hide()
                 play()
+                draggablePanel?.relatedVideosFragment?.videoId = lastVideo!!.id
             }
         }
 

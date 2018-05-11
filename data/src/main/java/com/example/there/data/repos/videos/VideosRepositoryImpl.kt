@@ -8,7 +8,6 @@ import com.example.there.domain.repos.videos.VideosRepository
 import io.reactivex.Observable
 
 class VideosRepositoryImpl(api: YoutubeApi, scraper: YahooScraper) : VideosRepository {
-
     private val remoteVideosDataStore = RemoteVideosDataStore(api, scraper)
 
     override fun getVideos(query: String): Observable<List<VideoEntity>> = remoteVideosDataStore.getVideos(query)
@@ -18,4 +17,7 @@ class VideosRepositoryImpl(api: YoutubeApi, scraper: YahooScraper) : VideosRepos
 
     override fun getVideos(query: String, pageToken: String?): Observable<Pair<String?, List<VideoEntity>>> =
             remoteVideosDataStore.getVideos(query, pageToken)
+
+    override fun getRelatedVideos(toVideoId: String, pageToken: String?): Observable<Pair<String?, List<VideoEntity>>> =
+            remoteVideosDataStore.getVideos(toVideoId, pageToken)
 }

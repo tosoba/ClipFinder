@@ -3,6 +3,7 @@ package com.example.there.findclips.search.videos
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
+import com.example.there.domain.usecases.videos.SearchRelatedVideosUseCase
 import com.example.there.domain.usecases.videos.SearchVideosUseCase
 
 class VideosSearchVMFactory(private val searchVideosUseCase: SearchVideosUseCase,
