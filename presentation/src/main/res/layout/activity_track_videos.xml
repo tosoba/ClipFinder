@@ -9,7 +9,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.trackvideos.TrackVideosActivityView" />
+            type="com.example.there.findclips.trackvideos.TrackVideosView" />
     </data>
 
     <FrameLayout

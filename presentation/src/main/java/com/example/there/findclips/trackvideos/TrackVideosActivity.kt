@@ -19,7 +19,7 @@ import com.example.there.findclips.entities.Track
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.player.BasePlayerActivity
 import com.example.there.findclips.search.videos.VideosSearchFragment
-import com.example.there.findclips.trackdetails.TrackDetailsFragment
+import com.example.there.findclips.track.TrackFragment
 import com.example.there.findclips.util.*
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_track_videos.*
@@ -42,13 +42,13 @@ class TrackVideosActivity : BasePlayerActivity() {
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
         TrackVideosPagerAdapter(
                 manager = supportFragmentManager,
-                fragments = arrayOf(VideosSearchFragment.newInstanceWithQuery(track.query), TrackDetailsFragment()))
+                fragments = arrayOf(VideosSearchFragment.newInstanceWithQuery(track.query), TrackFragment.newInstanceWithTrack(track)))
     }
 
     private val track: Track by lazy { intent.getParcelableExtra(EXTRA_TRACK) as Track }
 
-    private val view: TrackVideosActivityView by lazy {
-        TrackVideosActivityView(
+    private val view: TrackVideosView by lazy {
+        TrackVideosView(
                 track = track,
                 state = viewState,
                 pagerAdapter = pagerAdapter,

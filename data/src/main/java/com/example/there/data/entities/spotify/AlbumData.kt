@@ -9,3 +9,9 @@ data class AlbumData(
         @SerializedName("images") val icons: List<IconData>,
         val name: String
 )
+
+data class SimplifiedAlbumData(
+        val id: String,
+        val name: String,
+        @SerializedName("images") val icons: List<IconData>
+)

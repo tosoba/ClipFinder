@@ -8,3 +8,8 @@ data class ArtistData(
         val name: String,
         val popularity: Int
 )
+
+data class SimplifiedArtistData(
+        val id: String,
+        val name: String
+)

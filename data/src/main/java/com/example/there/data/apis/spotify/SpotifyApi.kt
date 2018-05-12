@@ -1,5 +1,7 @@
 package com.example.there.data.apis.spotify
 
+import com.example.there.data.entities.spotify.AlbumData
+import com.example.there.data.entities.spotify.ArtistData
 import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.responses.*
 import io.reactivex.Observable
@@ -43,6 +45,23 @@ interface SpotifyApi {
     fun getPlaylistTracks(@Header("Authorization") authorization: String,
                           @Path("user_id") userId: String,
                           @Path("playlist_id") playlistId: String): Observable<PlaylistTracksResponse>
+
+    @GET("artists/{id}")
+    fun getArtist(@Header("Authorization") authorization: String,
+                  @Path("id") artistId: String): Observable<ArtistData>
+
+    @GET("artists")
+    fun getArtists(@Header("Authorization") authorization: String,
+                   @Query("ids") artistIds: String): Observable<ArtistsOnlyResponse>
+
+    @GET("albums/{id}")
+    fun getAlbum(@Header("Authorization") authorization: String,
+                 @Path("id") albumId: String): Observable<AlbumData>
+
+    @GET("recommendations")
+    fun getSimilarTracks(@Header("Authorization") authorization: String,
+                         @Query("limit") limit: String = "100",
+                         @Query("seed_tracks") trackId: String): Observable<SimilarTracksResponse>
 
     companion object {
         private const val DEFAULT_LIMIT = "50"

@@ -16,6 +16,8 @@ import com.example.there.findclips.di.relatedvideos.RelatedVideosModule
 import com.example.there.findclips.di.relatedvideos.RelatedVideosSubComponent
 import com.example.there.findclips.di.spotifysearch.SpotifySearchModule
 import com.example.there.findclips.di.spotifysearch.SpotifySearchSubComponent
+import com.example.there.findclips.di.track.TrackModule
+import com.example.there.findclips.di.track.TrackSubComponent
 import com.example.there.findclips.di.videossearch.VideosSearchModule
 import com.example.there.findclips.di.videossearch.VideosSearchSubComponent
 import com.squareup.leakcanary.LeakCanary
@@ -120,5 +122,15 @@ class FindClipsApp : Application() {
 
     fun releaseRelatedVideosSubComponent() {
         relatedVideosSubComponent = null
+    }
+
+    private var trackSubComponent: TrackSubComponent? = null
+    fun createTrackSubComponent(): TrackSubComponent {
+        trackSubComponent = appComponent.plus(TrackModule())
+        return trackSubComponent!!
+    }
+
+    fun releaseTrackSubComponent() {
+        trackSubComponent = null
     }
 }

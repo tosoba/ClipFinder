@@ -1,0 +1,32 @@
+package com.example.there.findclips.di.track
+
+import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.domain.usecases.spotify.GetAlbum
+import com.example.there.domain.usecases.spotify.GetArtists
+import com.example.there.domain.usecases.spotify.GetSimilarTracks
+import com.example.there.findclips.track.TrackVMFactory
+import com.example.there.findclips.util.rx.AsyncTransformer
+import dagger.Module
+import dagger.Provides
+
+@TrackScope
+@Module
+class TrackModule {
+
+    @Provides
+    fun albumUseCase(repository: SpotifyRepository): GetAlbum = GetAlbum(AsyncTransformer(), repository)
+
+    @Provides
+    fun artistUseCase(repository: SpotifyRepository): GetArtists = GetArtists(AsyncTransformer(), repository)
+
+    @Provides
+    fun similarTracksUseCase(repository: SpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncTransformer(), repository)
+
+    @Provides
+    fun trackVMFactory(getAccessToken: GetAccessToken,
+                       getAlbum: GetAlbum,
+                       getArtists: GetArtists,
+                       getSimilarTracks: GetSimilarTracks): TrackVMFactory =
+            TrackVMFactory(getAccessToken, getAlbum, getArtists, getSimilarTracks)
+}

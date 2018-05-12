@@ -2,16 +2,16 @@ package com.example.there.findclips.search.spotify
 
 import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.spotify.AccessTokenUseCase
-import com.example.there.domain.usecases.spotify.SearchAllUseCase
+import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.domain.usecases.spotify.SearchSpotify
 import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.mappers.AlbumEntityMapper
 import com.example.there.findclips.mappers.ArtistEntityMapper
 import com.example.there.findclips.mappers.PlaylistEntityMapper
 import com.example.there.findclips.mappers.TrackEntityMapper
 
-class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
-                             private val searchAllUseCase: SearchAllUseCase) : BaseSpotifyViewModel(accessTokenUseCase) {
+class SpotifySearchViewModel(getAccessToken: GetAccessToken,
+                             private val searchSpotify: SearchSpotify) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: SpotifySearchViewState = SpotifySearchViewState()
 
@@ -28,7 +28,7 @@ class SpotifySearchViewModel(accessTokenUseCase: AccessTokenUseCase,
 
     private fun loadData(accessTokenEntity: AccessTokenEntity, query: String) {
         viewState.loadingInProgress.set(true)
-        addDisposable(searchAllUseCase.execute(accessTokenEntity, query)
+        addDisposable(searchSpotify.execute(accessTokenEntity, query)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribe({
                     viewState.addAlbumsSorted(it.albums.map(AlbumEntityMapper::mapFrom))

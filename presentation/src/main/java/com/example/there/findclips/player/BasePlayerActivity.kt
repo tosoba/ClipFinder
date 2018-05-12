@@ -11,7 +11,6 @@ import com.example.there.findclips.draggablefragment.DraggableListener
 import com.example.there.findclips.draggablefragment.DraggablePanel
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.relatedvideos.RelatedVideosFragment
-import com.example.there.findclips.trackdetails.TrackDetailsFragment
 import com.example.there.findclips.util.OnSwipeTouchListener
 import com.example.there.findclips.util.getDimenFloat
 import com.example.there.findclips.util.relatedVideosFragment

@@ -19,4 +19,10 @@ interface SpotifyDataStore {
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>>
 
     fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String): Observable<List<TrackEntity>>
+
+    fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity>
+
+    fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Observable<List<ArtistEntity>>
+
+    fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>>
 }

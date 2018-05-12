@@ -1,8 +1,8 @@
 package com.example.there.findclips.di.spotifysearch
 
 import com.example.there.domain.repos.spotify.SpotifyRepository
-import com.example.there.domain.usecases.spotify.AccessTokenUseCase
-import com.example.there.domain.usecases.spotify.SearchAllUseCase
+import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.domain.usecases.spotify.SearchSpotify
 import com.example.there.findclips.search.spotify.SpotifySearchVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
@@ -13,10 +13,10 @@ import dagger.Provides
 class SpotifySearchModule {
 
     @Provides
-    fun searchAllUseCase(repository: SpotifyRepository): SearchAllUseCase = SearchAllUseCase(AsyncTransformer(), repository)
+    fun searchAllUseCase(repository: SpotifyRepository): SearchSpotify = SearchSpotify(AsyncTransformer(), repository)
 
     @Provides
-    fun searchViewModelFactory(accessTokenUseCase: AccessTokenUseCase,
-                               searchAllUseCase: SearchAllUseCase): SpotifySearchVMFactory =
-            SpotifySearchVMFactory(accessTokenUseCase, searchAllUseCase)
+    fun searchViewModelFactory(getAccessToken: GetAccessToken,
+                               searchSpotify: SearchSpotify): SpotifySearchVMFactory =
+            SpotifySearchVMFactory(getAccessToken, searchSpotify)
 }

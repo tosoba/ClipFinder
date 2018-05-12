@@ -21,4 +21,7 @@ object UseCaseParams {
 
     const val PARAM_PLAYLIST_ID = "PARAM_PLAYLIST_ID"
     const val PARAM_USER_ID = "PARAM_USER_ID"
+
+    const val PARAM_ALBUM_ID = "PARAM_ALBUM_ID"
+    const val PARAM_ARTIST_IDS = "PARAM_ARTIST_IDS"
 }

@@ -2,7 +2,7 @@ package com.example.there.findclips.di.modules
 
 import com.example.there.domain.repos.spotify.SpotifyRepository
 import com.example.there.domain.repos.videos.VideosRepository
-import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
@@ -14,7 +14,7 @@ class CommonUseCasesModule {
 
     @Provides
     @Singleton
-    fun accessTokenUseCase(repository: SpotifyRepository): AccessTokenUseCase = AccessTokenUseCase(AsyncTransformer(), repository)
+    fun accessTokenUseCase(repository: SpotifyRepository): GetAccessToken = GetAccessToken(AsyncTransformer(), repository)
 
     @Provides
     @Singleton

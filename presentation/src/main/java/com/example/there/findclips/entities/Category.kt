@@ -5,8 +5,4 @@ import io.mironov.smuggler.AutoParcelable
 
 
 @SuppressLint("ParcelCreator")
-data class Category(
-        val id: String,
-        val name: String,
-        val iconUrl: String
-) : AutoParcelable
+data class Category(val id: String, val name: String, val iconUrl: String) : AutoParcelable

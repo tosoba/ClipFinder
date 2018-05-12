@@ -45,8 +45,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
         }
     }
 
-    private val view: DashboardFragmentView by lazy {
-        DashboardFragmentView(
+    private val view: DashboardView by lazy {
+        DashboardView(
                 state = viewModel.viewState,
                 categoriesAdapter = CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
                 playlistsAdapter = PlaylistsList.Adapter(viewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener),
@@ -56,12 +56,12 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        binding.dashboardFragmentView = view
-
-        binding.genresRecyclerView.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-        binding.featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-        binding.topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        return binding.root
+        return binding.apply {
+            dashboardView = view
+            genresRecyclerView.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+            featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+            topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -8,3 +8,5 @@ data class PlaylistData(
         val name: String,
         val owner: OwnerData
 )
+
+data class OwnerData(val id: String)

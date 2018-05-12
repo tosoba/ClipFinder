@@ -5,8 +5,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="dashboardFragmentView"
-            type="com.example.there.findclips.dashboard.DashboardFragmentView" />
+            name="dashboardView"
+            type="com.example.there.findclips.dashboard.DashboardView" />
     </data>
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +33,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/genres_recycler_view"
                 style="@style/HorizontalGridRecyclerViewSpan2"
-                android:adapter="@{dashboardFragmentView.categoriesAdapter}"
+                android:adapter="@{dashboardView.categoriesAdapter}"
                 android:layout_width="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -42,7 +42,7 @@
             <ProgressBar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{dashboardFragmentView.state.categoriesLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{dashboardView.state.categoriesLoadingInProgress ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/genres_recycler_view"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -61,7 +61,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/featured_playlists_recyclerview"
                 style="@style/HorizontalGridRecyclerViewSpan2"
-                android:adapter="@{dashboardFragmentView.playlistsAdapter}"
+                android:adapter="@{dashboardView.playlistsAdapter}"
                 android:layout_width="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -70,7 +70,7 @@
             <ProgressBar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{dashboardFragmentView.state.featuredPlaylistsLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{dashboardView.state.featuredPlaylistsLoadingInProgress ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/featured_playlists_recyclerview"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -88,7 +88,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/top_tracks_recyclerview"
-                android:adapter="@{dashboardFragmentView.topTracksAdapter}"
+                android:adapter="@{dashboardView.topTracksAdapter}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
@@ -101,7 +101,7 @@
             <ProgressBar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{dashboardFragmentView.state.topTracksLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{dashboardView.state.topTracksLoadingInProgress ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/top_tracks_recyclerview"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

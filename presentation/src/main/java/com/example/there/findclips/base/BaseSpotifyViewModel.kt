@@ -3,11 +3,12 @@ package com.example.there.findclips.base
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.spotify.AccessTokenUseCase
+import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.util.messageOrDefault
 import retrofit2.HttpException
 
-open class BaseSpotifyViewModel(private val accessTokenUseCase: AccessTokenUseCase): BaseViewModel() {
+open class BaseSpotifyViewModel(private val getAccessToken: GetAccessToken) : BaseViewModel() {
 
     val accessTokenLiveData: MutableLiveData<AccessTokenEntity> = MutableLiveData()
 
@@ -16,7 +17,7 @@ open class BaseSpotifyViewModel(private val accessTokenUseCase: AccessTokenUseCa
         if (!accessTokenLoading) {
             clearDisposables()
             accessTokenLoading = true
-            addDisposable(accessTokenUseCase.execute(CLIENT_ID, CLIENT_SECRET)
+            addDisposable(getAccessToken.execute(SpotifyClient.id, SpotifyClient.secret)
                     .doFinally { accessTokenLoading = false }
                     .subscribe({
                         accessTokenLiveData.value = it
@@ -30,17 +31,11 @@ open class BaseSpotifyViewModel(private val accessTokenUseCase: AccessTokenUseCa
 
     protected fun handleErrors(t: Throwable, onErrorsResolved: (AccessTokenEntity) -> Unit) {
         if (t is HttpException) {
-            // Unauthorized
-            if (t.code() == 401) {
+            if (t.code() == 401) { // Unauthorized
                 loadAccessToken { onErrorsResolved(it) }
             }
         } else {
             Log.e("ERROR", t.messageOrDefault("Unknown error."))
         }
-    }
-
-    companion object {
-        private const val CLIENT_ID = "6dc5e6590b8b48c5bd73a64f6c206d8a"
-        private const val CLIENT_SECRET = "d5c30ea11b90401980c6ca37dc0512ba"
     }
 }

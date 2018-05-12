@@ -1,14 +1,12 @@
 package com.example.there.findclips.search.videos
 
-import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
-import com.example.there.domain.usecases.videos.SearchRelatedVideosUseCase
 import com.example.there.domain.usecases.videos.SearchVideosUseCase
-import com.example.there.findclips.base.BaseViewModel
+import com.example.there.findclips.base.BaseVideosViewModel
 import com.example.there.findclips.mappers.VideoEntityMapper
 
 class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase,
-                            private val getChannelsThumbnailUrlsUseCase: GetChannelsThumbnailUrlsUseCase) : BaseViewModel() {
+                            getChannelsThumbnailUrlsUseCase: GetChannelsThumbnailUrlsUseCase) : BaseVideosViewModel(getChannelsThumbnailUrlsUseCase) {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
@@ -35,14 +33,9 @@ class VideosSearchViewModel(private val searchVideosUseCase: SearchVideosUseCase
                     val (newNextPageToken, videos) = it
                     lastSearchVideosNextPageToken = newNextPageToken
                     viewState.videos.addAll(videos.map(VideoEntityMapper::mapFrom))
-                    getChannelThumbnails(videos)
-                }, this::onError))
-    }
-
-    private fun getChannelThumbnails(videos: List<VideoEntity>) {
-        addDisposable(getChannelsThumbnailUrlsUseCase.execute(videos)
-                .subscribe({
-                    it.forEachIndexed { index, url -> viewState.videos.getOrNull(index)?.channelThumbnailUrl?.set(url) }
+                    getChannelThumbnails(videos, onSuccess = {
+                        it.forEachIndexed { index, url -> viewState.videos.getOrNull(index)?.channelThumbnailUrl?.set(url) }
+                    })
                 }, this::onError))
     }
 }

@@ -1,20 +1,20 @@
 package com.example.there.findclips.dashboard
 
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.spotify.AccessTokenUseCase
-import com.example.there.domain.usecases.spotify.CategoriesUseCase
-import com.example.there.domain.usecases.spotify.DailyViralTracksUseCase
-import com.example.there.domain.usecases.spotify.FeaturedPlaylistsUseCase
+import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.domain.usecases.spotify.GetCategories
+import com.example.there.domain.usecases.spotify.GetDailyViralTracks
+import com.example.there.domain.usecases.spotify.GetFeaturedPlaylists
 import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.entities.TopTrack
 import com.example.there.findclips.mappers.CategoryEntityMapper
 import com.example.there.findclips.mappers.PlaylistEntityMapper
 import com.example.there.findclips.mappers.TrackEntityMapper
 
-class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
-                         private val featuredPlaylistsUseCase: FeaturedPlaylistsUseCase,
-                         private val categoriesUseCase: CategoriesUseCase,
-                         private val dailyViralTracksUseCase: DailyViralTracksUseCase) : BaseSpotifyViewModel(accessTokenUseCase) {
+class DashboardViewModel(getAccessToken: GetAccessToken,
+                         private val getFeaturedPlaylists: GetFeaturedPlaylists,
+                         private val getCategories: GetCategories,
+                         private val getDailyViralTracks: GetDailyViralTracks) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: DashboardViewState = DashboardViewState()
 
@@ -35,21 +35,21 @@ class DashboardViewModel(accessTokenUseCase: AccessTokenUseCase,
 
     private fun loadCategories(accessToken: AccessTokenEntity) {
         viewState.categoriesLoadingInProgress.set(true)
-        addDisposable(categoriesUseCase.execute(accessToken)
+        addDisposable(getCategories.execute(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribe({ viewState.addCategoriesSorted(it.map(CategoryEntityMapper::mapFrom)) }, this::onError))
     }
 
     private fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
-        addDisposable(featuredPlaylistsUseCase.execute(accessToken)
+        addDisposable(getFeaturedPlaylists.execute(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribe({ viewState.addFeaturedPlaylistsSorted(it.map(PlaylistEntityMapper::mapFrom)) }, this::onError))
     }
 
     private fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
         viewState.topTracksLoadingInProgress.set(true)
-        addDisposable(dailyViralTracksUseCase.execute(accessToken)
+        addDisposable(getDailyViralTracks.execute(accessToken)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, this::onError))
     }

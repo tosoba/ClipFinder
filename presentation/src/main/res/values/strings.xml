@@ -29,5 +29,8 @@
     <string name="no_albums_loaded_yet">No albums loaded yet.</string>
     <string name="no_artists_loaded_yet">No artists loaded yet.</string>
     <string name="error_player">There was an error initializing youtube player.</string>
+    <string name="album">Album</string>
+    <string name="artists">Artists</string>
+    <string name="similar_tracks">Similar tracks</string>
 
 </resources>
