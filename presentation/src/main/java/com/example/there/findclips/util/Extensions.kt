@@ -17,6 +17,7 @@ import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.draggablefragment.DraggablePanel
 import com.example.there.findclips.main.MainActivity
+import com.example.there.findclips.player.BasePlayerActivity
 import com.example.there.findclips.relatedvideos.RelatedVideosFragment
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
@@ -135,3 +136,6 @@ fun ViewGroup.changeMarginParams(left: Int, top: Int, right: Int, bottom: Int) {
 
 val DraggablePanel.relatedVideosFragment: RelatedVideosFragment?
     get() = bottomFragment as? RelatedVideosFragment
+
+val Fragment.basePlayerActivity: BasePlayerActivity?
+    get() = activity as? BasePlayerActivity

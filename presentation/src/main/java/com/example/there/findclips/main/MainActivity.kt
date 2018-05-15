@@ -13,6 +13,7 @@ import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.databinding.ActivityMainBindingLandImpl
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.player.BasePlayerActivity
+import com.example.there.findclips.player.PlayerViewState
 import com.example.there.findclips.util.*
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,6 +40,8 @@ class MainActivity : BasePlayerActivity() {
             main_bottom_navigation_view?.checkItem(itemIds[position])
         }
     }
+
+    override val viewState: PlayerViewState = PlayerViewState()
 
     private val view: MainActivityView by lazy {
         MainActivityView(

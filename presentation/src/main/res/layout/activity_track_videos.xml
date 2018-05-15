@@ -42,7 +42,7 @@
                     app:toolbarId="@+id/track_videos_toolbar">
 
                     <ImageView
-                        imageUrl="@{view.track.iconUrl}"
+                        imageUrl="@{view.state.track.iconUrl}"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:fitsSystemWindows="true"

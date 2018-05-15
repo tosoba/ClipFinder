@@ -54,7 +54,7 @@ abstract class BasePlayerActivity : AppCompatActivity() {
 
     abstract fun initView()
 
-    protected val viewState: PlayerViewState = PlayerViewState()
+    protected abstract val viewState: PlayerViewState
 
     private fun initFromSavedState(savedInstanceState: Bundle?) {
         savedInstanceState?.let {

@@ -15,6 +15,7 @@ import com.example.there.findclips.entities.Artist
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.lists.ArtistsList
 import com.example.there.findclips.lists.SimilarTracksList
+import com.example.there.findclips.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import javax.inject.Inject
@@ -22,10 +23,18 @@ import javax.inject.Inject
 
 class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>() {
 
+    var track: Track? = null
+        set(value) {
+            if (field == value || value == null) return
+            field = value
+            viewModel.loadDataForTrack(activity?.accessToken, value)
+            viewModel.viewState.clearAll()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            viewModel.loadDataForTrack(activity?.accessToken, track = arguments?.getParcelable(ARG_TRACK)!!)
+            track = arguments?.getParcelable(ARG_TRACK)
         }
     }
 
@@ -35,9 +44,12 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>() {
         }
     }
 
+    private val onTrackChangeListener: OnTrackChangeListener?
+        get() = activity as OnTrackChangeListener
+
     private val onSimilarTrackClickListener = object : SimilarTracksList.OnItemClickListener {
         override fun onClick(item: Track) {
-
+            onTrackChangeListener?.onTrackChanged(newTrack = item)
         }
     }
 

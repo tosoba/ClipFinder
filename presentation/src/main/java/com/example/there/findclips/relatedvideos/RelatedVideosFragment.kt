@@ -13,6 +13,7 @@ import com.example.there.findclips.databinding.FragmentRelatedVideosBinding
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.lists.RelatedVideosList
 import com.example.there.findclips.util.app
+import com.example.there.findclips.util.basePlayerActivity
 import com.example.there.findclips.util.recyclerview.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.util.recyclerview.SeparatorDecoration
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>() {
 
     private val onVideoItemClickListener = object : RelatedVideosList.OnItemClickListener {
         override fun onClick(item: Video) {
-
+            basePlayerActivity?.playVideo(video = item)
         }
     }
 

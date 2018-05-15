@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableField
 import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -18,6 +19,7 @@ import com.example.there.findclips.databinding.ActivityTrackVideosBindingLandImp
 import com.example.there.findclips.entities.Track
 import com.example.there.findclips.entities.Video
 import com.example.there.findclips.player.BasePlayerActivity
+import com.example.there.findclips.player.PlayerViewState
 import com.example.there.findclips.search.videos.VideosSearchFragment
 import com.example.there.findclips.track.TrackFragment
 import com.example.there.findclips.util.*
@@ -25,32 +27,54 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_track_videos.*
 
 
-class TrackVideosActivity : BasePlayerActivity() {
+class TrackVideosActivity : BasePlayerActivity(), OnTrackChangeListener {
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             track_videos_tab_layout?.getTabAt(position)?.select()
+            updateCurrentFragment(trackVideosViewState.track.get()!!)
         }
     }
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            tab?.let { track_videos_viewpager.currentItem = it.position }
+            tab?.let {
+                track_videos_viewpager.currentItem = it.position
+            }
+        }
+    }
+
+    override fun onTrackChanged(newTrack: Track) {
+        updateCurrentFragment(newTrack)
+        view.state.track.set(newTrack)
+        track_videos_toolbar_layout?.title = newTrack.name
+    }
+
+    private fun updateCurrentFragment(newTrack: Track) {
+        val currentFragment = pagerAdapter.currentFragment
+        when (currentFragment) {
+            is VideosSearchFragment -> currentFragment.query = newTrack.query
+            is TrackFragment -> currentFragment.track = newTrack
         }
     }
 
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
-        TrackVideosPagerAdapter(
-                manager = supportFragmentManager,
-                fragments = arrayOf(VideosSearchFragment.newInstanceWithQuery(track.query), TrackFragment.newInstanceWithTrack(track)))
+        TrackVideosPagerAdapter(manager = supportFragmentManager,
+                fragments = arrayOf(VideosSearchFragment.newInstanceWithQuery(intentTrack.query), TrackFragment.newInstanceWithTrack(intentTrack)))
     }
 
-    private val track: Track by lazy { intent.getParcelableExtra(EXTRA_TRACK) as Track }
+    private val intentTrack: Track by lazy { intent.getParcelableExtra(EXTRA_TRACK) as Track }
+
+
+
+    override val viewState: PlayerViewState by lazy { TrackVideosViewState(track = ObservableField(intentTrack)) }
+
+    private val trackVideosViewState: TrackVideosViewState
+        get() = viewState as TrackVideosViewState
 
     private val view: TrackVideosView by lazy {
         TrackVideosView(
-                track = track,
-                state = viewState,
+                state = viewState as TrackVideosViewState,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener
@@ -59,7 +83,13 @@ class TrackVideosActivity : BasePlayerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.let { trackVideosViewState.track.set(it.getParcelable(KEY_SAVED_TRACK)) }
         initToolbar()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putParcelable(KEY_SAVED_TRACK, trackVideosViewState.track.get())
     }
 
     override fun initView() {
@@ -113,7 +143,7 @@ class TrackVideosActivity : BasePlayerActivity() {
         setSupportActionBar(track_videos_toolbar)
         track_videos_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
         track_videos_toolbar.setNavigationOnClickListener { super.onBackPressed() }
-        title = track.name
+        title = trackVideosViewState.track.get()!!.name
     }
 
     override fun playVideo(video: Video) {
@@ -150,6 +180,8 @@ class TrackVideosActivity : BasePlayerActivity() {
 
     companion object {
         private const val EXTRA_TRACK = "EXTRA_TRACK"
+
+        private const val KEY_SAVED_TRACK = "KEY_SAVED_TRACK"
 
         fun start(activity: Activity, track: Track) {
             val intent = Intent(activity, TrackVideosActivity::class.java).apply {

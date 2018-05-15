@@ -21,4 +21,9 @@ data class TrackViewState(
         val album: ObservableField<Album> = ObservableField(),
         val artists: ObservableArrayList<Artist> = ObservableArrayList(),
         val similarTracks: ObservableArrayList<Track> = ObservableArrayList()
-)
+) {
+    fun clearAll() {
+        similarTracks.clear()
+        artists.clear()
+    }
+}
