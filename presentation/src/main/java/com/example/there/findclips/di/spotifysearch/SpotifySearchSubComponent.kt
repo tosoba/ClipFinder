@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.spotifysearch
 
-import com.example.there.findclips.search.spotify.SpotifySearchFragment
+import com.example.there.findclips.fragments.search.spotify.SpotifySearchFragment
 import dagger.Subcomponent
 
 @SpotifySearchScope

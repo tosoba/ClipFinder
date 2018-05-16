@@ -46,10 +46,6 @@ interface SpotifyApi {
                           @Path("user_id") userId: String,
                           @Path("playlist_id") playlistId: String): Observable<PlaylistTracksResponse>
 
-    @GET("artists/{id}")
-    fun getArtist(@Header("Authorization") authorization: String,
-                  @Path("id") artistId: String): Observable<ArtistData>
-
     @GET("artists")
     fun getArtists(@Header("Authorization") authorization: String,
                    @Query("ids") artistIds: String): Observable<ArtistsOnlyResponse>
@@ -63,11 +59,25 @@ interface SpotifyApi {
                          @Query("limit") limit: String = "100",
                          @Query("seed_tracks") trackId: String): Observable<SimilarTracksResponse>
 
+    @GET("artists/{id}/albums")
+    fun getAlbumsFromArtist(@Header("Authorization") authorization: String,
+                            @Path("id") artistId: String,
+                            @Query("limit") limit: String = DEFAULT_LIMIT): Observable<AlbumsResult>
+
+    @GET("artists/{id}/top-tracks")
+    fun getTopTracksFromArtist(@Header("Authorization") authorization: String,
+                               @Path("id") artistId: String,
+                               @Query("country") country: String = DEFAULT_COUNTRY): Observable<TracksOnlyResponse>
+
+    @GET("artists/{id}/related-artists")
+    fun getRelatedArtists(@Header("Authorization") authorization: String,
+                          @Path("id") artistId: String): Observable<ArtistsOnlyResponse>
+
     companion object {
         private const val DEFAULT_LIMIT = "50"
         private const val DEFAULT_OFFSET = "0"
-        private const val DEFAULT_COUNTRY = "SE"
-        private const val DEFAULT_LOCALE = "sv_se"
+        private const val DEFAULT_COUNTRY = "US"
+        private const val DEFAULT_LOCALE = "en_us"
 
         private const val ALL_SEARCH_TYPES = "album,artist,playlist,track"
     }

@@ -5,7 +5,7 @@
 
         <variable
             name="album"
-            type="com.example.there.findclips.entities.Album" />
+            type="com.example.there.findclips.model.entities.Album" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

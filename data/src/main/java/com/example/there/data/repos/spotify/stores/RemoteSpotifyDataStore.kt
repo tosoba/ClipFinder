@@ -104,6 +104,18 @@ class RemoteSpotifyDataStore(private val api: SpotifyApi,
                     .switchMap { it }
                     .map { it.tracks.map(TrackMapper::mapFrom) }
 
+    override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
+        api.getAlbumsFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                .map { it.albums.map(AlbumMapper::mapFrom) }
+
+    override fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>> =
+        api.getTopTracksFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                .map { it.tracks.map(TrackMapper::mapFrom) }
+
+    override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
+        api.getRelatedArtists(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                .map { it.artists.map(ArtistMapper::mapFrom) }
+
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
 

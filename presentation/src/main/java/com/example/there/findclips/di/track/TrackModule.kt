@@ -5,7 +5,7 @@ import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetAlbum
 import com.example.there.domain.usecases.spotify.GetArtists
 import com.example.there.domain.usecases.spotify.GetSimilarTracks
-import com.example.there.findclips.track.TrackVMFactory
+import com.example.there.findclips.fragments.track.TrackVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides

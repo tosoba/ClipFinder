@@ -7,7 +7,7 @@
 
         <variable
             name="mainActivityView"
-            type="com.example.there.findclips.main.MainActivityView" />
+            type="com.example.there.findclips.activities.main.MainView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".main.MainActivity">
+        tools:context=".activities.main.MainActivity">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/main_view_pager"
@@ -56,7 +56,7 @@
 
             <fragment
                 android:id="@+id/main_player_fragment"
-                android:name="com.example.there.findclips.player.SwipeablePlayerFragment"
+                android:name="com.example.there.findclips.activities.player.SwipeableYTPlayerFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"

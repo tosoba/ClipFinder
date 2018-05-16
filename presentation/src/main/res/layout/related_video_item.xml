@@ -5,7 +5,7 @@
 
         <variable
             name="video"
-            type="com.example.there.findclips.entities.Video" />
+            type="com.example.there.findclips.model.entities.Video" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

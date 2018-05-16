@@ -9,7 +9,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.trackvideos.TrackVideosView" />
+            type="com.example.there.findclips.activities.trackvideos.TrackVideosView" />
     </data>
 
     <FrameLayout
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            tools:context="com.example.there.findclips.trackvideos.TrackVideosActivity">
+            tools:context=".activities.trackvideos.TrackVideosActivity">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/track_videos_app_bar"
@@ -90,7 +90,7 @@
 
         </android.support.design.widget.CoordinatorLayout>
 
-        <com.example.there.findclips.draggablefragment.DraggablePanel
+        <com.example.there.findclips.view.draggable.DraggablePanel
             android:id="@+id/track_videos_draggable_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

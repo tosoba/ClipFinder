@@ -3,7 +3,7 @@ package com.example.there.findclips.di.playlist
 import com.example.there.domain.repos.spotify.SpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistTracks
-import com.example.there.findclips.playlist.PlaylistVMFactory
+import com.example.there.findclips.activities.playlist.PlaylistVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides

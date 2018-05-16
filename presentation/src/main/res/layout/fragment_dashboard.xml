@@ -6,7 +6,7 @@
 
         <variable
             name="dashboardView"
-            type="com.example.there.findclips.dashboard.DashboardView" />
+            type="com.example.there.findclips.fragments.dashboard.DashboardView" />
     </data>
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,7 +18,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="com.example.there.findclips.dashboard.DashboardFragment">
+            tools:context=".fragments.dashboard.DashboardFragment">
 
             <TextView
                 android:id="@+id/genres_label_txt"

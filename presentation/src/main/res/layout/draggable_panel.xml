@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.there.findclips.draggablefragment.DraggableView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.there.findclips.view.draggable.DraggableView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:draggable_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draggable_view"
     android:layout_width="match_parent"
@@ -20,4 +20,4 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical" />
 
-</com.example.there.findclips.draggablefragment.DraggableView>
+</com.example.there.findclips.view.draggable.DraggableView>

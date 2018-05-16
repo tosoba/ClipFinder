@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.category.CategoryView" />
+            type="com.example.there.findclips.activities.category.CategoryView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.example.there.findclips.category.CategoryActivity">
+        tools:context=".activities.category.CategoryActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/category_app_bar"
@@ -68,7 +68,7 @@
 
             <fragment
                 android:id="@+id/category_spotify_playlists_fragment"
-                android:name="com.example.there.findclips.listfragments.SpotifyPlaylistsFragment"
+                android:name="com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

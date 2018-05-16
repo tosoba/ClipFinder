@@ -4,7 +4,6 @@ import com.example.there.domain.entities.videos.VideoEntity
 import io.reactivex.Observable
 
 interface VideosDataStore {
-    fun getVideos(query: String): Observable<List<VideoEntity>>
 
     fun getVideos(query: String, pageToken: String? = null): Observable<Pair<String?, List<VideoEntity>>>
 

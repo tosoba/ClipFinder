@@ -6,7 +6,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.relatedvideos.RelatedVideosView" />
+            type="com.example.there.findclips.fragments.relatedvideos.RelatedVideosView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/main_background_gradient"
-        tools:context="com.example.there.findclips.relatedvideos.RelatedVideosFragment">
+        tools:context=".fragments.relatedvideos.RelatedVideosFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/related_videos_recycler_view"

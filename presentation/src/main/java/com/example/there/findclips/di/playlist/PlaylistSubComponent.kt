@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.playlist
 
-import com.example.there.findclips.playlist.PlaylistActivity
+import com.example.there.findclips.activities.playlist.PlaylistActivity
 import dagger.Subcomponent
 
 @PlaylistScope

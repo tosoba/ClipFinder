@@ -6,14 +6,14 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.listfragments.SpotifyAlbumsFragment.View" />
+            type="com.example.there.findclips.fragments.lists.SpotifyAlbumsFragment.View" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.listfragments.SpotifyAlbumsFragment">
+        tools:context=".fragments.lists.SpotifyAlbumsFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/albums_recycler_view"

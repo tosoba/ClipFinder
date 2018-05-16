@@ -1,9 +1,9 @@
 package com.example.there.findclips.di.videossearch
 
 import com.example.there.domain.repos.videos.VideosRepository
-import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrlsUseCase
-import com.example.there.domain.usecases.videos.SearchVideosUseCase
-import com.example.there.findclips.search.videos.VideosSearchVMFactory
+import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
+import com.example.there.domain.usecases.videos.SearchVideos
+import com.example.there.findclips.fragments.search.videos.VideosSearchVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides
@@ -14,10 +14,10 @@ import dagger.Provides
 class VideosSearchModule {
 
     @Provides
-    fun videosViewModelFactory(searchVideosUseCase: SearchVideosUseCase,
-                               getChannelsThumbnailUrlsUseCase: GetChannelsThumbnailUrlsUseCase): VideosSearchVMFactory =
-            VideosSearchVMFactory(searchVideosUseCase, getChannelsThumbnailUrlsUseCase)
+    fun videosViewModelFactory(searchVideos: SearchVideos,
+                               getChannelsThumbnailUrls: GetChannelsThumbnailUrls): VideosSearchVMFactory =
+            VideosSearchVMFactory(searchVideos, getChannelsThumbnailUrls)
 
     @Provides
-    fun searchVideosUseCase(repository: VideosRepository): SearchVideosUseCase = SearchVideosUseCase(AsyncTransformer(), repository)
+    fun searchVideosUseCase(repository: VideosRepository): SearchVideos = SearchVideos(AsyncTransformer(), repository)
 }

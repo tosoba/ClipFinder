@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.dashboard
 
-import com.example.there.findclips.dashboard.DashboardFragment
+import com.example.there.findclips.fragments.dashboard.DashboardFragment
 import dagger.Subcomponent
 
 @DashboardScope

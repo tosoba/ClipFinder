@@ -3,7 +3,6 @@ package com.example.there.findclips.di.modules
 import com.example.there.data.apis.spotify.SpotifyAccountsApi
 import com.example.there.data.apis.spotify.SpotifyApi
 import com.example.there.data.apis.spotify.SpotifyChartsApi
-import com.example.there.data.apis.yahoo.YahooScraper
 import com.example.there.data.apis.youtube.YoutubeApi
 import com.example.there.data.repos.spotify.SpotifyRepositoryImpl
 import com.example.there.data.repos.videos.VideosRepositoryImpl
@@ -20,12 +19,9 @@ class DataModule {
     @Singleton
     fun spotifyRepository(api: SpotifyApi,
                           accountsApi: SpotifyAccountsApi,
-                          chartsApi: SpotifyChartsApi): SpotifyRepository =
-            SpotifyRepositoryImpl(api, accountsApi, chartsApi)
+                          chartsApi: SpotifyChartsApi): SpotifyRepository = SpotifyRepositoryImpl(api, accountsApi, chartsApi)
 
     @Provides
     @Singleton
-    fun videosRepository(api: YoutubeApi,
-                         scraper: YahooScraper): VideosRepository =
-            VideosRepositoryImpl(api, scraper)
+    fun videosRepository(api: YoutubeApi): VideosRepository = VideosRepositoryImpl(api)
 }

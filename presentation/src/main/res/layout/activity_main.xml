@@ -7,7 +7,7 @@
 
         <variable
             name="mainActivityView"
-            type="com.example.there.findclips.main.MainActivityView" />
+            type="com.example.there.findclips.activities.main.MainView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".main.MainActivity">
+        tools:context=".activities.main.MainActivity">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/main_view_pager"
@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_navigation" />
 
-        <com.example.there.findclips.draggablefragment.DraggablePanel
+        <com.example.there.findclips.view.draggable.DraggablePanel
             android:id="@+id/main_draggable_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -5,7 +5,7 @@ import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetCategories
 import com.example.there.domain.usecases.spotify.GetDailyViralTracks
 import com.example.there.domain.usecases.spotify.GetFeaturedPlaylists
-import com.example.there.findclips.dashboard.DashboardVMFactory
+import com.example.there.findclips.fragments.dashboard.DashboardVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides

@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.favourites
 
-import com.example.there.findclips.favourites.FavouritesFragment
+import com.example.there.findclips.fragments.favourites.FavouritesFragment
 import dagger.Subcomponent
 
 @FavouritesScope

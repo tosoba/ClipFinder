@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.relatedvideos
 
-import com.example.there.findclips.relatedvideos.RelatedVideosFragment
+import com.example.there.findclips.fragments.relatedvideos.RelatedVideosFragment
 import dagger.Subcomponent
 
 @RelatedVideosScope
