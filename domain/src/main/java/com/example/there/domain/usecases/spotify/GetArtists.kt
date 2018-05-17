@@ -17,7 +17,7 @@ class GetArtists(transformer: Transformer<List<ArtistEntity>>,
         return if (accessToken != null && artistIds != null) {
             repository.getArtists(accessToken, artistIds)
         } else {
-            Observable.error { IllegalArgumentException("Access token and artistId must be provided.") }
+            Observable.error { IllegalArgumentException("Access token and artistIds must be provided.") }
         }
     }
 

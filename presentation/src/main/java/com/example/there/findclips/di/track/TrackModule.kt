@@ -18,9 +18,6 @@ class TrackModule {
     fun albumUseCase(repository: SpotifyRepository): GetAlbum = GetAlbum(AsyncTransformer(), repository)
 
     @Provides
-    fun artistUseCase(repository: SpotifyRepository): GetArtists = GetArtists(AsyncTransformer(), repository)
-
-    @Provides
     fun similarTracksUseCase(repository: SpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncTransformer(), repository)
 
     @Provides

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.view.lists.GridAlbumsList
@@ -21,9 +22,7 @@ class SpotifyAlbumsFragment : BaseSpotifyFragment<Album>() {
     override val viewState: BaseSpotifyFragment.ViewState<Album> = BaseSpotifyFragment.ViewState()
 
     private val onAlbumClickListener = object : OnAlbumClickListener {
-        override fun onClick(item: Album) {
-
-        }
+        override fun onClick(item: Album) = Router.goToAlbumAcitivity(activity, album = item)
     }
 
     private val view: SpotifyAlbumsFragment.View by lazy {

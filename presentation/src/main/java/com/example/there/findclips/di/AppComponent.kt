@@ -1,5 +1,7 @@
 package com.example.there.findclips.di
 
+import com.example.there.findclips.di.album.AlbumModule
+import com.example.there.findclips.di.album.AlbumSubComponent
 import com.example.there.findclips.di.artist.ArtistModule
 import com.example.there.findclips.di.artist.ArtistSubComponent
 import com.example.there.findclips.di.category.CategoryModule
@@ -39,4 +41,5 @@ interface AppComponent {
     fun plus(relatedVideosModule: RelatedVideosModule): RelatedVideosSubComponent
     fun plus(trackModule: TrackModule): TrackSubComponent
     fun plus(artistModule: ArtistModule): ArtistSubComponent
+    fun plus(albumModule: AlbumModule): AlbumSubComponent
 }

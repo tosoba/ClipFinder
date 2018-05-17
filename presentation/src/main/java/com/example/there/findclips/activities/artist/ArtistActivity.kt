@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseSpotifyVMActivity
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
@@ -19,6 +20,7 @@ import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.activity_artist.*
+import okhttp3.Route
 import javax.inject.Inject
 
 class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
@@ -27,24 +29,20 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
     private val albumsAdapter: AlbumsList.Adapter by lazy {
         AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
-            override fun onClick(item: Album) {
-
-            }
+            override fun onClick(item: Album) = Router.goToAlbumAcitivity(this@ArtistActivity, album = item)
         })
     }
 
     private val topTracksAdapter: TracksList.Adapter by lazy {
         TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item, object : OnTrackClickListener {
-            override fun onClick(item: Track) {
-
-            }
+            override fun onClick(item: Track) = Router.goToTrackVideosActivity(this@ArtistActivity, track = item)
         })
     }
 
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
             override fun onClick(item: Artist) {
-
+                //TODO: reload with new artist
             }
         })
     }

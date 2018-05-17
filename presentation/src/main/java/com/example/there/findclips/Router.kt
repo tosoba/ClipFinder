@@ -1,6 +1,7 @@
 package com.example.there.findclips
 
 import android.app.Activity
+import com.example.there.findclips.activities.album.AlbumActivity
 import com.example.there.findclips.activities.artist.ArtistActivity
 import com.example.there.findclips.activities.category.CategoryActivity
 import com.example.there.findclips.model.entities.*
@@ -22,5 +23,9 @@ object Router {
 
     fun goToArtistActivity(activity: Activity?, artist: Artist) {
         activity?.let { ArtistActivity.start(it, artist) }
+    }
+
+    fun goToAlbumAcitivity(activity: Activity?, album: Album) {
+        activity?.let { AlbumActivity.start(it, album) }
     }
 }

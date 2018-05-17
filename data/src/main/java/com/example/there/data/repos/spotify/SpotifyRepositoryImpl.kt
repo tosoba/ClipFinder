@@ -56,4 +56,7 @@ class SpotifyRepositoryImpl(api: SpotifyApi,
 
     override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
             remoteSpotifyDataStore.getRelatedArtists(accessToken, artistId)
+
+    override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
+            remoteSpotifyDataStore.getTracksFromAlbum(accessToken, albumId)
 }

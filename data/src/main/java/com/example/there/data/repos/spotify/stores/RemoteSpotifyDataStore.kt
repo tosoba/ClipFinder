@@ -105,16 +105,30 @@ class RemoteSpotifyDataStore(private val api: SpotifyApi,
                     .map { it.tracks.map(TrackMapper::mapFrom) }
 
     override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
-        api.getAlbumsFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                .map { it.albums.map(AlbumMapper::mapFrom) }
+            api.getAlbumsFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                    .map { it.albums.map(AlbumMapper::mapFrom) }
 
     override fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>> =
-        api.getTopTracksFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                .map { it.tracks.map(TrackMapper::mapFrom) }
+            api.getTopTracksFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                    .map { it.tracks.map(TrackMapper::mapFrom) }
 
     override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
-        api.getRelatedArtists(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                .map { it.artists.map(ArtistMapper::mapFrom) }
+            api.getRelatedArtists(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
+                    .map { it.artists.map(ArtistMapper::mapFrom) }
+
+    override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
+            api.getTracksFromAlbum(authorization = getAccessTokenHeader(accessToken.token), albumId = albumId)
+                    .map {
+                        it.tracks.chunked(50).map {
+                            api.getTracks(
+                                    authorization = getAccessTokenHeader(accessToken.token),
+                                    ids = it.joinToString(",") { it.id }
+                            )
+                        }
+                    }
+                    .flatMapIterable { it }
+                    .switchMap { it }
+                    .map { it.tracks.map(TrackMapper::mapFrom) }
 
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"

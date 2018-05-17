@@ -12,7 +12,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewCompat
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.ActivityTrackVideosBinding
@@ -78,7 +80,10 @@ class TrackVideosActivity : BasePlayerActivity(), OnTrackChangeListener {
                 state = viewState as TrackVideosViewState,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
-                onTabSelectedListener = onTabSelectedListener
+                onTabSelectedListener = onTabSelectedListener,
+                onFavouriteBtnClickListener = View.OnClickListener {
+                    Toast.makeText(this,"Added to favourites.", Toast.LENGTH_SHORT).show()
+                }
         )
     }
 

@@ -79,6 +79,16 @@
 
             </android.support.design.widget.AppBarLayout>
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/track_favourite_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:onClick="@{view.onFavouriteBtnClickListener}"
+                android:src="@drawable/favourite"
+                app:layout_anchor="@id/track_videos_app_bar"
+                app:layout_anchorGravity="bottom|end" />
+
             <android.support.v4.view.ViewPager
                 android:id="@+id/track_videos_viewpager"
                 onPageChangeListener="@{view.onPageChangeListener}"

@@ -73,6 +73,12 @@ interface SpotifyApi {
     fun getRelatedArtists(@Header("Authorization") authorization: String,
                           @Path("id") artistId: String): Observable<ArtistsOnlyResponse>
 
+    @GET("albums/{id}/tracks")
+    fun getTracksFromAlbum(@Header("Authorization") authorization: String,
+                           @Path("id") albumId: String,
+                           @Query("limit") limit: String = DEFAULT_LIMIT,
+                           @Query("offset") offset: String = DEFAULT_OFFSET): Observable<TracksResult>
+
     companion object {
         private const val DEFAULT_LIMIT = "50"
         private const val DEFAULT_OFFSET = "0"

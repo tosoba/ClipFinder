@@ -22,9 +22,7 @@ class SpotifyTracksFragment : BaseSpotifyFragment<Track>() {
     override val viewState: BaseSpotifyFragment.ViewState<Track> = BaseSpotifyFragment.ViewState()
 
     private val onTrackClickListener = object : OnTrackClickListener {
-        override fun onClick(item: Track) {
-            Router.goToTrackVideosActivity(activity, track = item)
-        }
+        override fun onClick(item: Track) = Router.goToTrackVideosActivity(activity, track = item)
     }
 
     private val view: SpotifyTracksFragment.View by lazy {

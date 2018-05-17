@@ -12,10 +12,7 @@ interface BaseBindingList {
 
     abstract class Adapter<I, B>(val items: ObservableArrayList<I>,
                                  private val itemLayoutId: Int,
-                                 private val onItemClickListener: OnItemClickListener<I>) :
-            RecyclerView.Adapter<ViewHolder<B>>()
-            where B : ViewDataBinding {
-
+                                 private val onItemClickListener: OnItemClickListener<I>) : RecyclerView.Adapter<ViewHolder<B>>() where B : ViewDataBinding {
         init {
             items.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableArrayList<I>>() {
                 override fun onChanged(sender: ObservableArrayList<I>?) = notifyDataSetChanged()

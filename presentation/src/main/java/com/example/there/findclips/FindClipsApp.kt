@@ -3,6 +3,8 @@ package com.example.there.findclips
 import android.app.Application
 import com.example.there.findclips.di.AppComponent
 import com.example.there.findclips.di.DaggerAppComponent
+import com.example.there.findclips.di.album.AlbumModule
+import com.example.there.findclips.di.album.AlbumSubComponent
 import com.example.there.findclips.di.artist.ArtistModule
 import com.example.there.findclips.di.artist.ArtistSubComponent
 import com.example.there.findclips.di.category.CategoryModule
@@ -144,5 +146,15 @@ class FindClipsApp : Application() {
 
     fun releaseArtistSubComponent() {
         artistSubComponent = null
+    }
+
+    private var albumSubComponent: AlbumSubComponent? = null
+    fun createAlbumSubComponent(): AlbumSubComponent {
+        albumSubComponent = appComponent.plus(AlbumModule())
+        return albumSubComponent!!
+    }
+
+    fun releaseAlbumSubComponent() {
+        albumSubComponent = null
     }
 }

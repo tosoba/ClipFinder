@@ -36,6 +36,7 @@
                 android:layout_height="140dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:onClick="@{view.onAlbumImageViewClickListener}"
                 android:visibility="@{view.state.albumLoadingInProgress ? View.GONE : View.VISIBLE}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/track_album_label_txt" />

@@ -2,6 +2,7 @@ package com.example.there.findclips.fragments.track
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
+import android.view.View
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
@@ -11,7 +12,8 @@ import com.example.there.findclips.view.lists.TracksList
 data class TrackView(
         val state: TrackViewState,
         val artistsAdapter: ArtistsList.Adapter,
-        val similarTracksAdapter: TracksList.Adapter
+        val similarTracksAdapter: TracksList.Adapter,
+        val onAlbumImageViewClickListener: View.OnClickListener
 )
 
 data class TrackViewState(

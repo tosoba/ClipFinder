@@ -59,7 +59,11 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>() {
     private val view: TrackView by lazy {
         TrackView(state = viewModel.viewState,
                 artistsAdapter = ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item, onArtistClickListener),
-                similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener))
+                similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener),
+                onAlbumImageViewClickListener = View.OnClickListener {
+                    val album = viewModel.viewState.album.get()
+                    album?.let { Router.goToAlbumAcitivity(activity, album = it) }
+                })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
