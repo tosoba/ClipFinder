@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.category
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistsForCategory
 import com.example.there.findclips.activities.category.CategoryVMFactory
@@ -13,7 +13,7 @@ import dagger.Provides
 class CategoryModule {
 
     @Provides
-    fun playlistsForCategoryUseCase(repository: SpotifyRepository): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncTransformer(), repository)
+    fun playlistsForCategoryUseCase(repository: ISpotifyRepository): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncTransformer(), repository)
 
     @Provides
     fun categoryVMFactory(getAccessToken: GetAccessToken, getPlaylistsForCategory: GetPlaylistsForCategory): CategoryVMFactory =

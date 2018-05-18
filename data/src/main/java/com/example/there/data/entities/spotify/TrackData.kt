@@ -1,15 +1,40 @@
 package com.example.there.data.entities.spotify
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.TypeConverters
+import com.example.there.data.db.SimplifiedAlbumDataConverter
+import com.example.there.data.db.SimplifiedArtistDataConverter
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "tracks")
 data class TrackData(
+        @PrimaryKey
+        @ColumnInfo(name = "id")
         val id: String,
+
+        @ColumnInfo(name = "name")
         val name: String,
+
+        @ColumnInfo(name = "artists")
+        @TypeConverters(SimplifiedArtistDataConverter::class)
         val artists: List<SimplifiedArtistData>,
+
+        @ColumnInfo(name = "album")
+        @TypeConverters(SimplifiedAlbumDataConverter::class)
         val album: SimplifiedAlbumData,
-        @SerializedName("duration_ms") val durationMs: Int,
+
+        @ColumnInfo(name = "duration_ms")
+        @SerializedName("duration_ms")
+        val durationMs: Int,
+
+        @ColumnInfo(name = "popularity")
         val popularity: Int,
-        @SerializedName("track_number") val trackNumber: Int
+
+        @ColumnInfo(name = "track_number")
+        @SerializedName("track_number")
+        val trackNumber: Int
 )
 
 data class SimilarTrackData(

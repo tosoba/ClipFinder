@@ -4,7 +4,7 @@ import com.example.there.data.entities.videos.VideoData
 import com.example.there.data.util.urlHigh
 import com.example.there.domain.common.Mapper
 import com.example.there.domain.entities.videos.VideoEntity
-import com.example.there.domain.entities.videos.Duration
+import com.example.there.domain.entities.videos.DurationEntity
 import java.math.BigInteger
 
 object VideoMapper : Mapper<VideoData, VideoEntity>() {
@@ -15,7 +15,7 @@ object VideoMapper : Mapper<VideoData, VideoEntity>() {
             description = from.snippet.description,
             publishedAt = from.snippet.publishedAt,
             thumbnailUrl = from.snippet.thumbnails.urlHigh,
-            duration = Duration(from.contentDetails.duration),
+            duration = DurationEntity(from.contentDetails.duration),
             viewCount = BigInteger.valueOf(from.statistics.viewCount?.toLong() ?: 0)
     )
 }

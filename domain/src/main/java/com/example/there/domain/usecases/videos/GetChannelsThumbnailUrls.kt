@@ -4,12 +4,12 @@ import com.example.there.domain.common.Transformer
 import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.usecases.UseCaseParams
 import com.example.there.domain.entities.videos.VideoEntity
-import com.example.there.domain.repos.videos.VideosRepository
+import com.example.there.domain.repos.videos.IVideosRepository
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
 class GetChannelsThumbnailUrls(transformer: Transformer<List<String>>,
-                               private val repository: VideosRepository) : UseCase<List<String>>(transformer) {
+                               private val repository: IVideosRepository) : UseCase<List<String>>(transformer) {
 
     @Suppress("UNCHECKED_CAST")
     override fun createObservable(data: Map<String, Any?>?): Observable<List<String>> {

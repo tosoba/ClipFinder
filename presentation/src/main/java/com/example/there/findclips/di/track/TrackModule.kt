@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.track
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetAlbum
 import com.example.there.domain.usecases.spotify.GetArtists
@@ -15,10 +15,10 @@ import dagger.Provides
 class TrackModule {
 
     @Provides
-    fun albumUseCase(repository: SpotifyRepository): GetAlbum = GetAlbum(AsyncTransformer(), repository)
+    fun albumUseCase(repository: ISpotifyRepository): GetAlbum = GetAlbum(AsyncTransformer(), repository)
 
     @Provides
-    fun similarTracksUseCase(repository: SpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncTransformer(), repository)
+    fun similarTracksUseCase(repository: ISpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncTransformer(), repository)
 
     @Provides
     fun trackVMFactory(getAccessToken: GetAccessToken,

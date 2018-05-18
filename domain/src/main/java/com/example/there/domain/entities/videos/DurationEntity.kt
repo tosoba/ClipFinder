@@ -3,7 +3,7 @@ package com.example.there.domain.entities.videos
 import com.example.there.domain.util.timeString
 import java.util.regex.Pattern
 
-data class Duration(private val isoString: String) {
+data class DurationEntity(private val isoString: String) {
     private val days: Long
     private val hours: Long
     private val minutes: Long

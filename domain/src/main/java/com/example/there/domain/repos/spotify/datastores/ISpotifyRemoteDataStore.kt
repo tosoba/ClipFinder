@@ -1,12 +1,12 @@
-package com.example.there.domain.repos.spotify
+package com.example.there.domain.repos.spotify.datastores
 
 import com.example.there.domain.entities.spotify.*
 import io.reactivex.Observable
 
-interface SpotifyRepository {
-    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
-
+interface ISpotifyRemoteDataStore {
     fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity>
+
+    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
 
     fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>
 

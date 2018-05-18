@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.artist
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetAlbumsFromArtist
 import com.example.there.domain.usecases.spotify.GetRelatedArtists
@@ -15,13 +15,13 @@ import dagger.Provides
 class ArtistModule {
 
     @Provides
-    fun albumsFromArtistUseCase(repository: SpotifyRepository): GetAlbumsFromArtist = GetAlbumsFromArtist(AsyncTransformer(), repository)
+    fun albumsFromArtistUseCase(repository: ISpotifyRepository): GetAlbumsFromArtist = GetAlbumsFromArtist(AsyncTransformer(), repository)
 
     @Provides
-    fun topTracksFromArtistUseCase(repository: SpotifyRepository): GetTopTracksFromArtist = GetTopTracksFromArtist(AsyncTransformer(), repository)
+    fun topTracksFromArtistUseCase(repository: ISpotifyRepository): GetTopTracksFromArtist = GetTopTracksFromArtist(AsyncTransformer(), repository)
 
     @Provides
-    fun relatedArtistsUseCase(repository: SpotifyRepository): GetRelatedArtists = GetRelatedArtists(AsyncTransformer(), repository)
+    fun relatedArtistsUseCase(repository: ISpotifyRepository): GetRelatedArtists = GetRelatedArtists(AsyncTransformer(), repository)
 
     @Provides
     fun artistVMFactory(getAccessToken: GetAccessToken,

@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.videossearch
 
-import com.example.there.domain.repos.videos.VideosRepository
+import com.example.there.domain.repos.videos.IVideosRepository
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecases.videos.SearchVideos
 import com.example.there.findclips.fragments.search.videos.VideosSearchVMFactory
@@ -19,5 +19,5 @@ class VideosSearchModule {
             VideosSearchVMFactory(searchVideos, getChannelsThumbnailUrls)
 
     @Provides
-    fun searchVideosUseCase(repository: VideosRepository): SearchVideos = SearchVideos(AsyncTransformer(), repository)
+    fun searchVideosUseCase(repository: IVideosRepository): SearchVideos = SearchVideos(AsyncTransformer(), repository)
 }

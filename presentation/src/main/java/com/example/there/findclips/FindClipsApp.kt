@@ -49,7 +49,7 @@ class FindClipsApp : Application() {
     private fun initAppComponent() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(applicationContext))
-                .dataModule(DataModule())
+                .dataModule(DataModule(this))
                 .networkModule(NetworkModule(spotifyApiBaseUrl = getString(R.string.spotify_base_url),
                         accessTokenBaseUrl = getString(R.string.access_token_base_url),
                         spotifyChartsBaseUrl = getString(R.string.spotify_charts_base_url),

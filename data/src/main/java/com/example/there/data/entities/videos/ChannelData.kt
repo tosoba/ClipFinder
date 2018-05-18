@@ -9,5 +9,5 @@ data class ChannelSnippet(
         val description: String,
         val customUrl: String,
         val publishedAt: String,
-        val thumbnails: Thumbnails
+        val thumbnails: ThumbnailsData
 )

@@ -1,7 +1,7 @@
 package com.example.there.findclips.di.modules
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
-import com.example.there.domain.repos.videos.VideosRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
+import com.example.there.domain.repos.videos.IVideosRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetArtists
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
@@ -15,14 +15,14 @@ class CommonUseCasesModule {
 
     @Provides
     @Singleton
-    fun accessTokenUseCase(repository: SpotifyRepository): GetAccessToken = GetAccessToken(AsyncTransformer(), repository)
+    fun accessTokenUseCase(repository: ISpotifyRepository): GetAccessToken = GetAccessToken(AsyncTransformer(), repository)
 
     @Provides
     @Singleton
-    fun artistsUseCase(repository: SpotifyRepository): GetArtists = GetArtists(AsyncTransformer(), repository)
+    fun artistsUseCase(repository: ISpotifyRepository): GetArtists = GetArtists(AsyncTransformer(), repository)
 
     @Provides
     @Singleton
-    fun getChannelsThumbnailUrlsUseCase(repository: VideosRepository): GetChannelsThumbnailUrls =
+    fun getChannelsThumbnailUrlsUseCase(repository: IVideosRepository): GetChannelsThumbnailUrls =
             GetChannelsThumbnailUrls(AsyncTransformer(), repository)
 }

@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.playlist
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistTracks
 import com.example.there.findclips.activities.playlist.PlaylistVMFactory
@@ -13,7 +13,7 @@ import dagger.Provides
 class PlaylistModule {
 
     @Provides
-    fun playlistTracksUseCase(repository: SpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncTransformer(), repository)
+    fun playlistTracksUseCase(repository: ISpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncTransformer(), repository)
 
     @Provides
     fun playlistVMFactory(getAccessToken: GetAccessToken, getPlaylistTracks: GetPlaylistTracks) =

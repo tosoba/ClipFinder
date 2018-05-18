@@ -1,13 +1,13 @@
-package com.example.there.data.repos.videos.stores
+package com.example.there.data.repos.videos.datastores
 
 import com.example.there.data.apis.youtube.YoutubeApi
 import com.example.there.data.mappers.videos.ChannelThumbnailUrlMapper
 import com.example.there.data.mappers.videos.VideoMapper
 import com.example.there.domain.entities.videos.VideoEntity
-import com.example.there.domain.repos.videos.VideosDataStore
+import com.example.there.domain.repos.videos.datastores.IVideosRemoteDataStore
 import io.reactivex.Observable
 
-class RemoteVideosDataStore(private val api: YoutubeApi) : VideosDataStore {
+class VideosRemoteDataStore(private val api: YoutubeApi) : IVideosRemoteDataStore {
 
     override fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>> {
         return Observable.fromIterable(videos.chunked(50)

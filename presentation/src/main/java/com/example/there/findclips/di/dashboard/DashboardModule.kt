@@ -1,6 +1,6 @@
 package com.example.there.findclips.di.dashboard
 
-import com.example.there.domain.repos.spotify.SpotifyRepository
+import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetCategories
 import com.example.there.domain.usecases.spotify.GetDailyViralTracks
@@ -15,13 +15,13 @@ import dagger.Provides
 class DashboardModule {
 
     @Provides
-    fun categoriesUseCase(repository: SpotifyRepository): GetCategories = GetCategories(AsyncTransformer(), repository)
+    fun categoriesUseCase(repository: ISpotifyRepository): GetCategories = GetCategories(AsyncTransformer(), repository)
 
     @Provides
-    fun featuredPlaylistsUseCase(repository: SpotifyRepository): GetFeaturedPlaylists = GetFeaturedPlaylists(AsyncTransformer(), repository)
+    fun featuredPlaylistsUseCase(repository: ISpotifyRepository): GetFeaturedPlaylists = GetFeaturedPlaylists(AsyncTransformer(), repository)
 
     @Provides
-    fun dailyViralTracksUseCase(repository: SpotifyRepository): GetDailyViralTracks = GetDailyViralTracks(AsyncTransformer(), repository)
+    fun dailyViralTracksUseCase(repository: ISpotifyRepository): GetDailyViralTracks = GetDailyViralTracks(AsyncTransformer(), repository)
 
     @Provides
     fun dashboardViewModelFactory(getAccessToken: GetAccessToken,

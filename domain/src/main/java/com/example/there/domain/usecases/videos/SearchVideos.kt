@@ -4,12 +4,12 @@ import com.example.there.domain.common.Transformer
 import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.usecases.UseCaseParams
 import com.example.there.domain.entities.videos.VideoEntity
-import com.example.there.domain.repos.videos.VideosRepository
+import com.example.there.domain.repos.videos.IVideosRepository
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
 class SearchVideos(transformer: Transformer<Pair<String?, List<VideoEntity>>>,
-                   private val repository: VideosRepository) : UseCase<Pair<String?, List<VideoEntity>>>(transformer) {
+                   private val repository: IVideosRepository) : UseCase<Pair<String?, List<VideoEntity>>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<Pair<String?, List<VideoEntity>>> {
         val query = data?.get(UseCaseParams.PARAM_VIDEO_QUERY) as? String

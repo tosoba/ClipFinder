@@ -8,28 +8,29 @@ import android.databinding.ObservableField
 import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewCompat
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.ActivityTrackVideosBinding
-import com.example.there.findclips.databinding.ActivityTrackVideosBindingLandImpl
-import com.example.there.findclips.model.entities.Track
-import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.activities.player.BasePlayerActivity
 import com.example.there.findclips.activities.player.PlayerViewState
+import com.example.there.findclips.databinding.ActivityTrackVideosBinding
+import com.example.there.findclips.databinding.ActivityTrackVideosBindingLandImpl
 import com.example.there.findclips.fragments.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragments.track.TrackFragment
+import com.example.there.findclips.model.entities.Track
+import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.util.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_track_videos.*
+import java.lang.Exception
 
 
 class TrackVideosActivity : BasePlayerActivity(), OnTrackChangeListener {
@@ -132,7 +133,11 @@ class TrackVideosActivity : BasePlayerActivity(), OnTrackChangeListener {
     override fun pause() {
         if (youtubePlayer?.isPlaying == true) {
             showStatusBar()
-            youtubePlayer?.pause()
+            try {
+                youtubePlayer?.pause()
+            } catch (e: Exception) {
+                Log.e(javaClass.name, "YoutubePlayer exception: ${e.message}")
+            }
         }
     }
 
@@ -141,7 +146,11 @@ class TrackVideosActivity : BasePlayerActivity(), OnTrackChangeListener {
             hideStatusBar()
             view.state.videoIsOpen.set(true)
             track_videos_draggable_panel?.let { ViewCompat.setTranslationZ(it, 0f) }
-            youtubePlayer?.play()
+            try {
+                youtubePlayer?.play()
+            } catch (e: Exception) {
+                Log.e(javaClass.name, "YoutubePlayer exception: ${e.message}")
+            }
         }
     }
 
