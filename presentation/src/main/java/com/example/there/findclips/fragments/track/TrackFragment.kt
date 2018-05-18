@@ -42,9 +42,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>() {
     }
 
     private val onArtistClickListener = object : OnArtistClickListener {
-        override fun onClick(item: Artist) {
-            Router.goToArtistActivity(activity, artist = item)
-        }
+        override fun onClick(item: Artist) = Router.goToArtistActivity(activity, artist = item)
     }
 
     private val onTrackChangeListener: OnTrackChangeListener?

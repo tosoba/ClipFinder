@@ -4,6 +4,7 @@ import android.databinding.ObservableArrayList
 import com.example.there.findclips.databinding.GridTrackItemBinding
 import com.example.there.findclips.databinding.TrackItemBinding
 import com.example.there.findclips.databinding.TopTrackItemBinding
+import com.example.there.findclips.databinding.TrackPopularityItemBinding
 import com.example.there.findclips.model.entities.TopTrack
 import com.example.there.findclips.model.entities.Track
 
@@ -34,6 +35,17 @@ interface TopTracksList {
             BaseBindingList.Adapter<TopTrack, TopTrackItemBinding>(tracks, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<TopTrackItemBinding>, position: Int) {
+            super.onBindViewHolder(holder, position)
+            holder.binding.track = items[position]
+        }
+    }
+}
+
+interface TracksPopularityList {
+    class Adapter(tracks: ObservableArrayList<Track>, itemLayoutId: Int, listener: OnTrackClickListener) :
+            BaseBindingList.Adapter<Track, TrackPopularityItemBinding>(tracks, itemLayoutId, listener) {
+
+        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<TrackPopularityItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.track = items[position]
         }

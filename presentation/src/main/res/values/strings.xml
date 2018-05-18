@@ -38,5 +38,6 @@
     <string name="related_artists">Related artists</string>
     <string name="title_activity_album">AlbumActivity</string>
     <string name="tracks">Tracks</string>
+    <string name="playlists">Playlists</string>
 
 </resources>

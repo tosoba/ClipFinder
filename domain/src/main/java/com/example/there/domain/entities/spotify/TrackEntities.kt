@@ -6,16 +6,12 @@ data class TrackEntity(
         val iconUrl: String,
         val albumId: String,
         val albumName: String,
-        val artists: List<SimpleArtistEntity>
+        val artists: List<SimpleArtistEntity>,
+        val popularity: Int,
+        val trackNumber: Int
 )
 
 data class TopTrackEntity(
         val position: Int,
         val track: TrackEntity
-)
-
-data class SimilarTrackEntity(
-        val id: String,
-        val name: String,
-        val artists: List<SimpleArtistEntity>
 )

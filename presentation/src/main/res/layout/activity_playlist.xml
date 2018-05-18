@@ -60,26 +60,42 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <TextView
+                android:id="@+id/playlist_tracks_label_txt"
+                style="@style/LargeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/tracks"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <fragment
                 android:id="@+id/playlist_spotify_tracks_fragment"
                 android:name="com.example.there.findclips.fragments.lists.SpotifyTracksFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/playlist_tracks_label_txt" />
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|center_horizontal"
-                android:layout_marginTop="100dp"
-                android:visibility="@{view.state.loadingInProgress ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{safeUnbox(view.state.loadingInProgress) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/playlist_spotify_tracks_fragment"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/playlist_spotify_tracks_fragment" />
 
-        </FrameLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/playlist_favourite_fab"

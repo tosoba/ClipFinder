@@ -3,6 +3,7 @@ package com.example.there.findclips.fragments.lists
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -29,7 +30,7 @@ class SpotifyTracksFragment : BaseSpotifyFragment<Track>() {
         SpotifyTracksFragment.View(
                 state = viewState,
                 adapter = GridTracksList.Adapter(viewState.items, R.layout.grid_track_item, onTrackClickListener),
-                itemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f)
+                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 

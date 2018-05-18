@@ -10,7 +10,9 @@ data class Track(
         val iconUrl: String,
         val albumId: String,
         val albumName: String,
-        val artists: List<SimpleArtist>
+        val artists: List<SimpleArtist>,
+        val popularity: Int,
+        val trackNumber: Int
 ) : AutoParcelable {
 
     val artistNamesText: String

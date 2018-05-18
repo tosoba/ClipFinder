@@ -19,8 +19,6 @@ class AlbumViewModel(getAccessToken: GetAccessToken,
 
     private var lastAlbum: Album? = null
 
-    val tracks: MutableLiveData<List<Track>> = MutableLiveData()
-
     fun loadAlbumData(accessToken: AccessTokenEntity?, album: Album) {
         lastAlbum = album
         if (accessToken != null && accessToken.isValid) {
@@ -47,11 +45,7 @@ class AlbumViewModel(getAccessToken: GetAccessToken,
         viewState.tracksLoadingInProgress.set(true)
         addDisposable(getTracksFromAlbum.execute(accessToken, albumId)
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                .subscribe({
-                    val newTracks = it.map(TrackEntityMapper::mapFrom)
-                    viewState.tracks.addAll(newTracks)
-                    tracks.value = newTracks
-                }, this::onError))
+                .subscribe({ viewState.tracks.addAll(it.map(TrackEntityMapper::mapFrom).sortedBy { it.trackNumber }) }, this::onError))
     }
 
     override fun onError(t: Throwable) {

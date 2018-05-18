@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
-            android:visibility="@{(mainActivityView.state.videoIsOpen &amp;&amp; mainActivityView.state.isMaximized) ? View.GONE : View.VISIBLE}"
+            android:visibility="@{(safeUnbox(mainActivityView.state.videoIsOpen) &amp;&amp; safeUnbox(mainActivityView.state.isMaximized)) ? View.GONE : View.VISIBLE}"
             app:itemIconTint="@color/bottom_navigation_color"
             app:itemTextColor="@color/bottom_navigation_color"
             app:layout_constraintTop_toBottomOf="@id/main_view_pager"
@@ -48,7 +48,7 @@
             android:id="@+id/main_draggable_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{mainActivityView.state.videoIsOpen ? View.VISIBLE : View.GONE}"
+            android:visibility="@{safeUnbox(mainActivityView.state.videoIsOpen) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/main_bottom_navigation_view"
             app:layout_constraintRight_toRightOf="parent" />
 

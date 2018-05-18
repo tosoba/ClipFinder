@@ -107,7 +107,7 @@
             android:layout_gravity="bottom|end"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="@{view.state.videoIsOpen ? View.VISIBLE : View.GONE}">
+            android:visibility="@{safeUnbox(view.state.videoIsOpen) ? View.VISIBLE : View.GONE}">
 
             <fragment
                 android:id="@+id/track_videos_player_fragment"

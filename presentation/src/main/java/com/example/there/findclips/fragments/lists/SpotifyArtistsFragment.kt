@@ -3,6 +3,7 @@ package com.example.there.findclips.fragments.lists
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,16 +23,14 @@ class SpotifyArtistsFragment : BaseSpotifyFragment<Artist>() {
     override val viewState = BaseSpotifyFragment.ViewState<Artist>()
 
     private val onArtistClickListener = object : OnArtistClickListener {
-        override fun onClick(item: Artist) {
-            Router.goToArtistActivity(activity, artist = item)
-        }
+        override fun onClick(item: Artist) = Router.goToArtistActivity(activity, artist = item)
     }
 
     private val view: SpotifyArtistsFragment.View by lazy {
         SpotifyArtistsFragment.View(
                 state = viewState,
                 adapter = GridArtistsList.Adapter(viewState.items, R.layout.grid_artist_item, onArtistClickListener),
-                itemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f)
+                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 

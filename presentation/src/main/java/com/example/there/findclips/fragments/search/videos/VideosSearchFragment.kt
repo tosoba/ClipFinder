@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -53,7 +54,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
                 state = viewModel.viewState,
                 videosAdapter = VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
                 onScrollListener = onScrollListener,
-                videosItemDecoration = SeparatorDecoration(context!!, context!!.resources.getColor(R.color.colorAccent), 2f)
+                videosItemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 

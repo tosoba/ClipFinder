@@ -44,7 +44,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{view.state.albumsLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{safeUnbox(view.state.albumsLoadingInProgress) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/artist_albums_recycler_view"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -72,7 +72,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{view.state.topTracksLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{safeUnbox(view.state.topTracksLoadingInProgress) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/artist_top_tracks_recycler_view"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -100,7 +100,7 @@
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{view.state.relatedArtistsLoadingInProgress ? View.VISIBLE : View.GONE}"
+                android:visibility="@{safeUnbox(view.state.relatedArtistsLoadingInProgress) ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@id/artist_related_artists_recycler_view"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

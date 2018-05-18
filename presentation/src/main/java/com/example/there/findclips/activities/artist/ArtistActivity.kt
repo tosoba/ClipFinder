@@ -42,7 +42,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
             override fun onClick(item: Artist) {
-                //TODO: reload with new artist
+
             }
         })
     }
@@ -83,7 +83,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
     private fun initToolbar() {
         setSupportActionBar(artist_toolbar)
         artist_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        artist_toolbar.setNavigationOnClickListener { onBackPressed() }
+        artist_toolbar.setNavigationOnClickListener { super.onBackPressed() }
         title = artist.name
     }
 

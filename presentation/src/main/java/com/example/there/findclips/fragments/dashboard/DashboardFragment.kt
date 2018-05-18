@@ -28,21 +28,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
     lateinit var vmFactory: DashboardVMFactory
 
     private val topTrackItemClickListener = object : OnTopTrackClickListener {
-        override fun onClick(item: TopTrack) {
-            Router.goToTrackVideosActivity(mainActivity, track = item.track)
-        }
+        override fun onClick(item: TopTrack) = Router.goToTrackVideosActivity(mainActivity, track = item.track)
     }
 
     private val categoryItemClickListener = object : OnCategoryClickListener {
-        override fun onClick(item: Category) {
-            Router.goToCategoryActivity(mainActivity, category = item)
-        }
+        override fun onClick(item: Category) = Router.goToCategoryActivity(mainActivity, category = item)
     }
 
     private val playlistItemClickListener = object : OnPlaylistClickListener {
-        override fun onClick(item: Playlist) {
-            Router.goToPlaylistActivity(mainActivity, playlist = item)
-        }
+        override fun onClick(item: Playlist) = Router.goToPlaylistActivity(mainActivity, playlist = item)
     }
 
     private val view: DashboardView by lazy {

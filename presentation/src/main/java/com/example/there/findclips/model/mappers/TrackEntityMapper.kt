@@ -12,6 +12,8 @@ object TrackEntityMapper : Mapper<TrackEntity, Track>() {
             iconUrl = from.iconUrl,
             albumId = from.albumId,
             albumName = from.albumName,
-            artists = from.artists.map { SimpleArtist(it.id, it.name) }
+            artists = from.artists.map { SimpleArtist(it.id, it.name) },
+            popularity = from.popularity,
+            trackNumber = from.trackNumber
     )
 }

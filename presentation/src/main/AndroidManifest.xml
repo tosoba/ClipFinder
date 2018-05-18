@@ -41,7 +41,7 @@
         <activity
             android:name=".activities.album.AlbumActivity"
             android:label="@string/title_activity_album"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

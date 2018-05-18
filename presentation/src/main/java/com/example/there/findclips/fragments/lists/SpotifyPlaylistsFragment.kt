@@ -18,9 +18,7 @@ import com.example.there.findclips.view.lists.OnPlaylistClickListener
 class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
 
     private val onPlaylistClickListener = object : OnPlaylistClickListener {
-        override fun onClick(item: Playlist) {
-            Router.goToPlaylistActivity(activity, playlist = item)
-        }
+        override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)
     }
 
     override val viewState: BaseSpotifyFragment.ViewState<Playlist> = BaseSpotifyFragment.ViewState()
