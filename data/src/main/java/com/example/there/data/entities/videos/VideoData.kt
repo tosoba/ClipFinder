@@ -3,32 +3,46 @@ package com.example.there.data.entities.videos
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.TypeConverters
-import com.example.there.data.db.VideoContentDetailsConverter
-import com.example.there.data.db.VideoSnippetConverter
-import com.example.there.data.db.VideoStatisticsConverter
 import com.google.gson.annotations.SerializedName
 
+
+data class VideoData(val id: String,
+                     val snippet: VideoSnippet,
+                     val contentDetails: VideoContentDetails,
+                     val statistics: Statistics)
+
 @Entity(tableName = "videos")
-data class VideoData(
+data class VideoDbData(
         @PrimaryKey
         @ColumnInfo(name = "id")
         val id: String,
 
-        @ColumnInfo(name = "snippet")
-        @TypeConverters(VideoSnippetConverter::class)
-        val snippet: VideoSnippet,
+        @ColumnInfo(name = "channel_id")
+        val channelId: String,
 
-        @ColumnInfo(name = "content_details")
-        @TypeConverters(VideoContentDetailsConverter::class)
-        val contentDetails: VideoContentDetails,
+        @ColumnInfo(name = "title")
+        val title: String,
 
-        @ColumnInfo(name = "statistics")
-        @TypeConverters(VideoStatisticsConverter::class)
-        val statistics: Statistics,
+        @ColumnInfo(name = "description")
+        val description: String,
 
-        @ColumnInfo(name = "playlistId")
-        var playlistId: Long? = null
+        @ColumnInfo(name = "published_at")
+        val publishedAt: String,
+
+        @ColumnInfo(name = "thumbnail_url")
+        val thumbnailUrl: String,
+
+        @ColumnInfo(name = "duration")
+        val duration: String,
+
+        @ColumnInfo(name = "view_count")
+        val viewCount: Long,
+
+        @ColumnInfo(name = "playlist_id")
+        var playlistId: Long? = null,
+
+        @ColumnInfo(name = "channel_thumbnail_url")
+        val channelThumbnailUrl: String
 )
 
 data class VideoSnippet(

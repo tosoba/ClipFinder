@@ -4,6 +4,7 @@ import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.repos.spotify.datastores.ISpotifyDbDataStore
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -65,4 +66,14 @@ class SpotifyRepository(private val remoteDataStore: ISpotifyRemoteDataStore,
     override fun getFavouritePlaylists(): Single<List<PlaylistEntity>> = dbDataStore.getFavouritePlaylists()
 
     override fun getFavouriteTracks(): Single<List<TrackEntity>> = dbDataStore.getFavouriteTracks()
+
+    override fun insertAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.insertAlbum(albumEntity)
+
+    override fun insertArtist(artistEntity: ArtistEntity): Completable = dbDataStore.insertArtist(artistEntity)
+
+    override fun insertCategory(categoryEntity: CategoryEntity): Completable = dbDataStore.insertCategory(categoryEntity)
+
+    override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
+
+    override fun insertTrack(trackEntity: TrackEntity): Completable = dbDataStore.insertTrack(trackEntity)
 }

@@ -25,10 +25,6 @@ data class TrackData(
         @TypeConverters(SimplifiedAlbumDataConverter::class)
         val album: SimplifiedAlbumData,
 
-        @ColumnInfo(name = "duration_ms")
-        @SerializedName("duration_ms")
-        val durationMs: Int,
-
         @ColumnInfo(name = "popularity")
         val popularity: Int,
 

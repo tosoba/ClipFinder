@@ -2,6 +2,7 @@ package com.example.there.domain.repos.videos
 
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -12,4 +13,6 @@ interface IVideosRepository {
 
     fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>>
     fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>>
+    fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Completable
+    fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
 }

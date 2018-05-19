@@ -4,6 +4,7 @@ import com.example.there.data.db.*
 import com.example.there.data.mappers.spotify.*
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.datastores.ISpotifyDbDataStore
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class SpotifyDbDataStore(private val albumDao: AlbumDao,
@@ -21,4 +22,24 @@ class SpotifyDbDataStore(private val albumDao: AlbumDao,
     override fun getFavouritePlaylists(): Single<List<PlaylistEntity>> = spotifyPlaylistDao.findAll().map { it.map(PlaylistMapper::mapFrom) }
 
     override fun getFavouriteTracks(): Single<List<TrackEntity>> = trackDao.findAll().map { it.map(TrackMapper::mapFrom) }
+
+    override fun insertAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
+        albumDao.insert(AlbumMapper.mapBack(albumEntity))
+    }
+
+    override fun insertArtist(artistEntity: ArtistEntity): Completable = Completable.fromCallable {
+        artistDao.insert(ArtistMapper.mapBack(artistEntity))
+    }
+
+    override fun insertCategory(categoryEntity: CategoryEntity): Completable = Completable.fromCallable {
+        categoryDao.insert(CategoryMapper.mapBack(categoryEntity))
+    }
+
+    override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = Completable.fromCallable {
+        spotifyPlaylistDao.insert(PlaylistMapper.mapBack(playlistEntity))
+    }
+
+    override fun insertTrack(trackEntity: TrackEntity): Completable = Completable.fromCallable {
+        trackDao.insert(TrackMapper.mapBack(trackEntity))
+    }
 }

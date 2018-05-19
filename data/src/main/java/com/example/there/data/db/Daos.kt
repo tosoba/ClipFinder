@@ -3,6 +3,7 @@ package com.example.there.data.db
 import android.arch.persistence.room.*
 import com.example.there.data.entities.spotify.*
 import com.example.there.data.entities.videos.VideoData
+import com.example.there.data.entities.videos.VideoDbData
 import com.example.there.data.entities.videos.VideoPlaylistData
 import io.reactivex.Single
 
@@ -52,9 +53,9 @@ interface TrackDao : BaseDao<TrackData> {
 }
 
 @Dao
-interface VideoDao : BaseDao<VideoData> {
-    @Query("SELECT * FROM videos WHERE playlistId = :playlistId")
-    fun findVideosFromPlaylist(playlistId: Long): Single<List<VideoData>>
+interface VideoDao : BaseDao<VideoDbData> {
+    @Query("SELECT * FROM videos WHERE playlist_id = :playlistId")
+    fun findVideosFromPlaylist(playlistId: Long): Single<List<VideoDbData>>
 }
 
 @Dao

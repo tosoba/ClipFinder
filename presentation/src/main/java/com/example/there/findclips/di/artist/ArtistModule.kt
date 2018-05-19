@@ -1,10 +1,7 @@
 package com.example.there.findclips.di.artist
 
 import com.example.there.domain.repos.spotify.ISpotifyRepository
-import com.example.there.domain.usecases.spotify.GetAccessToken
-import com.example.there.domain.usecases.spotify.GetAlbumsFromArtist
-import com.example.there.domain.usecases.spotify.GetRelatedArtists
-import com.example.there.domain.usecases.spotify.GetTopTracksFromArtist
+import com.example.there.domain.usecases.spotify.*
 import com.example.there.findclips.activities.artist.ArtistVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
@@ -13,6 +10,9 @@ import dagger.Provides
 @ArtistScope
 @Module
 class ArtistModule {
+
+    @Provides
+    fun insertArtistUseCase(repository: ISpotifyRepository): InsertArtist = InsertArtist(AsyncTransformer(), repository)
 
     @Provides
     fun albumsFromArtistUseCase(repository: ISpotifyRepository): GetAlbumsFromArtist = GetAlbumsFromArtist(AsyncTransformer(), repository)

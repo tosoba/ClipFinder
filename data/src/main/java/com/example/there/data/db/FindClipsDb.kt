@@ -5,6 +5,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import com.example.there.data.entities.spotify.*
 import com.example.there.data.entities.videos.VideoData
+import com.example.there.data.entities.videos.VideoDbData
 import com.example.there.data.entities.videos.VideoPlaylistData
 
 @Database(entities = [
@@ -13,17 +14,14 @@ import com.example.there.data.entities.videos.VideoPlaylistData
     CategoryData::class,
     PlaylistData::class,
     TrackData::class,
-    VideoData::class,
+    VideoDbData::class,
     VideoPlaylistData::class
 ], version = 1, exportSchema = false)
 @TypeConverters(
         SimplifiedAlbumDataConverter::class,
         SimplifiedArtistDataConverter::class,
         IconDataConverter::class,
-        OwnerDataConverter::class,
-        VideoSnippetConverter::class,
-        VideoContentDetailsConverter::class,
-        VideoStatisticsConverter::class
+        OwnerDataConverter::class
 )
 abstract class FindClipsDb : RoomDatabase() {
     abstract fun albumDao(): AlbumDao

@@ -1,12 +1,11 @@
 package com.example.there.data.repos.videos
 
-import com.example.there.data.apis.youtube.YoutubeApi
-import com.example.there.data.repos.videos.datastores.VideosRemoteDataStore
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
 import com.example.there.domain.repos.videos.IVideosRepository
 import com.example.there.domain.repos.videos.datastores.IVideosDbDataStore
 import com.example.there.domain.repos.videos.datastores.IVideosRemoteDataStore
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -25,4 +24,9 @@ class VideosRepository(private val remoteDataStore: IVideosRemoteDataStore,
     override fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>> = dbDataStore.getFavouritePlaylists()
 
     override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> = dbDataStore.getVideosFromPlaylist(playlistId)
+
+    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
+
+    override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable =
+            dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)
 }

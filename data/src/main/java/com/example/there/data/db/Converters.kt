@@ -31,7 +31,3 @@ class SimplifiedAlbumDataConverter : DbTypeConverter<SimplifiedAlbumData>()
 class SimplifiedArtistDataConverter : DbTypeConverter<SimplifiedArtistData>()
 class IconDataConverter : DbTypeConverter<IconData>()
 class OwnerDataConverter : DbTypeConverter<OwnerData>()
-
-class VideoSnippetConverter : DbTypeConverter<VideoSnippet>()
-class VideoContentDetailsConverter : DbTypeConverter<VideoContentDetails>()
-class VideoStatisticsConverter : DbTypeConverter<Statistics>()

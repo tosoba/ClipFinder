@@ -1,6 +1,7 @@
 package com.example.there.domain.repos.spotify
 
 import com.example.there.domain.entities.spotify.*
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -26,4 +27,9 @@ interface ISpotifyRepository {
     fun getFavouriteCategories(): Single<List<CategoryEntity>>
     fun getFavouritePlaylists(): Single<List<PlaylistEntity>>
     fun getFavouriteTracks(): Single<List<TrackEntity>>
+    fun insertAlbum(albumEntity: AlbumEntity): Completable
+    fun insertArtist(artistEntity: ArtistEntity): Completable
+    fun insertCategory(categoryEntity: CategoryEntity): Completable
+    fun insertPlaylist(playlistEntity: PlaylistEntity): Completable
+    fun insertTrack(trackEntity: TrackEntity): Completable
 }
