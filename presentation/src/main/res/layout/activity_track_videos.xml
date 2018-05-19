@@ -104,7 +104,7 @@
             android:id="@+id/track_videos_draggable_panel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{safeUnbox(view.state.videoIsOpen) ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{safeUnbox(view.playerState.videoIsOpen) ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>
 

@@ -1,7 +1,6 @@
 package com.example.there.findclips.activities.album
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -14,7 +13,6 @@ import com.example.there.findclips.R
 import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityAlbumBinding
-import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track

@@ -56,7 +56,7 @@
 
             <fragment
                 android:id="@+id/main_player_fragment"
-                android:name="com.example.there.findclips.activities.player.SwipeableYTPlayerFragment"
+                android:name="com.example.there.findclips.view.player.SwipeableYTPlayerFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"

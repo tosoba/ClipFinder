@@ -19,6 +19,8 @@ import com.example.there.findclips.di.spotifysearch.SpotifySearchModule
 import com.example.there.findclips.di.spotifysearch.SpotifySearchSubComponent
 import com.example.there.findclips.di.track.TrackModule
 import com.example.there.findclips.di.track.TrackSubComponent
+import com.example.there.findclips.di.trackvideos.TrackVideosModule
+import com.example.there.findclips.di.trackvideos.TrackVideosSubComponent
 import com.example.there.findclips.di.videossearch.VideosSearchModule
 import com.example.there.findclips.di.videossearch.VideosSearchSubComponent
 import dagger.Component
@@ -42,4 +44,5 @@ interface AppComponent {
     fun plus(trackModule: TrackModule): TrackSubComponent
     fun plus(artistModule: ArtistModule): ArtistSubComponent
     fun plus(albumModule: AlbumModule): AlbumSubComponent
+    fun plus(trackVideosModule: TrackVideosModule): TrackVideosSubComponent
 }

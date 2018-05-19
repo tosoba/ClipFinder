@@ -1,26 +1,25 @@
-package com.example.there.findclips.activities.player
+package com.example.there.findclips.view.player
 
-import android.content.Intent
 import android.databinding.ViewDataBinding
 import android.os.Bundle
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
-import com.example.there.findclips.view.draggable.DraggableListener
-import com.example.there.findclips.view.draggable.DraggablePanel
-import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.fragments.relatedvideos.RelatedVideosFragment
-import com.example.there.findclips.view.OnSwipeTouchListener
+import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.util.getDimenFloat
 import com.example.there.findclips.util.relatedVideosFragment
-import com.example.there.findclips.util.showStatusBar
+import com.example.there.findclips.view.OnSwipeTouchListener
+import com.example.there.findclips.view.draggable.DraggableListener
+import com.example.there.findclips.view.draggable.DraggablePanel
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 
 
-abstract class BasePlayerActivity : AppCompatActivity() {
+abstract class PlayerView(activity: AppCompatActivity) {
 
     protected var lastVideo: Video? = null
     private var lastSeekTime = 0
@@ -33,7 +32,7 @@ abstract class BasePlayerActivity : AppCompatActivity() {
     abstract fun initYoutubeFragment(binding: ViewDataBinding)
 
     protected val onYoutubeFragmentTouchListener: OnSwipeTouchListener by lazy {
-        object : OnSwipeTouchListener(this@BasePlayerActivity) {
+        object : OnSwipeTouchListener(activity) {
             override fun onSingleTap() {
                 if (youtubePlayer?.isPlaying == true) youtubePlayer?.pause()
                 else youtubePlayer?.play()
@@ -46,34 +45,31 @@ abstract class BasePlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    fun onCreate(savedInstanceState: Bundle?) {
         initFromSavedState(savedInstanceState)
         initView()
     }
 
     abstract fun initView()
 
-    protected abstract val viewState: PlayerViewState
+    abstract val state: PlayerViewState
 
     private fun initFromSavedState(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            viewState.videoIsOpen.set(it.getBoolean(KEY_SAVED_VIDEO_IS_OPEN))
+            state.videoIsOpen.set(it.getBoolean(KEY_SAVED_VIDEO_IS_OPEN))
             lastVideo = it.getParcelable(KEY_SAVED_LAST_VIDEO)
             lastSeekTime = it.getInt(KEY_SAVED_LAST_SEEK_TIME)
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.putBoolean(KEY_SAVED_VIDEO_IS_OPEN, viewState.videoIsOpen.get() ?: false)
+    fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putBoolean(KEY_SAVED_VIDEO_IS_OPEN, state.videoIsOpen.get() ?: false)
         outState?.putParcelable(KEY_SAVED_LAST_VIDEO, lastVideo)
         outState?.putInt(KEY_SAVED_LAST_SEEK_TIME, lastSeekTime)
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (viewState.videoIsOpen.get() == true) lastSeekTime = youtubePlayer?.currentTimeMillis ?: 0
+    fun onPause() {
+        if (state.videoIsOpen.get() == true) lastSeekTime = youtubePlayer?.currentTimeMillis ?: 0
         youtubePlayer = null
         draggablePanel = null
     }
@@ -81,12 +77,12 @@ abstract class BasePlayerActivity : AppCompatActivity() {
     private val draggableListener = object : DraggableListener {
         override fun onMaximized() {
             play()
-            viewState.isMaximized.set(true)
-            supportActionBar?.hide()
+            state.isMaximized.set(true)
+            activity.supportActionBar?.hide()
         }
 
         override fun onMinimized() {
-            viewState.isMaximized.set(false)
+            state.isMaximized.set(false)
         }
 
         override fun onClosedToLeft() = closeVideo()
@@ -96,8 +92,8 @@ abstract class BasePlayerActivity : AppCompatActivity() {
 
     private var draggablePanel: DraggablePanel? = null
 
-    protected fun initDraggablePanel(draggablePanel: DraggablePanel) = with(draggablePanel) {
-        this@BasePlayerActivity.draggablePanel = this
+    protected fun initDraggablePanel(draggablePanel: DraggablePanel, supportFragmentManager: FragmentManager) = with(draggablePanel) {
+        this@PlayerView.draggablePanel = this
 
         setFragmentManager(supportFragmentManager)
         setTopFragment(youtubePlayerFragment)
@@ -122,9 +118,9 @@ abstract class BasePlayerActivity : AppCompatActivity() {
             youtubePlayer = player
             youtubePlayer?.setShowFullscreenButton(false)
 
-            if (viewState.videoIsOpen.get() == true && lastVideo != null) {
+            if (state.videoIsOpen.get() == true && lastVideo != null) {
                 youtubePlayer?.loadVideo(lastVideo!!.id, lastSeekTime)
-                supportActionBar?.hide()
+                activity.supportActionBar?.hide()
                 play()
                 draggablePanel?.relatedVideosFragment?.videoId = lastVideo!!.id
             }
@@ -132,10 +128,10 @@ abstract class BasePlayerActivity : AppCompatActivity() {
 
         override fun onInitializationFailure(provider: YouTubePlayer.Provider, error: YouTubeInitializationResult) {
             if (error.isUserRecoverableError) {
-                error.getErrorDialog(this@BasePlayerActivity, RECOVERY_DIALOG_REQUEST).show()
+                error.getErrorDialog(activity, RECOVERY_DIALOG_REQUEST).show()
             } else {
-                val errorMessage = String.format(getString(R.string.error_player), error.toString())
-                Toast.makeText(this@BasePlayerActivity, errorMessage, Toast.LENGTH_LONG).show()
+                val errorMessage = String.format(activity.getString(R.string.error_player), error.toString())
+                Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -146,19 +142,21 @@ abstract class BasePlayerActivity : AppCompatActivity() {
     abstract fun play()
     abstract fun pause()
 
-    private fun closeVideo() {
+    open fun closeVideo() {
         pause()
-        viewState.videoIsOpen.set(false)
+        state.videoIsOpen.set(false)
         lastVideo = null
         maximizeLandscapeFragmentContainer()
-        showStatusBar()
-        supportActionBar?.show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    fun onActivityResult(requestCode: Int) {
         if (requestCode == RECOVERY_DIALOG_REQUEST) {
             youtubePlayerFragment?.initialize(Keys.youtubeApi, onPlayerInitializedListener)
         }
+    }
+
+    interface OnVideoSelectedListener {
+        fun onVideoSelected(video: Video)
     }
 
     companion object {

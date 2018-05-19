@@ -14,7 +14,7 @@ import com.example.there.findclips.databinding.FragmentRelatedVideosBinding
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.view.lists.RelatedVideosList
 import com.example.there.findclips.util.app
-import com.example.there.findclips.util.basePlayerActivity
+import com.example.there.findclips.util.onVideoSelectedListener
 import com.example.there.findclips.view.lists.OnVideoClickListener
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
@@ -38,7 +38,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>() {
 
     private val onVideoItemClickListener = object : OnVideoClickListener {
         override fun onClick(item: Video) {
-            basePlayerActivity?.playVideo(video = item)
+            onVideoSelectedListener?.onVideoSelected(video = item)
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.there.findclips.activities.player
+package com.example.there.findclips.view.player
 
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import android.view.MotionEvent

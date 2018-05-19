@@ -18,7 +18,7 @@ import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.view.lists.VideosList
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.util.app
-import com.example.there.findclips.util.basePlayerActivity
+import com.example.there.findclips.util.onVideoSelectedListener
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
@@ -41,7 +41,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     private val videoItemClickListener = object : OnVideoClickListener {
         override fun onClick(item: Video) {
-            basePlayerActivity?.playVideo(video = item)
+            onVideoSelectedListener?.onVideoSelected(video = item)
         }
     }
 
