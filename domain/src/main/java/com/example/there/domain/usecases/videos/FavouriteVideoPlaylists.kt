@@ -7,7 +7,7 @@ import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.usecases.UseCaseParams
 import io.reactivex.Observable
 
-class GetVideoPlaylists(transformer: Transformer<List<VideoPlaylistEntity>>,
+class GetFavouriteVideoPlaylists(transformer: Transformer<List<VideoPlaylistEntity>>,
                                  private val repository: IVideosRepository) : UseCase<List<VideoPlaylistEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<VideoPlaylistEntity>> = repository.getFavouritePlaylists().toObservable()

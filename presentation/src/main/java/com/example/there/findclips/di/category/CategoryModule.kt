@@ -21,6 +21,7 @@ class CategoryModule {
     fun playlistsForCategoryUseCase(repository: ISpotifyRepository): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncTransformer(), repository)
 
     @Provides
-    fun categoryVMFactory(getAccessToken: GetAccessToken, getPlaylistsForCategory: GetPlaylistsForCategory): CategoryVMFactory =
-            CategoryVMFactory(getAccessToken, getPlaylistsForCategory)
+    fun categoryVMFactory(getAccessToken: GetAccessToken,
+                          getPlaylistsForCategory: GetPlaylistsForCategory,
+                          insertCategory: InsertCategory): CategoryVMFactory = CategoryVMFactory(getAccessToken, getPlaylistsForCategory, insertCategory)
 }

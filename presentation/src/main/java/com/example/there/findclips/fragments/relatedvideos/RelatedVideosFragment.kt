@@ -31,9 +31,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>() {
         }
 
     private val onScrollListener = object : EndlessRecyclerOnScrollListener() {
-        override fun onLoadMore() {
-            viewModel.searchRelatedVideosWithToLastId()
-        }
+        override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
     }
 
     private val onVideoItemClickListener = object : OnVideoClickListener {

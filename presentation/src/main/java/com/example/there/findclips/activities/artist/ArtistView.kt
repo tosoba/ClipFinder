@@ -12,7 +12,6 @@ import com.example.there.findclips.view.lists.TracksList
 
 data class ArtistView(
         val state: ArtistViewState,
-        val artist: Artist,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val albumsAdapter: AlbumsList.Adapter,
         val topTracksAdapter: TracksList.Adapter,
@@ -20,6 +19,7 @@ data class ArtistView(
 )
 
 data class ArtistViewState(
+        val artist: ObservableField<Artist> = ObservableField(),
         val albums: ObservableArrayList<Album> = ObservableArrayList(),
         val topTracks: ObservableArrayList<Track> = ObservableArrayList(),
         val relatedArtists: ObservableArrayList<Artist> = ObservableArrayList(),

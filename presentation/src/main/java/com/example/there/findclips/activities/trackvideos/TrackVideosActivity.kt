@@ -169,7 +169,10 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
                 onFavouriteBtnClickListener = View.OnClickListener {
-                    Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
+                    viewModel.viewState.track.get()?.let {
+                        viewModel.addFavouriteTrack(it)
+                        Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
+                    }
                 }
         )
     }

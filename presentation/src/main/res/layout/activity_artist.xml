@@ -34,7 +34,7 @@
                 app:toolbarId="@+id/artist_toolbar">
 
                 <ImageView
-                    imageUrl="@{view.artist.iconUrl}"
+                    imageUrl="@{view.state.artist.iconUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"

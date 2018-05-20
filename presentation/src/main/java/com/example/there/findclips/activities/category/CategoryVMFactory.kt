@@ -4,10 +4,12 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistsForCategory
+import com.example.there.domain.usecases.spotify.InsertCategory
 
 @Suppress("UNCHECKED_CAST")
 class CategoryVMFactory(private val getAccessToken: GetAccessToken,
-                        private val getPlaylistsForCategory: GetPlaylistsForCategory) : ViewModelProvider.Factory {
+                        private val getPlaylistsForCategory: GetPlaylistsForCategory,
+                        private val insertCategory: InsertCategory) : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = CategoryViewModel(getAccessToken, getPlaylistsForCategory) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T = CategoryViewModel(getAccessToken, getPlaylistsForCategory, insertCategory) as T
 }

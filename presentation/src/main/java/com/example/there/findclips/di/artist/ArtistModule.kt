@@ -27,6 +27,7 @@ class ArtistModule {
     fun artistVMFactory(getAccessToken: GetAccessToken,
                         getAlbumsFromArtist: GetAlbumsFromArtist,
                         getTopTracksFromArtist: GetTopTracksFromArtist,
-                        getRelatedArtists: GetRelatedArtists): ArtistVMFactory =
-            ArtistVMFactory(getAccessToken, getAlbumsFromArtist, getTopTracksFromArtist, getRelatedArtists)
+                        getRelatedArtists: GetRelatedArtists,
+                        insertArtist: InsertArtist): ArtistVMFactory =
+            ArtistVMFactory(getAccessToken, getAlbumsFromArtist, getTopTracksFromArtist, getRelatedArtists, insertArtist)
 }

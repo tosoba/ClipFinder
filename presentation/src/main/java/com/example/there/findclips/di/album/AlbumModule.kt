@@ -23,5 +23,6 @@ class AlbumModule {
     @Provides
     fun albumVMFactory(getAccessToken: GetAccessToken,
                        getArtists: GetArtists,
-                       getTracksFromAlbum: GetTracksFromAlbum): AlbumVMFactory = AlbumVMFactory(getAccessToken, getArtists, getTracksFromAlbum)
+                       getTracksFromAlbum: GetTracksFromAlbum,
+                       insertAlbum: InsertAlbum): AlbumVMFactory = AlbumVMFactory(getAccessToken, getArtists, getTracksFromAlbum, insertAlbum)
 }

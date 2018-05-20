@@ -20,12 +20,11 @@ import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.activity_artist.*
-import okhttp3.Route
 import javax.inject.Inject
 
 class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
-    private val artist: Artist by lazy { intent.getParcelableExtra<Artist>(EXTRA_ARTIST) }
+    private val intentArtist: Artist by lazy { intent.getParcelableExtra<Artist>(EXTRA_ARTIST) }
 
     private val albumsAdapter: AlbumsList.Adapter by lazy {
         AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
@@ -42,14 +41,14 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
             override fun onClick(item: Artist) {
-
+                viewModel.viewState.artist.set(item)
+                viewModel.loadArtistData(accessToken, artist = item)
             }
         })
     }
 
     private val view: ArtistView by lazy {
         ArtistView(state = viewModel.viewState,
-                artist = artist,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
@@ -65,7 +64,8 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         initToolbar()
 
         if (savedInstanceState == null) {
-            viewModel.loadArtistData(accessToken, artist)
+            viewModel.viewState.artist.set(intentArtist)
+            viewModel.loadArtistData(accessToken, intentArtist)
         }
     }
 
@@ -84,7 +84,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         setSupportActionBar(artist_toolbar)
         artist_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
         artist_toolbar.setNavigationOnClickListener { super.onBackPressed() }
-        title = artist.name
+        title = intentArtist.name
     }
 
     override fun initComponent() {

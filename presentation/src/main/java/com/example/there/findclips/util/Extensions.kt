@@ -3,6 +3,7 @@ package com.example.there.findclips.util
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.databinding.ObservableArrayList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.util.TypedValue
@@ -134,3 +135,11 @@ val DraggablePanel.relatedVideosFragment: RelatedVideosFragment?
 
 val Fragment.onVideoSelectedListener: PlayerView.OnVideoSelectedListener?
     get() = activity as? PlayerView.OnVideoSelectedListener
+
+fun <T> ObservableArrayList<T>.addAllIfNotContains(newItems: List<T>) {
+    newItems.forEach {
+        if (!this.contains(it)) {
+            this.add(it)
+        }
+    }
+}

@@ -27,6 +27,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         PlaylistView(state = viewModel.viewState,
                 playlist = playlist,
                 onFavouriteBtnClickListener = View.OnClickListener {
+                    viewModel.addFavouritePlaylist(playlist)
                     Toast.makeText(this,"Added to favourites.", Toast.LENGTH_SHORT).show()
                 })
     }

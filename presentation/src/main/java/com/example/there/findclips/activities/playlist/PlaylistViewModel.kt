@@ -1,16 +1,20 @@
 package com.example.there.findclips.activities.playlist
 
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistTracks
+import com.example.there.domain.usecases.spotify.InsertSpotifyPlaylist
 import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.Track
+import com.example.there.findclips.model.mappers.PlaylistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
 
 class PlaylistViewModel(getAccessToken: GetAccessToken,
-                        private val getPlaylistTracks: GetPlaylistTracks) : BaseSpotifyViewModel(getAccessToken) {
+                        private val getPlaylistTracks: GetPlaylistTracks,
+                        private val insertSpotifyPlaylist: InsertSpotifyPlaylist) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: PlaylistViewState = PlaylistViewState()
 
@@ -32,5 +36,9 @@ class PlaylistViewModel(getAccessToken: GetAccessToken,
                 .subscribe({
                     tracks.value = it.map(TrackEntityMapper::mapFrom).sortedBy { it.name }
                 }, this::onError))
+    }
+
+    fun addFavouritePlaylist(playlist: Playlist) {
+        addDisposable(insertSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist)).subscribe({}, { Log.e(javaClass.name, "Insert error.") }))
     }
 }

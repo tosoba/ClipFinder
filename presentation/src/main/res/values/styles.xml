@@ -24,13 +24,16 @@
         <item name="android:shadowRadius">8</item>
     </style>
 
-    <style name="HorizontalGridRecyclerViewSpan2">
-        <item name="android:layout_height">252dp</item>
+    <style name="HorizontalGridRecyclerView">
         <item name="android:layout_marginLeft">3dp</item>
         <item name="android:layout_marginRight">3dp</item>
         <item name="android:scrollbarAlwaysDrawHorizontalTrack">true</item>
         <item name="android:scrollbarThumbHorizontal">@drawable/scrollbar_thumb</item>
         <item name="android:scrollbars">horizontal</item>
+    </style>
+
+    <style name="HorizontalGridRecyclerViewSpan2" parent="HorizontalGridRecyclerView">
+        <item name="android:layout_height">252dp</item>
     </style>
 
     <style name="VideoItemTextView" parent="ShadowText">

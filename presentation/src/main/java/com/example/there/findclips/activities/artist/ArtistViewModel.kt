@@ -1,10 +1,8 @@
 package com.example.there.findclips.activities.artist
 
+import android.util.Log
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.spotify.GetAccessToken
-import com.example.there.domain.usecases.spotify.GetAlbumsFromArtist
-import com.example.there.domain.usecases.spotify.GetRelatedArtists
-import com.example.there.domain.usecases.spotify.GetTopTracksFromArtist
+import com.example.there.domain.usecases.spotify.*
 import com.example.there.findclips.base.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.mappers.AlbumEntityMapper
@@ -14,7 +12,8 @@ import com.example.there.findclips.model.mappers.TrackEntityMapper
 class ArtistViewModel(getAccessToken: GetAccessToken,
                       private val getAlbumsFromArtist: GetAlbumsFromArtist,
                       private val getTopTracksFromArtist: GetTopTracksFromArtist,
-                      private val getRelatedArtists: GetRelatedArtists): BaseSpotifyViewModel(getAccessToken) {
+                      private val getRelatedArtists: GetRelatedArtists,
+                      private val insertArtist: InsertArtist): BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: ArtistViewState = ArtistViewState()
 
@@ -55,6 +54,10 @@ class ArtistViewModel(getAccessToken: GetAccessToken,
         addDisposable(getRelatedArtists.execute(accessToken, artistId)
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
                 .subscribe({ viewState.relatedArtists.addAll(it.map(ArtistEntityMapper::mapFrom)) }, this::onError))
+    }
+
+    fun addFavouriteAlbum(artist: Artist) {
+        addDisposable(insertArtist.execute(ArtistEntityMapper.mapBack(artist)).subscribe({}, { Log.e(javaClass.name, "Insert error.") }))
     }
 
     override fun onError(t: Throwable) {

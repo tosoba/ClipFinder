@@ -10,6 +10,7 @@ import dagger.Provides
 @TrackVideosScope
 @Module
 class TrackVideosModule {
+
     @Provides
     fun insertTrackUseCase(repository: ISpotifyRepository): InsertTrack = InsertTrack(AsyncTransformer(), repository)
 

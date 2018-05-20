@@ -2,11 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.favourites.FavouritesFragment">
+    tools:context="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragment">
 
-    <FrameLayout
-        android:id="@+id/favourites_main_fragment_container"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:text="vids" />
 
 </FrameLayout>

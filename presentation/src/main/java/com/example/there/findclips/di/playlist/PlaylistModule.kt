@@ -20,6 +20,6 @@ class PlaylistModule {
     fun playlistTracksUseCase(repository: ISpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncTransformer(), repository)
 
     @Provides
-    fun playlistVMFactory(getAccessToken: GetAccessToken, getPlaylistTracks: GetPlaylistTracks) =
-            PlaylistVMFactory(getAccessToken, getPlaylistTracks)
+    fun playlistVMFactory(getAccessToken: GetAccessToken, getPlaylistTracks: GetPlaylistTracks, insertSpotifyPlaylist: InsertSpotifyPlaylist) =
+            PlaylistVMFactory(getAccessToken, getPlaylistTracks, insertSpotifyPlaylist)
 }

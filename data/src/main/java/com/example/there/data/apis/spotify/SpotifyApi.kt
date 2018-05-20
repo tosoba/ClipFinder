@@ -39,7 +39,8 @@ interface SpotifyApi {
 
     @GET("browse/categories/{category_id}/playlists")
     fun getPlaylistsForCategory(@Header("Authorization") authorization: String,
-                                @Path("category_id") categoryId: String): Observable<PlaylistsResponse>
+                                @Path("category_id") categoryId: String,
+                                @Query("country") country: String = DEFAULT_COUNTRY): Observable<PlaylistsResponse>
 
     @GET("users/{user_id}/playlists/{playlist_id}/tracks")
     fun getPlaylistTracks(@Header("Authorization") authorization: String,

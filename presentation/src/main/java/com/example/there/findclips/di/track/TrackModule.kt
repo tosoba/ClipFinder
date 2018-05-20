@@ -12,9 +12,6 @@ import dagger.Provides
 class TrackModule {
 
     @Provides
-    fun insertTrackUseCase(repository: ISpotifyRepository): InsertTrack = InsertTrack(AsyncTransformer(), repository)
-
-    @Provides
     fun albumUseCase(repository: ISpotifyRepository): GetAlbum = GetAlbum(AsyncTransformer(), repository)
 
     @Provides

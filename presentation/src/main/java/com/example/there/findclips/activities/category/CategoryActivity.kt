@@ -27,6 +27,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         CategoryView(state = viewModel.viewState,
                 category = category,
                 onFavouriteBtnClickListener = View.OnClickListener {
+                    viewModel.addFavouriteCategory(category)
                     Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 })
     }

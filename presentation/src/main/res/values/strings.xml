@@ -39,5 +39,11 @@
     <string name="title_activity_album">AlbumActivity</string>
     <string name="tracks">Tracks</string>
     <string name="playlists">Playlists</string>
+    <string name="categories">Categories</string>
+    <string name="no_favourite_albums_addded_yet">No favourite albums addded yet.</string>
+    <string name="no_favourite_artists_added_yet">No favourite artists added yet.</string>
+    <string name="no_favourite_playlists_added_yet">No favourite playlists added yet.</string>
+    <string name="no_favourite_categories_added_yet">No favourite categories added yet.</string>
+    <string name="no_favourite_tracks_added_yet">No favourite tracks added yet.</string>
 
 </resources>
