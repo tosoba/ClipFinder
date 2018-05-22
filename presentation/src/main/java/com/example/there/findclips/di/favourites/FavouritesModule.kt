@@ -31,10 +31,6 @@ class FavouritesModule {
     fun getFavouriteTracksUseCase(repository: ISpotifyRepository): GetFavouriteTracks = GetFavouriteTracks(AsyncTransformer(), repository)
 
     @Provides
-    fun getFavouriteVideoPlaylistsUseCase(repository: IVideosRepository): GetFavouriteVideoPlaylists =
-            GetFavouriteVideoPlaylists(AsyncTransformer(), repository)
-
-    @Provides
     fun getVideosFromPlaylistsUseCase(repository: IVideosRepository): GetFavouriteVideosFromPlaylist =
             GetFavouriteVideosFromPlaylist(AsyncTransformer(), repository)
 

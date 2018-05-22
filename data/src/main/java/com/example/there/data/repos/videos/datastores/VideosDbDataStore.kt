@@ -20,9 +20,9 @@ class VideosDbDataStore(private val videoDao: VideoDao,
     override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> =
             videoDao.findVideosFromPlaylist(playlistId).map { it.map(VideoDbMapper::mapFrom) }
 
-    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Completable = Completable.fromCallable {
+    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable({
         videoPlaylistDao.insert(VideoPlaylistMapper.mapBack(playlistEntity))
-    }
+    })
 
     override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable = Completable.fromCallable {
         videoEntity.playlistId = playlistEntity.id

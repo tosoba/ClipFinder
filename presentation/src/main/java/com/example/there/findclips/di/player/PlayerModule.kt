@@ -1,9 +1,7 @@
 package com.example.there.findclips.di.player
 
 import com.example.there.domain.repos.videos.IVideosRepository
-import com.example.there.domain.usecases.videos.AddVideosToPlaylist
-import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
-import com.example.there.domain.usecases.videos.SearchRelatedVideos
+import com.example.there.domain.usecases.videos.*
 import com.example.there.findclips.activities.player.PlayerVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
@@ -16,11 +14,16 @@ class PlayerModule {
     fun searchRelatedVideosUseCase(repository: IVideosRepository): SearchRelatedVideos = SearchRelatedVideos(AsyncTransformer(), repository)
 
     @Provides
-    fun addVideosToPlaylistUseCase(repository: IVideosRepository): AddVideosToPlaylist = AddVideosToPlaylist(AsyncTransformer(), repository)
+    fun addVideosToPlaylistUseCase(repository: IVideosRepository): AddVideoToPlaylist = AddVideoToPlaylist(AsyncTransformer(), repository)
+
+    @Provides
+    fun insertVideoPlaylistUseCase(repository: IVideosRepository): InsertVideoPlaylist = InsertVideoPlaylist(AsyncTransformer(), repository)
 
     @Provides
     fun playerVMFactory(searchRelatedVideos: SearchRelatedVideos,
                         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
-                        addVideosToPlaylist: AddVideosToPlaylist): PlayerVMFactory =
-            PlayerVMFactory(searchRelatedVideos, getChannelsThumbnailUrls, addVideosToPlaylist)
+                        insertVideoPlaylist: InsertVideoPlaylist,
+                        addVideoToPlaylist: AddVideoToPlaylist,
+                        getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists): PlayerVMFactory =
+            PlayerVMFactory(searchRelatedVideos, getChannelsThumbnailUrls, insertVideoPlaylist, addVideoToPlaylist, getFavouriteVideoPlaylists)
 }

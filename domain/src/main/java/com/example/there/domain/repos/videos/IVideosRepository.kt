@@ -15,6 +15,6 @@ interface IVideosRepository {
     fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>>
     fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>>
     fun getPlaylistsWithVideos(): Single<List<PlaylistWithVideosEntity>>
-    fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Completable
+    fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long>
     fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
 }

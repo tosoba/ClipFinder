@@ -13,10 +13,10 @@ class GetFavouriteVideoPlaylists(transformer: Transformer<List<VideoPlaylistEnti
     override fun createObservable(data: Map<String, Any?>?): Observable<List<VideoPlaylistEntity>> = repository.getFavouritePlaylists().toObservable()
 }
 
-class InsertVideoPlaylist(transformer: Transformer<Unit>,
-                          private val repository: IVideosRepository) : UseCase<Unit>(transformer) {
+class InsertVideoPlaylist(transformer: Transformer<Long>,
+                          private val repository: IVideosRepository) : UseCase<Long>(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<Unit> {
+    override fun createObservable(data: Map<String, Any?>?): Observable<Long> {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
         return if (playlistEntity != null) {
             repository.insertPlaylist(playlistEntity).toObservable()
@@ -25,7 +25,7 @@ class InsertVideoPlaylist(transformer: Transformer<Unit>,
         }
     }
 
-    fun execute(playlistEntity: VideoPlaylistEntity): Observable<Unit> {
+    fun execute(playlistEntity: VideoPlaylistEntity): Observable<Long> {
         val data = HashMap<String, VideoPlaylistEntity>().apply {
             put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
         }

@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.example.there.findclips.model.entities.Video
+import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.view.lists.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
@@ -21,4 +22,5 @@ data class PlayerView(val state: PlayerViewState,
 }
 
 data class PlayerViewState(val videos: ObservableArrayList<Video> = ObservableArrayList(),
-                           val currentTabPosition: ObservableField<Int> = ObservableField(0))
+                           val currentTabPosition: ObservableField<Int> = ObservableField(0),
+                           val favouriteVideoPlaylists: ObservableArrayList<VideoPlaylist> = ObservableArrayList())

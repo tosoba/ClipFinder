@@ -27,7 +27,7 @@ class VideosRepository(private val remoteDataStore: IVideosRemoteDataStore,
 
     override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> = dbDataStore.getVideosFromPlaylist(playlistId)
 
-    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
+    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = dbDataStore.insertPlaylist(playlistEntity)
 
     override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable =
             dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)

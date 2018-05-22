@@ -1,6 +1,6 @@
 package com.example.there.findclips.model.entities
 
-data class VideoPlaylist(val id: Long, val name: String)
+data class VideoPlaylist(val id: Long = 0, val name: String)
 
 data class PlaylistWithVideosEntity(
         val playlistEntity: VideoPlaylist,

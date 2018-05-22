@@ -45,5 +45,9 @@
     <string name="no_favourite_playlists_added_yet">No favourite playlists added yet.</string>
     <string name="no_favourite_categories_added_yet">No favourite categories added yet.</string>
     <string name="no_favourite_tracks_added_yet">No favourite tracks added yet.</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="no_playlists_created_yet_make_a_new_one">No playlists created yet - make a new one.</string>
+    <string name="playlist_name">Name</string>
+    <string name="ok">OK</string>
 
 </resources>

@@ -10,13 +10,18 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.text.InputType
 import android.view.View
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseVMActivity
 import com.example.there.findclips.databinding.ActivityPlayerBinding
+import com.example.there.findclips.fragments.addvideo.AddVideoDialogFragment
+import com.example.there.findclips.fragments.addvideo.AddVideoViewState
 import com.example.there.findclips.model.entities.Video
+import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.OnTabSelectedListener
@@ -36,8 +41,11 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
     private val intentVideo: Video by lazy { intent.getParcelableExtra<Video>(EXTRA_VIDEO) }
     private val intentOtherVideos: ArrayList<Video> by lazy { intent.getParcelableArrayListExtra<Video>(EXTRA_OTHER_VIDEOS) }
 
+    private lateinit var currentVideo: Video
+
     private val onVideoItemClickListener = object : OnVideoClickListener {
         override fun onClick(item: Video) {
+            currentVideo = item
             player?.loadVideo(item.id)
         }
     }
@@ -46,8 +54,14 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
         override fun onTabSelected(tab: TabLayout.Tab?) = viewModel.viewState.currentTabPosition.set(tab?.position ?: 0)
     }
 
-    private val onFavouriteBtnClickListener = View.OnClickListener {
+    private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
+    private val onFavouriteBtnClickListener = View.OnClickListener {
+        viewModel.getFavouriteVideoPlaylists()
+        addVideoDialogFragment = AddVideoDialogFragment().apply {
+            state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
+            show(supportFragmentManager, TAG_ADD_VIDEO)
+        }
     }
 
     private val onRelatedVideosListScrollListener = object : EndlessRecyclerOnScrollListener() {
@@ -71,6 +85,7 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        currentVideo = intentVideo
         viewModel.searchRelatedVideos(intentVideo.id)
     }
 
@@ -135,11 +150,39 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
         viewModel = ViewModelProviders.of(this, factory).get(PlayerViewModel::class.java)
     }
 
+    fun addVideoToPlaylist(playlist: VideoPlaylist) {
+        viewModel.addVideoToPlaylist(currentVideo, playlist) {
+            Toast.makeText(this, "Video added to playlist: ${playlist.name}.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun showNewPlaylistDialog() {
+        MaterialDialog.Builder(this)
+                .title(getString(R.string.new_playlist))
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(getString(R.string.playlist_name), "") { _, input ->
+                    val newPlaylistName = input.trim().toString()
+                    addVideoDialogFragment?.dismiss()
+                    viewModel.addVideoPlaylistWithVideo(VideoPlaylist(name = newPlaylistName), video = currentVideo) {
+                        Toast.makeText(this@PlayerActivity, "Video added to playlist: $newPlaylistName.", Toast.LENGTH_SHORT).show()
+                    }
+                }.positiveText(getString(R.string.ok))
+                .build()
+                .apply { show() }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        addVideoDialogFragment = null
+    }
+
     companion object {
         private const val RECOVERY_DIALOG_REQUEST = 100
 
         private const val EXTRA_VIDEO = "EXTRA_VIDEO"
         private const val EXTRA_OTHER_VIDEOS = "EXTRA_OTHER_VIDEOS"
+
+        private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
 
         fun start(activity: Activity, video: Video, otherVideos: ArrayList<Video>) {
             val intent = Intent(activity, PlayerActivity::class.java).apply {
