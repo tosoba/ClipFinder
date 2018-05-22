@@ -13,11 +13,14 @@ import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
 import com.example.there.findclips.di.favourites.FavouritesModule
 import com.example.there.findclips.di.favourites.FavouritesSubComponent
-import com.example.there.findclips.di.modules.*
+import com.example.there.findclips.di.modules.AppModule
+import com.example.there.findclips.di.modules.CommonUseCasesModule
+import com.example.there.findclips.di.modules.DataModule
+import com.example.there.findclips.di.modules.NetworkModule
+import com.example.there.findclips.di.player.PlayerModule
+import com.example.there.findclips.di.player.PlayerSubComponent
 import com.example.there.findclips.di.playlist.PlaylistModule
 import com.example.there.findclips.di.playlist.PlaylistSubComponent
-import com.example.there.findclips.di.relatedvideos.RelatedVideosModule
-import com.example.there.findclips.di.relatedvideos.RelatedVideosSubComponent
 import com.example.there.findclips.di.spotifysearch.SpotifySearchModule
 import com.example.there.findclips.di.spotifysearch.SpotifySearchSubComponent
 import com.example.there.findclips.di.track.TrackModule
@@ -120,16 +123,6 @@ class FindClipsApp : Application() {
         playlistSubComponent = null
     }
 
-    private var relatedVideosSubComponent: RelatedVideosSubComponent? = null
-    fun createRelatedVideosSubComponent(): RelatedVideosSubComponent {
-        relatedVideosSubComponent = appComponent.plus(RelatedVideosModule())
-        return relatedVideosSubComponent!!
-    }
-
-    fun releaseRelatedVideosSubComponent() {
-        relatedVideosSubComponent = null
-    }
-
     private var trackSubComponent: TrackSubComponent? = null
     fun createTrackSubComponent(): TrackSubComponent {
         trackSubComponent = appComponent.plus(TrackModule())
@@ -168,5 +161,15 @@ class FindClipsApp : Application() {
 
     fun releaseTrackVideosSubComponent() {
         trackVideosSubComponent = null
+    }
+
+    private var playerSubComponent: PlayerSubComponent? = null
+    fun createPlayerSubComponent(): PlayerSubComponent {
+        playerSubComponent = appComponent.plus(PlayerModule())
+        return playerSubComponent!!
+    }
+
+    fun releasePlayerSubComponent() {
+        playerSubComponent = null
     }
 }

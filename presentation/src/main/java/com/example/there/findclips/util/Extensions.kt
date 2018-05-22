@@ -2,19 +2,13 @@ package com.example.there.findclips.util
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.databinding.ObservableArrayList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.util.TypedValue
-import android.view.ViewGroup
 import android.view.WindowManager
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
-import com.example.there.findclips.view.draggable.DraggablePanel
 import com.example.there.findclips.activities.main.MainActivity
-import com.example.there.findclips.view.player.PlayerView
-import com.example.there.findclips.fragments.relatedvideos.RelatedVideosFragment
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
 import java.math.BigInteger
@@ -104,12 +98,6 @@ fun BottomNavigationView.checkItem(id: Int) {
     menu.findItem(id)?.isChecked = true
 }
 
-fun Resources.getDimenFloat(id: Int): Float {
-    val typedValue = TypedValue()
-    getValue(id, typedValue, true)
-    return typedValue.float
-}
-
 fun Activity.showStatusBar() {
     window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 }
@@ -117,24 +105,6 @@ fun Activity.showStatusBar() {
 fun Activity.hideStatusBar() {
     window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 }
-
-fun ViewGroup.changeParams(width: Int, height: Int) {
-    layoutParams.width = width
-    layoutParams.height = height
-    requestLayout()
-}
-
-fun ViewGroup.changeMarginParams(left: Int, top: Int, right: Int, bottom: Int) {
-    val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
-    marginLayoutParams.setMargins(left, top, right, bottom)
-    requestLayout()
-}
-
-val DraggablePanel.relatedVideosFragment: RelatedVideosFragment?
-    get() = bottomFragment as? RelatedVideosFragment
-
-val Fragment.onVideoSelectedListener: PlayerView.OnVideoSelectedListener?
-    get() = activity as? PlayerView.OnVideoSelectedListener
 
 fun <T> ObservableArrayList<T>.addAllIfNotContains(newItems: List<T>) {
     newItems.forEach {

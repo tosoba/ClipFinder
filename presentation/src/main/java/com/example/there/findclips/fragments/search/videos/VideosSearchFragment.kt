@@ -12,17 +12,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
-import com.example.there.findclips.model.entities.Video
-import com.example.there.findclips.view.lists.VideosList
 import com.example.there.findclips.fragments.search.MainSearchFragment
+import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.util.app
-import com.example.there.findclips.util.onVideoSelectedListener
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.OnVideoClickListener
+import com.example.there.findclips.view.lists.VideosList
+import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
+import com.example.there.findclips.view.recycler.SeparatorDecoration
 import javax.inject.Inject
 
 
@@ -40,9 +40,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     lateinit var viewModelFactory: VideosSearchVMFactory
 
     private val videoItemClickListener = object : OnVideoClickListener {
-        override fun onClick(item: Video) {
-            onVideoSelectedListener?.onVideoSelected(video = item)
-        }
+        override fun onClick(item: Video) = Router.goToPlayerActivity(activity, video = item, otherVideos = viewModel.viewState.videos)
     }
 
     private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {

@@ -4,9 +4,10 @@ import android.app.Activity
 import com.example.there.findclips.activities.album.AlbumActivity
 import com.example.there.findclips.activities.artist.ArtistActivity
 import com.example.there.findclips.activities.category.CategoryActivity
-import com.example.there.findclips.model.entities.*
+import com.example.there.findclips.activities.player.PlayerActivity
 import com.example.there.findclips.activities.playlist.PlaylistActivity
 import com.example.there.findclips.activities.trackvideos.TrackVideosActivity
+import com.example.there.findclips.model.entities.*
 
 object Router {
     fun goToTrackVideosActivity(activity: Activity?, track: Track) {
@@ -27,5 +28,9 @@ object Router {
 
     fun goToAlbumAcitivity(activity: Activity?, album: Album) {
         activity?.let { AlbumActivity.start(it, album) }
+    }
+
+    fun goToPlayerActivity(activity: Activity?, video: Video, otherVideos: ArrayList<Video>) {
+        activity?.let { PlayerActivity.start(it, video, otherVideos) }
     }
 }

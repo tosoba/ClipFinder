@@ -1,17 +1,19 @@
-package com.example.there.findclips.fragments.relatedvideos
+package com.example.there.findclips.activities.player
 
+import com.example.there.domain.usecases.videos.AddVideosToPlaylist
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecases.videos.SearchRelatedVideos
 import com.example.there.findclips.base.BaseVideosViewModel
 import com.example.there.findclips.model.mappers.VideoEntityMapper
 
-class RelatedVideosViewModel(private val searchRelatedVideos: SearchRelatedVideos,
-                             getChannelsThumbnailUrls: GetChannelsThumbnailUrls) : BaseVideosViewModel(getChannelsThumbnailUrls) {
-
-    val viewState: RelatedVideosViewState = RelatedVideosViewState()
+class PlayerViewModel(private val searchRelatedVideos: SearchRelatedVideos,
+                      getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
+                      private val addVideosToPlaylist: AddVideosToPlaylist) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     private var lastSearchVideoId: String? = null
     private var lastSearchRelatedNextPageToken: String? = null
+
+    val viewState = PlayerViewState()
 
     fun searchRelatedVideosWithToLastId() {
         if (lastSearchVideoId != null && lastSearchRelatedNextPageToken != null) {

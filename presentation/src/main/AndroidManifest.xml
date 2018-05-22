@@ -41,7 +41,10 @@
         <activity
             android:name=".activities.album.AlbumActivity"
             android:label="@string/title_activity_album"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.player.PlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 </manifest>

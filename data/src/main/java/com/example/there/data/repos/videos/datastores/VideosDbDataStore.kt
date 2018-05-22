@@ -3,8 +3,8 @@ package com.example.there.data.repos.videos.datastores
 import com.example.there.data.db.VideoDao
 import com.example.there.data.db.VideoPlaylistDao
 import com.example.there.data.mappers.videos.VideoDbMapper
-import com.example.there.data.mappers.videos.VideoMapper
 import com.example.there.data.mappers.videos.VideoPlaylistMapper
+import com.example.there.domain.entities.videos.PlaylistWithVideosEntity
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
 import com.example.there.domain.repos.videos.datastores.IVideosDbDataStore
@@ -28,4 +28,17 @@ class VideosDbDataStore(private val videoDao: VideoDao,
         videoEntity.playlistId = playlistEntity.id
         videoDao.insert(VideoDbMapper.mapBack(videoEntity))
     }
+
+    override fun getPlaylistsWithVideos(): Single<List<PlaylistWithVideosEntity>> = videoPlaylistDao.findAll()
+            .map {
+                it.map { playlistData ->
+                    videoDao.findVideosFromPlaylist(playlistData.id).map {
+                        PlaylistWithVideosEntity(VideoPlaylistMapper.mapFrom(playlistData), it.map(VideoDbMapper::mapFrom))
+                    }.toObservable()
+                }
+            }.toObservable()
+            .flatMapIterable { it }
+            .switchMap { it }
+            .toList()
+
 }
