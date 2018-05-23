@@ -1,13 +1,40 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="view"
+            type="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragmentView" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="vids" />
+        tools:context="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/videos_favourites_playlists_label"
+            style="@style/LargeLabel"
+            android:text="@string/playlists"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/videos_favourites_playlists_recycler_view"
+            itemDecoration="@{view.itemDecoration}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adapter="@{view.playlistsAdapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videos_favourites_playlists_label" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+
+

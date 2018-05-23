@@ -22,6 +22,7 @@ class SearchFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.searchFragmentView = view
+        binding.searchFragmentViewPager.offscreenPageLimit = 1
         return binding.root
     }
 

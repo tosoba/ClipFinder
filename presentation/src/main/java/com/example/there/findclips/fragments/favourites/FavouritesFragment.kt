@@ -55,7 +55,9 @@ class FavouritesFragment : BaseVMFragment<FavouritesViewModel>() {
             .commit()
 
     private fun showVideosFavouritesFragment() = childFragmentManager.beginTransaction()
-            .replace(R.id.favourites_main_fragment_container, VideosFavouritesFragment(), TAG_FAVOURITES_FRAGMENT)
+            .replace(R.id.favourites_main_fragment_container, VideosFavouritesFragment().apply {
+                updateState(viewModel.videoPlaylists.value ?: emptyList())
+            }, TAG_FAVOURITES_FRAGMENT)
             .commit()
 
     private val onMenuItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -91,7 +93,10 @@ class FavouritesFragment : BaseVMFragment<FavouritesViewModel>() {
     }
 
     private val spotifyFavouritesFragment: SpotifyFavouritesFragment?
-        get() = childFragmentManager?.findFragmentByTag(TAG_FAVOURITES_FRAGMENT) as? SpotifyFavouritesFragment
+        get() = childFragmentManager.findFragmentByTag(TAG_FAVOURITES_FRAGMENT) as? SpotifyFavouritesFragment
+
+    private val videosFavouritesFragment: VideosFavouritesFragment?
+        get() = childFragmentManager.findFragmentByTag(TAG_FAVOURITES_FRAGMENT) as? VideosFavouritesFragment
 
     override fun setupObservers() {
         super.setupObservers()
@@ -117,7 +122,7 @@ class FavouritesFragment : BaseVMFragment<FavouritesViewModel>() {
             })
 
             videoPlaylists.observe(this@FavouritesFragment, Observer {
-
+                it?.let { videosFavouritesFragment?.state?.playlists?.addAllIfNotContains(it) }
             })
         }
     }

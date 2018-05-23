@@ -15,6 +15,10 @@
         <item name="md_item_color">@android:color/darker_gray</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
     <style name="LargeLabel" parent="TextAppearance.AppCompat">
         <item name="android:padding">10dp</item>
         <item name="android:textSize">25sp</item>

@@ -1,8 +1,7 @@
 package com.example.there.findclips.model.entities
 
-data class VideoPlaylist(val id: Long = 0, val name: String)
+import android.annotation.SuppressLint
+import io.mironov.smuggler.AutoParcelable
 
-data class PlaylistWithVideosEntity(
-        val playlistEntity: VideoPlaylist,
-        val videos: List<Video>
-)
+@SuppressLint("ParcelCreator")
+data class VideoPlaylist(val id: Long = 0, val name: String): AutoParcelable

@@ -10,14 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
-import com.example.there.findclips.fragments.search.MainSearchFragment
-import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
 import com.example.there.findclips.fragments.lists.SpotifyAlbumsFragment
 import com.example.there.findclips.fragments.lists.SpotifyArtistsFragment
 import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
 import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
+import com.example.there.findclips.fragments.search.MainSearchFragment
+import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.app
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
@@ -80,6 +80,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSpotifySearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search, container, false)
         binding.spotifySearchView = view
+        binding.spotifyTabViewPager.offscreenPageLimit = 3
         return binding.root
     }
 

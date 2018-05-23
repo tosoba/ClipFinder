@@ -7,6 +7,7 @@ import com.example.there.findclips.activities.category.CategoryActivity
 import com.example.there.findclips.activities.player.PlayerActivity
 import com.example.there.findclips.activities.playlist.PlaylistActivity
 import com.example.there.findclips.activities.trackvideos.TrackVideosActivity
+import com.example.there.findclips.activities.videoplaylist.VideoPlaylistActivity
 import com.example.there.findclips.model.entities.*
 
 object Router {
@@ -32,5 +33,9 @@ object Router {
 
     fun goToPlayerActivity(activity: Activity?, video: Video, otherVideos: ArrayList<Video>) {
         activity?.let { PlayerActivity.start(it, video, otherVideos) }
+    }
+
+    fun goToVideoPlaylistActivity(activity: Activity?, videoPlaylist: VideoPlaylist) {
+        activity?.let { VideoPlaylistActivity.start(it, videoPlaylist) }
     }
 }

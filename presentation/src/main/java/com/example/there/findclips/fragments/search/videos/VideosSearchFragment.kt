@@ -17,6 +17,7 @@ import com.example.there.findclips.base.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.model.entities.Video
+import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.OnVideoClickListener
@@ -77,6 +78,9 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         arguments?.let {
             if (it.containsKey(ARG_QUERY)) {
                 query = it.getString(ARG_QUERY)
+            } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
+                val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)
+                viewModel.getFavouriteVideosFromPlaylist(videoPlaylist)
             }
         }
     }
@@ -95,9 +99,14 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"
+        private const val ARG_VIDEO_PLAYLIST = "ARG_VIDEO_PLAYLIST"
 
         fun newInstanceWithQuery(query: String): VideosSearchFragment = VideosSearchFragment().apply {
             arguments = Bundle().apply { putString(ARG_QUERY, query) }
+        }
+
+        fun newInstanceWithVideoPlaylist(videoPlaylist: VideoPlaylist): VideosSearchFragment = VideosSearchFragment().apply {
+            arguments = Bundle().apply { putParcelable(ARG_VIDEO_PLAYLIST, videoPlaylist) }
         }
     }
 }

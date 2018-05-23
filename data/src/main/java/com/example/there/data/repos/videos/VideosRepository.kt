@@ -1,6 +1,5 @@
 package com.example.there.data.repos.videos
 
-import com.example.there.domain.entities.videos.PlaylistWithVideosEntity
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
 import com.example.there.domain.repos.videos.IVideosRepository
@@ -12,7 +11,6 @@ import io.reactivex.Single
 
 class VideosRepository(private val remoteDataStore: IVideosRemoteDataStore,
                        private val dbDataStore: IVideosDbDataStore) : IVideosRepository {
-
 
     override fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>> =
             remoteDataStore.getChannelsThumbnailUrls(videos)
@@ -31,6 +29,4 @@ class VideosRepository(private val remoteDataStore: IVideosRemoteDataStore,
 
     override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable =
             dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)
-
-    override fun getPlaylistsWithVideos(): Single<List<PlaylistWithVideosEntity>> = dbDataStore.getPlaylistsWithVideos()
 }

@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.there.domain.usecases.spotify.*
 import com.example.there.domain.usecases.videos.GetFavouriteVideoPlaylists
-import com.example.there.domain.usecases.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.findclips.base.BaseViewModel
 import com.example.there.findclips.model.entities.*
 import com.example.there.findclips.model.mappers.*
@@ -14,8 +13,7 @@ class FavouritesViewModel(private val getFavouriteAlbums: GetFavouriteAlbums,
                           private val getFavouriteCategories: GetFavouriteCategories,
                           private val getFavouriteSpotifyPlaylists: GetFavouriteSpotifyPlaylists,
                           private val getFavouriteTracks: GetFavouriteTracks,
-                          private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists,
-                          private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist) : BaseViewModel() {
+                          private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists) : BaseViewModel() {
 
     val albums: MutableLiveData<List<Album>> = MutableLiveData()
     val artists: MutableLiveData<List<Artist>> = MutableLiveData()

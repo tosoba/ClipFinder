@@ -61,6 +61,8 @@ dependencies {
     // Material dialogs
     implementation 'com.afollestad.material-dialogs:core:0.9.5.0'
 
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.3'
+
     testImplementation rootProject.ext.junit
     testImplementation rootProject.ext.mockito
     androidTestImplementation rootProject.ext.androidTestRunner

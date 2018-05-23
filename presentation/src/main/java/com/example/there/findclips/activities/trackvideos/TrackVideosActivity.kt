@@ -80,6 +80,7 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
         super.onCreate(savedInstanceState)
         val binding: ActivityTrackVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_track_videos)
         binding.view = view
+        binding.trackVideosViewpager.offscreenPageLimit = 1
         if (savedInstanceState == null) {
             viewModel.viewState.track.set(intentTrack)
         }
