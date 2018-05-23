@@ -95,4 +95,11 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, spotifySearchVMFactory).get(SpotifySearchViewModel::class.java)
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.albums.isNotEmpty() &&
+            viewModel.viewState.artists.isNotEmpty() &&
+            viewModel.viewState.playlists.isNotEmpty() &&
+            viewModel.viewState.tracks.isNotEmpty()
+
+    override fun reloadData() = viewModel.searchAll(activity?.accessToken, query)
 }

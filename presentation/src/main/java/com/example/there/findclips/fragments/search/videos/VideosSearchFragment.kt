@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.base.BaseNetworkVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.model.entities.Video
@@ -27,7 +27,7 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 import javax.inject.Inject
 
 
-class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearchFragment {
+class VideosSearchFragment : BaseNetworkVMFragment<VideosSearchViewModel>(), MainSearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -96,6 +96,10 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosSearchViewModel::class.java)
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.videos.isNotEmpty()
+
+    override fun reloadData() = viewModel.searchVideos(query)
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

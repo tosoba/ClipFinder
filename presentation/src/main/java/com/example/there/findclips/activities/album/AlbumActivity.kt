@@ -92,6 +92,10 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
         viewModel = ViewModelProviders.of(this, factory).get(AlbumViewModel::class.java)
     }
 
+    override fun isDataLoaded(): Boolean = viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty()
+
+    override fun reloadData() = viewModel.loadAlbumData(accessToken, album)
+
     companion object {
         private const val EXTRA_ALBUM = "EXTRA_ALBUM"
 

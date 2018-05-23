@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import com.example.there.findclips.databinding.ActivityArtistBinding
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
@@ -13,6 +12,7 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseSpotifyVMActivity
+import com.example.there.findclips.databinding.ActivityArtistBinding
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
@@ -101,6 +101,13 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.albums.isNotEmpty() &&
+            viewModel.viewState.artist.get() != null &&
+            viewModel.viewState.topTracks.isNotEmpty() &&
+            viewModel.viewState.topTracks.isNotEmpty()
+
+    override fun reloadData() = viewModel.loadArtistData(accessToken, intentArtist)
 
     companion object {
         private const val EXTRA_ARTIST = "EXTRA_ARTIST"

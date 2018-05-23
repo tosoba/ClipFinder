@@ -12,8 +12,8 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityPlaylistBinding
-import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
+import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.activity_playlist.*
@@ -79,6 +79,10 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(PlaylistViewModel::class.java)
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.tracks.value != null
+
+    override fun reloadData() = viewModel.loadTracks(accessToken, playlist)
 
     companion object {
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"

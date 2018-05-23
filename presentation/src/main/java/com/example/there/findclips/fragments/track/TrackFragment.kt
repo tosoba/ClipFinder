@@ -10,17 +10,17 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
+import com.example.there.findclips.activities.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentTrackBinding
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
-import com.example.there.findclips.view.lists.ArtistsList
-import com.example.there.findclips.view.lists.TracksList
-import com.example.there.findclips.activities.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
+import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener
+import com.example.there.findclips.view.lists.TracksList
 import javax.inject.Inject
 
 
@@ -85,6 +85,14 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>() {
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(TrackViewModel::class.java)
+    }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.album.get() != null &&
+            viewModel.viewState.artists.isNotEmpty() &&
+            viewModel.viewState.similarTracks.isNotEmpty()
+
+    override fun reloadData() {
+        track?.let { viewModel.loadDataForTrack(activity?.accessToken, it) }
     }
 
     companion object {

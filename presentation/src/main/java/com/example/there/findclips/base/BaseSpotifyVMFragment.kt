@@ -3,7 +3,7 @@ package com.example.there.findclips.base
 import android.arch.lifecycle.Observer
 import com.example.there.findclips.util.saveAccessToken
 
-abstract class BaseSpotifyVMFragment<T : BaseSpotifyViewModel>: BaseVMFragment<T>() {
+abstract class BaseSpotifyVMFragment<T : BaseSpotifyViewModel>: BaseNetworkVMFragment<T>() {
 
     override fun setupObservers() {
         super.setupObservers()

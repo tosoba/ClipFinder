@@ -9,16 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.Router
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.TopTrack
-import com.example.there.findclips.view.lists.*
-import com.example.there.findclips.Router
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import com.example.there.findclips.util.mainActivity
+import com.example.there.findclips.view.lists.*
 import javax.inject.Inject
 
 
@@ -76,4 +76,10 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
     override fun releaseComponent() {
         activity?.app?.releaseDashboardComponent()
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.categories.isNotEmpty() &&
+            viewModel.viewState.featuredPlaylists.isNotEmpty() &&
+            viewModel.viewState.topTracks.isNotEmpty()
+
+    override fun reloadData() = viewModel.loadDashboardData(activity?.accessToken)
 }

@@ -16,7 +16,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseVMActivity
+import com.example.there.findclips.base.BaseNetworkVMActivity
 import com.example.there.findclips.databinding.ActivityPlayerBinding
 import com.example.there.findclips.fragments.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragments.addvideo.AddVideoViewState
@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.activity_player.*
 import javax.inject.Inject
 
 
-class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitializedListener {
+class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitializedListener {
 
     private val intentVideo: Video by lazy { intent.getParcelableExtra<Video>(EXTRA_VIDEO) }
     private val intentOtherVideos: ArrayList<Video> by lazy { intent.getParcelableArrayListExtra<Video>(EXTRA_OTHER_VIDEOS) }
@@ -175,6 +175,10 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
         super.onDestroy()
         addVideoDialogFragment = null
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.viewState.videos.isNotEmpty()
+
+    override fun reloadData() = viewModel.searchRelatedVideos(currentVideo.id)
 
     companion object {
         private const val RECOVERY_DIALOG_REQUEST = 100

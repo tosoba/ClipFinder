@@ -12,8 +12,8 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityCategoryBinding
-import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
+import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.activity_category.*
@@ -79,6 +79,10 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(CategoryViewModel::class.java)
     }
+
+    override fun isDataLoaded(): Boolean = viewModel.playlists.value != null
+
+    override fun reloadData() = viewModel.loadPlaylists(accessToken, category.id)
 
     companion object {
         private const val EXTRA_CATEGORY = "EXTRA_CATEGORY"
