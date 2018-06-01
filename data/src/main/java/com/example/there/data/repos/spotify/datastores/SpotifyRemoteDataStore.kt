@@ -6,9 +6,11 @@ import com.example.there.data.apis.spotify.SpotifyApi
 import com.example.there.data.apis.spotify.SpotifyChartsApi
 import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.mappers.spotify.*
+import com.example.there.data.responses.TracksOnlyResponse
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 
 class SpotifyRemoteDataStore(private val api: SpotifyApi,
                              private val accountsApi: SpotifyAccountsApi,
@@ -32,19 +34,27 @@ class SpotifyRemoteDataStore(private val api: SpotifyApi,
                     .map(TrackMapper::mapFrom)
 
     override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
-            .map { it.split('\n').drop(1) }
+            .map { it.split('\n').drop(1).dropLast(1) }
             .map { it.map(ChartTrackIdMapper::mapFrom) }
-            .buffer(50)
+            .map { it.chunked(50).map { it.joinToString(",") } }
+            .flatMapIterable { it }
+            .concatMap {
+                api.getTracks(
+                        authorization = getAccessTokenHeader(accessToken.token),
+                        ids = it
+                )
+            }
+            .zipWith(
+                    Observable.range(0, Int.MAX_VALUE),
+                    BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index -> Pair(response, index) }
+            )
             .map {
-                it.mapIndexed { chunkIndex: Int, ids: List<String> ->
-                    api.getTracks(authorization = getAccessTokenHeader(accessToken.token), ids = ids.joinToString(",").dropLast(1))
-                            .map {
-                                it.tracks.mapIndexed { index: Int, trackData: TrackData ->
-                                    TopTrackEntity(chunkIndex * 50 + index + 1, TrackMapper.mapFrom(trackData))
-                                }
-                            }
+                val (response, index) = it
+                response.tracks.mapIndexed { i: Int, trackData: TrackData ->
+                    TopTrackEntity(index * 50 + i + 1, TrackMapper.mapFrom(trackData))
                 }
-            }.flatMapIterable { it }.switchMap { it }
+            }
+
 
     override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
             api.searchAll(authorization = getAccessTokenHeader(accessToken.token), query = query)
@@ -90,17 +100,16 @@ class SpotifyRemoteDataStore(private val api: SpotifyApi,
 
     override fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>> =
             api.getSimilarTracks(authorization = getAccessTokenHeader(accessToken.token), trackId = trackId)
-                    .map {
-                        it.tracks.chunked(50).map {
-                            api.getTracks(
-                                    authorization = getAccessTokenHeader(accessToken.token),
-                                    ids = it.joinToString(",") { it.id }
-                            )
-                        }
-                    }
+                    .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
                     .flatMapIterable { it }
-                    .switchMap { it }
+                    .flatMap {
+                        api.getTracks(
+                                authorization = getAccessTokenHeader(accessToken.token),
+                                ids = it
+                        )
+                    }
                     .map { it.tracks.map(TrackMapper::mapFrom) }
+
 
     override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
             api.getAlbumsFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
@@ -116,17 +125,16 @@ class SpotifyRemoteDataStore(private val api: SpotifyApi,
 
     override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
             api.getTracksFromAlbum(authorization = getAccessTokenHeader(accessToken.token), albumId = albumId)
-                    .map {
-                        it.tracks.chunked(50).map {
-                            api.getTracks(
-                                    authorization = getAccessTokenHeader(accessToken.token),
-                                    ids = it.joinToString(",") { it.id }
-                            )
-                        }
-                    }
+                    .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
                     .flatMapIterable { it }
-                    .switchMap { it }
+                    .flatMap {
+                        api.getTracks(
+                                authorization = getAccessTokenHeader(accessToken.token),
+                                ids = it
+                        )
+                    }
                     .map { it.tracks.map(TrackMapper::mapFrom) }
+
 
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"

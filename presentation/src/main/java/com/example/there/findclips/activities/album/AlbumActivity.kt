@@ -46,6 +46,7 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
         AlbumView(state = viewModel.viewState,
                 album = album,
                 onFavouriteBtnClickListener = View.OnClickListener {
+                    viewModel.addFavouriteAlbum(album)
                     Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
                 artistsAdapter = artistsAdapter,
