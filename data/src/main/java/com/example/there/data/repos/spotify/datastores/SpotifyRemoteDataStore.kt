@@ -34,7 +34,7 @@ class SpotifyRemoteDataStore(private val api: SpotifyApi,
                     .map(TrackMapper::mapFrom)
 
     override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
-            .map { it.split('\n').drop(1).dropLast(1) }
+            .map { it.split('\n').filter { it.isNotBlank() && it.first().isDigit() } }
             .map { it.map(ChartTrackIdMapper::mapFrom) }
             .map { it.chunked(50).map { it.joinToString(",") } }
             .flatMapIterable { it }

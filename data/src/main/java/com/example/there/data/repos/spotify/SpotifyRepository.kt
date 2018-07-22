@@ -56,7 +56,6 @@ class SpotifyRepository(private val remoteDataStore: ISpotifyRemoteDataStore,
     override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
             remoteDataStore.getTracksFromAlbum(accessToken, albumId)
 
-
     override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 
     override fun getFavouriteArtists(): Single<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()

@@ -34,7 +34,7 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
     private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let {
-                track_videos_viewpager.currentItem = it.position
+                track_videos_viewpager?.currentItem = it.position
             }
         }
     }

@@ -25,13 +25,13 @@ class NetworkModule(private val spotifyApiBaseUrl: String,
     @Singleton
     @Named(Dependencies.SPOTIFY_API_RETROFIT)
     fun spotifyApiRetrofit(): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient().newBuilder().addInterceptor({ chain ->
+            .client(OkHttpClient().newBuilder().addInterceptor { chain ->
                 chain.proceed(chain.request()
                         .newBuilder()
                         .addHeader("Accept", "application/json")
                         .addHeader("Content-Type", "application/json")
                         .build())
-            }).build())
+            }.build())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(spotifyApiBaseUrl)
@@ -41,12 +41,12 @@ class NetworkModule(private val spotifyApiBaseUrl: String,
     @Singleton
     @Named(Dependencies.SPOTIFY_ACCOUNTS_API_RETROFIT)
     fun spotifyAccountsApiRetrofit(): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient().newBuilder().addInterceptor({ chain ->
+            .client(OkHttpClient().newBuilder().addInterceptor { chain ->
                 chain.proceed(chain.request()
                         .newBuilder()
                         .addHeader("Content-Type", "application/x-www-form-urlencoded")
                         .build())
-            }).build())
+            }.build())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(accessTokenBaseUrl)
