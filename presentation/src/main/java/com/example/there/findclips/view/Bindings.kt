@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
 import com.example.there.findclips.R
+import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.squareup.picasso.Picasso
 
 @BindingAdapter("onNavigationItemSelectedListener")
@@ -28,6 +29,11 @@ fun bindImageUrl(view: ImageView, url: String?) {
 
 @BindingAdapter("itemDecoration")
 fun bindItemDecoration(recycler: RecyclerView, decoration: RecyclerView.ItemDecoration) {
+    recycler.addItemDecoration(decoration)
+}
+
+@BindingAdapter("headerDecoration")
+fun bindHeaderDecoration(recycler: RecyclerView, decoration: HeaderDecoration) {
     recycler.addItemDecoration(decoration)
 }
 

@@ -12,10 +12,11 @@ import com.example.there.findclips.R
 import com.example.there.findclips.Router
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.model.entities.Album
-import com.example.there.findclips.view.lists.GridAlbumsList
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.example.there.findclips.util.screenOrientation
+import com.example.there.findclips.view.lists.GridAlbumsList
 import com.example.there.findclips.view.lists.OnAlbumClickListener
+import com.example.there.findclips.view.recycler.HeaderDecoration
+import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
 class SpotifyAlbumsFragment : BaseSpotifyFragment<Album>() {
@@ -36,13 +37,18 @@ class SpotifyAlbumsFragment : BaseSpotifyFragment<Album>() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
         val binding: FragmentSpotifyAlbumsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_albums, container, false)
-        binding.view = view
-        binding.albumsRecyclerView.layoutManager = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false)
-        } else {
-            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        }
-        return binding.root
+
+        return binding.apply {
+            view = this@SpotifyAlbumsFragment.view
+            val columnCount = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+            albumsRecyclerView.layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
+            albumsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
+                    .inflate(R.layout.albums_header)
+                    .parallax(1f)
+                    .dropShadowDp(5)
+                    .columns(columnCount)
+                    .build())
+        }.root
     }
 
     data class View(val state: BaseSpotifyFragment.ViewState<Album>,
