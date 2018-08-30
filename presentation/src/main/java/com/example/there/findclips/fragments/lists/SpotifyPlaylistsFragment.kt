@@ -22,8 +22,6 @@ class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
         override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)
     }
 
-    override val viewState: BaseSpotifyFragment.ViewState<Playlist> = BaseSpotifyFragment.ViewState()
-
     private val view: SpotifyPlaylistsFragment.View = SpotifyPlaylistsFragment.View(
             state = viewState,
             adapter = GridPlaylistsList.Adapter(viewState.items, R.layout.grid_playlist_item, onPlaylistClickListener)
@@ -39,7 +37,7 @@ class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
             playlistsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
                     .inflate(R.layout.playlists_header)
                     .parallax(1f)
-                    .dropShadowDp(5)
+                    .dropShadowDp(2)
                     .columns(columnCount)
                     .build())
         }.root
@@ -47,4 +45,10 @@ class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
 
     data class View(val state: BaseSpotifyFragment.ViewState<Playlist>,
                     val adapter: GridPlaylistsList.Adapter)
+
+    companion object {
+        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyPlaylistsFragment().apply {
+            BaseSpotifyFragment.putArguments(this, mainHintText, additionalHintText)
+        }
+    }
 }

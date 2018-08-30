@@ -8,8 +8,10 @@ import com.example.there.findclips.di.category.CategoryModule
 import com.example.there.findclips.di.category.CategorySubComponent
 import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
-import com.example.there.findclips.di.favourites.FavouritesModule
-import com.example.there.findclips.di.favourites.FavouritesSubComponent
+import com.example.there.findclips.di.favourites.spotify.FavouritesSpotifyModule
+import com.example.there.findclips.di.favourites.spotify.FavouritesSpotifySubComponent
+import com.example.there.findclips.di.favourites.videos.FavouritesVideosModule
+import com.example.there.findclips.di.favourites.videos.FavouritesVideosSubComponent
 import com.example.there.findclips.di.modules.AppModule
 import com.example.there.findclips.di.modules.CommonUseCasesModule
 import com.example.there.findclips.di.modules.DataModule
@@ -38,7 +40,8 @@ import javax.inject.Singleton
 ])
 interface AppComponent {
     fun plus(dashboardModule: DashboardModule): DashboardSubComponent
-    fun plus(favouritesModule: FavouritesModule): FavouritesSubComponent
+    fun plus(favouritesSpotifyModule: FavouritesSpotifyModule): FavouritesSpotifySubComponent
+    fun plus(favouritesVideosModule: FavouritesVideosModule): FavouritesVideosSubComponent
     fun plus(spotifySearchModule: SpotifySearchModule): SpotifySearchSubComponent
     fun plus(videosSearchModule: VideosSearchModule): VideosSearchSubComponent
     fun plus(categoryModule: CategoryModule): CategorySubComponent

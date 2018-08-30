@@ -1,17 +1,18 @@
 package com.example.there.findclips.fragments.favourites.spotify
 
 import android.databinding.ObservableArrayList
+import android.support.design.widget.TabLayout
+import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
 import com.example.there.findclips.model.entities.*
-import com.example.there.findclips.view.lists.*
 
 data class SpotifyFavouritesFragmentView(
-        val state: SpotifyFavouritesFragmentViewState,
-        val albumsAdapter: AlbumsList.Adapter,
-        val artistsAdapter: ArtistsList.Adapter,
-        val categoriesAdapter: CategoriesList.Adapter,
-        val playlistsAdapter: PlaylistsList.Adapter,
-        val tracksAdapter: TracksList.Adapter
-)
+        val pagerAdapter: FragmentStatePagerAdapter,
+        val onTabSelectedListener: TabLayout.OnTabSelectedListener,
+        val onPageChangeListener: ViewPager.OnPageChangeListener
+) {
+    val fragmentTabs = arrayOf("Albums", "Artists", "Categories", "Playlists", "Tracks")
+}
 
 data class SpotifyFavouritesFragmentViewState(
         val albums: ObservableArrayList<Album> = ObservableArrayList(),

@@ -54,5 +54,10 @@
     <string name="settings">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="internet_connection_is_needed">Internet connection is needed for app to work properly.</string>
+    <string name="browse_for_albums">Browse albums and save them as favourite to see them here.</string>
+    <string name="browse_for_artists">Browse for artists and save them as favourite to see them here.</string>
+    <string name="browse_for_playlists">Browse for playlists and save them as favourite to see them here.</string>
+    <string name="browse_for_tracks">Browse for tracks and save them as favourite to see them here.</string>
+    <string name="browse_for_categories">Browse for categories and save them as favourite to see them here.</string>
 
 </resources>

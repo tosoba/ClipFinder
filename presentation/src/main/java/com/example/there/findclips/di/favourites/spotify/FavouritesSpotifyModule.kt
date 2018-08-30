@@ -1,16 +1,14 @@
-package com.example.there.findclips.di.favourites
+package com.example.there.findclips.di.favourites.spotify
 
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.spotify.*
-import com.example.there.domain.usecases.videos.GetFavouriteVideoPlaylists
-import com.example.there.findclips.fragments.favourites.FavouritesVMFactory
+import com.example.there.findclips.fragments.favourites.spotify.SpotifyFavouritesVMFactory
 import com.example.there.findclips.util.rx.AsyncTransformer
 import dagger.Module
 import dagger.Provides
 
-@FavouritesScope
 @Module
-class FavouritesModule {
+class FavouritesSpotifyModule {
 
     @Provides
     fun getFavouriteAlbumsUseCase(repository: ISpotifyRepository): GetFavouriteAlbums = GetFavouriteAlbums(AsyncTransformer(), repository)
@@ -33,13 +31,11 @@ class FavouritesModule {
                                    getFavouriteArtists: GetFavouriteArtists,
                                    getFavouriteCategories: GetFavouriteCategories,
                                    getFavouriteSpotifyPlaylists: GetFavouriteSpotifyPlaylists,
-                                   getFavouriteTracks: GetFavouriteTracks,
-                                   getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists): FavouritesVMFactory = FavouritesVMFactory(
+                                   getFavouriteTracks: GetFavouriteTracks): SpotifyFavouritesVMFactory = SpotifyFavouritesVMFactory(
             getFavouriteAlbums,
             getFavouriteArtists,
             getFavouriteCategories,
             getFavouriteSpotifyPlaylists,
-            getFavouriteTracks,
-            getFavouriteVideoPlaylists
+            getFavouriteTracks
     )
 }

@@ -10,38 +10,37 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
-import com.example.there.findclips.model.entities.Album
+import com.example.there.findclips.databinding.FragmentSpotifyCategoriesBinding
+import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.util.screenOrientation
-import com.example.there.findclips.view.lists.GridAlbumsList
-import com.example.there.findclips.view.lists.OnAlbumClickListener
+import com.example.there.findclips.view.lists.CategoriesList
+import com.example.there.findclips.view.lists.OnCategoryClickListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
+class SpotifyCategoriesFragment : BaseSpotifyFragment<Category>() {
 
-class SpotifyAlbumsFragment : BaseSpotifyFragment<Album>() {
-
-    private val onAlbumClickListener = object : OnAlbumClickListener {
-        override fun onClick(item: Album) = Router.goToAlbumAcitivity(activity, album = item)
+    private val onCategoryClickListener = object : OnCategoryClickListener {
+        override fun onClick(item: Category) = Router.goToCategoryActivity(activity, category = item)
     }
 
-    private val view: SpotifyAlbumsFragment.View by lazy {
-        SpotifyAlbumsFragment.View(
+    private val view: SpotifyCategoriesFragment.View by lazy {
+        SpotifyCategoriesFragment.View(
                 state = viewState,
-                adapter = GridAlbumsList.Adapter(viewState.items, R.layout.grid_album_item, onAlbumClickListener),
+                adapter = CategoriesList.Adapter(viewState.items, R.layout.category_item, onCategoryClickListener),
                 itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
-        val binding: FragmentSpotifyAlbumsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_albums, container, false)
+        val binding: FragmentSpotifyCategoriesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_categories, container, false)
 
         return binding.apply {
-            view = this@SpotifyAlbumsFragment.view
+            view = this@SpotifyCategoriesFragment.view
             val columnCount = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
-            albumsRecyclerView.layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
-            albumsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
-                    .inflate(R.layout.albums_header)
+            categoriesRecyclerView.layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
+            categoriesRecyclerView.addItemDecoration(HeaderDecoration.with(context)
+                    .inflate(R.layout.categories_header)
                     .parallax(1f)
                     .dropShadowDp(2)
                     .columns(columnCount)
@@ -49,12 +48,12 @@ class SpotifyAlbumsFragment : BaseSpotifyFragment<Album>() {
         }.root
     }
 
-    data class View(val state: BaseSpotifyFragment.ViewState<Album>,
-                    val adapter: GridAlbumsList.Adapter,
+    data class View(val state: BaseSpotifyFragment.ViewState<Category>,
+                    val adapter: CategoriesList.Adapter,
                     val itemDecoration: RecyclerView.ItemDecoration)
 
     companion object {
-        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyAlbumsFragment().apply {
+        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyCategoriesFragment().apply {
             BaseSpotifyFragment.putArguments(this, mainHintText, additionalHintText)
         }
     }

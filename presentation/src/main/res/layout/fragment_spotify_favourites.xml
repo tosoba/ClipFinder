@@ -1,217 +1,46 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <import type="android.view.View" />
 
         <variable
             name="view"
             type="com.example.there.findclips.fragments.favourites.spotify.SpotifyFavouritesFragmentView" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="com.example.there.findclips.fragments.favourites.spotify.SpotifyFavouritesFragment">
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.example.there.findclips.fragments.favourites.spotify.SpotifyFavouritesFragment">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/spotify_favourites_tab_layout"
+            onTabSelectedListener="@{view.onTabSelectedListener}"
+            tabs="@{view.fragmentTabs}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="?android:attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabGravity="fill"
+            app:tabMode="scrollable" />
 
-            <TextView
-                android:id="@+id/favourites_albums_label"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/albums"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/spotify_favourites_tab_view_pager"
+            onPageChangeListener="@{view.onPageChangeListener}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adapter="@{view.pagerAdapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spotify_favourites_tab_layout" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_albums_recycler_view"
-                style="@style/HorizontalGridRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adapter="@{view.albumsAdapter}"
-                android:minHeight="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_albums_label" />
-
-            <TextView
-                android:id="@+id/no_fav_albums_txt"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/no_favourite_albums_addded_yet"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp"
-                android:visibility="@{safeUnbox(view.state.albums.size()) == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favourites_albums_label" />
-
-            <TextView
-                android:id="@+id/favourites_artists_label"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/artists"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_albums_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_artists_recycler_view"
-                style="@style/HorizontalGridRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adapter="@{view.artistsAdapter}"
-                android:minHeight="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_artists_label" />
-
-            <TextView
-                android:id="@+id/no_fav_artists_txt"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/no_favourite_artists_added_yet"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp"
-                android:visibility="@{safeUnbox(view.state.artists.size()) == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favourites_artists_label" />
-
-            <TextView
-                android:id="@+id/favourites_categories_label"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/categories"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_artists_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_categories_recycler_view"
-                style="@style/HorizontalGridRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adapter="@{view.categoriesAdapter}"
-                android:minHeight="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_categories_label" />
-
-            <TextView
-                android:id="@+id/no_fav_categories_txt"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/no_favourite_categories_added_yet"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp"
-                android:visibility="@{safeUnbox(view.state.categories.size()) == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favourites_categories_label" />
-
-            <TextView
-                android:id="@+id/favourites_playlists_label"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/playlists"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_categories_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_playlists_recycler_view"
-                style="@style/HorizontalGridRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adapter="@{view.playlistsAdapter}"
-                android:minHeight="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_playlists_label" />
-
-            <TextView
-                android:id="@+id/no_fav_playlists_txt"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/no_favourite_playlists_added_yet"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp"
-                android:visibility="@{safeUnbox(view.state.playlists.size()) == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favourites_playlists_label" />
-
-            <TextView
-                android:id="@+id/favourites_tracks_label"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/tracks"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_playlists_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/favourites_tracks_recycler_view"
-                style="@style/HorizontalGridRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adapter="@{view.tracksAdapter}"
-                android:minHeight="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/favourites_tracks_label" />
-
-            <TextView
-                android:id="@+id/no_fav_tracks_txt"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/no_favourite_tracks_added_yet"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="20sp"
-                android:visibility="@{safeUnbox(view.state.tracks.size()) == 0 ? View.VISIBLE : View.GONE}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favourites_tracks_label" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+    </android.support.constraint.ConstraintLayout>
 
 </layout>
 

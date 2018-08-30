@@ -11,8 +11,10 @@ import com.example.there.findclips.di.category.CategoryModule
 import com.example.there.findclips.di.category.CategorySubComponent
 import com.example.there.findclips.di.dashboard.DashboardModule
 import com.example.there.findclips.di.dashboard.DashboardSubComponent
-import com.example.there.findclips.di.favourites.FavouritesModule
-import com.example.there.findclips.di.favourites.FavouritesSubComponent
+import com.example.there.findclips.di.favourites.spotify.FavouritesSpotifyModule
+import com.example.there.findclips.di.favourites.spotify.FavouritesSpotifySubComponent
+import com.example.there.findclips.di.favourites.videos.FavouritesVideosModule
+import com.example.there.findclips.di.favourites.videos.FavouritesVideosSubComponent
 import com.example.there.findclips.di.modules.AppModule
 import com.example.there.findclips.di.modules.CommonUseCasesModule
 import com.example.there.findclips.di.modules.DataModule
@@ -73,14 +75,24 @@ class FindClipsApp : Application() {
         dashboardSubComponent = null
     }
 
-    private var favouritesSubComponent: FavouritesSubComponent? = null
-    fun createFavouritesComponent(): FavouritesSubComponent {
-        favouritesSubComponent = appComponent.plus(FavouritesModule())
-        return favouritesSubComponent!!
+    private var favouritesSpotifySubComponent: FavouritesSpotifySubComponent? = null
+    fun createFavouritesSpotifyComponent(): FavouritesSpotifySubComponent {
+        favouritesSpotifySubComponent = appComponent.plus(FavouritesSpotifyModule())
+        return favouritesSpotifySubComponent!!
     }
 
-    fun releaseFavouritesComponent() {
-        favouritesSubComponent = null
+    fun releaseFavouritesSpotifyComponent() {
+        favouritesSpotifySubComponent = null
+    }
+
+    private var favouritesVideosSubComponent: FavouritesVideosSubComponent? = null
+    fun createFavouritesVideosComponent(): FavouritesVideosSubComponent {
+        favouritesVideosSubComponent = appComponent.plus(FavouritesVideosModule())
+        return favouritesVideosSubComponent!!
+    }
+
+    fun releaseFavouritesVideosComponent() {
+        favouritesVideosSubComponent = null
     }
 
     private var spotifySearchSubComponent: SpotifySearchSubComponent? = null

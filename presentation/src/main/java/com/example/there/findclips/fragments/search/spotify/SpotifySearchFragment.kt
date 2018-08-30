@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
-import com.example.there.findclips.fragments.lists.SpotifyAlbumsFragment
-import com.example.there.findclips.fragments.lists.SpotifyArtistsFragment
-import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
-import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
+import com.example.there.findclips.fragments.lists.*
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.util.accessToken
 import com.example.there.findclips.util.app
@@ -66,7 +63,14 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         viewModel.loadedFlag.observe(this, Observer { updateCurrentFragment() })
     }
 
-    private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy { SpotifyFragmentPagerAdapter(childFragmentManager) }
+    private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy {
+        SpotifyFragmentPagerAdapter(childFragmentManager, arrayOf(
+                SpotifyAlbumsFragment.newInstance(getString(R.string.no_albums_loaded_yet), getString(R.string.search_for_some)),
+                SpotifyArtistsFragment.newInstance(getString(R.string.no_artists_loaded_yet), getString(R.string.search_for_some)),
+                SpotifyPlaylistsFragment.newInstance(getString(R.string.no_playlists_loaded_yet), getString(R.string.search_for_some)),
+                SpotifyTracksFragment.newInstance(getString(R.string.no_tracks_loaded_yet), getString(R.string.search_for_some))
+        ))
+    }
 
     private val view: SpotifySearchView by lazy {
         SpotifySearchView(

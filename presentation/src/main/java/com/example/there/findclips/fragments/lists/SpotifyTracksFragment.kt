@@ -21,8 +21,6 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class SpotifyTracksFragment : BaseSpotifyFragment<Track>() {
 
-    override val viewState: BaseSpotifyFragment.ViewState<Track> = BaseSpotifyFragment.ViewState()
-
     private val onTrackClickListener = object : OnTrackClickListener {
         override fun onClick(item: Track) = Router.goToTrackVideosActivity(activity, track = item)
     }
@@ -45,7 +43,7 @@ class SpotifyTracksFragment : BaseSpotifyFragment<Track>() {
             tracksRecyclerView.addItemDecoration(HeaderDecoration.with(context)
                     .inflate(R.layout.tracks_header)
                     .parallax(1f)
-                    .dropShadowDp(5)
+                    .dropShadowDp(2)
                     .columns(columnCount)
                     .build())
         }.root
@@ -54,4 +52,10 @@ class SpotifyTracksFragment : BaseSpotifyFragment<Track>() {
     data class View(val state: BaseSpotifyFragment.ViewState<Track>,
                     val adapter: GridTracksList.Adapter,
                     val itemDecoration: RecyclerView.ItemDecoration)
+
+    companion object {
+        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyTracksFragment().apply {
+            BaseSpotifyFragment.putArguments(this, mainHintText, additionalHintText)
+        }
+    }
 }
