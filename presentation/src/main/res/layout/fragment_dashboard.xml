@@ -18,7 +18,8 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".fragments.dashboard.DashboardFragment">
+            tools:context=".fragments.dashboard.DashboardFragment"
+            android:id="@+id/dashboard_root_layout">
 
             <TextView
                 android:id="@+id/genres_label_txt"

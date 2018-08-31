@@ -13,6 +13,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/spotify_search_root_layout"
         tools:context="com.example.there.findclips.search.spotify.SpotifySearchFragment">
 
         <android.support.design.widget.TabLayout

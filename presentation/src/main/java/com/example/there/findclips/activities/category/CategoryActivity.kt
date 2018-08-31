@@ -10,14 +10,13 @@ import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseSpotifyVMActivity
+import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityCategoryBinding
 import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.activity_category.*
-import javax.inject.Inject
 
 class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
 
@@ -32,15 +31,24 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
                 })
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                this,
+                viewModel.playlists.value != null,
+                category_root_layout,
+                ::loadData
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initView()
+        lifecycle.addObserver(connectivityComponent)
         initToolbar()
 
-        if (savedInstanceState == null) {
-            viewModel.loadPlaylists(accessToken, category.id)
-        }
+        if (savedInstanceState == null)
+            loadData()
     }
 
     private fun initView() {
@@ -65,24 +73,11 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         })
     }
 
-    override fun initComponent() {
-        app.createCategoryComponent().inject(this)
-    }
-
-    override fun releaseComponent() {
-        app.releaseCategoryComponent()
-    }
-
-    @Inject
-    lateinit var factory: CategoryVMFactory
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(CategoryViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.playlists.value != null
-
-    override fun reloadData() = viewModel.loadPlaylists(accessToken, category.id)
+    private fun loadData() = viewModel.loadPlaylists(accessToken, category.id)
 
     companion object {
         private const val EXTRA_CATEGORY = "EXTRA_CATEGORY"

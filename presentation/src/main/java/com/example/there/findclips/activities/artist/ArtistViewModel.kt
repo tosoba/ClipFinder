@@ -3,17 +3,20 @@ package com.example.there.findclips.activities.artist
 import android.util.Log
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.*
-import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.mappers.AlbumEntityMapper
 import com.example.there.findclips.model.mappers.ArtistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
+import javax.inject.Inject
 
-class ArtistViewModel(getAccessToken: GetAccessToken,
-                      private val getAlbumsFromArtist: GetAlbumsFromArtist,
-                      private val getTopTracksFromArtist: GetTopTracksFromArtist,
-                      private val getRelatedArtists: GetRelatedArtists,
-                      private val insertArtist: InsertArtist): BaseSpotifyViewModel(getAccessToken) {
+class ArtistViewModel @Inject constructor(
+        getAccessToken: GetAccessToken,
+        private val getAlbumsFromArtist: GetAlbumsFromArtist,
+        private val getTopTracksFromArtist: GetTopTracksFromArtist,
+        private val getRelatedArtists: GetRelatedArtists,
+        private val insertArtist: InsertArtist
+) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: ArtistViewState = ArtistViewState()
 
@@ -35,21 +38,21 @@ class ArtistViewModel(getAccessToken: GetAccessToken,
         loadRelatedArtists(accessToken, artist.id)
     }
 
-    private fun loadAlbumsFromArtist(accessToken: AccessTokenEntity,artistId: String) {
+    private fun loadAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String) {
         viewState.albumsLoadingInProgress.set(true)
         addDisposable(getAlbumsFromArtist.execute(accessToken, artistId)
                 .doFinally { viewState.albumsLoadingInProgress.set(false) }
                 .subscribe({ viewState.albums.addAll(it.map(AlbumEntityMapper::mapFrom)) }, this::onError))
     }
 
-    private fun loadTopTracksFromArtist(accessToken: AccessTokenEntity,artistId: String) {
+    private fun loadTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String) {
         viewState.topTracksLoadingInProgress.set(true)
         addDisposable(getTopTracksFromArtist.execute(accessToken, artistId)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({ viewState.topTracks.addAll(it.map(TrackEntityMapper::mapFrom)) }, this::onError))
     }
 
-    private fun loadRelatedArtists(accessToken: AccessTokenEntity,artistId: String) {
+    private fun loadRelatedArtists(accessToken: AccessTokenEntity, artistId: String) {
         viewState.relatedArtistsLoadingInProgress.set(true)
         addDisposable(getRelatedArtists.execute(accessToken, artistId)
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }

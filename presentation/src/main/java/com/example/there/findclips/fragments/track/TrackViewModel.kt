@@ -5,16 +5,19 @@ import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetAlbum
 import com.example.there.domain.usecases.spotify.GetArtists
 import com.example.there.domain.usecases.spotify.GetSimilarTracks
-import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.model.mappers.AlbumEntityMapper
 import com.example.there.findclips.model.mappers.ArtistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
+import javax.inject.Inject
 
-class TrackViewModel(getAccessToken: GetAccessToken,
-                     private val getAlbum: GetAlbum,
-                     private val getArtists: GetArtists,
-                     private val getSimilarTracks: GetSimilarTracks) : BaseSpotifyViewModel(getAccessToken) {
+class TrackViewModel @Inject constructor(
+        getAccessToken: GetAccessToken,
+        private val getAlbum: GetAlbum,
+        private val getArtists: GetArtists,
+        private val getSimilarTracks: GetSimilarTracks
+) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: TrackViewState = TrackViewState()
 

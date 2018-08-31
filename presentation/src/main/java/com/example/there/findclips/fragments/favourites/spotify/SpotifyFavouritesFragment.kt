@@ -9,17 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifyFavouritesBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragments.lists.*
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
-import javax.inject.Inject
 
 
-class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>() {
+class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), Injectable {
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -81,18 +80,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>() {
         }
     }
 
-    override fun initComponent() {
-        activity?.app?.createFavouritesSpotifyComponent()?.inject(this)
-    }
-
-    @Inject
-    lateinit var vmFactory: SpotifyFavouritesVMFactory
-
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, vmFactory).get(SpotifyFavouritesViewModel::class.java)
-    }
-
-    override fun releaseComponent() {
-        activity?.app?.releaseFavouritesSpotifyComponent()
+        viewModel = ViewModelProviders.of(this, factory).get(SpotifyFavouritesViewModel::class.java)
     }
 }

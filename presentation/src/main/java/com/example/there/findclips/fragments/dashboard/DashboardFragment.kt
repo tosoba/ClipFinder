@@ -10,22 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
+import com.example.there.findclips.di.Injectable
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.TopTrack
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import com.example.there.findclips.util.mainActivity
 import com.example.there.findclips.view.lists.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
-
-    @Inject
-    lateinit var vmFactory: DashboardVMFactory
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
 
     private val topTrackItemClickListener = object : OnTopTrackClickListener {
         override fun onClick(item: TopTrack) = Router.goToTrackVideosActivity(mainActivity, track = item.track)
@@ -58,28 +56,30 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>() {
         }.root
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                activity!!,
+                viewModel.viewState.categories.isNotEmpty() &&
+                        viewModel.viewState.featuredPlaylists.isNotEmpty() &&
+                        viewModel.viewState.topTracks.isNotEmpty(),
+                dashboard_root_layout,
+                ::loadData,
+                true
+        )
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.loadDashboardData(activity?.accessToken)
-        }
+
+        lifecycle.addObserver(connectivityComponent)
+
+        if (savedInstanceState == null)
+            loadData()
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, vmFactory).get(DashboardViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
     }
 
-    override fun initComponent() {
-        activity?.app?.createDashboardComponent()?.inject(this)
-    }
-
-    override fun releaseComponent() {
-        activity?.app?.releaseDashboardComponent()
-    }
-
-    override fun isDataLoaded(): Boolean = viewModel.viewState.categories.isNotEmpty() &&
-            viewModel.viewState.featuredPlaylists.isNotEmpty() &&
-            viewModel.viewState.topTracks.isNotEmpty()
-
-    override fun reloadData() = viewModel.loadDashboardData(activity?.accessToken)
+    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)
 }

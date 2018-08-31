@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
+        android:id="@+id/artist_root_layout"
         tools:context=".activities.artist.ArtistActivity">
 
         <android.support.design.widget.AppBarLayout

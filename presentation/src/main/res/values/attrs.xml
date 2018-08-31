@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BaseSpotifyFragment">
+    <declare-styleable name="BaseSpotifyListFragment">
         <attr name="main_hint_text" format="string"/>
         <attr name="additional_hint_text" format="string"/>
     </declare-styleable>

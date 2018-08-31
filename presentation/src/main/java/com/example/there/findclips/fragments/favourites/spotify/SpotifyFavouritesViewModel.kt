@@ -3,12 +3,13 @@ package com.example.there.findclips.fragments.favourites.spotify
 import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.usecases.spotify.*
-import com.example.there.findclips.base.BaseViewModel
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.mappers.*
 import io.reactivex.Observable
 import io.reactivex.functions.Function5
+import javax.inject.Inject
 
-class SpotifyFavouritesViewModel(
+class SpotifyFavouritesViewModel @Inject constructor(
         private val getFavouriteAlbums: GetFavouriteAlbums,
         private val getFavouriteArtists: GetFavouriteArtists,
         private val getFavouriteCategories: GetFavouriteCategories,

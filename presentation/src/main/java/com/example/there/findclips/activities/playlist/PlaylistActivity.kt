@@ -10,14 +10,13 @@ import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseSpotifyVMActivity
+import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityPlaylistBinding
 import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import kotlinx.android.synthetic.main.activity_playlist.*
-import javax.inject.Inject
 
 class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
 
@@ -28,19 +27,28 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
                 playlist = playlist,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.addFavouritePlaylist(playlist)
-                    Toast.makeText(this,"Added to favourites.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 })
+    }
+
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                this,
+                viewModel.tracks.value != null,
+                playlist_root_layout,
+                ::loadData
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initView()
+        lifecycle.addObserver(connectivityComponent)
         initToolbar()
 
-        if (savedInstanceState == null) {
-            viewModel.loadTracks(accessToken, playlist)
-        }
+        if (savedInstanceState == null)
+            loadData()
     }
 
     private fun initView() {
@@ -65,24 +73,11 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         })
     }
 
-    override fun initComponent() {
-        app.createPlaylistComponent().inject(this)
-    }
-
-    override fun releaseComponent() {
-        app.releasePlaylistComponent()
-    }
-
-    @Inject
-    lateinit var factory: PlaylistVMFactory
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(PlaylistViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.tracks.value != null
-
-    override fun reloadData() = viewModel.loadTracks(accessToken, playlist)
+    private fun loadData() = viewModel.loadTracks(accessToken, playlist)
 
     companion object {
         private const val EXTRA_PLAYLIST = "EXTRA_PLAYLIST"

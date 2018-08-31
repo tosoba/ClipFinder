@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
+import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyCategoriesBinding
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.util.screenOrientation
@@ -18,7 +19,7 @@ import com.example.there.findclips.view.lists.OnCategoryClickListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
-class SpotifyCategoriesFragment : BaseSpotifyFragment<Category>() {
+class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     private val onCategoryClickListener = object : OnCategoryClickListener {
         override fun onClick(item: Category) = Router.goToCategoryActivity(activity, category = item)
@@ -48,13 +49,13 @@ class SpotifyCategoriesFragment : BaseSpotifyFragment<Category>() {
         }.root
     }
 
-    data class View(val state: BaseSpotifyFragment.ViewState<Category>,
+    data class View(val state: BaseSpotifyListFragment.ViewState<Category>,
                     val adapter: CategoriesList.Adapter,
                     val itemDecoration: RecyclerView.ItemDecoration)
 
     companion object {
         fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyCategoriesFragment().apply {
-            BaseSpotifyFragment.putArguments(this, mainHintText, additionalHintText)
+            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
         }
     }
 }

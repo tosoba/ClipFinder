@@ -4,14 +4,17 @@ import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.SearchSpotify
-import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseSpotifyViewModel
 import com.example.there.findclips.model.mappers.AlbumEntityMapper
 import com.example.there.findclips.model.mappers.ArtistEntityMapper
 import com.example.there.findclips.model.mappers.PlaylistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
+import javax.inject.Inject
 
-class SpotifySearchViewModel(getAccessToken: GetAccessToken,
-                             private val searchSpotify: SearchSpotify) : BaseSpotifyViewModel(getAccessToken) {
+class SpotifySearchViewModel @Inject constructor(
+        getAccessToken: GetAccessToken,
+        private val searchSpotify: SearchSpotify
+) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: SpotifySearchViewState = SpotifySearchViewState()
 

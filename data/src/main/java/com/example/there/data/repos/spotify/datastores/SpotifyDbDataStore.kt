@@ -6,12 +6,15 @@ import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.datastores.ISpotifyDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class SpotifyDbDataStore(private val albumDao: AlbumDao,
-                         private val artistDao: ArtistDao,
-                         private val categoryDao: CategoryDao,
-                         private val spotifyPlaylistDao: SpotifyPlaylistDao,
-                         private val trackDao: TrackDao) : ISpotifyDbDataStore {
+class SpotifyDbDataStore @Inject constructor(
+        private val albumDao: AlbumDao,
+        private val artistDao: ArtistDao,
+        private val categoryDao: CategoryDao,
+        private val spotifyPlaylistDao: SpotifyPlaylistDao,
+        private val trackDao: TrackDao
+) : ISpotifyDbDataStore {
 
     override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = albumDao.findAll().map { it.map(AlbumMapper::mapFrom) }
 

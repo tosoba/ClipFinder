@@ -13,21 +13,21 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseNetworkVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragments.search.MainSearchFragment
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.model.entities.VideoPlaylist
-import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.OnVideoClickListener
 import com.example.there.findclips.view.lists.VideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_videos_search.*
 
 
-class VideosSearchFragment : BaseNetworkVMFragment<VideosSearchViewModel>(), MainSearchFragment {
+class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -36,9 +36,6 @@ class VideosSearchFragment : BaseNetworkVMFragment<VideosSearchViewModel>(), Mai
             viewModel.searchVideos(value)
             viewModel.viewState.videos.clear()
         }
-
-    @Inject
-    lateinit var viewModelFactory: VideosSearchVMFactory
 
     private val videoItemClickListener = object : OnVideoClickListener {
         override fun onClick(item: Video) = Router.goToPlayerActivity(activity, video = item, otherVideos = viewModel.viewState.videos)
@@ -85,21 +82,26 @@ class VideosSearchFragment : BaseNetworkVMFragment<VideosSearchViewModel>(), Mai
         }
     }
 
-    override fun initComponent() {
-        activity?.app?.createVideosSearchComponent()?.inject(this)
-    }
-
-    override fun releaseComponent() {
-        activity?.app?.releaseVideosSearchComponent()
-    }
-
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(VideosSearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(VideosSearchViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.viewState.videos.isNotEmpty()
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                activity!!,
+                query == "" || viewModel.viewState.videos.isNotEmpty(),
+                videos_search_root_layout,
+                ::loadData,
+                true
+        )
+    }
 
-    override fun reloadData() = viewModel.searchVideos(query)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lifecycle.addObserver(connectivityComponent)
+    }
+
+    private fun loadData() = viewModel.searchVideos(query)
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

@@ -7,9 +7,12 @@ import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class SpotifyRepository(private val remoteDataStore: ISpotifyRemoteDataStore,
-                        private val dbDataStore: ISpotifyDbDataStore) : ISpotifyRepository {
+class SpotifyRepository @Inject constructor(
+        private val remoteDataStore: ISpotifyRemoteDataStore,
+        private val dbDataStore: ISpotifyDbDataStore
+) : ISpotifyRepository {
 
     override fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> =
             remoteDataStore.getAccessToken(clientId, clientSecret)

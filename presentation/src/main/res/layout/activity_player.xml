@@ -17,6 +17,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/main_background_gradient"
         android:orientation="vertical"
+        android:id="@+id/player_root_layout"
         tools:context="com.example.there.findclips.activities.player.PlayerActivity">
 
         <fragment

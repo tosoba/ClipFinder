@@ -8,9 +8,12 @@ import com.example.there.domain.repos.videos.datastores.IVideosRemoteDataStore
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class VideosRepository(private val remoteDataStore: IVideosRemoteDataStore,
-                       private val dbDataStore: IVideosDbDataStore) : IVideosRepository {
+class VideosRepository @Inject constructor(
+        private val remoteDataStore: IVideosRemoteDataStore,
+        private val dbDataStore: IVideosDbDataStore
+) : IVideosRepository {
 
     override fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>> =
             remoteDataStore.getChannelsThumbnailUrls(videos)

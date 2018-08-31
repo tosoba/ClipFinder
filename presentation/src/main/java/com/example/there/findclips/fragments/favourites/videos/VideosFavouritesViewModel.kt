@@ -2,10 +2,13 @@ package com.example.there.findclips.fragments.favourites.videos
 
 import android.util.Log
 import com.example.there.domain.usecases.videos.GetFavouriteVideoPlaylists
-import com.example.there.findclips.base.BaseViewModel
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.mappers.VideoPlaylistEntityMapper
+import javax.inject.Inject
 
-class VideosFavouritesViewModel(private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists) : BaseViewModel() {
+class VideosFavouritesViewModel @Inject constructor(
+        private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
+) : BaseViewModel() {
 
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 

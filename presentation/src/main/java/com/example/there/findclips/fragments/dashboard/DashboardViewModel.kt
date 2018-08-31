@@ -5,16 +5,19 @@ import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetCategories
 import com.example.there.domain.usecases.spotify.GetDailyViralTracks
 import com.example.there.domain.usecases.spotify.GetFeaturedPlaylists
-import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.TopTrack
 import com.example.there.findclips.model.mappers.CategoryEntityMapper
 import com.example.there.findclips.model.mappers.PlaylistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
+import javax.inject.Inject
 
-class DashboardViewModel(getAccessToken: GetAccessToken,
-                         private val getFeaturedPlaylists: GetFeaturedPlaylists,
-                         private val getCategories: GetCategories,
-                         private val getDailyViralTracks: GetDailyViralTracks) : BaseSpotifyViewModel(getAccessToken) {
+class DashboardViewModel @Inject constructor(
+        getAccessToken: GetAccessToken,
+        private val getFeaturedPlaylists: GetFeaturedPlaylists,
+        private val getCategories: GetCategories,
+        private val getDailyViralTracks: GetDailyViralTracks
+) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: DashboardViewState = DashboardViewState()
 

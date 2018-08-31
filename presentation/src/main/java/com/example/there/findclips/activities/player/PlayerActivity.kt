@@ -16,13 +16,13 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.Keys
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseNetworkVMActivity
+import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.databinding.ActivityPlayerBinding
 import com.example.there.findclips.fragments.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragments.addvideo.AddVideoViewState
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.model.entities.VideoPlaylist
-import com.example.there.findclips.util.app
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.lists.OnVideoClickListener
@@ -33,10 +33,9 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import kotlinx.android.synthetic.main.activity_player.*
-import javax.inject.Inject
 
 
-class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitializedListener {
+class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitializedListener {
 
     private val intentVideo: Video by lazy { intent.getParcelableExtra<Video>(EXTRA_VIDEO) }
     private val intentOtherVideos: ArrayList<Video> by lazy { intent.getParcelableArrayListExtra<Video>(EXTRA_OTHER_VIDEOS) }
@@ -51,7 +50,8 @@ class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.O
     }
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
-        override fun onTabSelected(tab: TabLayout.Tab?) = viewModel.viewState.currentTabPosition.set(tab?.position ?: 0)
+        override fun onTabSelected(tab: TabLayout.Tab?) = viewModel.viewState.currentTabPosition.set(tab?.position
+                ?: 0)
     }
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
@@ -82,9 +82,21 @@ class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.O
         )
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                this,
+                viewModel.viewState.videos.isNotEmpty(),
+                player_root_layout,
+                ::loadData
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         initView()
+        lifecycle.addObserver(connectivityComponent)
+
         currentVideo = intentVideo
         viewModel.searchRelatedVideos(intentVideo.id)
     }
@@ -139,13 +151,6 @@ class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.O
         }
     }
 
-    override fun initComponent() = app.createPlayerSubComponent().inject(this)
-
-    override fun releaseComponent() = app.releasePlayerSubComponent()
-
-    @Inject
-    lateinit var factory: PlayerVMFactory
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(PlayerViewModel::class.java)
     }
@@ -176,9 +181,7 @@ class PlayerActivity : BaseNetworkVMActivity<PlayerViewModel>(), YouTubePlayer.O
         addVideoDialogFragment = null
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.viewState.videos.isNotEmpty()
-
-    override fun reloadData() = viewModel.searchRelatedVideos(currentVideo.id)
+    private fun loadData() = viewModel.searchRelatedVideos(currentVideo.id)
 
     companion object {
         private const val RECOVERY_DIALOG_REQUEST = 100

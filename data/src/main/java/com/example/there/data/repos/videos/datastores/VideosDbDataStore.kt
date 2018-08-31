@@ -9,9 +9,12 @@ import com.example.there.domain.entities.videos.VideoPlaylistEntity
 import com.example.there.domain.repos.videos.datastores.IVideosDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class VideosDbDataStore(private val videoDao: VideoDao,
-                        private val videoPlaylistDao: VideoPlaylistDao) : IVideosDbDataStore {
+class VideosDbDataStore @Inject constructor(
+        private val videoDao: VideoDao,
+        private val videoPlaylistDao: VideoPlaylistDao
+) : IVideosDbDataStore {
 
     override fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>> =
             videoPlaylistDao.findAll().map { it.map(VideoPlaylistMapper::mapFrom) }
@@ -19,9 +22,9 @@ class VideosDbDataStore(private val videoDao: VideoDao,
     override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> =
             videoDao.findVideosFromPlaylist(playlistId).map { it.map(VideoDbMapper::mapFrom) }
 
-    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable({
+    override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable {
         videoPlaylistDao.insert(VideoPlaylistMapper.mapBack(playlistEntity))
-    })
+    }
 
     override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable = Completable.fromCallable {
         videoEntity.playlistId = playlistEntity.id

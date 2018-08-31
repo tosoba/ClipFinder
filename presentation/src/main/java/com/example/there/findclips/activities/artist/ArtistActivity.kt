@@ -11,16 +11,15 @@ import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseSpotifyVMActivity
+import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityArtistBinding
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.activity_artist.*
-import javax.inject.Inject
 
 class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
@@ -57,10 +56,23 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
                 relatedArtistsAdapter = relatedArtistsAdapter)
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                this,
+                viewModel.viewState.albums.isNotEmpty() &&
+                        viewModel.viewState.artist.get() != null &&
+                        viewModel.viewState.topTracks.isNotEmpty() &&
+                        viewModel.viewState.topTracks.isNotEmpty(),
+                artist_root_layout,
+                ::loadData
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initView()
+        lifecycle.addObserver(connectivityComponent)
         initToolbar()
 
         if (savedInstanceState == null) {
@@ -87,27 +99,11 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         title = intentArtist.name
     }
 
-    override fun initComponent() {
-        app.createArtistSubComponent().inject(this)
-    }
-
-    override fun releaseComponent() {
-        app.releaseArtistSubComponent()
-    }
-
-    @Inject
-    lateinit var factory: ArtistVMFactory
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.viewState.albums.isNotEmpty() &&
-            viewModel.viewState.artist.get() != null &&
-            viewModel.viewState.topTracks.isNotEmpty() &&
-            viewModel.viewState.topTracks.isNotEmpty()
-
-    override fun reloadData() = viewModel.loadArtistData(accessToken, intentArtist)
+    private fun loadData() = viewModel.loadArtistData(accessToken, intentArtist)
 
     companion object {
         private const val EXTRA_ARTIST = "EXTRA_ARTIST"

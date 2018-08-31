@@ -10,16 +10,14 @@ import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseVMActivity
+import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.databinding.ActivityTrackVideosBinding
 import com.example.there.findclips.fragments.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragments.track.TrackFragment
 import com.example.there.findclips.model.entities.Track
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.activity_track_videos.*
-import javax.inject.Inject
 
 
 class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChangeListener {
@@ -55,7 +53,10 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
 
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
         TrackVideosPagerAdapter(manager = supportFragmentManager,
-                fragments = arrayOf(VideosSearchFragment.newInstanceWithQuery(intentTrack.query), TrackFragment.newInstanceWithTrack(intentTrack)))
+                fragments = arrayOf(
+                        VideosSearchFragment.newInstanceWithQuery(intentTrack.query),
+                        TrackFragment.newInstanceWithTrack(intentTrack))
+        )
     }
 
     private val onFavouriteBtnClickListener = View.OnClickListener {
@@ -93,13 +94,6 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
         track_videos_toolbar?.setNavigationOnClickListener { super.onBackPressed() }
         title = viewModel.viewState.track.get()?.name ?: intentTrack.name
     }
-
-    override fun initComponent() = app.createTrackVideosSubComponent().inject(this)
-
-    override fun releaseComponent() = app.releaseTrackVideosSubComponent()
-
-    @Inject
-    lateinit var factory: TrackVideosVMFactory
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(TrackVideosViewModel::class.java)

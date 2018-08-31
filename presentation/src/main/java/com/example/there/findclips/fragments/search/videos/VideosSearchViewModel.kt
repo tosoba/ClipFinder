@@ -4,14 +4,17 @@ import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.usecases.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecases.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecases.videos.SearchVideos
-import com.example.there.findclips.base.BaseVideosViewModel
+import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.model.mappers.VideoEntityMapper
 import com.example.there.findclips.model.mappers.VideoPlaylistEntityMapper
+import javax.inject.Inject
 
-class VideosSearchViewModel(private val searchVideos: SearchVideos,
-                            getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
-                            private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist) : BaseVideosViewModel(getChannelsThumbnailUrls) {
+class VideosSearchViewModel @Inject constructor(
+        private val searchVideos: SearchVideos,
+        getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
+        private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist
+) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 

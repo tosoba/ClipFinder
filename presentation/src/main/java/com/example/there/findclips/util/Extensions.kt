@@ -4,8 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.databinding.ObservableArrayList
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
+import android.util.DisplayMetrics
 import android.view.WindowManager
+import android.widget.FrameLayout
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.activities.main.MainActivity
@@ -113,3 +118,18 @@ fun <T> ObservableArrayList<T>.addAllIfNotContains(newItems: List<T>) {
         }
     }
 }
+
+fun Snackbar.showSnackbarWithBottomMargin(marginBottom: Int) {
+    val params = view.layoutParams as FrameLayout.LayoutParams
+    params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, params.bottomMargin + marginBottom)
+    view.layoutParams = params
+    show()
+}
+
+fun Context.dpToPx(dp: Float): Float {
+    val metrics = resources.displayMetrics
+    return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun Activity.registerFragmentLifecycleCallbacks(callbacks: FragmentManager.FragmentLifecycleCallbacks, recursive: Boolean) =
+        (this as? FragmentActivity)?.supportFragmentManager?.registerFragmentLifecycleCallbacks(callbacks, recursive)

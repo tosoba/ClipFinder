@@ -1,18 +1,12 @@
 package com.example.there.findclips.di.modules
 
+import android.app.Application
 import android.content.Context
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
 
 @Module
-class AppModule(context: Context) {
-
-    private val appContext = context.applicationContext
-
-    @Singleton
-    @Provides
-    fun provideAppContext(): Context {
-        return appContext
-    }
+abstract class AppModule {
+    @Binds
+    abstract fun bindContext(application: Application): Context
 }

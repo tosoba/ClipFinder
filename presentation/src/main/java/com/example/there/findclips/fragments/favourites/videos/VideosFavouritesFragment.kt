@@ -10,17 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.model.entities.VideoPlaylist
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.lists.OnVideoPlaylistClickListener
 import com.example.there.findclips.view.lists.VideoPlaylistsList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import javax.inject.Inject
 
 
-class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>() {
+class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), Injectable {
 
     private val onPlaylistClickListener = object : OnVideoPlaylistClickListener {
         override fun onClick(item: VideoPlaylist) = Router.goToVideoPlaylistActivity(activity, videoPlaylist = item)
@@ -46,18 +45,7 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>() {
         viewModel.loadVideoPlaylists()
     }
 
-    override fun initComponent() {
-        activity?.app?.createFavouritesVideosComponent()?.inject(this)
-    }
-
-    @Inject
-    lateinit var vmFactory: VideosFavouritesVMFactory
-
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, vmFactory).get(VideosFavouritesViewModel::class.java)
-    }
-
-    override fun releaseComponent() {
-        activity?.app?.releaseFavouritesVideosComponent()
+        viewModel = ViewModelProviders.of(this, factory).get(VideosFavouritesViewModel::class.java)
     }
 }

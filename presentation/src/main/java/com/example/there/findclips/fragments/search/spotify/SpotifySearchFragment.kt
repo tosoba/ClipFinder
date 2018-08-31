@@ -9,19 +9,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragments.lists.*
 import com.example.there.findclips.fragments.search.MainSearchFragment
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
-import javax.inject.Inject
 
 
-class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainSearchFragment {
+class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainSearchFragment, Injectable {
 
     override var query: String = ""
         set(value) {
@@ -30,9 +30,6 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
             viewModel.searchAll(activity?.accessToken, query)
             viewModel.viewState.clearAll()
         }
-
-    @Inject
-    lateinit var spotifySearchVMFactory: SpotifySearchVMFactory
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -88,22 +85,28 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         return binding.root
     }
 
-    override fun initComponent() {
-        activity?.app?.createSpotifySearchComponent()?.inject(this)
-    }
-
-    override fun releaseComponent() {
-        activity?.app?.releaseSpotifySearchComponent()
-    }
-
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, spotifySearchVMFactory).get(SpotifySearchViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(SpotifySearchViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.viewState.albums.isNotEmpty() &&
-            viewModel.viewState.artists.isNotEmpty() &&
-            viewModel.viewState.playlists.isNotEmpty() &&
-            viewModel.viewState.tracks.isNotEmpty()
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                activity!!,
+                query == "" ||
+                        (viewModel.viewState.albums.isNotEmpty() &&
+                        viewModel.viewState.artists.isNotEmpty() &&
+                        viewModel.viewState.playlists.isNotEmpty() &&
+                        viewModel.viewState.tracks.isNotEmpty()),
+                spotify_search_root_layout,
+                ::loadData,
+                true
+        )
+    }
 
-    override fun reloadData() = viewModel.searchAll(activity?.accessToken, query)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lifecycle.addObserver(connectivityComponent)
+    }
+
+    private fun loadData() = viewModel.searchAll(activity?.accessToken, query)
 }

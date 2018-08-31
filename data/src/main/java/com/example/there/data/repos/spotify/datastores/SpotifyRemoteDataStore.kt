@@ -11,10 +11,13 @@ import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import javax.inject.Inject
 
-class SpotifyRemoteDataStore(private val api: SpotifyApi,
-                             private val accountsApi: SpotifyAccountsApi,
-                             private val chartsApi: SpotifyChartsApi) : ISpotifyRemoteDataStore {
+class SpotifyRemoteDataStore @Inject constructor(
+        private val api: SpotifyApi,
+        private val accountsApi: SpotifyAccountsApi,
+        private val chartsApi: SpotifyChartsApi
+) : ISpotifyRemoteDataStore {
 
     override fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> =
             accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret)).map(AccessTokenMapper::mapFrom)

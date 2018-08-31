@@ -1,11 +1,7 @@
 package com.example.there.findclips.di.modules
 
-import android.app.Application
 import android.arch.persistence.room.Room
-import com.example.there.data.apis.spotify.SpotifyAccountsApi
-import com.example.there.data.apis.spotify.SpotifyApi
-import com.example.there.data.apis.spotify.SpotifyChartsApi
-import com.example.there.data.apis.youtube.YoutubeApi
+import android.content.Context
 import com.example.there.data.db.*
 import com.example.there.data.repos.spotify.SpotifyRepository
 import com.example.there.data.repos.spotify.datastores.SpotifyDbDataStore
@@ -19,77 +15,67 @@ import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import com.example.there.domain.repos.videos.IVideosRepository
 import com.example.there.domain.repos.videos.datastores.IVideosDbDataStore
 import com.example.there.domain.repos.videos.datastores.IVideosRemoteDataStore
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
-class DataModule(app: Application) {
+abstract class DataModule {
 
-    private val database: FindClipsDb = Room.databaseBuilder(app.applicationContext, FindClipsDb::class.java, "FindClipsDb.db").build()
+    @Module
+    companion object {
 
-    @Provides
-    @Singleton
-    fun database(): FindClipsDb = database
+        @Provides
+        @JvmStatic
+        fun database(
+                context: Context
+        ): FindClipsDb = Room.databaseBuilder(context, FindClipsDb::class.java, "FindClipsDb.db")
+                .build()
 
-    @Provides
-    @Singleton
-    fun albumDao(): AlbumDao = database.albumDao()
+        @Provides
+        @JvmStatic
+        fun albumDao(database: FindClipsDb): AlbumDao = database.albumDao()
 
-    @Provides
-    @Singleton
-    fun artistDao(): ArtistDao = database.artistDao()
+        @Provides
+        @JvmStatic
+        fun artistDao(database: FindClipsDb): ArtistDao = database.artistDao()
 
-    @Provides
-    @Singleton
-    fun categoryDao(): CategoryDao = database.categoryDao()
+        @Provides
+        @JvmStatic
+        fun categoryDao(database: FindClipsDb): CategoryDao = database.categoryDao()
 
-    @Provides
-    fun spotifyPlaylistDao(): SpotifyPlaylistDao = database.spotifyPlaylistDao()
+        @Provides
+        @JvmStatic
+        fun spotifyPlaylistDao(database: FindClipsDb): SpotifyPlaylistDao = database.spotifyPlaylistDao()
 
-    @Provides
-    @Singleton
-    fun trackDao(): TrackDao = database.trackDao()
+        @Provides
+        @JvmStatic
+        fun trackDao(database: FindClipsDb): TrackDao = database.trackDao()
 
-    @Provides
-    @Singleton
-    fun videoDao(): VideoDao = database.videoDao()
+        @Provides
+        @JvmStatic
+        fun videoDao(database: FindClipsDb): VideoDao = database.videoDao()
 
-    @Provides
-    @Singleton
-    fun videoPlaylistDao(): VideoPlaylistDao = database.videoPlaylistDao()
+        @Provides
+        @JvmStatic
+        fun videoPlaylistDao(database: FindClipsDb): VideoPlaylistDao = database.videoPlaylistDao()
+    }
 
-    @Provides
-    @Singleton
-    fun spotifyRemoteDataStore(api: SpotifyApi,
-                               accountsApi: SpotifyAccountsApi,
-                               chartsApi: SpotifyChartsApi): ISpotifyRemoteDataStore = SpotifyRemoteDataStore(api, accountsApi, chartsApi)
+    @Binds
+    abstract fun spotifyRemoteDataStore(ds: SpotifyRemoteDataStore): ISpotifyRemoteDataStore
 
-    @Provides
-    @Singleton
-    fun spotifyDbDataStore(albumDao: AlbumDao,
-                           artistDao: ArtistDao,
-                           categoryDao: CategoryDao,
-                           spotifyPlaylistDao: SpotifyPlaylistDao,
-                           trackDao: TrackDao): ISpotifyDbDataStore =
-            SpotifyDbDataStore(albumDao, artistDao, categoryDao, spotifyPlaylistDao, trackDao)
+    @Binds
+    abstract fun spotifyDbDataStore(ds: SpotifyDbDataStore): ISpotifyDbDataStore
 
-    @Provides
-    @Singleton
-    fun spotifyRepository(remoteDataStore: ISpotifyRemoteDataStore,
-                          dbDataStore: ISpotifyDbDataStore): ISpotifyRepository = SpotifyRepository(remoteDataStore, dbDataStore)
+    @Binds
+    abstract fun spotifyRepository(repo: SpotifyRepository): ISpotifyRepository
 
-    @Provides
-    @Singleton
-    fun videosRemoteDataStore(api: YoutubeApi): IVideosRemoteDataStore = VideosRemoteDataStore(api)
+    @Binds
+    abstract fun videosRemoteDataStore(ds: VideosRemoteDataStore): IVideosRemoteDataStore
 
-    @Provides
-    @Singleton
-    fun videosDbDataStore(videoDao: VideoDao,
-                          videoPlaylistDao: VideoPlaylistDao): IVideosDbDataStore = VideosDbDataStore(videoDao, videoPlaylistDao)
+    @Binds
+    abstract fun videosDbDataStore(ds: VideosDbDataStore): IVideosDbDataStore
 
-    @Provides
-    @Singleton
-    fun videosRepository(remoteDataStore: IVideosRemoteDataStore,
-                         dbDataStore: IVideosDbDataStore): IVideosRepository = VideosRepository(remoteDataStore, dbDataStore)
+    @Binds
+    abstract fun videosRepository(repo: VideosRepository): IVideosRepository
 }

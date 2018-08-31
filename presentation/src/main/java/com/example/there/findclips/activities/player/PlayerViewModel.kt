@@ -1,17 +1,20 @@
 package com.example.there.findclips.activities.player
 
 import com.example.there.domain.usecases.videos.*
-import com.example.there.findclips.base.BaseVideosViewModel
+import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.model.mappers.VideoEntityMapper
 import com.example.there.findclips.model.mappers.VideoPlaylistEntityMapper
+import javax.inject.Inject
 
-class PlayerViewModel(private val searchRelatedVideos: SearchRelatedVideos,
-                      getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
-                      private val insertVideoPlaylist: InsertVideoPlaylist,
-                      private val addVideoToPlaylist: AddVideoToPlaylist,
-                      private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists) : BaseVideosViewModel(getChannelsThumbnailUrls) {
+class PlayerViewModel @Inject constructor(
+        private val searchRelatedVideos: SearchRelatedVideos,
+        getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
+        private val insertVideoPlaylist: InsertVideoPlaylist,
+        private val addVideoToPlaylist: AddVideoToPlaylist,
+        private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
+) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     private var lastSearchVideoId: String? = null
     private var lastSearchRelatedNextPageToken: String? = null

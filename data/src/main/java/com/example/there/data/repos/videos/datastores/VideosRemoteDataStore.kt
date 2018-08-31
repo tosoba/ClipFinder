@@ -6,8 +6,11 @@ import com.example.there.data.mappers.videos.VideoMapper
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.repos.videos.datastores.IVideosRemoteDataStore
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class VideosRemoteDataStore(private val api: YoutubeApi) : IVideosRemoteDataStore {
+class VideosRemoteDataStore @Inject constructor(
+        private val api: YoutubeApi
+) : IVideosRemoteDataStore {
 
     override fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Observable<List<String>> {
         return Observable.fromIterable(videos.chunked(50)

@@ -11,20 +11,19 @@ import android.view.View
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
-import com.example.there.findclips.base.BaseSpotifyVMActivity
+import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
 import com.example.there.findclips.databinding.ActivityAlbumBinding
+import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.app
 import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener
 import com.example.there.findclips.view.lists.TracksPopularityList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.activity_album.*
-import javax.inject.Inject
 
 class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
 
@@ -54,15 +53,24 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
                 separatorDecoration = SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f))
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                this,
+                viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty(),
+                album_root_layout,
+                ::loadData
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initView()
+        lifecycle.addObserver(connectivityComponent)
         initToolbar()
 
-        if (savedInstanceState == null) {
-            viewModel.loadAlbumData(accessToken, album)
-        }
+        if (savedInstanceState == null)
+            loadData()
     }
 
     private fun initView() {
@@ -82,20 +90,11 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
         title = album.name
     }
 
-    override fun initComponent() = app.createAlbumSubComponent().inject(this)
-
-    override fun releaseComponent() = app.releaseAlbumSubComponent()
-
-    @Inject
-    lateinit var factory: AlbumVMFactory
-
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(AlbumViewModel::class.java)
     }
 
-    override fun isDataLoaded(): Boolean = viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty()
-
-    override fun reloadData() = viewModel.loadAlbumData(accessToken, album)
+    private fun loadData() = viewModel.loadAlbumData(accessToken, album)
 
     companion object {
         private const val EXTRA_ALBUM = "EXTRA_ALBUM"

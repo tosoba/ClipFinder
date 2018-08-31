@@ -6,15 +6,18 @@ import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistTracks
 import com.example.there.domain.usecases.spotify.InsertSpotifyPlaylist
-import com.example.there.findclips.base.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseSpotifyViewModel
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.model.mappers.PlaylistEntityMapper
 import com.example.there.findclips.model.mappers.TrackEntityMapper
+import javax.inject.Inject
 
-class PlaylistViewModel(getAccessToken: GetAccessToken,
-                        private val getPlaylistTracks: GetPlaylistTracks,
-                        private val insertSpotifyPlaylist: InsertSpotifyPlaylist) : BaseSpotifyViewModel(getAccessToken) {
+class PlaylistViewModel @Inject constructor(
+        getAccessToken: GetAccessToken,
+        private val getPlaylistTracks: GetPlaylistTracks,
+        private val insertSpotifyPlaylist: InsertSpotifyPlaylist
+) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: PlaylistViewState = PlaylistViewState()
 

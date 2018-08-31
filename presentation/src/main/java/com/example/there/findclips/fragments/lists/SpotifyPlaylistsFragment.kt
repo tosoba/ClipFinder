@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.Router
+import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyPlaylistsBinding
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.util.screenOrientation
@@ -16,7 +17,7 @@ import com.example.there.findclips.view.lists.OnPlaylistClickListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 
 
-class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
+class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
     private val onPlaylistClickListener = object : OnPlaylistClickListener {
         override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)
@@ -43,12 +44,12 @@ class SpotifyPlaylistsFragment : BaseSpotifyFragment<Playlist>() {
         }.root
     }
 
-    data class View(val state: BaseSpotifyFragment.ViewState<Playlist>,
+    data class View(val state: BaseSpotifyListFragment.ViewState<Playlist>,
                     val adapter: GridPlaylistsList.Adapter)
 
     companion object {
         fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyPlaylistsFragment().apply {
-            BaseSpotifyFragment.putArguments(this, mainHintText, additionalHintText)
+            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
         }
     }
 }
