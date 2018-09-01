@@ -31,16 +31,13 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
 
     private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            tab?.let {
-                track_videos_viewpager?.currentItem = it.position
-            }
+            tab?.let { track_videos_viewpager?.currentItem = it.position }
         }
     }
 
     override fun onTrackChanged(newTrack: Track) {
+        viewModel.updateState(newTrack)
         updateCurrentFragment(newTrack)
-        view.state.track.set(newTrack)
-        track_videos_toolbar_layout?.title = newTrack.name
     }
 
     private fun updateCurrentFragment(newTrack: Track) {
@@ -52,10 +49,12 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
     }
 
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
-        TrackVideosPagerAdapter(manager = supportFragmentManager,
+        TrackVideosPagerAdapter(
+                manager = supportFragmentManager,
                 fragments = arrayOf(
                         VideosSearchFragment.newInstanceWithQuery(intentTrack.query),
-                        TrackFragment.newInstanceWithTrack(intentTrack))
+                        TrackFragment.newInstanceWithTrack(intentTrack)
+                )
         )
     }
 
@@ -82,17 +81,25 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
         val binding: ActivityTrackVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_track_videos)
         binding.view = view
         binding.trackVideosViewpager.offscreenPageLimit = 1
-        if (savedInstanceState == null) {
-            viewModel.viewState.track.set(intentTrack)
-        }
         initToolbar()
+
+        if (savedInstanceState == null)
+            viewModel.updateState(intentTrack)
+
     }
 
     private fun initToolbar() {
         setSupportActionBar(track_videos_toolbar)
         track_videos_toolbar?.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        track_videos_toolbar?.setNavigationOnClickListener { super.onBackPressed() }
-        title = viewModel.viewState.track.get()?.name ?: intentTrack.name
+        track_videos_toolbar?.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    override fun onBackPressed() {
+        if (!viewModel.onBackPressed()) {
+            super.onBackPressed()
+        } else {
+            updateCurrentFragment(viewModel.viewState.track.get()!!)
+        }
     }
 
     override fun initViewModel() {

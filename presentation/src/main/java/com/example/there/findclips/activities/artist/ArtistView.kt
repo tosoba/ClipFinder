@@ -26,4 +26,10 @@ data class ArtistViewState(
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val relatedArtistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
-)
+) {
+    fun clearAll() {
+        albums.clear()
+        topTracks.clear()
+        relatedArtists.clear()
+    }
+}

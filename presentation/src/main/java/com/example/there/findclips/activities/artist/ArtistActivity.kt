@@ -39,21 +39,21 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
-            override fun onClick(item: Artist) {
-                viewModel.viewState.artist.set(item)
-                viewModel.loadArtistData(accessToken, artist = item)
-            }
+            override fun onClick(item: Artist) = viewModel.loadArtistData(accessToken, artist = item)
         })
     }
 
     private val view: ArtistView by lazy {
-        ArtistView(state = viewModel.viewState,
+        ArtistView(
+                state = viewModel.viewState,
                 onFavouriteBtnClickListener = View.OnClickListener {
+                    viewModel.addFavouriteArtist()
                     Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
                 albumsAdapter = albumsAdapter,
                 topTracksAdapter = topTracksAdapter,
-                relatedArtistsAdapter = relatedArtistsAdapter)
+                relatedArtistsAdapter = relatedArtistsAdapter
+        )
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
@@ -76,7 +76,6 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         initToolbar()
 
         if (savedInstanceState == null) {
-            viewModel.viewState.artist.set(intentArtist)
             viewModel.loadArtistData(accessToken, intentArtist)
         }
     }
@@ -86,17 +85,24 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         binding.apply {
             this.view = this@ArtistActivity.view
             artistContent?.view = view
-            artistContent?.artistAlbumsRecyclerView?.layoutManager = GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
-            artistContent?.artistTopTracksRecyclerView?.layoutManager = GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
-            artistContent?.artistRelatedArtistsRecyclerView?.layoutManager = GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
+            artistContent?.artistAlbumsRecyclerView?.layoutManager =
+                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
+            artistContent?.artistTopTracksRecyclerView?.layoutManager =
+                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
+            artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
+                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
         }
+    }
+
+    override fun onBackPressed() {
+        if (!viewModel.onBackPressed())
+            super.onBackPressed()
     }
 
     private fun initToolbar() {
         setSupportActionBar(artist_toolbar)
         artist_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        artist_toolbar.setNavigationOnClickListener { super.onBackPressed() }
-        title = intentArtist.name
+        artist_toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     override fun initViewModel() {

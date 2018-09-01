@@ -11,10 +11,10 @@
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/artist_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:id="@+id/artist_root_layout"
         tools:context=".activities.artist.ArtistActivity">
 
         <android.support.design.widget.AppBarLayout
@@ -32,6 +32,7 @@
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:title="@{view.state.artist.name}"
                 app:toolbarId="@+id/artist_toolbar">
 
                 <ImageView
