@@ -5,7 +5,7 @@ import android.util.Log
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.findclips.SpotifyClient
-import com.example.there.findclips.util.messageOrDefault
+import com.example.there.findclips.util.ext.messageOrDefault
 import retrofit2.HttpException
 
 open class BaseSpotifyViewModel(private val getAccessToken: GetAccessToken) : BaseViewModel() {

@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.di.vm.ViewModelFactory
-import com.example.there.findclips.util.messageOrDefault
+import com.example.there.findclips.util.ext.messageOrDefault
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector

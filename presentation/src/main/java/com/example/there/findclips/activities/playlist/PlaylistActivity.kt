@@ -15,7 +15,7 @@ import com.example.there.findclips.databinding.ActivityPlaylistBinding
 import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Playlist
-import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.ext.accessToken
 import kotlinx.android.synthetic.main.activity_playlist.*
 
 class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {

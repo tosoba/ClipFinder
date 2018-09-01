@@ -2,7 +2,7 @@ package com.example.there.findclips.model.entities
 
 import android.annotation.SuppressLint
 import android.databinding.ObservableField
-import com.example.there.findclips.util.*
+import com.example.there.findclips.util.ext.*
 import io.mironov.smuggler.AutoParcelable
 import org.joda.time.Instant
 import java.math.BigInteger

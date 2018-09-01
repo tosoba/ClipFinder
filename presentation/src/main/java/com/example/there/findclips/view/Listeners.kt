@@ -9,7 +9,7 @@ import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
-import com.example.there.findclips.util.messageOrDefault
+import com.example.there.findclips.util.ext.messageOrDefault
 
 
 interface OnTabSelectedListener : TabLayout.OnTabSelectedListener {

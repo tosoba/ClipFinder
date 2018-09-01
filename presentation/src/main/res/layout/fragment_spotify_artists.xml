@@ -20,6 +20,7 @@
             itemDecoration="@{view.itemDecoration}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="5dp"
             android:adapter="@{view.adapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

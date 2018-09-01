@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragments.lists
 
-import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -12,8 +11,7 @@ import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyPlaylistsBinding
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.util.putArguments
-import com.example.there.findclips.util.screenOrientation
+import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.GridPlaylistsList
 import com.example.there.findclips.view.lists.OnPlaylistClickListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
@@ -43,15 +41,14 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
         val binding: FragmentSpotifyPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_playlists, container, false)
         return binding.apply {
             view = this@SpotifyPlaylistsFragment.view
-
-            val columnCount = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
-            playlistsRecyclerView.layoutManager = GridLayoutManager(context, columnCount, GridLayoutManager.VERTICAL, false)
-            playlistsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
-                    .inflate(R.layout.playlists_header)
-                    .parallax(1f)
-                    .dropShadowDp(2)
-                    .columns(columnCount)
-                    .build())
+            playlistsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+            if (viewState.shouldShowHeader)
+                playlistsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
+                        .inflate(R.layout.playlists_header)
+                        .parallax(1f)
+                        .dropShadowDp(2)
+                        .columns(listColumnCount)
+                        .build())
         }.root
     }
 
@@ -62,9 +59,10 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
         fun newInstance(
                 mainHintText: String,
                 additionalHintText: String,
-                items: ArrayList<Playlist>?
+                items: ArrayList<Playlist>?,
+                shouldShowHeader: Boolean = false
         ) = SpotifyPlaylistsFragment().apply {
-            putArguments(mainHintText, additionalHintText, items)
+            putArguments(mainHintText, additionalHintText, items, shouldShowHeader)
         }
     }
 }

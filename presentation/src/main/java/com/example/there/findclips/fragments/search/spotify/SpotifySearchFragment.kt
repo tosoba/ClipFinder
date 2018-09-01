@@ -18,10 +18,10 @@ import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
 import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.viewpager.SpotifyFragmentPagerAdapter
+import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
+import com.example.there.findclips.view.viewpager.adapter.SpotifyFragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 
@@ -44,7 +44,6 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_tab_layout?.getTabAt(position)?.select()
-            updateCurrentFragment()
         }
     }
 
@@ -70,22 +69,38 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                         getString(R.string.no_albums_loaded_yet),
                         getString(R.string.search_for_some),
                         viewModel.viewState.albums
-                ),
+                ).apply {
+                    refresh = { fragment ->
+                        fragment.updateItems(viewModel.viewState.albums)
+                    }
+                },
                 SpotifyArtistsFragment.newInstance(
                         getString(R.string.no_artists_loaded_yet),
                         getString(R.string.search_for_some),
                         viewModel.viewState.artists
-                ),
+                ).apply {
+                    refresh = { fragment ->
+                        fragment.updateItems(viewModel.viewState.artists)
+                    }
+                },
                 SpotifyPlaylistsFragment.newInstance(
                         getString(R.string.no_playlists_loaded_yet),
                         getString(R.string.search_for_some),
                         viewModel.viewState.playlists
-                ),
+                ).apply {
+                    refresh = { fragment ->
+                        fragment.updateItems(viewModel.viewState.playlists)
+                    }
+                },
                 SpotifyTracksFragment.newInstance(
                         getString(R.string.no_tracks_loaded_yet),
                         getString(R.string.search_for_some),
                         viewModel.viewState.tracks
-                )
+                ).apply {
+                    refresh = { fragment ->
+                        fragment.updateItems(viewModel.viewState.tracks)
+                    }
+                }
         ))
     }
 

@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.ActivityMainBinding
-import com.example.there.findclips.util.checkItem
+import com.example.there.findclips.util.ext.checkItem
 import com.example.there.findclips.view.OnPageChangeListener
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

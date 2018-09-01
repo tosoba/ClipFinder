@@ -17,8 +17,8 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.TopTrack
-import com.example.there.findclips.util.accessToken
-import com.example.there.findclips.util.mainActivity
+import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 

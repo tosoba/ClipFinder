@@ -34,10 +34,10 @@ class SpotifySearchViewModel @Inject constructor(
         addDisposable(searchSpotify.execute(accessTokenEntity, query)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribe({
-                    viewState.addAlbumsSorted(it.albums.map(AlbumEntityMapper::mapFrom))
-                    viewState.addArtistsSorted(it.artists.map(ArtistEntityMapper::mapFrom))
-                    viewState.addPlaylistsSorted(it.playlists.map(PlaylistEntityMapper::mapFrom))
-                    viewState.addTracksSorted(it.tracks.map(TrackEntityMapper::mapFrom))
+                    viewState.albums.addAll(it.albums.map(AlbumEntityMapper::mapFrom))
+                    viewState.artists.addAll(it.artists.map(ArtistEntityMapper::mapFrom))
+                    viewState.playlists.addAll(it.playlists.map(PlaylistEntityMapper::mapFrom))
+                    viewState.tracks.addAll(it.tracks.map(TrackEntityMapper::mapFrom))
                     loadedFlag.value = Unit
                 }, this::onError))
     }

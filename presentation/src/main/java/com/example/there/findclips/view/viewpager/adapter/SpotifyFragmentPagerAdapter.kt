@@ -1,10 +1,10 @@
-package com.example.there.findclips.fragments.favourites
+package com.example.there.findclips.view.viewpager.adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.example.there.findclips.view.viewpager.adapter.CurrentFragmentStatePagerAdapter
 
-class FavouritesFragmentPagerAdapter(
+
+class SpotifyFragmentPagerAdapter(
         fragmentManager: FragmentManager,
         private val fragments: Array<Fragment>
 ) : CurrentFragmentStatePagerAdapter(fragmentManager) {

@@ -15,7 +15,7 @@ import com.example.there.findclips.databinding.ActivityCategoryBinding
 import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Category
-import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.ext.accessToken
 import kotlinx.android.synthetic.main.activity_category.*
 
 class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {

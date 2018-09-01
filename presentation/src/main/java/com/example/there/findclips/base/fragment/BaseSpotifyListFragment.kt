@@ -1,6 +1,7 @@
 package com.example.there.findclips.base.fragment
 
 import android.content.Context
+import android.content.res.Configuration
 import android.databinding.ObservableField
 import android.os.Bundle
 import android.os.Parcelable
@@ -8,10 +9,14 @@ import android.support.v4.app.Fragment
 import android.util.AttributeSet
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.ext.screenOrientation
 
 abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     var refresh: ((BaseSpotifyListFragment<T>) -> Unit)? = null
+
+    protected val listColumnCount: Int
+        get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
@@ -29,7 +34,8 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
     data class ViewState<T : Parcelable>(
             val items: ObservableSortedList<T>,
             val mainHintText: ObservableField<String> = ObservableField(""),
-            val additionalHintText: ObservableField<String> = ObservableField("")
+            val additionalHintText: ObservableField<String> = ObservableField(""),
+            var shouldShowHeader: Boolean = false
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +44,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         initFromArguments()
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SAVED_ITEMS)) {
-            viewState.items.addAll(savedInstanceState.getParcelableArrayList(KEY_SAVED_ITEMS))
+            updateItems(savedInstanceState.getParcelableArrayList(KEY_SAVED_ITEMS))
         }
     }
 
@@ -47,6 +53,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
             viewState.mainHintText.set(it.getString(EXTRA_MAIN_HINT))
             viewState.additionalHintText.set(it.getString(EXTRA_ADDITIONAL_HINT))
             if (it.containsKey(EXTRA_ITEMS)) updateItems(it.getParcelableArrayList(EXTRA_ITEMS))
+            viewState.shouldShowHeader = it.getBoolean(EXTRA_SHOULD_SHOW_HEADER)
         }
     }
 
@@ -54,7 +61,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         super.onSaveInstanceState(outState)
         if (viewState.items.isNotEmpty()) {
             outState.putParcelableArrayList(KEY_SAVED_ITEMS, ArrayList<T>(viewState.items.size).apply {
-                updateItems(viewState.items)
+                addAll(viewState.items)
             })
         }
     }
@@ -69,6 +76,9 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         attributes?.getText(R.styleable.BaseSpotifyListFragment_additional_hint_text)?.let {
             viewState.additionalHintText.set(it.toString())
         }
+        attributes?.getBoolean(R.styleable.BaseSpotifyListFragment_should_show_header, false)?.let {
+            viewState.shouldShowHeader = it
+        }
         attributes?.recycle()
     }
 
@@ -78,5 +88,6 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         const val EXTRA_MAIN_HINT = "EXTRA_MAIN_HINT"
         const val EXTRA_ADDITIONAL_HINT = "EXTRA_ADDITIONAL_HINT"
         const val EXTRA_ITEMS = "EXTRA_ITEMS"
+        const val EXTRA_SHOULD_SHOW_HEADER = "SHOULD_SHOW_HEADER"
     }
 }

@@ -23,7 +23,7 @@ import com.example.there.findclips.fragments.addvideo.AddVideoViewState
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.model.entities.VideoPlaylist
-import com.example.there.findclips.util.screenOrientation
+import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.lists.OnVideoClickListener
 import com.example.there.findclips.view.lists.RelatedVideosList

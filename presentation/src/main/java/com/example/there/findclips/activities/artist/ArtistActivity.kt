@@ -17,7 +17,7 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
-import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.activity_artist.*
 

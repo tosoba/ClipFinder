@@ -13,9 +13,9 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifyFavouritesBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragments.lists.*
-import com.example.there.findclips.util.viewpager.SpotifyFragmentPagerAdapter
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
+import com.example.there.findclips.view.viewpager.adapter.SpotifyFragmentPagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 

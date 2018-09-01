@@ -17,7 +17,7 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
-import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener

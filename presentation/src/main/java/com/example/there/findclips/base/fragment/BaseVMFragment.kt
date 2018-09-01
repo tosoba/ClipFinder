@@ -7,7 +7,7 @@ import android.widget.Toast
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.di.vm.ViewModelFactory
-import com.example.there.findclips.util.messageOrDefault
+import com.example.there.findclips.util.ext.messageOrDefault
 import javax.inject.Inject
 
 abstract class BaseVMFragment<T : BaseViewModel> : Fragment(), Injectable {

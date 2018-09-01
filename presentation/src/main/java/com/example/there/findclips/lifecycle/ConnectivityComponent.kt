@@ -11,8 +11,8 @@ import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
 import com.example.there.findclips.R
-import com.example.there.findclips.util.dpToPx
-import com.example.there.findclips.util.showSnackbarWithBottomMargin
+import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.showSnackbarWithBottomMargin
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
