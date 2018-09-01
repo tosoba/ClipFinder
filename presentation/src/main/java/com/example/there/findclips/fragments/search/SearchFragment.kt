@@ -1,5 +1,7 @@
 package com.example.there.findclips.fragments.search
 
+import android.app.SearchManager
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -39,6 +41,8 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private var searchViewMenuItem: MenuItem? = null
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         fun initSpinner(menu: Menu?) {
             val spinnerItem = menu?.findItem(R.id.spinner_menu_item)
@@ -52,33 +56,21 @@ class SearchFragment : Fragment() {
         }
 
         fun initSearchView(menu: Menu?) {
-            val searchViewItem = menu?.findItem(R.id.search_view_menu_item)
-            val searchView = searchViewItem?.actionView as? SearchView
-
-            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    if (!searchView.isIconified) {
-                        searchView.isIconified = true
-                    }
-                    searchViewItem.collapseActionView()
-
-                    search(query)
-
-                    return false
-                }
-
-                override fun onQueryTextChange(s: String): Boolean = true
-
-                fun search(query: String) {
-                    (pagerAdapter.currentFragment as? MainSearchFragment)?.query = query
-                }
-            })
+            searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
+            val searchView = searchViewMenuItem?.actionView as? SearchView
+            val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            searchView?.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         }
 
         inflater?.inflate(R.menu.search_fragment_menu, menu)
         initSpinner(menu)
         initSearchView(menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    fun search(query: String) {
+        searchViewMenuItem?.collapseActionView()
+        (pagerAdapter.currentFragment as? MainSearchFragment)?.query = query
     }
 
     companion object {
