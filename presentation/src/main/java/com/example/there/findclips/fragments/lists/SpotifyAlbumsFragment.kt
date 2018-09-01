@@ -21,6 +21,7 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
 class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
+
     override val viewState: ViewState<Album> =
             ViewState(ObservableSortedList<Album>(Album::class.java, object : ObservableSortedList.Callback<Album> {
                 override fun compare(o1: Album, o2: Album): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())

@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{view.adapter}"
-            android:layout_marginTop="5dp"
+            android:paddingTop="@{view.state.shouldShowHeader ? @dimen/spotify_list_no_top_margin : @dimen/spotify_list_top_margin}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

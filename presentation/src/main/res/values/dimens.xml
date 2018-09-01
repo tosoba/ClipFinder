@@ -11,4 +11,7 @@
     <dimen name="top_fragment_height">200dp</dimen>
     <dimen name="top_fragment_margin">10dp</dimen>
     <dimen name="video_player_fragment_height">325dp</dimen>
+
+    <dimen name="spotify_list_top_margin">10dp</dimen>
+    <dimen name="spotify_list_no_top_margin">0dp</dimen>
 </resources>
