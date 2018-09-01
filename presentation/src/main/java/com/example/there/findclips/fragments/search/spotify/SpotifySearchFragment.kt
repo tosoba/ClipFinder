@@ -12,10 +12,14 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.fragments.lists.*
+import com.example.there.findclips.fragments.lists.SpotifyAlbumsFragment
+import com.example.there.findclips.fragments.lists.SpotifyArtistsFragment
+import com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment
+import com.example.there.findclips.fragments.lists.SpotifyTracksFragment
 import com.example.there.findclips.fragments.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.util.accessToken
+import com.example.there.findclips.util.viewpager.SpotifyFragmentPagerAdapter
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
@@ -48,10 +52,10 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         val fragment = pagerAdapter.currentFragment
 
         when (fragment) {
-            is SpotifyAlbumsFragment -> fragment.addItems(viewModel.viewState.albums)
-            is SpotifyArtistsFragment -> fragment.addItems(viewModel.viewState.artists)
-            is SpotifyPlaylistsFragment -> fragment.addItems(viewModel.viewState.playlists)
-            is SpotifyTracksFragment -> fragment.addItems(viewModel.viewState.tracks)
+            is SpotifyAlbumsFragment -> fragment.updateItems(viewModel.viewState.albums)
+            is SpotifyArtistsFragment -> fragment.updateItems(viewModel.viewState.artists)
+            is SpotifyPlaylistsFragment -> fragment.updateItems(viewModel.viewState.playlists)
+            is SpotifyTracksFragment -> fragment.updateItems(viewModel.viewState.tracks)
         }
     }
 
@@ -62,10 +66,26 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
 
     private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy {
         SpotifyFragmentPagerAdapter(childFragmentManager, arrayOf(
-                SpotifyAlbumsFragment.newInstance(getString(R.string.no_albums_loaded_yet), getString(R.string.search_for_some)),
-                SpotifyArtistsFragment.newInstance(getString(R.string.no_artists_loaded_yet), getString(R.string.search_for_some)),
-                SpotifyPlaylistsFragment.newInstance(getString(R.string.no_playlists_loaded_yet), getString(R.string.search_for_some)),
-                SpotifyTracksFragment.newInstance(getString(R.string.no_tracks_loaded_yet), getString(R.string.search_for_some))
+                SpotifyAlbumsFragment.newInstance(
+                        getString(R.string.no_albums_loaded_yet),
+                        getString(R.string.search_for_some),
+                        viewModel.viewState.albums
+                ),
+                SpotifyArtistsFragment.newInstance(
+                        getString(R.string.no_artists_loaded_yet),
+                        getString(R.string.search_for_some),
+                        viewModel.viewState.artists
+                ),
+                SpotifyPlaylistsFragment.newInstance(
+                        getString(R.string.no_playlists_loaded_yet),
+                        getString(R.string.search_for_some),
+                        viewModel.viewState.playlists
+                ),
+                SpotifyTracksFragment.newInstance(
+                        getString(R.string.no_tracks_loaded_yet),
+                        getString(R.string.search_for_some),
+                        viewModel.viewState.tracks
+                )
         ))
     }
 
@@ -94,9 +114,9 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                 activity!!,
                 query == "" ||
                         (viewModel.viewState.albums.isNotEmpty() &&
-                        viewModel.viewState.artists.isNotEmpty() &&
-                        viewModel.viewState.playlists.isNotEmpty() &&
-                        viewModel.viewState.tracks.isNotEmpty()),
+                                viewModel.viewState.artists.isNotEmpty() &&
+                                viewModel.viewState.playlists.isNotEmpty() &&
+                                viewModel.viewState.tracks.isNotEmpty()),
                 spotify_search_root_layout,
                 ::loadData,
                 true

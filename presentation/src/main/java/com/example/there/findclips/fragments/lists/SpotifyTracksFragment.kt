@@ -13,6 +13,8 @@ import com.example.there.findclips.Router
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyTracksBinding
 import com.example.there.findclips.model.entities.Track
+import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.putArguments
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.GridTracksList
 import com.example.there.findclips.view.lists.OnTrackClickListener
@@ -21,6 +23,15 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
 class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
+
+    override val viewState: ViewState<Track> =
+            ViewState(ObservableSortedList<Track>(Track::class.java, object : ObservableSortedList.Callback<Track> {
+                override fun compare(o1: Track, o2: Track): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+
+                override fun areItemsTheSame(item1: Track, item2: Track): Boolean = item1.id == item2.id
+
+                override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean = newItem.id == oldItem.id
+            }))
 
     private val onTrackClickListener = object : OnTrackClickListener {
         override fun onClick(item: Track) = Router.goToTrackVideosActivity(activity, track = item)
@@ -55,8 +66,12 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
                     val itemDecoration: RecyclerView.ItemDecoration)
 
     companion object {
-        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyTracksFragment().apply {
-            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
+        fun newInstance(
+                mainHintText: String,
+                additionalHintText: String,
+                items: ArrayList<Track>?
+        ) = SpotifyTracksFragment().apply {
+            putArguments(mainHintText, additionalHintText, items)
         }
     }
 }

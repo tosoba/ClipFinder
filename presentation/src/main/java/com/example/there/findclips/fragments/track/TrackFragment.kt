@@ -61,7 +61,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
                 similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener),
                 onAlbumImageViewClickListener = View.OnClickListener {
                     val album = viewModel.viewState.album.get()
-                    album?.let { Router.goToAlbumAcitivity(activity, album = it) }
+                    album?.let { Router.goToAlbumActivity(activity, album = it) }
                 })
     }
 

@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragments.favourites.spotify
 
-import android.databinding.ObservableArrayList
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
@@ -15,11 +14,11 @@ data class SpotifyFavouritesFragmentView(
 }
 
 data class SpotifyFavouritesFragmentViewState(
-        val albums: ObservableArrayList<Album> = ObservableArrayList(),
-        val artists: ObservableArrayList<Artist> = ObservableArrayList(),
-        val categories: ObservableArrayList<Category> = ObservableArrayList(),
-        val playlists: ObservableArrayList<Playlist> = ObservableArrayList(),
-        val tracks: ObservableArrayList<Track> = ObservableArrayList()
+        val albums: ArrayList<Album> = ArrayList(),
+        val artists: ArrayList<Artist> = ArrayList(),
+        val categories: ArrayList<Category> = ArrayList(),
+        val playlists: ArrayList<Playlist> = ArrayList(),
+        val tracks: ArrayList<Track> = ArrayList()
 ) {
     fun clearAll() {
         albums.clear()

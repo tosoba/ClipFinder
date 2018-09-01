@@ -3,6 +3,8 @@ package com.example.there.findclips.util
 import android.app.Activity
 import android.content.Context
 import android.databinding.ObservableArrayList
+import android.os.Bundle
+import android.os.Parcelable
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -14,6 +16,7 @@ import android.widget.FrameLayout
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.activities.main.MainActivity
+import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import org.joda.time.DateTimeConstants
 import org.joda.time.Duration
 import java.math.BigInteger
@@ -133,3 +136,16 @@ fun Context.dpToPx(dp: Float): Float {
 
 fun Activity.registerFragmentLifecycleCallbacks(callbacks: FragmentManager.FragmentLifecycleCallbacks, recursive: Boolean) =
         (this as? FragmentActivity)?.supportFragmentManager?.registerFragmentLifecycleCallbacks(callbacks, recursive)
+
+fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
+        mainHintText: String,
+        additionalHintText: String,
+        items: ArrayList<I>?
+) {
+    val args = Bundle().apply {
+        putString(BaseSpotifyListFragment.EXTRA_MAIN_HINT, mainHintText)
+        putString(BaseSpotifyListFragment.EXTRA_ADDITIONAL_HINT, additionalHintText)
+        items?.let { putParcelableArrayList(BaseSpotifyListFragment.EXTRA_ITEMS, it) }
+    }
+    arguments = args
+}

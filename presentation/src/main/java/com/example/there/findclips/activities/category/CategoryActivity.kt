@@ -68,7 +68,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         viewModel.playlists.observe(this, Observer {
             it?.let {
                 val fragment = supportFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as SpotifyPlaylistsFragment
-                fragment.addItems(it)
+                fragment.updateItems(it)
             }
         })
     }

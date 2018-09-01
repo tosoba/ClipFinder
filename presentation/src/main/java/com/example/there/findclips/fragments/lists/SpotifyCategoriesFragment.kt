@@ -13,6 +13,8 @@ import com.example.there.findclips.Router
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyCategoriesBinding
 import com.example.there.findclips.model.entities.Category
+import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.putArguments
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.CategoriesList
 import com.example.there.findclips.view.lists.OnCategoryClickListener
@@ -20,6 +22,15 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
+
+    override val viewState: ViewState<Category> =
+            ViewState(ObservableSortedList<Category>(Category::class.java, object : ObservableSortedList.Callback<Category> {
+                override fun compare(o1: Category, o2: Category): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+
+                override fun areItemsTheSame(item1: Category, item2: Category): Boolean = item1.id == item2.id
+
+                override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean = oldItem.id == newItem.id
+            }))
 
     private val onCategoryClickListener = object : OnCategoryClickListener {
         override fun onClick(item: Category) = Router.goToCategoryActivity(activity, category = item)
@@ -54,8 +65,12 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
                     val itemDecoration: RecyclerView.ItemDecoration)
 
     companion object {
-        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyCategoriesFragment().apply {
-            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
+        fun newInstance(
+                mainHintText: String,
+                additionalHintText: String,
+                items: ArrayList<Category>?
+        ) = SpotifyCategoriesFragment().apply {
+            putArguments(mainHintText, additionalHintText, items)
         }
     }
 }

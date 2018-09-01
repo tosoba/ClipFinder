@@ -68,7 +68,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         viewModel.tracks.observe(this, Observer {
             it?.let {
                 val fragment = supportFragmentManager.findFragmentById(R.id.playlist_spotify_tracks_fragment) as SpotifyTracksFragment
-                fragment.addItems(it)
+                fragment.updateItems(it)
             }
         })
     }

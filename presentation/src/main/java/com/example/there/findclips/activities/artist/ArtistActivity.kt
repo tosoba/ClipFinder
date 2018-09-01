@@ -27,7 +27,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
     private val albumsAdapter: AlbumsList.Adapter by lazy {
         AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
-            override fun onClick(item: Album) = Router.goToAlbumAcitivity(this@ArtistActivity, album = item)
+            override fun onClick(item: Album) = Router.goToAlbumActivity(this@ArtistActivity, album = item)
         })
     }
 

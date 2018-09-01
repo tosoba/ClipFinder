@@ -1,7 +1,6 @@
 package com.example.there.findclips.view.lists
 
 import android.databinding.DataBindingUtil
-import android.databinding.ObservableArrayList
 import android.databinding.ObservableList
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
@@ -10,23 +9,26 @@ import android.view.ViewGroup
 
 interface BaseBindingList {
 
-    abstract class Adapter<I, B>(val items: ObservableArrayList<I>,
-                                 private val itemLayoutId: Int,
-                                 private val onItemClickListener: OnItemClickListener<I>) : RecyclerView.Adapter<ViewHolder<B>>() where B : ViewDataBinding {
-        init {
-            items.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableArrayList<I>>() {
-                override fun onChanged(sender: ObservableArrayList<I>?) = notifyDataSetChanged()
+    abstract class Adapter<I, B>(
+            val items: ObservableList<I>,
+            private val itemLayoutId: Int,
+            private val onItemClickListener: OnItemClickListener<I>
+    ) : RecyclerView.Adapter<ViewHolder<B>>() where B : ViewDataBinding {
 
-                override fun onItemRangeRemoved(sender: ObservableArrayList<I>?, positionStart: Int, itemCount: Int) =
+        init {
+            items.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableList<I>>() {
+                override fun onChanged(sender: ObservableList<I>?) = notifyDataSetChanged()
+
+                override fun onItemRangeRemoved(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
                         notifyItemRangeRemoved(positionStart, itemCount)
 
-                override fun onItemRangeMoved(sender: ObservableArrayList<I>?, fromPosition: Int, toPosition: Int, itemCount: Int) =
+                override fun onItemRangeMoved(sender: ObservableList<I>?, fromPosition: Int, toPosition: Int, itemCount: Int) =
                         notifyItemMoved(fromPosition, toPosition)
 
-                override fun onItemRangeInserted(sender: ObservableArrayList<I>?, positionStart: Int, itemCount: Int) =
+                override fun onItemRangeInserted(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
                         notifyItemRangeInserted(positionStart, itemCount)
 
-                override fun onItemRangeChanged(sender: ObservableArrayList<I>?, positionStart: Int, itemCount: Int) =
+                override fun onItemRangeChanged(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
                         notifyItemRangeChanged(positionStart, itemCount)
             })
         }

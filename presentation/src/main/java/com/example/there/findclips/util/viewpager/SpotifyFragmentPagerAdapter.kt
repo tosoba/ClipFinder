@@ -1,8 +1,7 @@
-package com.example.there.findclips.fragments.lists
+package com.example.there.findclips.util.viewpager
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.example.there.findclips.util.CurrentFragmentStatePagerAdapter
 
 
 class SpotifyFragmentPagerAdapter(

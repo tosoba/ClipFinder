@@ -27,7 +27,7 @@ object Router {
         activity?.let { ArtistActivity.start(it, artist) }
     }
 
-    fun goToAlbumAcitivity(activity: Activity?, album: Album) {
+    fun goToAlbumActivity(activity: Activity?, album: Album) {
         activity?.let { AlbumActivity.start(it, album) }
     }
 

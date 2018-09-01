@@ -17,24 +17,23 @@ class SpotifyFavouritesViewModel @Inject constructor(
         private val getFavouriteTracks: GetFavouriteTracks
 ) : BaseViewModel() {
 
-    val viewState = SpotifyFavouritesFragmentViewState()
-
-    val loadedFlag: MutableLiveData<Unit> = MutableLiveData()
+    val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 
     fun loadFavourites() {
-        addDisposable(Observable.zip<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, Unit>(
+        addDisposable(Observable.zip<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
                 getFavouriteAlbums.execute(),
                 getFavouriteArtists.execute(),
                 getFavouriteCategories.execute(),
                 getFavouriteSpotifyPlaylists.execute(),
                 getFavouriteTracks.execute(),
                 Function5 { albums, artists, categories, playlists, tracks ->
-                    viewState.clearAll()
-                    viewState.albums.addAll(albums.map(AlbumEntityMapper::mapFrom))
-                    viewState.artists.addAll(artists.map(ArtistEntityMapper::mapFrom))
-                    viewState.categories.addAll(categories.map(CategoryEntityMapper::mapFrom))
-                    viewState.playlists.addAll(playlists.map(PlaylistEntityMapper::mapFrom))
-                    viewState.tracks.addAll(tracks.map(TrackEntityMapper::mapFrom))
-                }).subscribe { loadedFlag.value = Unit })
+                    SpotifyFavouritesFragmentViewState(
+                            ArrayList(albums.map(AlbumEntityMapper::mapFrom)),
+                            ArrayList(artists.map(ArtistEntityMapper::mapFrom)),
+                            ArrayList(categories.map(CategoryEntityMapper::mapFrom)),
+                            ArrayList(playlists.map(PlaylistEntityMapper::mapFrom)),
+                            ArrayList(tracks.map(TrackEntityMapper::mapFrom))
+                    )
+                }).subscribe { viewState.value = it })
     }
 }

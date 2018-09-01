@@ -13,6 +13,7 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifyFavouritesBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragments.lists.*
+import com.example.there.findclips.util.viewpager.SpotifyFragmentPagerAdapter
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
@@ -29,17 +30,66 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
     private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_favourites_tab_layout?.getTabAt(position)?.select()
-            updateCurrentFragment()
         }
     }
 
     private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy {
         SpotifyFragmentPagerAdapter(childFragmentManager, arrayOf(
-                SpotifyAlbumsFragment.newInstance(getString(R.string.no_favourite_albums_addded_yet), getString(R.string.browse_for_albums)),
-                SpotifyArtistsFragment.newInstance(getString(R.string.no_favourite_artists_added_yet), getString(R.string.browse_for_artists)),
-                SpotifyCategoriesFragment.newInstance(getString(R.string.no_favourite_categories_added_yet), getString(R.string.browse_for_categories)),
-                SpotifyPlaylistsFragment.newInstance(getString(R.string.no_favourite_playlists_added_yet), getString(R.string.browse_for_playlists)),
-                SpotifyTracksFragment.newInstance(getString(R.string.no_favourite_tracks_added_yet), getString(R.string.browse_for_tracks))
+                SpotifyAlbumsFragment.newInstance(
+                        getString(R.string.no_favourite_albums_addded_yet),
+                        getString(R.string.browse_for_albums),
+                        viewModel.viewState.value?.albums
+                ).apply {
+                    refresh = { fragment ->
+                        viewModel.viewState.value?.let {
+                            fragment.updateItems(it.albums)
+                        }
+                    }
+                },
+                SpotifyArtistsFragment.newInstance(
+                        getString(R.string.no_favourite_artists_added_yet),
+                        getString(R.string.browse_for_artists),
+                        viewModel.viewState.value?.artists
+                ).apply {
+                    refresh = { fragment ->
+                        viewModel.viewState.value?.let {
+                            fragment.updateItems(it.artists)
+                        }
+                    }
+                },
+                SpotifyCategoriesFragment.newInstance(
+                        getString(R.string.no_favourite_categories_added_yet),
+                        getString(R.string.browse_for_categories),
+                        viewModel.viewState.value?.categories
+                ).apply {
+                    refresh = { fragment ->
+                        viewModel.viewState.value?.let {
+                            fragment.updateItems(it.categories)
+                        }
+                    }
+                },
+                SpotifyPlaylistsFragment.newInstance(
+                        getString(R.string.no_favourite_playlists_added_yet),
+                        getString(R.string.browse_for_playlists),
+                        viewModel.viewState.value?.playlists
+                ).apply {
+                    refresh = { fragment ->
+                        viewModel.viewState.value?.let {
+                            fragment.updateItems(it.playlists)
+                        }
+                    }
+                },
+                SpotifyTracksFragment.newInstance(
+                        getString(R.string.no_favourite_tracks_added_yet),
+                        getString(R.string.browse_for_tracks),
+                        viewModel.viewState.value?.tracks
+                ).apply {
+                    refresh = { fragment ->
+                        viewModel.viewState.value?.let {
+                            fragment.updateItems(it.tracks)
+                        }
+                    }
+                }
         ))
     }
 
@@ -65,18 +115,20 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
 
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.loadedFlag.observe(this, Observer { updateCurrentFragment() })
+        viewModel.viewState.observe(this, Observer { updateCurrentFragment() })
     }
 
     private fun updateCurrentFragment() {
         val fragment = pagerAdapter.currentFragment
 
-        when (fragment) {
-            is SpotifyAlbumsFragment -> fragment.addItems(viewModel.viewState.albums)
-            is SpotifyArtistsFragment -> fragment.addItems(viewModel.viewState.artists)
-            is SpotifyCategoriesFragment -> fragment.addItems(viewModel.viewState.categories)
-            is SpotifyPlaylistsFragment -> fragment.addItems(viewModel.viewState.playlists)
-            is SpotifyTracksFragment -> fragment.addItems(viewModel.viewState.tracks)
+        viewModel.viewState.value?.let {
+            when (fragment) {
+                is SpotifyAlbumsFragment -> fragment.updateItems(it.albums)
+                is SpotifyArtistsFragment -> fragment.updateItems(it.artists)
+                is SpotifyCategoriesFragment -> fragment.updateItems(it.categories)
+                is SpotifyPlaylistsFragment -> fragment.updateItems(it.playlists)
+                is SpotifyTracksFragment -> fragment.updateItems(it.tracks)
+            }
         }
     }
 

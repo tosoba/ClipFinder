@@ -2,7 +2,7 @@ package com.example.there.findclips.fragments.favourites
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.example.there.findclips.util.CurrentFragmentStatePagerAdapter
+import com.example.there.findclips.util.viewpager.CurrentFragmentStatePagerAdapter
 
 class FavouritesFragmentPagerAdapter(
         fragmentManager: FragmentManager,

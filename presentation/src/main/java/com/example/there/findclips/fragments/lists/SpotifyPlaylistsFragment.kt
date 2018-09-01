@@ -11,6 +11,8 @@ import com.example.there.findclips.Router
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyPlaylistsBinding
 import com.example.there.findclips.model.entities.Playlist
+import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.putArguments
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.GridPlaylistsList
 import com.example.there.findclips.view.lists.OnPlaylistClickListener
@@ -18,6 +20,15 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 
 
 class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
+
+    override val viewState: ViewState<Playlist> =
+            ViewState(ObservableSortedList<Playlist>(Playlist::class.java, object : ObservableSortedList.Callback<Playlist> {
+                override fun compare(o1: Playlist, o2: Playlist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+
+                override fun areItemsTheSame(item1: Playlist, item2: Playlist): Boolean = item1.id == item2.id
+
+                override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean = newItem.id == oldItem.id
+            }))
 
     private val onPlaylistClickListener = object : OnPlaylistClickListener {
         override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)
@@ -48,8 +59,12 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
                     val adapter: GridPlaylistsList.Adapter)
 
     companion object {
-        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyPlaylistsFragment().apply {
-            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
+        fun newInstance(
+                mainHintText: String,
+                additionalHintText: String,
+                items: ArrayList<Playlist>?
+        ) = SpotifyPlaylistsFragment().apply {
+            putArguments(mainHintText, additionalHintText, items)
         }
     }
 }

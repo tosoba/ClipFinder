@@ -1,12 +1,12 @@
 package com.example.there.findclips.view.lists
 
-import android.databinding.ObservableArrayList
+import android.databinding.ObservableList
 import com.example.there.findclips.databinding.ArtistItemBinding
 import com.example.there.findclips.databinding.GridArtistItemBinding
 import com.example.there.findclips.model.entities.Artist
 
 interface ArtistsList {
-    class Adapter(artists: ObservableArrayList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
+    class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
             BaseBindingList.Adapter<Artist, ArtistItemBinding>(artists, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<ArtistItemBinding>, position: Int) {
@@ -17,7 +17,7 @@ interface ArtistsList {
 }
 
 interface GridArtistsList {
-    class Adapter(artists: ObservableArrayList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
+    class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
             BaseBindingList.Adapter<Artist, GridArtistItemBinding>(artists, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<GridArtistItemBinding>, position: Int) {

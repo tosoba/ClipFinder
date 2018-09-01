@@ -13,6 +13,8 @@ import com.example.there.findclips.Router
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.model.entities.Album
+import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.putArguments
 import com.example.there.findclips.util.screenOrientation
 import com.example.there.findclips.view.lists.GridAlbumsList
 import com.example.there.findclips.view.lists.OnAlbumClickListener
@@ -21,9 +23,17 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
 class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
+    override val viewState: ViewState<Album> =
+            ViewState(ObservableSortedList<Album>(Album::class.java, object : ObservableSortedList.Callback<Album> {
+                override fun compare(o1: Album, o2: Album): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+
+                override fun areItemsTheSame(item1: Album, item2: Album): Boolean = item1.id == item2.id
+
+                override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean = newItem.id == oldItem.id
+            }))
 
     private val onAlbumClickListener = object : OnAlbumClickListener {
-        override fun onClick(item: Album) = Router.goToAlbumAcitivity(activity, album = item)
+        override fun onClick(item: Album) = Router.goToAlbumActivity(activity, album = item)
     }
 
     private val view: SpotifyAlbumsFragment.View by lazy {
@@ -55,8 +65,12 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                     val itemDecoration: RecyclerView.ItemDecoration)
 
     companion object {
-        fun newInstance(mainHintText: String, additionalHintText: String) = SpotifyAlbumsFragment().apply {
-            BaseSpotifyListFragment.putArguments(this, mainHintText, additionalHintText)
+        fun newInstance(
+                mainHintText: String,
+                additionalHintText: String,
+                items: ArrayList<Album>?
+        ) = SpotifyAlbumsFragment().apply {
+            putArguments(mainHintText, additionalHintText, items)
         }
     }
 }

@@ -1,12 +1,12 @@
 package com.example.there.findclips.view.lists
 
-import android.databinding.ObservableArrayList
+import android.databinding.ObservableList
 import com.example.there.findclips.databinding.RelatedVideoItemBinding
 import com.example.there.findclips.databinding.VideoItemBinding
 import com.example.there.findclips.model.entities.Video
 
 interface VideosList {
-    class Adapter(videos: ObservableArrayList<Video>, itemLayoutId: Int, listener: OnVideoClickListener) :
+    class Adapter(videos: ObservableList<Video>, itemLayoutId: Int, listener: OnVideoClickListener) :
             BaseBindingList.Adapter<Video, VideoItemBinding>(videos, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<VideoItemBinding>, position: Int) {
@@ -17,7 +17,7 @@ interface VideosList {
 }
 
 interface RelatedVideosList {
-    class Adapter(videos: ObservableArrayList<Video>, itemLayoutId: Int, listener: OnVideoClickListener):
+    class Adapter(videos: ObservableList<Video>, itemLayoutId: Int, listener: OnVideoClickListener):
             BaseBindingList.Adapter<Video, RelatedVideoItemBinding>(videos, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<RelatedVideoItemBinding>, position: Int) {

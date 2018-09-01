@@ -1,11 +1,11 @@
 package com.example.there.findclips.view.lists
 
-import android.databinding.ObservableArrayList
+import android.databinding.ObservableList
 import com.example.there.findclips.databinding.VideoPlaylistItemBinding
 import com.example.there.findclips.model.entities.VideoPlaylist
 
 interface VideoPlaylistsList {
-    class Adapter(playlists: ObservableArrayList<VideoPlaylist>, itemLayoutId: Int, listener: OnVideoPlaylistClickListener) :
+    class Adapter(playlists: ObservableList<VideoPlaylist>, itemLayoutId: Int, listener: OnVideoPlaylistClickListener) :
             BaseBindingList.Adapter<VideoPlaylist, VideoPlaylistItemBinding>(playlists, itemLayoutId, listener) {
 
         override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<VideoPlaylistItemBinding>, position: Int) {
