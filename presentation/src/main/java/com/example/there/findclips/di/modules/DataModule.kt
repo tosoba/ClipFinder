@@ -59,6 +59,14 @@ abstract class DataModule {
         @Provides
         @JvmStatic
         fun videoPlaylistDao(database: FindClipsDb): VideoPlaylistDao = database.videoPlaylistDao()
+
+        @Provides
+        @JvmStatic
+        fun videoSearchDao(database: FindClipsDb): VideoSearchDao = database.videoSearchDao()
+
+        @Provides
+        @JvmStatic
+        fun relatedVideoSearchDao(database: FindClipsDb): RelatedVideoSearchDao = database.relatedVideoSearchDao()
     }
 
     @Binds

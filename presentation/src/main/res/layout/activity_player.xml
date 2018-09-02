@@ -13,11 +13,11 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/player_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/main_background_gradient"
         android:orientation="vertical"
-        android:id="@+id/player_root_layout"
         tools:context="com.example.there.findclips.activities.player.PlayerActivity">
 
         <fragment
@@ -29,45 +29,16 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/player_tab_layout"
-            onTabSelectedListener="@{view.onTabSelectedListener}"
-            tabs="@{view.fragmentTabs}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:minHeight="?android:attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_fragment"
-            app:tabGravity="fill" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/player_related_videos_recycler_view"
             itemDecoration="@{view.relatedVideosItemDecoration}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:adapter="@{view.relatedVideosAdapter}"
-            android:visibility="@{safeUnbox(view.state.currentTabPosition) == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_tab_layout" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/player_other_video_results_recycler_view"
-            itemDecoration="@{view.otherVideosItemDecoration}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:adapter="@{view.otherVideosAdapter}"
-            android:visibility="@{safeUnbox(view.state.currentTabPosition) == 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_tab_layout" />
+            app:layout_constraintTop_toBottomOf="@id/player_fragment" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/player_favourite_video_fab"

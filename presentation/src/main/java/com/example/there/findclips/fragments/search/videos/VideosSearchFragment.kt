@@ -38,7 +38,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         }
 
     private val videoItemClickListener = object : OnVideoClickListener {
-        override fun onClick(item: Video) = Router.goToPlayerActivity(activity, video = item, otherVideos = viewModel.viewState.videos)
+        override fun onClick(item: Video) = Router.goToPlayerActivity(activity, video = item)
     }
 
     private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {

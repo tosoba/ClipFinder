@@ -4,9 +4,10 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import com.example.there.data.entities.spotify.*
-import com.example.there.data.entities.videos.VideoData
+import com.example.there.data.entities.videos.RelatedVideoSearchDbData
 import com.example.there.data.entities.videos.VideoDbData
 import com.example.there.data.entities.videos.VideoPlaylistData
+import com.example.there.data.entities.videos.VideoSearchDbData
 
 @Database(entities = [
     AlbumData::class,
@@ -15,7 +16,9 @@ import com.example.there.data.entities.videos.VideoPlaylistData
     PlaylistData::class,
     TrackData::class,
     VideoDbData::class,
-    VideoPlaylistData::class
+    VideoPlaylistData::class,
+    VideoSearchDbData::class,
+    RelatedVideoSearchDbData::class
 ], version = 1, exportSchema = false)
 @TypeConverters(
         SimplifiedAlbumDataConverter::class,
@@ -31,4 +34,6 @@ abstract class FindClipsDb : RoomDatabase() {
     abstract fun trackDao(): TrackDao
     abstract fun videoDao(): VideoDao
     abstract fun videoPlaylistDao(): VideoPlaylistDao
+    abstract fun videoSearchDao(): VideoSearchDao
+    abstract fun relatedVideoSearchDao(): RelatedVideoSearchDao
 }

@@ -31,8 +31,8 @@ object Router {
         activity?.let { AlbumActivity.start(it, album) }
     }
 
-    fun goToPlayerActivity(activity: Activity?, video: Video, otherVideos: ArrayList<Video>) {
-        activity?.let { PlayerActivity.start(it, video, otherVideos) }
+    fun goToPlayerActivity(activity: Activity?, video: Video) {
+        activity?.let { PlayerActivity.start(it, video) }
     }
 
     fun goToVideoPlaylistActivity(activity: Activity?, videoPlaylist: VideoPlaylist) {

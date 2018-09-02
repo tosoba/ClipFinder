@@ -2,9 +2,11 @@ package com.example.there.data.db
 
 import android.arch.persistence.room.*
 import com.example.there.data.entities.spotify.*
-import com.example.there.data.entities.videos.VideoData
+import com.example.there.data.entities.videos.RelatedVideoSearchDbData
 import com.example.there.data.entities.videos.VideoDbData
 import com.example.there.data.entities.videos.VideoPlaylistData
+import com.example.there.data.entities.videos.VideoSearchDbData
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -56,10 +58,40 @@ interface TrackDao : BaseDao<TrackData> {
 interface VideoDao : BaseDao<VideoDbData> {
     @Query("SELECT * FROM videos WHERE playlist_id = :playlistId")
     fun findVideosFromPlaylist(playlistId: Long): Single<List<VideoDbData>>
+
+    @Query("SELECT * FROM videos WHERE search_query = :query")
+    fun findAllWithQuery(query: String): Single<List<VideoDbData>>
+
+    @Query("SELECT * FROM videos WHERE related_video_id = :videoId")
+    fun findAllRelatedToVideo(videoId: String): Single<List<VideoDbData>>
 }
 
 @Dao
 interface VideoPlaylistDao : BaseDao<VideoPlaylistData> {
     @Query("SELECT * FROM video_playlists")
     fun findAll(): Single<List<VideoPlaylistData>>
+}
+
+@Dao
+interface VideoSearchDao : BaseDao<VideoSearchDbData> {
+    @Query("SELECT next_page_token FROM video_search_data WHERE search_query = :query")
+    fun getNextPageTokenForQuery(query: String): Maybe<String>
+
+    @Query("UPDATE video_search_data SET next_page_token = :pageToken WHERE search_query = :query")
+    fun updateNextPageTokenForQuery(query: String, pageToken: String?)
+
+    @Query("DELETE FROM video_search_data")
+    fun deleteAll()
+}
+
+@Dao
+interface RelatedVideoSearchDao : BaseDao<RelatedVideoSearchDbData> {
+    @Query("SELECT next_page_token FROM related_video_search_data WHERE related_video_id = :videoId")
+    fun getNextPageTokenForVideoId(videoId: String): Maybe<String>
+
+    @Query("UPDATE related_video_search_data SET next_page_token = :pageToken WHERE related_video_id = :videoId")
+    fun updateNextPageTokenForVideo(videoId: String, pageToken: String?)
+
+    @Query("DELETE FROM related_video_search_data")
+    fun deleteAll()
 }

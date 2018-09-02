@@ -5,9 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
-import android.databinding.ObservableArrayList
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.InputType
@@ -24,7 +22,6 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Video
 import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.util.ext.screenOrientation
-import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.lists.OnVideoClickListener
 import com.example.there.findclips.view.lists.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
@@ -38,7 +35,6 @@ import kotlinx.android.synthetic.main.activity_player.*
 class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitializedListener {
 
     private val intentVideo: Video by lazy { intent.getParcelableExtra<Video>(EXTRA_VIDEO) }
-    private val intentOtherVideos: ArrayList<Video> by lazy { intent.getParcelableArrayListExtra<Video>(EXTRA_OTHER_VIDEOS) }
 
     private lateinit var currentVideo: Video
 
@@ -47,11 +43,6 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
             currentVideo = item
             player?.loadVideo(item.id)
         }
-    }
-
-    private val onTabSelectedListener = object : OnTabSelectedListener {
-        override fun onTabSelected(tab: TabLayout.Tab?) = viewModel.viewState.currentTabPosition.set(tab?.position
-                ?: 0)
     }
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
@@ -71,13 +62,8 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
     private val view: PlayerView by lazy {
         PlayerView(state = viewModel.viewState,
                 relatedVideosAdapter = RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item, onVideoItemClickListener),
-                otherVideosAdapter = RelatedVideosList.Adapter(ObservableArrayList<Video>().apply {
-                    addAll(intentOtherVideos)
-                }, R.layout.related_video_item, onVideoItemClickListener),
                 relatedVideosItemDecoration = SeparatorDecoration(this@PlayerActivity, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
-                otherVideosItemDecoration = SeparatorDecoration(this@PlayerActivity, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 onRelatedVideosScrollListener = onRelatedVideosListScrollListener,
-                onTabSelectedListener = onTabSelectedListener,
                 onFavouriteBtnClickListener = onFavouriteBtnClickListener
         )
     }
@@ -108,7 +94,6 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
         val binding: ActivityPlayerBinding = DataBindingUtil.setContentView(this, R.layout.activity_player)
         binding.view = view
         binding.playerRelatedVideosRecyclerView.layoutManager = LinearLayoutManager(this@PlayerActivity, LinearLayoutManager.VERTICAL, false)
-        binding.playerOtherVideoResultsRecyclerView.layoutManager = LinearLayoutManager(this@PlayerActivity, LinearLayoutManager.VERTICAL, false)
 
         if (screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             player_favourite_video_fab?.visibility = View.GONE
@@ -143,10 +128,8 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            player_tab_layout?.visibility = View.GONE
             player_favourite_video_fab?.visibility = View.GONE
         } else {
-            player_tab_layout?.visibility = View.VISIBLE
             player_favourite_video_fab?.visibility = View.VISIBLE
         }
     }
@@ -187,14 +170,12 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
         private const val RECOVERY_DIALOG_REQUEST = 100
 
         private const val EXTRA_VIDEO = "EXTRA_VIDEO"
-        private const val EXTRA_OTHER_VIDEOS = "EXTRA_OTHER_VIDEOS"
 
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
 
-        fun start(activity: Activity, video: Video, otherVideos: ArrayList<Video>) {
+        fun start(activity: Activity, video: Video) {
             val intent = Intent(activity, PlayerActivity::class.java).apply {
                 putExtra(EXTRA_VIDEO, video)
-                putParcelableArrayListExtra(EXTRA_OTHER_VIDEOS, otherVideos)
             }
             activity.startActivity(intent)
         }

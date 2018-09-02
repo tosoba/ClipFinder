@@ -1,9 +1,9 @@
-package com.example.there.domain.usecases
+package com.example.there.domain.usecases.base
 
-import com.example.there.domain.common.Transformer
+import com.example.there.domain.common.SymmetricObservableTransformer
 import io.reactivex.Observable
 
-abstract class UseCase<T>(private val transformer: Transformer<T>) {
+abstract class ObservableUseCase<T>(private val transformer: SymmetricObservableTransformer<T>) {
 
     protected abstract fun createObservable(data: Map<String, Any?>? = null): Observable<T>
 

@@ -5,8 +5,8 @@ import com.example.there.data.entities.videos.VideoDbData
 import com.example.there.data.util.urlHigh
 import com.example.there.domain.common.OneWayMapper
 import com.example.there.domain.common.TwoWayMapper
-import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.common.convertDuration
+import com.example.there.domain.entities.videos.VideoEntity
 import java.math.BigInteger
 
 
@@ -34,7 +34,9 @@ object VideoDbMapper : TwoWayMapper<VideoDbData, VideoEntity>() {
             duration = from.duration,
             viewCount = BigInteger.valueOf(from.viewCount),
             channelThumbnailUrl = from.channelThumbnailUrl,
-            playlistId = from.playlistId
+            playlistId = from.playlistId,
+            query = from.query,
+            relatedVideoId = from.relatedVideoId
     )
 
     override fun mapBack(from: VideoEntity): VideoDbData = VideoDbData(
@@ -47,6 +49,8 @@ object VideoDbMapper : TwoWayMapper<VideoDbData, VideoEntity>() {
             duration = from.duration,
             viewCount = from.viewCount.toLong(),
             channelThumbnailUrl = from.channelThumbnailUrl ?: "",
-            playlistId = from.playlistId
+            playlistId = from.playlistId,
+            query = from.query,
+            relatedVideoId = from.relatedVideoId
     )
 }

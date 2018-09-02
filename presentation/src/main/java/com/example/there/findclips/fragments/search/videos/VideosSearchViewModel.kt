@@ -18,41 +18,37 @@ class VideosSearchViewModel @Inject constructor(
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 
-    private var lastSearchVideosNextPageToken: String? = null
     private var lastQuery: String? = null
 
     fun searchVideos(query: String) {
         viewState.videosLoadingInProgress.set(true)
         lastQuery = query
-        addSearchVideosDisposable(query, null)
+        addSearchVideosDisposable(query, false)
     }
 
     fun searchVideosWithLastQuery() {
-        if (lastQuery != null && lastSearchVideosNextPageToken != null) {
+        if (lastQuery != null) {
             viewState.videosLoadingInProgress.set(true)
-            addSearchVideosDisposable(lastQuery!!, lastSearchVideosNextPageToken)
+            addSearchVideosDisposable(lastQuery!!, true)
         }
     }
 
-    private fun addSearchVideosDisposable(query: String, pageToken: String?) {
-        addDisposable(searchVideos.execute(query, pageToken)
+    private fun addSearchVideosDisposable(query: String, loadMore: Boolean) {
+        addDisposable(searchVideos.execute(query, loadMore)
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
-                .subscribe({
-                    val (newNextPageToken, videos) = it
-                    lastSearchVideosNextPageToken = newNextPageToken
-                    updateVideos(videos)
-                }, this::onError))
+                .subscribe({ videos -> updateVideos(videos) }, ::onError))
     }
 
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {
         addDisposable(getFavouriteVideosFromPlaylist.execute(VideoPlaylistEntityMapper.mapBack(videoPlaylist))
-                .subscribe({ updateVideos(it) }, this::onError))
+                .subscribe({ updateVideos(it) }, ::onError))
     }
 
     private fun updateVideos(videos: List<VideoEntity>) {
-        viewState.videos.addAll(videos.map(VideoEntityMapper::mapFrom))
+        val mapped = videos.map(VideoEntityMapper::mapFrom)
+        viewState.videos.addAll(mapped)
         getChannelThumbnails(videos, onSuccess = {
-            it.forEachIndexed { index, url -> viewState.videos.getOrNull(index)?.channelThumbnailUrl?.set(url) }
+            it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
         })
     }
 }

@@ -1,30 +1,33 @@
 package com.example.there.domain.usecases.videos
 
-import com.example.there.domain.common.Transformer
+import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.repos.videos.IVideosRepository
-import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.usecases.UseCaseParams
-import io.reactivex.Observable
+import com.example.there.domain.usecases.base.SingleUseCase
+import io.reactivex.Single
 import java.lang.IllegalArgumentException
 
-class SearchRelatedVideos(transformer: Transformer<Pair<String?, List<VideoEntity>>>,
-                          private val repository: IVideosRepository) : UseCase<Pair<String?, List<VideoEntity>>>(transformer) {
+class SearchRelatedVideos(
+        transformer: SymmetricSingleTransformer<List<VideoEntity>>,
+        private val repository: IVideosRepository
+) : SingleUseCase<List<VideoEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<Pair<String?, List<VideoEntity>>> {
+    override fun createSingle(data: Map<String, Any?>?): Single<List<VideoEntity>> {
         val videoId = data?.get(UseCaseParams.PARAM_VIDEO_ID) as? String
-        val pageToken = data?.get(UseCaseParams.PARAM_PAGE_TOKEN) as? String?
+        val loadMore = data?.get(UseCaseParams.PARAM_LOAD_MORE) as? Boolean
         return if (videoId != null) {
-            repository.getRelatedVideos(videoId, pageToken)
+            if (loadMore != null && loadMore) repository.getMoreRelatedVideos(videoId)
+            else repository.getRelatedVideos(videoId)
         } else {
-            Observable.error { IllegalArgumentException("VideoId and optionally page token must be provided.") }
+            Single.error { IllegalArgumentException("VideoId and optionally page token must be provided.") }
         }
     }
 
-    fun execute(videoId: String, pageToken: String?): Observable<Pair<String?, List<VideoEntity>>> {
+    fun execute(videoId: String, loadMore: Boolean): Single<List<VideoEntity>> {
         val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_VIDEO_ID, videoId)
-            put(UseCaseParams.PARAM_PAGE_TOKEN, pageToken)
+            put(UseCaseParams.PARAM_LOAD_MORE, loadMore)
         }
         return execute(withData = data)
     }

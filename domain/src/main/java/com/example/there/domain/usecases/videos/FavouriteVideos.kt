@@ -1,15 +1,15 @@
 package com.example.there.domain.usecases.videos
 
-import com.example.there.domain.common.Transformer
+import com.example.there.domain.common.SymmetricObservableTransformer
 import com.example.there.domain.entities.videos.VideoEntity
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
 import com.example.there.domain.repos.videos.IVideosRepository
-import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.usecases.UseCaseParams
+import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 
-class GetFavouriteVideosFromPlaylist(transformer: Transformer<List<VideoEntity>>,
-                                     private val repository: IVideosRepository) : UseCase<List<VideoEntity>>(transformer) {
+class GetFavouriteVideosFromPlaylist(transformer: SymmetricObservableTransformer<List<VideoEntity>>,
+                                     private val repository: IVideosRepository) : ObservableUseCase<List<VideoEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<VideoEntity>> {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
@@ -28,8 +28,8 @@ class GetFavouriteVideosFromPlaylist(transformer: Transformer<List<VideoEntity>>
     }
 }
 
-class AddVideoToPlaylist(transformer: Transformer<Unit>,
-                         private val repository: IVideosRepository) : UseCase<Unit>(transformer) {
+class AddVideoToPlaylist(transformer: SymmetricObservableTransformer<Unit>,
+                         private val repository: IVideosRepository) : ObservableUseCase<Unit>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<Unit> {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity

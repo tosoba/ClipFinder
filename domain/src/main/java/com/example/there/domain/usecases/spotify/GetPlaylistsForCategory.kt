@@ -1,16 +1,16 @@
 package com.example.there.domain.usecases.spotify
 
-import com.example.there.domain.common.Transformer
+import com.example.there.domain.common.SymmetricObservableTransformer
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.UseCase
 import com.example.there.domain.entities.spotify.PlaylistEntity
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.UseCaseParams
+import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class GetPlaylistsForCategory(transformer: Transformer<List<PlaylistEntity>>,
-                              private val repository: ISpotifyRepository) : UseCase<List<PlaylistEntity>>(transformer) {
+class GetPlaylistsForCategory(transformer: SymmetricObservableTransformer<List<PlaylistEntity>>,
+                              private val repository: ISpotifyRepository) : ObservableUseCase<List<PlaylistEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<PlaylistEntity>> {
         val categoryId = data?.get(UseCaseParams.PARAM_CATEGORY_ID) as? String

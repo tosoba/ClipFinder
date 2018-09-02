@@ -11,21 +11,16 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "tracks")
 data class TrackData(
         @PrimaryKey
-        @ColumnInfo(name = "id")
         val id: String,
 
-        @ColumnInfo(name = "name")
         val name: String,
 
-        @ColumnInfo(name = "artists")
         @TypeConverters(SimplifiedArtistDataConverter::class)
         val artists: List<SimplifiedArtistData>,
 
-        @ColumnInfo(name = "album")
         @TypeConverters(SimplifiedAlbumDataConverter::class)
         val album: SimplifiedAlbumData,
 
-        @ColumnInfo(name = "popularity")
         val popularity: Int,
 
         @ColumnInfo(name = "track_number")
@@ -40,6 +35,8 @@ data class SimilarTrackData(
 )
 
 data class PlaylistTrackData(
-        @SerializedName("added_at") val addedAt: String,
+        @SerializedName("added_at")
+        val addedAt: String,
+
         val track: TrackData
 )

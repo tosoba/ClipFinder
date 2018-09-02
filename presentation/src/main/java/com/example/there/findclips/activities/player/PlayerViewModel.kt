@@ -17,29 +17,27 @@ class PlayerViewModel @Inject constructor(
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     private var lastSearchVideoId: String? = null
-    private var lastSearchRelatedNextPageToken: String? = null
 
     val viewState = PlayerViewState()
 
     fun searchRelatedVideosWithToLastId() {
-        if (lastSearchVideoId != null && lastSearchRelatedNextPageToken != null) {
-            addSearchRelatedVideosDisposable(lastSearchVideoId!!, lastSearchRelatedNextPageToken)
+        if (lastSearchVideoId != null) {
+            addSearchRelatedVideosDisposable(lastSearchVideoId!!, true)
         }
     }
 
     fun searchRelatedVideos(toVideoId: String) {
         lastSearchVideoId = toVideoId
-        addSearchRelatedVideosDisposable(toVideoId, null)
+        addSearchRelatedVideosDisposable(toVideoId, false)
     }
 
-    private fun addSearchRelatedVideosDisposable(videoId: String, pageToken: String?) {
-        addDisposable(searchRelatedVideos.execute(videoId, pageToken)
-                .subscribe({
-                    val (newNextPageToken, videos) = it
-                    lastSearchRelatedNextPageToken = newNextPageToken
-                    viewState.videos.addAll(videos.map(VideoEntityMapper::mapFrom))
+    private fun addSearchRelatedVideosDisposable(videoId: String, loadMore: Boolean) {
+        addDisposable(searchRelatedVideos.execute(videoId, loadMore)
+                .subscribe({ videos ->
+                    val mapped = videos.map(VideoEntityMapper::mapFrom)
+                    viewState.videos.addAll(mapped)
                     getChannelThumbnails(videos, onSuccess = {
-                        it.forEachIndexed { index, url -> viewState.videos.getOrNull(index)?.channelThumbnailUrl?.set(url) }
+                        it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
                     })
                 }, this::onError))
     }

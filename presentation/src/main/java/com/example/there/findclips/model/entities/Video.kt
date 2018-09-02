@@ -17,7 +17,10 @@ data class Video(
         val thumbnailUrl: String,
         val duration: String,
         val viewCount: BigInteger,
-        var channelThumbnailUrl: ObservableField<String> = ObservableField("")
+        var channelThumbnailUrl: ObservableField<String> = ObservableField(""),
+        var playlistId: Long? = null,
+        var query: String? = null,
+        var relatedVideoId: String? = null
 ): AutoParcelable {
 
     val details: String
