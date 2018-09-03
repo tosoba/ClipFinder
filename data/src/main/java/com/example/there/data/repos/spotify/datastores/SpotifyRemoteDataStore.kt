@@ -11,6 +11,7 @@ import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class SpotifyRemoteDataStore @Inject constructor(
@@ -19,28 +20,53 @@ class SpotifyRemoteDataStore @Inject constructor(
         private val chartsApi: SpotifyChartsApi
 ) : ISpotifyRemoteDataStore {
 
-    override fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> =
-            accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret)).map(AccessTokenMapper::mapFrom)
+    override fun getAccessToken(
+            clientId: String,
+            clientSecret: String
+    ): Observable<AccessTokenEntity> = accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret))
+            .map(AccessTokenMapper::mapFrom)
 
-    override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> =
-            api.getCategories(authorization = getAccessTokenHeader(accessToken.token))
-                    .map { it.result.categories }
-                    .map { it.map(CategoryMapper::mapFrom) }
+    override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
+        val offsetSubject = BehaviorSubject.createDefault(0)
+        return offsetSubject.concatMap { offset ->
+            api.getCategories(
+                    authorization = getAccessTokenHeader(accessToken.token),
+                    offset = offset.toString()
+            )
+        }.doOnNext {
+            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
+                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            else
+                offsetSubject.onComplete()
+        }.map { it.result.categories.map(CategoryMapper::mapFrom) }
+    }
 
-    override fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> =
-            api.getFeaturedPlaylists(authorization = getAccessTokenHeader(accessToken.token))
-                    .map { it.result.playlists }
-                    .map { it.map(PlaylistMapper::mapFrom) }
+    override fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> {
+        val offsetSubject = BehaviorSubject.createDefault(0)
+        return offsetSubject.concatMap { offset ->
+            api.getFeaturedPlaylists(
+                    authorization = getAccessTokenHeader(accessToken.token),
+                    offset = offset.toString()
+            )
+        }.doOnNext {
+            if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
+                offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            else
+                offsetSubject.onComplete()
+        }.map { it.result.playlists.map(PlaylistMapper::mapFrom) }
+    }
 
     override fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity> =
             api.getTrack(authorization = getAccessTokenHeader(accessToken.token), id = id)
                     .map(TrackMapper::mapFrom)
 
-    override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
+    override fun getDailyViralTracks(
+            accessToken: AccessTokenEntity
+    ): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
             .map { it.split('\n').filter { it.isNotBlank() && it.first().isDigit() } }
             .map { it.map(ChartTrackIdMapper::mapFrom) }
             .map { it.chunked(50).map { it.joinToString(",") } }
-            .flatMapIterable { it }
+            .concatMapIterable { it }
             .concatMap {
                 api.getTracks(
                         authorization = getAccessTokenHeader(accessToken.token),
@@ -51,8 +77,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                     Observable.range(0, Int.MAX_VALUE),
                     BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index -> Pair(response, index) }
             )
-            .map {
-                val (response, index) = it
+            .map { (response, index) ->
                 response.tracks.mapIndexed { i: Int, trackData: TrackData ->
                     TopTrackEntity(index * 50 + i + 1, TrackMapper.mapFrom(trackData))
                 }
@@ -71,10 +96,14 @@ class SpotifyRemoteDataStore @Inject constructor(
                                         ?: emptyList(),
                                 tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
                                         ?: emptyList(),
-                                albumsNextPageUrl = it.albumsResult?.nextPageUrl,
-                                artistsNextPageUrl = it.artistsResult?.nextPageUrl,
-                                playlistsNextPageUrl = it.playlistsResult?.nextPageUrl,
-                                tracksNextPageUrl = it.tracksResult?.nextPageUrl
+                                albumsTotalResults = it.albumsResult?.totalItems ?: 0,
+                                albumsOffset = it.albumsResult?.offset ?: 0,
+                                artistsTotalResults = it.artistsResult?.totalItems ?: 0,
+                                artistsOffset = it.artistsResult?.offset ?: 0,
+                                playlistsTotalResults = it.playlistsResult?.totalItems ?: 0,
+                                playlistsOffset = it.playlistsResult?.offset ?: 0,
+                                tracksTotalResults = it.tracksResult?.totalItems ?: 0,
+                                tracksOffset = it.tracksResult?.offset ?: 0
                         )
                     }
 

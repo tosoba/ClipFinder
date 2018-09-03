@@ -1,11 +1,13 @@
 package com.example.there.data.apis.spotify
 
 import com.example.there.data.entities.spotify.AlbumData
-import com.example.there.data.entities.spotify.ArtistData
 import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.responses.*
 import io.reactivex.Observable
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface SpotifyApi {
 
@@ -81,7 +83,7 @@ interface SpotifyApi {
                            @Query("offset") offset: String = DEFAULT_OFFSET): Observable<TracksResult>
 
     companion object {
-        private const val DEFAULT_LIMIT = "50"
+        const val DEFAULT_LIMIT = "50"
         private const val DEFAULT_OFFSET = "0"
         private const val DEFAULT_COUNTRY = "US"
         private const val DEFAULT_LOCALE = "en_us"
