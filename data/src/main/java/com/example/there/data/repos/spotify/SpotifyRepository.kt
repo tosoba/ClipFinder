@@ -1,6 +1,7 @@
 package com.example.there.data.repos.spotify
 
 import com.example.there.domain.entities.spotify.*
+import com.example.there.domain.pages.PlaylistTracksPage
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.repos.spotify.datastores.ISpotifyDbDataStore
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
@@ -35,8 +36,8 @@ class SpotifyRepository @Inject constructor(
     override fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>> =
             remoteDataStore.getPlaylistsForCategory(accessToken, categoryId)
 
-    override fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String): Observable<List<TrackEntity>> =
-            remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId)
+    override fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<PlaylistTracksPage> =
+            remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
 
     override fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity> =
             remoteDataStore.getAlbum(accessToken, albumId)

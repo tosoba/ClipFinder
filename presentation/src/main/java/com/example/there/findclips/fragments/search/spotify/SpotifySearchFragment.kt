@@ -70,7 +70,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                         getString(R.string.search_for_some),
                         viewModel.viewState.albums
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.albums)
                     }
                 },
@@ -79,7 +79,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                         getString(R.string.search_for_some),
                         viewModel.viewState.artists
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.artists)
                     }
                 },
@@ -88,7 +88,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                         getString(R.string.search_for_some),
                         viewModel.viewState.playlists
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.playlists)
                     }
                 },
@@ -97,7 +97,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                         getString(R.string.search_for_some),
                         viewModel.viewState.tracks
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.tracks)
                     }
                 }

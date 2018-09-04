@@ -2,6 +2,7 @@ package com.example.there.findclips.activities.playlist
 
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import com.example.there.data.apis.spotify.SpotifyApi
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistTracks
@@ -32,13 +33,20 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
+    private var currentOffset = 0
+    private var totalItems = 0
+
     private fun loadData(accessToken: AccessTokenEntity, playlist: Playlist) {
-        viewState.loadingInProgress.set(true)
-        addDisposable(getPlaylistTracks.execute(accessToken, playlist.id, playlist.userId)
-                .doFinally { viewState.loadingInProgress.set(false) }
-                .subscribe({
-                    tracks.value = it.map(TrackEntityMapper::mapFrom).sortedBy { it.name }
-                }, this::onError))
+        if (currentOffset == 0 || (currentOffset < totalItems)) {
+            viewState.loadingInProgress.set(true)
+            addDisposable(getPlaylistTracks.execute(accessToken, playlist.id, playlist.userId, currentOffset)
+                    .doFinally { viewState.loadingInProgress.set(false) }
+                    .subscribe({
+                        currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT.toInt()
+                        totalItems = it.totalItems
+                        tracks.value = it.tracks.map(TrackEntityMapper::mapFrom)
+                    }, ::onError))
+        }
     }
 
     fun addFavouritePlaylist(playlist: Playlist) {

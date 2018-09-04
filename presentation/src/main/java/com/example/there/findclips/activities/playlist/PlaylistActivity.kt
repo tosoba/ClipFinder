@@ -23,12 +23,14 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
     private val playlist: Playlist by lazy { intent.getParcelableExtra(EXTRA_PLAYLIST) as Playlist }
 
     private val view: PlaylistView by lazy {
-        PlaylistView(state = viewModel.viewState,
+        PlaylistView(
+                state = viewModel.viewState,
                 playlist = playlist,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.addFavouritePlaylist(playlist)
                     Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
-                })
+                }
+        )
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
@@ -40,12 +42,17 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         )
     }
 
+    private val tracksFragment: SpotifyTracksFragment
+        get() = supportFragmentManager.findFragmentById(R.id.playlist_spotify_tracks_fragment) as SpotifyTracksFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initView()
         lifecycle.addObserver(connectivityComponent)
         initToolbar()
+
+        tracksFragment.loadMore = ::loadData
 
         if (savedInstanceState == null)
             loadData()
@@ -67,8 +74,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
         super.setupObservers()
         viewModel.tracks.observe(this, Observer {
             it?.let {
-                val fragment = supportFragmentManager.findFragmentById(R.id.playlist_spotify_tracks_fragment) as SpotifyTracksFragment
-                fragment.updateItems(it)
+                tracksFragment.updateItems(it, false)
             }
         })
     }

@@ -88,7 +88,7 @@ class DomainModule {
     fun insertSpotifyPlaylistUseCase(repository: ISpotifyRepository): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun playlistTracksUseCase(repository: ISpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncSymmetricObservableTransformer(), repository)
+    fun playlistTracksUseCase(repository: ISpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun searchAllUseCase(repository: ISpotifyRepository): SearchSpotify = SearchSpotify(AsyncSymmetricObservableTransformer(), repository)

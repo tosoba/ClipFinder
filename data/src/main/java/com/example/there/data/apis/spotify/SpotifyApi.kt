@@ -4,6 +4,7 @@ import com.example.there.data.entities.spotify.AlbumData
 import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.responses.*
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -45,9 +46,12 @@ interface SpotifyApi {
                                 @Query("country") country: String = DEFAULT_COUNTRY): Observable<PlaylistsResponse>
 
     @GET("users/{user_id}/playlists/{playlist_id}/tracks")
-    fun getPlaylistTracks(@Header("Authorization") authorization: String,
-                          @Path("user_id") userId: String,
-                          @Path("playlist_id") playlistId: String): Observable<PlaylistTracksResponse>
+    fun getPlaylistTracks(
+            @Header("Authorization") authorization: String,
+            @Path("user_id") userId: String,
+            @Path("playlist_id") playlistId: String,
+            @Query("offset") offset: String
+    ): Single<PlaylistTracksResponse>
 
     @GET("artists")
     fun getArtists(@Header("Authorization") authorization: String,
@@ -84,6 +88,8 @@ interface SpotifyApi {
 
     companion object {
         const val DEFAULT_LIMIT = "50"
+        const val DEFAULT_TRACKS_LIMIT = "100"
+
         private const val DEFAULT_OFFSET = "0"
         private const val DEFAULT_COUNTRY = "US"
         private const val DEFAULT_LOCALE = "en_us"

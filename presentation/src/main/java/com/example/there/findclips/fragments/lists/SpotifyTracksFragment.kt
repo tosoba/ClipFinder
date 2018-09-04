@@ -24,7 +24,7 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
 
     override val viewState: ViewState<Track> =
             ViewState(ObservableSortedList<Track>(Track::class.java, object : ObservableSortedList.Callback<Track> {
-                override fun compare(o1: Track, o2: Track): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+                override fun compare(o1: Track, o2: Track): Int = 0
 
                 override fun areItemsTheSame(item1: Track, item2: Track): Boolean = item1.id == item2.id
 
@@ -39,7 +39,8 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
         SpotifyTracksFragment.View(
                 state = viewState,
                 adapter = GridTracksList.Adapter(viewState.items, R.layout.grid_track_item, onTrackClickListener),
-                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                onScrollListener = onScrollListener
         )
     }
 
@@ -59,9 +60,12 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
         }.root
     }
 
-    data class View(val state: BaseSpotifyListFragment.ViewState<Track>,
-                    val adapter: GridTracksList.Adapter,
-                    val itemDecoration: RecyclerView.ItemDecoration)
+    data class View(
+            val state: BaseSpotifyListFragment.ViewState<Track>,
+            val adapter: GridTracksList.Adapter,
+            val itemDecoration: RecyclerView.ItemDecoration,
+            val onScrollListener: RecyclerView.OnScrollListener
+    )
 
     companion object {
         fun newInstance(

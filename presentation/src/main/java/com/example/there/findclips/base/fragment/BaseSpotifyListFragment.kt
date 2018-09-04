@@ -6,26 +6,40 @@ import android.databinding.ObservableField
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
-    var refresh: ((BaseSpotifyListFragment<T>) -> Unit)? = null
+    var refreshData: ((BaseSpotifyListFragment<T>) -> Unit)? = null
+
+    var loadMore: (() -> Unit)? = null
+
+    protected val onScrollListener: RecyclerView.OnScrollListener by lazy {
+        object : EndlessRecyclerOnScrollListener() {
+            override fun onLoadMore() {
+                loadMore?.invoke()
+            }
+        }
+    }
 
     protected val listColumnCount: Int
         get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) refresh?.invoke(this)
+        if (isVisibleToUser) refreshData?.invoke(this)
     }
 
-    fun updateItems(items: List<T>) {
-        val toRemove = viewState.items.filter { !items.contains(it) }
-        viewState.items.removeAll(toRemove)
+    fun updateItems(items: List<T>, shouldRemove: Boolean = true) {
+        if (shouldRemove) {
+            val toRemove = viewState.items.filter { !items.contains(it) }
+            viewState.items.removeAll(toRemove)
+        }
         viewState.items.addAll(items)
     }
 

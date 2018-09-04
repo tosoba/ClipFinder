@@ -35,6 +35,8 @@ object UseCaseParams {
     const val PARAM_SPOTIFY_PLAYLIST = "PARAM_SPOTIFY_PLAYLIST"
     const val PARAM_TRACK = "PARAM_TRACK"
 
+    const val PARAM_OFFSET = "PARAM_OFFSET"
+
     const val PARAM_VIDEO_PLAYLIST = "PARAM_VIDEO_PLAYLIST"
     const val PARAM_VIDEO = "PARAM_VIDEO"
 }

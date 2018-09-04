@@ -8,8 +8,10 @@ import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.mappers.spotify.*
 import com.example.there.data.responses.TracksOnlyResponse
 import com.example.there.domain.entities.spotify.*
+import com.example.there.domain.pages.PlaylistTracksPage
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
@@ -111,12 +113,23 @@ class SpotifyRemoteDataStore @Inject constructor(
             api.getPlaylistsForCategory(authorization = getAccessTokenHeader(accessToken.token), categoryId = categoryId)
                     .map { it.result.playlists.map(PlaylistMapper::mapFrom) }
 
-    override fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String): Observable<List<TrackEntity>> =
-            api.getPlaylistTracks(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    playlistId = playlistId,
-                    userId = userId
-            ).map { it.playlistTracks.map { TrackMapper.mapFrom(it.track) } }
+    override fun getPlaylistTracks(
+            accessToken: AccessTokenEntity,
+            playlistId: String,
+            userId: String,
+            offset: Int
+    ): Single<PlaylistTracksPage> = api.getPlaylistTracks(
+            authorization = getAccessTokenHeader(accessToken.token),
+            playlistId = playlistId,
+            userId = userId,
+            offset = offset.toString()
+    ).map {
+        PlaylistTracksPage(
+                tracks = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
+                offset = it.offset,
+                totalItems = it.totalItems
+        )
+    }
 
     override fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity> =
             api.getAlbum(

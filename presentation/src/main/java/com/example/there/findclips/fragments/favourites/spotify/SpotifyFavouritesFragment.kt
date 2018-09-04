@@ -40,7 +40,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                         getString(R.string.browse_for_albums),
                         viewModel.viewState.value?.albums
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         viewModel.viewState.value?.let {
                             fragment.updateItems(it.albums)
                         }
@@ -51,7 +51,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                         getString(R.string.browse_for_artists),
                         viewModel.viewState.value?.artists
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         viewModel.viewState.value?.let {
                             fragment.updateItems(it.artists)
                         }
@@ -62,7 +62,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                         getString(R.string.browse_for_categories),
                         viewModel.viewState.value?.categories
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         viewModel.viewState.value?.let {
                             fragment.updateItems(it.categories)
                         }
@@ -73,7 +73,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                         getString(R.string.browse_for_playlists),
                         viewModel.viewState.value?.playlists
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         viewModel.viewState.value?.let {
                             fragment.updateItems(it.playlists)
                         }
@@ -84,7 +84,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                         getString(R.string.browse_for_tracks),
                         viewModel.viewState.value?.tracks
                 ).apply {
-                    refresh = { fragment ->
+                    refreshData = { fragment ->
                         viewModel.viewState.value?.let {
                             fragment.updateItems(it.tracks)
                         }
