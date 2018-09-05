@@ -17,6 +17,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/playlists_recycler_view"
+            onScrollListener="@{view.onScrollListener}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{view.adapter}"

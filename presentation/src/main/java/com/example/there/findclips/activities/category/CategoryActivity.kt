@@ -47,6 +47,8 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         lifecycle.addObserver(connectivityComponent)
         initToolbar()
 
+        playlistsFragment.loadMore = ::loadData
+
         if (savedInstanceState == null)
             loadData()
     }
@@ -63,13 +65,13 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
         title = category.name
     }
 
+    private val playlistsFragment: SpotifyPlaylistsFragment
+        get() = supportFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as SpotifyPlaylistsFragment
+
     override fun setupObservers() {
         super.setupObservers()
         viewModel.playlists.observe(this, Observer {
-            it?.let {
-                val fragment = supportFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as SpotifyPlaylistsFragment
-                fragment.updateItems(it)
-            }
+            it?.let { playlistsFragment.updateItems(it, false) }
         })
     }
 

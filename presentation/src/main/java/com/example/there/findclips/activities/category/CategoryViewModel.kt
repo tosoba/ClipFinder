@@ -2,6 +2,7 @@ package com.example.there.findclips.activities.category
 
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import com.example.there.data.apis.spotify.SpotifyApi
 import com.example.there.domain.entities.spotify.AccessTokenEntity
 import com.example.there.domain.usecases.spotify.GetAccessToken
 import com.example.there.domain.usecases.spotify.GetPlaylistsForCategory
@@ -33,13 +34,20 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
+    private var currentOffset = 0
+    private var totalItems = 0
+
     private fun loadData(accessTokenEntity: AccessTokenEntity, categoryId: String) {
-        viewState.loadingInProgress.set(true)
-        addDisposable(getPlaylistsForCategory.execute(accessTokenEntity, categoryId)
-                .doFinally { viewState.loadingInProgress.set(false) }
-                .subscribe({
-                    playlists.value = it.map(PlaylistEntityMapper::mapFrom).sortedBy { it.name }
-                }, this::onError))
+        if (currentOffset == 0 || (currentOffset < totalItems)) {
+            viewState.loadingInProgress.set(true)
+            addDisposable(getPlaylistsForCategory.execute(accessTokenEntity, categoryId, currentOffset)
+                    .doFinally { viewState.loadingInProgress.set(false) }
+                    .subscribe({
+                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        totalItems = it.totalItems
+                        playlists.value = it.playlists.map(PlaylistEntityMapper::mapFrom)
+                    }, this::onError))
+        }
     }
 
     fun addFavouriteCategory(category: Category) {

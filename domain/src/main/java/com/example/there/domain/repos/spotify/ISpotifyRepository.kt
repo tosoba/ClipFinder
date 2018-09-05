@@ -1,6 +1,7 @@
 package com.example.there.domain.repos.spotify
 
 import com.example.there.domain.entities.spotify.*
+import com.example.there.domain.pages.CategoryPlaylistsPage
 import com.example.there.domain.pages.PlaylistTracksPage
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -13,8 +14,8 @@ interface ISpotifyRepository {
     fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity>
     fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
     fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
-    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String): Observable<List<PlaylistEntity>>
 
+    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<CategoryPlaylistsPage>
     fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<PlaylistTracksPage>
 
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity>

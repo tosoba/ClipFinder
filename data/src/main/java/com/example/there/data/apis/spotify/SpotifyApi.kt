@@ -41,9 +41,13 @@ interface SpotifyApi {
                   @Query("limit") limit: String = DEFAULT_LIMIT): Observable<SearchAllResponse>
 
     @GET("browse/categories/{category_id}/playlists")
-    fun getPlaylistsForCategory(@Header("Authorization") authorization: String,
-                                @Path("category_id") categoryId: String,
-                                @Query("country") country: String = DEFAULT_COUNTRY): Observable<PlaylistsResponse>
+    fun getPlaylistsForCategory(
+            @Header("Authorization") authorization: String,
+            @Path("category_id") categoryId: String,
+            @Query("offset") offset: String,
+            @Query("country") country: String = DEFAULT_COUNTRY,
+            @Query("limit") limit: String = DEFAULT_LIMIT
+    ): Single<PlaylistsResponse>
 
     @GET("users/{user_id}/playlists/{playlist_id}/tracks")
     fun getPlaylistTracks(

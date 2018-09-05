@@ -3,6 +3,7 @@ package com.example.there.findclips.fragments.lists
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
@@ -19,14 +20,16 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 
 class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
-    override val viewState: ViewState<Playlist> =
-            ViewState(ObservableSortedList<Playlist>(Playlist::class.java, object : ObservableSortedList.Callback<Playlist> {
+    override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(
+            Playlist::class.java,
+            object : ObservableSortedList.Callback<Playlist> {
                 override fun compare(o1: Playlist, o2: Playlist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
 
                 override fun areItemsTheSame(item1: Playlist, item2: Playlist): Boolean = item1.id == item2.id
 
                 override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean = newItem.id == oldItem.id
-            }))
+            }
+    ))
 
     private val onPlaylistClickListener = object : OnPlaylistClickListener {
         override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)
@@ -34,7 +37,8 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
     private val view: SpotifyPlaylistsFragment.View = SpotifyPlaylistsFragment.View(
             state = viewState,
-            adapter = GridPlaylistsList.Adapter(viewState.items, R.layout.grid_playlist_item, onPlaylistClickListener)
+            adapter = GridPlaylistsList.Adapter(viewState.items, R.layout.grid_playlist_item, onPlaylistClickListener),
+            onScrollListener = onScrollListener
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
@@ -52,8 +56,11 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
         }.root
     }
 
-    data class View(val state: BaseSpotifyListFragment.ViewState<Playlist>,
-                    val adapter: GridPlaylistsList.Adapter)
+    data class View(
+            val state: BaseSpotifyListFragment.ViewState<Playlist>,
+            val adapter: GridPlaylistsList.Adapter,
+            val onScrollListener: RecyclerView.OnScrollListener
+    )
 
     companion object {
         fun newInstance(

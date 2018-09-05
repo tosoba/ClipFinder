@@ -48,7 +48,9 @@ class DomainModule {
     fun insertCategoryUseCase(repository: ISpotifyRepository): InsertCategory = InsertCategory(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun playlistsForCategoryUseCase(repository: ISpotifyRepository): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncSymmetricObservableTransformer(), repository)
+    fun playlistsForCategoryUseCase(
+            repository: ISpotifyRepository
+    ): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun categoriesUseCase(repository: ISpotifyRepository): GetCategories = GetCategories(AsyncSymmetricObservableTransformer(), repository)
@@ -88,7 +90,9 @@ class DomainModule {
     fun insertSpotifyPlaylistUseCase(repository: ISpotifyRepository): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun playlistTracksUseCase(repository: ISpotifyRepository): GetPlaylistTracks = GetPlaylistTracks(AsyncSymmetricSingleTransformer(), repository)
+    fun playlistTracksUseCase(
+            repository: ISpotifyRepository
+    ): GetPlaylistTracks = GetPlaylistTracks(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun searchAllUseCase(repository: ISpotifyRepository): SearchSpotify = SearchSpotify(AsyncSymmetricObservableTransformer(), repository)
