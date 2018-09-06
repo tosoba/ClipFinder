@@ -25,9 +25,6 @@ class SpotifyRepository @Inject constructor(
     override fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> =
             remoteDataStore.getFeaturedPlaylists(accessToken)
 
-    override fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity> =
-            remoteDataStore.getTrack(accessToken, id)
-
     override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> =
             remoteDataStore.getDailyViralTracks(accessToken)
 
@@ -47,11 +44,15 @@ class SpotifyRepository @Inject constructor(
             offset: Int
     ): Single<TracksPage> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
 
-    override fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity> =
-            remoteDataStore.getAlbum(accessToken, albumId)
+    override fun getAlbum(
+            accessToken: AccessTokenEntity,
+            albumId: String
+    ): Single<AlbumEntity> = remoteDataStore.getAlbum(accessToken, albumId)
 
-    override fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Observable<List<ArtistEntity>> =
-            remoteDataStore.getArtists(accessToken, artistIds)
+    override fun getArtists(
+            accessToken: AccessTokenEntity,
+            artistIds: List<String>
+    ): Single<List<ArtistEntity>> = remoteDataStore.getArtists(accessToken, artistIds)
 
     override fun getSimilarTracks(
             accessToken: AccessTokenEntity,
@@ -61,11 +62,15 @@ class SpotifyRepository @Inject constructor(
     override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
             remoteDataStore.getAlbumsFromArtist(accessToken, artistId)
 
-    override fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>> =
-            remoteDataStore.getTopTracksFromArtist(accessToken, artistId)
+    override fun getTopTracksFromArtist(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Single<List<TrackEntity>> = remoteDataStore.getTopTracksFromArtist(accessToken, artistId)
 
-    override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
-            remoteDataStore.getRelatedArtists(accessToken, artistId)
+    override fun getRelatedArtists(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Single<List<ArtistEntity>> = remoteDataStore.getRelatedArtists(accessToken, artistId)
 
     override fun getTracksFromAlbum(
             accessToken: AccessTokenEntity,
@@ -73,6 +78,7 @@ class SpotifyRepository @Inject constructor(
             offset: Int
     ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
 
+    //TODO: make these return Flowable
     override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 
     override fun getFavouriteArtists(): Single<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()

@@ -16,36 +16,53 @@ class DomainModule {
     fun accessTokenUseCase(repository: ISpotifyRepository): GetAccessToken = GetAccessToken(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun artistsUseCase(repository: ISpotifyRepository): GetArtists = GetArtists(AsyncSymmetricObservableTransformer(), repository)
+    fun artistsUseCase(
+            repository: ISpotifyRepository
+    ): GetArtists = GetArtists(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun getChannelsThumbnailUrlsUseCase(repository: IVideosRepository): GetChannelsThumbnailUrls =
-            GetChannelsThumbnailUrls(AsyncSymmetricSingleTransformer(), repository)
+    fun getChannelsThumbnailUrlsUseCase(
+            repository: IVideosRepository
+    ): GetChannelsThumbnailUrls = GetChannelsThumbnailUrls(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun getFavouriteVideoPlaylistsUseCase(repository: IVideosRepository): GetFavouriteVideoPlaylists =
             GetFavouriteVideoPlaylists(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun insertAlbumUseCase(repository: ISpotifyRepository): InsertAlbum = InsertAlbum(AsyncSymmetricObservableTransformer(), repository)
+    fun insertAlbumUseCase(
+            repository: ISpotifyRepository
+    ): InsertAlbum = InsertAlbum(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun tracksFromAlbumUseCase(repository: ISpotifyRepository): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricSingleTransformer(), repository)
+    fun tracksFromAlbumUseCase(
+            repository: ISpotifyRepository
+    ): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun insertArtistUseCase(repository: ISpotifyRepository): InsertArtist = InsertArtist(AsyncSymmetricObservableTransformer(), repository)
+    fun insertArtistUseCase(
+            repository: ISpotifyRepository
+    ): InsertArtist = InsertArtist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun albumsFromArtistUseCase(repository: ISpotifyRepository): GetAlbumsFromArtist = GetAlbumsFromArtist(AsyncSymmetricObservableTransformer(), repository)
+    fun albumsFromArtistUseCase(
+            repository: ISpotifyRepository
+    ): GetAlbumsFromArtist = GetAlbumsFromArtist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun topTracksFromArtistUseCase(repository: ISpotifyRepository): GetTopTracksFromArtist = GetTopTracksFromArtist(AsyncSymmetricObservableTransformer(), repository)
+    fun topTracksFromArtistUseCase(
+            repository: ISpotifyRepository
+    ): GetTopTracksFromArtist = GetTopTracksFromArtist(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun relatedArtistsUseCase(repository: ISpotifyRepository): GetRelatedArtists = GetRelatedArtists(AsyncSymmetricObservableTransformer(), repository)
+    fun relatedArtistsUseCase(
+            repository: ISpotifyRepository
+    ): GetRelatedArtists = GetRelatedArtists(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun insertCategoryUseCase(repository: ISpotifyRepository): InsertCategory = InsertCategory(AsyncSymmetricObservableTransformer(), repository)
+    fun insertCategoryUseCase(
+            repository: ISpotifyRepository
+    ): InsertCategory = InsertCategory(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun playlistsForCategoryUseCase(
@@ -53,13 +70,19 @@ class DomainModule {
     ): GetPlaylistsForCategory = GetPlaylistsForCategory(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun categoriesUseCase(repository: ISpotifyRepository): GetCategories = GetCategories(AsyncSymmetricObservableTransformer(), repository)
+    fun categoriesUseCase(
+            repository: ISpotifyRepository
+    ): GetCategories = GetCategories(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun featuredPlaylistsUseCase(repository: ISpotifyRepository): GetFeaturedPlaylists = GetFeaturedPlaylists(AsyncSymmetricObservableTransformer(), repository)
+    fun featuredPlaylistsUseCase(
+            repository: ISpotifyRepository
+    ): GetFeaturedPlaylists = GetFeaturedPlaylists(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun dailyViralTracksUseCase(repository: ISpotifyRepository): GetDailyViralTracks = GetDailyViralTracks(AsyncSymmetricObservableTransformer(), repository)
+    fun dailyViralTracksUseCase(
+            repository: ISpotifyRepository
+    ): GetDailyViralTracks = GetDailyViralTracks(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun getFavouriteAlbumsUseCase(repository: ISpotifyRepository): GetFavouriteAlbums = GetFavouriteAlbums(AsyncSymmetricObservableTransformer(), repository)
@@ -71,8 +94,7 @@ class DomainModule {
     fun getFavouriteCategoriesUseCase(repository: ISpotifyRepository): GetFavouriteCategories = GetFavouriteCategories(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun getFavouriteSpotifyPlaylistsUseCase(repository: ISpotifyRepository): GetFavouriteSpotifyPlaylists =
-            GetFavouriteSpotifyPlaylists(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteSpotifyPlaylistsUseCase(repository: ISpotifyRepository): GetFavouriteSpotifyPlaylists = GetFavouriteSpotifyPlaylists(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun getFavouriteTracksUseCase(repository: ISpotifyRepository): GetFavouriteTracks = GetFavouriteTracks(AsyncSymmetricObservableTransformer(), repository)
@@ -84,10 +106,14 @@ class DomainModule {
     fun addVideosToPlaylistUseCase(repository: IVideosRepository): AddVideoToPlaylist = AddVideoToPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun insertVideoPlaylistUseCase(repository: IVideosRepository): InsertVideoPlaylist = InsertVideoPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    fun insertVideoPlaylistUseCase(
+            repository: IVideosRepository
+    ): InsertVideoPlaylist = InsertVideoPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun insertSpotifyPlaylistUseCase(repository: ISpotifyRepository): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    fun insertSpotifyPlaylistUseCase(
+            repository: ISpotifyRepository
+    ): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun playlistTracksUseCase(
@@ -98,13 +124,17 @@ class DomainModule {
     fun searchAllUseCase(repository: ISpotifyRepository): SearchSpotify = SearchSpotify(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun albumUseCase(repository: ISpotifyRepository): GetAlbum = GetAlbum(AsyncSymmetricObservableTransformer(), repository)
+    fun albumUseCase(
+            repository: ISpotifyRepository
+    ): GetAlbum = GetAlbum(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun similarTracksUseCase(repository: ISpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun insertTrackUseCase(repository: ISpotifyRepository): InsertTrack = InsertTrack(AsyncSymmetricObservableTransformer(), repository)
+    fun insertTrackUseCase(
+            repository: ISpotifyRepository
+    ): InsertTrack = InsertTrack(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun searchVideosUseCase(repository: IVideosRepository): SearchVideos = SearchVideos(AsyncSymmetricSingleTransformer(), repository)

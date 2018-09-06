@@ -59,10 +59,6 @@ class SpotifyRemoteDataStore @Inject constructor(
         }.map { it.result.playlists.map(PlaylistMapper::mapFrom) }
     }
 
-    override fun getTrack(accessToken: AccessTokenEntity, id: String): Observable<TrackEntity> =
-            api.getTrack(authorization = getAccessTokenHeader(accessToken.token), id = id)
-                    .map(TrackMapper::mapFrom)
-
     override fun getDailyViralTracks(
             accessToken: AccessTokenEntity
     ): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
@@ -144,17 +140,21 @@ class SpotifyRemoteDataStore @Inject constructor(
         )
     }
 
-    override fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity> =
-            api.getAlbum(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    albumId = albumId
-            ).map(AlbumMapper::mapFrom)
+    override fun getAlbum(
+            accessToken: AccessTokenEntity,
+            albumId: String
+    ): Single<AlbumEntity> = api.getAlbum(
+            authorization = getAccessTokenHeader(accessToken.token),
+            albumId = albumId
+    ).map(AlbumMapper::mapFrom)
 
-    override fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Observable<List<ArtistEntity>> =
-            api.getArtists(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    artistIds = artistIds.joinToString(",")
-            ).map { it.artists.map(ArtistMapper::mapFrom) }
+    override fun getArtists(
+            accessToken: AccessTokenEntity,
+            artistIds: List<String>
+    ): Single<List<ArtistEntity>> = api.getArtists(
+            authorization = getAccessTokenHeader(accessToken.token),
+            artistIds = artistIds.joinToString(",")
+    ).map { it.artists.map(ArtistMapper::mapFrom) }
 
     override fun getSimilarTracks(
             accessToken: AccessTokenEntity,
@@ -190,13 +190,21 @@ class SpotifyRemoteDataStore @Inject constructor(
         }.map { it.albums.map(AlbumMapper::mapFrom) }
     }
 
-    override fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>> =
-            api.getTopTracksFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                    .map { it.tracks.map(TrackMapper::mapFrom) }
+    override fun getTopTracksFromArtist(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Single<List<TrackEntity>> = api.getTopTracksFromArtist(
+            authorization = getAccessTokenHeader(accessToken.token),
+            artistId = artistId
+    ).map { it.tracks.map(TrackMapper::mapFrom) }
 
-    override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
-            api.getRelatedArtists(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                    .map { it.artists.map(ArtistMapper::mapFrom) }
+    override fun getRelatedArtists(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Single<List<ArtistEntity>> = api.getRelatedArtists(
+            authorization = getAccessTokenHeader(accessToken.token),
+            artistId = artistId
+    ).map { it.artists.map(ArtistMapper::mapFrom) }
 
     data class TrackIdsPage(
             val ids: String,

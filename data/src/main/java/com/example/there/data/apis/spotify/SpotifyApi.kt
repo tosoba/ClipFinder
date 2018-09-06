@@ -1,7 +1,6 @@
 package com.example.there.data.apis.spotify
 
 import com.example.there.data.entities.spotify.AlbumData
-import com.example.there.data.entities.spotify.TrackData
 import com.example.there.data.responses.*
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -28,10 +27,6 @@ interface SpotifyApi {
             @Query("offset") offset: String = DEFAULT_OFFSET,
             @Query("limit") limit: String = DEFAULT_LIMIT
     ): Observable<PlaylistsResponse>
-
-    @GET("tracks/{id}")
-    fun getTrack(@Header("Authorization") authorization: String,
-                 @Path("id") id: String): Observable<TrackData>
 
     @GET("tracks")
     fun getTracks(
@@ -64,12 +59,16 @@ interface SpotifyApi {
     ): Single<PlaylistTracksResponse>
 
     @GET("artists")
-    fun getArtists(@Header("Authorization") authorization: String,
-                   @Query("ids") artistIds: String): Observable<ArtistsOnlyResponse>
+    fun getArtists(
+            @Header("Authorization") authorization: String,
+            @Query("ids") artistIds: String
+    ): Single<ArtistsOnlyResponse>
 
     @GET("albums/{id}")
-    fun getAlbum(@Header("Authorization") authorization: String,
-                 @Path("id") albumId: String): Observable<AlbumData>
+    fun getAlbum(
+            @Header("Authorization") authorization: String,
+            @Path("id") albumId: String
+    ): Single<AlbumData>
 
     @GET("recommendations")
     fun getSimilarTracks(
@@ -87,13 +86,17 @@ interface SpotifyApi {
     ): Observable<AlbumsResult>
 
     @GET("artists/{id}/top-tracks")
-    fun getTopTracksFromArtist(@Header("Authorization") authorization: String,
-                               @Path("id") artistId: String,
-                               @Query("country") country: String = DEFAULT_COUNTRY): Observable<TracksOnlyResponse>
+    fun getTopTracksFromArtist(
+            @Header("Authorization") authorization: String,
+            @Path("id") artistId: String,
+            @Query("country") country: String = DEFAULT_COUNTRY
+    ): Single<TracksOnlyResponse>
 
     @GET("artists/{id}/related-artists")
-    fun getRelatedArtists(@Header("Authorization") authorization: String,
-                          @Path("id") artistId: String): Observable<ArtistsOnlyResponse>
+    fun getRelatedArtists(
+            @Header("Authorization") authorization: String,
+            @Path("id") artistId: String
+    ): Single<ArtistsOnlyResponse>
 
     @GET("albums/{id}/tracks")
     fun getTracksFromAlbum(
