@@ -1,7 +1,6 @@
 package com.example.there.findclips.model.mappers
 
 import com.example.there.domain.common.TwoWayMapper
-import com.example.there.domain.entities.spotify.AlbumEntity
 import com.example.there.domain.entities.spotify.ArtistEntity
 import com.example.there.findclips.model.entities.Artist
 

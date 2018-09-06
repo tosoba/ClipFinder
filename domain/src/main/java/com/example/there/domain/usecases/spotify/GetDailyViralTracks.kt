@@ -9,8 +9,10 @@ import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class GetDailyViralTracks(transformer: SymmetricObservableTransformer<List<TopTrackEntity>>,
-                          private val repository: ISpotifyRepository) : ObservableUseCase<List<TopTrackEntity>>(transformer) {
+class GetDailyViralTracks(
+        transformer: SymmetricObservableTransformer<List<TopTrackEntity>>,
+        private val repository: ISpotifyRepository
+) : ObservableUseCase<List<TopTrackEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<TopTrackEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity

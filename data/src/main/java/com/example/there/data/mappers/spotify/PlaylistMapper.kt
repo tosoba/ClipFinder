@@ -4,7 +4,6 @@ import com.example.there.data.entities.spotify.IconData
 import com.example.there.data.entities.spotify.OwnerData
 import com.example.there.data.entities.spotify.PlaylistData
 import com.example.there.data.util.firstIconUrlOrDefault
-import com.example.there.domain.common.OneWayMapper
 import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entities.spotify.PlaylistEntity
 

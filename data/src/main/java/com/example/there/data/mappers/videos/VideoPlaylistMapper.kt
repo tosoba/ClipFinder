@@ -1,7 +1,6 @@
 package com.example.there.data.mappers.videos
 
 import com.example.there.data.entities.videos.VideoPlaylistData
-import com.example.there.domain.common.OneWayMapper
 import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entities.videos.VideoPlaylistEntity
 

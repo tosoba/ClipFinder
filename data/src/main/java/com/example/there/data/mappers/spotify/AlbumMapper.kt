@@ -4,7 +4,6 @@ import com.example.there.data.entities.spotify.AlbumData
 import com.example.there.data.entities.spotify.IconData
 import com.example.there.data.entities.spotify.SimplifiedArtistData
 import com.example.there.data.util.secondIconUrlOrDefault
-import com.example.there.domain.common.OneWayMapper
 import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entities.spotify.AlbumEntity
 import com.example.there.domain.entities.spotify.SimpleArtistEntity

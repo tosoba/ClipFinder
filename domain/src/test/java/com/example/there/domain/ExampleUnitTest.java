@@ -2,7 +2,7 @@ package com.example.there.domain;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will createObservable on the development machine (host).
