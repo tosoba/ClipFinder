@@ -13,7 +13,9 @@ import dagger.Provides
 class DomainModule {
 
     @Provides
-    fun accessTokenUseCase(repository: ISpotifyRepository): GetAccessToken = GetAccessToken(AsyncSymmetricObservableTransformer(), repository)
+    fun accessTokenUseCase(
+            repository: ISpotifyRepository
+    ): GetAccessToken = GetAccessToken(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun artistsUseCase(
@@ -100,10 +102,14 @@ class DomainModule {
     fun getFavouriteTracksUseCase(repository: ISpotifyRepository): GetFavouriteTracks = GetFavouriteTracks(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun searchRelatedVideosUseCase(repository: IVideosRepository): SearchRelatedVideos = SearchRelatedVideos(AsyncSymmetricSingleTransformer(), repository)
+    fun searchRelatedVideosUseCase(
+            repository: IVideosRepository
+    ): SearchRelatedVideos = SearchRelatedVideos(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun addVideosToPlaylistUseCase(repository: IVideosRepository): AddVideoToPlaylist = AddVideoToPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    fun addVideosToPlaylistUseCase(
+            repository: IVideosRepository
+    ): AddVideoToPlaylist = AddVideoToPlaylist(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun insertVideoPlaylistUseCase(
@@ -129,7 +135,9 @@ class DomainModule {
     ): GetAlbum = GetAlbum(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun similarTracksUseCase(repository: ISpotifyRepository): GetSimilarTracks = GetSimilarTracks(AsyncSymmetricObservableTransformer(), repository)
+    fun similarTracksUseCase(
+            repository: ISpotifyRepository
+    ): GetSimilarTracks = GetSimilarTracks(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun insertTrackUseCase(

@@ -16,17 +16,21 @@ class SpotifyRepository @Inject constructor(
         private val dbDataStore: ISpotifyDbDataStore
 ) : ISpotifyRepository {
 
-    override fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity> =
-            remoteDataStore.getAccessToken(clientId, clientSecret)
+    override fun getAccessToken(
+            clientId: String, clientSecret: String
+    ): Single<AccessTokenEntity> = remoteDataStore.getAccessToken(clientId, clientSecret)
 
-    override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> =
-            remoteDataStore.getCategories(accessToken)
+    override fun getCategories(
+            accessToken: AccessTokenEntity
+    ): Observable<List<CategoryEntity>> = remoteDataStore.getCategories(accessToken)
 
-    override fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> =
-            remoteDataStore.getFeaturedPlaylists(accessToken)
+    override fun getFeaturedPlaylists(
+            accessToken: AccessTokenEntity
+    ): Observable<List<PlaylistEntity>> = remoteDataStore.getFeaturedPlaylists(accessToken)
 
-    override fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>> =
-            remoteDataStore.getDailyViralTracks(accessToken)
+    override fun getDailyViralTracks(
+            accessToken: AccessTokenEntity
+    ): Observable<List<TopTrackEntity>> = remoteDataStore.getDailyViralTracks(accessToken)
 
     override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
             remoteDataStore.searchAll(accessToken, query)
@@ -78,7 +82,7 @@ class SpotifyRepository @Inject constructor(
             offset: Int
     ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
 
-    //TODO: make these return Flowable
+    //TODO: make these get... return Flowable
     override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 
     override fun getFavouriteArtists(): Single<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()

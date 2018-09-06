@@ -8,7 +8,9 @@ import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.util.ext.messageOrDefault
 import retrofit2.HttpException
 
-open class BaseSpotifyViewModel(private val getAccessToken: GetAccessToken) : BaseViewModel() {
+open class BaseSpotifyViewModel(
+        private val getAccessToken: GetAccessToken
+) : BaseViewModel() {
 
     val accessTokenLiveData: MutableLiveData<AccessTokenEntity> = MutableLiveData()
 

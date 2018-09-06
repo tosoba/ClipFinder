@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface ISpotifyRepository {
-    fun getAccessToken(clientId: String, clientSecret: String): Observable<AccessTokenEntity>
+    fun getAccessToken(clientId: String, clientSecret: String): Single<AccessTokenEntity>
 
     fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
     fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>

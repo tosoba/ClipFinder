@@ -26,7 +26,7 @@ class SpotifyRemoteDataStore @Inject constructor(
     override fun getAccessToken(
             clientId: String,
             clientSecret: String
-    ): Observable<AccessTokenEntity> = accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret))
+    ): Single<AccessTokenEntity> = accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret))
             .map(AccessTokenMapper::mapFrom)
 
     override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
