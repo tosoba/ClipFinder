@@ -20,16 +20,7 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 
 class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
-    override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(
-            Playlist::class.java,
-            object : ObservableSortedList.Callback<Playlist> {
-                override fun compare(o1: Playlist, o2: Playlist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
-
-                override fun areItemsTheSame(item1: Playlist, item2: Playlist): Boolean = item1.id == item2.id
-
-                override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean = newItem.id == oldItem.id
-            }
-    ))
+    override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback))
 
     private val onPlaylistClickListener = object : OnPlaylistClickListener {
         override fun onClick(item: Playlist) = Router.goToPlaylistActivity(activity, playlist = item)

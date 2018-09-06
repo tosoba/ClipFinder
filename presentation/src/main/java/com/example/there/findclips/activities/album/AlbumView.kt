@@ -23,20 +23,8 @@ data class AlbumView(
 )
 
 data class AlbumViewState(
-        val artists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, object : ObservableSortedList.Callback<Artist> {
-            override fun compare(o1: Artist, o2: Artist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
-
-            override fun areItemsTheSame(item1: Artist, item2: Artist): Boolean = item1.id == item2.id
-
-            override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean = oldItem.id == newItem.id
-        }),
-        val tracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, object : ObservableSortedList.Callback<Track> {
-            override fun compare(o1: Track, o2: Track): Int = o1.trackNumber.compareTo(o2.trackNumber)
-
-            override fun areItemsTheSame(item1: Track, item2: Track): Boolean = item1.id == item2.id
-
-            override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean = oldItem.id == newItem.id
-        }),
+        val artists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback),
+        val tracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackTrackNumber),
         val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
 )

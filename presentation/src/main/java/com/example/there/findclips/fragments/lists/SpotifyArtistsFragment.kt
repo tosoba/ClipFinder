@@ -22,14 +22,7 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
 
-    override val viewState: ViewState<Artist> =
-            ViewState(ObservableSortedList<Artist>(Artist::class.java, object : ObservableSortedList.Callback<Artist> {
-                override fun compare(o1: Artist, o2: Artist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
-
-                override fun areItemsTheSame(item1: Artist, item2: Artist): Boolean = item1.id == item2.id
-
-                override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean = newItem.id == oldItem.id
-            }))
+    override val viewState: ViewState<Artist> = ViewState(ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback))
 
     private val onArtistClickListener = object : OnArtistClickListener {
         override fun onClick(item: Artist) = Router.goToArtistActivity(activity, artist = item)
