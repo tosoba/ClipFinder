@@ -30,8 +30,10 @@ interface SpotifyApi {
                  @Path("id") id: String): Observable<TrackData>
 
     @GET("tracks")
-    fun getTracks(@Header("Authorization") authorization: String,
-                  @Query("ids") ids: String): Observable<TracksOnlyResponse>
+    fun getTracks(
+            @Header("Authorization") authorization: String,
+            @Query("ids") ids: String
+    ): Single<TracksOnlyResponse>
 
     @GET("search")
     fun searchAll(@Header("Authorization") authorization: String,
@@ -66,9 +68,11 @@ interface SpotifyApi {
                  @Path("id") albumId: String): Observable<AlbumData>
 
     @GET("recommendations")
-    fun getSimilarTracks(@Header("Authorization") authorization: String,
-                         @Query("limit") limit: String = "100",
-                         @Query("seed_tracks") trackId: String): Observable<SimilarTracksResponse>
+    fun getSimilarTracks(
+            @Header("Authorization") authorization: String,
+            @Query("limit") limit: String = DEFAULT_TRACKS_LIMIT,
+            @Query("seed_tracks") trackId: String
+    ): Observable<SimilarTracksResponse>
 
     @GET("artists/{id}/albums")
     fun getAlbumsFromArtist(@Header("Authorization") authorization: String,
@@ -85,10 +89,12 @@ interface SpotifyApi {
                           @Path("id") artistId: String): Observable<ArtistsOnlyResponse>
 
     @GET("albums/{id}/tracks")
-    fun getTracksFromAlbum(@Header("Authorization") authorization: String,
-                           @Path("id") albumId: String,
-                           @Query("limit") limit: String = DEFAULT_LIMIT,
-                           @Query("offset") offset: String = DEFAULT_OFFSET): Observable<TracksResult>
+    fun getTracksFromAlbum(
+            @Header("Authorization") authorization: String,
+            @Path("id") albumId: String,
+            @Query("limit") limit: String = DEFAULT_LIMIT,
+            @Query("offset") offset: String = DEFAULT_OFFSET
+    ): Single<TracksResult>
 
     companion object {
         const val DEFAULT_LIMIT = "50"

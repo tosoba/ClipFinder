@@ -22,6 +22,7 @@ import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener
 import com.example.there.findclips.view.lists.TracksPopularityList
+import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.activity_album.*
 
@@ -50,7 +51,13 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
                 },
                 artistsAdapter = artistsAdapter,
                 tracksAdapter = tracksAdapter,
-                separatorDecoration = SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f))
+                separatorDecoration = SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                onTracksScrollListener = object : EndlessRecyclerOnScrollListener() {
+                    override fun onLoadMore() {
+                        accessToken?.let { viewModel.loadTracksFromAlbum(it, album.id) }
+                    }
+                }
+        )
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {

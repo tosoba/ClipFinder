@@ -67,6 +67,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/album_tracks_recycler_view"
                 itemDecoration="@{view.separatorDecoration}"
+                onScrollListener="@{view.onTracksScrollListener}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:adapter="@{view.tracksAdapter}"

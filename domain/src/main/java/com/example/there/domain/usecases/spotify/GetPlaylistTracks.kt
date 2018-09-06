@@ -2,7 +2,7 @@ package com.example.there.domain.usecases.spotify
 
 import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.pages.PlaylistTracksPage
+import com.example.there.domain.pages.TracksPage
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.usecases.UseCaseParams
 import com.example.there.domain.usecases.base.SingleUseCase
@@ -10,11 +10,11 @@ import io.reactivex.Single
 import java.lang.IllegalArgumentException
 
 class GetPlaylistTracks(
-        transformer: SymmetricSingleTransformer<PlaylistTracksPage>,
+        transformer: SymmetricSingleTransformer<TracksPage>,
         private val repository: ISpotifyRepository
-) : SingleUseCase<PlaylistTracksPage>(transformer) {
+) : SingleUseCase<TracksPage>(transformer) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<PlaylistTracksPage> {
+    override fun createSingle(data: Map<String, Any?>?): Single<TracksPage> {
         val accessTokenEntity = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
         val playlistId = data?.get(UseCaseParams.PARAM_PLAYLIST_ID) as? String
         val userId = data?.get(UseCaseParams.PARAM_USER_ID) as? String
@@ -26,7 +26,7 @@ class GetPlaylistTracks(
         }
     }
 
-    fun execute(accessTokenEntity: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<PlaylistTracksPage> {
+    fun execute(accessTokenEntity: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<TracksPage> {
         val data = HashMap<String, Any>().apply {
             put(UseCaseParams.PARAM_ACCESS_TOKEN, accessTokenEntity)
             put(UseCaseParams.PARAM_PLAYLIST_ID, playlistId)

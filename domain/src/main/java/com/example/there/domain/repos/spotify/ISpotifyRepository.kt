@@ -2,7 +2,7 @@ package com.example.there.domain.repos.spotify
 
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.pages.CategoryPlaylistsPage
-import com.example.there.domain.pages.PlaylistTracksPage
+import com.example.there.domain.pages.TracksPage
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -16,7 +16,8 @@ interface ISpotifyRepository {
     fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<CategoryPlaylistsPage>
-    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<PlaylistTracksPage>
+    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<TracksPage>
+    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage>
 
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity>
     fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Observable<List<ArtistEntity>>
@@ -24,7 +25,6 @@ interface ISpotifyRepository {
     fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>>
     fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>>
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>>
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>>
 
     fun getFavouriteAlbums(): Single<List<AlbumEntity>>
     fun getFavouriteArtists(): Single<List<ArtistEntity>>

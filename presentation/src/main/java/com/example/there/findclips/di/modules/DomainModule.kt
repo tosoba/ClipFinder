@@ -30,7 +30,7 @@ class DomainModule {
     fun insertAlbumUseCase(repository: ISpotifyRepository): InsertAlbum = InsertAlbum(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun tracksFromAlbumUseCase(repository: ISpotifyRepository): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricObservableTransformer(), repository)
+    fun tracksFromAlbumUseCase(repository: ISpotifyRepository): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun insertArtistUseCase(repository: ISpotifyRepository): InsertArtist = InsertArtist(AsyncSymmetricObservableTransformer(), repository)

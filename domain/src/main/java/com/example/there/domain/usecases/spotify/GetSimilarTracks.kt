@@ -8,8 +8,10 @@ import com.example.there.domain.usecases.UseCaseParams
 import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 
-class GetSimilarTracks(transformer: SymmetricObservableTransformer<List<TrackEntity>>,
-                       private val repository: ISpotifyRepository) : ObservableUseCase<List<TrackEntity>>(transformer) {
+class GetSimilarTracks(
+        transformer: SymmetricObservableTransformer<List<TrackEntity>>,
+        private val repository: ISpotifyRepository
+) : ObservableUseCase<List<TrackEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<TrackEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity

@@ -2,7 +2,7 @@ package com.example.there.data.repos.spotify
 
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.pages.CategoryPlaylistsPage
-import com.example.there.domain.pages.PlaylistTracksPage
+import com.example.there.domain.pages.TracksPage
 import com.example.there.domain.repos.spotify.ISpotifyRepository
 import com.example.there.domain.repos.spotify.datastores.ISpotifyDbDataStore
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
@@ -45,7 +45,7 @@ class SpotifyRepository @Inject constructor(
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<PlaylistTracksPage> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
+    ): Single<TracksPage> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
 
     override fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity> =
             remoteDataStore.getAlbum(accessToken, albumId)
@@ -53,8 +53,10 @@ class SpotifyRepository @Inject constructor(
     override fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Observable<List<ArtistEntity>> =
             remoteDataStore.getArtists(accessToken, artistIds)
 
-    override fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>> =
-            remoteDataStore.getSimilarTracks(accessToken, trackId)
+    override fun getSimilarTracks(
+            accessToken: AccessTokenEntity,
+            trackId: String
+    ): Observable<List<TrackEntity>> = remoteDataStore.getSimilarTracks(accessToken, trackId)
 
     override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
             remoteDataStore.getAlbumsFromArtist(accessToken, artistId)
@@ -65,8 +67,11 @@ class SpotifyRepository @Inject constructor(
     override fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>> =
             remoteDataStore.getRelatedArtists(accessToken, artistId)
 
-    override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
-            remoteDataStore.getTracksFromAlbum(accessToken, albumId)
+    override fun getTracksFromAlbum(
+            accessToken: AccessTokenEntity,
+            albumId: String,
+            offset: Int
+    ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
 
     override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 

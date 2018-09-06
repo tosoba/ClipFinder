@@ -2,7 +2,7 @@ package com.example.there.domain.repos.spotify.datastores
 
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.pages.CategoryPlaylistsPage
-import com.example.there.domain.pages.PlaylistTracksPage
+import com.example.there.domain.pages.TracksPage
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -21,7 +21,7 @@ interface ISpotifyRemoteDataStore {
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<CategoryPlaylistsPage>
 
-    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<PlaylistTracksPage>
+    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<TracksPage>
 
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<AlbumEntity>
 
@@ -35,5 +35,5 @@ interface ISpotifyRemoteDataStore {
 
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Observable<List<ArtistEntity>>
 
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>>
+    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage>
 }

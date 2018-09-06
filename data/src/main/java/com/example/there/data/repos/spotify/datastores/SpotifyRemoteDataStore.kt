@@ -9,7 +9,7 @@ import com.example.there.data.mappers.spotify.*
 import com.example.there.data.responses.TracksOnlyResponse
 import com.example.there.domain.entities.spotify.*
 import com.example.there.domain.pages.CategoryPlaylistsPage
-import com.example.there.domain.pages.PlaylistTracksPage
+import com.example.there.domain.pages.TracksPage
 import com.example.there.domain.repos.spotify.datastores.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -74,7 +74,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 api.getTracks(
                         authorization = getAccessTokenHeader(accessToken.token),
                         ids = it
-                )
+                ).toObservable()
             }
             .zipWith(
                     Observable.range(0, Int.MAX_VALUE),
@@ -131,13 +131,13 @@ class SpotifyRemoteDataStore @Inject constructor(
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<PlaylistTracksPage> = api.getPlaylistTracks(
+    ): Single<TracksPage> = api.getPlaylistTracks(
             authorization = getAccessTokenHeader(accessToken.token),
             playlistId = playlistId,
             userId = userId,
             offset = offset.toString()
     ).map {
-        PlaylistTracksPage(
+        TracksPage(
                 tracks = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
                 offset = it.offset,
                 totalItems = it.totalItems
@@ -156,17 +156,19 @@ class SpotifyRemoteDataStore @Inject constructor(
                     artistIds = artistIds.joinToString(",")
             ).map { it.artists.map(ArtistMapper::mapFrom) }
 
-    override fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>> =
-            api.getSimilarTracks(authorization = getAccessTokenHeader(accessToken.token), trackId = trackId)
-                    .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
-                    .flatMapIterable { it }
-                    .flatMap {
-                        api.getTracks(
-                                authorization = getAccessTokenHeader(accessToken.token),
-                                ids = it
-                        )
-                    }
-                    .map { it.tracks.map(TrackMapper::mapFrom) }
+    override fun getSimilarTracks(
+            accessToken: AccessTokenEntity,
+            trackId: String
+    ): Observable<List<TrackEntity>> = api.getSimilarTracks(authorization = getAccessTokenHeader(accessToken.token), trackId = trackId)
+            .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
+            .flatMapIterable { it }
+            .flatMap {
+                api.getTracks(
+                        authorization = getAccessTokenHeader(accessToken.token),
+                        ids = it
+                ).toObservable()
+            }
+            .map { it.tracks.map(TrackMapper::mapFrom) }
 
 
     override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
@@ -181,18 +183,38 @@ class SpotifyRemoteDataStore @Inject constructor(
             api.getRelatedArtists(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
                     .map { it.artists.map(ArtistMapper::mapFrom) }
 
-    override fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<List<TrackEntity>> =
-            api.getTracksFromAlbum(authorization = getAccessTokenHeader(accessToken.token), albumId = albumId)
-                    .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
-                    .flatMapIterable { it }
-                    .flatMap {
-                        api.getTracks(
-                                authorization = getAccessTokenHeader(accessToken.token),
-                                ids = it
-                        )
-                    }
-                    .map { it.tracks.map(TrackMapper::mapFrom) }
+    data class TrackIdsPage(
+            val ids: String,
+            val offset: Int,
+            val totalItems: Int
+    )
 
+    override fun getTracksFromAlbum(
+            accessToken: AccessTokenEntity,
+            albumId: String,
+            offset: Int
+    ): Single<TracksPage> = api.getTracksFromAlbum(
+            authorization = getAccessTokenHeader(accessToken.token),
+            albumId = albumId,
+            offset = offset.toString()
+    ).map {
+        TrackIdsPage(
+                ids = it.tracks.joinToString(separator = ",") { it.id },
+                offset = it.offset,
+                totalItems = it.totalItems
+        )
+    }.flatMap { idsPage ->
+        api.getTracks(
+                authorization = getAccessTokenHeader(accessToken.token),
+                ids = idsPage.ids
+        ).map {
+            TracksPage(
+                    tracks = it.tracks.map(TrackMapper::mapFrom),
+                    offset = idsPage.offset,
+                    totalItems = idsPage.totalItems
+            )
+        }
+    }
 
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
