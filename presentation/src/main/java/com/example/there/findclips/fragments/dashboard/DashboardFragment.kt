@@ -56,12 +56,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         }.root
     }
 
+    private val isDataLoaded: Boolean
+        get() = viewModel.viewState.categories.isNotEmpty() &&
+                viewModel.viewState.featuredPlaylists.isNotEmpty() &&
+                viewModel.viewState.topTracks.isNotEmpty()
+
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 activity!!,
-                viewModel.viewState.categories.isNotEmpty() &&
-                        viewModel.viewState.featuredPlaylists.isNotEmpty() &&
-                        viewModel.viewState.topTracks.isNotEmpty(),
+                { isDataLoaded },
                 dashboard_root_layout,
                 ::loadData,
                 true

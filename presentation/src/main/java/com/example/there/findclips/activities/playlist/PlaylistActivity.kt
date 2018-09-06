@@ -36,7 +36,7 @@ class PlaylistActivity : BaseSpotifyVMActivity<PlaylistViewModel>() {
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 this,
-                viewModel.tracks.value != null,
+                { viewModel.tracks.value != null },
                 playlist_root_layout,
                 ::loadData
         )

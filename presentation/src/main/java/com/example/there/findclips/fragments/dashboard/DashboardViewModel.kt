@@ -40,21 +40,21 @@ class DashboardViewModel @Inject constructor(
         viewState.categoriesLoadingInProgress.set(true)
         addDisposable(getCategories.execute(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
-                .subscribe({ viewState.addCategoriesSorted(it.map(CategoryEntityMapper::mapFrom)) }, this::onError))
+                .subscribe({ viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom)) }, ::onError))
     }
 
     private fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
         addDisposable(getFeaturedPlaylists.execute(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
-                .subscribe({ viewState.addFeaturedPlaylistsSorted(it.map(PlaylistEntityMapper::mapFrom)) }, this::onError))
+                .subscribe({ viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom)) }, ::onError))
     }
 
     private fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
         viewState.topTracksLoadingInProgress.set(true)
         addDisposable(getDailyViralTracks.execute(accessToken)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
-                .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, this::onError))
+                .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, ::onError))
     }
 
     override fun onError(t: Throwable) {

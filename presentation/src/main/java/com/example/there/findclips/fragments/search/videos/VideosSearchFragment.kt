@@ -89,7 +89,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 activity!!,
-                query == "" || viewModel.viewState.videos.isNotEmpty(),
+                { query == "" || viewModel.viewState.videos.isNotEmpty() },
                 videos_search_root_layout,
                 ::loadData,
                 true

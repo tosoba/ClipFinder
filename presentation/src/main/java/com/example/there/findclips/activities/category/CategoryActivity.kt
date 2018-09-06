@@ -34,7 +34,7 @@ class CategoryActivity : BaseSpotifyVMActivity<CategoryViewModel>() {
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 this,
-                viewModel.playlists.value != null,
+                { viewModel.playlists.value != null },
                 category_root_layout,
                 ::loadData
         )

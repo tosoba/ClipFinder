@@ -127,11 +127,13 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 activity!!,
-                query == "" ||
-                        (viewModel.viewState.albums.isNotEmpty() &&
-                                viewModel.viewState.artists.isNotEmpty() &&
-                                viewModel.viewState.playlists.isNotEmpty() &&
-                                viewModel.viewState.tracks.isNotEmpty()),
+                {
+                    query == "" ||
+                            (viewModel.viewState.albums.isNotEmpty() &&
+                                    viewModel.viewState.artists.isNotEmpty() &&
+                                    viewModel.viewState.playlists.isNotEmpty() &&
+                                    viewModel.viewState.tracks.isNotEmpty())
+                },
                 spotify_search_root_layout,
                 ::loadData,
                 true

@@ -56,7 +56,7 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 this,
-                viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty(),
+                { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
                 album_root_layout,
                 ::loadData
         )

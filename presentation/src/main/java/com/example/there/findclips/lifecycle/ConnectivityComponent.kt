@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 
 class ConnectivityComponent(
         private val activity: Activity,
-        private val isDataLoaded: Boolean,
+        private val isDataLoaded: () -> Boolean,
         private val parentView: View,
         private val reloadData: (() -> Unit)? = null,
         private val shouldShowSnackbarWithBottomMargin: Boolean = false
@@ -54,7 +54,7 @@ class ConnectivityComponent(
         } else {
             if (connectionInterrupted) {
                 connectionInterrupted = false
-                if (!isDataLoaded && reloadData != null) {
+                if (!isDataLoaded() && reloadData != null) {
                     reloadData.invoke()
                 }
             }

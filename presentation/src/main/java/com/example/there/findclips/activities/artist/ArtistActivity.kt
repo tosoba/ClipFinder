@@ -59,10 +59,12 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 this,
-                viewModel.viewState.albums.isNotEmpty() &&
-                        viewModel.viewState.artist.get() != null &&
-                        viewModel.viewState.topTracks.isNotEmpty() &&
-                        viewModel.viewState.topTracks.isNotEmpty(),
+                {
+                    viewModel.viewState.albums.isNotEmpty() &&
+                            viewModel.viewState.artist.get() != null &&
+                            viewModel.viewState.topTracks.isNotEmpty() &&
+                            viewModel.viewState.topTracks.isNotEmpty()
+                },
                 artist_root_layout,
                 ::loadData
         )

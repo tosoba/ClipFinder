@@ -80,9 +80,11 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 activity!!,
-                viewModel.viewState.album.get() != null &&
-                        viewModel.viewState.artists.isNotEmpty() &&
-                        viewModel.viewState.similarTracks.isNotEmpty(),
+                {
+                    viewModel.viewState.album.get() != null &&
+                            viewModel.viewState.artists.isNotEmpty() &&
+                            viewModel.viewState.similarTracks.isNotEmpty()
+                },
                 track_root_layout,
                 ::loadData
         )

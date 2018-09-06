@@ -71,7 +71,7 @@ class PlayerActivity : BaseVMActivity<PlayerViewModel>(), YouTubePlayer.OnInitia
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 this,
-                viewModel.viewState.videos.isNotEmpty(),
+                { viewModel.viewState.videos.isNotEmpty() },
                 player_root_layout,
                 ::loadData
         )
