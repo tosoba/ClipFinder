@@ -13,17 +13,21 @@ import retrofit2.http.Query
 interface SpotifyApi {
 
     @GET("browse/categories")
-    fun getCategories(@Header("Authorization") authorization: String,
-                      @Query("country") country: String = DEFAULT_COUNTRY,
-                      @Query("locale") locale: String = DEFAULT_LOCALE,
-                      @Query("offset") offset: String = DEFAULT_OFFSET,
-                      @Query("limit") limit: String = DEFAULT_LIMIT): Observable<CategoriesResponse>
+    fun getCategories(
+            @Header("Authorization") authorization: String,
+            @Query("country") country: String = DEFAULT_COUNTRY,
+            @Query("locale") locale: String = DEFAULT_LOCALE,
+            @Query("offset") offset: String = DEFAULT_OFFSET,
+            @Query("limit") limit: String = DEFAULT_LIMIT
+    ): Observable<CategoriesResponse>
 
     @GET("browse/featured-playlists")
-    fun getFeaturedPlaylists(@Header("Authorization") authorization: String,
-                             @Query("country") country: String = DEFAULT_COUNTRY,
-                             @Query("offset") offset: String = DEFAULT_OFFSET,
-                             @Query("limit") limit: String = DEFAULT_LIMIT): Observable<PlaylistsResponse>
+    fun getFeaturedPlaylists(
+            @Header("Authorization") authorization: String,
+            @Query("country") country: String = DEFAULT_COUNTRY,
+            @Query("offset") offset: String = DEFAULT_OFFSET,
+            @Query("limit") limit: String = DEFAULT_LIMIT
+    ): Observable<PlaylistsResponse>
 
     @GET("tracks/{id}")
     fun getTrack(@Header("Authorization") authorization: String,
@@ -75,9 +79,12 @@ interface SpotifyApi {
     ): Observable<SimilarTracksResponse>
 
     @GET("artists/{id}/albums")
-    fun getAlbumsFromArtist(@Header("Authorization") authorization: String,
-                            @Path("id") artistId: String,
-                            @Query("limit") limit: String = DEFAULT_LIMIT): Observable<AlbumsResult>
+    fun getAlbumsFromArtist(
+            @Header("Authorization") authorization: String,
+            @Path("id") artistId: String,
+            @Query("limit") limit: String = DEFAULT_LIMIT,
+            @Query("offset") offset: String = DEFAULT_OFFSET
+    ): Observable<AlbumsResult>
 
     @GET("artists/{id}/top-tracks")
     fun getTopTracksFromArtist(@Header("Authorization") authorization: String,

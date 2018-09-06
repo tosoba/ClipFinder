@@ -171,9 +171,24 @@ class SpotifyRemoteDataStore @Inject constructor(
             .map { it.tracks.map(TrackMapper::mapFrom) }
 
 
-    override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
-            api.getAlbumsFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)
-                    .map { it.albums.map(AlbumMapper::mapFrom) }
+    override fun getAlbumsFromArtist(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Observable<List<AlbumEntity>> {
+        val offsetSubject = BehaviorSubject.createDefault(0)
+        return offsetSubject.concatMap { offset ->
+            api.getAlbumsFromArtist(
+                    authorization = getAccessTokenHeader(accessToken.token),
+                    artistId = artistId,
+                    offset = offset.toString()
+            )
+        }.doOnNext {
+            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
+                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            else
+                offsetSubject.onComplete()
+        }.map { it.albums.map(AlbumMapper::mapFrom) }
+    }
 
     override fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<TrackEntity>> =
             api.getTopTracksFromArtist(authorization = getAccessTokenHeader(accessToken.token), artistId = artistId)

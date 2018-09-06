@@ -68,7 +68,7 @@ class ArtistViewModel @Inject constructor(
                     val toAdd = it.map(AlbumEntityMapper::mapFrom)
                     viewStates.peek().albums.addAll(toAdd)
                     viewState.albums.addAll(toAdd)
-                }, this::onError))
+                }, ::onError))
     }
 
     private fun loadTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String) {
@@ -79,7 +79,7 @@ class ArtistViewModel @Inject constructor(
                     val toAdd = it.map(TrackEntityMapper::mapFrom)
                     viewStates.peek().topTracks.addAll(toAdd)
                     viewState.topTracks.addAll(toAdd)
-                }, this::onError))
+                }, ::onError))
     }
 
     private fun loadRelatedArtists(accessToken: AccessTokenEntity, artistId: String) {
@@ -90,7 +90,7 @@ class ArtistViewModel @Inject constructor(
                     val toAdd = it.map(ArtistEntityMapper::mapFrom)
                     viewStates.peek().relatedArtists.addAll(toAdd)
                     viewState.relatedArtists.addAll(toAdd)
-                }, this::onError))
+                }, ::onError))
     }
 
     fun addFavouriteArtist() {

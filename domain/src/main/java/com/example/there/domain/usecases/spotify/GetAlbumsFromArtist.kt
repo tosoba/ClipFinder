@@ -8,8 +8,10 @@ import com.example.there.domain.usecases.UseCaseParams
 import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 
-class GetAlbumsFromArtist(transformer: SymmetricObservableTransformer<List<AlbumEntity>>,
-                          private val repository: ISpotifyRepository) : ObservableUseCase<List<AlbumEntity>>(transformer) {
+class GetAlbumsFromArtist(
+        transformer: SymmetricObservableTransformer<List<AlbumEntity>>,
+        private val repository: ISpotifyRepository
+) : ObservableUseCase<List<AlbumEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<AlbumEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity

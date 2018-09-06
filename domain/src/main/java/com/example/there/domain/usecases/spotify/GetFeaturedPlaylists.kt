@@ -9,8 +9,10 @@ import com.example.there.domain.usecases.base.ObservableUseCase
 import io.reactivex.Observable
 import java.lang.IllegalArgumentException
 
-class GetFeaturedPlaylists(transformer: SymmetricObservableTransformer<List<PlaylistEntity>>,
-                           private val repository: ISpotifyRepository) : ObservableUseCase<List<PlaylistEntity>>(transformer) {
+class GetFeaturedPlaylists(
+        transformer: SymmetricObservableTransformer<List<PlaylistEntity>>,
+        private val repository: ISpotifyRepository
+) : ObservableUseCase<List<PlaylistEntity>>(transformer) {
 
     override fun createObservable(data: Map<String, Any?>?): Observable<List<PlaylistEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
