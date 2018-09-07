@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".activities.playlist.PlaylistActivity">
+        tools:context=".activities.playlist.PlaylistFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/playlist_app_bar"

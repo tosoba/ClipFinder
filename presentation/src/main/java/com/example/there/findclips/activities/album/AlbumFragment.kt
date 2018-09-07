@@ -1,18 +1,19 @@
 package com.example.there.findclips.activities.album
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
-import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
-import com.example.there.findclips.databinding.ActivityAlbumBinding
+import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.HasBackNavigation
+import com.example.there.findclips.databinding.FragmentAlbumBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
@@ -24,37 +25,42 @@ import com.example.there.findclips.view.lists.OnTrackClickListener
 import com.example.there.findclips.view.lists.TracksPopularityList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import kotlinx.android.synthetic.main.activity_album.*
+import kotlinx.android.synthetic.main.fragment_album.*
 
-class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
+class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable, HasBackNavigation {
 
-    private val album: Album by lazy { intent.getParcelableExtra<Album>(EXTRA_ALBUM) }
+    private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
     private val artistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item, object : OnArtistClickListener {
-            override fun onClick(item: Artist) = Router.goToArtistActivity(this@AlbumActivity, artist = item)
+            override fun onClick(item: Artist) {
+                // show ArtistFragment
+            }
         })
     }
 
     private val tracksAdapter: TracksPopularityList.Adapter by lazy {
         TracksPopularityList.Adapter(viewModel.viewState.tracks, R.layout.track_popularity_item, object : OnTrackClickListener {
-            override fun onClick(item: Track) = Router.goToTrackVideosActivity(this@AlbumActivity, track = item)
+            override fun onClick(item: Track) {
+                // show TrackVideosFragment
+            }
         })
     }
 
     private val view: AlbumView by lazy {
-        AlbumView(state = viewModel.viewState,
+        AlbumView(
+                state = viewModel.viewState,
                 album = album,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.addFavouriteAlbum(album)
-                    Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
                 artistsAdapter = artistsAdapter,
                 tracksAdapter = tracksAdapter,
-                separatorDecoration = SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                separatorDecoration = SeparatorDecoration(activity!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 onTracksScrollListener = object : EndlessRecyclerOnScrollListener() {
                     override fun onLoadMore() {
-                        accessToken?.let { viewModel.loadTracksFromAlbum(it, album.id) }
+                        activity?.accessToken?.let { viewModel.loadTracksFromAlbum(it, album.id) }
                     }
                 }
         )
@@ -62,55 +68,43 @@ class AlbumActivity : BaseSpotifyVMActivity<AlbumViewModel>() {
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
-                this,
+                activity!!,
                 { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
                 album_root_layout,
                 ::loadData
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, R.layout.fragment_album, container, false)
+        return binding.apply {
+            this.view = this@AlbumFragment.view
+            albumContent?.view = view
+            albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        }.root
+    }
 
-        initView()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
         lifecycle.addObserver(connectivityComponent)
-        initToolbar()
 
         if (savedInstanceState == null)
             loadData()
-    }
-
-    private fun initView() {
-        val binding: ActivityAlbumBinding = DataBindingUtil.setContentView(this, R.layout.activity_album)
-        binding.apply {
-            this.view = this@AlbumActivity.view
-            albumContent?.view = view
-            albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(this@AlbumActivity, LinearLayoutManager.HORIZONTAL, false)
-            albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(this@AlbumActivity, LinearLayoutManager.VERTICAL, false)
-        }
-    }
-
-    private fun initToolbar() {
-        setSupportActionBar(album_toolbar)
-        album_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        album_toolbar.setNavigationOnClickListener { super.onBackPressed() }
-        title = album.name
     }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(AlbumViewModel::class.java)
     }
 
-    private fun loadData() = viewModel.loadAlbumData(accessToken, album)
+    private fun loadData() = viewModel.loadAlbumData(activity?.accessToken, album)
 
     companion object {
-        private const val EXTRA_ALBUM = "EXTRA_ALBUM"
+        private const val ARG_ALBUM = "ARG_ALBUM"
 
-        fun start(activity: Activity, album: Album) {
-            val intent = Intent(activity, AlbumActivity::class.java).apply {
-                putExtra(EXTRA_ALBUM, album)
-            }
-            activity.startActivity(intent)
+        fun newInstance(album: Album) = AlbumFragment().apply {
+            arguments = Bundle().apply { putParcelable(ARG_ALBUM, album) }
         }
     }
 }

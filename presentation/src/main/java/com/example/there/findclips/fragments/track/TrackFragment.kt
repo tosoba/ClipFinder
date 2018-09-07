@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
-import com.example.there.findclips.activities.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentTrackBinding
 import com.example.there.findclips.di.Injectable
@@ -43,15 +41,16 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
     }
 
     private val onArtistClickListener = object : OnArtistClickListener {
-        override fun onClick(item: Artist) = Router.goToArtistActivity(activity, artist = item)
+        override fun onClick(item: Artist) {
+            // show ArtistFragment
+        }
     }
 
-    private val onTrackChangeListener: OnTrackChangeListener?
-        get() = activity as OnTrackChangeListener
+    //TODO: onTrackChangeListener with EventBus probably
 
     private val onTrackClickListener = object : OnTrackClickListener {
         override fun onClick(item: Track) {
-            onTrackChangeListener?.onTrackChanged(newTrack = item)
+            // EventBus to TrackVideosFragment - change fragment
         }
     }
 
@@ -61,7 +60,9 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
                 similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener),
                 onAlbumImageViewClickListener = View.OnClickListener {
                     val album = viewModel.viewState.album.get()
-                    album?.let { Router.goToAlbumActivity(activity, album = it) }
+                    album?.let {
+                        // show albumFragment
+                    }
                 })
     }
 

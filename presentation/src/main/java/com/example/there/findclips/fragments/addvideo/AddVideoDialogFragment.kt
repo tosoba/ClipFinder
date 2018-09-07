@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.activities.player.PlayerActivity
 import com.example.there.findclips.databinding.DialogAddVideoBinding
 import com.example.there.findclips.model.entities.VideoPlaylist
 import com.example.there.findclips.view.lists.OnVideoPlaylistClickListener
@@ -17,20 +16,22 @@ import com.example.there.findclips.view.lists.VideoPlaylistsList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class AddVideoDialogFragment : DialogFragment() {
+
     lateinit var state: AddVideoViewState
 
-    private val playerActivity: PlayerActivity?
-        get() = activity as? PlayerActivity
+    //TODO: fix adding video to playlist and adding a new playlist
 
     private val onVideoPlaylistSelectedListener = object : OnVideoPlaylistClickListener {
         override fun onClick(item: VideoPlaylist) {
-            playerActivity?.addVideoToPlaylist(playlist = item)
+            // addVideoToPlaylist
+//            playerActivity?.addVideoToPlaylist(playlist = item)
             dismiss()
         }
     }
 
     private val onAddNewPlaylistsBtnClickListener = View.OnClickListener {
-        playerActivity?.showNewPlaylistDialog()
+
+        //        playerActivity?.showNewPlaylistDialog()
     }
 
     private val view: AddVideoView by lazy {

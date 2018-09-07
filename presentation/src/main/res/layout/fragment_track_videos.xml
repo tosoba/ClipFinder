@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".activities.trackvideos.TrackVideosActivity">
+        tools:context=".activities.trackvideos.TrackVideosFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/track_videos_app_bar"

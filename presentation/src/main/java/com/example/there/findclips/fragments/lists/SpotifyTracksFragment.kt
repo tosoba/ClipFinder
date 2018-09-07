@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
+
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyTracksBinding
 import com.example.there.findclips.model.entities.Track
@@ -25,7 +25,9 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
     override val viewState: ViewState<Track> = ViewState(ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName))
 
     private val onTrackClickListener = object : OnTrackClickListener {
-        override fun onClick(item: Track) = Router.goToTrackVideosActivity(activity, track = item)
+        override fun onClick(item: Track) {
+            // show TrackVideosFragment
+        }
     }
 
     private val view: SpotifyTracksFragment.View by lazy {

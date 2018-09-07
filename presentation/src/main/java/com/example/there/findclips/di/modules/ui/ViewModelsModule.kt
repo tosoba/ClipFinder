@@ -1,12 +1,13 @@
 package com.example.there.findclips.di.modules.ui
 
 import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import com.example.there.findclips.activities.album.AlbumViewModel
 import com.example.there.findclips.activities.artist.ArtistViewModel
 import com.example.there.findclips.activities.category.CategoryViewModel
-import com.example.there.findclips.activities.player.PlayerViewModel
 import com.example.there.findclips.activities.playlist.PlaylistViewModel
 import com.example.there.findclips.activities.trackvideos.TrackVideosViewModel
+import com.example.there.findclips.di.vm.ViewModelFactory
 import com.example.there.findclips.di.vm.ViewModelKey
 import com.example.there.findclips.fragments.dashboard.DashboardViewModel
 import com.example.there.findclips.fragments.favourites.spotify.SpotifyFavouritesViewModel
@@ -20,6 +21,10 @@ import dagger.multibindings.IntoMap
 
 @Module
 abstract class ViewModelsModule {
+
+    @Binds
+    abstract fun viewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+
     @Binds
     @IntoMap
     @ViewModelKey(AlbumViewModel::class)
@@ -34,11 +39,6 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(CategoryViewModel::class)
     abstract fun categoryViewModel(viewModel: CategoryViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PlayerViewModel::class)
-    abstract fun playerViewModel(viewModel: PlayerViewModel): ViewModel
 
     @Binds
     @IntoMap

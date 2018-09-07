@@ -1,26 +1,27 @@
 package com.example.there.findclips.activities.trackvideos
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.content.res.ResourcesCompat
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.activity.BaseVMActivity
-import com.example.there.findclips.databinding.ActivityTrackVideosBinding
+import com.example.there.findclips.base.fragment.BaseVMFragment
+import com.example.there.findclips.base.fragment.HasBackNavigation
+import com.example.there.findclips.databinding.FragmentTrackVideosBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragments.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragments.track.TrackFragment
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
-import kotlinx.android.synthetic.main.activity_track_videos.*
+import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 
-class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChangeListener {
+class TrackVideosFragment : BaseVMFragment<TrackVideosViewModel>(), OnTrackChangeListener, Injectable, HasBackNavigation {
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
@@ -50,10 +51,10 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
 
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
         TrackVideosPagerAdapter(
-                manager = supportFragmentManager,
+                manager = childFragmentManager,
                 fragments = arrayOf(
-                        VideosSearchFragment.newInstanceWithQuery(intentTrack.query),
-                        TrackFragment.newInstanceWithTrack(intentTrack)
+                        VideosSearchFragment.newInstanceWithQuery(argTrack.query),
+                        TrackFragment.newInstanceWithTrack(argTrack)
                 )
         )
     }
@@ -61,11 +62,11 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
     private val onFavouriteBtnClickListener = View.OnClickListener {
         viewModel.viewState.track.get()?.let {
             viewModel.addFavouriteTrack(it)
-            Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private val intentTrack: Track by lazy { intent.getParcelableExtra(EXTRA_TRACK) as Track }
+    private val argTrack: Track by lazy { arguments!!.getParcelable<Track>(ARG_TRACK) }
 
     private val view: TrackVideosView by lazy {
         TrackVideosView(state = viewModel.viewState,
@@ -76,44 +77,41 @@ class TrackVideosActivity : BaseVMActivity<TrackVideosViewModel>(), OnTrackChang
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding: ActivityTrackVideosBinding = DataBindingUtil.setContentView(this, R.layout.activity_track_videos)
-        binding.view = view
-        binding.trackVideosViewpager.offscreenPageLimit = 1
-        initToolbar()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         if (savedInstanceState == null)
-            viewModel.updateState(intentTrack)
-
+            viewModel.updateState(argTrack)
     }
 
-    private fun initToolbar() {
-        setSupportActionBar(track_videos_toolbar)
-        track_videos_toolbar?.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        track_videos_toolbar?.setNavigationOnClickListener { onBackPressed() }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_videos, container, false)
+        return binding.apply {
+            view = this@TrackVideosFragment.view
+            binding.trackVideosViewpager.offscreenPageLimit = 1
+        }.root
     }
 
-    override fun onBackPressed() {
-        if (!viewModel.onBackPressed()) {
-            super.onBackPressed()
-        } else {
-            updateCurrentFragment(viewModel.viewState.track.get()!!)
-        }
-    }
+    //TODO: handle onBackPressed like in ArtistFragment
+//    override fun onBackPressed() {
+//        if (!viewModel.onBackPressed()) {
+//            super.onBackPressed()
+//        } else {
+//            updateCurrentFragment(viewModel.viewState.track.get()!!)
+//        }
+//    }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(TrackVideosViewModel::class.java)
     }
 
     companion object {
-        private const val EXTRA_TRACK = "EXTRA_TRACK"
+        private const val ARG_TRACK = "ARG_TRACK"
 
-        fun start(activity: Activity, track: Track) {
-            val intent = Intent(activity, TrackVideosActivity::class.java).apply {
-                putExtra(EXTRA_TRACK, track)
+        fun newInstance(track: Track) = TrackVideosFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(ARG_TRACK, track)
             }
-            activity.startActivity(intent)
         }
     }
 }

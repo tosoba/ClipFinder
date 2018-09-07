@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
@@ -18,7 +18,6 @@ import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.TopTrack
 import com.example.there.findclips.util.ext.accessToken
-import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 
@@ -26,15 +25,21 @@ import kotlinx.android.synthetic.main.fragment_dashboard.*
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
 
     private val topTrackItemClickListener = object : OnTopTrackClickListener {
-        override fun onClick(item: TopTrack) = Router.goToTrackVideosActivity(mainActivity, track = item.track)
+        override fun onClick(item: TopTrack) {
+            // show TrackVideosFragment
+        }
     }
 
     private val categoryItemClickListener = object : OnCategoryClickListener {
-        override fun onClick(item: Category) = Router.goToCategoryActivity(mainActivity, category = item)
+        override fun onClick(item: Category) {
+            // show CategoryFragment
+        }
     }
 
     private val playlistItemClickListener = object : OnPlaylistClickListener {
-        override fun onClick(item: Playlist) = Router.goToPlaylistActivity(mainActivity, playlist = item)
+        override fun onClick(item: Playlist) {
+            // show PlaylistFragment
+        }
     }
 
     private val view: DashboardView by lazy {
@@ -54,6 +59,21 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
             featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
             topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+
+        activity?.invalidateOptionsMenu()
+
+        menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = false
+        menu?.findItem(R.id.spinner_menu_item)?.isVisible = false
+        menu?.findItem(R.id.search_view_menu_item)?.isVisible = false
     }
 
     private val isDataLoaded: Boolean

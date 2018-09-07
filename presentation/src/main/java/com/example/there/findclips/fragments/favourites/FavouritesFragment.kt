@@ -16,11 +16,6 @@ import kotlinx.android.synthetic.main.fragment_favourites.*
 
 class FavouritesFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     private val onMenuItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
@@ -29,9 +24,24 @@ class FavouritesFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+
+        activity?.invalidateOptionsMenu()
+
+        menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = true
+        menu?.findItem(R.id.spinner_menu_item)?.isVisible = false
+        menu?.findItem(R.id.search_view_menu_item)?.isVisible = false
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.favourites_fragment_menu, menu)
+
         val spinnerItem = menu?.findItem(R.id.favourites_spinner_menu_item)
         val menuSpinner = spinnerItem?.actionView as? Spinner
 
@@ -40,6 +50,7 @@ class FavouritesFragment : Fragment() {
             it.setSelection(favourites_fragment_view_pager.currentItem)
             it.onItemSelectedListener = onMenuItemSelectedListener
         }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 

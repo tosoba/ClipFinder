@@ -28,11 +28,6 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     private val onMenuItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
 
@@ -42,6 +37,21 @@ class SearchFragment : Fragment() {
     }
 
     private var searchViewMenuItem: MenuItem? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+
+        activity?.invalidateOptionsMenu()
+
+        menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = false
+        menu?.findItem(R.id.spinner_menu_item)?.isVisible = true
+        menu?.findItem(R.id.search_view_menu_item)?.isVisible = true
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         fun initSpinner(menu: Menu?) {

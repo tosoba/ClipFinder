@@ -17,8 +17,8 @@
         android:background="@drawable/main_background_gradient"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.example.there.findclips.activities.album.AlbumActivity"
-        tools:showIn="@layout/activity_album">
+        tools:context="com.example.there.findclips.activities.album.AlbumFragment"
+        tools:showIn="@layout/fragment_album">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"

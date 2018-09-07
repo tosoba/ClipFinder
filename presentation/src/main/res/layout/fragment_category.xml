@@ -3,40 +3,41 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="view"
-            type="com.example.there.findclips.activities.artist.ArtistView" />
+            type="com.example.there.findclips.activities.category.CategoryView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/artist_root_layout"
+        android:id="@+id/category_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".activities.artist.ArtistActivity">
+        tools:context=".activities.category.CategoryFragment">
 
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/artist_app_bar"
+            android:id="@+id/category_app_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/app_bar_height"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/artist_toolbar_layout"
+                android:id="@+id/category_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:title="@{view.state.artist.name}"
-                app:toolbarId="@+id/artist_toolbar">
+                app:toolbarId="@+id/category_toolbar">
 
                 <ImageView
-                    imageUrl="@{view.state.artist.iconUrl}"
+                    imageUrl="@{view.category.iconUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
@@ -50,7 +51,7 @@
                     android:fitsSystemWindows="true" />
 
                 <android.support.v7.widget.Toolbar
-                    android:id="@+id/artist_toolbar"
+                    android:id="@+id/category_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
                     app:layout_collapseMode="pin"
@@ -60,18 +61,44 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include
-            android:id="@+id/artist_content"
-            layout="@layout/content_activity_artist" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/main_background_gradient"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <fragment
+                android:id="@+id/category_spotify_playlists_fragment"
+                android:name="com.example.there.findclips.fragments.lists.SpotifyPlaylistsFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:additional_hint_text=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:main_hint_text="@string/no_playlists_loaded_yet"
+                app:should_show_header="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="25dp"
+                android:visibility="@{safeUnbox(view.state.loadingInProgress) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/category_spotify_playlists_fragment" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/artist_favourite_fab"
+            android:id="@+id/category_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
-            app:layout_anchor="@id/artist_app_bar"
+            app:layout_anchor="@id/category_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
     </android.support.design.widget.CoordinatorLayout>

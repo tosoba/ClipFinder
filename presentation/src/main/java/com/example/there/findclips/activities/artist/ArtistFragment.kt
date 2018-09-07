@@ -1,45 +1,49 @@
 package com.example.there.findclips.activities.artist
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.Router
-import com.example.there.findclips.base.activity.BaseSpotifyVMActivity
-import com.example.there.findclips.databinding.ActivityArtistBinding
+import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.HasBackNavigation
+import com.example.there.findclips.databinding.FragmentArtistBinding
+import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.view.lists.*
-import kotlinx.android.synthetic.main.activity_artist.*
+import kotlinx.android.synthetic.main.fragment_artist.*
 
-class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
+class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, HasBackNavigation {
 
-    private val intentArtist: Artist by lazy { intent.getParcelableExtra<Artist>(EXTRA_ARTIST) }
+    private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
     private val albumsAdapter: AlbumsList.Adapter by lazy {
         AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
-            override fun onClick(item: Album) = Router.goToAlbumActivity(this@ArtistActivity, album = item)
+            override fun onClick(item: Album) {
+                // show AlbumFragment
+            }
         })
     }
 
     private val topTracksAdapter: TracksList.Adapter by lazy {
         TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item, object : OnTrackClickListener {
-            override fun onClick(item: Track) = Router.goToTrackVideosActivity(this@ArtistActivity, track = item)
+            override fun onClick(item: Track) {
+                // show TrackVideosFragment
+            }
         })
     }
 
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
-            override fun onClick(item: Artist) = viewModel.loadArtistData(accessToken, artist = item)
+            override fun onClick(item: Artist) = viewModel.loadArtistData(activity?.accessToken, artist = item)
         })
     }
 
@@ -48,7 +52,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
                 state = viewModel.viewState,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.addFavouriteArtist()
-                    Toast.makeText(this, "Added to favourites.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
                 albumsAdapter = albumsAdapter,
                 topTracksAdapter = topTracksAdapter,
@@ -58,7 +62,7 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
-                this,
+                activity!!,
                 {
                     viewModel.viewState.albums.isNotEmpty() &&
                             viewModel.viewState.artist.get() != null &&
@@ -70,57 +74,51 @@ class ArtistActivity : BaseSpotifyVMActivity<ArtistViewModel>() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        initView()
         lifecycle.addObserver(connectivityComponent)
-        initToolbar()
 
         if (savedInstanceState == null) {
-            viewModel.loadArtistData(accessToken, intentArtist)
+            viewModel.loadArtistData(activity?.accessToken, argArtist)
         }
     }
 
-    private fun initView() {
-        val binding: ActivityArtistBinding = DataBindingUtil.setContentView(this, R.layout.activity_artist)
-        binding.apply {
-            this.view = this@ArtistActivity.view
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
+        return binding.apply {
+            this.view = this@ArtistFragment.view
             artistContent?.view = view
             artistContent?.artistAlbumsRecyclerView?.layoutManager =
-                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
+                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
             artistContent?.artistTopTracksRecyclerView?.layoutManager =
-                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
+                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
             artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
-                    GridLayoutManager(this@ArtistActivity, 2, GridLayoutManager.HORIZONTAL, false)
-        }
+                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+        }.root
     }
 
-    override fun onBackPressed() {
-        if (!viewModel.onBackPressed())
-            super.onBackPressed()
-    }
 
-    private fun initToolbar() {
-        setSupportActionBar(artist_toolbar)
-        artist_toolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-        artist_toolbar.setNavigationOnClickListener { onBackPressed() }
-    }
+    //TODO: handle onBackPressed - go to previous state - maybe make an interface HasPreviousStates or smth -> implement it in ArtistFragment -> in MainActivity onBackPressed findFragmentById -> check type and call method like below
+//     fun onBackPressed() {
+//        if (!viewModel.onBackPressed())
+//            activity?.onBackPressed(ignorePreviousStatesInFragment = true)
+//    }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)
     }
 
-    private fun loadData() = viewModel.loadArtistData(accessToken, intentArtist)
+    private fun loadData() = viewModel.loadArtistData(activity?.accessToken, argArtist)
 
     companion object {
-        private const val EXTRA_ARTIST = "EXTRA_ARTIST"
+        private const val ARG_ARTIST = "ARG_ARTIST"
 
-        fun start(activity: Activity, artist: Artist) {
-            val intent = Intent(activity, ArtistActivity::class.java).apply {
-                putExtra(EXTRA_ARTIST, artist)
+        fun newInstance(artist: Artist) = ArtistFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(ARG_ARTIST, artist)
             }
-            activity.startActivity(intent)
         }
     }
 }
