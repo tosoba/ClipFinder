@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
-
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyTracksBinding
 import com.example.there.findclips.model.entities.Track
@@ -16,11 +15,17 @@ import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.GridTracksList
 import com.example.there.findclips.view.lists.OnTrackClickListener
-import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import kotlinx.android.synthetic.main.fragment_spotify_tracks.*
 
 
 class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
+
+    override val itemsRecyclerView: RecyclerView?
+        get() = tracks_recycler_view
+
+    override val recyclerViewHeaderLayout: Int
+        get() = R.layout.tracks_header
 
     override val viewState: ViewState<Track> = ViewState(ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName))
 
@@ -45,13 +50,7 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
         return binding.apply {
             view = this@SpotifyTracksFragment.view
             tracksRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-            if (viewState.shouldShowHeader)
-                tracksRecyclerView.addItemDecoration(HeaderDecoration.with(context)
-                        .inflate(R.layout.tracks_header)
-                        .parallax(1f)
-                        .dropShadowDp(2)
-                        .columns(listColumnCount)
-                        .build())
+            if (viewState.shouldShowHeader) tracksRecyclerView.addItemDecoration(headerItemDecoration(R.layout.tracks_header))
         }.root
     }
 

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
-
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.model.entities.Album
@@ -16,11 +15,17 @@ import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.GridAlbumsList
 import com.example.there.findclips.view.lists.OnAlbumClickListener
-import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import kotlinx.android.synthetic.main.fragment_spotify_albums.*
 
 
 class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
+
+    override val itemsRecyclerView: RecyclerView?
+        get() = albums_recycler_view
+
+    override val recyclerViewHeaderLayout: Int
+        get() = R.layout.albums_header
 
     override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, Album.sortedListCallback))
 
@@ -44,19 +49,15 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
         return binding.apply {
             view = this@SpotifyAlbumsFragment.view
             albumsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-            if (viewState.shouldShowHeader)
-                albumsRecyclerView.addItemDecoration(HeaderDecoration.with(context)
-                        .inflate(R.layout.albums_header)
-                        .parallax(1f)
-                        .dropShadowDp(2)
-                        .columns(listColumnCount)
-                        .build())
+            if (viewState.shouldShowHeader) albumsRecyclerView.addItemDecoration(headerItemDecoration(R.layout.albums_header))
         }.root
     }
 
-    data class View(val state: BaseSpotifyListFragment.ViewState<Album>,
-                    val adapter: GridAlbumsList.Adapter,
-                    val itemDecoration: RecyclerView.ItemDecoration)
+    data class View(
+            val state: BaseSpotifyListFragment.ViewState<Album>,
+            val adapter: GridAlbumsList.Adapter,
+            val itemDecoration: RecyclerView.ItemDecoration
+    )
 
     companion object {
         fun newInstance(

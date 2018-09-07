@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
-
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyCategoriesBinding
 import com.example.there.findclips.model.entities.Category
@@ -16,10 +15,16 @@ import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.CategoriesList
 import com.example.there.findclips.view.lists.OnCategoryClickListener
-import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import kotlinx.android.synthetic.main.fragment_spotify_categories.*
 
 class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
+
+    override val itemsRecyclerView: RecyclerView?
+        get() = categories_recycler_view
+
+    override val recyclerViewHeaderLayout: Int
+        get() = R.layout.categories_header
 
     override val viewState: ViewState<Category> = ViewState(ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback))
 
@@ -43,19 +48,16 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
         return binding.apply {
             view = this@SpotifyCategoriesFragment.view
             categoriesRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-            if (viewState.shouldShowHeader)
-                categoriesRecyclerView.addItemDecoration(HeaderDecoration.with(context)
-                        .inflate(R.layout.categories_header)
-                        .parallax(1f)
-                        .dropShadowDp(2)
-                        .columns(listColumnCount)
-                        .build())
+            if (viewState.shouldShowHeader) categoriesRecyclerView.addItemDecoration(headerItemDecoration(R.layout.categories_header))
         }.root
     }
 
-    data class View(val state: BaseSpotifyListFragment.ViewState<Category>,
+
+    data class View(
+            val state: BaseSpotifyListFragment.ViewState<Category>,
                     val adapter: CategoriesList.Adapter,
-                    val itemDecoration: RecyclerView.ItemDecoration)
+                    val itemDecoration: RecyclerView.ItemDecoration
+    )
 
     companion object {
         fun newInstance(

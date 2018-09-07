@@ -10,6 +10,9 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.category.CategoryFragment
+import com.example.there.findclips.activities.playlist.PlaylistFragment
+import com.example.there.findclips.activities.trackvideos.TrackVideosFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
@@ -18,6 +21,7 @@ import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.model.entities.Playlist
 import com.example.there.findclips.model.entities.TopTrack
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 
@@ -26,19 +30,19 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     private val topTrackItemClickListener = object : OnTopTrackClickListener {
         override fun onClick(item: TopTrack) {
-            // show TrackVideosFragment
+            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item.track), true)
         }
     }
 
     private val categoryItemClickListener = object : OnCategoryClickListener {
         override fun onClick(item: Category) {
-            // show CategoryFragment
+            hostFragment?.showFragment(CategoryFragment.newInstance(category = item), true)
         }
     }
 
     private val playlistItemClickListener = object : OnPlaylistClickListener {
         override fun onClick(item: Playlist) {
-            // show PlaylistFragment
+            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = item), true)
         }
     }
 

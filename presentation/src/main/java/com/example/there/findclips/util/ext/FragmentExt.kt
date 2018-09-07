@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import com.example.there.findclips.activities.main.MainActivity
+import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import java.util.*
 
@@ -24,3 +25,6 @@ fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
     }
     arguments = args
 }
+
+val Fragment.hostFragment: BaseHostFragment?
+    get() = parentFragment as? BaseHostFragment

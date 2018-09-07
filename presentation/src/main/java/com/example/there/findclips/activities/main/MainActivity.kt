@@ -80,4 +80,15 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
 //            currentFragment?.let { (it as? SearchFragment)?.search(query) }
 //        }
     }
+
+    override fun onBackPressed() {
+        val currentFragment = pagerAdapter.currentFragment
+        if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+            currentFragment.childFragmentManager.popBackStackImmediate()
+//            updateToolbarTitle(currentFragment)
+//            updateToolbarBackNavigation(currentFragment)
+        } else {
+            super.onBackPressed()
+        }
+    }
 }

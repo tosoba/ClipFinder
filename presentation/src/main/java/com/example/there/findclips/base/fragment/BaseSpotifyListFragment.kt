@@ -5,19 +5,53 @@ import android.content.res.Configuration
 import android.databinding.ObservableField
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
+import com.example.there.findclips.view.recycler.HeaderDecoration
 
 abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     var refreshData: ((BaseSpotifyListFragment<T>) -> Unit)? = null
 
     var loadMore: (() -> Unit)? = null
+
+    protected abstract val itemsRecyclerView: RecyclerView?
+
+    protected abstract val recyclerViewHeaderLayout: Int
+
+    private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
+
+    protected fun headerItemDecoration(@LayoutRes headerLayout: Int): RecyclerView.ItemDecoration {
+        currentHeaderDecoration = HeaderDecoration.with(context)
+                .inflate(headerLayout)
+                .parallax(1f)
+                .dropShadowDp(2)
+                .columns(listColumnCount)
+                .build()
+        return currentHeaderDecoration!!
+    }
+
+    protected fun updateRecyclerViewOnConfigChange() {
+        itemsRecyclerView?.let {
+            if (viewState.shouldShowHeader) {
+                it.removeItemDecoration(currentHeaderDecoration)
+                it.addItemDecoration(headerItemDecoration(recyclerViewHeaderLayout))
+            }
+            it.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updateRecyclerViewOnConfigChange()
+    }
 
     protected val onScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener() {
