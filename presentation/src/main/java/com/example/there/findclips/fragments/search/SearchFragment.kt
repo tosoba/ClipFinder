@@ -46,8 +46,6 @@ class SearchFragment : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
 
-        activity?.invalidateOptionsMenu()
-
         menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = false
         menu?.findItem(R.id.spinner_menu_item)?.isVisible = true
         menu?.findItem(R.id.search_view_menu_item)?.isVisible = true
