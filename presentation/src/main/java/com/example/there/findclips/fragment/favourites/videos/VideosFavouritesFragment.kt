@@ -33,7 +33,8 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
         VideosFavouritesFragmentView(
                 state = viewModel.state,
                 playlistsAdapter = VideoPlaylistsList.Adapter(viewModel.state.playlists, R.layout.video_playlist_item, onPlaylistClickListener),
-                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f))
+                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,8 +45,8 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
         }.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel.loadVideoPlaylists()
     }
 

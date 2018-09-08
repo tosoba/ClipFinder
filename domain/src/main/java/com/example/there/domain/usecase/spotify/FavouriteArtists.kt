@@ -1,31 +1,38 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricObservableTransformer
+import com.example.there.domain.common.SymmetricFlowableTransformer
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.ObservableUseCase
-import io.reactivex.Observable
+import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.FlowableUseCase
+import io.reactivex.Completable
+import io.reactivex.CompletableTransformer
+import io.reactivex.Flowable
 
-class GetFavouriteArtists(transformer: SymmetricObservableTransformer<List<ArtistEntity>>,
-                          private val repository: ISpotifyRepository) : ObservableUseCase<List<ArtistEntity>>(transformer) {
+class GetFavouriteArtists(
+        transformer: SymmetricFlowableTransformer<List<ArtistEntity>>,
+        private val repository: ISpotifyRepository
+) : FlowableUseCase<List<ArtistEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<List<ArtistEntity>> = repository.getFavouriteArtists().toObservable()
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<ArtistEntity>> = repository.getFavouriteArtists()
 }
 
-class InsertArtist(transformer: SymmetricObservableTransformer<Unit>,
-                   private val repository: ISpotifyRepository) : ObservableUseCase<Unit>(transformer) {
+class InsertArtist(
+        transformer: CompletableTransformer,
+        private val repository: ISpotifyRepository
+) : CompletableUseCase(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<Unit> {
+    override fun createCompletable(data: Map<String, Any?>?): Completable {
         val artistEntity = data?.get(UseCaseParams.PARAM_ARTIST) as? ArtistEntity
         return if (artistEntity != null) {
-            repository.insertArtist(artistEntity).toObservable()
+            repository.insertArtist(artistEntity)
         } else {
-            Observable.error { IllegalArgumentException("ArtistEntity must be provided.") }
+            Completable.error { IllegalArgumentException("ArtistEntity must be provided.") }
         }
     }
 
-    fun execute(artistEntity: ArtistEntity): Observable<Unit> {
+    fun execute(artistEntity: ArtistEntity): Completable {
         val data = HashMap<String, ArtistEntity>().apply {
             put(UseCaseParams.PARAM_ARTIST, artistEntity)
         }

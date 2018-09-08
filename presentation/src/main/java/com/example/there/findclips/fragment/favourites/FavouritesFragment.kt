@@ -3,12 +3,11 @@ package com.example.there.findclips.fragment.favourites
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import com.example.there.findclips.R
-
 import com.example.there.findclips.databinding.FragmentFavouritesBinding
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
@@ -30,29 +29,6 @@ class FavouritesFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-
-        menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = true
-        menu?.findItem(R.id.spinner_menu_item)?.isVisible = false
-        menu?.findItem(R.id.search_view_menu_item)?.isVisible = false
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.favourites_fragment_menu, menu)
-
-        val spinnerItem = menu?.findItem(R.id.favourites_spinner_menu_item)
-        val menuSpinner = spinnerItem?.actionView as? Spinner
-
-        menuSpinner?.let {
-            it.adapter = ArrayAdapter<String>(context, R.layout.spinner_item, menuItems)
-            it.setSelection(favourites_fragment_view_pager.currentItem)
-            it.onItemSelectedListener = onMenuItemSelectedListener
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
     private val pagerAdapter: FavouritesFragmentPagerAdapter by lazy {
         FavouritesFragmentPagerAdapter(childFragmentManager, arrayOf(
                 SpotifyFavouritesFragment(),
@@ -67,9 +43,5 @@ class FavouritesFragment : Fragment() {
         binding.favouritesFragmentView = view
         binding.favouritesFragmentViewPager.offscreenPageLimit = 1
         return binding.root
-    }
-
-    companion object {
-        private val menuItems = arrayOf("Spotify", "Youtube")
     }
 }

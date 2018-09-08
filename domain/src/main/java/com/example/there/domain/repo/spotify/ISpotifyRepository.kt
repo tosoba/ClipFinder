@@ -4,6 +4,7 @@ import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.entitypage.CategoryPlaylistsPage
 import com.example.there.domain.entitypage.TracksPage
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -26,11 +27,11 @@ interface ISpotifyRepository {
     fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>>
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
 
-    fun getFavouriteAlbums(): Single<List<AlbumEntity>>
-    fun getFavouriteArtists(): Single<List<ArtistEntity>>
-    fun getFavouriteCategories(): Single<List<CategoryEntity>>
-    fun getFavouritePlaylists(): Single<List<PlaylistEntity>>
-    fun getFavouriteTracks(): Single<List<TrackEntity>>
+    fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
+    fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
+    fun getFavouriteCategories(): Flowable<List<CategoryEntity>>
+    fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>>
+    fun getFavouriteTracks(): Flowable<List<TrackEntity>>
     fun insertAlbum(albumEntity: AlbumEntity): Completable
     fun insertArtist(artistEntity: ArtistEntity): Completable
     fun insertCategory(categoryEntity: CategoryEntity): Completable

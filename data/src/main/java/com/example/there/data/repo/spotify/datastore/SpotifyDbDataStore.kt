@@ -5,7 +5,7 @@ import com.example.there.data.mapper.spotify.*
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import javax.inject.Inject
 
 class SpotifyDbDataStore @Inject constructor(
@@ -16,15 +16,20 @@ class SpotifyDbDataStore @Inject constructor(
         private val trackDao: TrackDao
 ) : ISpotifyDbDataStore {
 
-    override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = albumDao.findAll().map { it.map(AlbumMapper::mapFrom) }
+    override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = albumDao.findAll()
+            .map { it.map(AlbumMapper::mapFrom) }
 
-    override fun getFavouriteArtists(): Single<List<ArtistEntity>> = artistDao.findAll().map { it.map(ArtistMapper::mapFrom) }
+    override fun getFavouriteArtists(): Flowable<List<ArtistEntity>> = artistDao.findAll()
+            .map { it.map(ArtistMapper::mapFrom) }
 
-    override fun getFavouriteCategories(): Single<List<CategoryEntity>> = categoryDao.findAll().map { it.map(CategoryMapper::mapFrom) }
+    override fun getFavouriteCategories(): Flowable<List<CategoryEntity>> = categoryDao.findAll()
+            .map { it.map(CategoryMapper::mapFrom) }
 
-    override fun getFavouritePlaylists(): Single<List<PlaylistEntity>> = spotifyPlaylistDao.findAll().map { it.map(PlaylistMapper::mapFrom) }
+    override fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>> = spotifyPlaylistDao.findAll()
+            .map { it.map(PlaylistMapper::mapFrom) }
 
-    override fun getFavouriteTracks(): Single<List<TrackEntity>> = trackDao.findAll().map { it.map(TrackMapper::mapFrom) }
+    override fun getFavouriteTracks(): Flowable<List<TrackEntity>> = trackDao.findAll()
+            .map { it.map(TrackMapper::mapFrom) }
 
     override fun insertAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
         albumDao.insert(AlbumMapper.mapBack(albumEntity))

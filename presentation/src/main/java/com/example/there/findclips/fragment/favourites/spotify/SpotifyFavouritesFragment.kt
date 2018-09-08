@@ -108,8 +108,8 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
         }.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel.loadFavourites()
     }
 

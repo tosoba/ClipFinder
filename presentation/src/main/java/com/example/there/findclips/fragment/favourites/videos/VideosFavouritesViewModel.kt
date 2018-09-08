@@ -13,9 +13,10 @@ class VideosFavouritesViewModel @Inject constructor(
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 
     fun loadVideoPlaylists() {
-        addDisposable(getFavouriteVideoPlaylists.execute().subscribe({
-            state.playlists.clear()
-            state.playlists.addAll(it.map(VideoPlaylistEntityMapper::mapFrom))
+        addDisposable(getFavouriteVideoPlaylists.execute().subscribe({ newPlaylists ->
+            val newItems = newPlaylists.map(VideoPlaylistEntityMapper::mapFrom)
+            state.playlists.removeAll { currentPlaylist -> !newItems.map { it.id }.contains(currentPlaylist.id) }
+            state.playlists.addAll(newItems)
         }, { Log.e(javaClass.name, "VideoPlaylists load error") }))
     }
 }

@@ -6,7 +6,7 @@ ext {
     testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 
     androidSupportLibVersion = "27.1.1"
-    room = "android.arch.persistence.room:runtime:1.1.0"
+    room = "android.arch.persistence.room:runtime:1.1.1"
     rxJava = "io.reactivex.rxjava2:rxjava:2.1.6"
     dagger = "com.google.dagger:dagger:2.13"
     daggerSupport = "com.google.dagger:dagger-android-support:2.13"

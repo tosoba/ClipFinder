@@ -2,7 +2,8 @@ package com.example.there.findclips.di.module.domain
 
 import com.example.there.domain.repo.videos.IVideosRepository
 import com.example.there.domain.usecase.videos.*
-import com.example.there.findclips.util.rx.AsyncSymmetricObservableTransformer
+import com.example.there.findclips.util.rx.AsyncCompletableTransformer
+import com.example.there.findclips.util.rx.AsyncSymmetricFlowableTransformer
 import com.example.there.findclips.util.rx.AsyncSymmetricSingleTransformer
 import dagger.Module
 import dagger.Provides
@@ -16,8 +17,9 @@ class VideosDomainModule {
     ): GetChannelsThumbnailUrls = GetChannelsThumbnailUrls(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun getFavouriteVideoPlaylistsUseCase(repository: IVideosRepository): GetFavouriteVideoPlaylists =
-            GetFavouriteVideoPlaylists(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteVideoPlaylistsUseCase(
+            repository: IVideosRepository
+    ): GetFavouriteVideoPlaylists = GetFavouriteVideoPlaylists(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
     fun searchRelatedVideosUseCase(
@@ -27,16 +29,18 @@ class VideosDomainModule {
     @Provides
     fun addVideosToPlaylistUseCase(
             repository: IVideosRepository
-    ): AddVideoToPlaylist = AddVideoToPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    ): AddVideoToPlaylist = AddVideoToPlaylist(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun insertVideoPlaylistUseCase(
             repository: IVideosRepository
-    ): InsertVideoPlaylist = InsertVideoPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertVideoPlaylist = InsertVideoPlaylist(AsyncSymmetricSingleTransformer(), repository)
+
     @Provides
     fun searchVideosUseCase(repository: IVideosRepository): SearchVideos = SearchVideos(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun getVideosFromPlaylistsUseCase(repository: IVideosRepository): GetFavouriteVideosFromPlaylist =
-            GetFavouriteVideosFromPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    fun getVideosFromPlaylistsUseCase(
+            repository: IVideosRepository
+    ): GetFavouriteVideosFromPlaylist = GetFavouriteVideosFromPlaylist(AsyncSymmetricFlowableTransformer(), repository)
 }

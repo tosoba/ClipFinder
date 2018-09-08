@@ -38,7 +38,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         return currentHeaderDecoration!!
     }
 
-    protected fun updateRecyclerViewOnConfigChange() {
+    private fun updateRecyclerViewOnConfigChange() {
         itemsRecyclerView?.let {
             if (viewState.shouldShowHeader) {
                 it.removeItemDecoration(currentHeaderDecoration)

@@ -20,8 +20,8 @@
             itemDecoration="@{view.itemDecoration}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:paddingTop="@{view.state.shouldShowHeader ? @dimen/spotify_list_no_top_margin : @dimen/spotify_list_top_margin}"
             android:adapter="@{view.adapter}"
+            android:paddingTop="@{view.state.shouldShowHeader ? @dimen/spotify_list_no_top_margin : @dimen/spotify_list_top_margin}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -38,10 +38,11 @@
             android:textStyle="bold"
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/search_for_some_artists_txt"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/artists_recycler_view" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/search_for_some_artists_txt"
@@ -52,10 +53,10 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="20sp"
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/artists_recycler_view"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/artists_recycler_view"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/no_artists_loaded_txt" />
 
     </android.support.constraint.ConstraintLayout>

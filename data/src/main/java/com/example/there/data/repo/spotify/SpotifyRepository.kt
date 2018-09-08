@@ -7,6 +7,7 @@ import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -82,16 +83,15 @@ class SpotifyRepository @Inject constructor(
             offset: Int
     ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
 
-    //TODO: make these get... return Flowable
-    override fun getFavouriteAlbums(): Single<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
+    override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 
-    override fun getFavouriteArtists(): Single<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()
+    override fun getFavouriteArtists(): Flowable<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()
 
-    override fun getFavouriteCategories(): Single<List<CategoryEntity>> = dbDataStore.getFavouriteCategories()
+    override fun getFavouriteCategories(): Flowable<List<CategoryEntity>> = dbDataStore.getFavouriteCategories()
 
-    override fun getFavouritePlaylists(): Single<List<PlaylistEntity>> = dbDataStore.getFavouritePlaylists()
+    override fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>> = dbDataStore.getFavouritePlaylists()
 
-    override fun getFavouriteTracks(): Single<List<TrackEntity>> = dbDataStore.getFavouriteTracks()
+    override fun getFavouriteTracks(): Flowable<List<TrackEntity>> = dbDataStore.getFavouriteTracks()
 
     override fun insertAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.insertAlbum(albumEntity)
 

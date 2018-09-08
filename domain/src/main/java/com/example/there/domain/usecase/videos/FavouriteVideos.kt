@@ -1,26 +1,31 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.there.domain.common.SymmetricObservableTransformer
+import com.example.there.domain.common.SymmetricFlowableTransformer
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.repo.videos.IVideosRepository
 import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.ObservableUseCase
-import io.reactivex.Observable
+import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.FlowableUseCase
+import io.reactivex.Completable
+import io.reactivex.CompletableTransformer
+import io.reactivex.Flowable
 
-class GetFavouriteVideosFromPlaylist(transformer: SymmetricObservableTransformer<List<VideoEntity>>,
-                                     private val repository: IVideosRepository) : ObservableUseCase<List<VideoEntity>>(transformer) {
+class GetFavouriteVideosFromPlaylist(
+        transformer: SymmetricFlowableTransformer<List<VideoEntity>>,
+        private val repository: IVideosRepository
+) : FlowableUseCase<List<VideoEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<List<VideoEntity>> {
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<VideoEntity>> {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        return if (playlistEntity != null ) {
-            repository.getVideosFromPlaylist(playlistEntity.id).toObservable()
+        return if (playlistEntity != null) {
+            repository.getVideosFromPlaylist(playlistEntity.id)
         } else {
-            Observable.error { IllegalArgumentException("PlaylistEntity must be provided.") }
+            Flowable.error { IllegalArgumentException("PlaylistEntity must be provided.") }
         }
     }
 
-    fun execute(playlistEntity: VideoPlaylistEntity): Observable<List<VideoEntity>> {
+    fun execute(playlistEntity: VideoPlaylistEntity): Flowable<List<VideoEntity>> {
         val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
         }
@@ -28,20 +33,22 @@ class GetFavouriteVideosFromPlaylist(transformer: SymmetricObservableTransformer
     }
 }
 
-class AddVideoToPlaylist(transformer: SymmetricObservableTransformer<Unit>,
-                         private val repository: IVideosRepository) : ObservableUseCase<Unit>(transformer) {
+class AddVideoToPlaylist(
+        transformer: CompletableTransformer,
+        private val repository: IVideosRepository
+) : CompletableUseCase(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<Unit> {
+    override fun createCompletable(data: Map<String, Any?>?): Completable {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
         val videoEntity = data?.get(UseCaseParams.PARAM_VIDEO) as? VideoEntity
         return if (playlistEntity != null && videoEntity != null) {
-            repository.addVideoToPlaylist(videoEntity, playlistEntity).toObservable()
+            repository.addVideoToPlaylist(videoEntity, playlistEntity)
         } else {
-            Observable.error { IllegalArgumentException("VideoEntity and PlaylistEntity must be provided.") }
+            Completable.error { IllegalArgumentException("VideoEntity and PlaylistEntity must be provided.") }
         }
     }
 
-    fun execute(playlistEntity: VideoPlaylistEntity, videoEntity: VideoEntity): Observable<Unit> {
+    fun execute(playlistEntity: VideoPlaylistEntity, videoEntity: VideoEntity): Completable {
         val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
             put(UseCaseParams.PARAM_VIDEO, videoEntity)

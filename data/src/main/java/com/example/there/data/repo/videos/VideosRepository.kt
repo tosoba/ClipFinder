@@ -6,6 +6,7 @@ import com.example.there.domain.repo.videos.IVideosRepository
 import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
 import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -67,11 +68,11 @@ class VideosRepository @Inject constructor(
                         .andThen(Single.just(videos))
             }
 
-    //TODO: make this get... return Flowable
+    override fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>> = dbDataStore.getFavouritePlaylists()
 
-    override fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>> = dbDataStore.getFavouritePlaylists()
-
-    override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> = dbDataStore.getVideosFromPlaylist(playlistId)
+    override fun getVideosFromPlaylist(
+            playlistId: Long
+    ): Flowable<List<VideoEntity>> = dbDataStore.getVideosFromPlaylist(playlistId)
 
     override fun insertPlaylist(
             playlistEntity: VideoPlaylistEntity

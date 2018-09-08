@@ -6,6 +6,7 @@ import com.example.there.data.entity.videos.RelatedVideoSearchDbData
 import com.example.there.data.entity.videos.VideoDbData
 import com.example.there.data.entity.videos.VideoPlaylistData
 import com.example.there.data.entity.videos.VideoSearchDbData
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -27,37 +28,37 @@ interface BaseDao<T> {
 @Dao
 interface AlbumDao : BaseDao<AlbumData> {
     @Query("SELECT * FROM albums")
-    fun findAll(): Single<List<AlbumData>>
+    fun findAll(): Flowable<List<AlbumData>>
 }
 
 @Dao
 interface ArtistDao : BaseDao<ArtistData> {
     @Query("SELECT * FROM artists")
-    fun findAll(): Single<List<ArtistData>>
+    fun findAll(): Flowable<List<ArtistData>>
 }
 
 @Dao
 interface CategoryDao : BaseDao<CategoryData> {
     @Query("SELECT * FROM categories")
-    fun findAll(): Single<List<CategoryData>>
+    fun findAll(): Flowable<List<CategoryData>>
 }
 
 @Dao
 interface SpotifyPlaylistDao : BaseDao<PlaylistData> {
     @Query("SELECT * FROM spotify_playlists")
-    fun findAll(): Single<List<PlaylistData>>
+    fun findAll(): Flowable<List<PlaylistData>>
 }
 
 @Dao
 interface TrackDao : BaseDao<TrackData> {
     @Query("SELECT * FROM tracks")
-    fun findAll(): Single<List<TrackData>>
+    fun findAll(): Flowable<List<TrackData>>
 }
 
 @Dao
 interface VideoDao : BaseDao<VideoDbData> {
     @Query("SELECT * FROM videos WHERE playlist_id = :playlistId")
-    fun findVideosFromPlaylist(playlistId: Long): Single<List<VideoDbData>>
+    fun findVideosFromPlaylist(playlistId: Long): Flowable<List<VideoDbData>>
 
     @Query("SELECT * FROM videos WHERE search_query = :query")
     fun findAllWithQuery(query: String): Single<List<VideoDbData>>
@@ -69,7 +70,7 @@ interface VideoDao : BaseDao<VideoDbData> {
 @Dao
 interface VideoPlaylistDao : BaseDao<VideoPlaylistData> {
     @Query("SELECT * FROM video_playlists")
-    fun findAll(): Single<List<VideoPlaylistData>>
+    fun findAll(): Flowable<List<VideoPlaylistData>>
 }
 
 @Dao

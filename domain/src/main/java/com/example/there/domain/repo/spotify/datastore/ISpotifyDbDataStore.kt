@@ -2,14 +2,14 @@ package com.example.there.domain.repo.spotify.datastore
 
 import com.example.there.domain.entity.spotify.*
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 
 interface ISpotifyDbDataStore {
-    fun getFavouriteAlbums(): Single<List<AlbumEntity>>
-    fun getFavouriteArtists(): Single<List<ArtistEntity>>
-    fun getFavouriteCategories(): Single<List<CategoryEntity>>
-    fun getFavouritePlaylists(): Single<List<PlaylistEntity>>
-    fun getFavouriteTracks(): Single<List<TrackEntity>>
+    fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
+    fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
+    fun getFavouriteCategories(): Flowable<List<CategoryEntity>>
+    fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>>
+    fun getFavouriteTracks(): Flowable<List<TrackEntity>>
 
     fun insertAlbum(albumEntity: AlbumEntity): Completable
     fun insertArtist(artistEntity: ArtistEntity): Completable

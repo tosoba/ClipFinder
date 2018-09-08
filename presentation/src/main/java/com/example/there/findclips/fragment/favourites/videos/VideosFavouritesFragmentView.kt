@@ -1,8 +1,9 @@
 package com.example.there.findclips.fragment.favourites.videos
 
-import android.databinding.ObservableArrayList
+import android.databinding.ObservableList
 import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.list.VideoPlaylistsList
 
 data class VideosFavouritesFragmentView(
@@ -12,5 +13,8 @@ data class VideosFavouritesFragmentView(
 )
 
 data class VideosFavouritesFragmentViewState(
-        val playlists: ObservableArrayList<VideoPlaylist> = ObservableArrayList()
+        val playlists: ObservableList<VideoPlaylist> = ObservableSortedList<VideoPlaylist>(
+                VideoPlaylist::class.java,
+                VideoPlaylist.sortedListCallback
+        )
 )

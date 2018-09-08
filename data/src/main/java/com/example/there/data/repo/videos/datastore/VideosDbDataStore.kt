@@ -12,6 +12,7 @@ import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
@@ -87,11 +88,13 @@ class VideosDbDataStore @Inject constructor(
     ): Single<List<VideoEntity>> = videoDao.findAllWithQuery(query)
             .map { it.map(VideoDbMapper::mapFrom) }
 
-    override fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>> =
-            videoPlaylistDao.findAll().map { it.map(VideoPlaylistMapper::mapFrom) }
+    override fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>> = videoPlaylistDao.findAll()
+            .map { it.map(VideoPlaylistMapper::mapFrom) }
 
-    override fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>> =
-            videoDao.findVideosFromPlaylist(playlistId).map { it.map(VideoDbMapper::mapFrom) }
+    override fun getVideosFromPlaylist(
+            playlistId: Long
+    ): Flowable<List<VideoEntity>> = videoDao.findVideosFromPlaylist(playlistId)
+            .map { it.map(VideoDbMapper::mapFrom) }
 
     override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable {
         videoPlaylistDao.insert(VideoPlaylistMapper.mapBack(playlistEntity))

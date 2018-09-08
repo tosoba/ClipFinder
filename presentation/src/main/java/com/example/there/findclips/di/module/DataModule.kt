@@ -18,6 +18,7 @@ import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 abstract class DataModule {
@@ -26,6 +27,7 @@ abstract class DataModule {
     companion object {
 
         @Provides
+        @Singleton
         @JvmStatic
         fun database(
                 context: Context

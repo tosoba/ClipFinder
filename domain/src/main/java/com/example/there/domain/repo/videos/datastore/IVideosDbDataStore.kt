@@ -3,12 +3,13 @@ package com.example.there.domain.repo.videos.datastore
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 
 interface IVideosDbDataStore {
-    fun getFavouritePlaylists(): Single<List<VideoPlaylistEntity>>
-    fun getVideosFromPlaylist(playlistId: Long): Single<List<VideoEntity>>
+    fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>>
+    fun getVideosFromPlaylist(playlistId: Long): Flowable<List<VideoEntity>>
 
     fun getSavedVideosForQuery(query: String): Single<List<VideoEntity>>
     fun getNextPageTokenForQuery(query: String): Maybe<String>

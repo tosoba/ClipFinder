@@ -1,31 +1,38 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricObservableTransformer
+import com.example.there.domain.common.SymmetricFlowableTransformer
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.ObservableUseCase
-import io.reactivex.Observable
+import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.FlowableUseCase
+import io.reactivex.Completable
+import io.reactivex.CompletableTransformer
+import io.reactivex.Flowable
 
-class GetFavouriteSpotifyPlaylists(transformer: SymmetricObservableTransformer<List<PlaylistEntity>>,
-                                   private val repository: ISpotifyRepository) : ObservableUseCase<List<PlaylistEntity>>(transformer) {
+class GetFavouriteSpotifyPlaylists(
+        transformer: SymmetricFlowableTransformer<List<PlaylistEntity>>,
+        private val repository: ISpotifyRepository
+) : FlowableUseCase<List<PlaylistEntity>>(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<List<PlaylistEntity>> = repository.getFavouritePlaylists().toObservable()
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<PlaylistEntity>> = repository.getFavouritePlaylists()
 }
 
-class InsertSpotifyPlaylist(transformer: SymmetricObservableTransformer<Unit>,
-                            private val repository: ISpotifyRepository) : ObservableUseCase<Unit>(transformer) {
+class InsertSpotifyPlaylist(
+        transformer: CompletableTransformer,
+        private val repository: ISpotifyRepository
+) : CompletableUseCase(transformer) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<Unit> {
+    override fun createCompletable(data: Map<String, Any?>?): Completable {
         val playlistEntity = data?.get(UseCaseParams.PARAM_SPOTIFY_PLAYLIST) as? PlaylistEntity
         return if (playlistEntity != null) {
-            repository.insertPlaylist(playlistEntity).toObservable()
+            repository.insertPlaylist(playlistEntity)
         } else {
-            Observable.error { IllegalArgumentException("PlaylistEntity must be provided.") }
+            Completable.error { IllegalArgumentException("PlaylistEntity must be provided.") }
         }
     }
 
-    fun execute(playlistEntity: PlaylistEntity): Observable<Unit> {
+    fun execute(playlistEntity: PlaylistEntity): Completable {
         val data = HashMap<String, PlaylistEntity>().apply {
             put(UseCaseParams.PARAM_SPOTIFY_PLAYLIST, playlistEntity)
         }

@@ -5,7 +5,7 @@ import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.mapper.*
-import io.reactivex.Observable
+import io.reactivex.Flowable
 import io.reactivex.functions.Function5
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class SpotifyFavouritesViewModel @Inject constructor(
     val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 
     fun loadFavourites() {
-        addDisposable(Observable.zip<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
+        addDisposable(Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
                 getFavouriteAlbums.execute(),
                 getFavouriteArtists.execute(),
                 getFavouriteCategories.execute(),
@@ -34,6 +34,7 @@ class SpotifyFavouritesViewModel @Inject constructor(
                             ArrayList(playlists.map(PlaylistEntityMapper::mapFrom)),
                             ArrayList(tracks.map(TrackEntityMapper::mapFrom))
                     )
-                }).subscribe { viewState.value = it })
+                })
+                .subscribe { viewState.value = it })
     }
 }

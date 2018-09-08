@@ -2,6 +2,8 @@ package com.example.there.findclips.di.module.domain
 
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.spotify.*
+import com.example.there.findclips.util.rx.AsyncCompletableTransformer
+import com.example.there.findclips.util.rx.AsyncSymmetricFlowableTransformer
 import com.example.there.findclips.util.rx.AsyncSymmetricObservableTransformer
 import com.example.there.findclips.util.rx.AsyncSymmetricSingleTransformer
 import dagger.Module
@@ -23,7 +25,7 @@ class SpotifyDomainModule {
     @Provides
     fun insertAlbumUseCase(
             repository: ISpotifyRepository
-    ): InsertAlbum = InsertAlbum(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertAlbum = InsertAlbum(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun tracksFromAlbumUseCase(
@@ -33,7 +35,7 @@ class SpotifyDomainModule {
     @Provides
     fun insertArtistUseCase(
             repository: ISpotifyRepository
-    ): InsertArtist = InsertArtist(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertArtist = InsertArtist(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun albumsFromArtistUseCase(
@@ -53,7 +55,7 @@ class SpotifyDomainModule {
     @Provides
     fun insertCategoryUseCase(
             repository: ISpotifyRepository
-    ): InsertCategory = InsertCategory(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertCategory = InsertCategory(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun playlistsForCategoryUseCase(
@@ -76,24 +78,34 @@ class SpotifyDomainModule {
     ): GetDailyViralTracks = GetDailyViralTracks(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
-    fun getFavouriteAlbumsUseCase(repository: ISpotifyRepository): GetFavouriteAlbums = GetFavouriteAlbums(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteAlbumsUseCase(
+            repository: ISpotifyRepository
+    ): GetFavouriteAlbums = GetFavouriteAlbums(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
-    fun getFavouriteArtistsUseCase(repository: ISpotifyRepository): GetFavouriteArtists = GetFavouriteArtists(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteArtistsUseCase(
+            repository: ISpotifyRepository
+    ): GetFavouriteArtists = GetFavouriteArtists(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
-    fun getFavouriteCategoriesUseCase(repository: ISpotifyRepository): GetFavouriteCategories = GetFavouriteCategories(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteCategoriesUseCase(
+            repository: ISpotifyRepository
+    ): GetFavouriteCategories = GetFavouriteCategories(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
-    fun getFavouriteSpotifyPlaylistsUseCase(repository: ISpotifyRepository): GetFavouriteSpotifyPlaylists = GetFavouriteSpotifyPlaylists(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteSpotifyPlaylistsUseCase(
+            repository: ISpotifyRepository
+    ): GetFavouriteSpotifyPlaylists = GetFavouriteSpotifyPlaylists(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
-    fun getFavouriteTracksUseCase(repository: ISpotifyRepository): GetFavouriteTracks = GetFavouriteTracks(AsyncSymmetricObservableTransformer(), repository)
+    fun getFavouriteTracksUseCase(
+            repository: ISpotifyRepository
+    ): GetFavouriteTracks = GetFavouriteTracks(AsyncSymmetricFlowableTransformer(), repository)
 
     @Provides
     fun insertSpotifyPlaylistUseCase(
             repository: ISpotifyRepository
-    ): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertSpotifyPlaylist = InsertSpotifyPlaylist(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun playlistTracksUseCase(
@@ -116,6 +128,6 @@ class SpotifyDomainModule {
     @Provides
     fun insertTrackUseCase(
             repository: ISpotifyRepository
-    ): InsertTrack = InsertTrack(AsyncSymmetricObservableTransformer(), repository)
+    ): InsertTrack = InsertTrack(AsyncCompletableTransformer(), repository)
 
 }
