@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -21,6 +22,9 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
+import com.example.there.findclips.base.fragment.BaseHostFragment
+import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.there.findclips.base.fragment.HasBackNavigation
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
@@ -86,20 +90,59 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 //        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        addVideoDialogFragment = null
+    }
+
     override fun onBackPressed() {
         val currentFragment = pagerAdapter.currentFragment
+
+        if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            return
+        }
+
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+            val fragmentOnTop = (currentFragment as? BaseHostFragment)?.topFragment
+            fragmentOnTop?.let {
+                if (it is GoesToPreviousStateOnBackPressed) {
+                    it.onBackPressed()
+                    return
+                }
+            }
+
             currentFragment.childFragmentManager.popBackStackImmediate()
-//            updateToolbarTitle(currentFragment)
-//            updateToolbarBackNavigation(currentFragment)
+            updateToolbarBackNavigation(currentFragment)
         } else {
             super.onBackPressed()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        addVideoDialogFragment = null
+    fun backPressedOnNoPreviousFragmentState() {
+        val currentFragment = pagerAdapter.currentFragment
+        if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+            currentFragment.childFragmentManager.popBackStackImmediate()
+            updateToolbarBackNavigation(currentFragment)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    fun addBackNavigationToToolbar() {
+        main_toolbar?.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+        main_toolbar?.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    fun updateToolbarBackNavigation(currentFragment: Fragment) {
+        val baseHostFragment = currentFragment as? BaseHostFragment
+        baseHostFragment?.let {
+            if (it.childFragmentManager.findFragmentById(it.backStackLayoutId) is HasBackNavigation) {
+                addBackNavigationToToolbar()
+            } else {
+                main_toolbar?.navigationIcon = null
+            }
+        }
     }
 
     private val view: MainView by lazy {

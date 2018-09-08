@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.example.there.findclips.R
+
 import com.example.there.findclips.databinding.FragmentFavouritesBinding
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment

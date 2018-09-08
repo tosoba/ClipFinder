@@ -14,6 +14,7 @@ import com.example.there.findclips.databinding.FragmentTrackBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.artist.ArtistFragment
+import com.example.there.findclips.fragment.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
@@ -49,11 +50,9 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
         }
     }
 
-    //TODO: onTrackChangeListener with EventBus probably
-
     private val onTrackClickListener = object : OnTrackClickListener {
         override fun onClick(item: Track) {
-            // EventBus to TrackVideosFragment - change fragment
+            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = item)
         }
     }
 

@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.example.there.findclips.R
+
 import com.example.there.findclips.databinding.FragmentSearchBinding
 import kotlinx.android.synthetic.main.fragment_search.*
 

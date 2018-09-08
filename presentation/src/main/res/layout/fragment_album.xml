@@ -32,6 +32,7 @@
                 app:contentScrim="@color/colorPrimary"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:title="@{view.album.name}"
                 app:toolbarId="@+id/album_toolbar">
 
                 <ImageView

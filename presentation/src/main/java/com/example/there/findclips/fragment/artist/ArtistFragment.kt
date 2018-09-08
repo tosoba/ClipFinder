@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.base.fragment.HasBackNavigation
+
 import com.example.there.findclips.databinding.FragmentArtistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
@@ -21,10 +23,11 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.*
 import kotlinx.android.synthetic.main.fragment_artist.*
 
-class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, HasBackNavigation {
+class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, HasBackNavigation, GoesToPreviousStateOnBackPressed {
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
@@ -104,10 +107,10 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Has
 
 
     //TODO: handle onBackPressed - go to previous state - maybe make an interface HasPreviousStates or smth -> implement it in ArtistFragment -> in MainActivity onBackPressed findFragmentById -> check type and call method like below
-//     fun onBackPressed() {
-//        if (!viewModel.onBackPressed())
-//            activity?.onBackPressed(ignorePreviousStatesInFragment = true)
-//    }
+    override fun onBackPressed() {
+        if (!viewModel.onBackPressed())
+            mainActivity?.backPressedOnNoPreviousFragmentState()
+    }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)

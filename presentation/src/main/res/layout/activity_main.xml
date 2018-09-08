@@ -55,7 +55,6 @@
                         android:layout_height="?android:attr/actionBarSize"
                         android:background="@color/colorPrimary"
                         app:collapseIcon="@drawable/back"
-                        app:layout_scrollFlags="scroll|enterAlways"
                         app:theme="@style/ActionBar"
                         app:titleTextColor="#fff" />
 

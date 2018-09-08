@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.category.CategoryFragment

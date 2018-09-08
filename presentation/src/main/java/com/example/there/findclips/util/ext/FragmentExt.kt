@@ -3,6 +3,8 @@ package com.example.there.findclips.util.ext
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
+import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.main.MainActivity
@@ -34,3 +36,6 @@ val Fragment.hostFragment: BaseHostFragment?
         }
         return if (fragment != null && fragment is BaseHostFragment) fragment else null
     }
+
+val Fragment.mainToolbar: Toolbar?
+    get() = mainActivity?.findViewById(R.id.main_toolbar)

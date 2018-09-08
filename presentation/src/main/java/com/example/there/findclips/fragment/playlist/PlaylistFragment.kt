@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.HasBackNavigation
+
 import com.example.there.findclips.databinding.FragmentPlaylistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
@@ -69,10 +70,8 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable,
 
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.tracks.observe(this, Observer {
-            it?.let {
-                tracksFragment.updateItems(it, false)
-            }
+        viewModel.tracks.observe(this, Observer { tracks ->
+            tracks?.let { tracksFragment.updateItems(it, false) }
         })
     }
 
