@@ -27,4 +27,10 @@ fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
 }
 
 val Fragment.hostFragment: BaseHostFragment?
-    get() = parentFragment as? BaseHostFragment
+    get() {
+        var fragment: Fragment? = this
+        while (fragment?.parentFragment != null) {
+            fragment = fragment.parentFragment
+        }
+        return if (fragment != null && fragment is BaseHostFragment) fragment else null
+    }

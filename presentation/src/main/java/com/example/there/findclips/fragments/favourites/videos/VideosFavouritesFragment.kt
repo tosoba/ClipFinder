@@ -13,7 +13,9 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.di.Injectable
+import com.example.there.findclips.fragments.search.videos.VideosSearchFragment
 import com.example.there.findclips.model.entities.VideoPlaylist
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.lists.OnVideoPlaylistClickListener
 import com.example.there.findclips.view.lists.VideoPlaylistsList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
@@ -23,7 +25,7 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
 
     private val onPlaylistClickListener = object : OnVideoPlaylistClickListener {
         override fun onClick(item: VideoPlaylist) {
-            // show VideoSearchFragment with
+            hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = item), true)
         }
     }
 

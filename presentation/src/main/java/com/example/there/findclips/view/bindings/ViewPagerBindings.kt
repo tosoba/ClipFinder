@@ -13,3 +13,8 @@ fun bindOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageCha
 fun bindSwipeLocked(viewPager: LockableViewPager, swipeLocked: Boolean) {
     viewPager.swipeLocked = swipeLocked
 }
+
+@BindingAdapter("offScreenPageLimit")
+fun bindOffScreenPageLimit(viewPager: ViewPager, limit: Int) {
+    viewPager.offscreenPageLimit = limit
+}

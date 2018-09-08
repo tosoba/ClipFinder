@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.album.AlbumFragment
+import com.example.there.findclips.activities.trackvideos.TrackVideosFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.HasBackNavigation
 import com.example.there.findclips.databinding.FragmentArtistBinding
@@ -18,6 +20,7 @@ import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.lists.*
 import kotlinx.android.synthetic.main.fragment_artist.*
 
@@ -28,7 +31,7 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Has
     private val albumsAdapter: AlbumsList.Adapter by lazy {
         AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
             override fun onClick(item: Album) {
-                // show AlbumFragment
+                hostFragment?.showFragment(AlbumFragment.newInstance(album = item), true)
             }
         })
     }
@@ -36,7 +39,7 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Has
     private val topTracksAdapter: TracksList.Adapter by lazy {
         TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item, object : OnTrackClickListener {
             override fun onClick(item: Track) {
-                // show TrackVideosFragment
+                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item), true)
             }
         })
     }

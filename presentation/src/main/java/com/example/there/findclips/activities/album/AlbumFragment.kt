@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.artist.ArtistFragment
+import com.example.there.findclips.activities.trackvideos.TrackVideosFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.HasBackNavigation
 import com.example.there.findclips.databinding.FragmentAlbumBinding
@@ -19,6 +21,7 @@ import com.example.there.findclips.model.entities.Album
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener
@@ -34,7 +37,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable, HasBa
     private val artistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item, object : OnArtistClickListener {
             override fun onClick(item: Artist) {
-                // show ArtistFragment
+                hostFragment?.showFragment(ArtistFragment.newInstance(artist = item), true)
             }
         })
     }
@@ -42,7 +45,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable, HasBa
     private val tracksAdapter: TracksPopularityList.Adapter by lazy {
         TracksPopularityList.Adapter(viewModel.viewState.tracks, R.layout.track_popularity_item, object : OnTrackClickListener {
             override fun onClick(item: Track) {
-                // show TrackVideosFragment
+                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item), true)
             }
         })
     }

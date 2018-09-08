@@ -31,7 +31,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.there.findclips.view.recycler.ScrollThroughRecyclerView
                 android:id="@+id/genres_recycler_view"
                 style="@style/HorizontalGridRecyclerViewSpan2"
                 android:adapter="@{dashboardView.categoriesAdapter}"
@@ -59,7 +59,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/genres_recycler_view" />
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.there.findclips.view.recycler.ScrollThroughRecyclerView
                 android:id="@+id/featured_playlists_recyclerview"
                 style="@style/HorizontalGridRecyclerViewSpan2"
                 android:adapter="@{dashboardView.playlistsAdapter}"
@@ -87,7 +87,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/featured_playlists_recyclerview" />
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.there.findclips.view.recycler.ScrollThroughRecyclerView
                 android:id="@+id/top_tracks_recyclerview"
                 android:adapter="@{dashboardView.topTracksAdapter}"
                 android:layout_width="0dp"

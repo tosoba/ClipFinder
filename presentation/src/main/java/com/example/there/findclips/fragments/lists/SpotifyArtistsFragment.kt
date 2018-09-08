@@ -8,10 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.artist.ArtistFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyArtistsBinding
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.GridArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
@@ -31,7 +33,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
 
     private val onArtistClickListener = object : OnArtistClickListener {
         override fun onClick(item: Artist) {
-            // show ArtistFragment
+            hostFragment?.showFragment(ArtistFragment.newInstance(artist = item), true)
         }
     }
 

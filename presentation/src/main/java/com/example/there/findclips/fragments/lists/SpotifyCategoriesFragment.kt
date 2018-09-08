@@ -8,10 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.category.CategoryFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyCategoriesBinding
 import com.example.there.findclips.model.entities.Category
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.lists.CategoriesList
 import com.example.there.findclips.view.lists.OnCategoryClickListener
@@ -30,7 +32,7 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     private val onCategoryClickListener = object : OnCategoryClickListener {
         override fun onClick(item: Category) {
-            // show CategoryFragment
+            hostFragment?.showFragment(CategoryFragment.newInstance(category = item), true)
         }
     }
 
@@ -55,8 +57,8 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     data class View(
             val state: BaseSpotifyListFragment.ViewState<Category>,
-                    val adapter: CategoriesList.Adapter,
-                    val itemDecoration: RecyclerView.ItemDecoration
+            val adapter: CategoriesList.Adapter,
+            val itemDecoration: RecyclerView.ItemDecoration
     )
 
     companion object {

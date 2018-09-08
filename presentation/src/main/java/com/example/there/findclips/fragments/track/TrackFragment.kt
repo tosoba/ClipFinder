@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.activities.album.AlbumFragment
+import com.example.there.findclips.activities.artist.ArtistFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentTrackBinding
 import com.example.there.findclips.di.Injectable
@@ -16,6 +18,7 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entities.Artist
 import com.example.there.findclips.model.entities.Track
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.lists.ArtistsList
 import com.example.there.findclips.view.lists.OnArtistClickListener
 import com.example.there.findclips.view.lists.OnTrackClickListener
@@ -42,7 +45,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
 
     private val onArtistClickListener = object : OnArtistClickListener {
         override fun onClick(item: Artist) {
-            // show ArtistFragment
+            hostFragment?.showFragment(ArtistFragment.newInstance(artist = item), true)
         }
     }
 
@@ -58,11 +61,9 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
         TrackView(state = viewModel.viewState,
                 artistsAdapter = ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item, onArtistClickListener),
                 similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener),
-                onAlbumImageViewClickListener = View.OnClickListener {
+                onAlbumImageViewClickListener = View.OnClickListener { _ ->
                     val album = viewModel.viewState.album.get()
-                    album?.let {
-                        // show albumFragment
-                    }
+                    album?.let { hostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
                 })
     }
 

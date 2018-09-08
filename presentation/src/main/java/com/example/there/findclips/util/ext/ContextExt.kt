@@ -10,3 +10,6 @@ fun Context.dpToPx(dp: Float): Float {
 
 val Context.screenOrientation: Int
     get() = resources.configuration.orientation
+
+val Context.screenHeight: Int
+    get() = resources.configuration.screenHeightDp
