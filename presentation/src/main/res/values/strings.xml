@@ -60,4 +60,6 @@
     <string name="browse_for_tracks">Browse for tracks and save them as favourite to see them here.</string>
     <string name="browse_for_categories">Browse for categories and save them as favourite to see them here.</string>
     <string name="search_hint">Search…</string>
+    <string name="videos">Videos</string>
+    <string name="spotify">Spotify</string>
 </resources>

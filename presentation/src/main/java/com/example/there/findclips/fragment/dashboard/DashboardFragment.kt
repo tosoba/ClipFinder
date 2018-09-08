@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.category.CategoryFragment
@@ -64,19 +62,6 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
             featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
             topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        super.onPrepareOptionsMenu(menu)
-
-        menu?.findItem(R.id.favourites_spinner_menu_item)?.isVisible = false
-        menu?.findItem(R.id.spinner_menu_item)?.isVisible = false
-        menu?.findItem(R.id.search_view_menu_item)?.isVisible = false
     }
 
     private val isDataLoaded: Boolean

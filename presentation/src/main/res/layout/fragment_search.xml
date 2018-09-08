@@ -7,7 +7,7 @@
             type="com.example.there.findclips.fragment.search.SearchView" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -17,15 +17,28 @@
         <com.example.there.findclips.view.viewpager.LockableViewPager
             android:id="@+id/search_fragment_view_pager"
             swipeLocked="@{true}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adapter="@{searchFragmentView.pagerAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/search_bottom_navigation_view"
+            onNavigationItemSelectedListener="@{searchFragmentView.onNavigationItemSelectedListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryDark"
+            app:itemIconTint="@color/bottom_navigation_color"
+            app:itemTextColor="@color/bottom_navigation_color"
+            app:labelVisibilityMode="unlabeled"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            app:menu="@menu/spotify_videos_bottom_navigation" />
+
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
 
 

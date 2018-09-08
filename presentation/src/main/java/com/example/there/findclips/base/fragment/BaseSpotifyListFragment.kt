@@ -39,12 +39,12 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
     }
 
     private fun updateRecyclerViewOnConfigChange() {
-        itemsRecyclerView?.let {
+        itemsRecyclerView?.let { recyclerView ->
             if (viewState.shouldShowHeader) {
-                it.removeItemDecoration(currentHeaderDecoration)
-                it.addItemDecoration(headerItemDecoration(recyclerViewHeaderLayout))
+                currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
+                recyclerView.addItemDecoration(headerItemDecoration(recyclerViewHeaderLayout))
             }
-            it.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+            recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
         }
     }
 

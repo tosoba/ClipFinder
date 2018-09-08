@@ -10,9 +10,11 @@ import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
 
-class SeparatorDecoration(context: Context,
-                          @ColorInt color: Int,
-                          @FloatRange(from = 0.0, fromInclusive = false) heightDp: Float) : RecyclerView.ItemDecoration() {
+class SeparatorDecoration(
+        context: Context,
+        @ColorInt color: Int,
+        @FloatRange(from = 0.0, fromInclusive = false) heightDp: Float
+) : RecyclerView.ItemDecoration() {
 
     private val mPaint: Paint = Paint()
 
@@ -22,21 +24,21 @@ class SeparatorDecoration(context: Context,
         mPaint.strokeWidth = thickness
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val params = view.layoutParams as RecyclerView.LayoutParams
 
         // we want to retrieve the position in the list
         val position = params.viewAdapterPosition
 
         // and add a separator to any view but the last one
-        if (position < state!!.itemCount) {
+        if (position < state.itemCount) {
             outRect.set(0, 0, 0, mPaint.strokeWidth.toInt()) // left, top, right, bottom
         } else {
             outRect.setEmpty() // 0, 0, 0, 0
         }
     }
 
-    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         // we set the stroke width before, so as to correctly draw the line we have to offset by width / 2
         val offset = (mPaint.strokeWidth / 2).toInt()
 

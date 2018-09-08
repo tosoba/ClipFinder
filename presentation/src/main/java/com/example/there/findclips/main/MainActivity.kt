@@ -1,7 +1,9 @@
 package com.example.there.findclips.main
 
+import android.app.SearchManager
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
@@ -12,7 +14,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.text.InputType
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -68,6 +72,17 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_fragment_menu, menu)
+
+        val searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
+        val searchView = searchViewMenuItem?.actionView as? SearchView
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onNewIntent(intent: Intent?) {

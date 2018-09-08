@@ -5,14 +5,8 @@
     <item
         android:id="@+id/search_view_menu_item"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="@string/search"/>
-
-    <item
-        android:id="@+id/spinner_menu_item"
         android:title="@string/search"
-        app:actionViewClass="android.widget.Spinner"
-        app:showAsAction="always" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>
