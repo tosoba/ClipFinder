@@ -5,7 +5,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.activities.album.AlbumView" />
+            type="com.example.there.findclips.fragment.album.AlbumView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context="com.example.there.findclips.activities.album.AlbumFragment">
+        tools:context=".fragment.album.AlbumFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/album_app_bar"
@@ -61,7 +61,7 @@
 
         <include
             android:id="@+id/album_content"
-            layout="@layout/content_activity_album" />
+            layout="@layout/content_fragment_album" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/album_favourite_fab"

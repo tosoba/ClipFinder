@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragments.track.TrackView" />
+            type="com.example.there.findclips.fragment.track.TrackView" />
     </data>
 
     <android.support.v4.widget.NestedScrollView
@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/track_root_layout"
-            tools:context=".fragments.track.TrackFragment">
+            tools:context=".fragment.track.TrackFragment">
 
             <TextView
                 android:id="@+id/track_album_label_txt"

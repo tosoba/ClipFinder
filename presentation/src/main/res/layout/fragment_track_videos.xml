@@ -9,14 +9,14 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.activities.trackvideos.TrackVideosView" />
+            type="com.example.there.findclips.fragment.trackvideos.TrackVideosView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".activities.trackvideos.TrackVideosFragment">
+        tools:context=".fragment.trackvideos.TrackVideosFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/track_videos_app_bar"

@@ -2,8 +2,8 @@ package com.example.there.findclips.base.vm
 
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
-import com.example.there.domain.entities.spotify.AccessTokenEntity
-import com.example.there.domain.usecases.spotify.GetAccessToken
+import com.example.there.domain.entity.spotify.AccessTokenEntity
+import com.example.there.domain.usecase.spotify.GetAccessToken
 import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.util.ext.messageOrDefault
 import retrofit2.HttpException

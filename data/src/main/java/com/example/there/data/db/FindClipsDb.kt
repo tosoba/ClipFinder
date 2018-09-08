@@ -3,11 +3,11 @@ package com.example.there.data.db
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
-import com.example.there.data.entities.spotify.*
-import com.example.there.data.entities.videos.RelatedVideoSearchDbData
-import com.example.there.data.entities.videos.VideoDbData
-import com.example.there.data.entities.videos.VideoPlaylistData
-import com.example.there.data.entities.videos.VideoSearchDbData
+import com.example.there.data.entity.spotify.*
+import com.example.there.data.entity.videos.RelatedVideoSearchDbData
+import com.example.there.data.entity.videos.VideoDbData
+import com.example.there.data.entity.videos.VideoPlaylistData
+import com.example.there.data.entity.videos.VideoSearchDbData
 
 @Database(entities = [
     AlbumData::class,

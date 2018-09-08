@@ -6,7 +6,7 @@
 
         <variable
             name="playlist"
-            type="com.example.there.findclips.model.entities.Playlist" />
+            type="com.example.there.findclips.model.entity.Playlist" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

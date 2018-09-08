@@ -1,10 +1,10 @@
 package com.example.there.data.db
 
 import android.arch.persistence.room.TypeConverter
-import com.example.there.data.entities.spotify.IconData
-import com.example.there.data.entities.spotify.OwnerData
-import com.example.there.data.entities.spotify.SimplifiedAlbumData
-import com.example.there.data.entities.spotify.SimplifiedArtistData
+import com.example.there.data.entity.spotify.IconData
+import com.example.there.data.entity.spotify.OwnerData
+import com.example.there.data.entity.spotify.SimplifiedAlbumData
+import com.example.there.data.entity.spotify.SimplifiedArtistData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*

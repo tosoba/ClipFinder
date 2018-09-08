@@ -14,11 +14,11 @@
         android:theme="@style/AppTheme">
 
         <provider
-            android:name=".fragments.search.SearchSuggestionProvider"
-            android:authorities="com.example.there.findclips.fragments.search.SearchSuggestionProvider" />
+            android:name=".fragment.search.SearchSuggestionProvider"
+            android:authorities="com.example.there.findclips.fragment.search.SearchSuggestionProvider" />
 
         <activity
-            android:name=".activities.main.MainActivity"
+            android:name="com.example.there.findclips.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"

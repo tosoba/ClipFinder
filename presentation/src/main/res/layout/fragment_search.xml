@@ -4,7 +4,7 @@
 
         <variable
             name="searchFragmentView"
-            type="com.example.there.findclips.fragments.search.SearchView" />
+            type="com.example.there.findclips.fragment.search.SearchView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -3,9 +3,9 @@ package com.example.there.findclips.util.ext
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
-import com.example.there.findclips.activities.main.MainActivity
 import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
+import com.example.there.findclips.main.MainActivity
 import java.util.*
 
 val Fragment.mainActivity: MainActivity?

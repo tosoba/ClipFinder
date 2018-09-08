@@ -4,14 +4,14 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragmentView" />
+            type="com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragmentView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.fragments.favourites.videos.VideosFavouritesFragment">
+        tools:context="com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment">
 
         <TextView
             android:id="@+id/videos_favourites_playlists_label"

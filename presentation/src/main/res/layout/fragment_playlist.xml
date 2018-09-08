@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.activities.playlist.PlaylistView" />
+            type="com.example.there.findclips.fragment.playlist.PlaylistView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".activities.playlist.PlaylistFragment">
+        tools:context=".fragment.playlist.PlaylistFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/playlist_app_bar"
@@ -69,7 +69,7 @@
 
             <fragment
                 android:id="@+id/playlist_spotify_tracks_fragment"
-                android:name="com.example.there.findclips.fragments.lists.SpotifyTracksFragment"
+                android:name="com.example.there.findclips.fragment.list.SpotifyTracksFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:additional_hint_text=""
