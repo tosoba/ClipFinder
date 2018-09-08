@@ -10,11 +10,11 @@ import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.view.Menu
 import android.view.View
@@ -26,18 +26,13 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
-import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.there.findclips.base.fragment.HasBackNavigation
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.checkItem
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.screenHeight
-import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.list.OnVideoClickListener
 import com.example.there.findclips.view.list.RelatedVideosList
@@ -50,6 +45,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector {
+
+    val toolbar: Toolbar?
+        get() = main_toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +109,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onBackPressed() {
-        val currentFragment = pagerAdapter.currentFragment
+        val currentFragment = pagerAdapter.currentHostFragment
 
         if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
             sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -119,16 +117,19 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         }
 
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
-            val fragmentOnTop = (currentFragment as? BaseHostFragment)?.topFragment
-            fragmentOnTop?.let {
+            currentFragment.topFragment?.let {
                 if (it is GoesToPreviousStateOnBackPressed) {
                     it.onBackPressed()
                     return
                 }
             }
 
+            if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
+                main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
+                main_toolbar?.navigationIcon = null
+            }
+
             currentFragment.childFragmentManager.popBackStackImmediate()
-            updateToolbarBackNavigation(currentFragment)
         } else {
             super.onBackPressed()
         }
@@ -138,7 +139,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         val currentFragment = pagerAdapter.currentFragment
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
             currentFragment.childFragmentManager.popBackStackImmediate()
-            updateToolbarBackNavigation(currentFragment)
         } else {
             super.onBackPressed()
         }
@@ -147,17 +147,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     fun addBackNavigationToToolbar() {
         main_toolbar?.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
         main_toolbar?.setNavigationOnClickListener { onBackPressed() }
-    }
-
-    fun updateToolbarBackNavigation(currentFragment: Fragment) {
-        val baseHostFragment = currentFragment as? BaseHostFragment
-        baseHostFragment?.let {
-            if (it.childFragmentManager.findFragmentById(it.backStackLayoutId) is HasBackNavigation) {
-                addBackNavigationToToolbar()
-            } else {
-                main_toolbar?.navigationIcon = null
-            }
-        }
     }
 
     private val view: MainView by lazy {

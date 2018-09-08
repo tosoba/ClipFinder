@@ -19,7 +19,7 @@
             onTabSelectedListener="@{view.onTabSelectedListener}"
             tabs="@{view.fragmentTabs}"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:background="@color/colorPrimary"
             android:minHeight="?android:attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

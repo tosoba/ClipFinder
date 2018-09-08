@@ -3,6 +3,7 @@ package com.example.there.findclips.fragment.artist
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.there.findclips.base.fragment.HasBackNavigation
 
 import com.example.there.findclips.databinding.FragmentArtistBinding
 import com.example.there.findclips.di.Injectable
@@ -27,7 +27,7 @@ import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.*
 import kotlinx.android.synthetic.main.fragment_artist.*
 
-class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, HasBackNavigation, GoesToPreviousStateOnBackPressed {
+class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, GoesToPreviousStateOnBackPressed {
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
@@ -102,6 +102,8 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Has
                     GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
             artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
                     GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+            artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            artistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
 

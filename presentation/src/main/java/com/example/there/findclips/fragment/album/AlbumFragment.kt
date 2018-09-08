@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-import com.example.there.findclips.base.fragment.HasBackNavigation
 
 import com.example.there.findclips.databinding.FragmentAlbumBinding
 import com.example.there.findclips.di.Injectable
@@ -23,6 +22,7 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ArtistsList
 import com.example.there.findclips.view.list.OnArtistClickListener
 import com.example.there.findclips.view.list.OnTrackClickListener
@@ -31,7 +31,7 @@ import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_album.*
 
-class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable, HasBackNavigation {
+class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
@@ -86,6 +86,8 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable, HasBa
             albumContent?.view = view
             albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            albumToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            albumToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
 

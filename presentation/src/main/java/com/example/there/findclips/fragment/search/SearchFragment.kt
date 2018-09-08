@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.FragmentSearchBinding
+import com.example.there.findclips.util.ext.dpToPx
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
@@ -36,6 +37,10 @@ class SearchFragment : Fragment() {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         binding.searchFragmentView = view
         binding.searchFragmentViewPager.offscreenPageLimit = 1
+        val params = binding.searchBottomNavigationView.layoutParams
+        params.height = activity!!.dpToPx(40f).toInt()
+        binding.searchBottomNavigationView.layoutParams = params
+
         return binding.root
     }
 

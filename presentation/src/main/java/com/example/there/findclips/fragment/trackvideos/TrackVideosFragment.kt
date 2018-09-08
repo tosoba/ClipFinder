@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.there.findclips.base.fragment.HasBackNavigation
 
 import com.example.there.findclips.databinding.FragmentTrackVideosBinding
 import com.example.there.findclips.di.Injectable
@@ -28,7 +28,6 @@ class TrackVideosFragment :
         BaseVMFragment<TrackVideosViewModel>(),
         OnTrackChangeListener,
         Injectable,
-        HasBackNavigation,
         GoesToPreviousStateOnBackPressed {
 
     private val onPageChangeListener = object : OnPageChangeListener {
@@ -97,6 +96,8 @@ class TrackVideosFragment :
         return binding.apply {
             view = this@TrackVideosFragment.view
             binding.trackVideosViewpager.offscreenPageLimit = 1
+            trackVideosToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            trackVideosToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
 

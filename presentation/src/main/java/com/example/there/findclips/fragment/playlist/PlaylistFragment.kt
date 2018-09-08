@@ -4,13 +4,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-import com.example.there.findclips.base.fragment.HasBackNavigation
 
 import com.example.there.findclips.databinding.FragmentPlaylistBinding
 import com.example.there.findclips.di.Injectable
@@ -18,9 +18,10 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.mainActivity
 import kotlinx.android.synthetic.main.fragment_playlist.*
 
-class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable, HasBackNavigation {
+class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 
@@ -60,6 +61,8 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable,
         val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         return binding.apply {
             view = this@PlaylistFragment.view
+            playlistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            playlistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
 

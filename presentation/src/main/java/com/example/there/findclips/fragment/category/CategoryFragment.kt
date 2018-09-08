@@ -4,13 +4,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-import com.example.there.findclips.base.fragment.HasBackNavigation
 
 import com.example.there.findclips.databinding.FragmentCategoryBinding
 import com.example.there.findclips.di.Injectable
@@ -18,9 +18,10 @@ import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.mainActivity
 import kotlinx.android.synthetic.main.fragment_category.*
 
-class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable, HasBackNavigation {
+class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 
@@ -57,6 +58,8 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable,
         val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         return binding.apply {
             view = this@CategoryFragment.view
+            categoryToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            categoryToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
 
