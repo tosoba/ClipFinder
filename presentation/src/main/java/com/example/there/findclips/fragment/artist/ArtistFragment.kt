@@ -106,10 +106,8 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Has
     }
 
 
-    //TODO: handle onBackPressed - go to previous state - maybe make an interface HasPreviousStates or smth -> implement it in ArtistFragment -> in MainActivity onBackPressed findFragmentById -> check type and call method like below
     override fun onBackPressed() {
-        if (!viewModel.onBackPressed())
-            mainActivity?.backPressedOnNoPreviousFragmentState()
+        if (!viewModel.onBackPressed()) mainActivity?.backPressedOnNoPreviousFragmentState()
     }
 
     override fun initViewModel() {

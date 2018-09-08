@@ -100,7 +100,6 @@ class TrackVideosFragment :
         }.root
     }
 
-    //TODO: handle onBackPressed like in ArtistFragment
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {
             mainActivity?.backPressedOnNoPreviousFragmentState()
