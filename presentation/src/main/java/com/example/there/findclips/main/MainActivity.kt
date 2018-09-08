@@ -9,6 +9,7 @@ import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -16,10 +17,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.text.InputType
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -30,6 +28,8 @@ import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPresse
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
+import com.example.there.findclips.fragment.search.SearchFragment
+import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.*
@@ -72,15 +72,22 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
     }
 
+    private var searchViewMenuItem: MenuItem? = null
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_fragment_menu, menu)
 
-        val searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
+        searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
         val searchView = searchViewMenuItem?.actionView as? SearchView
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 
-        return super.onCreateOptionsMenu(menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.search_view_menu_item -> true
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -89,18 +96,21 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     private fun handleSearchIntent(intent: Intent?) {
-//        fun saveQuery(query: String) {
-//            val suggestions = SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE)
-//            suggestions.saveRecentQuery(query, null)
-//        }
-//
-//        if (Intent.ACTION_SEARCH == intent?.action) {
-//            val query = intent.getStringExtra(SearchManager.QUERY)
-//            saveQuery(query)
-//
-//            val currentFragment = pagerAdapter.currentFragment
-//            currentFragment?.let { (it as? SearchFragment)?.search(query) }
-//        }
+        fun saveQuery(query: String) {
+            val suggestions = SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE)
+            suggestions.saveRecentQuery(query, null)
+        }
+
+        if (Intent.ACTION_SEARCH == intent?.action) {
+            val query = intent.getStringExtra(SearchManager.QUERY)
+            if (query.isNullOrBlank()) return
+            saveQuery(query)
+
+            searchViewMenuItem?.collapseActionView()
+
+            val currentFragment = pagerAdapter.currentHostFragment
+            currentFragment?.showFragment(SearchFragment.newInstance(query), true)
+        }
     }
 
     override fun onDestroy() {
@@ -126,7 +136,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
             if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
                 main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
-                main_toolbar?.navigationIcon = null
+                setSupportActionBar(main_toolbar)
             }
 
             currentFragment.childFragmentManager.popBackStackImmediate()
@@ -142,11 +152,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         } else {
             super.onBackPressed()
         }
-    }
-
-    fun addBackNavigationToToolbar() {
-        main_toolbar?.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
-        main_toolbar?.setNavigationOnClickListener { onBackPressed() }
     }
 
     private val view: MainView by lazy {
@@ -168,7 +173,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region pager navigation
 
-    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_favorites, R.id.action_search)
+    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_favorites)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         if (item.itemId == main_bottom_navigation_view.selectedItemId) {

@@ -13,7 +13,6 @@ abstract class BaseHostFragment : Fragment() {
         val transaction = childFragmentManager.beginTransaction().replace(backStackLayoutId, fragment)
 
         if (addToBackStack) {
-            mainActivity?.addBackNavigationToToolbar()
             if (mainActivity?.toolbar?.height != 0)
                 mainActivity?.toolbar?.animateHeight(mainActivity!!.dpToPx(48f).toInt(), 0, 400)
             transaction.addToBackStack(null)

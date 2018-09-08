@@ -15,7 +15,7 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
-import com.example.there.findclips.view.viewpager.adapter.SpotifyFragmentPagerAdapter
+import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 
@@ -33,8 +33,8 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
         }
     }
 
-    private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy {
-        SpotifyFragmentPagerAdapter(childFragmentManager, arrayOf(
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+        CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
                 SpotifyAlbumsFragment.newInstance(
                         getString(R.string.no_favourite_albums_addded_yet),
                         getString(R.string.browse_for_albums),

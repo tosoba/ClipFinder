@@ -21,7 +21,7 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
-import com.example.there.findclips.view.viewpager.adapter.SpotifyFragmentPagerAdapter
+import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 
@@ -63,8 +63,8 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         viewModel.loadedFlag.observe(this, Observer { updateCurrentFragment() })
     }
 
-    private val pagerAdapter: SpotifyFragmentPagerAdapter by lazy {
-        SpotifyFragmentPagerAdapter(childFragmentManager, arrayOf(
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+        CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
                 SpotifyAlbumsFragment.newInstance(
                         getString(R.string.no_albums_loaded_yet),
                         getString(R.string.search_for_some),
@@ -145,5 +145,24 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         lifecycle.addObserver(connectivityComponent)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initFromArguments()
+    }
+
+    private fun initFromArguments() {
+        arguments?.let {
+            if (it.containsKey(ARG_QUERY)) query = it.getString(ARG_QUERY)!!
+        }
+    }
+
     private fun loadData() = viewModel.searchAll(activity?.accessToken, query)
+
+    companion object {
+        private const val ARG_QUERY = "ARG_QUERY"
+
+        fun newInstanceWithQuery(query: String) = SpotifySearchFragment().apply {
+            arguments = Bundle().apply { putString(ARG_QUERY, query) }
+        }
+    }
 }

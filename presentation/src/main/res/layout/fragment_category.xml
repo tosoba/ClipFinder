@@ -55,7 +55,7 @@
                     android:id="@+id/category_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
-                    app:layout_collapseMode="parallax"
+                    app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </android.support.design.widget.CollapsingToolbarLayout>

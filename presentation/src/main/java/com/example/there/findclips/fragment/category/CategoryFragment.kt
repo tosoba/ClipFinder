@@ -6,12 +6,12 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-
 import com.example.there.findclips.databinding.FragmentCategoryBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
@@ -54,10 +54,18 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable 
             loadData()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         return binding.apply {
             view = this@CategoryFragment.view
+            mainActivity?.setSupportActionBar(categoryToolbar)
             categoryToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
             categoryToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root

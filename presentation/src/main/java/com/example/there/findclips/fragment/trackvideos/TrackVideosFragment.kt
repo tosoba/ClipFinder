@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -84,6 +85,13 @@ class TrackVideosFragment :
         )
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -96,6 +104,7 @@ class TrackVideosFragment :
         return binding.apply {
             view = this@TrackVideosFragment.view
             binding.trackVideosViewpager.offscreenPageLimit = 1
+            mainActivity?.setSupportActionBar(trackVideosToolbar)
             trackVideosToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
             trackVideosToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root

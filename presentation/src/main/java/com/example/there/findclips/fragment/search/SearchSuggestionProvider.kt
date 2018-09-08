@@ -9,7 +9,7 @@ class SearchSuggestionProvider: SearchRecentSuggestionsProvider() {
     }
 
     companion object {
-        const val AUTHORITY = "com.example.there.findclips.fragments.search.SearchSuggestionProvider"
+        const val AUTHORITY = "com.example.there.findclips.fragment.search.SearchSuggestionProvider"
         const val MODE = DATABASE_MODE_QUERIES
     }
 }

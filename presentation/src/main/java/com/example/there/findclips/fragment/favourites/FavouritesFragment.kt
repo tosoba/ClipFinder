@@ -12,15 +12,11 @@ import com.example.there.findclips.databinding.FragmentFavouritesBinding
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
 import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.setHeight
 import kotlinx.android.synthetic.main.fragment_favourites.*
 
 
 class FavouritesFragment : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     private val pagerAdapter: FavouritesFragmentPagerAdapter by lazy {
         FavouritesFragmentPagerAdapter(childFragmentManager, arrayOf(
@@ -47,9 +43,7 @@ class FavouritesFragment : Fragment() {
         val binding: FragmentFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_favourites, container, false)
         binding.favouritesFragmentView = view
         binding.favouritesFragmentViewPager.offscreenPageLimit = 1
-        val params = binding.favouritesBottomNavigationView.layoutParams
-        params.height = activity!!.dpToPx(40f).toInt()
-        binding.favouritesBottomNavigationView.layoutParams = params
+        binding.favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
         return binding.root
     }
 }

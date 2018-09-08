@@ -4,6 +4,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
 
 data class SearchView(
+        val query: String,
         val pagerAdapter: FragmentStatePagerAdapter,
         val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener
 )

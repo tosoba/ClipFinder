@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -90,6 +91,12 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
@@ -102,11 +109,11 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
                     GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
             artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
                     GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+            mainActivity?.setSupportActionBar(artistToolbar)
             artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
             artistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
-
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) mainActivity?.backPressedOnNoPreviousFragmentState()

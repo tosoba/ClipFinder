@@ -71,15 +71,15 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) initFromArguments()
+        initFromArguments()
     }
 
     private fun initFromArguments() {
         arguments?.let {
             if (it.containsKey(ARG_QUERY)) {
-                query = it.getString(ARG_QUERY)
+                query = it.getString(ARG_QUERY)!!
             } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
-                val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)
+                val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)!!
                 viewModel.getFavouriteVideosFromPlaylist(videoPlaylist)
             }
         }

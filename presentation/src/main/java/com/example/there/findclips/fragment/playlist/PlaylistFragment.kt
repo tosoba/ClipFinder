@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -57,10 +58,18 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable 
             loadData()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         return binding.apply {
             view = this@PlaylistFragment.view
+            mainActivity?.setSupportActionBar(playlistToolbar)
             playlistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
             playlistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root

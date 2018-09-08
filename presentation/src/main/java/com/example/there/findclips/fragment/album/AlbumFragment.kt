@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -86,10 +87,18 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
             albumContent?.view = view
             albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            mainActivity?.setSupportActionBar(albumToolbar)
             albumToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
             albumToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
