@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -49,6 +50,9 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     val toolbar: Toolbar?
         get() = main_toolbar
 
+    val connectivitySnackbarParentView: View?
+        get() = findViewById(R.id.main_view_pager)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,16 +70,24 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         super.onConfigurationChanged(newConfig)
         updatePlayerDimensions(currentSlideOffset)
         updateMainContentLayoutParams()
+        updateFavouriteBtnOnConfigChange(newConfig)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        addVideoDialogFragment = null
     }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
     }
 
+    // region search
+
     private var searchViewMenuItem: MenuItem? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_fragment_menu, menu)
+        menuInflater.inflate(R.menu.search_menu, menu)
 
         searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
         val searchView = searchViewMenuItem?.actionView as? SearchView
@@ -113,10 +125,9 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        addVideoDialogFragment = null
-    }
+    // endregion
+
+    // region backNavigation
 
     override fun onBackPressed() {
         val currentFragment = pagerAdapter.currentHostFragment
@@ -134,10 +145,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                 }
             }
 
-            if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
-                main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
-                setSupportActionBar(main_toolbar)
-            }
+            showMainToolbarIfNeeded(currentFragment)
 
             currentFragment.childFragmentManager.popBackStackImmediate()
         } else {
@@ -148,11 +156,21 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     fun backPressedOnNoPreviousFragmentState() {
         val currentFragment = pagerAdapter.currentFragment
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+            showMainToolbarIfNeeded(currentFragment)
             currentFragment.childFragmentManager.popBackStackImmediate()
         } else {
             super.onBackPressed()
         }
     }
+
+    private fun showMainToolbarIfNeeded(currentFragment: Fragment) {
+        if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
+            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
+            setSupportActionBar(main_toolbar)
+        }
+    }
+
+    // endregion
 
     private val view: MainView by lazy {
         MainView(
@@ -262,6 +280,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
             }
             layoutParams.height = height.toInt()
             player_view.requestLayout()
+        }
+    }
+
+    private fun updateFavouriteBtnOnConfigChange(newConfig: Configuration?) {
+        if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            add_video_to_favourites_fab?.animate()?.alpha(0f)
+        } else {
+            add_video_to_favourites_fab?.animate()?.alpha(1f)
         }
     }
 

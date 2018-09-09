@@ -21,8 +21,8 @@ import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.*
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
@@ -73,19 +73,20 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         ConnectivityComponent(
                 activity!!,
                 { isDataLoaded },
-                dashboard_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData,
-                true
+                false
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadData()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         lifecycle.addObserver(connectivityComponent)
-
-        if (savedInstanceState == null)
-            loadData()
     }
 
     override fun initViewModel() {

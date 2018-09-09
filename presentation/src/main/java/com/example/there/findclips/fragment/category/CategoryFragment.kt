@@ -19,7 +19,6 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
-import kotlinx.android.synthetic.main.fragment_category.*
 
 class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable {
 
@@ -40,23 +39,20 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable 
         ConnectivityComponent(
                 activity!!,
                 { viewModel.playlists.value != null },
-                category_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData
         )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         lifecycle.addObserver(connectivityComponent)
-
-        if (savedInstanceState == null)
-            loadData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -66,7 +62,7 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable 
         return binding.apply {
             view = this@CategoryFragment.view
             mainActivity?.setSupportActionBar(categoryToolbar)
-            categoryToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            categoryToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             categoryToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }

@@ -19,6 +19,7 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.util.ext.accessToken
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -31,7 +32,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         set(value) {
             if (field == value) return
             field = value
-            viewModel.searchAll(activity?.accessToken, query)
+            loadData()
             viewModel.viewState.clearAll()
         }
 
@@ -134,7 +135,7 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
                                     viewModel.viewState.playlists.isNotEmpty() &&
                                     viewModel.viewState.tracks.isNotEmpty())
                 },
-                spotify_search_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )

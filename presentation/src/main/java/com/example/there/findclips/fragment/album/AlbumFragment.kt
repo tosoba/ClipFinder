@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-
 import com.example.there.findclips.databinding.FragmentAlbumBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.artist.ArtistFragment
@@ -30,7 +29,6 @@ import com.example.there.findclips.view.list.OnTrackClickListener
 import com.example.there.findclips.view.list.TracksPopularityList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import kotlinx.android.synthetic.main.fragment_album.*
 
 class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
 
@@ -75,7 +73,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
         ConnectivityComponent(
                 activity!!,
                 { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
-                album_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData
         )
     }
@@ -88,7 +86,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
             albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             mainActivity?.setSupportActionBar(albumToolbar)
-            albumToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            albumToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             albumToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }
@@ -96,17 +94,14 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         lifecycle.addObserver(connectivityComponent)
-
-        if (savedInstanceState == null)
-            loadData()
     }
 
     override fun initViewModel() {

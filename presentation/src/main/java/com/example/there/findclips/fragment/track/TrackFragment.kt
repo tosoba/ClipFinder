@@ -20,11 +20,11 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ArtistsList
 import com.example.there.findclips.view.list.OnArtistClickListener
 import com.example.there.findclips.view.list.OnTrackClickListener
 import com.example.there.findclips.view.list.TracksList
-import kotlinx.android.synthetic.main.fragment_track.*
 
 
 class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
@@ -86,7 +86,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
                             viewModel.viewState.artists.isNotEmpty() &&
                             viewModel.viewState.similarTracks.isNotEmpty()
                 },
-                track_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData
         )
     }

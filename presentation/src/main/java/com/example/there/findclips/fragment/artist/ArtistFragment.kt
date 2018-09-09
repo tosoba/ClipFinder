@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-
 import com.example.there.findclips.databinding.FragmentArtistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
@@ -26,7 +25,6 @@ import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.*
-import kotlinx.android.synthetic.main.fragment_artist.*
 
 class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, GoesToPreviousStateOnBackPressed {
 
@@ -76,24 +74,25 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
                             viewModel.viewState.topTracks.isNotEmpty() &&
                             viewModel.viewState.topTracks.isNotEmpty()
                 },
-                artist_root_layout,
-                ::loadData
+                mainActivity!!.connectivitySnackbarParentView!!,
+                {
+                    val artistToLoad = if (viewModelInitialized && viewModel.viewState.artist.get() != null)
+                        viewModel.viewState.artist.get()!!
+                    else argArtist
+                    viewModel.loadArtistData(activity?.accessToken, artistToLoad)
+                }
         )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         lifecycle.addObserver(connectivityComponent)
-
-        if (savedInstanceState == null) {
-            viewModel.loadArtistData(activity?.accessToken, argArtist)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -110,7 +109,7 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
             artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
                     GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
             mainActivity?.setSupportActionBar(artistToolbar)
-            artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             artistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }

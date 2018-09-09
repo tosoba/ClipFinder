@@ -59,7 +59,7 @@ class SearchFragment : Fragment() {
             searchFragmentViewPager.offscreenPageLimit = 1
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
             mainActivity?.setSupportActionBar(searchToolbar)
-            searchToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            searchToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             searchToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }

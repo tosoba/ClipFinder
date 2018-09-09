@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
-
 import com.example.there.findclips.databinding.FragmentPlaylistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
@@ -20,7 +19,6 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
-import kotlinx.android.synthetic.main.fragment_playlist.*
 
 class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable {
 
@@ -41,7 +39,7 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable 
         ConnectivityComponent(
                 activity!!,
                 { viewModel.tracks.value != null },
-                playlist_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData
         )
     }
@@ -51,16 +49,13 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         lifecycle.addObserver(connectivityComponent)
-
-        if (savedInstanceState == null)
-            loadData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -70,7 +65,7 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable 
         return binding.apply {
             view = this@PlaylistFragment.view
             mainActivity?.setSupportActionBar(playlistToolbar)
-            playlistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            playlistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             playlistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }

@@ -25,6 +25,9 @@ abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity(), HasSuppo
 
     protected lateinit var viewModel: T
 
+    protected val viewModelInitialized: Boolean
+        get() = ::viewModel.isInitialized
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()

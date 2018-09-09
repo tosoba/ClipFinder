@@ -28,8 +28,7 @@ class ConnectivityComponent(
 
     private var internetDisposable: Disposable? = null
     private var connectionInterrupted = false
-    var lastConnectionStatus: Boolean = false
-        private set
+    private var lastConnectionStatus: Boolean? = null
 
     private var snackbar: Snackbar? = null
     private var isSnackbarShowing = false
@@ -40,7 +39,7 @@ class ConnectivityComponent(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { isConnectedToInternet ->
-                    lastConnectionStatus = isConnectedToInternet!!
+                    lastConnectionStatus = isConnectedToInternet
                     handleConnectionStatus(isConnectedToInternet)
                 }
     }
@@ -49,7 +48,7 @@ class ConnectivityComponent(
         if (!isConnectedToInternet) {
             connectionInterrupted = true
             if (!isSnackbarShowing) {
-                showNoConnectionDialog()
+                showNoConnectionSnackbar()
             }
         } else {
             if (connectionInterrupted) {
@@ -60,14 +59,13 @@ class ConnectivityComponent(
             }
 
             isSnackbarShowing = false
-            if (snackbar != null) snackbar!!.dismiss()
+            snackbar?.dismiss()
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun clear() {
-        if (snackbar != null)
-            snackbar!!.dismiss()
+        snackbar?.dismiss()
         snackbar = null
         safelyDispose(internetDisposable)
     }
@@ -78,7 +76,7 @@ class ConnectivityComponent(
         }
     }
 
-    private fun showNoConnectionDialog() {
+    private fun showNoConnectionSnackbar() {
         snackbar = Snackbar
                 .make(parentView, "No internet connection.", Snackbar.LENGTH_LONG)
                 .setAction("SETTINGS") { _ ->
@@ -88,20 +86,20 @@ class ConnectivityComponent(
                 .setCallback(object : Snackbar.Callback() {
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                         if (event == Snackbar.Callback.DISMISS_EVENT_SWIPE) {
-                            showNoConnectionDialog()
+                            showNoConnectionSnackbar()
                         }
                     }
                 })
                 .setActionTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
 
-        val textView = snackbar!!.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-        textView.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
-        snackbar!!.duration = Snackbar.LENGTH_INDEFINITE
+        val textView = snackbar?.view?.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+        textView?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
+        snackbar?.duration = Snackbar.LENGTH_INDEFINITE
 
         if (!shouldShowSnackbarWithBottomMargin) {
-            snackbar!!.show()
+            snackbar?.show()
         } else {
-            snackbar!!.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
+            snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(40f).toInt())
         }
     }
 }

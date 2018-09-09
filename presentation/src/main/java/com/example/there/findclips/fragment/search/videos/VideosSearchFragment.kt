@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragment.search.MainSearchFragment
@@ -34,7 +33,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         set(value) {
             if (field == value) return
             field = value
-            viewModel.searchVideos(value)
+            loadData()
             viewModel.viewState.videos.clear()
         }
 
@@ -48,10 +47,14 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
+    private val videosAdapter: VideosList.Adapter by lazy {
+        VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener)
+    }
+
     private val view: VideosSearchView by lazy {
         VideosSearchView(
                 state = viewModel.viewState,
-                videosAdapter = VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener),
+                videosAdapter = videosAdapter,
                 onScrollListener = onScrollListener,
                 videosItemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
@@ -60,12 +63,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_search, container, false)
         binding.videosSearchView = view
-        binding.videosRecyclerView.layoutManager = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        } else {
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
-
+        binding.videosRecyclerView.layoutManager = videosLayoutManager
         return binding.root
     }
 
@@ -85,6 +83,25 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updateRecyclerViewOnConfigChange()
+    }
+
+    private val videosLayoutManager: RecyclerView.LayoutManager
+        get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        } else {
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+
+    private fun updateRecyclerViewOnConfigChange() {
+        videos_recycler_view?.adapter = null
+        videos_recycler_view?.layoutManager = videosLayoutManager
+        videos_recycler_view?.adapter = videosAdapter
+        videosAdapter.notifyDataSetChanged()
+    }
+
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(VideosSearchViewModel::class.java)
     }
@@ -93,7 +110,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         ConnectivityComponent(
                 activity!!,
                 { query == "" || viewModel.viewState.videos.isNotEmpty() },
-                videos_search_root_layout,
+                mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )

@@ -88,16 +88,10 @@ class TrackVideosFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        viewModel.updateState(argTrack)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        if (savedInstanceState == null)
-            viewModel.updateState(argTrack)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_videos, container, false)
@@ -105,7 +99,7 @@ class TrackVideosFragment :
             view = this@TrackVideosFragment.view
             binding.trackVideosViewpager.offscreenPageLimit = 1
             mainActivity?.setSupportActionBar(trackVideosToolbar)
-            trackVideosToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back, null)
+            trackVideosToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             trackVideosToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
         }.root
     }

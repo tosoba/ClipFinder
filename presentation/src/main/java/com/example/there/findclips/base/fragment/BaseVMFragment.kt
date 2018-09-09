@@ -17,6 +17,9 @@ abstract class BaseVMFragment<T : BaseViewModel> : Fragment(), Injectable {
 
     protected lateinit var viewModel: T
 
+    protected val viewModelInitialized: Boolean
+        get() = ::viewModel.isInitialized
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupObservers()

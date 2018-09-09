@@ -11,7 +11,6 @@ fun bindImageUrl(view: ImageView, url: String?) {
         Picasso.with(view.context)
                 .load(url)
                 .fit()
-                .centerCrop()
                 .error(R.drawable.placeholder)
                 .into(view)
     }

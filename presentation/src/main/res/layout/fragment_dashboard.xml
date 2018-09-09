@@ -16,7 +16,6 @@
         android:fillViewport="true">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/dashboard_root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".fragment.dashboard.DashboardFragment">
