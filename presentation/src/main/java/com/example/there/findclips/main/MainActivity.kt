@@ -145,7 +145,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                 }
             }
 
-            showMainToolbarIfNeeded(currentFragment)
+            showMainToolbarOnBackPressed(currentFragment)
 
             currentFragment.childFragmentManager.popBackStackImmediate()
         } else {
@@ -156,14 +156,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     fun backPressedOnNoPreviousFragmentState() {
         val currentFragment = pagerAdapter.currentFragment
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
-            showMainToolbarIfNeeded(currentFragment)
+            showMainToolbarOnBackPressed(currentFragment)
             currentFragment.childFragmentManager.popBackStackImmediate()
         } else {
             super.onBackPressed()
         }
     }
 
-    private fun showMainToolbarIfNeeded(currentFragment: Fragment) {
+    private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
             main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
             setSupportActionBar(main_toolbar)
@@ -199,6 +199,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         }
 
         main_view_pager.currentItem = itemIds.indexOf(item.itemId)
+        toggleToolbar()
 
         return@OnNavigationItemSelectedListener true
     }
@@ -208,6 +209,16 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             main_bottom_navigation_view?.checkItem(itemIds[position])
+            toggleToolbar()
+        }
+    }
+
+    private fun toggleToolbar() {
+        if (pagerAdapter.currentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
+            setSupportActionBar(main_toolbar)
+        } else {
+            main_toolbar?.animateHeight(dpToPx(48f).toInt(), 0, 400)
         }
     }
 
