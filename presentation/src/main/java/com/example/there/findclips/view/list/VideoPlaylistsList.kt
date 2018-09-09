@@ -8,11 +8,11 @@ interface VideoPlaylistsList {
     class Adapter(playlists: ObservableList<VideoPlaylist>, itemLayoutId: Int, listener: OnVideoPlaylistClickListener) :
             BaseBindingList.Adapter<VideoPlaylist, VideoPlaylistItemBinding>(playlists, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<VideoPlaylistItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<VideoPlaylistItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.playlist = items[position]
         }
     }
 }
 
-interface OnVideoPlaylistClickListener : BaseBindingList.OnItemClickListener<VideoPlaylist>
+interface OnVideoPlaylistClickListener : OnItemClickListener<VideoPlaylist>

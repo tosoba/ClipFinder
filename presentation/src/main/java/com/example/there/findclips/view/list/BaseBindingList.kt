@@ -6,6 +6,7 @@ import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.example.there.findclips.util.ext.bindToItems
 
 interface BaseBindingList {
 
@@ -13,24 +14,10 @@ interface BaseBindingList {
             val items: ObservableList<I>,
             private val itemLayoutId: Int,
             private val onItemClickListener: OnItemClickListener<I>
-    ) : RecyclerView.Adapter<ViewHolder<B>>() where B : ViewDataBinding {
+    ) : RecyclerView.Adapter<BaseBindingViewHolder<B>>() where B : ViewDataBinding {
 
         init {
-            items.addOnListChangedCallback(object : ObservableList.OnListChangedCallback<ObservableList<I>>() {
-                override fun onChanged(sender: ObservableList<I>?) = notifyDataSetChanged()
-
-                override fun onItemRangeRemoved(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
-                        notifyItemRangeRemoved(positionStart, itemCount)
-
-                override fun onItemRangeMoved(sender: ObservableList<I>?, fromPosition: Int, toPosition: Int, itemCount: Int) =
-                        notifyItemMoved(fromPosition, toPosition)
-
-                override fun onItemRangeInserted(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
-                        notifyItemRangeInserted(positionStart, itemCount)
-
-                override fun onItemRangeChanged(sender: ObservableList<I>?, positionStart: Int, itemCount: Int) =
-                        notifyItemRangeChanged(positionStart, itemCount)
-            })
+            bindToItems(items)
         }
 
         private fun makeBinding(parent: ViewGroup): B {
@@ -38,19 +25,13 @@ interface BaseBindingList {
             return DataBindingUtil.inflate(inflater, itemLayoutId, parent, false) as B
         }
 
-        override fun onBindViewHolder(holder: ViewHolder<B>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<B>, position: Int) {
             holder.binding.root.setOnClickListener { onItemClickListener.onClick(items[position]) }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<B> = ViewHolder(makeBinding(parent))
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseBindingViewHolder<B> = BaseBindingViewHolder(makeBinding(parent))
 
         override fun getItemCount(): Int = items.size
-    }
-
-    open class ViewHolder<B>(val binding: B) : RecyclerView.ViewHolder(binding.root) where B : ViewDataBinding
-
-    interface OnItemClickListener<I> {
-        fun onClick(item: I)
     }
 }
 

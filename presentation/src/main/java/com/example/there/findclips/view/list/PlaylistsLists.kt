@@ -9,7 +9,7 @@ interface PlaylistsList {
     class Adapter(playlists: ObservableList<Playlist>, itemLayoutId: Int, listener: OnPlaylistClickListener) :
             BaseBindingList.Adapter<Playlist, PlaylistItemBinding>(playlists, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<PlaylistItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<PlaylistItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.playlist = items[position]
         }
@@ -20,11 +20,11 @@ interface GridPlaylistsList {
     class Adapter(playlists: ObservableList<Playlist>, itemLayoutId: Int, listener: OnPlaylistClickListener) :
             BaseBindingList.Adapter<Playlist, GridPlaylistItemBinding>(playlists, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<GridPlaylistItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<GridPlaylistItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.playlist = items[position]
         }
     }
 }
 
-interface OnPlaylistClickListener : BaseBindingList.OnItemClickListener<Playlist>
+interface OnPlaylistClickListener : OnItemClickListener<Playlist>

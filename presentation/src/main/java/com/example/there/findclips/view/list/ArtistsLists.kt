@@ -9,7 +9,7 @@ interface ArtistsList {
     class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
             BaseBindingList.Adapter<Artist, ArtistItemBinding>(artists, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<ArtistItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<ArtistItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.artist = items[position]
         }
@@ -20,11 +20,11 @@ interface GridArtistsList {
     class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int, listener: OnArtistClickListener) :
             BaseBindingList.Adapter<Artist, GridArtistItemBinding>(artists, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<GridArtistItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<GridArtistItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.artist = items[position]
         }
     }
 }
 
-interface OnArtistClickListener : BaseBindingList.OnItemClickListener<Artist>
+interface OnArtistClickListener : OnItemClickListener<Artist>

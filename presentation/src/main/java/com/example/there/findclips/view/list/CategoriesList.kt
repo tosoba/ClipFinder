@@ -8,11 +8,11 @@ interface CategoriesList {
     class Adapter(categories: ObservableList<Category>, itemLayoutId: Int, listener: OnCategoryClickListener) :
             BaseBindingList.Adapter<Category, CategoryItemBinding>(categories, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<CategoryItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<CategoryItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.category = items[position]
         }
     }
 }
 
-interface OnCategoryClickListener : BaseBindingList.OnItemClickListener<Category>
+interface OnCategoryClickListener : OnItemClickListener<Category>

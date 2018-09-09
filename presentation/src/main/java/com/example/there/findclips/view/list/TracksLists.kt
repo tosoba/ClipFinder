@@ -12,7 +12,7 @@ interface GridTracksList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int, listener: OnTrackClickListener) :
             BaseBindingList.Adapter<Track, GridTrackItemBinding>(tracks, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<GridTrackItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<GridTrackItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.track = items[position]
         }
@@ -23,7 +23,7 @@ interface TracksList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int, listener: OnTrackClickListener) :
             BaseBindingList.Adapter<Track, TrackItemBinding>(tracks, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<TrackItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<TrackItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.track = items[position]
         }
@@ -34,7 +34,7 @@ interface TopTracksList {
     class Adapter(tracks: ObservableList<TopTrack>, itemLayoutId: Int, listener: OnTopTrackClickListener) :
             BaseBindingList.Adapter<TopTrack, TopTrackItemBinding>(tracks, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<TopTrackItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<TopTrackItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.track = items[position]
         }
@@ -45,13 +45,13 @@ interface TracksPopularityList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int, listener: OnTrackClickListener) :
             BaseBindingList.Adapter<Track, TrackPopularityItemBinding>(tracks, itemLayoutId, listener) {
 
-        override fun onBindViewHolder(holder: BaseBindingList.ViewHolder<TrackPopularityItemBinding>, position: Int) {
+        override fun onBindViewHolder(holder: BaseBindingViewHolder<TrackPopularityItemBinding>, position: Int) {
             super.onBindViewHolder(holder, position)
             holder.binding.track = items[position]
         }
     }
 }
 
-interface OnTrackClickListener : BaseBindingList.OnItemClickListener<Track>
+interface OnTrackClickListener : OnItemClickListener<Track>
 
-interface OnTopTrackClickListener : BaseBindingList.OnItemClickListener<TopTrack>
+interface OnTopTrackClickListener : OnItemClickListener<TopTrack>
