@@ -39,7 +39,14 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
     }
 
     private val dashboardAdapter: DashboardAdapter by lazy {
-        DashboardAdapter(categoriesAdapter, playlistsAdapter, topTracksAdapter)
+        DashboardAdapter(
+                categoriesAdapter,
+                playlistsAdapter,
+                topTracksAdapter,
+                viewModel.viewState.categoriesLoadingInProgress,
+                viewModel.viewState.featuredPlaylistsLoadingInProgress,
+                viewModel.viewState.topTracksLoadingInProgress
+        )
     }
 
     private val view: DashboardView by lazy {
@@ -54,7 +61,6 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         return binding.apply {
             dashboardView = view
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-
         }.root
     }
 

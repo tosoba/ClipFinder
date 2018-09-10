@@ -59,6 +59,6 @@ class DashboardViewModel @Inject constructor(
 
     override fun onError(t: Throwable) {
         super.onError(t)
-        handleErrors(t, onErrorsResolved = this::loadDashboardData)
+        handleErrors(t, onErrorsResolved = ::loadDashboardData)
     }
 }
