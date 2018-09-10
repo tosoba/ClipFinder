@@ -2,18 +2,21 @@ package com.example.there.findclips.base.fragment
 
 import android.content.Context
 import android.content.res.Configuration
+import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import com.example.there.findclips.R
+import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 
@@ -25,17 +28,22 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     protected abstract val itemsRecyclerView: RecyclerView?
 
-    protected abstract val recyclerViewHeaderLayout: Int
+    protected abstract val headerText: String
 
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
-    protected fun headerItemDecoration(@LayoutRes headerLayout: Int): RecyclerView.ItemDecoration {
-        currentHeaderDecoration = HeaderDecoration.with(context)
-                .inflate(headerLayout)
-                .parallax(1f)
-                .dropShadowDp(2)
-                .columns(listColumnCount)
-                .build()
+    protected fun headerItemDecoration(): RecyclerView.ItemDecoration {
+        val binding = DataBindingUtil.inflate<HeaderItemBinding>(
+                LayoutInflater.from(context),
+                R.layout.header_item,
+                null,
+                false
+        ).apply {
+            viewState = HeaderItemViewState(headerText)
+            executePendingBindings()
+        }
+
+        currentHeaderDecoration = HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
         return currentHeaderDecoration!!
     }
 
@@ -43,7 +51,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         itemsRecyclerView?.let { recyclerView ->
             if (viewState.shouldShowHeader) {
                 currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
-                recyclerView.addItemDecoration(headerItemDecoration(recyclerViewHeaderLayout))
+                recyclerView.addItemDecoration(headerItemDecoration())
             }
             recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
         }

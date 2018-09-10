@@ -25,8 +25,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
     override val itemsRecyclerView: RecyclerView?
         get() = artists_recycler_view
 
-    override val recyclerViewHeaderLayout: Int
-        get() = R.layout.artists_header
+    override val headerText: String = "Artists"
 
     override val viewState: ViewState<Artist> = ViewState(ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback))
 
@@ -54,7 +53,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
         return binding.apply {
             view = this@SpotifyArtistsFragment.view
             artistsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-            if (viewState.shouldShowHeader) artistsRecyclerView.addItemDecoration(headerItemDecoration(R.layout.artists_header))
+            if (viewState.shouldShowHeader) artistsRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
 

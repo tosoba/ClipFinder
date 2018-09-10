@@ -8,9 +8,4 @@ import android.view.ViewGroup
 
 fun <T : ViewDataBinding> ViewGroup.makeItemBinding(
         @LayoutRes layoutId: Int
-): T = DataBindingUtil.inflate(
-        LayoutInflater.from(context),
-        layoutId,
-        this,
-        false
-) as T
+): T = DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, this, false)
