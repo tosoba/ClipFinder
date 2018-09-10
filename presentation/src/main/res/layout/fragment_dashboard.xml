@@ -9,19 +9,12 @@
             type="com.example.there.findclips.fragment.dashboard.DashboardView" />
     </data>
 
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/dashboard_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.dashboard.DashboardFragment">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/dashboard_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adapter="@{dashboardView.dashboardAdapter}" />
-
-    </FrameLayout>
+        android:adapter="@{dashboardView.dashboardAdapter}"
+        tools:context=".fragment.dashboard.DashboardFragment" />
 
 </layout>

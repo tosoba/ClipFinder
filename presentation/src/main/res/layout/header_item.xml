@@ -8,16 +8,11 @@
             type="com.example.there.findclips.view.list.item.HeaderItemViewState" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/LargeLabel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="@{viewState.text}" />
 
-        <TextView
-            style="@style/LargeLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{viewState.text}" />
-
-    </FrameLayout>
 </layout>
 
