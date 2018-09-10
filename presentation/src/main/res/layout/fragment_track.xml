@@ -1,5 +1,4 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -10,125 +9,11 @@
             type="com.example.there.findclips.fragment.track.TrackView" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/track_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/track_root_layout"
-            tools:context=".fragment.track.TrackFragment">
-
-            <TextView
-                android:id="@+id/track_album_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/album"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/track_album_image_view"
-                imageUrl="@{view.state.album.iconUrl}"
-                android:layout_width="105dp"
-                android:layout_height="140dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:onClick="@{view.onAlbumImageViewClickListener}"
-                android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.GONE : View.VISIBLE}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_album_label_txt" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:text='@{view.state.album.name}'
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@id/track_album_image_view"
-                app:layout_constraintLeft_toRightOf="@id/track_album_image_view"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/track_album_image_view" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/track_artists_label_txt"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_album_label_txt" />
-
-            <TextView
-                android:id="@+id/track_artists_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/artists"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_album_image_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/track_artists_recycler_view"
-                android:layout_width="0dp"
-                android:layout_height="126dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:adapter="@{view.artistsAdapter}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_artists_label_txt" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(view.state.artistsLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/track_artists_recycler_view"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/track_artists_recycler_view" />
-
-            <TextView
-                android:id="@+id/track_similar_tracks_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/similar_tracks"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_artists_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/track_similar_tracks_recycler_view"
-                style="@style/HorizontalGridRecyclerViewSpan2"
-                android:layout_width="0dp"
-                android:adapter="@{view.similarTracksAdapter}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/track_similar_tracks_label_txt" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(view.state.similarTracksLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/track_similar_tracks_recycler_view"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/track_similar_tracks_recycler_view" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        android:adapter="@{view.trackAdapter}" />
 
 </layout>
 

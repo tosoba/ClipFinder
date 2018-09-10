@@ -52,7 +52,7 @@ class SeparatorDecoration(
             val position = params.viewAdapterPosition
 
             // and finally draw the separator
-            if (position < state!!.itemCount) {
+            if (position < state.itemCount) {
                 c.drawLine(view.left.toFloat(), (view.bottom + offset).toFloat(), view.right.toFloat(), (view.bottom + offset).toFloat(), mPaint)
             }
         }

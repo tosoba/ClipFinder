@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.track
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +22,8 @@ import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.impl.ArtistsList
 import com.example.there.findclips.view.list.impl.TracksList
+import com.example.there.findclips.view.list.item.AlbumInfoItemView
+import com.example.there.findclips.view.list.item.AlbumInfoViewState
 
 
 class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
@@ -63,21 +64,21 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
         TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item)
     }
 
+    private val trackAdapter: TrackAdapter by lazy {
+        TrackAdapter(AlbumInfoItemView(AlbumInfoViewState(viewModel.viewState.albumLoadingInProgress, viewModel.viewState.album), View.OnClickListener { _ ->
+            val album = viewModel.viewState.album.get()
+            album?.let { hostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
+        }), artistsAdapter, similarTracksAdapter, viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.similarTracksLoadingInProgress)
+    }
+
     private val view: TrackView by lazy {
-        TrackView(state = viewModel.viewState,
-                artistsAdapter = artistsAdapter,
-                similarTracksAdapter = similarTracksAdapter,
-                onAlbumImageViewClickListener = View.OnClickListener { _ ->
-                    val album = viewModel.viewState.album.get()
-                    album?.let { hostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
-                })
+        TrackView(viewModel.viewState, trackAdapter)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track, container, false)
         binding.view = view
-        binding.trackArtistsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.trackSimilarTracksRecyclerView.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+        binding.trackRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         return binding.root
     }
 

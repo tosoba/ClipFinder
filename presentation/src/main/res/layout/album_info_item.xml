@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="view"
+            type="com.example.there.findclips.view.list.item.AlbumInfoItemView" />
+    </data>
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/track_album_image_view"
+        imageUrl="@{view.state.album.iconUrl}"
+        android:layout_width="105dp"
+        android:layout_height="140dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:onClick="@{view.onClickListener}"
+        android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.GONE : View.VISIBLE}" />
+
+</layout>
+
