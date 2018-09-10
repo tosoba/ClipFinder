@@ -14,8 +14,7 @@ import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
-import com.example.there.findclips.view.list.GridPlaylistsList
-import com.example.there.findclips.view.list.OnPlaylistClickListener
+import com.example.there.findclips.view.list.impl.GridPlaylistsList
 import kotlinx.android.synthetic.main.fragment_spotify_playlists.*
 
 
@@ -29,17 +28,21 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
     override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback))
 
-    private val onPlaylistClickListener = object : OnPlaylistClickListener {
-        override fun onClick(item: Playlist) {
-            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = item), true)
-        }
+    private val playlistsAdapter: GridPlaylistsList.Adapter by lazy {
+        GridPlaylistsList.Adapter(viewState.items, R.layout.grid_playlist_item)
     }
 
     private val view: SpotifyPlaylistsFragment.View = SpotifyPlaylistsFragment.View(
             state = viewState,
-            adapter = GridPlaylistsList.Adapter(viewState.items, R.layout.grid_playlist_item, onPlaylistClickListener),
+            adapter = playlistsAdapter,
             onScrollListener = onScrollListener
     )
+
+    override fun initItemClicks() {
+        disposablesComponent.add(playlistsAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+        })
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
         val binding: FragmentSpotifyPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_playlists, container, false)

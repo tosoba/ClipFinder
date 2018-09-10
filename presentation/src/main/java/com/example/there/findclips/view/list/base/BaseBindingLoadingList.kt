@@ -1,4 +1,4 @@
-package com.example.there.findclips.view.list
+package com.example.there.findclips.view.list.base
 
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
@@ -11,13 +11,15 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.LoadingItemBinding
 import com.example.there.findclips.util.ext.bindToItems
+import com.example.there.findclips.view.list.item.LoadingItemViewState
+import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
+import io.reactivex.subjects.PublishSubject
 
 interface BaseBindingLoadingList {
 
     abstract class Adapter<I, B>(
             val items: ObservableList<I>,
-            @LayoutRes private val itemLayoutId: Int,
-            private val onItemClickListener: OnItemClickListener<I>
+            @LayoutRes private val itemLayoutId: Int
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() where B : ViewDataBinding {
 
         init {
@@ -25,6 +27,8 @@ interface BaseBindingLoadingList {
         }
 
         val loadingInProgress: ObservableField<Boolean> = ObservableField(false)
+
+        val itemClicked: PublishSubject<I> = PublishSubject.create()
 
         private fun <T : ViewDataBinding> makeItemBinding(
                 parent: ViewGroup,
@@ -40,7 +44,7 @@ interface BaseBindingLoadingList {
             if (position < items.size) {
                 val itemViewHolder = holder as? BaseBindingViewHolder<*>
                 itemViewHolder?.binding?.root?.setOnClickListener {
-                    onItemClickListener.onClick(items[position])
+                    itemClicked.onNext(items[position])
                 }
             }
         }

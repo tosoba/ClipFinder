@@ -31,16 +31,14 @@ import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.list.OnVideoClickListener
-import com.example.there.findclips.view.list.RelatedVideosList
+import com.example.there.findclips.view.list.impl.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -53,8 +51,13 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
@@ -363,14 +366,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     // region relatedVideos
 
     private val relatedVideosAdapter: RelatedVideosList.Adapter by lazy(LazyThreadSafetyMode.NONE) {
-        RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item, onVideoItemClickListener)
-    }
-
-    private val onVideoItemClickListener = object : OnVideoClickListener {
-        override fun onClick(item: Video) {
-            lastPlayedVideo = item
-            loadVideo(item)
-        }
+        RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item)
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
@@ -382,6 +378,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
         SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
     }
+
+    private fun initItemClicks() {
+        disposablesComponent.add(relatedVideosAdapter.itemClicked.subscribe {
+            lastPlayedVideo = it
+            loadVideo(it)
+        })
+    }
+
 
     // endregion
 

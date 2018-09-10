@@ -16,41 +16,35 @@ import com.example.there.findclips.fragment.category.CategoryFragment
 import com.example.there.findclips.fragment.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.TopTrack
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.*
+import com.example.there.findclips.view.list.impl.CategoriesList
+import com.example.there.findclips.view.list.impl.PlaylistsList
+import com.example.there.findclips.view.list.impl.TopTracksList
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
 
-    private val topTrackItemClickListener = object : OnTopTrackClickListener {
-        override fun onClick(item: TopTrack) {
-            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item.track), true)
-        }
+    private val categoriesAdapter: CategoriesList.Adapter by lazy {
+        CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item)
     }
 
-    private val categoryItemClickListener = object : OnCategoryClickListener {
-        override fun onClick(item: Category) {
-            hostFragment?.showFragment(CategoryFragment.newInstance(category = item), true)
-        }
+    private val playlistsAdapter: PlaylistsList.Adapter by lazy {
+        PlaylistsList.Adapter(viewModel.viewState.featuredPlaylists, R.layout.playlist_item)
     }
 
-    private val playlistItemClickListener = object : OnPlaylistClickListener {
-        override fun onClick(item: Playlist) {
-            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = item), true)
-        }
+    private val topTracksAdapter: TopTracksList.Adapter by lazy {
+        TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item)
     }
 
     private val view: DashboardView by lazy {
         DashboardView(
                 state = viewModel.viewState,
-                categoriesAdapter = CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item, categoryItemClickListener),
-                playlistsAdapter = PlaylistsList.Adapter(viewModel.viewState.featuredPlaylists, R.layout.playlist_item, playlistItemClickListener),
-                topTracksAdapter = TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item, topTrackItemClickListener)
+                categoriesAdapter = categoriesAdapter,
+                playlistsAdapter = playlistsAdapter,
+                topTracksAdapter = topTracksAdapter
         )
     }
 
@@ -79,9 +73,25 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         )
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
         loadData()
+    }
+
+    private fun initItemClicks() {
+        disposablesComponent.add(categoriesAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+        })
+        disposablesComponent.add(playlistsAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+        })
+        disposablesComponent.add(topTracksAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

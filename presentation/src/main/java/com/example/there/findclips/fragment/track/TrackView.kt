@@ -6,8 +6,8 @@ import android.view.View
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.view.list.ArtistsList
-import com.example.there.findclips.view.list.TracksList
+import com.example.there.findclips.view.list.impl.ArtistsList
+import com.example.there.findclips.view.list.impl.TracksList
 
 data class TrackView(
         val state: TrackViewState,

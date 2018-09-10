@@ -1,4 +1,4 @@
-package com.example.there.findclips.view.list
+package com.example.there.findclips.view.list.vh
 
 import android.databinding.ViewDataBinding
 import android.support.v7.widget.RecyclerView

@@ -15,8 +15,7 @@ import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
-import com.example.there.findclips.view.list.CategoriesList
-import com.example.there.findclips.view.list.OnCategoryClickListener
+import com.example.there.findclips.view.list.impl.CategoriesList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_categories.*
 
@@ -30,18 +29,22 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     override val viewState: ViewState<Category> = ViewState(ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback))
 
-    private val onCategoryClickListener = object : OnCategoryClickListener {
-        override fun onClick(item: Category) {
-            hostFragment?.showFragment(CategoryFragment.newInstance(category = item), true)
-        }
+    private val categoriesAdapter: CategoriesList.Adapter by lazy {
+        CategoriesList.Adapter(viewState.items, R.layout.category_item)
     }
 
     private val view: SpotifyCategoriesFragment.View by lazy {
         SpotifyCategoriesFragment.View(
                 state = viewState,
-                adapter = CategoriesList.Adapter(viewState.items, R.layout.category_item, onCategoryClickListener),
+                adapter = categoriesAdapter,
                 itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
+    }
+
+    override fun initItemClicks() {
+        disposablesComponent.add(categoriesAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {

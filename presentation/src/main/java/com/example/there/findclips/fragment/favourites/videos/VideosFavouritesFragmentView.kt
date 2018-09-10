@@ -4,7 +4,7 @@ import android.databinding.ObservableList
 import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.view.list.VideoPlaylistsList
+import com.example.there.findclips.view.list.impl.VideoPlaylistsList
 
 data class VideosFavouritesFragmentView(
         val state: VideosFavouritesFragmentViewState,

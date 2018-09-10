@@ -8,8 +8,8 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.view.list.ArtistsList
-import com.example.there.findclips.view.list.TracksPopularityList
+import com.example.there.findclips.view.list.impl.ArtistsList
+import com.example.there.findclips.view.list.impl.TracksPopularityList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 data class AlbumView(

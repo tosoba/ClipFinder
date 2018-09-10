@@ -1,4 +1,4 @@
-package com.example.there.findclips.view.list
+package com.example.there.findclips.view.list.item
 
 import android.databinding.ObservableField
 

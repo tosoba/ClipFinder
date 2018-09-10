@@ -18,39 +18,32 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Album
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Artist
-import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.*
+import com.example.there.findclips.view.list.impl.AlbumsList
+import com.example.there.findclips.view.list.impl.ArtistsList
+import com.example.there.findclips.view.list.impl.TracksList
 
 class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, GoesToPreviousStateOnBackPressed {
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
     private val albumsAdapter: AlbumsList.Adapter by lazy {
-        AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item, object : OnAlbumClickListener {
-            override fun onClick(item: Album) {
-                hostFragment?.showFragment(AlbumFragment.newInstance(album = item), true)
-            }
-        })
+        AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item)
     }
 
     private val topTracksAdapter: TracksList.Adapter by lazy {
-        TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item, object : OnTrackClickListener {
-            override fun onClick(item: Track) {
-                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item), true)
-            }
-        })
+        TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item)
     }
 
     private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
-        ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item, object : OnArtistClickListener {
-            override fun onClick(item: Artist) = viewModel.loadArtistData(activity?.accessToken, artist = item)
-        })
+        ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item)
     }
+
+    private val disposablesComponent = DisposablesComponent()
 
     private val view: ArtistView by lazy {
         ArtistView(
@@ -92,7 +85,21 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
         loadData()
+    }
+
+    private fun initItemClicks() {
+        disposablesComponent.add(albumsAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+        })
+        disposablesComponent.add(topTracksAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+        })
+        disposablesComponent.add(relatedArtistsAdapter.itemClicked.subscribe {
+            viewModel.loadArtistData(activity?.accessToken, artist = it)
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false

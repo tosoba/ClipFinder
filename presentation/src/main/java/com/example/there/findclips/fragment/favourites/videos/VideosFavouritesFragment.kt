@@ -9,30 +9,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.view.list.OnVideoPlaylistClickListener
-import com.example.there.findclips.view.list.VideoPlaylistsList
+import com.example.there.findclips.view.list.impl.VideoPlaylistsList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
 class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), Injectable {
 
-    private val onPlaylistClickListener = object : OnVideoPlaylistClickListener {
-        override fun onClick(item: VideoPlaylist) {
-            hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = item), true)
-        }
+    private val playlistsAdapter: VideoPlaylistsList.Adapter by lazy {
+        VideoPlaylistsList.Adapter(viewModel.state.playlists, R.layout.video_playlist_item)
     }
 
     private val view: VideosFavouritesFragmentView by lazy {
         VideosFavouritesFragmentView(
                 state = viewModel.state,
-                playlistsAdapter = VideoPlaylistsList.Adapter(viewModel.state.playlists, R.layout.video_playlist_item, onPlaylistClickListener),
+                playlistsAdapter = playlistsAdapter,
                 itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
@@ -45,8 +41,16 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
         }.root
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(disposablesComponent)
+        disposablesComponent.add(playlistsAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = it), true)
+        })
+
         viewModel.loadVideoPlaylists()
     }
 

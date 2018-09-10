@@ -16,12 +16,11 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Video
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.screenOrientation
-import com.example.there.findclips.view.list.OnVideoClickListener
-import com.example.there.findclips.view.list.VideosList
+import com.example.there.findclips.view.list.impl.VideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_videos_search.*
@@ -37,18 +36,12 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
             viewModel.viewState.videos.clear()
         }
 
-    private val videoItemClickListener = object : OnVideoClickListener {
-        override fun onClick(item: Video) {
-            mainActivity?.loadVideo(video = item)
-        }
-    }
-
     private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
     private val videosAdapter: VideosList.Adapter by lazy {
-        VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item, videoItemClickListener)
+        VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item)
     }
 
     private val view: VideosSearchView by lazy {
@@ -67,9 +60,21 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         return binding.root
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
+
         initFromArguments()
+    }
+
+    private fun initItemClicks() {
+        disposablesComponent.add(videosAdapter.itemClicked.subscribe {
+            mainActivity?.loadVideo(video = it)
+        })
     }
 
     private fun initFromArguments() {

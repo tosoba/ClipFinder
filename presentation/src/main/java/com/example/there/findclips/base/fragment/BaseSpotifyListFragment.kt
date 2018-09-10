@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import com.example.there.findclips.R
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
@@ -86,8 +87,14 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
             var shouldShowHeader: Boolean = false
     )
 
+    protected val disposablesComponent = DisposablesComponent()
+
+    protected abstract fun initItemClicks()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
 
         initFromArguments()
 

@@ -16,15 +16,13 @@ import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.artist.ArtistFragment
 import com.example.there.findclips.fragment.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.ArtistsList
-import com.example.there.findclips.view.list.OnArtistClickListener
-import com.example.there.findclips.view.list.OnTrackClickListener
-import com.example.there.findclips.view.list.TracksList
+import com.example.there.findclips.view.list.impl.ArtistsList
+import com.example.there.findclips.view.list.impl.TracksList
 
 
 class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
@@ -37,29 +35,38 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
             viewModel.viewState.clearAll()
         }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            track = arguments?.getParcelable(ARG_TRACK)
-        }
+
+        lifecycle.addObserver(disposablesComponent)
+        initItemClicks()
+
+        track = arguments?.getParcelable(ARG_TRACK)
     }
 
-    private val onArtistClickListener = object : OnArtistClickListener {
-        override fun onClick(item: Artist) {
-            hostFragment?.showFragment(ArtistFragment.newInstance(artist = item), true)
-        }
+    private fun initItemClicks() {
+        disposablesComponent.add(artistsAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+        })
+        disposablesComponent.add(similarTracksAdapter.itemClicked.subscribe {
+            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
+        })
     }
 
-    private val onTrackClickListener = object : OnTrackClickListener {
-        override fun onClick(item: Track) {
-            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = item)
-        }
+    private val artistsAdapter: ArtistsList.Adapter by lazy {
+        ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item)
+    }
+
+    private val similarTracksAdapter: TracksList.Adapter by lazy {
+        TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item)
     }
 
     private val view: TrackView by lazy {
         TrackView(state = viewModel.viewState,
-                artistsAdapter = ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item, onArtistClickListener),
-                similarTracksAdapter = TracksList.Adapter(viewModel.viewState.similarTracks, R.layout.track_item, onTrackClickListener),
+                artistsAdapter = artistsAdapter,
+                similarTracksAdapter = similarTracksAdapter,
                 onAlbumImageViewClickListener = View.OnClickListener { _ ->
                     val album = viewModel.viewState.album.get()
                     album?.let { hostFragment?.showFragment(AlbumFragment.newInstance(it), true) }

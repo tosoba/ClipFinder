@@ -7,7 +7,7 @@
 
         <variable
             name="viewState"
-            type="com.example.there.findclips.view.list.LoadingItemViewState" />
+            type="com.example.there.findclips.view.list.item.LoadingItemViewState" />
 
 
     </data>

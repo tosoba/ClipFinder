@@ -15,8 +15,7 @@ import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
-import com.example.there.findclips.view.list.GridTracksList
-import com.example.there.findclips.view.list.OnTrackClickListener
+import com.example.there.findclips.view.list.impl.GridTracksList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_tracks.*
 
@@ -31,19 +30,23 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
 
     override val viewState: ViewState<Track> = ViewState(ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName))
 
-    private val onTrackClickListener = object : OnTrackClickListener {
-        override fun onClick(item: Track) {
-            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = item), true)
-        }
+    private val tracksAdapter: GridTracksList.Adapter by lazy {
+        GridTracksList.Adapter(viewState.items, R.layout.grid_track_item)
     }
 
     private val view: SpotifyTracksFragment.View by lazy {
         SpotifyTracksFragment.View(
                 state = viewState,
-                adapter = GridTracksList.Adapter(viewState.items, R.layout.grid_track_item, onTrackClickListener),
+                adapter = tracksAdapter,
                 itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 onScrollListener = onScrollListener
         )
+    }
+
+    override fun initItemClicks() {
+        disposablesComponent.add(tracksAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {

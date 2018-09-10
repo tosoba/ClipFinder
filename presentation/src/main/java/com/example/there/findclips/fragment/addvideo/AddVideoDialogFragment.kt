@@ -10,32 +10,30 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.DialogAddVideoBinding
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.OnVideoPlaylistClickListener
-import com.example.there.findclips.view.list.VideoPlaylistsList
+import com.example.there.findclips.view.list.impl.VideoPlaylistsList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class AddVideoDialogFragment : DialogFragment() {
 
     lateinit var state: AddVideoViewState
 
-    private val onVideoPlaylistSelectedListener = object : OnVideoPlaylistClickListener {
-        override fun onClick(item: VideoPlaylist) {
-            mainActivity?.addVideoToPlaylist(playlist = item)
-            dismiss()
-        }
-    }
-
     private val onAddNewPlaylistsBtnClickListener = View.OnClickListener {
         mainActivity?.showNewPlaylistDialog()
     }
 
+    private val playlistsAdapter: VideoPlaylistsList.Adapter by lazy {
+        VideoPlaylistsList.Adapter(state.playlists, R.layout.video_playlist_item)
+    }
+
     private val view: AddVideoView by lazy {
-        AddVideoView(state = state,
-                playlistsAdapter = VideoPlaylistsList.Adapter(state.playlists, R.layout.video_playlist_item, onVideoPlaylistSelectedListener),
+        AddVideoView(
+                state = state,
+                playlistsAdapter = playlistsAdapter,
                 itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
-                onAddNewPlaylistBtnClickListener = onAddNewPlaylistsBtnClickListener)
+                onAddNewPlaylistBtnClickListener = onAddNewPlaylistsBtnClickListener
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -43,6 +41,17 @@ class AddVideoDialogFragment : DialogFragment() {
         binding.view = view
         binding.addVideoPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         return binding.root
+    }
+
+    private val disposablesComponent = DisposablesComponent()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(disposablesComponent)
+        disposablesComponent.add(playlistsAdapter.itemClicked.subscribe {
+            mainActivity?.addVideoToPlaylist(playlist = it)
+            dismiss()
+        })
     }
 
     override fun onStart() {

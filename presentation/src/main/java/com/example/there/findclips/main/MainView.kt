@@ -9,8 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.view.list.RelatedVideosList
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.example.there.findclips.view.list.impl.RelatedVideosList
 
 data class MainView(
         val state: MainViewState,

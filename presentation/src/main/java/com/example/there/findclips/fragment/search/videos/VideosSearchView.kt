@@ -4,7 +4,7 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.view.list.VideosList
+import com.example.there.findclips.view.list.impl.VideosList
 
 data class VideosSearchView(
         val state: VideosSearchViewState,

@@ -6,9 +6,9 @@ import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.view.list.CategoriesList
-import com.example.there.findclips.view.list.PlaylistsList
-import com.example.there.findclips.view.list.TopTracksList
+import com.example.there.findclips.view.list.impl.CategoriesList
+import com.example.there.findclips.view.list.impl.PlaylistsList
+import com.example.there.findclips.view.list.impl.TopTracksList
 
 data class DashboardView(
         val state: DashboardViewState,
