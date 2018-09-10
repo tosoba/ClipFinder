@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -43,7 +43,16 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
         ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item)
     }
 
-    private val disposablesComponent = DisposablesComponent()
+    private val artistAdapter: ArtistAdapter by lazy {
+        ArtistAdapter(
+                albumsAdapter,
+                topTracksAdapter,
+                relatedArtistsAdapter,
+                viewModel.viewState.albumsLoadingInProgress,
+                viewModel.viewState.topTracksLoadingInProgress,
+                viewModel.viewState.relatedArtistsLoadingInProgress
+        )
+    }
 
     private val view: ArtistView by lazy {
         ArtistView(
@@ -52,11 +61,11 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
                     viewModel.addFavouriteArtist()
                     Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
-                albumsAdapter = albumsAdapter,
-                topTracksAdapter = topTracksAdapter,
-                relatedArtistsAdapter = relatedArtistsAdapter
+                artistAdapter = artistAdapter
         )
     }
+
+    private val disposablesComponent = DisposablesComponent()
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
@@ -107,14 +116,8 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
         return binding.apply {
-            this.view = this@ArtistFragment.view
-            artistContent?.view = view
-            artistContent?.artistAlbumsRecyclerView?.layoutManager =
-                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
-            artistContent?.artistTopTracksRecyclerView?.layoutManager =
-                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
-            artistContent?.artistRelatedArtistsRecyclerView?.layoutManager =
-                    GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+            view = this@ArtistFragment.view
+            artistRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             mainActivity?.setSupportActionBar(artistToolbar)
             artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             artistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }

@@ -9,14 +9,13 @@ import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
 import com.example.there.findclips.util.ext.makeItemBinding
-import com.example.there.findclips.view.list.impl.CategoriesList
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
 
 class DashboardAdapter(
-        private val categoriesAdapter: CategoriesList.Adapter,
+        private val categoriesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val playlistsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val tracksAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val categoriesLoadingInProgress: ObservableField<Boolean>,
@@ -24,17 +23,12 @@ class DashboardAdapter(
         private val tracksLoadingInProgress: ObservableField<Boolean>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun getItemViewType(position: Int): Int = when (position) {
-        0 -> CATEGORIES_HEADER_VIEW_TYPE
-        1 -> CATEGORIES_LIST_VIEW_TYPE
-        2 -> PLAYLISTS_HEADER_VIEW_TYPE
-        3 -> PLAYLISTS_LIST_VIEW_TYPE
-        4 -> TRACKS_HEADER_VIEW_TYPE
-        5 -> TRACKS_LIST_VIEW_TYPE
-        else -> throw IllegalStateException("${javaClass.name}: Unknown viewType for position: $position")
-    }
+    override fun getItemViewType(position: Int): Int = viewTypes[position]
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+    override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+    ): RecyclerView.ViewHolder = when (viewType) {
         CATEGORIES_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Genres")
         })
@@ -59,7 +53,7 @@ class DashboardAdapter(
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
 
-    override fun getItemCount(): Int = 6
+    override fun getItemCount(): Int = viewTypes.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
 
@@ -70,5 +64,14 @@ class DashboardAdapter(
         private const val PLAYLISTS_LIST_VIEW_TYPE = 3
         private const val TRACKS_HEADER_VIEW_TYPE = 4
         private const val TRACKS_LIST_VIEW_TYPE = 5
+
+        private val viewTypes = arrayOf(
+                CATEGORIES_HEADER_VIEW_TYPE,
+                CATEGORIES_LIST_VIEW_TYPE,
+                PLAYLISTS_HEADER_VIEW_TYPE,
+                PLAYLISTS_LIST_VIEW_TYPE,
+                TRACKS_HEADER_VIEW_TYPE,
+                TRACKS_LIST_VIEW_TYPE
+        )
     }
 }

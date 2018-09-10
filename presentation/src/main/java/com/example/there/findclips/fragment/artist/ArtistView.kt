@@ -7,16 +7,11 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.view.list.impl.AlbumsList
-import com.example.there.findclips.view.list.impl.ArtistsList
-import com.example.there.findclips.view.list.impl.TracksList
 
 data class ArtistView(
         val state: ArtistViewState,
         val onFavouriteBtnClickListener: View.OnClickListener,
-        val albumsAdapter: AlbumsList.Adapter,
-        val topTracksAdapter: TracksList.Adapter,
-        val relatedArtistsAdapter: ArtistsList.Adapter
+        val artistAdapter: ArtistAdapter
 )
 
 data class ArtistViewState(
