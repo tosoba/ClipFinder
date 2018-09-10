@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import com.example.there.findclips.model.entity.*
 
-data class SpotifyFavouritesFragmentView(
+class SpotifyFavouritesFragmentView(
         val pagerAdapter: FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
         val onPageChangeListener: ViewPager.OnPageChangeListener
@@ -19,12 +19,4 @@ data class SpotifyFavouritesFragmentViewState(
         val categories: ArrayList<Category> = ArrayList(),
         val playlists: ArrayList<Playlist> = ArrayList(),
         val tracks: ArrayList<Track> = ArrayList()
-) {
-    fun clearAll() {
-        albums.clear()
-        artists.clear()
-        categories.clear()
-        playlists.clear()
-        tracks.clear()
-    }
-}
+)

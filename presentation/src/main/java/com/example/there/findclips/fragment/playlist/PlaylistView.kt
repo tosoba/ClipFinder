@@ -4,7 +4,7 @@ import android.databinding.ObservableField
 import android.view.View
 import com.example.there.findclips.model.entity.Playlist
 
-data class PlaylistView(
+class PlaylistView(
         val state: PlaylistViewState,
         val playlist: Playlist,
         val onFavouriteBtnClickListener: View.OnClickListener

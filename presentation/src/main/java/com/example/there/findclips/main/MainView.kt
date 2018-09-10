@@ -12,7 +12,7 @@ import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.impl.RelatedVideosList
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
-data class MainView(
+class MainView(
         val state: MainViewState,
         val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener,
         val pagerAdapter: FragmentStatePagerAdapter,

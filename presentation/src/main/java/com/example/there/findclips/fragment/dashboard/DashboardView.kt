@@ -7,7 +7,7 @@ import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ObservableSortedList
 
-data class DashboardView(
+class DashboardView(
         val state: DashboardViewState,
         val dashboardAdapter: DashboardAdapter
 )

@@ -52,7 +52,7 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
         }.root
     }
 
-    data class View(
+    class View(
             val state: BaseSpotifyListFragment.ViewState<Playlist>,
             val adapter: GridPlaylistsList.Adapter,
             val onScrollListener: RecyclerView.OnScrollListener

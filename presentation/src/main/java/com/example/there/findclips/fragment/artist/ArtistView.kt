@@ -8,7 +8,7 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
 
-data class ArtistView(
+class ArtistView(
         val state: ArtistViewState,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val artistAdapter: ArtistAdapter

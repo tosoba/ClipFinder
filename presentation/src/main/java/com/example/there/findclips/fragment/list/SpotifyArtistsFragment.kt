@@ -57,7 +57,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
         }.root
     }
 
-    data class View(
+    class View(
             val state: BaseSpotifyListFragment.ViewState<Artist>,
             val adapter: GridArtistsList.Adapter,
             val itemDecoration: RecyclerView.ItemDecoration

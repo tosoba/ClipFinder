@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.view.list.impl.VideosList
 
-data class VideosSearchView(
+class VideosSearchView(
         val state: VideosSearchViewState,
         val onScrollListener: RecyclerView.OnScrollListener,
         val videosAdapter: VideosList.Adapter,

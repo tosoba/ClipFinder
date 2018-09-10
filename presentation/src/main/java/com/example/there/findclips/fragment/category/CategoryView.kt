@@ -4,7 +4,7 @@ import android.databinding.ObservableField
 import android.view.View
 import com.example.there.findclips.model.entity.Category
 
-data class CategoryView(
+class CategoryView(
         val state: CategoryViewState,
         val category: Category,
         val onFavouriteBtnClickListener: View.OnClickListener

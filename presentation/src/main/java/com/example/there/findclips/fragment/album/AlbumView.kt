@@ -8,7 +8,7 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
 
-data class AlbumView(
+class AlbumView(
         val state: AlbumViewState,
         val album: Album,
         val onFavouriteBtnClickListener: View.OnClickListener,

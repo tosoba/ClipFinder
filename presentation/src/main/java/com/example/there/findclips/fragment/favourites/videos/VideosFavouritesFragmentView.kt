@@ -6,7 +6,7 @@ import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.list.impl.VideoPlaylistsList
 
-data class VideosFavouritesFragmentView(
+class VideosFavouritesFragmentView(
         val state: VideosFavouritesFragmentViewState,
         val playlistsAdapter: VideoPlaylistsList.Adapter,
         val itemDecoration: RecyclerView.ItemDecoration

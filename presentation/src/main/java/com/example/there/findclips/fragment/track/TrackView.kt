@@ -6,7 +6,7 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 
-data class TrackView(
+class TrackView(
         val state: TrackViewState,
         val trackAdapter: TrackAdapter
 )

@@ -9,7 +9,7 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.Track
 
-data class SpotifySearchView(
+class SpotifySearchView(
         val state: SpotifySearchViewState,
         val pagerAdapter: FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,

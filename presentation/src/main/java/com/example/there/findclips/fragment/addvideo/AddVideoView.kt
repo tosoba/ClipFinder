@@ -7,7 +7,7 @@ import android.view.View
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.impl.VideoPlaylistsList
 
-data class AddVideoView(
+class AddVideoView(
         val state: AddVideoViewState,
         val playlistsAdapter: VideoPlaylistsList.Adapter,
         val itemDecoration: RecyclerView.ItemDecoration,

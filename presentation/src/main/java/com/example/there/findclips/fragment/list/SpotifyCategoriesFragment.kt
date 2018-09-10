@@ -57,7 +57,7 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
     }
 
 
-    data class View(
+    class View(
             val state: BaseSpotifyListFragment.ViewState<Category>,
             val adapter: CategoriesList.Adapter,
             val itemDecoration: RecyclerView.ItemDecoration
