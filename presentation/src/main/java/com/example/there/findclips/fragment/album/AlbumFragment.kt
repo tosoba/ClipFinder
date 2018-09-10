@@ -39,6 +39,21 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
         TracksPopularityList.Adapter(viewModel.viewState.tracks, R.layout.track_popularity_item)
     }
 
+    private val albumAdapter: AlbumAdapter by lazy {
+        AlbumAdapter(
+                artistsAdapter,
+                tracksAdapter,
+                viewModel.viewState.artistsLoadingInProgress,
+                viewModel.viewState.tracksLoadingInProgress,
+                object : EndlessRecyclerOnScrollListener() {
+                    override fun onLoadMore() {
+                        activity?.accessToken?.let { viewModel.loadTracksFromAlbum(it, album.id) }
+                    }
+                },
+                SeparatorDecoration(activity!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+        )
+    }
+
     private val view: AlbumView by lazy {
         AlbumView(
                 state = viewModel.viewState,
@@ -47,14 +62,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
                     viewModel.addFavouriteAlbum(album)
                     Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
-                artistsAdapter = artistsAdapter,
-                tracksAdapter = tracksAdapter,
-                separatorDecoration = SeparatorDecoration(activity!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
-                onTracksScrollListener = object : EndlessRecyclerOnScrollListener() {
-                    override fun onLoadMore() {
-                        activity?.accessToken?.let { viewModel.loadTracksFromAlbum(it, album.id) }
-                    }
-                }
+                albumAdapter = albumAdapter
         )
     }
 
@@ -71,9 +79,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
         val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, R.layout.fragment_album, container, false)
         return binding.apply {
             this.view = this@AlbumFragment.view
-            albumContent?.view = view
-            albumContent?.albumArtistsRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            albumContent?.albumTracksRecyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            albumRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             mainActivity?.setSupportActionBar(albumToolbar)
             albumToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
             albumToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
