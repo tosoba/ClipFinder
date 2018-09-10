@@ -9,16 +9,17 @@ abstract class BaseHostFragment : Fragment() {
 
     abstract val backStackLayoutId: Int
 
-    fun showFragment(fragment: Fragment, addToBackStack: Boolean) {
-        val transaction = childFragmentManager.beginTransaction().replace(backStackLayoutId, fragment)
+    fun showFragment(fragment: Fragment, addToBackStack: Boolean) = with(childFragmentManager.beginTransaction()) {
+        setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+        replace(backStackLayoutId, fragment)
 
         if (addToBackStack) {
             if (mainActivity?.toolbar?.height != 0)
-                mainActivity?.toolbar?.animateHeight(mainActivity!!.dpToPx(48f).toInt(), 0, 400)
-            transaction.addToBackStack(null)
+                mainActivity?.toolbar?.animateHeight(mainActivity!!.dpToPx(48f).toInt(), 0, 250)
+            addToBackStack(null)
         }
 
-        transaction.commit()
+        commit()
     }
 
     val topFragment: Fragment?

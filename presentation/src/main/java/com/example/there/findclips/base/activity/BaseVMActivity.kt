@@ -4,7 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
+import android.util.Log
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.di.vm.ViewModelFactory
 import com.example.there.findclips.util.ext.messageOrDefault
@@ -38,9 +38,7 @@ abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity(), HasSuppo
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
-            error?.let {
-                Toast.makeText(this, it.messageOrDefault(), Toast.LENGTH_LONG).show()
-            }
+            error?.let { Log.e(javaClass.name ?: "Error", it.messageOrDefault()) }
         })
     }
 }

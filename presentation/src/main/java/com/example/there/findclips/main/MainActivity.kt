@@ -170,7 +170,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
-            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
+            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 250)
             setSupportActionBar(main_toolbar)
         }
     }
@@ -220,10 +220,10 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private fun toggleToolbar() {
         if (pagerAdapter.currentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 400)
+            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 250)
             setSupportActionBar(main_toolbar)
         } else {
-            main_toolbar?.animateHeight(dpToPx(48f).toInt(), 0, 400)
+            main_toolbar?.animateHeight(dpToPx(48f).toInt(), 0, 250)
         }
     }
 

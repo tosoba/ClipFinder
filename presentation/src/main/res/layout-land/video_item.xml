@@ -11,7 +11,8 @@
     <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:foreground="@drawable/list_item_ripple">
 
         <ImageView
             android:id="@+id/video_thumbnail_imageview"
