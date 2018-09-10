@@ -196,7 +196,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region pager navigation
 
-    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_favorites)
+    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         if (item.itemId == main_bottom_navigation_view.selectedItemId) {

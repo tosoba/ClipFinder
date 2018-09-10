@@ -38,15 +38,15 @@ dependencies {
     implementation rootProject.ext.retrofitRxJava2Adapter
     implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.room
-    implementation "android.arch.persistence.room:rxjava2:1.1.0"
-    kapt "android.arch.persistence.room:compiler:1.1.0"
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 
     implementation 'org.jsoup:jsoup:1.11.3'
 
     testImplementation rootProject.ext.junit
     testImplementation rootProject.ext.mockito
     androidTestImplementation rootProject.ext.androidTestRunner
-    testImplementation "android.arch.persistence.room:testing:1.1.0"
+    testImplementation "android.arch.persistence.room:testing:1.1.1"
 
     implementation project(':domain')
 }

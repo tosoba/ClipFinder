@@ -1,13 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_dashboard"
-        android:title="@string/dashboard"
         android:icon="@drawable/dashboard"
-        />
+        android:title="@string/dashboard" />
+
+    <item
+        android:id="@+id/action_user"
+        android:icon="@drawable/user"
+        android:title="@string/user" />
 
     <item
         android:id="@+id/action_favorites"
-        android:title="@string/favourites"
         android:icon="@drawable/favourites"
-        />
+        android:title="@string/favourites" />
+
 </menu>
