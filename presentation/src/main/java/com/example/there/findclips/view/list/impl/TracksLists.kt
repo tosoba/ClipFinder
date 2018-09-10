@@ -1,6 +1,7 @@
 package com.example.there.findclips.view.list.impl
 
 import android.databinding.ObservableList
+import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.databinding.GridTrackItemBinding
 import com.example.there.findclips.databinding.TopTrackItemBinding
 import com.example.there.findclips.databinding.TrackItemBinding
@@ -14,9 +15,10 @@ interface GridTracksList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int) :
             BaseBindingList.Adapter<Track, GridTrackItemBinding>(tracks, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<GridTrackItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.track = items[position]
+            (holder as BaseBindingViewHolder<GridTrackItemBinding>).binding.track = items[position]
         }
     }
 }
@@ -25,9 +27,10 @@ interface TracksList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int) :
             BaseBindingList.Adapter<Track, TrackItemBinding>(tracks, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<TrackItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.track = items[position]
+            (holder as BaseBindingViewHolder<TrackItemBinding>).binding.track = items[position]
         }
     }
 }
@@ -36,9 +39,10 @@ interface TopTracksList {
     class Adapter(tracks: ObservableList<TopTrack>, itemLayoutId: Int) :
             BaseBindingList.Adapter<TopTrack, TopTrackItemBinding>(tracks, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<TopTrackItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.track = items[position]
+            (holder as BaseBindingViewHolder<TopTrackItemBinding>).binding.track = items[position]
         }
     }
 }
@@ -47,9 +51,10 @@ interface TracksPopularityList {
     class Adapter(tracks: ObservableList<Track>, itemLayoutId: Int) :
             BaseBindingList.Adapter<Track, TrackPopularityItemBinding>(tracks, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<TrackPopularityItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.track = items[position]
+            (holder as BaseBindingViewHolder<TrackPopularityItemBinding>).binding.track = items[position]
         }
     }
 }

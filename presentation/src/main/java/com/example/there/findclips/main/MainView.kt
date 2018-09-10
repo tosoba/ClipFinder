@@ -10,6 +10,7 @@ import android.view.View
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.impl.RelatedVideosList
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 data class MainView(
         val state: MainViewState,

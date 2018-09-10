@@ -73,7 +73,6 @@ dependencies {
     implementation project(':data')
     implementation project(':domain')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    implementation 'com.github.pedrovgs:draggablepanel:1.9'
     implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1"
     implementation "com.sothree.slidinguppanel:library:3.4.0"
 }

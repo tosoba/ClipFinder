@@ -39,6 +39,8 @@ import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.list.impl.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 

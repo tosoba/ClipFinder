@@ -1,6 +1,7 @@
 package com.example.there.findclips.view.list.impl
 
 import android.databinding.ObservableList
+import android.support.v7.widget.RecyclerView
 import com.example.there.findclips.databinding.ArtistItemBinding
 import com.example.there.findclips.databinding.GridArtistItemBinding
 import com.example.there.findclips.model.entity.Artist
@@ -11,9 +12,10 @@ interface ArtistsList {
     class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int) :
             BaseBindingList.Adapter<Artist, ArtistItemBinding>(artists, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<ArtistItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.artist = items[position]
+            (holder as BaseBindingViewHolder<ArtistItemBinding>).binding.artist = items[position]
         }
     }
 }
@@ -22,9 +24,10 @@ interface GridArtistsList {
     class Adapter(artists: ObservableList<Artist>, itemLayoutId: Int) :
             BaseBindingList.Adapter<Artist, GridArtistItemBinding>(artists, itemLayoutId) {
 
-        override fun onBindViewHolder(holder: BaseBindingViewHolder<GridArtistItemBinding>, position: Int) {
+        @Suppress("UNCHECKED_CAST")
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             super.onBindViewHolder(holder, position)
-            holder.binding.artist = items[position]
+            (holder as BaseBindingViewHolder<GridArtistItemBinding>).binding.artist = items[position]
         }
     }
 }

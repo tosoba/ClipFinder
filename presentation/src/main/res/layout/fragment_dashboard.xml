@@ -1,4 +1,4 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
@@ -9,106 +9,19 @@
             type="com.example.there.findclips.fragment.dashboard.DashboardView" />
     </data>
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        tools:context=".fragment.dashboard.DashboardFragment">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dashboard_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".fragment.dashboard.DashboardFragment">
+            android:layout_height="match_parent"
+            android:adapter="@{dashboardView.dashboardAdapter}" />
 
-            <TextView
-                android:id="@+id/genres_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/genres"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/genres_recycler_view"
-                style="@style/HorizontalGridRecyclerViewSpan2"
-                android:layout_width="0dp"
-                android:adapter="@{dashboardView.categoriesAdapter}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/genres_label_txt" />
-
-            <ProgressBar
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(dashboardView.state.categoriesLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/genres_recycler_view"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/genres_recycler_view" />
-
-            <TextView
-                android:id="@+id/featured_playlists_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/featured_playlists"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/genres_recycler_view" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/featured_playlists_recyclerview"
-                style="@style/HorizontalGridRecyclerViewSpan2"
-                android:layout_width="0dp"
-                android:adapter="@{dashboardView.playlistsAdapter}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/featured_playlists_label_txt" />
-
-            <ProgressBar
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(dashboardView.state.featuredPlaylistsLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/featured_playlists_recyclerview"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/featured_playlists_recyclerview" />
-
-            <TextView
-                android:id="@+id/top_tracks_label_txt"
-                style="@style/LargeLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/top_tracks"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/featured_playlists_recyclerview" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/top_tracks_recyclerview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:adapter="@{dashboardView.topTracksAdapter}"
-                app:layout_constraintHeight_min="120dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/top_tracks_label_txt" />
-
-            <ProgressBar
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(dashboardView.state.topTracksLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@id/top_tracks_recyclerview"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/top_tracks_recyclerview" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
 
 </layout>

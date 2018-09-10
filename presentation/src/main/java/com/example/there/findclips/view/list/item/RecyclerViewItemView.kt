@@ -1,0 +1,9 @@
+package com.example.there.findclips.view.list.item
+
+import android.support.v7.widget.RecyclerView
+
+data class RecyclerViewItemView(
+        val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+        val itemDecoration: RecyclerView.ItemDecoration?,
+        val onScrollListener: RecyclerView.OnScrollListener?
+)

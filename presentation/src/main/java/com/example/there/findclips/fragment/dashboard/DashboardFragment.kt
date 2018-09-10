@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.dashboard
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -39,12 +38,14 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item)
     }
 
+    private val dashboardAdapter: DashboardAdapter by lazy {
+        DashboardAdapter(categoriesAdapter, playlistsAdapter, topTracksAdapter)
+    }
+
     private val view: DashboardView by lazy {
         DashboardView(
                 state = viewModel.viewState,
-                categoriesAdapter = categoriesAdapter,
-                playlistsAdapter = playlistsAdapter,
-                topTracksAdapter = topTracksAdapter
+                dashboardAdapter = dashboardAdapter
         )
     }
 
@@ -52,9 +53,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         return binding.apply {
             dashboardView = view
-            genresRecyclerView.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-            featuredPlaylistsRecyclerview.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-            topTracksRecyclerview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
         }.root
     }
 
@@ -77,8 +77,10 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         lifecycle.addObserver(disposablesComponent)
         initItemClicks()
+
         loadData()
     }
 
