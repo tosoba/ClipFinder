@@ -22,7 +22,8 @@ class DashboardAdapter(
         private val categoriesLoadingInProgress: ObservableField<Boolean>,
         private val playlistsLoadingInProgress: ObservableField<Boolean>,
         private val tracksLoadingInProgress: ObservableField<Boolean>,
-        private val albumsLoadingInProgress: ObservableField<Boolean>
+        private val albumsLoadingInProgress: ObservableField<Boolean>,
+        private val onAlbumsScrollListener: RecyclerView.OnScrollListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
@@ -59,7 +60,7 @@ class DashboardAdapter(
             viewState = HeaderItemViewState("New releases")
         })
         ALBUMS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-            view = RecyclerViewItemView(RecyclerViewItemViewState(albumsLoadingInProgress), albumsAdapter, null, null)
+            view = RecyclerViewItemView(RecyclerViewItemViewState(albumsLoadingInProgress), albumsAdapter, null, onAlbumsScrollListener)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             itemRecyclerView.isNestedScrollingEnabled = false
         })

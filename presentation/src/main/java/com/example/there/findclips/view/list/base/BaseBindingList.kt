@@ -22,6 +22,16 @@ interface BaseBindingList {
 
         val itemClicked: PublishSubject<I> = PublishSubject.create()
 
+        var recyclerView: RecyclerView? = null
+            private set
+
+        fun scrollToTop() = recyclerView?.scrollToPosition(0)
+
+        override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+            super.onAttachedToRecyclerView(recyclerView)
+            this.recyclerView = recyclerView
+        }
+
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (position < items.size)
                 (holder as BaseBindingViewHolder<*>).binding.root.setOnClickListener { itemClicked.onNext(items[position]) }

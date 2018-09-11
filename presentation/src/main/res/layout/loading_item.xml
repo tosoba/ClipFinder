@@ -11,12 +11,18 @@
 
     </data>
 
-    <ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/loading_item_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:visibility="@{safeUnbox(viewState.loadingInProgress) ? View.VISIBLE : View.GONE}" />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/loading_item_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:visibility="@{safeUnbox(viewState.loadingInProgress) ? View.VISIBLE : View.GONE}" />
+
+    </FrameLayout>
 
 </layout>

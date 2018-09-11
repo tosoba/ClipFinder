@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
+import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.category.CategoryFragment
 import com.example.there.findclips.fragment.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
@@ -23,6 +25,7 @@ import com.example.there.findclips.view.list.impl.AlbumsList
 import com.example.there.findclips.view.list.impl.CategoriesList
 import com.example.there.findclips.view.list.impl.PlaylistsList
 import com.example.there.findclips.view.list.impl.TopTracksList
+import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
@@ -43,6 +46,16 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         AlbumsList.Adapter(viewModel.viewState.newReleases, R.layout.album_item)
     }
 
+    private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
+        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
+            override fun onLoadMore() {
+                activity?.accessToken?.let {
+                    viewModel.loadNewReleases(it, true)
+                }
+            }
+        }
+    }
+
     private val dashboardAdapter: DashboardAdapter by lazy {
         DashboardAdapter(
                 categoriesAdapter,
@@ -52,7 +65,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 viewModel.viewState.categoriesLoadingInProgress,
                 viewModel.viewState.featuredPlaylistsLoadingInProgress,
                 viewModel.viewState.topTracksLoadingInProgress,
-                viewModel.viewState.newReleasesLoadingInProgress
+                viewModel.viewState.newReleasesLoadingInProgress,
+                onNewReleasesScrollListener
         )
     }
 
@@ -107,6 +121,9 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         disposablesComponent.add(topTracksAdapter.itemClicked.subscribe {
             hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
         })
+        disposablesComponent.add(newReleasesAdapter.itemClicked.subscribe {
+            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -118,5 +135,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         viewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
     }
 
-    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)
+    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken) {
+        newReleasesAdapter.scrollToTop()
+    }
 }

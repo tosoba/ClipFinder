@@ -19,7 +19,7 @@ interface BaseBindingLoadingList {
     abstract class Adapter<I, B>(
             val items: ObservableList<I>,
             @LayoutRes private val itemLayoutId: Int,
-            private val loadingMoreItemsInProgress: ObservableField<Boolean>
+            private val loadingMoreItemsInProgress: ObservableField<Boolean> = ObservableField(false)
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() where B : ViewDataBinding {
 
         init {
@@ -27,6 +27,19 @@ interface BaseBindingLoadingList {
         }
 
         val itemClicked: PublishSubject<I> = PublishSubject.create()
+
+        var recyclerView: RecyclerView? = null
+            private set
+
+        override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+            super.onAttachedToRecyclerView(recyclerView)
+            this.recyclerView = recyclerView
+        }
+
+        fun scrollToTop() = recyclerView?.scrollToPosition(0)
+
+        override fun getItemViewType(position: Int): Int = if (position == items.size) VIEW_TYPE_LOADING
+        else VIEW_TYPE_ITEM
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (position < items.size) {

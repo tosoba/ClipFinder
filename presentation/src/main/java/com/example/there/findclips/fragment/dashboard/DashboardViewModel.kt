@@ -21,20 +21,26 @@ class DashboardViewModel @Inject constructor(
 
     val viewState: DashboardViewState = DashboardViewState()
 
-    fun loadDashboardData(accessToken: AccessTokenEntity?) {
+    fun loadDashboardData(
+            accessToken: AccessTokenEntity?,
+            onNewReleasesFinally: (() -> Unit)? = null
+    ) {
         if (accessToken != null && accessToken.isValid) {
             accessTokenLiveData.value = accessToken
-            loadData(accessTokenLiveData.value!!)
+            loadData(accessTokenLiveData.value!!, onNewReleasesFinally)
         } else {
             loadAccessToken { loadData(it) }
         }
     }
 
-    private fun loadData(accessToken: AccessTokenEntity) = with(accessToken) {
+    private fun loadData(
+            accessToken: AccessTokenEntity,
+            onNewReleasesFinally: (() -> Unit)? = null
+    ) = with(accessToken) {
         loadCategories(this)
         loadFeaturedPlaylists(this)
         loadDailyViralTracks(this)
-        loadNewReleases(this)
+        loadNewReleases(this, onFinally = onNewReleasesFinally)
     }
 
     private fun loadCategories(accessToken: AccessTokenEntity) {
@@ -61,11 +67,17 @@ class DashboardViewModel @Inject constructor(
     private var currentNewReleasesOffset: Int = 0
     private var totalNewReleases = 0
 
-    fun loadNewReleases(accessToken: AccessTokenEntity) {
-        if (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases)) {
-            viewState.newReleasesLoadingInProgress.set(true)
+    fun loadNewReleases(accessToken: AccessTokenEntity, loadMore: Boolean = false, onFinally: (() -> Unit)? = null) {
+        if (viewState.newReleasesLoadingInProgress.get() != true
+                && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
+            if (!loadMore)
+                viewState.newReleasesLoadingInProgress.set(true)
             addDisposable(getNewReleases.execute(accessToken, currentNewReleasesOffset)
-                    .doFinally { viewState.newReleasesLoadingInProgress.set(false) }
+                    .doFinally {
+                        if (!loadMore)
+                            viewState.newReleasesLoadingInProgress.set(false)
+                        onFinally?.invoke()
+                    }
                     .subscribe({
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalNewReleases = it.totalItems
@@ -76,6 +88,6 @@ class DashboardViewModel @Inject constructor(
 
     override fun onError(t: Throwable) {
         super.onError(t)
-        handleErrors(t, onErrorsResolved = ::loadDashboardData)
+        handleErrors(t, onErrorsResolved = { loadDashboardData(it) })
     }
 }
