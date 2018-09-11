@@ -3,11 +3,14 @@ package com.example.there.findclips.main
 import android.app.SearchManager
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
@@ -18,12 +21,14 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.text.InputType
+import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.R
+import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.databinding.ActivityMainBinding
@@ -41,11 +46,15 @@ import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.spotify.sdk.android.authentication.AuthenticationClient
+import com.spotify.sdk.android.authentication.AuthenticationRequest
+import com.spotify.sdk.android.authentication.AuthenticationResponse
+import com.spotify.sdk.android.player.*
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector {
+class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector, Player.NotificationCallback, ConnectionStateCallback, Player.OperationCallback {
 
     val toolbar: Toolbar?
         get() = main_toolbar
@@ -69,6 +78,8 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
         initYouTubePlayerView()
         addPlayerViewControls()
+
+        initSpotifyPlayer()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -79,13 +90,149 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         addVideoDialogFragment = null
+
+        unregisterReceiver(mNetworkStateReceiver)
+
+        spotifyPlayer?.removeNotificationCallback(this)
+        spotifyPlayer?.removeConnectionStateCallback(this)
+        Spotify.destroyPlayer(this)
+
+        super.onDestroy()
     }
 
     override fun initViewModel() {
         viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
     }
+
+    // region spotify player
+
+    override fun onSuccess() {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onError(p0: Error?) {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onPlaybackError(p0: Error?) {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onPlaybackEvent(p0: PlayerEvent?) {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onLoggedOut() {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onLoggedIn() {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onConnectionMessage(p0: String?) {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onLoginFailed(p0: Error?) {
+        Log.e("TEST", "LOG")
+    }
+
+    override fun onTemporaryError() {
+        Log.e("TEST", "LOG")
+    }
+
+    private var spotifyPlayer: SpotifyPlayer? = null
+
+    private val mNetworkStateReceiver: BroadcastReceiver by lazy {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (spotifyPlayer != null) {
+                    val connectivity = getNetworkConnectivity(baseContext)
+                    spotifyPlayer?.setConnectivityStatus(this@MainActivity, connectivity)
+                }
+            }
+        }
+    }
+
+    val loggedIn: Boolean
+        get() = spotifyPlayer?.isLoggedIn == true
+
+    fun logOutPlayer() {
+        spotifyPlayer?.logout()
+    }
+
+    private fun getNetworkConnectivity(context: Context): Connectivity {
+        val connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return if (activeNetwork != null && activeNetwork.isConnected) Connectivity.fromNetworkType(activeNetwork.type)
+        else Connectivity.OFFLINE
+    }
+
+    private fun initSpotifyPlayer() {
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(mNetworkStateReceiver, filter)
+
+        spotifyPlayer?.addNotificationCallback(this)
+        spotifyPlayer?.addConnectionStateCallback(this)
+    }
+
+    private val mOperationCallback = object : Player.OperationCallback {
+        override fun onSuccess() {
+            Log.e("TEST", "ERR")
+        }
+
+        override fun onError(error: Error) {
+            Log.e("TEST", "ERR")
+        }
+    }
+
+    fun openLoginWindow() {
+        val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setScopes(arrayOf("user-read-private", "playlist-read", "playlist-read-private", "streaming"))
+                .build()
+
+        AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
+    }
+
+    private fun onAuthenticationComplete(accessToken: String) {
+        if (spotifyPlayer == null) {
+            val playerConfig = Config(applicationContext, accessToken, SpotifyClient.id)
+
+            spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
+                override fun onInitialized(player: SpotifyPlayer) {
+                    spotifyPlayer?.setConnectivityStatus(mOperationCallback, getNetworkConnectivity(this@MainActivity))
+                    spotifyPlayer?.addNotificationCallback(this@MainActivity)
+                    spotifyPlayer?.addConnectionStateCallback(this@MainActivity)
+
+                    spotifyPlayer?.playUri(mOperationCallback, TRACK_URI, 0, 0)
+                }
+
+                override fun onError(error: Throwable) {
+                    Log.e("TEST", "ERR")
+                }
+            })
+        } else {
+            spotifyPlayer?.login(accessToken)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            val response = AuthenticationClient.getResponse(resultCode, data)
+            when (response.type) {
+                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
+
+                AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
+
+                else -> Log.e("ERR", "Auth result: " + response.type)
+            }
+        }
+    }
+
+    // endregion
 
     // region search
 
@@ -433,5 +580,9 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         private const val minimumPlayerHeightDp = 100
 
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
+
+        private const val LOGIN_REQUEST_CODE = 100
+        private const val REDIRECT_URI = "testschema://callback"
+        private const val TRACK_URI = "spotify:track:6KywfgRqvgvfJc3JRwaZdZ"
     }
 }
