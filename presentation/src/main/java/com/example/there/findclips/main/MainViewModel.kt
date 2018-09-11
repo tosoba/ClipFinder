@@ -14,25 +14,34 @@ class MainViewModel @Inject constructor(
         private val insertVideoPlaylist: InsertVideoPlaylist,
         private val addVideoToPlaylist: AddVideoToPlaylist,
         private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
-): BaseVideosViewModel(getChannelsThumbnailUrls) {
+) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState = MainViewState()
 
     private var lastSearchVideo: Video? = null
 
     fun searchRelatedVideosWithToLastId() {
-        if (lastSearchVideo != null) {
-            addSearchRelatedVideosDisposable(lastSearchVideo!!, true)
+        lastSearchVideo?.let {
+            addSearchRelatedVideosDisposable(it, true)
         }
     }
 
-    fun searchRelatedVideos(toVideo: Video) {
+    fun searchRelatedVideos(toVideo: Video,  onFinally: (() -> Unit)? = null) {
         lastSearchVideo = toVideo
-        addSearchRelatedVideosDisposable(toVideo, false)
+        viewState.videos.clear()
+        addSearchRelatedVideosDisposable(toVideo, false, onFinally)
     }
 
-    private fun addSearchRelatedVideosDisposable(video: Video, loadMore: Boolean) {
+    private fun addSearchRelatedVideosDisposable(video: Video, loadMore: Boolean, onFinally: (() -> Unit)? = null) {
+        if (loadMore) viewState.loadingMoreVideosInProgress.set(true)
+        else viewState.initialVideosLoadingInProgress.set(true)
+
         addDisposable(searchRelatedVideos.execute(video.id, loadMore)
+                .doFinally {
+                    if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
+                    else viewState.initialVideosLoadingInProgress.set(false)
+                    onFinally?.invoke()
+                }
                 .subscribe({ videos ->
                     val mapped = videos.map(VideoEntityMapper::mapFrom)
                     viewState.videos.addAll(mapped)

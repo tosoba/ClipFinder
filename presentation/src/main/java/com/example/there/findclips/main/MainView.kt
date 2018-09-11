@@ -1,6 +1,7 @@
 package com.example.there.findclips.main
 
 import android.databinding.ObservableArrayList
+import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -29,5 +30,7 @@ class MainView(
 
 data class MainViewState(
         val videos: ObservableList<Video> = ObservableArrayList(),
-        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList()
+        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
+        val initialVideosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
+        val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false)
 )

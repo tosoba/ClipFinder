@@ -23,7 +23,7 @@ abstract class EndlessRecyclerOnScrollListener(
         val visibleItemCount = recyclerView.childCount
         val totalItemCount = recyclerView.layoutManager?.itemCount
 
-        if (totalItemCount == null || totalItemCount == returnFromOnScrolledItemCount) return
+        if (totalItemCount == null || totalItemCount <= returnFromOnScrolledItemCount) return
 
         val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 

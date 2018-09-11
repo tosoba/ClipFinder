@@ -282,7 +282,10 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         else
             youTubePlayer?.cueVideo(video.id, 0f)
 
-        viewModel.searchRelatedVideos(video)
+        viewModel.searchRelatedVideos(video) {
+            if (!relatedVideosAdapter.userHasScrolled)
+                related_videos_recycler_view?.scrollToPosition(0)
+        }
     }
 
     private fun updatePlayerDimensions(slideOffset: Float) {
@@ -368,11 +371,11 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     // region relatedVideos
 
     private val relatedVideosAdapter: RelatedVideosList.Adapter by lazy(LazyThreadSafetyMode.NONE) {
-        RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item)
+        RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item, viewModel.viewState.loadingMoreVideosInProgress)
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        object : EndlessRecyclerOnScrollListener() {
+        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 2) {
             override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
         }
     }
@@ -382,12 +385,8 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     private fun initItemClicks() {
-        disposablesComponent.add(relatedVideosAdapter.itemClicked.subscribe {
-            lastPlayedVideo = it
-            loadVideo(it)
-        })
+        disposablesComponent.add(relatedVideosAdapter.itemClicked.subscribe { loadVideo(it) })
     }
-
 
     // endregion
 

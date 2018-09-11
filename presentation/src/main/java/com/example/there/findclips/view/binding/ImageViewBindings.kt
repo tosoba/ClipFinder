@@ -2,16 +2,18 @@ package com.example.there.findclips.view.binding
 
 import android.databinding.BindingAdapter
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.there.findclips.R
-import com.squareup.picasso.Picasso
 
 @BindingAdapter("imageUrl")
 fun bindImageUrl(view: ImageView, url: String?) {
     if (url != null && !url.isEmpty()) {
-        Picasso.with(view.context)
+        Glide.with(view.context)
                 .load(url)
-                .fit()
-                .error(R.drawable.placeholder)
+                .apply(RequestOptions()
+                        .fitCenter()
+                        .error(R.drawable.placeholder))
                 .into(view)
     }
 }

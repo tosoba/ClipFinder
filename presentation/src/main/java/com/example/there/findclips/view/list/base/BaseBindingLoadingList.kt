@@ -18,14 +18,13 @@ interface BaseBindingLoadingList {
 
     abstract class Adapter<I, B>(
             val items: ObservableList<I>,
-            @LayoutRes private val itemLayoutId: Int
+            @LayoutRes private val itemLayoutId: Int,
+            private val loadingMoreItemsInProgress: ObservableField<Boolean>
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() where B : ViewDataBinding {
 
         init {
             bindToItems(items)
         }
-
-        val loadingMoreItemsInProgress: ObservableField<Boolean> = ObservableField(false)
 
         val itemClicked: PublishSubject<I> = PublishSubject.create()
 

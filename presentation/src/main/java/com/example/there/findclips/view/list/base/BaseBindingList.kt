@@ -23,7 +23,8 @@ interface BaseBindingList {
         val itemClicked: PublishSubject<I> = PublishSubject.create()
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            (holder as BaseBindingViewHolder<*>).binding.root.setOnClickListener { itemClicked.onNext(items[position]) }
+            if (position < items.size)
+                (holder as BaseBindingViewHolder<*>).binding.root.setOnClickListener { itemClicked.onNext(items[position]) }
         }
 
         override fun onCreateViewHolder(
