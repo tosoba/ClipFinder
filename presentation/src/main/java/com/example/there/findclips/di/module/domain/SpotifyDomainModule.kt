@@ -130,4 +130,8 @@ class SpotifyDomainModule {
             repository: ISpotifyRepository
     ): InsertTrack = InsertTrack(AsyncCompletableTransformer(), repository)
 
+    @Provides
+    fun getNewReleases(
+            repository: ISpotifyRepository
+    ): GetNewReleases = GetNewReleases(AsyncSymmetricSingleTransformer(), repository)
 }

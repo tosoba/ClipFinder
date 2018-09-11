@@ -8,6 +8,7 @@ import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.mapper.spotify.*
 import com.example.there.data.response.TracksOnlyResponse
 import com.example.there.domain.entity.spotify.*
+import com.example.there.domain.entitypage.AlbumsPage
 import com.example.there.domain.entitypage.CategoryPlaylistsPage
 import com.example.there.domain.entitypage.TracksPage
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
@@ -237,6 +238,20 @@ class SpotifyRemoteDataStore @Inject constructor(
                     totalItems = idsPage.totalItems
             )
         }
+    }
+
+    override fun getNewReleases(
+            accessToken: AccessTokenEntity,
+            offset: Int
+    ): Single<AlbumsPage> = api.getNewReleases(
+            authorization = getAccessTokenHeader(accessToken.token),
+            offset = offset.toString()
+    ).map {
+        AlbumsPage(
+                albums = it.result.albums.map(AlbumMapper::mapFrom),
+                offset = it.result.offset,
+                totalItems = it.result.totalItems
+        )
     }
 
     companion object {

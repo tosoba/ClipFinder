@@ -1,6 +1,7 @@
 package com.example.there.domain.repo.spotify
 
 import com.example.there.domain.entity.spotify.*
+import com.example.there.domain.entitypage.AlbumsPage
 import com.example.there.domain.entitypage.CategoryPlaylistsPage
 import com.example.there.domain.entitypage.TracksPage
 import io.reactivex.Completable
@@ -26,6 +27,7 @@ interface ISpotifyRepository {
     fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Single<List<TrackEntity>>
     fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>>
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
+    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<AlbumsPage>
 
     fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
     fun getFavouriteArtists(): Flowable<List<ArtistEntity>>

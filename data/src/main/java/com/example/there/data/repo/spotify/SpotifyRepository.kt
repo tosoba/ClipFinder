@@ -1,6 +1,7 @@
 package com.example.there.data.repo.spotify
 
 import com.example.there.domain.entity.spotify.*
+import com.example.there.domain.entitypage.AlbumsPage
 import com.example.there.domain.entitypage.CategoryPlaylistsPage
 import com.example.there.domain.entitypage.TracksPage
 import com.example.there.domain.repo.spotify.ISpotifyRepository
@@ -82,6 +83,11 @@ class SpotifyRepository @Inject constructor(
             albumId: String,
             offset: Int
     ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
+
+    override fun getNewReleases(
+            accessToken: AccessTokenEntity,
+            offset: Int
+    ): Single<AlbumsPage> = remoteDataStore.getNewReleases(accessToken, offset)
 
     override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 

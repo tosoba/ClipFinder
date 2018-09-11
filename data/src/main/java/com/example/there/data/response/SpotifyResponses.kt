@@ -32,6 +32,10 @@ data class PlaylistTracksResponse(
         @SerializedName("total") val totalItems: Int
 )
 
+data class NewReleasesResponse(
+        @SerializedName("albums") val result: AlbumsResult
+)
+
 data class AlbumsResult(
         @SerializedName("items") val albums: List<AlbumData>,
         val offset: Int,

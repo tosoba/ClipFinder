@@ -1,6 +1,7 @@
 package com.example.there.domain.repo.spotify.datastore
 
 import com.example.there.domain.entity.spotify.*
+import com.example.there.domain.entitypage.AlbumsPage
 import com.example.there.domain.entitypage.CategoryPlaylistsPage
 import com.example.there.domain.entitypage.TracksPage
 import io.reactivex.Observable
@@ -34,4 +35,6 @@ interface ISpotifyRemoteDataStore {
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
 
     fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage>
+
+    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<AlbumsPage>
 }

@@ -18,9 +18,11 @@ class DashboardAdapter(
         private val categoriesAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val playlistsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val tracksAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
+        private val albumsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         private val categoriesLoadingInProgress: ObservableField<Boolean>,
         private val playlistsLoadingInProgress: ObservableField<Boolean>,
-        private val tracksLoadingInProgress: ObservableField<Boolean>
+        private val tracksLoadingInProgress: ObservableField<Boolean>,
+        private val albumsLoadingInProgress: ObservableField<Boolean>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
@@ -53,6 +55,14 @@ class DashboardAdapter(
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
             itemRecyclerView.isNestedScrollingEnabled = false
         })
+        ALBUMS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            viewState = HeaderItemViewState("New releases")
+        })
+        ALBUMS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+            view = RecyclerViewItemView(RecyclerViewItemViewState(albumsLoadingInProgress), albumsAdapter, null, null)
+            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.isNestedScrollingEnabled = false
+        })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
 
@@ -67,6 +77,8 @@ class DashboardAdapter(
         private const val PLAYLISTS_LIST_VIEW_TYPE = 3
         private const val TRACKS_HEADER_VIEW_TYPE = 4
         private const val TRACKS_LIST_VIEW_TYPE = 5
+        private const val ALBUMS_HEADER_VIEW_TYPE = 6
+        private const val ALBUMS_LIST_VIEW_TYPE = 7
 
         private val viewTypes = arrayOf(
                 CATEGORIES_HEADER_VIEW_TYPE,
@@ -74,7 +86,9 @@ class DashboardAdapter(
                 PLAYLISTS_HEADER_VIEW_TYPE,
                 PLAYLISTS_LIST_VIEW_TYPE,
                 TRACKS_HEADER_VIEW_TYPE,
-                TRACKS_LIST_VIEW_TYPE
+                TRACKS_LIST_VIEW_TYPE,
+                ALBUMS_HEADER_VIEW_TYPE,
+                ALBUMS_LIST_VIEW_TYPE
         )
     }
 }

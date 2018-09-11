@@ -19,6 +19,7 @@ import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.view.list.impl.AlbumsList
 import com.example.there.findclips.view.list.impl.CategoriesList
 import com.example.there.findclips.view.list.impl.PlaylistsList
 import com.example.there.findclips.view.list.impl.TopTracksList
@@ -38,14 +39,20 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item)
     }
 
+    private val newReleasesAdapter: AlbumsList.Adapter by lazy {
+        AlbumsList.Adapter(viewModel.viewState.newReleases, R.layout.album_item)
+    }
+
     private val dashboardAdapter: DashboardAdapter by lazy {
         DashboardAdapter(
                 categoriesAdapter,
                 playlistsAdapter,
                 topTracksAdapter,
+                newReleasesAdapter,
                 viewModel.viewState.categoriesLoadingInProgress,
                 viewModel.viewState.featuredPlaylistsLoadingInProgress,
-                viewModel.viewState.topTracksLoadingInProgress
+                viewModel.viewState.topTracksLoadingInProgress,
+                viewModel.viewState.newReleasesLoadingInProgress
         )
     }
 
