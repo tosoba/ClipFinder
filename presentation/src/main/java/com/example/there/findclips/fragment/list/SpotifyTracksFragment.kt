@@ -54,6 +54,7 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
         return binding.apply {
             view = this@SpotifyTracksFragment.view
             tracksRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+//            tracksRecyclerView.isNestedScrollingEnabled = false
             if (viewState.shouldShowHeader) tracksRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }

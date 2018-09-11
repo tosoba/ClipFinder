@@ -48,6 +48,7 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
         return binding.apply {
             view = this@SpotifyPlaylistsFragment.view
             playlistsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+//            playlistsRecyclerView.isNestedScrollingEnabled = false
             if (viewState.shouldShowHeader) playlistsRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }

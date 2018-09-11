@@ -15,7 +15,7 @@ import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
-import com.example.there.findclips.view.list.impl.CategoriesList
+import com.example.there.findclips.view.list.impl.GridCategoriesList
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_categories.*
 
@@ -28,8 +28,8 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     override val viewState: ViewState<Category> = ViewState(ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback))
 
-    private val categoriesAdapter: CategoriesList.Adapter by lazy {
-        CategoriesList.Adapter(viewState.items, R.layout.category_item)
+    private val categoriesAdapter: GridCategoriesList.Adapter by lazy {
+        GridCategoriesList.Adapter(viewState.items, R.layout.grid_category_item)
     }
 
     private val view: SpotifyCategoriesFragment.View by lazy {
@@ -52,6 +52,7 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
         return binding.apply {
             view = this@SpotifyCategoriesFragment.view
             categoriesRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+//            categoriesRecyclerView.isNestedScrollingEnabled = false
             if (viewState.shouldShowHeader) categoriesRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
@@ -59,7 +60,7 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     class View(
             val state: BaseSpotifyListFragment.ViewState<Category>,
-            val adapter: CategoriesList.Adapter,
+            val adapter: GridCategoriesList.Adapter,
             val itemDecoration: RecyclerView.ItemDecoration
     )
 

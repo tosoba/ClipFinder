@@ -53,6 +53,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
         return binding.apply {
             view = this@SpotifyArtistsFragment.view
             artistsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+//            artistsRecyclerView.isNestedScrollingEnabled = false
             if (viewState.shouldShowHeader) artistsRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }

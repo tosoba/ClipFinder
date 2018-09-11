@@ -55,6 +55,7 @@
                         android:layout_height="48dp"
                         android:background="@color/colorPrimaryDark"
                         app:collapseIcon="@drawable/back"
+                        app:layout_scrollFlags="scroll|enterAlways"
                         app:theme="@style/ActionBar"
                         app:titleTextColor="#fff" />
 
