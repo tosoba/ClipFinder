@@ -21,7 +21,7 @@
             android:id="@+id/artist_imageview"
             imageUrl="@{artist.iconUrl}"
             android:layout_width="0dp"
-            android:layout_height="130dp"
+            android:layout_height="170dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

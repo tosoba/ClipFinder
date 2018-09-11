@@ -13,31 +13,31 @@
         android:layout_height="match_parent"
         tools:context="com.example.there.findclips.fragment.favourites.FavouritesFragment">
 
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/favourites_bottom_navigation_view"
+            onNavigationItemSelectedListener="@{favouritesFragmentView.onNavigationItemSelectedListener}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            app:itemIconTint="@color/bottom_navigation_color"
+            app:itemTextColor="@color/bottom_navigation_color"
+            app:labelVisibilityMode="unlabeled"
+            app:layout_constraintBottom_toTopOf="@id/favourites_fragment_view_pager"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/spotify_videos_bottom_navigation" />
+
         <com.example.there.findclips.view.viewpager.LockableViewPager
             android:id="@+id/favourites_fragment_view_pager"
             swipeLocked="@{true}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:adapter="@{favouritesFragmentView.pagerAdapter}"
-            app:layout_constraintBottom_toTopOf="@id/favourites_bottom_navigation_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/favourites_bottom_navigation_view"
-            onNavigationItemSelectedListener="@{favouritesFragmentView.onNavigationItemSelectedListener}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            app:itemIconTint="@color/bottom_navigation_color"
-            app:itemTextColor="@color/bottom_navigation_color"
-            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favourites_fragment_view_pager"
-            app:menu="@menu/spotify_videos_bottom_navigation" />
+            app:layout_constraintTop_toBottomOf="@id/favourites_bottom_navigation_view" />
 
     </android.support.constraint.ConstraintLayout>
 
