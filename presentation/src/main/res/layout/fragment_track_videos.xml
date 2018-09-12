@@ -82,7 +82,7 @@
             android:id="@+id/track_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/track_videos_app_bar"
@@ -96,6 +96,15 @@
             android:adapter="@{view.pagerAdapter}"
             android:background="@drawable/main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="@{view.onPlayBtnClickListener}"
+            android:src="@drawable/play"
+            app:layout_anchor="@id/track_videos_viewpager"
+            app:layout_anchorGravity="bottom|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -12,7 +12,8 @@ class TrackVideosView(
         val pagerAdapter: FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
         val onPageChangeListener: ViewPager.OnPageChangeListener,
-        val onFavouriteBtnClickListener: View.OnClickListener
+        val onFavouriteBtnClickListener: View.OnClickListener,
+        val onPlayBtnClickListener: View.OnClickListener
 ) {
     val fragmentTabs = arrayOf("Clips", "Info")
 }

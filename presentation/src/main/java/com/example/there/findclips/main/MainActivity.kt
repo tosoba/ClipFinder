@@ -38,6 +38,7 @@ import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.lifecycle.DisposablesComponent
+import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.*
@@ -89,7 +90,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     override fun onDestroy() {
         addVideoDialogFragment = null
 
-        unregisterReceiver(mNetworkStateReceiver)
+        unregisterReceiver(networkStateReceiver)
 
         spotifyPlayer?.removeNotificationCallback(this)
         spotifyPlayer?.removeConnectionStateCallback(this)
@@ -104,6 +105,39 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region spotify player
 
+    private var lastPlayedTrack: Track? = null
+
+    fun loadTrack(track: Track) {
+        if (viewModel.viewState.isLoggedIn.get() == false || lastPlayedTrack == track) return
+
+        youTubePlayer?.pause()
+        lastPlayedVideo = null
+
+        //TODO: nullify lastPlayedPlaylist and lastPlayedAlbum
+
+        lastPlayedTrack = track
+        viewModel.viewState.playerState.set(PlayerState.TRACK)
+
+        if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+
+        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, TRACK_URI, 0, 0)
+    }
+
+    private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
+        if (currentPlaybackState != null && currentPlaybackState!!.isPlaying) {
+            spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+        } else {
+            spotifyPlayer?.resume(spotifyPlayerOperationCallback)
+        }
+    }
+
+    private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+        spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+        lastPlayedTrack = null
+    }
+
     override fun onSuccess() {
         Log.e("TEST", "LOG")
     }
@@ -112,12 +146,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         Log.e("TEST", "LOG")
     }
 
-    override fun onPlaybackError(p0: Error?) {
+    override fun onPlaybackError(error: Error?) {
         Log.e("TEST", "LOG")
     }
 
-    override fun onPlaybackEvent(p0: PlayerEvent?) {
-        Log.e("TEST", "LOG")
+    override fun onPlaybackEvent(event: PlayerEvent) {
+        Log.e("PlaybackEvent", event.toString())
+        playerMetadata = spotifyPlayer?.metadata
+        currentPlaybackState = spotifyPlayer?.playbackState
     }
 
     override fun onLoggedOut() {
@@ -142,7 +178,11 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private var spotifyPlayer: SpotifyPlayer? = null
 
-    private val mNetworkStateReceiver: BroadcastReceiver by lazy {
+    private var playerMetadata: Metadata? = null
+
+    private var currentPlaybackState: PlaybackState? = null
+
+    private val networkStateReceiver: BroadcastReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (spotifyPlayer != null) {
@@ -169,13 +209,13 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private fun initSpotifyPlayer() {
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(mNetworkStateReceiver, filter)
+        registerReceiver(networkStateReceiver, filter)
 
         spotifyPlayer?.addNotificationCallback(this)
         spotifyPlayer?.addConnectionStateCallback(this)
     }
 
-    private val mOperationCallback = object : Player.OperationCallback {
+    private val spotifyPlayerOperationCallback = object : Player.OperationCallback {
         override fun onSuccess() {
             Log.e("TEST", "ERR")
         }
@@ -199,17 +239,17 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
             spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
-                    spotifyPlayer?.setConnectivityStatus(mOperationCallback, getNetworkConnectivity(this@MainActivity))
+                    spotifyPlayer?.setConnectivityStatus(spotifyPlayerOperationCallback, getNetworkConnectivity(this@MainActivity))
                     spotifyPlayer?.addNotificationCallback(this@MainActivity)
                     spotifyPlayer?.addConnectionStateCallback(this@MainActivity)
-
-                    spotifyPlayer?.playUri(mOperationCallback, TRACK_URI, 0, 0)
                 }
 
                 override fun onError(error: Throwable) {
                     Log.e("TEST", "ERR")
                 }
             })
+
+            viewModel.viewState.isLoggedIn.set(true)
         } else {
             spotifyPlayer?.login(accessToken)
         }
@@ -334,7 +374,9 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                 onRelatedVideosScroll = onRelatedVideosScrollListener,
                 itemDecoration = relatedVideosItemDecoration,
                 relatedVideosAdapter = relatedVideosAdapter,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener
+                onFavouriteBtnClickListener = onFavouriteBtnClickListener,
+                onSpotifyPlayPauseBtnClickListener = onSpotifyPlayPauseBtnClickListener,
+                onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener
         )
     }
 
@@ -407,9 +449,9 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     private var youTubePlayer: YouTubePlayer? = null
 
     private fun initYouTubePlayerView() {
-        lifecycle.addObserver(player_view)
-        player_view.initialize({ this.youTubePlayer = it }, true)
-        player_view.playerUIController.showFullscreenButton(false)
+        lifecycle.addObserver(youtube_player_view)
+        youtube_player_view.initialize({ this.youTubePlayer = it }, true)
+        youtube_player_view.playerUIController.showFullscreenButton(false)
     }
 
     private var lastPlayedVideo: Video? = null
@@ -417,6 +459,12 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     fun loadVideo(video: Video) {
         if (video == lastPlayedVideo) return
         lastPlayedVideo = video
+
+        spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+        //TODO: nullify all spotify playback objects
+        lastPlayedTrack = null
+
+        viewModel.viewState.playerState.set(PlayerState.VIDEO)
 
         if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
@@ -434,14 +482,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     private fun updatePlayerDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
             currentSlideOffset = slideOffset
-            val layoutParams = player_view.layoutParams
+            val layoutParams = youtube_player_view.layoutParams
             val height = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
                 (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             } else {
                 (playerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             }
             layoutParams.height = height.toInt()
-            player_view.requestLayout()
+            youtube_player_view.requestLayout()
         }
     }
 

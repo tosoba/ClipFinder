@@ -13,7 +13,6 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-
 import com.example.there.findclips.databinding.FragmentTrackVideosBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
@@ -74,6 +73,12 @@ class TrackVideosFragment :
         }
     }
 
+    private val onPlayBtnClickListener = View.OnClickListener { _ ->
+        viewModel.viewState.track.get()?.let {
+            mainActivity?.loadTrack(track = it)
+        }
+    }
+
     private val argTrack: Track by lazy { arguments!!.getParcelable<Track>(ARG_TRACK) }
 
     private val view: TrackVideosView by lazy {
@@ -81,7 +86,8 @@ class TrackVideosFragment :
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener
+                onFavouriteBtnClickListener = onFavouriteBtnClickListener,
+                onPlayBtnClickListener = onPlayBtnClickListener
         )
     }
 
