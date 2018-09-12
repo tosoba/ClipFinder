@@ -7,7 +7,8 @@ data class RecyclerViewItemView(
         val state: RecyclerViewItemViewState,
         val adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
         val itemDecoration: RecyclerView.ItemDecoration?,
-        val onScrollListener: RecyclerView.OnScrollListener?
+        val onScrollListener: RecyclerView.OnScrollListener?,
+        val nestedScrollingEnabled: Boolean = false
 )
 
 data class RecyclerViewItemViewState(

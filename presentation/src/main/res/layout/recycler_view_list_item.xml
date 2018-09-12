@@ -17,11 +17,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/item_recycler_view"
             itemDecoration="@{view.itemDecoration}"
+            nestedScrollingIsEnabled="@{view.nestedScrollingEnabled}"
             onScrollListener="@{view.onScrollListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adapter="@{view.adapter}"
-            android:visibility="@{safeUnbox(view.state.initialLoadingInProgress) ? View.INVISIBLE : View.VISIBLE}" />
+            android:adapter="@{view.adapter}" />
 
         <ProgressBar
             android:layout_width="wrap_content"

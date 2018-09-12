@@ -34,7 +34,6 @@ class ArtistAdapter(
         ALBUMS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(albumsLoadingInProgress), albumsAdapter, null, null)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         RELATED_ARTISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Related artists")
@@ -42,7 +41,6 @@ class ArtistAdapter(
         RELATED_ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(relatedArtistsLoadingInProgress), relatedArtistsAdapter, null, null)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         TOP_TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Top tracks")
@@ -50,7 +48,6 @@ class ArtistAdapter(
         TOP_TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(topTracksLoadingInProgress), topTracksAdapter, null, null)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }

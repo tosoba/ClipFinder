@@ -34,7 +34,6 @@ class AlbumAdapter(
         ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(artistsLoadingInProgress), artistsAdapter, null, null)
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Tracks")
@@ -42,7 +41,6 @@ class AlbumAdapter(
         TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(tracksLoadingInProgress), tracksAdapter, tracksItemDecoration, onTracksScrollListener)
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.VERTICAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }

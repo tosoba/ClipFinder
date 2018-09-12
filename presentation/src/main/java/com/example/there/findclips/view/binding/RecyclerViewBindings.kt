@@ -12,3 +12,11 @@ fun bindItemDecoration(recycler: RecyclerView, decoration: RecyclerView.ItemDeco
 fun bindOnScrollListener(recycler: RecyclerView, listener: RecyclerView.OnScrollListener?) {
     listener?.let { recycler.addOnScrollListener(it) }
 }
+
+@BindingAdapter("hasFixedSize")
+fun bindHasFixedSize(recycler: RecyclerView, hasFixedSize: Boolean) = recycler.setHasFixedSize(hasFixedSize)
+
+@BindingAdapter("nestedScrollingIsEnabled")
+fun bindNestedScrolling(recycler: RecyclerView, nestedScrollingEnabled: Boolean) {
+    recycler.isNestedScrollingEnabled = nestedScrollingEnabled
+}

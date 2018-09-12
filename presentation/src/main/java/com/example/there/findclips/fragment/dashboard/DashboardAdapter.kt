@@ -38,7 +38,6 @@ class DashboardAdapter(
         CATEGORIES_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(categoriesLoadingInProgress), categoriesAdapter, null, null)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         PLAYLISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Playlists")
@@ -46,7 +45,6 @@ class DashboardAdapter(
         PLAYLISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(playlistsLoadingInProgress), playlistsAdapter, null, null)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Top tracks")
@@ -54,7 +52,6 @@ class DashboardAdapter(
         TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(tracksLoadingInProgress), tracksAdapter, null, null)
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         ALBUMS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("New releases")
@@ -62,7 +59,6 @@ class DashboardAdapter(
         ALBUMS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = RecyclerViewItemView(RecyclerViewItemViewState(albumsLoadingInProgress), albumsAdapter, null, onAlbumsScrollListener)
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemRecyclerView.isNestedScrollingEnabled = false
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
