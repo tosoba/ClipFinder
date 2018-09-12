@@ -1,9 +1,7 @@
 package com.example.there.data.repo.spotify
 
+import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
-import com.example.there.domain.entitypage.AlbumsPage
-import com.example.there.domain.entitypage.CategoryPlaylistsPage
-import com.example.there.domain.entitypage.TracksPage
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
@@ -41,14 +39,14 @@ class SpotifyRepository @Inject constructor(
             accessToken: AccessTokenEntity,
             categoryId: String,
             offset: Int
-    ): Single<CategoryPlaylistsPage> = remoteDataStore.getPlaylistsForCategory(accessToken, categoryId, offset)
+    ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getPlaylistsForCategory(accessToken, categoryId, offset)
 
     override fun getPlaylistTracks(
             accessToken: AccessTokenEntity,
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<TracksPage> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
 
     override fun getAlbum(
             accessToken: AccessTokenEntity,
@@ -82,12 +80,12 @@ class SpotifyRepository @Inject constructor(
             accessToken: AccessTokenEntity,
             albumId: String,
             offset: Int
-    ): Single<TracksPage> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
 
     override fun getNewReleases(
             accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<AlbumsPage> = remoteDataStore.getNewReleases(accessToken, offset)
+    ): Single<EntityPage<AlbumEntity>> = remoteDataStore.getNewReleases(accessToken, offset)
 
     override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 

@@ -45,8 +45,8 @@ class CategoryViewModel @Inject constructor(
                     .subscribe({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalItems = it.totalItems
-                        playlists.value = it.playlists.map(PlaylistEntityMapper::mapFrom)
-                    }, this::onError))
+                        playlists.value = it.items.map(PlaylistEntityMapper::mapFrom)
+                    }, ::onError))
         }
     }
 

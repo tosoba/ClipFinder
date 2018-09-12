@@ -1,9 +1,7 @@
 package com.example.there.domain.repo.spotify.datastore
 
+import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
-import com.example.there.domain.entitypage.AlbumsPage
-import com.example.there.domain.entitypage.CategoryPlaylistsPage
-import com.example.there.domain.entitypage.TracksPage
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -18,9 +16,9 @@ interface ISpotifyRemoteDataStore {
 
     fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
 
-    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<CategoryPlaylistsPage>
+    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
 
-    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<TracksPage>
+    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>
 
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Single<AlbumEntity>
 
@@ -34,7 +32,7 @@ interface ISpotifyRemoteDataStore {
 
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
 
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage>
+    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<EntityPage<TrackEntity>>
 
-    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<AlbumsPage>
+    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
 }

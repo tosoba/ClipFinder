@@ -1,9 +1,7 @@
 package com.example.there.domain.repo.spotify
 
+import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
-import com.example.there.domain.entitypage.AlbumsPage
-import com.example.there.domain.entitypage.CategoryPlaylistsPage
-import com.example.there.domain.entitypage.TracksPage
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -18,16 +16,16 @@ interface ISpotifyRepository {
 
     fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
 
-    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<CategoryPlaylistsPage>
-    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<TracksPage>
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage>
+    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
+    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>
+    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<EntityPage<TrackEntity>>
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Single<AlbumEntity>
     fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>>
     fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Single<List<ArtistEntity>>
     fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Single<List<TrackEntity>>
     fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>>
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
-    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<AlbumsPage>
+    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
 
     fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
     fun getFavouriteArtists(): Flowable<List<ArtistEntity>>

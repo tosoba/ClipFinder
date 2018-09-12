@@ -1,19 +1,20 @@
 package com.example.there.domain.usecase.spotify
 
 import com.example.there.domain.common.SymmetricSingleTransformer
+import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.domain.entitypage.TracksPage
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.UseCaseParams
 import com.example.there.domain.usecase.base.SingleUseCase
 import io.reactivex.Single
 
 class GetTracksFromAlbum(
-        transformer: SymmetricSingleTransformer<TracksPage>,
+        transformer: SymmetricSingleTransformer<EntityPage<TrackEntity>>,
         private val repository: ISpotifyRepository
-) : SingleUseCase<TracksPage>(transformer) {
+) : SingleUseCase<EntityPage<TrackEntity>>(transformer) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<TracksPage> {
+    override fun createSingle(data: Map<String, Any?>?): Single<EntityPage<TrackEntity>> {
         val accessToken = data?.get(UseCaseParams.PARAM_ACCESS_TOKEN) as? AccessTokenEntity
         val albumId = data?.get(UseCaseParams.PARAM_ALBUM_ID) as? String
         val offset = data?.get(UseCaseParams.PARAM_OFFSET) as? Int
@@ -24,7 +25,7 @@ class GetTracksFromAlbum(
         }
     }
 
-    fun execute(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<TracksPage> {
+    fun execute(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<EntityPage<TrackEntity>> {
         val data = HashMap<String, Any?>().apply {
             put(UseCaseParams.PARAM_ACCESS_TOKEN, accessToken)
             put(UseCaseParams.PARAM_ALBUM_ID, albumId)

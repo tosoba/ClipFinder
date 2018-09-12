@@ -7,10 +7,8 @@ import com.example.there.data.api.spotify.SpotifyChartsApi
 import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.mapper.spotify.*
 import com.example.there.data.response.TracksOnlyResponse
+import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
-import com.example.there.domain.entitypage.AlbumsPage
-import com.example.there.domain.entitypage.CategoryPlaylistsPage
-import com.example.there.domain.entitypage.TracksPage
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -111,13 +109,13 @@ class SpotifyRemoteDataStore @Inject constructor(
             accessToken: AccessTokenEntity,
             categoryId: String,
             offset: Int
-    ): Single<CategoryPlaylistsPage> = api.getPlaylistsForCategory(
+    ): Single<EntityPage<PlaylistEntity>> = api.getPlaylistsForCategory(
             authorization = getAccessTokenHeader(accessToken.token),
             categoryId = categoryId,
             offset = offset.toString()
     ).map {
-        CategoryPlaylistsPage(
-                playlists = it.result.playlists.map(PlaylistMapper::mapFrom),
+        EntityPage(
+                items = it.result.playlists.map(PlaylistMapper::mapFrom),
                 offset = it.result.offset,
                 totalItems = it.result.totalItems
         )
@@ -128,14 +126,14 @@ class SpotifyRemoteDataStore @Inject constructor(
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<TracksPage> = api.getPlaylistTracks(
+    ): Single<EntityPage<TrackEntity>> = api.getPlaylistTracks(
             authorization = getAccessTokenHeader(accessToken.token),
             playlistId = playlistId,
             userId = userId,
             offset = offset.toString()
     ).map {
-        TracksPage(
-                tracks = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
+        EntityPage(
+                items = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
                 offset = it.offset,
                 totalItems = it.totalItems
         )
@@ -217,7 +215,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             accessToken: AccessTokenEntity,
             albumId: String,
             offset: Int
-    ): Single<TracksPage> = api.getTracksFromAlbum(
+    ): Single<EntityPage<TrackEntity>> = api.getTracksFromAlbum(
             authorization = getAccessTokenHeader(accessToken.token),
             albumId = albumId,
             offset = offset.toString()
@@ -232,8 +230,8 @@ class SpotifyRemoteDataStore @Inject constructor(
                 authorization = getAccessTokenHeader(accessToken.token),
                 ids = idsPage.ids
         ).map {
-            TracksPage(
-                    tracks = it.tracks.map(TrackMapper::mapFrom),
+            EntityPage(
+                    items = it.tracks.map(TrackMapper::mapFrom),
                     offset = idsPage.offset,
                     totalItems = idsPage.totalItems
             )
@@ -243,12 +241,12 @@ class SpotifyRemoteDataStore @Inject constructor(
     override fun getNewReleases(
             accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<AlbumsPage> = api.getNewReleases(
+    ): Single<EntityPage<AlbumEntity>> = api.getNewReleases(
             authorization = getAccessTokenHeader(accessToken.token),
             offset = offset.toString()
     ).map {
-        AlbumsPage(
-                albums = it.result.albums.map(AlbumMapper::mapFrom),
+        EntityPage(
+                items = it.result.albums.map(AlbumMapper::mapFrom),
                 offset = it.result.offset,
                 totalItems = it.result.totalItems
         )

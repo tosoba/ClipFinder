@@ -58,7 +58,7 @@ class AlbumViewModel @Inject constructor(
                     .subscribe({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalItems = it.totalItems
-                        viewState.tracks.addAll(it.tracks.map(TrackEntityMapper::mapFrom))
+                        viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
                     }, ::onError))
         }
     }

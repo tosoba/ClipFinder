@@ -81,7 +81,7 @@ class DashboardViewModel @Inject constructor(
                     .subscribe({
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalNewReleases = it.totalItems
-                        viewState.newReleases.addAll(it.albums.map(AlbumEntityMapper::mapFrom))
+                        viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
                     }, ::onError))
         }
     }
