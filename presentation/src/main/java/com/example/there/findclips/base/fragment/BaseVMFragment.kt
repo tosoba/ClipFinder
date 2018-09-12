@@ -34,7 +34,7 @@ abstract class BaseVMFragment<T : BaseViewModel> : Fragment(), Injectable {
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
-            error?.let { Log.e(javaClass.name ?: "Error", it.messageOrDefault()) }
+            error?.let { Log.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault()) }
         })
     }
 }

@@ -1,6 +1,7 @@
 package com.example.there.findclips.view.binding
 
 import android.databinding.BindingAdapter
+import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -16,4 +17,9 @@ fun bindImageUrl(view: ImageView, url: String?) {
                         .error(R.drawable.placeholder))
                 .into(view)
     }
+}
+
+@BindingAdapter("onClickIfNotNull")
+fun bindOnClick(view: ImageView, onClickListener: View.OnClickListener?) {
+    onClickListener?.let { view.setOnClickListener(it) }
 }

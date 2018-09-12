@@ -21,13 +21,27 @@
             onScrollListener="@{view.onScrollListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adapter="@{view.adapter}" />
+            android:adapter="@{view.adapter}"
+            android:visibility="@{(safeUnbox(view.state.errorOccurred)) ? View.GONE : View.VISIBLE}" />
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             android:visibility="@{safeUnbox(view.state.initialLoadingInProgress) ? View.VISIBLE : View.GONE}" />
+
+        <ImageButton
+            onClickIfNotNull="@{view.onReloadBtnClickListener}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary"
+            android:foreground="@color/rippleColor"
+            android:src="@drawable/reload"
+            android:text="@string/reload"
+            android:visibility="@{(!safeUnbox(view.state.initialLoadingInProgress) &amp;&amp; safeUnbox(view.state.errorOccurred)) ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>
 

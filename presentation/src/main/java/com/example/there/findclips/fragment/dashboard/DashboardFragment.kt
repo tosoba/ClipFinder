@@ -25,6 +25,8 @@ import com.example.there.findclips.view.list.impl.AlbumsList
 import com.example.there.findclips.view.list.impl.CategoriesList
 import com.example.there.findclips.view.list.impl.PlaylistsList
 import com.example.there.findclips.view.list.impl.TopTracksList
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 
@@ -58,15 +60,55 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     private val dashboardAdapter: DashboardAdapter by lazy {
         DashboardAdapter(
-                categoriesAdapter,
-                playlistsAdapter,
-                topTracksAdapter,
-                newReleasesAdapter,
-                viewModel.viewState.categoriesLoadingInProgress,
-                viewModel.viewState.featuredPlaylistsLoadingInProgress,
-                viewModel.viewState.topTracksLoadingInProgress,
-                viewModel.viewState.newReleasesLoadingInProgress,
-                onNewReleasesScrollListener
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                viewModel.viewState.categoriesLoadingInProgress,
+                                viewModel.viewState.categoriesErrorOccurred
+                        ),
+                        categoriesAdapter,
+                        null,
+                        null,
+                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadCategories(it) } }
+                ),
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                viewModel.viewState.featuredPlaylistsLoadingInProgress,
+                                viewModel.viewState.playlistsErrorOccurred),
+                        playlistsAdapter,
+                        null,
+                        null,
+                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadFeaturedPlaylists(it) } }
+                ),
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                viewModel.viewState.topTracksLoadingInProgress,
+                                viewModel.viewState.topTracksErrorOccurred
+                        ),
+                        topTracksAdapter,
+                        null,
+                        null,
+                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadDailyViralTracks(it) } }
+                ),
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                viewModel.viewState.newReleasesLoadingInProgress,
+                                viewModel.viewState.newReleasesErrorOccurred),
+                        newReleasesAdapter,
+                        null,
+                        onNewReleasesScrollListener,
+                        View.OnClickListener {
+                            activity?.accessToken?.let {
+                                val loadMore = viewModel.viewState.newReleases.size > 0
+                                val onFinally: (() -> Unit)? = if (loadMore) {
+                                    {
+                                        newReleasesAdapter.scrollToTop()
+                                        viewBinding?.executePendingBindings()
+                                    }
+                                } else null
+                                viewModel.loadNewReleases(it, loadMore, onFinally)
+                            }
+                        }
+                )
         )
     }
 
@@ -77,9 +119,11 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         )
     }
 
+    private var viewBinding: FragmentDashboardBinding? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        return binding.apply {
+        viewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
+        return viewBinding!!.apply {
             dashboardView = view
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         }.root
@@ -137,5 +181,6 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     private fun loadData() = viewModel.loadDashboardData(activity?.accessToken) {
         newReleasesAdapter.scrollToTop()
+        viewBinding?.executePendingBindings()
     }
 }
