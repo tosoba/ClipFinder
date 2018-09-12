@@ -42,7 +42,7 @@ class SearchFragment : Fragment() {
     }
 
     private val view: SearchView by lazy {
-        SearchView(query, pagerAdapter, onNavigationItemSelectedListener)
+        SearchView(query, pagerAdapter, onNavigationItemSelectedListener, 1)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,6 @@ class SearchFragment : Fragment() {
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
         return binding.apply {
             searchFragmentView = view
-            searchFragmentViewPager.offscreenPageLimit = 1
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
             mainActivity?.setSupportActionBar(searchToolbar)
             searchToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)

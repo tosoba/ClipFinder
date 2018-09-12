@@ -5,11 +5,11 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.Toolbar
+import android.view.*
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
@@ -28,9 +28,13 @@ import com.example.there.findclips.view.list.impl.TopTracksList
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable {
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable, HasMainToolbar {
+
+    override val toolbar: Toolbar
+        get() = dashboard_toolbar
 
     private val categoriesAdapter: CategoriesList.Adapter by lazy {
         CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item)
@@ -73,7 +77,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.featuredPlaylistsLoadingInProgress,
-                                viewModel.viewState.playlistsErrorOccurred),
+                                viewModel.viewState.playlistsErrorOccurred
+                        ),
                         playlistsAdapter,
                         null,
                         null,
@@ -92,7 +97,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.newReleasesLoadingInProgress,
-                                viewModel.viewState.newReleasesErrorOccurred),
+                                viewModel.viewState.newReleasesErrorOccurred
+                        ),
                         newReleasesAdapter,
                         null,
                         onNewReleasesScrollListener,
@@ -125,8 +131,14 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         viewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         return viewBinding!!.apply {
             dashboardView = view
+            mainActivity?.setSupportActionBar(dashboardToolbar)
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         }.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
     }
 
     private val isDataLoaded: Boolean
@@ -148,12 +160,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
         lifecycle.addObserver(disposablesComponent)
         initItemClicks()
 
         loadData()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     private fun initItemClicks() {
         disposablesComponent.add(categoriesAdapter.itemClicked.subscribe {

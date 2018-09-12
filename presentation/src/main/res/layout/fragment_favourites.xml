@@ -7,38 +7,53 @@
             type="com.example.there.findclips.fragment.favourites.FavouritesView" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.there.findclips.fragment.favourites.FavouritesFragment">
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/favourites_bottom_navigation_view"
-            onNavigationItemSelectedListener="@{favouritesFragmentView.onNavigationItemSelectedListener}"
-            android:layout_width="0dp"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/favourites_app_bar_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            app:itemIconTint="@color/bottom_navigation_color"
-            app:itemTextColor="@color/bottom_navigation_color"
-            app:labelVisibilityMode="unlabeled"
-            app:layout_constraintBottom_toTopOf="@id/favourites_fragment_view_pager"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/spotify_videos_bottom_navigation" />
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/favourites_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/colorPrimaryDark"
+                app:collapseIcon="@drawable/back"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/ActionBar"
+                app:title="@string/favourites"
+                app:titleTextColor="#fff" />
+
+        </android.support.design.widget.AppBarLayout>
 
         <com.example.there.findclips.view.viewpager.LockableViewPager
             android:id="@+id/favourites_fragment_view_pager"
+            offScreenPageLimit="@{favouritesFragmentView.offScreenPageLimit}"
             swipeLocked="@{true}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:adapter="@{favouritesFragmentView.pagerAdapter}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favourites_bottom_navigation_view" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.constraint.ConstraintLayout>
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/favourites_bottom_navigation_view"
+            onNavigationItemSelectedListener="@{favouritesFragmentView.onNavigationItemSelectedListener}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@color/bottom_navigation_color"
+            app:itemTextColor="@color/bottom_navigation_color"
+            app:labelVisibilityMode="unlabeled"
+            app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+            app:menu="@menu/spotify_videos_bottom_navigation" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>

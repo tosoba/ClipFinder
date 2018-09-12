@@ -26,6 +26,7 @@
                 android:layout_height="48dp"
                 android:background="@color/colorPrimaryDark"
                 app:collapseIcon="@drawable/back"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/ActionBar"
                 app:title="@{searchFragmentView.query}"
                 app:titleTextColor="#fff" />
@@ -34,15 +35,12 @@
 
         <com.example.there.findclips.view.viewpager.LockableViewPager
             android:id="@+id/search_fragment_view_pager"
+            offScreenPageLimit="@{searchFragmentView.offScreenPageLimit}"
             swipeLocked="@{true}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adapter="@{searchFragmentView.pagerAdapter}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/search_bottom_navigation_view"
@@ -58,6 +56,7 @@
             app:menu="@menu/spotify_videos_bottom_navigation" />
 
     </android.support.design.widget.CoordinatorLayout>
+
 </layout>
 
 

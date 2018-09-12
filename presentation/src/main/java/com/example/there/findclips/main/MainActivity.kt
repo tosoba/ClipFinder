@@ -19,7 +19,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
 import android.text.InputType
 import android.util.Log
 import android.view.*
@@ -30,7 +29,9 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.R
 import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.base.activity.BaseVMActivity
+import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
@@ -39,7 +40,10 @@ import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.checkItem
+import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.screenHeight
+import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.list.impl.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
@@ -56,9 +60,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector, Player.NotificationCallback, ConnectionStateCallback, Player.OperationCallback {
 
-    val toolbar: Toolbar?
-        get() = main_toolbar
-
     val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
 
@@ -73,8 +74,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
         binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        setSupportActionBar(main_toolbar)
 
         initYouTubePlayerView()
         addPlayerViewControls()
@@ -317,8 +316,8 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
-            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 250)
-            setSupportActionBar(main_toolbar)
+            val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
+            setSupportActionBar(mainToolbar)
         }
     }
 
@@ -366,11 +365,10 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     private fun toggleToolbar() {
-        if (pagerAdapter.currentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-            main_toolbar?.animateHeight(0, dpToPx(48f).toInt(), 250)
-            setSupportActionBar(main_toolbar)
-        } else {
-            main_toolbar?.animateHeight(dpToPx(48f).toInt(), 0, 250)
+        val currentTopFragment = (pagerAdapter.currentFragment as BaseHostFragment).topFragment
+        val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
+        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) {
+            setSupportActionBar(mainToolbar)
         }
     }
 
@@ -478,7 +476,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         ImageButton(this).apply {
             setImageResource(R.drawable.maximize)
             layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(5, 5, 5, 5)
+                setMargins(10, 10, 10, 10)
             }
             setOnClickListener {
                 if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -497,7 +495,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         ImageButton(this).apply {
             setImageResource(R.drawable.close)
             layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(5, 5, 5, 5)
+                setMargins(10, 10, 10, 10)
                 addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             }
             setOnClickListener {

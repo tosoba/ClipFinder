@@ -4,19 +4,26 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.FragmentFavouritesBinding
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
 import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.setHeight
 import kotlinx.android.synthetic.main.fragment_favourites.*
 
 
-class FavouritesFragment : Fragment() {
+class FavouritesFragment : Fragment(), HasMainToolbar {
+
+    override val toolbar: Toolbar
+        get() = favourites_toolbar
 
     private val pagerAdapter: FavouritesFragmentPagerAdapter by lazy {
         FavouritesFragmentPagerAdapter(childFragmentManager, arrayOf(
@@ -37,13 +44,23 @@ class FavouritesFragment : Fragment() {
         return@OnNavigationItemSelectedListener true
     }
 
-    private val view: FavouritesView by lazy { FavouritesView(pagerAdapter, onNavigationItemSelectedListener) }
+    private val view: FavouritesView by lazy {
+        FavouritesView(pagerAdapter, onNavigationItemSelectedListener, 1)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_favourites, container, false)
-        binding.favouritesFragmentView = view
-        binding.favouritesFragmentViewPager.offscreenPageLimit = 1
-        binding.favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
-        return binding.root
+        return binding.apply {
+            favouritesFragmentView = view
+            mainActivity?.setSupportActionBar(favouritesToolbar)
+            favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
+        }.root
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 }
