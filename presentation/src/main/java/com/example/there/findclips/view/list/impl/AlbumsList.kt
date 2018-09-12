@@ -8,7 +8,6 @@ import com.example.there.findclips.databinding.GridAlbumItemBinding
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.view.list.base.BaseBindingList
 import com.example.there.findclips.view.list.base.BaseBindingLoadingList
-import com.example.there.findclips.view.list.base.TracksInitialScroll
 import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
 
 interface AlbumsList {
@@ -16,13 +15,7 @@ interface AlbumsList {
             albums: ObservableList<Album>,
             itemLayoutId: Int,
             loadingMoreItemsInProgress: ObservableField<Boolean> = ObservableField(false)
-    ) : BaseBindingLoadingList.Adapter<Album, AlbumItemBinding>(
-            albums,
-            itemLayoutId,
-            loadingMoreItemsInProgress
-    ), TracksInitialScroll {
-
-        override var userHasScrolled: Boolean = false
+    ) : BaseBindingLoadingList.Adapter<Album, AlbumItemBinding>(albums, itemLayoutId, loadingMoreItemsInProgress) {
 
         @Suppress("UNCHECKED_CAST")
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

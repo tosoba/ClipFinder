@@ -40,10 +40,7 @@ import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.checkItem
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.screenHeight
-import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.list.impl.RelatedVideosList
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
@@ -74,6 +71,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
         binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.relatedVideosRecyclerView.addOnInitialUserScrollListener()
 
         initYouTubePlayerView()
         addPlayerViewControls()

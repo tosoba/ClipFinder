@@ -18,5 +18,11 @@ data class Album(
             override fun areItemsTheSame(item1: Album, item2: Album): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean = oldItem.id == newItem.id
         }
+
+        val unsortedListCallback: ObservableSortedList.Callback<Album> = object : ObservableSortedList.Callback<Album> {
+            override fun compare(o1: Album, o2: Album): Int = -1
+            override fun areItemsTheSame(item1: Album, item2: Album): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean = oldItem.id == newItem.id
+        }
     }
 }
