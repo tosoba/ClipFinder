@@ -11,16 +11,22 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
+import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.screenOrientation
-import com.example.there.findclips.view.list.impl.VideosList
+import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.binder.ItemBinder
+import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.ListItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_videos_search.*
@@ -40,41 +46,38 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
-    private val videosAdapter: VideosList.Adapter by lazy {
-        VideosList.Adapter(viewModel.viewState.videos, R.layout.video_item)
-    }
-
     private val view: VideosSearchView by lazy {
         VideosSearchView(
                 state = viewModel.viewState,
-                videosAdapter = videosAdapter,
-                onScrollListener = onScrollListener,
-                videosItemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+                recyclerViewItemView = RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                viewModel.viewState.videosLoadingInProgress,
+                                viewModel.viewState.videos
+                        ),
+                        object : ListItemView<Video>(viewModel.viewState.videos) {
+                            override val itemViewBinder: ItemBinder<Video>
+                                get() = ItemBinderBase(BR.video, R.layout.video_item)
+                        },
+                        ClickHandler {
+                            mainActivity?.loadVideo(video = it)
+                        },
+                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                        onScrollListener
+                )
         )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_search, container, false)
-        binding.videosSearchView = view
-        binding.videosRecyclerView.layoutManager = videosLayoutManager
-        return binding.root
+        return binding.apply {
+            videosSearchView = view
+            videosRecyclerView.layoutManager = videosLayoutManager
+        }.root
     }
-
-    private val disposablesComponent = DisposablesComponent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        lifecycle.addObserver(disposablesComponent)
-        initItemClicks()
-
         initFromArguments()
-    }
-
-    private fun initItemClicks() {
-        disposablesComponent.add(videosAdapter.itemClicked.subscribe {
-            mainActivity?.loadVideo(video = it)
-        })
     }
 
     private fun initFromArguments() {
@@ -101,10 +104,11 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         }
 
     private fun updateRecyclerViewOnConfigChange() {
+        val adapter = videos_recycler_view?.adapter
         videos_recycler_view?.adapter = null
         videos_recycler_view?.layoutManager = videosLayoutManager
-        videos_recycler_view?.adapter = videosAdapter
-        videosAdapter.notifyDataSetChanged()
+        videos_recycler_view?.adapter = adapter
+        adapter?.notifyDataSetChanged()
     }
 
     override fun initViewModel() {

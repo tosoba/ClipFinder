@@ -6,11 +6,10 @@ import android.databinding.ObservableList
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.view.list.impl.RelatedVideosList
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(
@@ -22,9 +21,7 @@ class MainView(
         val fadeOnClickListener: View.OnClickListener,
         val slideListener: SlidingUpPanelLayout.PanelSlideListener,
         val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
-        val relatedVideosAdapter: RelatedVideosList.Adapter,
-        val onRelatedVideosScroll: RecyclerView.OnScrollListener,
-        val itemDecoration: RecyclerView.ItemDecoration,
+        val relatedVideosRecyclerViewItemView: RecyclerViewItemView<Video>,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val onSpotifyPlayPauseBtnClickListener: View.OnClickListener,
         val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener

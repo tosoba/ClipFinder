@@ -7,20 +7,25 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
+import com.example.there.findclips.model.entity.Album
+import com.example.there.findclips.model.entity.Category
+import com.example.there.findclips.model.entity.Playlist
+import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ext.makeItemBinding
+import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
 
 class DashboardAdapter(
-        private val categoriesRecyclerViewItemView: RecyclerViewItemView,
-        private val playlistsRecyclerViewItemView: RecyclerViewItemView,
-        private val tracksRecyclerViewItemState: RecyclerViewItemView,
-        private val albumsRecyclerViewItemView: RecyclerViewItemView
+        private val categoriesRecyclerViewItemView: RecyclerViewItemView<Category>,
+        private val playlistsRecyclerViewItemView: RecyclerViewItemView<Playlist>,
+        private val tracksRecyclerViewItemState: RecyclerViewItemView<TopTrack>,
+        private val albumsRecyclerViewItemView: RecyclerViewItemView<Album>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -31,7 +36,7 @@ class DashboardAdapter(
             })
         CATEGORIES_LIST_VIEW_TYPE ->
             BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-                view = categoriesRecyclerViewItemView
+                view = categoriesRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         PLAYLISTS_HEADER_VIEW_TYPE ->
@@ -40,7 +45,7 @@ class DashboardAdapter(
             })
         PLAYLISTS_LIST_VIEW_TYPE ->
             BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-                view = playlistsRecyclerViewItemView
+                view = playlistsRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         ALBUMS_HEADER_VIEW_TYPE ->
@@ -49,7 +54,7 @@ class DashboardAdapter(
             })
         ALBUMS_LIST_VIEW_TYPE ->
             BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-                view = albumsRecyclerViewItemView
+                view = albumsRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         TRACKS_HEADER_VIEW_TYPE ->
@@ -58,7 +63,7 @@ class DashboardAdapter(
             })
         TRACKS_LIST_VIEW_TYPE ->
             BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-                view = tracksRecyclerViewItemState
+                view = tracksRecyclerViewItemState as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
             })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")

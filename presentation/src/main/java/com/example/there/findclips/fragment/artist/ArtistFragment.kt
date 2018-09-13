@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
@@ -19,38 +20,61 @@ import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent
+import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.impl.AlbumsList
-import com.example.there.findclips.view.list.impl.ArtistsList
-import com.example.there.findclips.view.list.impl.TracksList
+import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.binder.ItemBinder
+import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.ListItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 
 class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, GoesToPreviousStateOnBackPressed {
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
-    private val albumsAdapter: AlbumsList.Adapter by lazy {
-        AlbumsList.Adapter(viewModel.viewState.albums, R.layout.album_item)
-    }
-
-    private val topTracksAdapter: TracksList.Adapter by lazy {
-        TracksList.Adapter(viewModel.viewState.topTracks, R.layout.track_item)
-    }
-
-    private val relatedArtistsAdapter: ArtistsList.Adapter by lazy {
-        ArtistsList.Adapter(viewModel.viewState.relatedArtists, R.layout.artist_item)
-    }
-
     private val artistAdapter: ArtistAdapter by lazy {
         ArtistAdapter(
-                albumsAdapter,
-                topTracksAdapter,
-                relatedArtistsAdapter,
-                viewModel.viewState.albumsLoadingInProgress,
-                viewModel.viewState.topTracksLoadingInProgress,
-                viewModel.viewState.relatedArtistsLoadingInProgress
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums),
+                        object : ListItemView<Album>(viewModel.viewState.albums) {
+                            override val itemViewBinder: ItemBinder<Album>
+                                get() = ItemBinderBase(BR.album, R.layout.album_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                        },
+                        null,
+                        null
+                ),
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(viewModel.viewState.topTracksLoadingInProgress, viewModel.viewState.topTracks),
+                        object : ListItemView<Track>(viewModel.viewState.topTracks) {
+                            override val itemViewBinder: ItemBinder<Track>
+                                get() = ItemBinderBase(BR.track, R.layout.track_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                        },
+                        null,
+                        null
+                ),
+                RecyclerViewItemView(
+                        RecyclerViewItemViewState(viewModel.viewState.relatedArtistsLoadingInProgress, viewModel.viewState.relatedArtists),
+                        object : ListItemView<Artist>(viewModel.viewState.relatedArtists) {
+                            override val itemViewBinder: ItemBinder<Artist>
+                                get() = ItemBinderBase(BR.artist, R.layout.artist_item)
+                        },
+                        ClickHandler {
+                            viewModel.loadArtistData(activity?.accessToken, artist = it)
+                        },
+                        null,
+                        null
+                )
         )
     }
 
@@ -94,22 +118,8 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
-        initItemClicks()
         loadData()
     }
-
-    private fun initItemClicks() = disposablesComponent.addAll(
-            albumsAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
-            },
-            topTracksAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
-            },
-            relatedArtistsAdapter.itemClicked.subscribe {
-                viewModel.loadArtistData(activity?.accessToken, artist = it)
-            }
-    )
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 

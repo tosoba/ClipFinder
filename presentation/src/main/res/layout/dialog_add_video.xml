@@ -18,10 +18,12 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/add_video_playlists_recycler_view"
-            itemDecoration="@{view.itemDecoration}"
+            clickHandler="@{view.playlistsRecyclerViewItemView.onItemClickListener}"
+            itemDecoration="@{view.playlistsRecyclerViewItemView.itemDecoration}"
+            itemViewBinder="@{view.playlistsRecyclerViewItemView.listItemView.itemViewBinder}"
+            items="@{view.state.playlists}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:adapter="@{view.playlistsAdapter}"
             android:visibility="@{safeUnbox(view.state.playlists.size()) > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/add_video_new_playlist_btn"
             app:layout_constraintLeft_toLeftOf="parent"

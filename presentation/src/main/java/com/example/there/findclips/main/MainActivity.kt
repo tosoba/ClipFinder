@@ -27,6 +27,7 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.base.activity.BaseVMActivity
@@ -38,13 +39,20 @@ import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
-import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.checkItem
+import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.screenHeight
+import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.list.impl.RelatedVideosList
+import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.binder.ItemBinder
+import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.ListItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
@@ -62,18 +70,12 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        lifecycle.addObserver(disposablesComponent)
-        initItemClicks()
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
         binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.relatedVideosRecyclerView.addOnInitialUserScrollListener()
 
         initYouTubePlayerView()
         addPlayerViewControls()
@@ -424,9 +426,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                 fadeOnClickListener = fadeOnClickListener,
                 slideListener = slideListener,
                 initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-                onRelatedVideosScroll = onRelatedVideosScrollListener,
-                itemDecoration = relatedVideosItemDecoration,
-                relatedVideosAdapter = relatedVideosAdapter,
+                relatedVideosRecyclerViewItemView = relatedVideosRecyclerViewItemView,
                 onFavouriteBtnClickListener = onFavouriteBtnClickListener,
                 onSpotifyPlayPauseBtnClickListener = onSpotifyPlayPauseBtnClickListener,
                 onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener
@@ -526,10 +526,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         else
             youTubePlayer?.cueVideo(video.id, 0f)
 
-        viewModel.searchRelatedVideos(video) {
-            if (!relatedVideosAdapter.userHasScrolled)
-                related_videos_recycler_view?.scrollToPosition(0)
-        }
+        viewModel.searchRelatedVideos(video)
     }
 
     private fun updatePlayerDimensions(slideOffset: Float) {
@@ -614,8 +611,17 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region relatedVideos
 
-    private val relatedVideosAdapter: RelatedVideosList.Adapter by lazy(LazyThreadSafetyMode.NONE) {
-        RelatedVideosList.Adapter(viewModel.viewState.videos, R.layout.related_video_item, viewModel.viewState.loadingMoreVideosInProgress)
+    private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<Video> by lazy(LazyThreadSafetyMode.NONE) {
+        RecyclerViewItemView(
+                RecyclerViewItemViewState(viewModel.viewState.initialVideosLoadingInProgress, viewModel.viewState.videos),
+                object : ListItemView<Video>(viewModel.viewState.videos) {
+                    override val itemViewBinder: ItemBinder<Video>
+                        get() = ItemBinderBase(BR.video, R.layout.video_item)
+                },
+                ClickHandler { loadVideo(it) },
+                relatedVideosItemDecoration,
+                onRelatedVideosScrollListener
+        )
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
@@ -626,10 +632,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
         SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
-    }
-
-    private fun initItemClicks() {
-        disposablesComponent.add(relatedVideosAdapter.itemClicked.subscribe { loadVideo(it) })
     }
 
     // endregion

@@ -45,34 +45,28 @@ class DashboardViewModel @Inject constructor(
 
     fun loadCategories(accessToken: AccessTokenEntity) {
         viewState.categoriesLoadingInProgress.set(true)
-        viewState.categoriesErrorOccurred.set(false)
         addDisposable(getCategories.execute(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribe({ viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom)) }, {
                     onError(it)
-                    viewState.categoriesErrorOccurred.set(true)
                 }))
     }
 
     fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
-        viewState.playlistsErrorOccurred.set(false)
         addDisposable(getFeaturedPlaylists.execute(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribe({ viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom)) }, {
                     onError(it)
-                    viewState.playlistsErrorOccurred.set(true)
                 }))
     }
 
     fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
         viewState.topTracksLoadingInProgress.set(true)
-        viewState.topTracksErrorOccurred.set(false)
         addDisposable(getDailyViralTracks.execute(accessToken)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, {
                     onError(it)
-                    viewState.topTracksErrorOccurred.set(true)
                 }))
     }
 
@@ -84,7 +78,6 @@ class DashboardViewModel @Inject constructor(
                 && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
             if (!loadMore)
                 viewState.newReleasesLoadingInProgress.set(true)
-            viewState.newReleasesErrorOccurred.set(false)
             addDisposable(getNewReleases.execute(accessToken, currentNewReleasesOffset)
                     .doFinally {
                         if (!loadMore)
@@ -97,7 +90,6 @@ class DashboardViewModel @Inject constructor(
                         viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
                     }, {
                         onError(it)
-                        viewState.newReleasesErrorOccurred.set(true)
                     }))
         }
     }

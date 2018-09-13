@@ -1,12 +1,14 @@
 package com.example.there.findclips.fragment.list
 
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableField
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
@@ -15,7 +17,12 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.putArguments
-import com.example.there.findclips.view.list.impl.GridAlbumsList
+import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.binder.ItemBinder
+import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.ListItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_albums.*
 
@@ -29,39 +36,39 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
 
     override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, Album.sortedListCallback))
 
-    private val albumsAdapter: GridAlbumsList.Adapter by lazy {
-        GridAlbumsList.Adapter(viewState.items, R.layout.grid_album_item)
-    }
-
     private val view: SpotifyAlbumsFragment.View by lazy {
         SpotifyAlbumsFragment.View(
                 state = viewState,
-                adapter = albumsAdapter,
-                itemDecoration = SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+                recyclerViewItemView = RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                ObservableField(false),
+                                viewState.items
+                        ),
+                        object : ListItemView<Album>(viewState.items) {
+                            override val itemViewBinder: ItemBinder<Album>
+                                get() = ItemBinderBase(BR.album, R.layout.grid_album_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                        },
+                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                        null
+                )
         )
-    }
-
-    override fun initItemClicks() {
-        disposablesComponent.add(albumsAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
         val binding: FragmentSpotifyAlbumsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_albums, container, false)
-
         return binding.apply {
             view = this@SpotifyAlbumsFragment.view
             albumsRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-//            albumsRecyclerView.isNestedScrollingEnabled = false
             if (viewState.shouldShowHeader) albumsRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
 
     class View(
             val state: BaseSpotifyListFragment.ViewState<Album>,
-            val adapter: GridAlbumsList.Adapter,
-            val itemDecoration: RecyclerView.ItemDecoration
+            val recyclerViewItemView: RecyclerViewItemView<Album>
     )
 
     companion object {

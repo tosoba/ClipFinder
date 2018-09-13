@@ -21,9 +21,5 @@ data class DashboardViewState(
         val categoriesLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val featuredPlaylistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
-        val newReleasesLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
-        val categoriesErrorOccurred: ObservableField<Boolean> = ObservableField(false),
-        val playlistsErrorOccurred: ObservableField<Boolean> = ObservableField(false),
-        val topTracksErrorOccurred: ObservableField<Boolean> = ObservableField(false),
-        val newReleasesErrorOccurred: ObservableField<Boolean> = ObservableField(false)
+        val newReleasesLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
 )

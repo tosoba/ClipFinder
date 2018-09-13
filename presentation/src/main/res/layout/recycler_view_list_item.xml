@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.view.list.item.RecyclerViewItemView" />
+            type="com.example.there.findclips.view.list.item.RecyclerViewItemView&lt;Object&gt;" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,13 +16,14 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/item_recycler_view"
+            clickHandler="@{view.onItemClickListener}"
             itemDecoration="@{view.itemDecoration}"
+            itemViewBinder="@{view.listItemView.itemViewBinder}"
+            items="@{view.state.items}"
             nestedScrollingIsEnabled="@{view.nestedScrollingEnabled}"
             onScrollListener="@{view.onScrollListener}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adapter="@{view.adapter}"
-            android:visibility="@{(safeUnbox(view.state.errorOccurred)) ? View.GONE : View.VISIBLE}" />
+            android:layout_height="wrap_content" />
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -38,10 +39,10 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@color/colorPrimary"
-            android:foreground="@color/rippleColor"
+            android:foreground="@drawable/list_item_ripple"
             android:src="@drawable/reload"
             android:text="@string/reload"
-            android:visibility="@{(!safeUnbox(view.state.initialLoadingInProgress) &amp;&amp; safeUnbox(view.state.errorOccurred)) ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{(!safeUnbox(view.state.initialLoadingInProgress) &amp;&amp; view.state.items.size() == 0) ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>
 

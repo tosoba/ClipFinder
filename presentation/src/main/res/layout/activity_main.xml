@@ -84,11 +84,13 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/related_videos_recycler_view"
-                itemDecoration="@{mainActivityView.itemDecoration}"
-                onScrollListener="@{mainActivityView.onRelatedVideosScroll}"
+                clickHandler="@{mainActivityView.relatedVideosRecyclerViewItemView.onItemClickListener}"
+                itemDecoration="@{mainActivityView.relatedVideosRecyclerViewItemView.itemDecoration}"
+                itemViewBinder="@{mainActivityView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
+                items="@{mainActivityView.relatedVideosRecyclerViewItemView.state.items}"
+                onScrollListener="@{mainActivityView.relatedVideosRecyclerViewItemView.onScrollListener}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:adapter="@{mainActivityView.relatedVideosAdapter}"
                 android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

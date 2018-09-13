@@ -16,19 +16,21 @@
         <TextView
             android:id="@+id/videos_favourites_playlists_label"
             style="@style/LargeLabel"
-            android:text="@string/playlists"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@string/playlists"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/videos_favourites_playlists_recycler_view"
-            itemDecoration="@{view.itemDecoration}"
+            clickHandler="@{view.playlistsRecyclerViewItemView.onItemClickListener}"
+            itemDecoration="@{view.playlistsRecyclerViewItemView.itemDecoration}"
+            itemViewBinder="@{view.playlistsRecyclerViewItemView.listItemView.itemViewBinder}"
+            items="@{view.playlistsRecyclerViewItemView.state.items}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:adapter="@{view.playlistsAdapter}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

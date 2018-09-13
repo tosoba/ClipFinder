@@ -1,29 +1,26 @@
 package com.example.there.findclips.fragment.album
 
-import android.databinding.ObservableField
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
+import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.makeItemBinding
+import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
 
 class AlbumAdapter(
-        private val artistsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-        private val tracksAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-        private val artistsLoadingInProgress: ObservableField<Boolean>,
-        private val tracksLoadingInProgress: ObservableField<Boolean>,
-        private val onTracksScrollListener: RecyclerView.OnScrollListener,
-        private val tracksItemDecoration: RecyclerView.ItemDecoration
+        private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
+        private val tracksRecyclerViewItemView: RecyclerViewItemView<Track>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -32,14 +29,14 @@ class AlbumAdapter(
             viewState = HeaderItemViewState("Artists")
         })
         ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-            view = RecyclerViewItemView(RecyclerViewItemViewState(artistsLoadingInProgress), artistsAdapter, null, null)
+            view = artistsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
         })
         TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Tracks")
         })
         TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-            view = RecyclerViewItemView(RecyclerViewItemViewState(tracksLoadingInProgress), tracksAdapter, tracksItemDecoration, onTracksScrollListener)
+            view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.VERTICAL, false)
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")

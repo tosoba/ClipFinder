@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.HasMainToolbar
@@ -17,14 +18,17 @@ import com.example.there.findclips.fragment.category.CategoryFragment
 import com.example.there.findclips.fragment.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
+import com.example.there.findclips.model.entity.Album
+import com.example.there.findclips.model.entity.Category
+import com.example.there.findclips.model.entity.Playlist
+import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.view.list.impl.AlbumsList
-import com.example.there.findclips.view.list.impl.CategoriesList
-import com.example.there.findclips.view.list.impl.PlaylistsList
-import com.example.there.findclips.view.list.impl.TopTracksList
+import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.binder.ItemBinder
+import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
@@ -35,22 +39,6 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
-
-    private val categoriesAdapter: CategoriesList.Adapter by lazy {
-        CategoriesList.Adapter(viewModel.viewState.categories, R.layout.category_item)
-    }
-
-    private val playlistsAdapter: PlaylistsList.Adapter by lazy {
-        PlaylistsList.Adapter(viewModel.viewState.featuredPlaylists, R.layout.playlist_item)
-    }
-
-    private val topTracksAdapter: TopTracksList.Adapter by lazy {
-        TopTracksList.Adapter(viewModel.viewState.topTracks, R.layout.top_track_item)
-    }
-
-    private val newReleasesAdapter: AlbumsList.Adapter by lazy {
-        AlbumsList.Adapter(viewModel.viewState.newReleases, R.layout.album_item)
-    }
 
     private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
@@ -67,9 +55,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.categoriesLoadingInProgress,
-                                viewModel.viewState.categoriesErrorOccurred
+                                viewModel.viewState.categories
                         ),
-                        categoriesAdapter,
+                        object : ListItemView<Category>(viewModel.viewState.categories) {
+                            override val itemViewBinder: ItemBinder<Category>
+                                get() = ItemBinderBase(BR.category, R.layout.category_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+                        },
                         null,
                         null,
                         View.OnClickListener { activity?.accessToken?.let { viewModel.loadCategories(it) } }
@@ -77,9 +71,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.featuredPlaylistsLoadingInProgress,
-                                viewModel.viewState.playlistsErrorOccurred
+                                viewModel.viewState.featuredPlaylists
                         ),
-                        playlistsAdapter,
+                        object : ListItemView<Playlist>(viewModel.viewState.featuredPlaylists) {
+                            override val itemViewBinder: ItemBinder<Playlist>
+                                get() = ItemBinderBase(BR.playlist, R.layout.playlist_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+                        },
                         null,
                         null,
                         View.OnClickListener { activity?.accessToken?.let { viewModel.loadFeaturedPlaylists(it) } }
@@ -87,9 +87,15 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.topTracksLoadingInProgress,
-                                viewModel.viewState.topTracksErrorOccurred
+                                viewModel.viewState.topTracks
                         ),
-                        topTracksAdapter,
+                        object : ListItemView<TopTrack>(viewModel.viewState.topTracks) {
+                            override val itemViewBinder: ItemBinder<TopTrack>
+                                get() = ItemBinderBase(BR.track, R.layout.top_track_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
+                        },
                         null,
                         null,
                         View.OnClickListener { activity?.accessToken?.let { viewModel.loadDailyViralTracks(it) } }
@@ -97,21 +103,21 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.newReleasesLoadingInProgress,
-                                viewModel.viewState.newReleasesErrorOccurred
+                                viewModel.viewState.newReleases
                         ),
-                        newReleasesAdapter,
+                        object : ListItemView<Album>(viewModel.viewState.newReleases) {
+                            override val itemViewBinder: ItemBinder<Album>
+                                get() = ItemBinderBase(BR.album, R.layout.album_item)
+                        },
+                        ClickHandler {
+                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                        },
                         null,
                         onNewReleasesScrollListener,
                         View.OnClickListener {
                             activity?.accessToken?.let {
                                 val loadMore = viewModel.viewState.newReleases.size > 0
-                                val onFinally: (() -> Unit)? = if (loadMore) {
-                                    {
-                                        newReleasesAdapter.scrollToTop()
-                                        viewBinding?.executePendingBindings()
-                                    }
-                                } else null
-                                viewModel.loadNewReleases(it, loadMore, onFinally)
+                                viewModel.loadNewReleases(it, loadMore)
                             }
                         }
                 )
@@ -125,11 +131,9 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         )
     }
 
-    private var viewBinding: FragmentDashboardBinding? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        viewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        return viewBinding!!.apply {
+        val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
+        return binding.apply {
             dashboardView = view
             mainActivity?.setSupportActionBar(dashboardToolbar)
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -156,35 +160,13 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        lifecycle.addObserver(disposablesComponent)
-        initItemClicks()
-
         loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
-
-    private fun initItemClicks() = disposablesComponent.addAll(
-            categoriesAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
-            },
-            playlistsAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
-            },
-            topTracksAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
-            },
-            newReleasesAdapter.itemClicked.subscribe {
-                hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
-            }
-    )
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -195,8 +177,5 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
         viewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
     }
 
-    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken) {
-        newReleasesAdapter.scrollToTop()
-        viewBinding?.executePendingBindings()
-    }
+    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)
 }

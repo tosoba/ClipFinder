@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.track
 
-import android.databinding.ObservableField
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,23 +8,23 @@ import com.example.there.findclips.R
 import com.example.there.findclips.databinding.AlbumInfoItemBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
+import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.makeItemBinding
+import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.AlbumInfoItemView
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.list.vh.BaseBindingViewHolder
 
 class TrackAdapter(
         private val albumInfoItemView: AlbumInfoItemView,
-        private val artistsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-        private val similarTracksAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>,
-        private val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
-        private val similarTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
+        private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
+        private val similarTracksRecyclerViewItemView: RecyclerViewItemView<Track>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -40,14 +39,14 @@ class TrackAdapter(
             viewState = HeaderItemViewState("Artists")
         })
         ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-            view = RecyclerViewItemView(RecyclerViewItemViewState(artistsLoadingInProgress), artistsAdapter, null, null)
+            view = artistsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
         })
         SIMILAR_TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Similar tracks")
         })
         SIMILAR_TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-            view = RecyclerViewItemView(RecyclerViewItemViewState(similarTracksLoadingInProgress), similarTracksAdapter, null, null)
+            view = similarTracksRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
