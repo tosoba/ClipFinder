@@ -16,6 +16,7 @@ import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.list.item.HeaderItemViewState
+import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 
@@ -94,6 +95,12 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
             var shouldShowHeader: Boolean = false
     )
 
+    abstract val view: View<T>
+
+    data class View<T : Parcelable>(
+            val state: BaseSpotifyListFragment.ViewState<T>,
+            val recyclerViewItemView: RecyclerViewItemView<T>
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

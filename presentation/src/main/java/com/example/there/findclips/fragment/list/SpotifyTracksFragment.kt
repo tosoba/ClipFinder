@@ -36,8 +36,8 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
 
     override val viewState: ViewState<Track> = ViewState(ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName))
 
-    private val view: SpotifyTracksFragment.View by lazy {
-        SpotifyTracksFragment.View(
+    override val view: BaseSpotifyListFragment.View<Track> by lazy {
+        BaseSpotifyListFragment.View(
                 state = viewState,
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(

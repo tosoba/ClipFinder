@@ -35,8 +35,8 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
 
     override val viewState: ViewState<Category> = ViewState(ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback))
 
-    private val view: SpotifyCategoriesFragment.View by lazy {
-        SpotifyCategoriesFragment.View(
+    override val view: BaseSpotifyListFragment.View<Category> by lazy {
+        BaseSpotifyListFragment.View(
                 state = viewState,
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -65,12 +65,6 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
             if (viewState.shouldShowHeader) categoriesRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
-
-
-    class View(
-            val state: BaseSpotifyListFragment.ViewState<Category>,
-            val recyclerViewItemView: RecyclerViewItemView<Category>
-    )
 
     companion object {
         fun newInstance(

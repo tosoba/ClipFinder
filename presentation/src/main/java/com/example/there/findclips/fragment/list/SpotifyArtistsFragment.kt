@@ -36,8 +36,8 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
 
     override val viewState: ViewState<Artist> = ViewState(ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback))
 
-    private val view: SpotifyArtistsFragment.View by lazy {
-        SpotifyArtistsFragment.View(
+    override val view: BaseSpotifyListFragment.View<Artist> by lazy {
+        BaseSpotifyListFragment.View(
                 state = viewState,
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -57,7 +57,6 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
         )
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
         val binding: FragmentSpotifyArtistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_artists, container, false)
 
@@ -67,11 +66,6 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
             if (viewState.shouldShowHeader) artistsRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
-
-    class View(
-            val state: BaseSpotifyListFragment.ViewState<Artist>,
-            val recyclerViewItemView: RecyclerViewItemView<Artist>
-    )
 
     companion object {
         fun newInstance(
