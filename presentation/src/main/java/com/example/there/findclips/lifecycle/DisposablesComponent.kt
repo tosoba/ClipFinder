@@ -11,6 +11,8 @@ class DisposablesComponent : LifecycleObserver {
 
     fun add(disposable: Disposable) = disposables.add(disposable)
 
+    fun addAll(vararg disposables: Disposable) = this.disposables.addAll(*disposables)
+
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun clear() = disposables.clear()
 }

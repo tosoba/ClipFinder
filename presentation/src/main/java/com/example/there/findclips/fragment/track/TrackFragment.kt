@@ -47,14 +47,15 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
         track = arguments?.getParcelable(ARG_TRACK)
     }
 
-    private fun initItemClicks() {
-        disposablesComponent.add(artistsAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
-        })
-        disposablesComponent.add(similarTracksAdapter.itemClicked.subscribe {
-            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
-        })
-    }
+    private fun initItemClicks() = disposablesComponent.addAll(
+            artistsAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+            },
+            similarTracksAdapter.itemClicked.subscribe {
+                (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
+            }
+    )
+
 
     private val artistsAdapter: ArtistsList.Adapter by lazy {
         ArtistsList.Adapter(viewModel.viewState.artists, R.layout.artist_item)

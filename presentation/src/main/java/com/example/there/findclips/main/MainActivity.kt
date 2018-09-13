@@ -106,6 +106,19 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region spotify player
 
+    fun showLoginDialog() {
+        if (!loggedIn) {
+            MaterialDialog.Builder(this)
+                    .title(R.string.spotify_login)
+                    .content(R.string.playback_requires_login)
+                    .positiveText(R.string.login)
+                    .negativeText(R.string.cancel)
+                    .onPositive { _, _ -> openLoginWindow() }
+                    .build()
+                    .apply { show() }
+        }
+    }
+
     private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
     }
@@ -185,7 +198,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onLoggedIn() {
-        viewModel.viewState.isLoggedIn.set(true)
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
     }
 
@@ -278,17 +290,25 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         } else {
             spotifyPlayer?.login(accessToken)
         }
+
+        viewModel.viewState.isLoggedIn.set(true)
     }
+
+    var onLoginSuccessful: (() -> Unit)? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == LOGIN_REQUEST_CODE) {
             val response = AuthenticationClient.getResponse(resultCode, data)
+
             when (response.type) {
-                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
-
+                AuthenticationResponse.Type.TOKEN -> {
+                    onAuthenticationComplete(response.accessToken)
+                    onLoginSuccessful?.invoke()
+                    onLoginSuccessful = null
+                }
                 AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
-
                 else -> Log.e("ERR", "Auth result: " + response.type)
             }
         }

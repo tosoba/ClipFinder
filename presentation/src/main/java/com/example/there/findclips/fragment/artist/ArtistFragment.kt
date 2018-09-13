@@ -99,17 +99,17 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
         loadData()
     }
 
-    private fun initItemClicks() {
-        disposablesComponent.add(albumsAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
-        })
-        disposablesComponent.add(topTracksAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
-        })
-        disposablesComponent.add(relatedArtistsAdapter.itemClicked.subscribe {
-            viewModel.loadArtistData(activity?.accessToken, artist = it)
-        })
-    }
+    private fun initItemClicks() = disposablesComponent.addAll(
+            albumsAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+            },
+            topTracksAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+            },
+            relatedArtistsAdapter.itemClicked.subscribe {
+                viewModel.loadArtistData(activity?.accessToken, artist = it)
+            }
+    )
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 

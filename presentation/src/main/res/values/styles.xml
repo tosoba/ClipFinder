@@ -10,6 +10,7 @@
         <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
 
         <item name="android:textColorHint">@color/colorAccent</item>
+        <item name="android:editTextColor">@android:color/white</item>
 
         <item name="md_background_color">@color/colorPrimaryDark</item>
         <item name="md_title_color">@android:color/darker_gray</item>

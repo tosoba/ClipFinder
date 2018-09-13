@@ -75,7 +75,13 @@ class TrackVideosFragment :
 
     private val onPlayBtnClickListener = View.OnClickListener { _ ->
         viewModel.viewState.track.get()?.let {
-            mainActivity?.loadTrack(track = it)
+            val playTrack: () -> Unit = { mainActivity?.loadTrack(track = it) }
+            if (mainActivity?.loggedIn == true) {
+                playTrack()
+            } else {
+                mainActivity?.showLoginDialog()
+                mainActivity?.onLoginSuccessful = playTrack
+            }
         }
     }
 

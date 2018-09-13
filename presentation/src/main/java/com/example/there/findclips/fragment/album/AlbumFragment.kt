@@ -98,14 +98,14 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
         loadData()
     }
 
-    private fun initItemClicks() {
-        disposablesComponent.add(artistsAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
-        })
-        disposablesComponent.add(tracksAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
-        })
-    }
+    private fun initItemClicks() = disposablesComponent.addAll(
+            artistsAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+            },
+            tracksAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+            }
+    )
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 

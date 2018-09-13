@@ -170,20 +170,21 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
-    private fun initItemClicks() {
-        disposablesComponent.add(categoriesAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
-        })
-        disposablesComponent.add(playlistsAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
-        })
-        disposablesComponent.add(topTracksAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
-        })
-        disposablesComponent.add(newReleasesAdapter.itemClicked.subscribe {
-            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
-        })
-    }
+    private fun initItemClicks() = disposablesComponent.addAll(
+            categoriesAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+            },
+            playlistsAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+            },
+            topTracksAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
+            },
+            newReleasesAdapter.itemClicked.subscribe {
+                hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+            }
+    )
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

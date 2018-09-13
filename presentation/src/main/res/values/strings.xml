@@ -67,4 +67,6 @@
     <string name="account">Your Spotify</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="playback_requires_login">Playback requires logging in to Spotify (with a premium account).</string>
+    <string name="spotify_login">Spotify login</string>
 </resources>
