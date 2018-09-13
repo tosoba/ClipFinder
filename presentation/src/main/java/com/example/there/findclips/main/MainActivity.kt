@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
+import android.databinding.Observable
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -105,6 +106,27 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     // region spotify player
 
+    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.viewState.isLoggedIn.addOnPropertyChangedCallback(loggedInCallback)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.viewState.isLoggedIn.removeOnPropertyChangedCallback(loggedInCallback)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
+        menu?.findItem(R.id.action_login)?.isVisible = !isLoggedIn
+        menu?.findItem(R.id.action_logout)?.isVisible = isLoggedIn
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     private var lastPlayedTrack: Track? = null
 
     fun loadTrack(track: Track) {
@@ -139,15 +161,16 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onSuccess() {
-        Log.e("TEST", "LOG")
+        Log.e("playerOperation", "Success")
     }
 
-    override fun onError(p0: Error?) {
-        Log.e("TEST", "LOG")
+    override fun onError(error: Error?) {
+        Log.e("playerOperation", error?.name
+                ?: "error unknown")
     }
 
     override fun onPlaybackError(error: Error?) {
-        Log.e("TEST", "LOG")
+        Log.e("ERR", "onPlaybackError: ${error?.name ?: "error unknown"}")
     }
 
     override fun onPlaybackEvent(event: PlayerEvent) {
@@ -157,23 +180,27 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onLoggedOut() {
-        Log.e("TEST", "LOG")
+        viewModel.viewState.isLoggedIn.set(false)
+        Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLoggedIn() {
-        Log.e("TEST", "LOG")
+        viewModel.viewState.isLoggedIn.set(true)
+        Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onConnectionMessage(p0: String?) {
-        Log.e("TEST", "LOG")
+    override fun onConnectionMessage(message: String?) {
+        Log.e("onConnectionMessage: ", message ?: "Unknown connection message.")
     }
 
-    override fun onLoginFailed(p0: Error?) {
-        Log.e("TEST", "LOG")
+    override fun onLoginFailed(error: Error?) {
+        Log.e("ERR", "onLoginFailed")
+        Toast.makeText(this, "Login failed: ${error?.name
+                ?: "error unknown"}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTemporaryError() {
-        Log.e("TEST", "LOG")
+        Log.e("ERR", "onTemporaryError")
     }
 
     private var spotifyPlayer: SpotifyPlayer? = null
@@ -248,8 +275,6 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                     Log.e("TEST", "ERR")
                 }
             })
-
-            viewModel.viewState.isLoggedIn.set(true)
         } else {
             spotifyPlayer?.login(accessToken)
         }
@@ -288,6 +313,14 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.search_view_menu_item -> true
+        R.id.action_login -> {
+            if (!loggedIn) openLoginWindow()
+            true
+        }
+        R.id.action_logout -> {
+            if (loggedIn) logOutPlayer()
+            true
+        }
         else -> super.onOptionsItemSelected(item)
     }
 
