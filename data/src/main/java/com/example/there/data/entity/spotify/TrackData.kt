@@ -25,7 +25,9 @@ data class TrackData(
 
         @ColumnInfo(name = "track_number")
         @SerializedName("track_number")
-        val trackNumber: Int
+        val trackNumber: Int,
+
+        val uri: String
 )
 
 data class SimilarTrackData(

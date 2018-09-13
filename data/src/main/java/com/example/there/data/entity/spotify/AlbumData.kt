@@ -20,7 +20,9 @@ data class AlbumData(
         @TypeConverters(IconDataConverter::class)
         val icons: List<IconData>,
 
-        val name: String
+        val name: String,
+
+        val uri: String
 )
 
 data class SimplifiedAlbumData(

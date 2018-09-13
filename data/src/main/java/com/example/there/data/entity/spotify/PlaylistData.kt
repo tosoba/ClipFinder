@@ -19,7 +19,9 @@ data class PlaylistData(
         val name: String,
 
         @TypeConverters(OwnerDataConverter::class)
-        val owner: OwnerData
+        val owner: OwnerData,
+
+        val uri: String
 )
 
 data class OwnerData(val id: String)

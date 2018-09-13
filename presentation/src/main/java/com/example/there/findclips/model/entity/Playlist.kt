@@ -9,7 +9,8 @@ data class Playlist(
         val id: String,
         val name: String,
         val iconUrl: String,
-        val userId: String
+        val userId: String,
+        val uri: String
 ) : AutoParcelable {
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Playlist> = object : ObservableSortedList.Callback<Playlist> {

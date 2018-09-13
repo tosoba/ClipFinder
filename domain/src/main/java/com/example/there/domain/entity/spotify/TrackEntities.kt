@@ -8,7 +8,8 @@ data class TrackEntity(
         val albumName: String,
         val artists: List<SimpleArtistEntity>,
         val popularity: Int,
-        val trackNumber: Int
+        val trackNumber: Int,
+        val uri: String
 )
 
 data class TopTrackEntity(

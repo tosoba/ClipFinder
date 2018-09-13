@@ -14,7 +14,8 @@ object AlbumMapper : TwoWayMapper<AlbumData, AlbumEntity>() {
             name = from.name,
             albumType = from.albumType,
             artists = from.artists.map { SimpleArtistEntity(it.id, it.name) },
-            iconUrl = from.icons.secondIconUrlOrDefault
+            iconUrl = from.icons.secondIconUrlOrDefault,
+            uri = from.uri
     )
 
     override fun mapBack(from: AlbumEntity): AlbumData = AlbumData(
@@ -22,6 +23,7 @@ object AlbumMapper : TwoWayMapper<AlbumData, AlbumEntity>() {
             name = from.name,
             albumType = from.albumType,
             artists = from.artists.map { SimplifiedArtistData(it.id, it.name) },
-            icons = listOf(IconData(url = from.iconUrl))
+            icons = listOf(IconData(url = from.iconUrl)),
+            uri = from.uri
     )
 }

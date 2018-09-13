@@ -5,5 +5,6 @@ data class AlbumEntity(
         val name: String,
         val artists: List<SimpleArtistEntity>,
         val albumType: String,
-        val iconUrl: String
+        val iconUrl: String,
+        val uri: String
 )

@@ -19,7 +19,6 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
@@ -88,8 +87,6 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
                 artistAdapter = artistAdapter
         )
     }
-
-    private val disposablesComponent = DisposablesComponent()
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(

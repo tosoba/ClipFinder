@@ -16,7 +16,7 @@ class ArtistView(
 
 data class ArtistViewState(
         val artist: ObservableField<Artist> = ObservableField(),
-        val albums: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, Album.sortedListCallback),
+        val albums: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback),
         val topTracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName),
         val relatedArtists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback),
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

@@ -13,11 +13,9 @@ data class Track(
         val albumName: String,
         val artists: List<SimpleArtist>,
         val popularity: Int,
-        val trackNumber: Int
+        val trackNumber: Int,
+        val uri: String
 ) : AutoParcelable {
-
-    val artistNamesText: String
-        get() = artists.joinToString(separator = ", ") { it.name }
 
     val query: String
         get() = "$name $albumName"

@@ -65,7 +65,12 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector, Player.NotificationCallback, ConnectionStateCallback, Player.OperationCallback {
+class MainActivity :
+        BaseVMActivity<MainViewModel>(),
+        HasSupportFragmentInjector,
+        Player.NotificationCallback,
+        ConnectionStateCallback,
+        Player.OperationCallback {
 
     val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
@@ -158,7 +163,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
         if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
 
-        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, TRACK_URI, 0, 0)
+        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, track.uri, 0, 0)
     }
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
@@ -200,7 +205,12 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
     }
 
     override fun onLoggedIn() {
+        viewModel.viewState.isLoggedIn.set(true)
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
+
+        if (spotifyPlayer?.isInitialized == true)
+            onLoginSuccessful?.invoke()
+        onLoginSuccessful = null
     }
 
     override fun onConnectionMessage(message: String?) {
@@ -258,11 +268,11 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
     private val spotifyPlayerOperationCallback = object : Player.OperationCallback {
         override fun onSuccess() {
-            Log.e("TEST", "ERR")
+            Log.e("SUCCESS", "spotifyPlayerOperationCallback")
         }
 
         override fun onError(error: Error) {
-            Log.e("TEST", "ERR")
+            Log.e("ERR", "spotifyPlayerOperationCallback ${error.name}")
         }
     }
 
@@ -286,14 +296,12 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
                 }
 
                 override fun onError(error: Throwable) {
-                    Log.e("TEST", "ERR")
+                    Log.e("ERR", "SpotifyPlayer.InitializationObserver")
                 }
             })
         } else {
             spotifyPlayer?.login(accessToken)
         }
-
-        viewModel.viewState.isLoggedIn.set(true)
     }
 
     var onLoginSuccessful: (() -> Unit)? = null
@@ -305,11 +313,7 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
             val response = AuthenticationClient.getResponse(resultCode, data)
 
             when (response.type) {
-                AuthenticationResponse.Type.TOKEN -> {
-                    onAuthenticationComplete(response.accessToken)
-                    onLoginSuccessful?.invoke()
-                    onLoginSuccessful = null
-                }
+                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
                 AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
                 else -> Log.e("ERR", "Auth result: " + response.type)
             }
@@ -682,6 +686,5 @@ class MainActivity : BaseVMActivity<MainViewModel>(), HasSupportFragmentInjector
 
         private const val LOGIN_REQUEST_CODE = 100
         private const val REDIRECT_URI = "testschema://callback"
-        private const val TRACK_URI = "spotify:track:6KywfgRqvgvfJc3JRwaZdZ"
     }
 }

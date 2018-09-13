@@ -106,10 +106,6 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         super.onCreate(savedInstanceState)
 
         initFromArguments()
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SAVED_ITEMS)) {
-            updateItems(savedInstanceState.getParcelableArrayList(KEY_SAVED_ITEMS))
-        }
     }
 
     private fun initFromArguments() {
@@ -118,15 +114,6 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
             viewState.additionalHintText.set(it.getString(EXTRA_ADDITIONAL_HINT))
             if (it.containsKey(EXTRA_ITEMS)) updateItems(it.getParcelableArrayList(EXTRA_ITEMS))
             viewState.shouldShowHeader = it.getBoolean(EXTRA_SHOULD_SHOW_HEADER)
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        if (viewState.items.isNotEmpty()) {
-            outState.putParcelableArrayList(KEY_SAVED_ITEMS, ArrayList<T>(viewState.items.size).apply {
-                addAll(viewState.items)
-            })
         }
     }
 

@@ -10,7 +10,8 @@ data class Album(
         val name: String,
         val artists: List<SimpleArtist>,
         val albumType: String,
-        val iconUrl: String
+        val iconUrl: String,
+        val uri: String
 ) : AutoParcelable {
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Album> = object : ObservableSortedList.Callback<Album> {

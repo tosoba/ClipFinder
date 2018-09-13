@@ -9,13 +9,15 @@ object PlaylistEntityMapper : TwoWayMapper<PlaylistEntity, Playlist>() {
             id = from.id,
             name = from.name,
             iconUrl = from.iconUrl,
-            userId = from.userId
+            userId = from.userId,
+            uri = from.uri
     )
 
     override fun mapBack(from: Playlist): PlaylistEntity = PlaylistEntity(
             id = from.id,
             name = from.name,
             iconUrl = from.iconUrl,
-            userId = from.userId
+            userId = from.userId,
+            uri = from.uri
     )
 }

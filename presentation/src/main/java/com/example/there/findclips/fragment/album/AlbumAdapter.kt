@@ -1,5 +1,6 @@
 package com.example.there.findclips.fragment.album
 
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
@@ -37,7 +38,7 @@ class AlbumAdapter(
         })
         TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.VERTICAL, false)
+            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
