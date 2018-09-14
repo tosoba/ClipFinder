@@ -485,10 +485,19 @@ class MainActivity :
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?
         ) {
-            if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                minimizeBtn.setImageResource(R.drawable.minimize)
-            } else if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                minimizeBtn.setImageResource(R.drawable.maximize)
+            when (newState) {
+                SlidingUpPanelLayout.PanelState.EXPANDED -> minimizeBtn.setImageResource(R.drawable.minimize)
+                SlidingUpPanelLayout.PanelState.COLLAPSED -> minimizeBtn.setImageResource(R.drawable.maximize)
+                SlidingUpPanelLayout.PanelState.HIDDEN -> {
+                    //TODO: pause and nullify everything
+
+                    youTubePlayer?.pause()
+                    lastPlayedVideo = null
+
+                    spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+                    lastPlayedTrack = null
+                }
+                else -> return
             }
         }
     }
