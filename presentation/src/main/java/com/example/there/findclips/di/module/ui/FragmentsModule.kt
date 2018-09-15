@@ -1,5 +1,6 @@
 package com.example.there.findclips.di.module.ui
 
+import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.artist.ArtistFragment
 import com.example.there.findclips.fragment.category.CategoryFragment
@@ -34,7 +35,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector
     abstract fun trackSearchFragment(): TrackFragment
 
-
     @ContributesAndroidInjector
     abstract fun albumFragment(): AlbumFragment
 
@@ -49,4 +49,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun trackVideosFragment(): TrackVideosFragment
+
+    @ContributesAndroidInjector
+    abstract fun accountPlaylistsFragment(): AccountPlaylistsFragment
 }

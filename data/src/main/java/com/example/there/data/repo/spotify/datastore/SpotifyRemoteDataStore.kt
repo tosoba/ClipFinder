@@ -252,6 +252,20 @@ class SpotifyRemoteDataStore @Inject constructor(
         )
     }
 
+    override fun getCurrentUsersPlaylists(
+            accessToken: AccessTokenEntity,
+            offset: Int
+    ): Single<EntityPage<PlaylistEntity>> = api.getCurrentUsersPlaylists(
+            authorization = getAccessTokenHeader(accessToken.token),
+            offset = offset.toString()
+    ).map {
+        EntityPage(
+                items = it.playlists.map(PlaylistMapper::mapFrom),
+                offset = it.offset,
+                totalItems = it.totalItems
+        )
+    }
+
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
 

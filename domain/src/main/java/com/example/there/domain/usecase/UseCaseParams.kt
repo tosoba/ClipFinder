@@ -9,7 +9,6 @@ object UseCaseParams {
     const val PARAM_TRACK_ID = "PARAM_TRACK_ID"
 
     const val PARAM_VIDEO_QUERY = "PARAM_VIDEO_QUERY"
-    const val PARAM_PAGE_TOKEN = "PARAM_PAGE_TOKEN"
 
     const val PARAM_LOAD_MORE = "PARAM_MORE"
 

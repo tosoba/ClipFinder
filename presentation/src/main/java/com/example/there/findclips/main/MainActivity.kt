@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
+import android.databinding.ObservableField
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -27,6 +28,7 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.SpotifyClient
@@ -114,7 +116,7 @@ class MainActivity :
     // region spotify player
 
     fun showLoginDialog() {
-        if (!loggedIn) {
+        if (!playerLoggedIn) {
             MaterialDialog.Builder(this)
                     .title(R.string.spotify_login)
                     .content(R.string.playback_requires_login)
@@ -244,7 +246,10 @@ class MainActivity :
         }
     }
 
-    val loggedIn: Boolean
+    val loggedInObservable: ObservableField<Boolean>
+        get() = viewModel.viewState.isLoggedIn
+
+    val playerLoggedIn: Boolean
         get() = spotifyPlayer?.isLoggedIn == true
 
     fun logOutPlayer() {
@@ -276,7 +281,7 @@ class MainActivity :
         }
     }
 
-    fun openLoginWindow() {
+    private fun openLoginWindow() {
         val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(arrayOf("user-read-private", "playlist-read", "playlist-read-private", "streaming"))
                 .build()
@@ -284,7 +289,14 @@ class MainActivity :
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
 
+    private lateinit var userReadPrivateAccessToken: String
+
+    val userReadPrivateAccessTokenEntity: AccessTokenEntity
+        get() = AccessTokenEntity(userReadPrivateAccessToken, System.currentTimeMillis())
+
     private fun onAuthenticationComplete(accessToken: String) {
+        userReadPrivateAccessToken = accessToken
+
         if (spotifyPlayer == null) {
             val playerConfig = Config(applicationContext, accessToken, SpotifyClient.id)
 
@@ -340,11 +352,11 @@ class MainActivity :
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.search_view_menu_item -> true
         R.id.action_login -> {
-            if (!loggedIn) openLoginWindow()
+            if (!playerLoggedIn) openLoginWindow()
             true
         }
         R.id.action_logout -> {
-            if (loggedIn) logOutPlayer()
+            if (playerLoggedIn) logOutPlayer()
             true
         }
         else -> super.onOptionsItemSelected(item)

@@ -27,6 +27,8 @@ interface ISpotifyRepository {
     fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
     fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
 
+    fun getCurrentUsersPlaylists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<PlaylistEntity>>
+
     fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
     fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
     fun getFavouriteCategories(): Flowable<List<CategoryEntity>>

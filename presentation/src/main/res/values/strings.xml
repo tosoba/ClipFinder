@@ -69,4 +69,6 @@
     <string name="logout">Logout</string>
     <string name="playback_requires_login">Playback requires logging in to Spotify (with a premium account).</string>
     <string name="spotify_login">Spotify login</string>
+    <string name="need_to_login_to_see_playlists">You need to login to Spotify (with a premium account) to see your playlists</string>
+    <string name="no_spotify_playlists">You have no spotify playlists - add some via the Spotify app</string>
 </resources>
