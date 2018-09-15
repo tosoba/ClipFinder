@@ -27,7 +27,10 @@ data class TrackData(
         @SerializedName("track_number")
         val trackNumber: Int,
 
-        val uri: String
+        val uri: String,
+
+        @SerializedName("duration_ms")
+        val durationMs: Int
 )
 
 data class SimilarTrackData(

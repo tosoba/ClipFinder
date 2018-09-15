@@ -14,6 +14,7 @@ import android.databinding.ObservableField
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -26,6 +27,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.SeekBar
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.domain.entity.spotify.AccessTokenEntity
@@ -49,6 +51,7 @@ import com.example.there.findclips.util.ext.dpToPx
 import com.example.there.findclips.util.ext.screenHeight
 import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.OnPageChangeListener
+import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -165,6 +168,7 @@ class MainActivity :
         if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
             sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
 
+        playback_seek_bar?.progress = 0
         spotifyPlayer?.playUri(spotifyPlayerOperationCallback, track.uri, 0, 0)
     }
 
@@ -195,10 +199,51 @@ class MainActivity :
         Log.e("ERR", "onPlaybackError: ${error?.name ?: "error unknown"}")
     }
 
+    private var spotifyPlaybackTimer: CountDownTimer? = null
+
+    private fun playbackTimer(trackDuration: Long, positionMs: Long): CountDownTimer = object : CountDownTimer(
+            trackDuration - positionMs,
+            1000
+    ) {
+        override fun onFinish() = Unit
+
+        override fun onTick(millisUntilFinished: Long) {
+            val seconds = (trackDuration - millisUntilFinished) / 1000
+            playback_seek_bar?.progress = seconds.toInt()
+        }
+    }
+
+    private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
+        object : OnSeekBarProgressChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val positionInMs = progress * 1000
+                    spotifyPlaybackTimer?.cancel()
+                    spotifyPlayer?.seekToPosition(spotifyPlayerOperationCallback, positionInMs)
+                    spotifyPlaybackTimer = playbackTimer(
+                            trackDuration = lastPlayedTrack!!.durationMs.toLong(),
+                            positionMs = positionInMs.toLong()
+                    ).apply { start() }
+                }
+            }
+        }
+    }
+
     override fun onPlaybackEvent(event: PlayerEvent) {
         Log.e("PlaybackEvent", event.toString())
         playerMetadata = spotifyPlayer?.metadata
         currentPlaybackState = spotifyPlayer?.playbackState
+
+        when (event) {
+            PlayerEvent.kSpPlaybackNotifyPlay -> {
+                val trackDuration = playerMetadata!!.currentTrack.durationMs
+                val positionMs = currentPlaybackState!!.positionMs
+                viewModel.viewState.playbackSeekbarMaxValue.set((trackDuration / 1000).toInt())
+                spotifyPlaybackTimer = playbackTimer(trackDuration, positionMs).apply { start() }
+            }
+            PlayerEvent.kSpPlaybackNotifyPause -> spotifyPlaybackTimer?.cancel()
+            else -> return
+        }
     }
 
     override fun onLoggedOut() {
@@ -252,7 +297,7 @@ class MainActivity :
     val playerLoggedIn: Boolean
         get() = spotifyPlayer?.isLoggedIn == true
 
-    fun logOutPlayer() {
+    private fun logOutPlayer() {
         spotifyPlayer?.logout()
     }
 
@@ -445,7 +490,8 @@ class MainActivity :
                 relatedVideosRecyclerViewItemView = relatedVideosRecyclerViewItemView,
                 onFavouriteBtnClickListener = onFavouriteBtnClickListener,
                 onSpotifyPlayPauseBtnClickListener = onSpotifyPlayPauseBtnClickListener,
-                onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener
+                onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener,
+                onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
         )
     }
 
@@ -666,6 +712,7 @@ class MainActivity :
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
     private val onFavouriteBtnClickListener = View.OnClickListener {
+        //TODO: use this button also to add favourite spotify tracks/playlists/albums depending on PlayerState
         viewModel.getFavouriteVideoPlaylists()
         addVideoDialogFragment = AddVideoDialogFragment().apply {
             state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)

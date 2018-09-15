@@ -20,7 +20,8 @@ object TrackMapper : TwoWayMapper<TrackData, TrackEntity>() {
             artists = from.artists.map { SimpleArtistEntity(it.id, it.name) },
             popularity = from.popularity,
             trackNumber = from.trackNumber,
-            uri = from.uri
+            uri = from.uri,
+            durationMs = from.durationMs
     )
 
     override fun mapBack(from: TrackEntity): TrackData = TrackData(
@@ -34,7 +35,8 @@ object TrackMapper : TwoWayMapper<TrackData, TrackEntity>() {
             artists = from.artists.map { SimplifiedArtistData(it.id, it.name) },
             popularity = from.popularity,
             trackNumber = from.trackNumber,
-            uri = from.uri
+            uri = from.uri,
+            durationMs = from.durationMs
     )
 }
 

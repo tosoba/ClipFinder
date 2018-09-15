@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
+import android.widget.SeekBar
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
@@ -24,7 +25,8 @@ class MainView(
         val relatedVideosRecyclerViewItemView: RecyclerViewItemView<Video>,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val onSpotifyPlayPauseBtnClickListener: View.OnClickListener,
-        val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener
+        val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener,
+        val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
 )
 
 data class MainViewState(
@@ -33,7 +35,8 @@ data class MainViewState(
         val initialVideosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false),
         val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
-        val isLoggedIn: ObservableField<Boolean> = ObservableField(false)
+        val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
+        val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0)
 )
 
 enum class PlayerState {

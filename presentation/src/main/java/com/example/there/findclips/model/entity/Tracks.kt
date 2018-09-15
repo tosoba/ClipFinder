@@ -14,7 +14,8 @@ data class Track(
         val artists: List<SimpleArtist>,
         val popularity: Int,
         val trackNumber: Int,
-        val uri: String
+        val uri: String,
+        val durationMs: Int
 ) : AutoParcelable {
 
     val query: String
