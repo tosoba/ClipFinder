@@ -70,10 +70,20 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/play_album_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@drawable/play"
+            app:layout_anchor="@id/album_recycler_view"
+            app:layout_anchorGravity="bottom|end"
+            android:onClick="@{view.onPlayBtnClickListener}"/>
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/album_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/album_app_bar"

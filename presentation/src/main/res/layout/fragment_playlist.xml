@@ -65,6 +65,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/playlist_main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/main_background_gradient"
@@ -95,10 +96,20 @@
         </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/play_playlist_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="@{view.onPlayBtnClickListener}"
+            android:src="@drawable/play"
+            app:layout_anchor="@id/playlist_main_content"
+            app:layout_anchorGravity="bottom|end" />
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/playlist_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
+            android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/playlist_app_bar"

@@ -31,6 +31,15 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(), Injectable 
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.addFavouritePlaylist(playlist)
                     Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
+                },
+                onPlayBtnClickListener = View.OnClickListener {
+                    val playPlaylist: () -> Unit = { mainActivity?.loadPlaylist(playlist) }
+                    if (mainActivity?.playerLoggedIn == true) {
+                        playPlaylist()
+                    } else {
+                        mainActivity?.showLoginDialog()
+                        mainActivity?.onLoginSuccessful = playPlaylist
+                    }
                 }
         )
     }

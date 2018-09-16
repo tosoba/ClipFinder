@@ -72,6 +72,15 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
                     viewModel.addFavouriteAlbum(album)
                     Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
                 },
+                onPlayBtnClickListener = View.OnClickListener {
+                    val playAlbum: () -> Unit = { mainActivity?.loadAlbum(album) }
+                    if (mainActivity?.playerLoggedIn == true) {
+                        playAlbum()
+                    } else {
+                        mainActivity?.showLoginDialog()
+                        mainActivity?.onLoginSuccessful = playAlbum
+                    }
+                },
                 albumAdapter = albumAdapter
         )
     }

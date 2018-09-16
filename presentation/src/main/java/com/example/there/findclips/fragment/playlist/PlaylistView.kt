@@ -7,7 +7,8 @@ import com.example.there.findclips.model.entity.Playlist
 class PlaylistView(
         val state: PlaylistViewState,
         val playlist: Playlist,
-        val onFavouriteBtnClickListener: View.OnClickListener
+        val onFavouriteBtnClickListener: View.OnClickListener,
+        val onPlayBtnClickListener: View.OnClickListener
 )
 
 data class PlaylistViewState(

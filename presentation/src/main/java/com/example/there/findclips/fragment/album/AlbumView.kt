@@ -12,6 +12,7 @@ class AlbumView(
         val state: AlbumViewState,
         val album: Album,
         val onFavouriteBtnClickListener: View.OnClickListener,
+        val onPlayBtnClickListener: View.OnClickListener,
         val albumAdapter: AlbumAdapter
 )
 

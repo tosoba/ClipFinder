@@ -43,13 +43,8 @@ import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
-import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.checkItem
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.screenHeight
-import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.example.there.findclips.view.list.ClickHandler
@@ -152,24 +147,55 @@ class MainActivity :
         return super.onPrepareOptionsMenu(menu)
     }
 
+    private fun resetProgressAndPlay(uri: String) {
+        sliding_layout?.expandIfHidden()
+        playback_seek_bar?.progress = 0
+        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, uri, 0, 0)
+    }
+
     private var lastPlayedTrack: Track? = null
 
     fun loadTrack(track: Track) {
         if (viewModel.viewState.isLoggedIn.get() == false || lastPlayedTrack == track) return
 
-        youTubePlayer?.pause()
-        lastPlayedVideo = null
-
-        //TODO: nullify lastPlayedPlaylist and lastPlayedAlbum
+        stopYoutubePlayback()
+        lastPlayedAlbum = null
+        lastPlayedPlaylist = null
 
         lastPlayedTrack = track
         viewModel.viewState.playerState.set(PlayerState.TRACK)
 
-        if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        resetProgressAndPlay(track.uri)
+    }
 
-        playback_seek_bar?.progress = 0
-        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, track.uri, 0, 0)
+    private var lastPlayedAlbum: Album? = null
+
+    fun loadAlbum(album: Album) {
+        if (viewModel.viewState.isLoggedIn.get() == false || lastPlayedAlbum == album) return
+
+        stopYoutubePlayback()
+        lastPlayedTrack = null
+        lastPlayedPlaylist = null
+
+        lastPlayedAlbum = album
+        viewModel.viewState.playerState.set(PlayerState.ALBUM)
+
+        resetProgressAndPlay(album.uri)
+    }
+
+    private var lastPlayedPlaylist: Playlist? = null
+
+    fun loadPlaylist(playlist: Playlist) {
+        if (viewModel.viewState.isLoggedIn.get() == false || lastPlayedPlaylist == playlist) return
+
+        stopYoutubePlayback()
+        lastPlayedTrack = null
+        lastPlayedAlbum = null
+
+        lastPlayedPlaylist = playlist
+        viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
+
+        resetProgressAndPlay(playlist.uri)
     }
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
@@ -178,6 +204,14 @@ class MainActivity :
         } else {
             spotifyPlayer?.resume(spotifyPlayerOperationCallback)
         }
+    }
+
+    private val onNextBtnClickListener = View.OnClickListener {
+        spotifyPlayer?.skipToNext(spotifyPlayerOperationCallback)
+    }
+
+    private val onPreviousBtnClickListener = View.OnClickListener {
+        spotifyPlayer?.skipToPrevious(spotifyPlayerOperationCallback)
     }
 
     private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
@@ -221,7 +255,7 @@ class MainActivity :
                     spotifyPlaybackTimer?.cancel()
                     spotifyPlayer?.seekToPosition(spotifyPlayerOperationCallback, positionInMs)
                     spotifyPlaybackTimer = playbackTimer(
-                            trackDuration = lastPlayedTrack!!.durationMs.toLong(),
+                            trackDuration = playerMetadata!!.currentTrack.durationMs,
                             positionMs = positionInMs.toLong()
                     ).apply { start() }
                 }
@@ -235,11 +269,18 @@ class MainActivity :
         currentPlaybackState = spotifyPlayer?.playbackState
 
         when (event) {
-            PlayerEvent.kSpPlaybackNotifyPlay -> {
-                val trackDuration = playerMetadata!!.currentTrack.durationMs
-                val positionMs = currentPlaybackState!!.positionMs
-                viewModel.viewState.playbackSeekbarMaxValue.set((trackDuration / 1000).toInt())
-                spotifyPlaybackTimer = playbackTimer(trackDuration, positionMs).apply { start() }
+            PlayerEvent.kSpPlaybackNotifyPlay, PlayerEvent.kSpPlaybackNotifyNext, PlayerEvent.kSpPlaybackNotifyPrev -> {
+                playerMetadata?.let {
+                    viewModel.viewState.nextTrackExists.set(it.nextTrack != null)
+                    viewModel.viewState.previousTrackExists.set(it.prevTrack != null)
+
+                    val trackDuration = it.currentTrack.durationMs
+                    val positionMs = currentPlaybackState!!.positionMs
+
+                    viewModel.viewState.playbackSeekbarMaxValue.set((trackDuration / 1000).toInt())
+                    spotifyPlaybackTimer?.cancel()
+                    spotifyPlaybackTimer = playbackTimer(trackDuration, positionMs).apply { start() }
+                }
             }
             PlayerEvent.kSpPlaybackNotifyPause -> spotifyPlaybackTimer?.cancel()
             else -> return
@@ -491,6 +532,8 @@ class MainActivity :
                 onFavouriteBtnClickListener = onFavouriteBtnClickListener,
                 onSpotifyPlayPauseBtnClickListener = onSpotifyPlayPauseBtnClickListener,
                 onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener,
+                onPreviousBtnClickListener = onPreviousBtnClickListener,
+                onNextBtnClickListener = onNextBtnClickListener,
                 onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
         )
     }
@@ -547,13 +590,13 @@ class MainActivity :
                 SlidingUpPanelLayout.PanelState.EXPANDED -> minimizeBtn.setImageResource(R.drawable.minimize)
                 SlidingUpPanelLayout.PanelState.COLLAPSED -> minimizeBtn.setImageResource(R.drawable.maximize)
                 SlidingUpPanelLayout.PanelState.HIDDEN -> {
-                    //TODO: pause and nullify everything
-
                     youTubePlayer?.pause()
                     lastPlayedVideo = null
 
                     spotifyPlayer?.pause(spotifyPlayerOperationCallback)
                     lastPlayedTrack = null
+                    lastPlayedAlbum = null
+                    lastPlayedPlaylist = null
                 }
                 else -> return
             }
@@ -578,6 +621,11 @@ class MainActivity :
         youtube_player_view.playerUIController.showFullscreenButton(false)
     }
 
+    private fun stopYoutubePlayback() {
+        youTubePlayer?.pause()
+        lastPlayedVideo = null
+    }
+
     private var lastPlayedVideo: Video? = null
 
     fun loadVideo(video: Video) {
@@ -585,13 +633,13 @@ class MainActivity :
         lastPlayedVideo = video
 
         spotifyPlayer?.pause(spotifyPlayerOperationCallback)
-        //TODO: nullify all spotify playback objects
         lastPlayedTrack = null
+        lastPlayedPlaylist = null
+        lastPlayedAlbum = null
 
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
 
-        if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN)
-            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.EXPANDED
+        sliding_layout?.expandIfHidden()
         if (lifecycle.currentState == Lifecycle.State.RESUMED)
             youTubePlayer?.loadVideo(video.id, 0f)
         else
@@ -616,9 +664,9 @@ class MainActivity :
 
     private fun updateFavouriteBtnOnConfigChange(newConfig: Configuration?) {
         if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            add_video_to_favourites_fab?.animate()?.alpha(0f)
+            add_to_favourites_fab?.animate()?.alpha(0f)
         } else {
-            add_video_to_favourites_fab?.animate()?.alpha(1f)
+            add_to_favourites_fab?.animate()?.alpha(1f)
         }
     }
 
@@ -711,12 +759,26 @@ class MainActivity :
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
-    private val onFavouriteBtnClickListener = View.OnClickListener {
-        //TODO: use this button also to add favourite spotify tracks/playlists/albums depending on PlayerState
-        viewModel.getFavouriteVideoPlaylists()
-        addVideoDialogFragment = AddVideoDialogFragment().apply {
-            state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
-            show(supportFragmentManager, TAG_ADD_VIDEO)
+    private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
+        viewModel.viewState.playerState.get()?.let { playerState ->
+            when (playerState) {
+                PlayerState.VIDEO -> lastPlayedVideo?.let {
+                    viewModel.getFavouriteVideoPlaylists()
+                    addVideoDialogFragment = AddVideoDialogFragment().apply {
+                        state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
+                        show(supportFragmentManager, TAG_ADD_VIDEO)
+                    }
+                }
+                PlayerState.PLAYLIST -> lastPlayedPlaylist?.let {
+                    //TODO: add playlist to favourites
+                }
+                PlayerState.TRACK -> lastPlayedTrack?.let {
+                    //TODO: add track to favourites
+                }
+                PlayerState.ALBUM -> lastPlayedAlbum?.let {
+                    //TODO: add album to favourites
+                }
+            }
         }
     }
 

@@ -26,6 +26,8 @@ class MainView(
         val onFavouriteBtnClickListener: View.OnClickListener,
         val onSpotifyPlayPauseBtnClickListener: View.OnClickListener,
         val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener,
+        val onPreviousBtnClickListener: View.OnClickListener,
+        val onNextBtnClickListener: View.OnClickListener,
         val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
 )
 
@@ -36,7 +38,9 @@ data class MainViewState(
         val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false),
         val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
         val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
-        val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0)
+        val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0),
+        val nextTrackExists: ObservableField<Boolean> = ObservableField(false),
+        val previousTrackExists: ObservableField<Boolean> = ObservableField(false)
 )
 
 enum class PlayerState {
