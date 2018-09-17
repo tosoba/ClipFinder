@@ -369,7 +369,7 @@ class MainActivity :
 
     private fun openLoginWindow() {
         val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(arrayOf("user-read-private", "playlist-read", "playlist-read-private", "streaming"))
+                .setScopes(SCOPES)
                 .build()
 
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
@@ -816,5 +816,6 @@ class MainActivity :
 
         private const val LOGIN_REQUEST_CODE = 100
         private const val REDIRECT_URI = "testschema://callback"
+        private val SCOPES = arrayOf("user-read-private", "user-top-read", "playlist-read", "playlist-read-private", "streaming")
     }
 }

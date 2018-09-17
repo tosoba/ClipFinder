@@ -3,16 +3,14 @@ package com.example.there.findclips.fragment.account.playlists
 import android.arch.lifecycle.MutableLiveData
 import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.domain.usecase.spotify.GetAccessToken
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
-import com.example.there.findclips.base.vm.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper
 import javax.inject.Inject
 
 class AccountPlaylistsViewModel @Inject constructor(
-        getAccessToken: GetAccessToken,
         private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists
-) : BaseSpotifyViewModel(getAccessToken) {
+) : BaseViewModel() {
 
     lateinit var viewState: AccountPlaylistViewState
 

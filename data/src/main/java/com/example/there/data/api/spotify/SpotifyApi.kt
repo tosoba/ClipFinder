@@ -120,6 +120,20 @@ interface SpotifyApi {
             @Query("offset") offset: String = DEFAULT_OFFSET
     ): Single<PlaylistsResult>
 
+    @GET("me/top/tracks")
+    fun getCurrentUsersTopTracks(
+            @Header("Authorization") authorization: String,
+            @Query("limit") limit: String = DEFAULT_LIMIT,
+            @Query("offset") offset: String = DEFAULT_OFFSET
+    ): Single<TracksResult>
+
+    @GET("me/top/artists")
+    fun getCurrentUsersTopArtists(
+            @Header("Authorization") authorization: String,
+            @Query("limit") limit: String = DEFAULT_LIMIT,
+            @Query("offset") offset: String = DEFAULT_OFFSET
+    ): Single<ArtistsResult>
+
     companion object {
         const val DEFAULT_LIMIT = "50"
         const val DEFAULT_TRACKS_LIMIT = "100"

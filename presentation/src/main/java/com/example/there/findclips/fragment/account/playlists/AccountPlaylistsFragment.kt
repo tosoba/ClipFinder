@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentAccountPlaylistsBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.account.TracksDataLoaded
@@ -17,7 +17,7 @@ import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.util.ext.mainActivity
 
 
-class AccountPlaylistsFragment : BaseSpotifyVMFragment<AccountPlaylistsViewModel>(), Injectable, TracksDataLoaded {
+class AccountPlaylistsFragment : BaseVMFragment<AccountPlaylistsViewModel>(), Injectable, TracksDataLoaded {
 
     override val isDataLoaded: Boolean
         get() = viewModelInitialized && viewModel.viewState.playlists.isNotEmpty()

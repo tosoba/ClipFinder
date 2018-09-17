@@ -139,4 +139,14 @@ class SpotifyDomainModule {
     fun getCurrentUsersPlaylists(
             repository: ISpotifyRepository
     ): GetCurrentUsersPlaylists = GetCurrentUsersPlaylists(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun getCurrentUsersTopTracks(
+            repository: ISpotifyRepository
+    ): GetCurrentUsersTopTracks = GetCurrentUsersTopTracks(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun getCurrentUsersTopArtists(
+            repository: ISpotifyRepository
+    ): GetCurrentUsersTopArtists = GetCurrentUsersTopArtists(AsyncSymmetricSingleTransformer(), repository)
 }

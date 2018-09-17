@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider
 import com.example.there.findclips.di.vm.ViewModelFactory
 import com.example.there.findclips.di.vm.ViewModelKey
 import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsViewModel
+import com.example.there.findclips.fragment.account.top.AccountTopViewModel
 import com.example.there.findclips.fragment.album.AlbumViewModel
 import com.example.there.findclips.fragment.artist.ArtistViewModel
 import com.example.there.findclips.fragment.category.CategoryViewModel
@@ -91,4 +92,10 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(AccountPlaylistsViewModel::class)
     abstract fun accountPlaylistsViewModel(viewModel: AccountPlaylistsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccountTopViewModel::class)
+    abstract fun accountTopViewModel(viewModel: AccountTopViewModel): ViewModel
+
 }

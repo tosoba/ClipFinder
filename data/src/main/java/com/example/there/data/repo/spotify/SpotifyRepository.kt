@@ -92,6 +92,16 @@ class SpotifyRepository @Inject constructor(
             offset: Int
     ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getCurrentUsersPlaylists(accessToken, offset)
 
+    override fun getCurrentUsersTopTracks(
+            accessToken: AccessTokenEntity,
+            offset: Int
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getCurrentUsersTopTracks(accessToken, offset)
+
+    override fun getCurrentUsersTopArtists(
+            accessToken: AccessTokenEntity,
+            offset: Int
+    ): Single<EntityPage<ArtistEntity>> = remoteDataStore.getCurrentUsersTopArtists(accessToken, offset)
+
     override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
 
     override fun getFavouriteArtists(): Flowable<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()

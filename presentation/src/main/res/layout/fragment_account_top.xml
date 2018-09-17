@@ -1,12 +1,25 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.there.findclips.fragment.account.top.AccountTopFragment">
+<layout>
 
-    <TextView
+    <data>
+
+        <variable
+            name="view"
+            type="com.example.there.findclips.fragment.account.top.AccountTopView" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="top" />
+        tools:context="com.example.there.findclips.fragment.account.top.AccountTopFragment">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/account_top_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adapter="@{view.albumAdapter}" />
+
+    </FrameLayout>
+
+</layout>
+

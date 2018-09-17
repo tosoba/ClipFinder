@@ -37,4 +37,6 @@ interface ISpotifyRemoteDataStore {
     fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
 
     fun getCurrentUsersPlaylists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<PlaylistEntity>>
+    fun getCurrentUsersTopTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
+    fun getCurrentUsersTopArtists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<ArtistEntity>>
 }
