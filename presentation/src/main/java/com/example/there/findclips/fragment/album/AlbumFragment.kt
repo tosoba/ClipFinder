@@ -53,7 +53,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
                         RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks),
                         object : ListItemView<Track>(viewModel.viewState.tracks) {
                             override val itemViewBinder: ItemBinder<Track>
-                                get() = ItemBinderBase(BR.track, R.layout.track_item)
+                                get() = ItemBinderBase(BR.track, R.layout.track_popularity_item)
                         },
                         ClickHandler {
                             hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)

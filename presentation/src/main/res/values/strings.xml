@@ -72,4 +72,6 @@
     <string name="need_to_login_to_see_playlists">You need to login to Spotify (with a premium account) to see your playlists</string>
     <string name="no_spotify_playlists">You have no spotify playlists - add some via the Spotify app</string>
     <string name="need_to_login_to_see_saved_tracks_and_albums">You need to login to Spotify (with a premium account) to see your saved tracks and albums</string>
+    <string name="need_to_login_to_see_top_tracks_and_artists">You need to login to Spotify (with a premium account) to see your top tracks and artists.</string>
+    <string name="no_video_playlists_created_yet">No video playlists created yet.</string>
 </resources>

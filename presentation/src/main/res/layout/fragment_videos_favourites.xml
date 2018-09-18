@@ -2,6 +2,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="view"
             type="com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragmentView" />
@@ -14,11 +16,15 @@
         tools:context="com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment">
 
         <TextView
-            android:id="@+id/videos_favourites_playlists_label"
-            style="@style/LargeLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/playlists"
+            android:text="@string/no_video_playlists_created_yet"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:visibility="@{view.state.playlists.size() == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,10 +37,11 @@
             items="@{view.playlistsRecyclerViewItemView.state.items}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="@{view.state.playlists.size() > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/videos_favourites_playlists_label" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

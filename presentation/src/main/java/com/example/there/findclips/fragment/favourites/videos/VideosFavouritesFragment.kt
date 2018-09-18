@@ -13,6 +13,7 @@ import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
+import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.model.entity.VideoPlaylist
@@ -20,9 +21,11 @@ import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
+import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
@@ -58,6 +61,18 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
         return binding.apply {
             this.view = this@VideosFavouritesFragment.view
             videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
+            val headerBinding = DataBindingUtil.inflate<HeaderItemBinding>(
+                    LayoutInflater.from(context),
+                    R.layout.header_item,
+                    null,
+                    false
+            ).apply {
+                viewState = HeaderItemViewState("Playlists")
+                executePendingBindings()
+            }
+
+            videosFavouritesPlaylistsRecyclerView.addItemDecoration(HeaderDecoration(headerBinding.root, false, 1f, 0f, 1))
         }.root
     }
 

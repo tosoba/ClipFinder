@@ -2,6 +2,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="view"
             type="com.example.there.findclips.fragment.account.top.AccountTopView" />
@@ -13,11 +15,25 @@
         android:layout_height="match_parent"
         tools:context="com.example.there.findclips.fragment.account.top.AccountTopFragment">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="@string/need_to_login_to_see_top_tracks_and_artists"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:visibility="@{((!safeUnbox(view.state.tracksLoadingInProgress) &amp;&amp; !safeUnbox(view.state.artistsLoadingInProgress) &amp;&amp; !safeUnbox(view.state.userLoggedIn) &amp;&amp; view.state.topTracks.size() == 0 &amp;&amp; view.state.artists.size() == 0) ? View.VISIBLE : View.GONE) }" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/account_top_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adapter="@{view.albumAdapter}" />
+            android:adapter="@{view.albumAdapter}"
+            android:visibility="@{(view.state.topTracks.size() > 0 &amp;&amp; view.state.artists.size() > 0) ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>
 
