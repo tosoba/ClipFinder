@@ -816,6 +816,6 @@ class MainActivity :
 
         private const val LOGIN_REQUEST_CODE = 100
         private const val REDIRECT_URI = "testschema://callback"
-        private val SCOPES = arrayOf("user-read-private", "user-top-read", "playlist-read", "playlist-read-private", "streaming")
+        private val SCOPES = arrayOf("user-read-private", "user-library-read", "user-top-read", "playlist-read", "playlist-read-private", "streaming")
     }
 }

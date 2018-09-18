@@ -71,4 +71,5 @@
     <string name="spotify_login">Spotify login</string>
     <string name="need_to_login_to_see_playlists">You need to login to Spotify (with a premium account) to see your playlists</string>
     <string name="no_spotify_playlists">You have no spotify playlists - add some via the Spotify app</string>
+    <string name="need_to_login_to_see_saved_tracks_and_albums">You need to login to Spotify (with a premium account) to see your saved tracks and albums</string>
 </resources>

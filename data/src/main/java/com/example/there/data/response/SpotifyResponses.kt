@@ -60,5 +60,23 @@ data class TracksResult(
         @SerializedName("total") val totalItems: Int
 )
 
+data class SavedTrack(
+        val track: TrackData
+)
 
+data class SavedTracksResult(
+        @SerializedName("items") val savedTracks: List<SavedTrack>,
+        val offset: Int,
+        @SerializedName("total") val totalItems: Int
+)
+
+data class SavedAlbum(
+        val album: AlbumData
+)
+
+data class SavedAlbumsResult(
+        @SerializedName("items") val savedAlbums: List<SavedAlbum>,
+        val offset: Int,
+        @SerializedName("total") val totalItems: Int
+)
 

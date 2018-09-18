@@ -31,6 +31,9 @@ interface ISpotifyRepository {
     fun getCurrentUsersTopTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
     fun getCurrentUsersTopArtists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<ArtistEntity>>
 
+    fun getCurrentUsersSavedTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
+    fun getCurrentUsersSavedAlbums(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
+
     fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
     fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
     fun getFavouriteCategories(): Flowable<List<CategoryEntity>>

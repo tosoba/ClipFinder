@@ -1,6 +1,7 @@
 package com.example.there.findclips.di.module.ui
 
 import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFragment
+import com.example.there.findclips.fragment.account.saved.AccountSavedFragment
 import com.example.there.findclips.fragment.account.top.AccountTopFragment
 import com.example.there.findclips.fragment.album.AlbumFragment
 import com.example.there.findclips.fragment.artist.ArtistFragment
@@ -18,6 +19,7 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class FragmentsModule {
+
     @ContributesAndroidInjector
     abstract fun dashboardFragment(): DashboardFragment
 
@@ -56,4 +58,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun accountTopFragment(): AccountTopFragment
+
+    @ContributesAndroidInjector
+    abstract fun accountSavedFragment(): AccountSavedFragment
 }
