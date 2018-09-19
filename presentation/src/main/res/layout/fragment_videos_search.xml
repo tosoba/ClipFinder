@@ -51,13 +51,10 @@
 
         <TextView
             android:id="@+id/no_clips_loaded_txt"
+            style="@style/EmptyListTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/no_clips_loaded_yet"
-            android:textAlignment="center"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="25sp"
-            android:textStyle="bold"
             android:visibility="@{(safeUnbox(videosSearchView.state.videos.size()) == 0 &amp;&amp; !safeUnbox(videosSearchView.state.videosLoadingInProgress)) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/search_for_some_clips_txt"
             app:layout_constraintHorizontal_bias="0.5"
@@ -68,13 +65,11 @@
 
         <TextView
             android:id="@+id/search_for_some_clips_txt"
+            style="@style/AdditionalHintTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="@string/search_for_some"
-            android:textAlignment="center"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="20sp"
             android:visibility="@{(safeUnbox(videosSearchView.state.videos.size()) == 0 &amp;&amp; !safeUnbox(videosSearchView.state.videosLoadingInProgress)) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/videos_recycler_view"
             app:layout_constraintHorizontal_bias="0.5"
