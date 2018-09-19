@@ -24,6 +24,7 @@ import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
@@ -34,8 +35,8 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
-    private val albumAdapter: AlbumAdapter by lazy {
-        AlbumAdapter(
+    private val artistsAndTracksAdapter: ArtistsAndTracksAdapter by lazy {
+        ArtistsAndTracksAdapter(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists),
                         object : ListItemView<Artist>(viewModel.viewState.artists) {
@@ -80,7 +81,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                         mainActivity?.onLoginSuccessful = playAlbum
                     }
                 },
-                albumAdapter = albumAdapter
+                artistsAndTracksAdapter = artistsAndTracksAdapter
         )
     }
 

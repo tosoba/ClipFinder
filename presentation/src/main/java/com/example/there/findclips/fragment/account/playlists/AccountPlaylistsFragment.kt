@@ -13,6 +13,7 @@ import com.example.there.findclips.databinding.FragmentAccountPlaylistsBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.account.TracksDataLoaded
 import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
+import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.util.ext.mainActivity
 
 
@@ -55,13 +56,8 @@ class AccountPlaylistsFragment :
 
     private fun loadData() = viewModel.loadPlaylists(mainActivity!!.userReadPrivateAccessTokenEntity)
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.viewState.userLoggedIn.addOnPropertyChangedCallback(loginCallback)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.viewState.userLoggedIn.addOnPropertyChangedCallback(loginCallback)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
     }
 }

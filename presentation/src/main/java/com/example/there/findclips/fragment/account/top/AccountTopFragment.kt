@@ -13,14 +13,15 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentAccountTopBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.account.TracksDataLoaded
-import com.example.there.findclips.fragment.album.AlbumAdapter
 import com.example.there.findclips.fragment.artist.ArtistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
+import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
+import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
@@ -45,7 +46,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
     private val view: AccountTopView by lazy {
         AccountTopView(
                 viewModel.viewState,
-                AlbumAdapter(
+                ArtistsAndTracksAdapter(
                         RecyclerViewItemView(
                                 RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists),
                                 object : ListItemView<Artist>(viewModel.viewState.artists) {
@@ -108,13 +109,8 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
         viewModel.loadArtists(this)
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.viewState.userLoggedIn.addOnPropertyChangedCallback(loginCallback)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.viewState.userLoggedIn.addOnPropertyChangedCallback(loginCallback)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
     }
 }

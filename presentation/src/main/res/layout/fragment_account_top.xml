@@ -26,7 +26,7 @@
             android:id="@+id/account_top_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adapter="@{view.albumAdapter}"
+            android:adapter="@{view.artistsAndTracksAdapter}"
             android:visibility="@{(view.state.topTracks.size() > 0 &amp;&amp; view.state.artists.size() > 0) ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>

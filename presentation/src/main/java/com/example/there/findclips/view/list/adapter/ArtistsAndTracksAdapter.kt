@@ -1,4 +1,4 @@
-package com.example.there.findclips.fragment.album
+package com.example.there.findclips.view.list.adapter
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -14,7 +14,7 @@ import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 
-class AlbumAdapter(
+class ArtistsAndTracksAdapter(
         private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
         private val tracksRecyclerViewItemView: RecyclerViewItemView<Track>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
