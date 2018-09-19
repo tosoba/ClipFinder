@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.artist
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
@@ -32,7 +31,10 @@ import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 
-class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, GoesToPreviousStateOnBackPressed {
+class ArtistFragment :
+        BaseSpotifyVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
+        Injectable,
+        GoesToPreviousStateOnBackPressed {
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
@@ -133,10 +135,6 @@ class ArtistFragment : BaseSpotifyVMFragment<ArtistViewModel>(), Injectable, Goe
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) mainActivity?.backPressedOnNoPreviousFragmentState()
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(ArtistViewModel::class.java)
     }
 
     private fun loadData() = viewModel.loadArtistData(activity?.accessToken, argArtist)

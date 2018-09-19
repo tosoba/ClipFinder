@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.account.playlists
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.os.Bundle
@@ -17,15 +16,17 @@ import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.util.ext.mainActivity
 
 
-class AccountPlaylistsFragment : BaseVMFragment<AccountPlaylistsViewModel>(), Injectable, TracksDataLoaded {
+class AccountPlaylistsFragment :
+        BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
+        Injectable,
+        TracksDataLoaded {
+
+    override val onViewModelInitialized: (() -> Unit)? = {
+        viewModel.viewState = AccountPlaylistViewState(mainActivity!!.loggedInObservable)
+    }
 
     override val isDataLoaded: Boolean
         get() = viewModelInitialized && viewModel.viewState.playlists.isNotEmpty()
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(AccountPlaylistsViewModel::class.java)
-        viewModel.viewState = AccountPlaylistViewState(mainActivity!!.loggedInObservable)
-    }
 
     private val playlistsFragment: SpotifyPlaylistsFragment
         get() = childFragmentManager.findFragmentById(R.id.account_spotify_playlists_fragment) as SpotifyPlaylistsFragment

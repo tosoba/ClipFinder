@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.favourites.videos
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
@@ -29,7 +28,7 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 
-class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), Injectable {
+class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java), Injectable {
 
     private val playlistsRecyclerViewItemView: RecyclerViewItemView<VideoPlaylist> by lazy {
         RecyclerViewItemView(
@@ -79,9 +78,5 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(), In
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.loadVideoPlaylists()
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(VideosFavouritesViewModel::class.java)
     }
 }

@@ -37,11 +37,9 @@
             android:text="@{view.state.mainHintText}"
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@+id/search_for_some_artists_txt"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/search_for_some_artists_txt"
@@ -50,8 +48,6 @@
             android:layout_height="wrap_content"
             android:text="@{view.state.additionalHintText}"
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@+id/artists_recycler_view"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/no_artists_loaded_txt" />

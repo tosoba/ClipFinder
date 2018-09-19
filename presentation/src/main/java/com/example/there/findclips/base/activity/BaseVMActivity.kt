@@ -1,6 +1,7 @@
 package com.example.there.findclips.base.activity
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -13,7 +14,9 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseVMActivity<T : BaseViewModel> constructor(
+        private val vmClass: Class<T>
+) : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -34,7 +37,12 @@ abstract class BaseVMActivity<T : BaseViewModel> : AppCompatActivity(), HasSuppo
         setupObservers()
     }
 
-    protected abstract fun initViewModel()
+    protected open val onViewModelInitialized: ((T) -> Unit)? = null
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
+        onViewModelInitialized?.invoke(viewModel)
+    }
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->

@@ -1,6 +1,7 @@
 package com.example.there.findclips.base.fragment
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -10,7 +11,9 @@ import com.example.there.findclips.di.vm.ViewModelFactory
 import com.example.there.findclips.util.ext.messageOrDefault
 import javax.inject.Inject
 
-abstract class BaseVMFragment<T : BaseViewModel> : Fragment(), Injectable {
+abstract class BaseVMFragment<T : BaseViewModel> constructor(
+        private val vmClass: Class<T>
+) : Fragment(), Injectable {
 
     @Inject
     lateinit var factory: ViewModelFactory
@@ -30,7 +33,12 @@ abstract class BaseVMFragment<T : BaseViewModel> : Fragment(), Injectable {
         initViewModel()
     }
 
-    protected abstract fun initViewModel()
+    protected open val onViewModelInitialized: (() -> Unit)? = null
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
+        onViewModelInitialized?.invoke()
+    }
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->

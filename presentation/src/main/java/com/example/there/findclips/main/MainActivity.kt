@@ -2,7 +2,6 @@ package com.example.there.findclips.main
 
 import android.app.SearchManager
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -66,7 +65,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity :
-        BaseVMActivity<MainViewModel>(),
+        BaseVMActivity<MainViewModel>(MainViewModel::class.java),
         HasSupportFragmentInjector,
         Player.NotificationCallback,
         ConnectionStateCallback,
@@ -105,10 +104,6 @@ class MainActivity :
         Spotify.destroyPlayer(this)
 
         super.onDestroy()
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(MainViewModel::class.java)
     }
 
     // region spotify player

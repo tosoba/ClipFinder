@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.album
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
@@ -31,7 +30,7 @@ import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 
-class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
+class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
@@ -116,10 +115,6 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(AlbumViewModel::class.java)
     }
 
     private fun loadData() = viewModel.loadAlbumData(activity?.accessToken, album)

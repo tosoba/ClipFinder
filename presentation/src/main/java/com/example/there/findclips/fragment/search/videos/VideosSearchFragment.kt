@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.search.videos
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -32,7 +31,7 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_videos_search.*
 
 
-class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearchFragment {
+class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java), MainSearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -109,10 +108,6 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(), MainSearch
         videos_recycler_view?.layoutManager = videosLayoutManager
         videos_recycler_view?.adapter = adapter
         adapter?.notifyDataSetChanged()
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(VideosSearchViewModel::class.java)
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {

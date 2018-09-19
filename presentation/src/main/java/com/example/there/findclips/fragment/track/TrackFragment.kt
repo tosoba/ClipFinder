@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.track
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -27,7 +26,7 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.*
 
 
-class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
+class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
 
     var track: Track? = null
         set(value) {
@@ -88,10 +87,6 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(), Injectable {
         binding.view = view
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         return binding.root
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(TrackViewModel::class.java)
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {

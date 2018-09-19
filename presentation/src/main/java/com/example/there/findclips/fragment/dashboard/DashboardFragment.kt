@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.dashboard
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -35,7 +34,7 @@ import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectable, HasMainToolbar {
+class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardViewModel::class.java), Injectable, HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
@@ -171,10 +170,6 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(), Injectabl
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(DashboardViewModel::class.java)
     }
 
     private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)

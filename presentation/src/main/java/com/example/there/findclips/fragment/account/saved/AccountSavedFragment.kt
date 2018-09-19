@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.account.saved
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.os.Bundle
@@ -29,9 +28,12 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 
-class AccountSavedFragment : BaseVMFragment<AccountSavedViewModel>(), Injectable, TracksDataLoaded {
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(AccountSavedViewModel::class.java)
+class AccountSavedFragment :
+        BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
+        Injectable,
+        TracksDataLoaded {
+
+    override val onViewModelInitialized: (() -> Unit)? = {
         viewModel.viewState = AccountSavedViewState(mainActivity!!.loggedInObservable)
     }
 

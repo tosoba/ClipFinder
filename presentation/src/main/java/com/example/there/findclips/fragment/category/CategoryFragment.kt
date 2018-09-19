@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.category
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
@@ -20,7 +19,7 @@ import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
 
-class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable {
+class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 
@@ -77,13 +76,9 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(), Injectable 
 
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.playlists.observe(this, Observer {
-            it?.let { playlistsFragment.updateItems(it, false) }
+        viewModel.playlists.observe(this, Observer { playlists ->
+            playlists?.let { playlistsFragment.updateItems(it, false) }
         })
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(CategoryViewModel::class.java)
     }
 
     private fun loadData() = viewModel.loadPlaylists(activity?.accessToken, category.id)

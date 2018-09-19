@@ -31,7 +31,6 @@
             style="@style/EmptyListTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="@string/need_to_login_to_see_playlists"
             android:visibility="@{((!safeUnbox(viewState.playlistsLoadingInProgress) &amp;&amp; !safeUnbox(viewState.userLoggedIn) &amp;&amp; viewState.playlists.size() == 0) ? View.VISIBLE : View.GONE) }" />
 

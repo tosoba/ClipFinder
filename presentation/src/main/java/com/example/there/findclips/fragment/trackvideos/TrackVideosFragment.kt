@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.trackvideos
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -25,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 
 class TrackVideosFragment :
-        BaseVMFragment<TrackVideosViewModel>(),
+        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
         OnTrackChangeListener,
         Injectable,
         GoesToPreviousStateOnBackPressed {
@@ -122,10 +121,6 @@ class TrackVideosFragment :
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
         }
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(TrackVideosViewModel::class.java)
     }
 
     companion object {

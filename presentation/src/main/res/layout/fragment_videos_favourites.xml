@@ -19,7 +19,6 @@
             style="@style/EmptyListTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="@string/no_video_playlists_created_yet"
             android:visibility="@{view.state.playlists.size() == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"

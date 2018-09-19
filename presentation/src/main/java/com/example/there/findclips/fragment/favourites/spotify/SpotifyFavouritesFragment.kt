@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.favourites.spotify
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -19,7 +18,7 @@ import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePage
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 
-class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), Injectable {
+class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -130,9 +129,5 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(), 
                 is SpotifyTracksFragment -> fragment.updateItems(it.tracks)
             }
         }
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(SpotifyFavouritesViewModel::class.java)
     }
 }

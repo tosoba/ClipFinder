@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.search.spotify
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -26,7 +25,10 @@ import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePage
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 
-class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), MainSearchFragment, Injectable {
+class SpotifySearchFragment :
+        BaseSpotifyVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
+        MainSearchFragment,
+        Injectable {
 
     override var query: String = ""
         set(value) {
@@ -119,10 +121,6 @@ class SpotifySearchFragment : BaseSpotifyVMFragment<SpotifySearchViewModel>(), M
         binding.spotifySearchView = view
         binding.spotifyTabViewPager.offscreenPageLimit = 3
         return binding.root
-    }
-
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(SpotifySearchViewModel::class.java)
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {

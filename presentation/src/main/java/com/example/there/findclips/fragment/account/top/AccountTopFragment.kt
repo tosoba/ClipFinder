@@ -1,6 +1,5 @@
 package com.example.there.findclips.fragment.account.top
 
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.os.Bundle
@@ -30,10 +29,11 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 
-class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(), Injectable, TracksDataLoaded {
+class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
+        AccountTopViewModel::class.java
+), Injectable, TracksDataLoaded {
 
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(AccountTopViewModel::class.java)
+    override val onViewModelInitialized: (() -> Unit)? = {
         viewModel.viewState = AccountTopViewState(mainActivity!!.loggedInObservable)
     }
 

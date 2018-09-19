@@ -2,7 +2,7 @@ package com.example.there.findclips.fragment.search
 
 import android.content.SearchRecentSuggestionsProvider
 
-class SearchSuggestionProvider: SearchRecentSuggestionsProvider() {
+class SearchSuggestionProvider : SearchRecentSuggestionsProvider() {
 
     init {
         setupSuggestions(AUTHORITY, MODE)
