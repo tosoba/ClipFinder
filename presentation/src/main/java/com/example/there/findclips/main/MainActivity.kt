@@ -263,21 +263,38 @@ class MainActivity :
         playerMetadata = spotifyPlayer?.metadata
         currentPlaybackState = spotifyPlayer?.playbackState
 
-        when (event) {
-            PlayerEvent.kSpPlaybackNotifyPlay, PlayerEvent.kSpPlaybackNotifyNext, PlayerEvent.kSpPlaybackNotifyPrev -> {
-                playerMetadata?.let {
-                    viewModel.viewState.nextTrackExists.set(it.nextTrack != null)
-                    viewModel.viewState.previousTrackExists.set(it.prevTrack != null)
+        fun updatePlayback() {
+            playerMetadata?.let {
+                viewModel.viewState.nextTrackExists.set(it.nextTrack != null)
+                viewModel.viewState.previousTrackExists.set(it.prevTrack != null)
 
-                    val trackDuration = it.currentTrack.durationMs
-                    val positionMs = currentPlaybackState!!.positionMs
+                val trackDuration = it.currentTrack.durationMs
+                val positionMs = currentPlaybackState!!.positionMs
 
-                    viewModel.viewState.playbackSeekbarMaxValue.set((trackDuration / 1000).toInt())
-                    spotifyPlaybackTimer?.cancel()
-                    spotifyPlaybackTimer = playbackTimer(trackDuration, positionMs).apply { start() }
-                }
+                viewModel.viewState.playbackSeekbarMaxValue.set((trackDuration / 1000).toInt())
+                spotifyPlaybackTimer?.cancel()
+                spotifyPlaybackTimer = playbackTimer(trackDuration, positionMs).apply { start() }
             }
-            PlayerEvent.kSpPlaybackNotifyPause -> spotifyPlaybackTimer?.cancel()
+        }
+
+        when (event) {
+            PlayerEvent.kSpPlaybackNotifyNext, PlayerEvent.kSpPlaybackNotifyPrev, PlayerEvent.kSpPlaybackNotifyPlay -> {
+                updatePlayback()
+                spotify_player_play_pause_image_button?.setImageResource(R.drawable.pause)
+            }
+
+            PlayerEvent.kSpPlaybackNotifyPause -> {
+                spotifyPlaybackTimer?.cancel()
+                spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
+            }
+
+            PlayerEvent.kSpPlaybackNotifyTrackChanged -> playerMetadata?.let {
+                val trackName = it.currentTrack?.name
+                val artistName = it.currentTrack?.artistName
+                val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
+                viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
+            }
+
             else -> return
         }
     }

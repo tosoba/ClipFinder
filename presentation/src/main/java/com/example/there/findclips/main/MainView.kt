@@ -40,7 +40,8 @@ data class MainViewState(
         val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
         val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0),
         val nextTrackExists: ObservableField<Boolean> = ObservableField(false),
-        val previousTrackExists: ObservableField<Boolean> = ObservableField(false)
+        val previousTrackExists: ObservableField<Boolean> = ObservableField(false),
+        val currentTrackTitle: ObservableField<String> = ObservableField("")
 )
 
 enum class PlayerState {

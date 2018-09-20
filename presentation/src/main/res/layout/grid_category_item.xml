@@ -15,7 +15,7 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:background="@color/colorPrimaryDark"
-        android:foreground="@drawable/list_item_ripple">
+        android:foreground="@drawable/foreground_ripple">
 
         <ImageView
             android:id="@+id/category_imageview"

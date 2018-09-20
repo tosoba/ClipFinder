@@ -18,7 +18,7 @@
         android:layout_height="120dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:foreground="@drawable/list_item_ripple"
+        android:foreground="@drawable/foreground_ripple"
         android:onClick="@{view.onClickListener}"
         android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.GONE : View.VISIBLE}" />
 
