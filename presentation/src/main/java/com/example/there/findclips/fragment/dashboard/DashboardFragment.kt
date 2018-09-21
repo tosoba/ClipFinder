@@ -2,6 +2,8 @@ package com.example.there.findclips.fragment.dashboard
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -24,6 +26,7 @@ import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -135,6 +138,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
         return binding.apply {
             dashboardView = view
             mainActivity?.setSupportActionBar(dashboardToolbar)
+            mainActivity?.showDrawerHamburger()
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         }.root
     }
@@ -165,7 +169,12 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
         loadData()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+            mainActivity?.findViewById<DrawerLayout>(R.id.main_drawer_layout)?.openDrawer(GravityCompat.START)
+            true
+        } else false
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

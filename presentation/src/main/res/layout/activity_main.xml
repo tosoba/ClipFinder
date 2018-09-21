@@ -12,225 +12,245 @@
             type="com.example.there.findclips.main.MainView" />
     </data>
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/sliding_layout"
-        fadeOnClickListener="@{mainActivityView.fadeOnClickListener}"
-        initialSlideState="@{mainActivityView.initialSlidePanelState}"
-        panelSlideListener="@{mainActivityView.slideListener}"
+        android:id="@+id/main_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        app:umanoDragView="@+id/player_layout"
-        app:umanoOverlay="false"
-        app:umanoPanelHeight="100dp"
-        app:umanoParallaxOffset="100dp"
-        app:umanoScrollableView="@+id/related_videos_recycler_view"
-        app:umanoShadowHeight="4dp"
-        tools:context=".main.MainActivity">
+        android:fitsSystemWindows="true">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/main_content_layout"
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/sliding_layout"
+            fadeOnClickListener="@{mainActivityView.fadeOnClickListener}"
+            initialSlideState="@{mainActivityView.initialSlidePanelState}"
+            panelSlideListener="@{mainActivityView.slideListener}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="false">
+            android:gravity="bottom"
+            app:umanoDragView="@+id/player_layout"
+            app:umanoOverlay="false"
+            app:umanoPanelHeight="100dp"
+            app:umanoParallaxOffset="100dp"
+            app:umanoScrollableView="@+id/related_videos_recycler_view"
+            app:umanoShadowHeight="4dp"
+            tools:context=".main.MainActivity">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/main_view_pager"
-                offScreenPageLimit="@{mainActivityView.offScreenPageLimit}"
-                onPageChangeListener="@{mainActivityView.onPageChangeListener}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:adapter="@{mainActivityView.pagerAdapter}"
-                android:background="@drawable/main_background_gradient"
-                app:layout_constraintBottom_toTopOf="@id/main_bottom_navigation_view"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/main_content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="false">
 
-            <android.support.design.widget.BottomNavigationView
-                android:id="@+id/main_bottom_navigation_view"
-                onNavigationItemSelectedListener="@{mainActivityView.onNavigationItemSelectedListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                app:itemIconTint="@color/bottom_navigation_color"
-                app:itemTextColor="@color/bottom_navigation_color"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_view_pager"
-                app:menu="@menu/bottom_navigation" />
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/main_view_pager"
+                    offScreenPageLimit="@{mainActivityView.offScreenPageLimit}"
+                    onPageChangeListener="@{mainActivityView.onPageChangeListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:adapter="@{mainActivityView.pagerAdapter}"
+                    android:background="@drawable/main_background_gradient"
+                    app:layout_constraintBottom_toTopOf="@id/main_bottom_navigation_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
+                <android.support.design.widget.BottomNavigationView
+                    android:id="@+id/main_bottom_navigation_view"
+                    onNavigationItemSelectedListener="@{mainActivityView.onNavigationItemSelectedListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark"
+                    app:itemIconTint="@color/bottom_navigation_color"
+                    app:itemTextColor="@color/bottom_navigation_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/main_view_pager"
+                    app:menu="@menu/bottom_navigation" />
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/player_layout"
-            android:layout_width="match_parent"
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/player_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/dark_background_gradient"
+                android:clickable="true"
+                android:focusable="false">
+
+                <android.support.constraint.Group
+                    android:id="@+id/youtube_player_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.VISIBLE : View.GONE}"
+                    app:constraint_referenced_ids="youtube_player_view,related_videos_recycler_view" />
+
+                <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+                    android:id="@+id/youtube_player_view"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/related_videos_recycler_view"
+                    clickHandler="@{mainActivityView.relatedVideosRecyclerViewItemView.onItemClickListener}"
+                    itemDecoration="@{mainActivityView.relatedVideosRecyclerViewItemView.itemDecoration}"
+                    itemViewBinder="@{mainActivityView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
+                    items="@{mainActivityView.relatedVideosRecyclerViewItemView.state.items}"
+                    onScrollListener="@{mainActivityView.relatedVideosRecyclerViewItemView.onScrollListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
+
+                <ProgressBar
+                    android:id="@+id/related_videos_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{safeUnbox(mainActivityView.state.initialVideosLoadingInProgress) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/add_to_favourites_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:onClick="@{mainActivityView.onFavouriteBtnClickListener}"
+                    android:src="@drawable/favourite"
+                    app:elevation="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <android.support.constraint.Group
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}"
+                    app:constraint_referenced_ids="current_track_title_text_view,close_spotify_player_image_button,spotify_player_play_pause_image_button,playback_seek_bar" />
+
+                <ImageButton
+                    android:id="@+id/close_spotify_player_image_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@color/colorPrimary"
+                    android:foreground="@drawable/foreground_ripple"
+                    android:onClick="@{mainActivityView.onCloseSpotifyPlayerBtnClickListener}"
+                    android:src="@drawable/close"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/spotify_player_play_pause_image_button"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/image_button_background"
+                    android:foreground="@drawable/round_foreground_ripple"
+                    android:onClick="@{mainActivityView.onSpotifyPlayPauseBtnClickListener}"
+                    android:src="@drawable/play"
+                    app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/next_track_btn"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/image_button_background"
+                    android:foreground="@drawable/round_foreground_ripple"
+                    android:onClick="@{mainActivityView.onNextBtnClickListener}"
+                    android:src="@drawable/next_track"
+                    android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.nextTrackExists)) ? View.VISIBLE : View.GONE }"
+                    app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
+                    app:layout_constraintLeft_toRightOf="@id/spotify_player_play_pause_image_button"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/previous_track_btn"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/image_button_background"
+                    android:foreground="@drawable/round_foreground_ripple"
+                    android:onClick="@{mainActivityView.onPreviousBtnClickListener}"
+                    android:src="@drawable/previous_track"
+                    android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.previousTrackExists)) ? View.VISIBLE : View.GONE }"
+                    app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/spotify_player_play_pause_image_button"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <SeekBar
+                    android:id="@+id/playback_seek_bar"
+                    progressChangeListener="@{mainActivityView.onPlaybackSeekBarProgressChangeListener}"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:max="@{safeUnbox(mainActivityView.state.playbackSeekbarMaxValue)}"
+                    app:layout_constraintBottom_toTopOf="@id/current_track_title_text_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spotify_player_play_pause_image_button" />
+
+                <TextView
+                    android:id="@+id/current_track_title_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{mainActivityView.state.currentTrackTitle}"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/spotify_player_guideline"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/playback_seek_bar" />
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/spotify_player_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_begin="100dp" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/drawer_navigation_view"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/main_background_gradient"
-            android:clickable="true"
-            android:focusable="false">
+            android:layout_gravity="start"
+            android:background="@drawable/dark_background_gradient"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/drawer_header"
+            app:itemIconTint="@android:color/white"
+            app:itemTextColor="@android:color/white"
+            app:menu="@menu/drawer_menu" />
 
-            <android.support.constraint.Group
-                android:id="@+id/youtube_player_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.VISIBLE : View.GONE}"
-                app:constraint_referenced_ids="youtube_player_view,related_videos_recycler_view" />
-
-            <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-                android:id="@+id/youtube_player_view"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/related_videos_recycler_view"
-                clickHandler="@{mainActivityView.relatedVideosRecyclerViewItemView.onItemClickListener}"
-                itemDecoration="@{mainActivityView.relatedVideosRecyclerViewItemView.itemDecoration}"
-                itemViewBinder="@{mainActivityView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
-                items="@{mainActivityView.relatedVideosRecyclerViewItemView.state.items}"
-                onScrollListener="@{mainActivityView.relatedVideosRecyclerViewItemView.onScrollListener}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
-
-            <ProgressBar
-                android:id="@+id/related_videos_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{safeUnbox(mainActivityView.state.initialVideosLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_to_favourites_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:onClick="@{mainActivityView.onFavouriteBtnClickListener}"
-                android:src="@drawable/favourite"
-                app:elevation="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
-
-            <android.support.constraint.Group
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}"
-                app:constraint_referenced_ids="current_track_title_text_view,close_spotify_player_image_button,spotify_player_play_pause_image_button,playback_seek_bar" />
-
-            <ImageButton
-                android:id="@+id/close_spotify_player_image_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@color/colorPrimary"
-                android:foreground="@drawable/foreground_ripple"
-                android:onClick="@{mainActivityView.onCloseSpotifyPlayerBtnClickListener}"
-                android:src="@drawable/close"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/spotify_player_play_pause_image_button"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/image_button_background"
-                android:foreground="@drawable/round_foreground_ripple"
-                android:onClick="@{mainActivityView.onSpotifyPlayPauseBtnClickListener}"
-                android:src="@drawable/play"
-                app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/next_track_btn"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/image_button_background"
-                android:foreground="@drawable/round_foreground_ripple"
-                android:onClick="@{mainActivityView.onNextBtnClickListener}"
-                android:src="@drawable/next_track"
-                android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.nextTrackExists)) ? View.VISIBLE : View.GONE }"
-                app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
-                app:layout_constraintLeft_toRightOf="@id/spotify_player_play_pause_image_button"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/previous_track_btn"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/image_button_background"
-                android:foreground="@drawable/round_foreground_ripple"
-                android:onClick="@{mainActivityView.onPreviousBtnClickListener}"
-                android:src="@drawable/previous_track"
-                android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.previousTrackExists)) ? View.VISIBLE : View.GONE }"
-                app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/spotify_player_play_pause_image_button"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <SeekBar
-                android:id="@+id/playback_seek_bar"
-                progressChangeListener="@{mainActivityView.onPlaybackSeekBarProgressChangeListener}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:max="@{safeUnbox(mainActivityView.state.playbackSeekbarMaxValue)}"
-                app:layout_constraintBottom_toTopOf="@id/current_track_title_text_view"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spotify_player_play_pause_image_button" />
-
-            <TextView
-                android:id="@+id/current_track_title_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{mainActivityView.state.currentTrackTitle}"
-                android:textAlignment="center"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/spotify_player_guideline"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playback_seek_bar" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/spotify_player_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="100dp" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </android.support.v4.widget.DrawerLayout>
 
 </layout>
 

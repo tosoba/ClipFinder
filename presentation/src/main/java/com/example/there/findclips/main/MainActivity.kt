@@ -525,6 +525,7 @@ class MainActivity :
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
             val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
+            showDrawerHamburger()
         }
     }
 
@@ -579,6 +580,7 @@ class MainActivity :
         val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
         if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) {
             setSupportActionBar(mainToolbar)
+            showDrawerHamburger()
         }
     }
 

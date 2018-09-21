@@ -14,6 +14,7 @@ import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFr
 import com.example.there.findclips.util.ext.dpToPx
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.setHeight
+import com.example.there.findclips.util.ext.showDrawerHamburger
 import kotlinx.android.synthetic.main.fragment_favourites.*
 
 
@@ -50,6 +51,7 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
         return binding.apply {
             favouritesFragmentView = view
             mainActivity?.setSupportActionBar(favouritesToolbar)
+            mainActivity?.showDrawerHamburger()
             favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
         }.root
     }

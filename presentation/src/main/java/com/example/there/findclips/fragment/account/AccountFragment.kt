@@ -14,6 +14,7 @@ import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFr
 import com.example.there.findclips.fragment.account.saved.AccountSavedFragment
 import com.example.there.findclips.fragment.account.top.AccountTopFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -52,6 +53,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)
             mainActivity?.setSupportActionBar(accountToolbar)
+            mainActivity?.showDrawerHamburger()
         }.root
     }
 
