@@ -128,6 +128,13 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
+                <android.support.constraint.Group
+                    android:id="@+id/spotify_player_and_similar_tracks_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}"
+                    app:constraint_referenced_ids="similar_tracks_fragment,spotify_player_layout" />
+
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/spotify_player_layout"
                     android:layout_width="match_parent"
@@ -228,26 +235,19 @@
 
                 </android.support.constraint.ConstraintLayout>
 
-                <FrameLayout
+                <fragment
+                    android:id="@+id/similar_tracks_fragment"
+                    android:name="com.example.there.findclips.fragment.list.SpotifyTracksFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}"
+                    app:additional_hint_text=""
+                    app:header_text="Similar tracks"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spotify_player_layout">
-
-                    <fragment
-                        android:id="@+id/similar_tracks_fragment"
-                        android:name="com.example.there.findclips.fragment.list.SpotifyTracksFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:additional_hint_text=""
-                        app:header_text="Similar tracks"
-                        app:main_hint_text="@string/no_tracks_loaded_yet"
-                        app:should_show_header="true" />
-
-                </FrameLayout>
+                    app:layout_constraintTop_toBottomOf="@id/spotify_player_layout"
+                    app:main_hint_text="@string/no_tracks_loaded_yet"
+                    app:should_show_header="true" />
 
             </android.support.constraint.ConstraintLayout>
 

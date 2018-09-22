@@ -91,7 +91,7 @@ class MainActivity :
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        updatePlayerDimensions(currentSlideOffset)
+        updatePlayersDimensions(currentSlideOffset)
         updateMainContentLayoutParams()
         updateFavouriteBtnOnConfigChange(newConfig)
     }
@@ -607,7 +607,7 @@ class MainActivity :
     }
 
     private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
-        override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayerDimensions(slideOffset)
+        override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
 
         override fun onPanelStateChanged(
                 panel: View?,
@@ -678,17 +678,20 @@ class MainActivity :
         viewModel.searchRelatedVideos(video)
     }
 
-    private fun updatePlayerDimensions(slideOffset: Float) {
+    private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
             currentSlideOffset = slideOffset
-            val layoutParams = youtube_player_view.layoutParams
+            val youtubePlayerLayoutParams = youtube_player_view.layoutParams
+            val spotifyPlayerLayoutParams = spotify_player_layout.layoutParams
             val height = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
                 (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             } else {
                 (playerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             }
-            layoutParams.height = height.toInt()
+            youtubePlayerLayoutParams.height = height.toInt()
+            spotifyPlayerLayoutParams.height = height.toInt()
             youtube_player_view.requestLayout()
+            spotify_player_layout.requestLayout()
         }
     }
 
