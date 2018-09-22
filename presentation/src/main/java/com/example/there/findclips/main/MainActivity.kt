@@ -2,6 +2,7 @@ package com.example.there.findclips.main
 
 import android.app.SearchManager
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.Observer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -40,6 +41,7 @@ import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
+import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.model.entity.*
@@ -258,6 +260,16 @@ class MainActivity :
         }
     }
 
+    private val similarTracksFragment: SpotifyTracksFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment) as? SpotifyTracksFragment
+
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
+            tracks?.let { similarTracksFragment?.resetItems(it) }
+        })
+    }
+
     override fun onPlaybackEvent(event: PlayerEvent) {
         Log.e("PlaybackEvent", event.toString())
         playerMetadata = spotifyPlayer?.metadata
@@ -288,11 +300,13 @@ class MainActivity :
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
             }
 
-            PlayerEvent.kSpPlaybackNotifyTrackChanged -> playerMetadata?.let {
-                val trackName = it.currentTrack?.name
-                val artistName = it.currentTrack?.artistName
+            PlayerEvent.kSpPlaybackNotifyTrackChanged -> playerMetadata?.currentTrack?.let {
+                val trackName = it.name
+                val artistName = it.artistName
                 val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
+                it.id?.let { id -> viewModel.getSimilarTracks(userReadPrivateAccessTokenEntity, id) }
+                sliding_layout?.setDragView(spotify_player_layout)
             }
 
             else -> return
@@ -652,6 +666,8 @@ class MainActivity :
         lastPlayedAlbum = null
 
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
+
+        sliding_layout?.setDragView(youtube_player_view)
 
         sliding_layout?.expandIfHidden()
         if (lifecycle.currentState == Lifecycle.State.RESUMED)

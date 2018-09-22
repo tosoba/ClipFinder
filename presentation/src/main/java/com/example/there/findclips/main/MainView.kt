@@ -1,5 +1,6 @@
 package com.example.there.findclips.main
 
+import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.SeekBar
+import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
@@ -33,6 +35,7 @@ class MainView(
 
 data class MainViewState(
         val videos: ObservableList<Video> = ObservableArrayList(),
+        val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
         val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
         val initialVideosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false),

@@ -4,5 +4,6 @@
         <attr name="main_hint_text" format="string" />
         <attr name="additional_hint_text" format="string" />
         <attr name="should_show_header" format="boolean" />
+        <attr name="header_text" format="string" />
     </declare-styleable>
 </resources>

@@ -1,9 +1,12 @@
 package com.example.there.findclips.main
 
+import com.example.there.domain.entity.spotify.AccessTokenEntity
+import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import com.example.there.domain.usecase.videos.*
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.mapper.TrackEntityMapper
 import com.example.there.findclips.model.mapper.VideoEntityMapper
 import com.example.there.findclips.model.mapper.VideoPlaylistEntityMapper
 import javax.inject.Inject
@@ -13,7 +16,8 @@ class MainViewModel @Inject constructor(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val insertVideoPlaylist: InsertVideoPlaylist,
         private val addVideoToPlaylist: AddVideoToPlaylist,
-        private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
+        private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists,
+        private val getSimilarTracks: GetSimilarTracks
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState = MainViewState()
@@ -26,7 +30,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun searchRelatedVideos(toVideo: Video,  onFinally: (() -> Unit)? = null) {
+    fun searchRelatedVideos(toVideo: Video, onFinally: (() -> Unit)? = null) {
         lastSearchVideo = toVideo
         viewState.videos.clear()
         addSearchRelatedVideosDisposable(toVideo, false, onFinally)
@@ -69,5 +73,10 @@ class MainViewModel @Inject constructor(
                 .subscribe({ playlistId ->
                     addVideoToPlaylist(video, VideoPlaylist(playlistId, playlist.name), onSuccess)
                 }, ::onError))
+    }
+
+    fun getSimilarTracks(accessTokenEntity: AccessTokenEntity, trackId: String) {
+        addDisposable(getSimilarTracks.execute(accessTokenEntity, trackId)
+                .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError))
     }
 }

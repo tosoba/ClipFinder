@@ -28,7 +28,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     protected abstract val itemsRecyclerView: RecyclerView?
 
-    protected abstract val headerText: String
+    protected abstract val defaultHeaderText: String
 
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
@@ -39,7 +39,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
                 null,
                 false
         ).apply {
-            viewState = HeaderItemViewState(headerText)
+            viewState = HeaderItemViewState(xmlHeaderText ?: defaultHeaderText)
             executePendingBindings()
         }
 
@@ -86,6 +86,11 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         viewState.items.addAll(items)
     }
 
+    fun resetItems(items: List<T>) {
+        viewState.items.clear()
+        viewState.items.addAll(items)
+    }
+
     abstract val viewState: ViewState<T>
 
     data class ViewState<T : Parcelable>(
@@ -117,6 +122,8 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         }
     }
 
+    private var xmlHeaderText: String? = null
+
     override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
 
@@ -130,12 +137,13 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         attributes?.getBoolean(R.styleable.BaseSpotifyListFragment_should_show_header, false)?.let {
             viewState.shouldShowHeader = it
         }
+        attributes?.getString(R.styleable.BaseSpotifyListFragment_header_text)?.let {
+            xmlHeaderText = it
+        }
         attributes?.recycle()
     }
 
     companion object {
-        private const val KEY_SAVED_ITEMS = "KEY_SAVED_ITEMS"
-
         const val EXTRA_MAIN_HINT = "EXTRA_MAIN_HINT"
         const val EXTRA_ADDITIONAL_HINT = "EXTRA_ADDITIONAL_HINT"
         const val EXTRA_ITEMS = "EXTRA_ITEMS"

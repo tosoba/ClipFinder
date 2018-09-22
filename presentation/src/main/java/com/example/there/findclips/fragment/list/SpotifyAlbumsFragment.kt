@@ -32,7 +32,7 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
     override val itemsRecyclerView: RecyclerView?
         get() = albums_recycler_view
 
-    override val headerText: String = "Albums"
+    override val defaultHeaderText: String = "Albums"
 
     override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, Album.sortedListCallback))
 
