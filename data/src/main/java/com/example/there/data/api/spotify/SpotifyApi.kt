@@ -25,7 +25,8 @@ interface SpotifyApi {
             @Header("Authorization") authorization: String,
             @Query("country") country: String = DEFAULT_COUNTRY,
             @Query("offset") offset: String = DEFAULT_OFFSET,
-            @Query("limit") limit: String = DEFAULT_LIMIT
+            @Query("limit") limit: String = DEFAULT_LIMIT,
+            @Query("locale") locale: String = DEFAULT_LOCALE
     ): Observable<PlaylistsResponse>
 
     @GET("tracks")
@@ -153,8 +154,8 @@ interface SpotifyApi {
         const val DEFAULT_TRACKS_LIMIT = "100"
 
         private const val DEFAULT_OFFSET = "0"
-        private const val DEFAULT_COUNTRY = "US"
-        private const val DEFAULT_LOCALE = "en_us"
+        const val DEFAULT_COUNTRY = "US"
+        const val DEFAULT_LOCALE = "en_us"
 
         private const val ALL_SEARCH_TYPES = "album,artist,playlist,track"
     }

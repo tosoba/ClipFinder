@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="country_names">
+        <item>United States</item>
+        <item>Germany</item>
+    </string-array>
+
+    <string-array name="country_values">
+        <item>US</item>
+        <item>DE</item>
+    </string-array>
+
+    <string-array name="language_names">
+        <item>English</item>
+        <item>German</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>en_us</item>
+        <item>de_de</item>
+    </string-array>
+</resources>

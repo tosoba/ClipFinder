@@ -5,6 +5,7 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
@@ -21,6 +22,7 @@ class MainView(
         val pagerAdapter: FragmentStatePagerAdapter,
         val onPageChangeListener: ViewPager.OnPageChangeListener,
         val offScreenPageLimit: Int,
+        val onDrawerNavigationItemSelectedListener: NavigationView.OnNavigationItemSelectedListener,
         val fadeOnClickListener: View.OnClickListener,
         val slideListener: SlidingUpPanelLayout.PanelSlideListener,
         val initialSlidePanelState: SlidingUpPanelLayout.PanelState,

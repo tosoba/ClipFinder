@@ -6,6 +6,7 @@ import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.data.api.spotify.SpotifyChartsApi
 import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.mapper.spotify.*
+import com.example.there.data.preferences.PreferencesHelper
 import com.example.there.data.response.TracksOnlyResponse
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class SpotifyRemoteDataStore @Inject constructor(
         private val api: SpotifyApi,
         private val accountsApi: SpotifyAccountsApi,
-        private val chartsApi: SpotifyChartsApi
+        private val chartsApi: SpotifyChartsApi,
+        private val preferencesHelper: PreferencesHelper
 ) : ISpotifyRemoteDataStore {
 
     override fun getAccessToken(
@@ -33,7 +35,9 @@ class SpotifyRemoteDataStore @Inject constructor(
         return offsetSubject.concatMap { offset ->
             api.getCategories(
                     authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset.toString()
+                    offset = offset.toString(),
+                    country = preferencesHelper.country,
+                    locale = preferencesHelper.language
             )
         }.doOnNext {
             if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
@@ -48,7 +52,9 @@ class SpotifyRemoteDataStore @Inject constructor(
         return offsetSubject.concatMap { offset ->
             api.getFeaturedPlaylists(
                     authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset.toString()
+                    offset = offset.toString(),
+                    country = preferencesHelper.country,
+                    locale = preferencesHelper.language
             )
         }.doOnNext {
             if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())

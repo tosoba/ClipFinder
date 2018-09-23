@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -45,6 +46,7 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
@@ -549,6 +551,7 @@ class MainActivity :
         MainView(
                 state = viewModel.viewState,
                 onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+                onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 offScreenPageLimit = 2,
@@ -564,6 +567,23 @@ class MainActivity :
                 onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
         )
     }
+
+    // region drawer navigation
+
+    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
+        when (it.itemId) {
+            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
+                startActivity(this)
+            }
+
+            R.id.drawer_action_about -> {
+
+            }
+        }
+        true
+    }
+
+    // endregion
 
     // region pager navigation
 
