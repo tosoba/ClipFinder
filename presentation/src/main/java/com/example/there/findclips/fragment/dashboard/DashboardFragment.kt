@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.there.data.preferences.PreferencesHelper
 import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
@@ -19,6 +20,7 @@ import com.example.there.findclips.fragment.category.CategoryFragment
 import com.example.there.findclips.fragment.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.model.entity.Playlist
@@ -35,6 +37,7 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import javax.inject.Inject
 
 
 class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardViewModel::class.java), Injectable, HasMainToolbar {
@@ -166,6 +169,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
+        observePreferences()
         loadData()
     }
 
@@ -182,4 +187,26 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     }
 
     private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)
+
+    private val disposablesComponent = DisposablesComponent()
+
+    @Inject
+    lateinit var preferencesHelper: PreferencesHelper
+
+    private fun observePreferences() {
+        disposablesComponent.addAll(
+                preferencesHelper.countryObservable
+                        .skip(1)
+                        .distinctUntilChanged()
+                        .subscribe {
+                            //TODO: reload categories and featured playlists
+                        },
+                preferencesHelper.languageObservable
+                        .skip(1)
+                        .distinctUntilChanged()
+                        .subscribe {
+                            //TODO: reload categories and featured playlists
+                        }
+        )
+    }
 }

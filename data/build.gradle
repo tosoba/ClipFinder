@@ -49,6 +49,8 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:1.1.1"
 
     implementation project(':domain')
+
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
 }
 
 repositories {
