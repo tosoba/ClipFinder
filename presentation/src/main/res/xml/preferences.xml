@@ -2,24 +2,23 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="@string/country"
-        android:title="Foreground Color"
         android:defaultValue="US"
+        android:dialogIcon="@drawable/country"
         android:entries="@array/country_names"
         android:entryValues="@array/country_values"
-        android:summary="Select a foreground color"
         android:icon="@drawable/country"
-        android:dialogIcon="@drawable/country"
-        />
+        android:key="@string/country"
+        android:summary="Select a country"
+        android:title="@string/country" />
+
     <ListPreference
-        android:key="@string/language"
-        android:title="Background Color"
+        android:defaultValue="en_us"
+        android:dialogIcon="@drawable/language"
         android:entries="@array/language_names"
         android:entryValues="@array/language_values"
-        android:defaultValue="en_us"
         android:icon="@drawable/language"
-        android:dialogIcon="@drawable/language"
-        android:summary="Choose a background color"
-        />
+        android:key="@string/language"
+        android:summary="Select a language"
+        android:title="@string/language" />
 
 </PreferenceScreen>

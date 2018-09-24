@@ -574,6 +574,7 @@ class MainActivity :
         when (it.itemId) {
             R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
                 startActivity(this)
+                main_drawer_layout?.closeDrawer(Gravity.START)
             }
 
             R.id.drawer_action_about -> {

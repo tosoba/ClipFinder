@@ -58,7 +58,9 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout" />
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/PreferenceScreen" />
     </application>
 
 </manifest>

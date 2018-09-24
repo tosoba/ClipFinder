@@ -24,7 +24,7 @@ open class PreferencesHelper @Inject constructor(context: Context) {
     companion object {
         private const val PREF_BUFFER_PACKAGE_NAME = "SHARED_PREFERENCES_KEY"
 
-        private const val PREF_KEY_COUNTRY = "country"
-        private const val PREF_KEY_LANGUAGE = "language"
+        private const val PREF_KEY_COUNTRY = "Country"
+        private const val PREF_KEY_LANGUAGE = "Language"
     }
 }

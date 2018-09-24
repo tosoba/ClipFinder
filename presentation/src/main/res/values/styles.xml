@@ -101,4 +101,19 @@
     <style name="ActionBar" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:displayOptions">homeAsUp</item>
     </style>
+
+    <style name="PreferenceScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/darker_gray</item>
+        <item name="android:textColorTertiary">@android:color/darker_gray</item>
+        <item name="android:alertDialogTheme">@style/PreferenceDialogStyle</item>
+        <item name="android:actionBarSize">48dp</item>
+
+        <item name="actionBarSize">48dp</item>
+    </style>
+
+    <style name="PreferenceDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>
