@@ -1,6 +1,7 @@
 package com.example.there.data.api.spotify
 
 import com.example.there.data.entity.spotify.AlbumData
+import com.example.there.data.entity.spotify.UserData
 import com.example.there.data.response.*
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -148,6 +149,9 @@ interface SpotifyApi {
             @Query("limit") limit: String = DEFAULT_LIMIT,
             @Query("offset") offset: String = DEFAULT_OFFSET
     ): Single<SavedAlbumsResult>
+
+    @GET("me")
+    fun getCurrentUser(@Header("Authorization") authorization: String): Single<UserData>
 
     companion object {
         const val DEFAULT_LIMIT = "50"

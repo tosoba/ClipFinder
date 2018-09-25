@@ -60,7 +60,7 @@ class DashboardViewModel @Inject constructor(
                 .subscribe({
                     if (shouldClear) viewState.featuredPlaylists.clear()
                     viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom))
-                },::onError))
+                }, ::onError))
     }
 
     fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
@@ -90,7 +90,7 @@ class DashboardViewModel @Inject constructor(
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalNewReleases = it.totalItems
                         viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
-                    },::onError))
+                    }, ::onError))
         }
     }
 

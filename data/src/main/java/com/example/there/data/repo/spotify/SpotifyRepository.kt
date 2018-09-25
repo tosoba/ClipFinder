@@ -131,4 +131,6 @@ class SpotifyRepository @Inject constructor(
     override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
 
     override fun insertTrack(trackEntity: TrackEntity): Completable = dbDataStore.insertTrack(trackEntity)
+
+    override fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity> = remoteDataStore.getCurrentUser(accessToken)
 }

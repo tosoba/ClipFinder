@@ -44,4 +44,6 @@ interface ISpotifyRepository {
     fun insertCategory(categoryEntity: CategoryEntity): Completable
     fun insertPlaylist(playlistEntity: PlaylistEntity): Completable
     fun insertTrack(trackEntity: TrackEntity): Completable
+
+    fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity>
 }

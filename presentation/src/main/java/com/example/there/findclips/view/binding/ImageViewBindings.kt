@@ -19,6 +19,16 @@ fun bindImageUrl(view: ImageView, url: String?) {
     }
 }
 
+@BindingAdapter("userThumbnailUrl")
+fun bindUserImageUrl(view: ImageView, url: String?) {
+    Glide.with(view.context)
+            .load(url)
+            .apply(RequestOptions()
+                    .fitCenter()
+                    .error(R.drawable.user_placeholder))
+            .into(view)
+}
+
 @BindingAdapter("onClickIfNotNull")
 fun bindOnClick(view: ImageView, onClickListener: View.OnClickListener?) {
     onClickListener?.let { view.setOnClickListener(it) }

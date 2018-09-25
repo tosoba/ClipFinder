@@ -40,6 +40,7 @@ import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.ActivityMainBinding
+import com.example.there.findclips.databinding.DrawerHeaderBinding
 import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
@@ -81,14 +82,22 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainActivityView = view
-        binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        initViewBindings()
 
         initYouTubePlayerView()
         addPlayerViewControls()
 
         initSpotifyPlayer()
+    }
+
+    private fun initViewBindings() {
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.mainActivityView = view
+        binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        val drawerHeaderBinding: DrawerHeaderBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
+        drawerHeaderBinding.viewState = viewModel.drawerViewState
+        binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -326,6 +335,7 @@ class MainActivity :
 
     override fun onLoggedOut() {
         viewModel.viewState.isLoggedIn.set(false)
+        viewModel.drawerViewState.user.set(null)
         Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
     }
 
@@ -419,6 +429,7 @@ class MainActivity :
 
     private fun onAuthenticationComplete(accessToken: String) {
         userReadPrivateAccessToken = accessToken
+        viewModel.getCurrentUser(userReadPrivateAccessTokenEntity)
 
         if (spotifyPlayer == null) {
             val playerConfig = Config(applicationContext, accessToken, SpotifyClient.id)
@@ -881,6 +892,15 @@ class MainActivity :
 
         private const val LOGIN_REQUEST_CODE = 100
         private const val REDIRECT_URI = "testschema://callback"
-        private val SCOPES = arrayOf("user-read-private", "user-library-read", "user-top-read", "playlist-read", "playlist-read-private", "streaming")
+        private val SCOPES = arrayOf(
+                "user-read-private",
+                "user-library-read",
+                "user-top-read",
+                "playlist-read",
+                "playlist-read-private",
+                "streaming",
+                "user-read-birthdate",
+                "user-read-email"
+        )
     }
 }

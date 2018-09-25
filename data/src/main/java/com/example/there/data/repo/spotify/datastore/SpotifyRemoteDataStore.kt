@@ -330,6 +330,11 @@ class SpotifyRemoteDataStore @Inject constructor(
         )
     }
 
+    override fun getCurrentUser(
+            accessToken: AccessTokenEntity
+    ): Single<UserEntity> = api.getCurrentUser(getAccessTokenHeader(accessToken.token))
+            .map { UserMapper.mapFrom(it) }
+
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
 
