@@ -141,8 +141,17 @@ class MainActivity :
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
-        menu?.findItem(R.id.action_login)?.isVisible = !isLoggedIn
-        menu?.findItem(R.id.action_logout)?.isVisible = isLoggedIn
+
+        menu?.apply {
+            findItem(R.id.action_login)?.isVisible = !isLoggedIn
+            findItem(R.id.action_logout)?.isVisible = isLoggedIn
+        }
+
+        drawer_navigation_view?.menu?.apply {
+            findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
+            findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -572,15 +581,18 @@ class MainActivity :
 
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
-            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
-                startActivity(this)
-                main_drawer_layout?.closeDrawer(Gravity.START)
-            }
+            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run { startActivity(this) }
 
             R.id.drawer_action_about -> {
 
             }
+
+            R.id.drawer_action_login -> if (!playerLoggedIn) openLoginWindow()
+
+            R.id.drawer_action_logout -> if (playerLoggedIn) logOutPlayer()
         }
+
+        main_drawer_layout?.closeDrawer(Gravity.START)
         true
     }
 

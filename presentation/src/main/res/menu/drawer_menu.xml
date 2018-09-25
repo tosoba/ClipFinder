@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/drawer_action_login"
+            android:icon="@drawable/login"
+            android:title="@string/login" />
+        <item
             android:id="@+id/drawer_action_settings"
             android:icon="@drawable/settings"
             android:title="@string/settings" />
@@ -9,5 +13,9 @@
             android:id="@+id/drawer_action_about"
             android:icon="@drawable/about"
             android:title="@string/about" />
+        <item
+            android:id="@+id/drawer_action_logout"
+            android:icon="@drawable/logout"
+            android:title="@string/logout" />
     </group>
 </menu>
