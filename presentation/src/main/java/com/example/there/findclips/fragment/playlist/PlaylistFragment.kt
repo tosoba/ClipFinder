@@ -16,7 +16,6 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
 
 class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
@@ -90,7 +89,7 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
         })
     }
 
-    private fun loadData() = viewModel.loadTracks(activity?.accessToken, playlist)
+    private fun loadData() = viewModel.loadTracks(preferenceHelper.accessToken, playlist)
 
     companion object {
         private const val ARG_PLAYLIST = "ARG_PLAYLIST"

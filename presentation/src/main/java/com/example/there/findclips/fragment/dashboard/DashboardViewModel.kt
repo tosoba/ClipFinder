@@ -43,31 +43,33 @@ class DashboardViewModel @Inject constructor(
         loadNewReleases(this, onFinally = onNewReleasesFinally)
     }
 
-    fun loadCategories(accessToken: AccessTokenEntity) {
+    fun loadCategories(accessToken: AccessTokenEntity, shouldClear: Boolean = false) {
         viewState.categoriesLoadingInProgress.set(true)
         addDisposable(getCategories.execute(accessToken)
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
-                .subscribe({ viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom)) }, {
-                    onError(it)
-                }))
+                .subscribe({
+                    if (shouldClear) viewState.categories.clear()
+                    viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom))
+                }, ::onError))
     }
 
-    fun loadFeaturedPlaylists(accessToken: AccessTokenEntity) {
+    fun loadFeaturedPlaylists(accessToken: AccessTokenEntity, shouldClear: Boolean = false) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
         addDisposable(getFeaturedPlaylists.execute(accessToken)
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
-                .subscribe({ viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom)) }, {
-                    onError(it)
-                }))
+                .subscribe({
+                    if (shouldClear) viewState.featuredPlaylists.clear()
+                    viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom))
+                },::onError))
     }
 
     fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
         viewState.topTracksLoadingInProgress.set(true)
         addDisposable(getDailyViralTracks.execute(accessToken)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
-                .subscribe({ viewState.topTracks.addAll(it.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) }) }, {
-                    onError(it)
-                }))
+                .subscribe({ result ->
+                    viewState.topTracks.addAll(result.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) })
+                }, ::onError))
     }
 
     private var currentNewReleasesOffset: Int = 0
@@ -88,9 +90,7 @@ class DashboardViewModel @Inject constructor(
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
                         totalNewReleases = it.totalItems
                         viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
-                    }, {
-                        onError(it)
-                    }))
+                    },::onError))
         }
     }
 

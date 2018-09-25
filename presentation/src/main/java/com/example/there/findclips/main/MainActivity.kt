@@ -613,10 +613,9 @@ class MainActivity :
     private fun toggleToolbar() {
         val currentTopFragment = (pagerAdapter.currentFragment as BaseHostFragment).topFragment
         val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
-        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) {
-            setSupportActionBar(mainToolbar)
+        setSupportActionBar(mainToolbar)
+        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0)
             showDrawerHamburger()
-        }
     }
 
     // endregion

@@ -118,7 +118,8 @@ class SpotifyRemoteDataStore @Inject constructor(
     ): Single<EntityPage<PlaylistEntity>> = api.getPlaylistsForCategory(
             authorization = getAccessTokenHeader(accessToken.token),
             categoryId = categoryId,
-            offset = offset.toString()
+            offset = offset.toString(),
+            country = preferencesHelper.country
     ).map {
         EntityPage(
                 items = it.result.playlists.map(PlaylistMapper::mapFrom),
@@ -200,7 +201,8 @@ class SpotifyRemoteDataStore @Inject constructor(
             artistId: String
     ): Single<List<TrackEntity>> = api.getTopTracksFromArtist(
             authorization = getAccessTokenHeader(accessToken.token),
-            artistId = artistId
+            artistId = artistId,
+            country = preferencesHelper.country
     ).map { it.tracks.map(TrackMapper::mapFrom) }
 
     override fun getRelatedArtists(

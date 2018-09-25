@@ -17,7 +17,6 @@ import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
@@ -155,7 +154,7 @@ class SpotifySearchFragment :
         }
     }
 
-    private fun loadData() = viewModel.searchAll(activity?.accessToken, query)
+    private fun loadData() = viewModel.searchAll(preferenceHelper.accessToken, query)
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

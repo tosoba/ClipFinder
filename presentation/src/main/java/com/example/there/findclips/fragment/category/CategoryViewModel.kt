@@ -37,8 +37,12 @@ class CategoryViewModel @Inject constructor(
     private var currentOffset = 0
     private var totalItems = 0
 
-    private fun loadData(accessTokenEntity: AccessTokenEntity, categoryId: String) {
-        if (currentOffset == 0 || (currentOffset < totalItems)) {
+    fun loadData(accessTokenEntity: AccessTokenEntity, categoryId: String, shouldClear: Boolean = false) {
+        if (currentOffset == 0 || (currentOffset < totalItems) || shouldClear) {
+            if (shouldClear) {
+                currentOffset = 0
+                totalItems = 0
+            }
             viewState.loadingInProgress.set(true)
             addDisposable(getPlaylistsForCategory.execute(accessTokenEntity, categoryId, currentOffset)
                     .doFinally { viewState.loadingInProgress.set(false) }

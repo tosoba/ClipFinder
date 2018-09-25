@@ -17,7 +17,6 @@ import com.example.there.findclips.fragment.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
@@ -32,7 +31,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
         set(value) {
             if (field == value || value == null) return
             field = value
-            viewModel.loadDataForTrack(activity?.accessToken, value)
+            viewModel.loadDataForTrack(preferenceHelper.accessToken, value)
             viewModel.viewState.clearAll()
         }
 
@@ -108,7 +107,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
     }
 
     private fun loadData() {
-        track?.let { viewModel.loadDataForTrack(activity?.accessToken, it) }
+        track?.let { viewModel.loadDataForTrack(preferenceHelper.accessToken, it) }
     }
 
     companion object {

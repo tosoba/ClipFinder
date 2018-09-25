@@ -86,6 +86,8 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         viewState.items.addAll(items)
     }
 
+    fun clearItems() = viewState.items.clear()
+
     fun resetItems(items: List<T>) {
         viewState.items.clear()
         viewState.items.addAll(items)

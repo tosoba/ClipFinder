@@ -20,7 +20,6 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
@@ -118,7 +117,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
         lifecycle.addObserver(connectivityComponent)
     }
 
-    private fun loadData() = viewModel.loadAlbumData(activity?.accessToken, album)
+    private fun loadData() = viewModel.loadAlbumData(preferenceHelper.accessToken, album)
 
     companion object {
         private const val ARG_ALBUM = "ARG_ALBUM"

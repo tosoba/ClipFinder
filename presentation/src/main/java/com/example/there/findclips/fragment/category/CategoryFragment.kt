@@ -15,8 +15,8 @@ import com.example.there.findclips.databinding.FragmentCategoryBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.mainActivity
 
 class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
@@ -48,11 +48,24 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
         lifecycle.addObserver(connectivityComponent)
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        observePreferences()
         loadData()
     }
+
+    private fun observePreferences() = disposablesComponent.add(preferenceHelper.countryObservable
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribe { _ ->
+                playlistsFragment?.clearItems()
+                preferenceHelper.accessToken?.let { viewModel.loadData(it, category.id, true) }
+            }
+    )
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
@@ -68,20 +81,20 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playlistsFragment.loadMore = ::loadData
+        playlistsFragment!!.loadMore = ::loadData
     }
 
-    private val playlistsFragment: SpotifyPlaylistsFragment
-        get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as SpotifyPlaylistsFragment
+    private val playlistsFragment: SpotifyPlaylistsFragment?
+        get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as? SpotifyPlaylistsFragment
 
     override fun setupObservers() {
         super.setupObservers()
         viewModel.playlists.observe(this, Observer { playlists ->
-            playlists?.let { playlistsFragment.updateItems(it, false) }
+            playlists?.let { playlistsFragment?.updateItems(it, false) }
         })
     }
 
-    private fun loadData() = viewModel.loadPlaylists(activity?.accessToken, category.id)
+    private fun loadData() = viewModel.loadPlaylists(preferenceHelper.accessToken, category.id)
 
     companion object {
         private const val ARG_CATEGORY = "ARG_CATEGORY"

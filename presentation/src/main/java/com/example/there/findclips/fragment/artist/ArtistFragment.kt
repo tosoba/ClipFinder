@@ -21,7 +21,6 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
@@ -71,7 +70,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
                         },
                         ClickHandler {
-                            viewModel.loadArtistData(activity?.accessToken, artist = it)
+                            viewModel.loadArtistData(preferenceHelper.accessToken, artist = it)
                         },
                         null,
                         null
@@ -104,7 +103,7 @@ class ArtistFragment :
                     val artistToLoad = if (viewModelInitialized && viewModel.viewState.artist.get() != null)
                         viewModel.viewState.artist.get()!!
                     else argArtist
-                    viewModel.loadArtistData(activity?.accessToken, artistToLoad)
+                    viewModel.loadArtistData(preferenceHelper.accessToken, artistToLoad)
                 }
         )
     }
@@ -137,7 +136,7 @@ class ArtistFragment :
         if (!viewModel.onBackPressed()) mainActivity?.backPressedOnNoPreviousFragmentState()
     }
 
-    private fun loadData() = viewModel.loadArtistData(activity?.accessToken, argArtist)
+    private fun loadData() = viewModel.loadArtistData(preferenceHelper.accessToken, argArtist)
 
     companion object {
         private const val ARG_ARTIST = "ARG_ARTIST"

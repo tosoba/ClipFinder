@@ -11,10 +11,7 @@ import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.FragmentFavouritesBinding
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setHeight
-import com.example.there.findclips.util.ext.showDrawerHamburger
+import com.example.there.findclips.util.ext.*
 import kotlinx.android.synthetic.main.fragment_favourites.*
 
 
@@ -66,5 +63,10 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
         if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(
+            item: MenuItem?
+    ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+        mainActivity?.openDrawer()
+        true
+    } else false
 }

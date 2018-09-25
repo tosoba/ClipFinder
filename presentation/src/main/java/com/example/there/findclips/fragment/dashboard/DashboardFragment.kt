@@ -2,8 +2,6 @@ package com.example.there.findclips.fragment.dashboard
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -25,9 +23,9 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
-import com.example.there.findclips.util.ext.accessToken
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.openDrawer
 import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -48,7 +46,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
             override fun onLoadMore() {
-                activity?.accessToken?.let {
+                preferenceHelper.accessToken?.let {
                     viewModel.loadNewReleases(it, true)
                 }
             }
@@ -71,7 +69,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadCategories(it) } }
+                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadCategories(it) } }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -87,7 +85,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadFeaturedPlaylists(it) } }
+                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadFeaturedPlaylists(it) } }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -103,7 +101,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { activity?.accessToken?.let { viewModel.loadDailyViralTracks(it) } }
+                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadDailyViralTracks(it) } }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -119,8 +117,8 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         onNewReleasesScrollListener,
-                        View.OnClickListener {
-                            activity?.accessToken?.let {
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
                                 val loadMore = viewModel.viewState.newReleases.size > 0
                                 viewModel.loadNewReleases(it, loadMore)
                             }
@@ -174,19 +172,19 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
         loadData()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-            mainActivity?.findViewById<DrawerLayout>(R.id.main_drawer_layout)?.openDrawer(GravityCompat.START)
-            true
-        } else false
-    }
+    override fun onOptionsItemSelected(
+            item: MenuItem?
+    ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+        mainActivity?.openDrawer()
+        true
+    } else false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
     }
 
-    private fun loadData() = viewModel.loadDashboardData(activity?.accessToken)
+    private fun loadData() = viewModel.loadDashboardData(preferenceHelper.accessToken)
 
     private val disposablesComponent = DisposablesComponent()
 
@@ -194,19 +192,20 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     lateinit var preferencesHelper: PreferencesHelper
 
     private fun observePreferences() {
+        fun reloadDataOnPreferencesChange() = preferencesHelper.accessToken?.let {
+            viewModel.loadCategories(it, true)
+            viewModel.loadFeaturedPlaylists(it, true)
+        }
+
         disposablesComponent.addAll(
                 preferencesHelper.countryObservable
                         .skip(1)
                         .distinctUntilChanged()
-                        .subscribe {
-                            //TODO: reload categories and featured playlists
-                        },
+                        .subscribe { reloadDataOnPreferencesChange() },
                 preferencesHelper.languageObservable
                         .skip(1)
                         .distinctUntilChanged()
-                        .subscribe {
-                            //TODO: reload categories and featured playlists
-                        }
+                        .subscribe { reloadDataOnPreferencesChange() }
         )
     }
 }

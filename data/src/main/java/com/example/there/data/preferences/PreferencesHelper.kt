@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
@@ -29,6 +30,22 @@ open class PreferencesHelper @Inject constructor(context: Context) {
                 ?: SpotifyApi.DEFAULT_LOCALE
         set(value) = preferences.edit().putString(PREF_KEY_LANGUAGE, value).apply()
 
+    var accessToken: AccessTokenEntity?
+        get() {
+            val token = preferences.getString(PREF_KEY_ACCESS_TOKEN, null)
+            val timestamp = preferences.getLong(PREF_KEY_ACCESS_TOKEN_TIMESTAMP, 0L)
+            return if (token == null) null
+            else AccessTokenEntity(token, timestamp)
+        }
+        set(value) {
+            if (value == null) return
+            with(preferences.edit()) {
+                putString(PREF_KEY_ACCESS_TOKEN, value.token)
+                putLong(PREF_KEY_ACCESS_TOKEN_TIMESTAMP, value.timestamp)
+                apply()
+            }
+        }
+
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
             if (!contains(PREF_KEY_COUNTRY)) edit().putString(PREF_KEY_COUNTRY, SpotifyApi.DEFAULT_COUNTRY).apply()
@@ -47,8 +64,8 @@ open class PreferencesHelper @Inject constructor(context: Context) {
         get() = languageRx.asObservable()
 
     companion object {
-        private const val SHARED_PREFERENCES_KEY = "SHARED_PREFERENCES_KEY"
-
+        private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
+        private const val PREF_KEY_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_ACCESS_TOKEN_TIMESTAMP"
         private const val PREF_KEY_COUNTRY = "Country"
         private const val PREF_KEY_LANGUAGE = "Language"
     }

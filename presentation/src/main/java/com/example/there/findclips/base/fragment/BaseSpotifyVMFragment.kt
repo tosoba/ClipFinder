@@ -1,20 +1,22 @@
 package com.example.there.findclips.base.fragment
 
 import android.arch.lifecycle.Observer
+import com.example.there.data.preferences.PreferencesHelper
 import com.example.there.findclips.base.vm.BaseSpotifyViewModel
-import com.example.there.findclips.util.ext.saveAccessToken
+import javax.inject.Inject
 
 abstract class BaseSpotifyVMFragment<T : BaseSpotifyViewModel> (
         vmClass: Class<T>
 ) : BaseVMFragment<T>(vmClass) {
 
+    @Inject
+    lateinit var preferenceHelper: PreferencesHelper
+
     override fun setupObservers() {
         super.setupObservers()
 
         viewModel.accessTokenLiveData.observe(this, Observer { accessToken ->
-            accessToken?.let {
-                activity?.saveAccessToken(it)
-            }
+            accessToken?.let { preferenceHelper.accessToken = it }
         })
     }
 }

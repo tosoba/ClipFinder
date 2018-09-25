@@ -14,6 +14,7 @@ import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFr
 import com.example.there.findclips.fragment.account.saved.AccountSavedFragment
 import com.example.there.findclips.fragment.account.top.AccountTopFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.openDrawer
 import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
@@ -67,5 +68,10 @@ class AccountFragment : Fragment(), HasMainToolbar {
         if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(
+            item: MenuItem?
+    ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+        mainActivity?.openDrawer()
+        true
+    } else false
 }
