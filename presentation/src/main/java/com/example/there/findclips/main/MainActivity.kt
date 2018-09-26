@@ -46,6 +46,7 @@ import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
+import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
@@ -88,6 +89,8 @@ class MainActivity :
         addPlayerViewControls()
 
         initSpotifyPlayer()
+
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
     }
 
     private fun initViewBindings() {
@@ -136,16 +139,6 @@ class MainActivity :
 
     private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.viewState.isLoggedIn.addOnPropertyChangedCallback(loggedInCallback)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.viewState.isLoggedIn.removeOnPropertyChangedCallback(loggedInCallback)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
