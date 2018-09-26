@@ -2,6 +2,7 @@ package com.example.there.data.repo.videos
 
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
+import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
 import com.example.there.domain.repo.videos.IVideosRepository
 import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
 import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
@@ -82,4 +83,6 @@ class VideosRepository @Inject constructor(
             videoEntity: VideoEntity,
             playlistEntity: VideoPlaylistEntity
     ): Completable = dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)
+
+    override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = dbDataStore.getVideoPlaylistsWithThumbnails()
 }

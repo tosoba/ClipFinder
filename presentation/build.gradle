@@ -80,4 +80,5 @@ dependencies {
     implementation 'com.android.support:customtabs:28.0.0'
 
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
+    implementation 'com.github.lopei:collageview:0.1.3'
 }

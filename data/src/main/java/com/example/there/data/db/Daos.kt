@@ -65,6 +65,9 @@ interface VideoDao : BaseDao<VideoDbData> {
 
     @Query("SELECT * FROM videos WHERE related_video_id = :videoId")
     fun findAllRelatedToVideo(videoId: String): Single<List<VideoDbData>>
+
+    @Query("SELECT * FROM videos WHERE playlist_id = :playlistId LIMIT 5")
+    fun find5VideosFromPlaylist(playlistId: Long): Single<List<VideoDbData>>
 }
 
 @Dao

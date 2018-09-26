@@ -15,7 +15,9 @@ class GetFavouriteVideoPlaylists(
         private val repository: IVideosRepository
 ) : FlowableUseCase<List<VideoPlaylistEntity>>(transformer) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<VideoPlaylistEntity>> = repository.getFavouritePlaylists()
+    override fun createFlowable(
+            data: Map<String, Any?>?
+    ): Flowable<List<VideoPlaylistEntity>> = repository.getFavouritePlaylists()
 }
 
 class InsertVideoPlaylist(

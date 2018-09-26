@@ -10,6 +10,7 @@ import com.example.there.data.mapper.videos.VideoDbMapper
 import com.example.there.data.mapper.videos.VideoPlaylistMapper
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
+import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
 import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -104,4 +105,18 @@ class VideosDbDataStore @Inject constructor(
         videoEntity.playlistId = playlistEntity.id
         videoDao.insert(VideoDbMapper.mapBack(videoEntity))
     }
+
+    override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = videoPlaylistDao.findAll()
+            .flatMapIterable { it }
+            .flatMap { playlist ->
+                videoDao.find5VideosFromPlaylist(playlist.id)
+                        .toFlowable()
+                        .map {
+                            VideoPlaylistThumbnailsEntity(
+                                playlist.id,
+                                playlist.name,
+                                it.map { it.thumbnailUrl }
+                            )
+                        }
+            }
 }

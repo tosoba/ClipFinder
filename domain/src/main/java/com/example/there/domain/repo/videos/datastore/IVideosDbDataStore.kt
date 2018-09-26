@@ -2,6 +2,7 @@ package com.example.there.domain.repo.videos.datastore
 
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
+import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -23,4 +24,6 @@ interface IVideosDbDataStore {
 
     fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long>
     fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
+
+    fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity>
 }
