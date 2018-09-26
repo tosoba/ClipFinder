@@ -49,7 +49,12 @@ class ArtistFragment :
                             hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
+                                viewModel.loadAlbumsFromArtist(it, artistToLoad.id)
+                            }
+                        }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(viewModel.viewState.topTracksLoadingInProgress, viewModel.viewState.topTracks),
@@ -61,7 +66,12 @@ class ArtistFragment :
                             hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
+                                viewModel.loadTopTracksFromArtist(it, artistToLoad.id)
+                            }
+                        }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(viewModel.viewState.relatedArtistsLoadingInProgress, viewModel.viewState.relatedArtists),
@@ -73,7 +83,12 @@ class ArtistFragment :
                             viewModel.loadArtistData(preferenceHelper.accessToken, artist = it)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
+                                viewModel.loadRelatedArtists(it, artistToLoad.id)
+                            }
+                        }
                 )
         )
     }
@@ -100,13 +115,15 @@ class ArtistFragment :
                 },
                 mainActivity!!.connectivitySnackbarParentView!!,
                 {
-                    val artistToLoad = if (viewModelInitialized && viewModel.viewState.artist.get() != null)
-                        viewModel.viewState.artist.get()!!
-                    else argArtist
                     viewModel.loadArtistData(preferenceHelper.accessToken, artistToLoad)
                 }
         )
     }
+
+    private val artistToLoad: Artist
+        get() = if (viewModelInitialized && viewModel.viewState.artist.get() != null)
+            viewModel.viewState.artist.get()!!
+        else argArtist
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

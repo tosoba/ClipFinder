@@ -46,7 +46,12 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                             hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
+                                viewModel.loadAlbumsArtists(it, album.artists.map { it.id })
+                            }
+                        }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks),
@@ -58,7 +63,12 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                             hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let {
+                                viewModel.loadTracksFromAlbum(it, album.id)
+                            }
+                        }
                 )
         )
     }

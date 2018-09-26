@@ -46,7 +46,7 @@ class TrackViewModel @Inject constructor(
                 .subscribe({ viewState.album.set(AlbumEntityMapper.mapFrom(it)) }, this::onError))
     }
 
-    private fun loadArtists(accessToken: AccessTokenEntity, artistIds: List<String>) {
+    fun loadArtists(accessToken: AccessTokenEntity, artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
         addDisposable(getArtists.execute(accessToken, artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
@@ -55,7 +55,7 @@ class TrackViewModel @Inject constructor(
                 }, this::onError))
     }
 
-    private fun loadSimilarTracks(accessToken: AccessTokenEntity, track: Track) {
+    fun loadSimilarTracks(accessToken: AccessTokenEntity, track: Track) {
         viewState.similarTracksLoadingInProgress.set(true)
         addDisposable(getSimilarTracks.execute(accessToken, track.id)
                 .doFinally { viewState.similarTracksLoadingInProgress.set(false) }

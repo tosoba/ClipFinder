@@ -60,7 +60,12 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
                             hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let { token ->
+                                track?.let { viewModel.loadArtists(token, it.artists.map { it.id }) }
+                            }
+                        }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(viewModel.viewState.similarTracksLoadingInProgress, viewModel.viewState.similarTracks),
@@ -72,7 +77,12 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
                             (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
                         },
                         null,
-                        null
+                        null,
+                        View.OnClickListener { _ ->
+                            preferenceHelper.accessToken?.let { token ->
+                                track?.let { viewModel.loadSimilarTracks(token, it) }
+                            }
+                        }
                 )
         )
     }

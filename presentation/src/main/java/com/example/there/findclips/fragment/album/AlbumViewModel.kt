@@ -40,7 +40,7 @@ class AlbumViewModel @Inject constructor(
         loadTracksFromAlbum(accessToken, albumId = album.id)
     }
 
-    private fun loadAlbumsArtists(accessToken: AccessTokenEntity, artistIds: List<String>) {
+    fun loadAlbumsArtists(accessToken: AccessTokenEntity, artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
         addDisposable(getArtists.execute(accessToken, artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }

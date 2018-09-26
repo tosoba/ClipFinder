@@ -60,7 +60,7 @@ class ArtistViewModel @Inject constructor(
         loadRelatedArtists(accessToken, artist.id)
     }
 
-    private fun loadAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String) {
         viewState.albumsLoadingInProgress.set(true)
         addDisposable(getAlbumsFromArtist.execute(accessToken, artistId)
                 .doFinally { viewState.albumsLoadingInProgress.set(false) }
@@ -71,7 +71,7 @@ class ArtistViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    private fun loadTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String) {
         viewState.topTracksLoadingInProgress.set(true)
         addDisposable(getTopTracksFromArtist.execute(accessToken, artistId)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
@@ -82,7 +82,7 @@ class ArtistViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    private fun loadRelatedArtists(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadRelatedArtists(accessToken: AccessTokenEntity, artistId: String) {
         viewState.relatedArtistsLoadingInProgress.set(true)
         addDisposable(getRelatedArtists.execute(accessToken, artistId)
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
