@@ -1,16 +1,11 @@
 package com.example.there.findclips.main
 
 import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.domain.usecase.spotify.GetCurrentUser
-import com.example.there.domain.usecase.spotify.GetSimilarTracks
+import com.example.there.domain.usecase.spotify.*
 import com.example.there.domain.usecase.videos.*
 import com.example.there.findclips.base.vm.BaseVideosViewModel
-import com.example.there.findclips.model.entity.User
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.model.mapper.TrackEntityMapper
-import com.example.there.findclips.model.mapper.VideoEntityMapper
-import com.example.there.findclips.model.mapper.VideoPlaylistEntityMapper
+import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.model.mapper.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -20,7 +15,10 @@ class MainViewModel @Inject constructor(
         private val addVideoToPlaylist: AddVideoToPlaylist,
         private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists,
         private val getSimilarTracks: GetSimilarTracks,
-        private val getCurrentUser: GetCurrentUser
+        private val getCurrentUser: GetCurrentUser,
+        private val insertTrack: InsertTrack,
+        private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
+        private val insertAlbum: InsertAlbum
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState = MainViewState()
@@ -88,4 +86,16 @@ class MainViewModel @Inject constructor(
     fun getCurrentUser(accessToken: AccessTokenEntity) = addDisposable(getCurrentUser
             .execute(accessToken)
             .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))
+
+    fun addTrackToFavourites(
+            track: Track
+    ) = addDisposable(insertTrack.execute(TrackEntityMapper.mapBack(track)).subscribe())
+
+    fun addPlaylistToFavourites(
+            playlist: Playlist
+    ) = addDisposable(insertSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist)).subscribe())
+
+    fun addAlbumToFavourites(
+            album: Album
+    ) = addDisposable(insertAlbum.execute(AlbumEntityMapper.mapBack(album)).subscribe())
 }

@@ -56,7 +56,7 @@ class AlbumViewModel @Inject constructor(
             addDisposable(getTracksFromAlbum.execute(accessToken, albumId, currentOffset)
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribe({
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
                     }, ::onError))

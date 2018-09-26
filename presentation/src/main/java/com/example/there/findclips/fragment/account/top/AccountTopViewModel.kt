@@ -26,7 +26,7 @@ class AccountTopViewModel @Inject constructor(
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.topTracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
-                        currentTracksOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        currentTracksOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalTracks = it.totalItems
                     }, ::onError))
         }
@@ -47,7 +47,7 @@ class AccountTopViewModel @Inject constructor(
                     .doFinally { viewState.artistsLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.artists.addAll(it.items.map(ArtistEntityMapper::mapFrom))
-                        currentArtistsOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        currentArtistsOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalArtists = it.totalItems
                     }, ::onError))
         }

@@ -26,7 +26,7 @@ class AccountPlaylistsViewModel @Inject constructor(
                     .doFinally { viewState.playlistsLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.playlists.addAll(it.items.map(PlaylistEntityMapper::mapFrom))
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         loadedFlag.value = Unit
                     }, ::onError))

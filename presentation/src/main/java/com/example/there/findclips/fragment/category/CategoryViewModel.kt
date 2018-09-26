@@ -47,7 +47,7 @@ class CategoryViewModel @Inject constructor(
             addDisposable(getPlaylistsForCategory.execute(accessTokenEntity, categoryId, currentOffset)
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribe({
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT.toInt()
+                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         playlists.value = it.items.map(PlaylistEntityMapper::mapFrom)
                     }, ::onError))

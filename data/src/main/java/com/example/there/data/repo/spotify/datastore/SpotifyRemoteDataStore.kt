@@ -35,13 +35,13 @@ class SpotifyRemoteDataStore @Inject constructor(
         return offsetSubject.concatMap { offset ->
             api.getCategories(
                     authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset.toString(),
+                    offset = offset,
                     country = preferencesHelper.country,
                     locale = preferencesHelper.language
             )
         }.doOnNext {
-            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
-                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
+                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
             else
                 offsetSubject.onComplete()
         }.map { it.result.categories.map(CategoryMapper::mapFrom) }
@@ -52,13 +52,13 @@ class SpotifyRemoteDataStore @Inject constructor(
         return offsetSubject.concatMap { offset ->
             api.getFeaturedPlaylists(
                     authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset.toString(),
+                    offset = offset,
                     country = preferencesHelper.country,
                     locale = preferencesHelper.language
             )
         }.doOnNext {
-            if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
-                offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT)
+                offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT)
             else
                 offsetSubject.onComplete()
         }.map { it.result.playlists.map(PlaylistMapper::mapFrom) }
@@ -118,7 +118,7 @@ class SpotifyRemoteDataStore @Inject constructor(
     ): Single<EntityPage<PlaylistEntity>> = api.getPlaylistsForCategory(
             authorization = getAccessTokenHeader(accessToken.token),
             categoryId = categoryId,
-            offset = offset.toString(),
+            offset = offset,
             country = preferencesHelper.country
     ).map {
         EntityPage(
@@ -137,7 +137,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             authorization = getAccessTokenHeader(accessToken.token),
             playlistId = playlistId,
             userId = userId,
-            offset = offset.toString()
+            offset = offset
     ).map {
         EntityPage(
                 items = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
@@ -186,11 +186,11 @@ class SpotifyRemoteDataStore @Inject constructor(
             api.getAlbumsFromArtist(
                     authorization = getAccessTokenHeader(accessToken.token),
                     artistId = artistId,
-                    offset = offset.toString()
+                    offset = offset
             )
         }.doOnNext {
-            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT.toInt())
-                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT.toInt())
+            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
+                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
             else
                 offsetSubject.onComplete()
         }.map { it.albums.map(AlbumMapper::mapFrom) }
@@ -226,7 +226,7 @@ class SpotifyRemoteDataStore @Inject constructor(
     ): Single<EntityPage<TrackEntity>> = api.getTracksFromAlbum(
             authorization = getAccessTokenHeader(accessToken.token),
             albumId = albumId,
-            offset = offset.toString()
+            offset = offset
     ).map {
         TrackIdsPage(
                 ids = it.tracks.joinToString(separator = ",") { it.id },
@@ -251,7 +251,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<AlbumEntity>> = api.getNewReleases(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map {
         EntityPage(
                 items = it.result.albums.map(AlbumMapper::mapFrom),
@@ -265,7 +265,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<PlaylistEntity>> = api.getCurrentUsersPlaylists(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map {
         EntityPage(
                 items = it.playlists.map(PlaylistMapper::mapFrom),
@@ -279,7 +279,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<TrackEntity>> = api.getCurrentUsersTopTracks(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map {
         EntityPage(
                 items = it.tracks.map(TrackMapper::mapFrom),
@@ -293,7 +293,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<ArtistEntity>> = api.getCurrentUsersTopArtists(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map {
         EntityPage(
                 items = it.artists.map(ArtistMapper::mapFrom),
@@ -307,7 +307,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<TrackEntity>> = api.getCurrentUsersSavedTracks(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map { result ->
         EntityPage(
                 items = result.savedTracks.map { TrackMapper.mapFrom(it.track) },
@@ -321,7 +321,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             offset: Int
     ): Single<EntityPage<AlbumEntity>> = api.getCurrentUsersSavedAlbums(
             authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset.toString()
+            offset = offset
     ).map { result ->
         EntityPage(
                 items = result.savedAlbums.map { AlbumMapper.mapFrom(it.album) },

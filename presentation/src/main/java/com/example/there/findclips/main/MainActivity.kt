@@ -846,13 +846,16 @@ class MainActivity :
                     }
                 }
                 PlayerState.PLAYLIST -> lastPlayedPlaylist?.let {
-                    //TODO: add playlist to favourites
+                    viewModel.addPlaylistToFavourites(it)
+                    Toast.makeText(this, "Playlist: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
                 }
                 PlayerState.TRACK -> lastPlayedTrack?.let {
-                    //TODO: add track to favourites
+                    viewModel.addTrackToFavourites(it)
+                    Toast.makeText(this, "Track: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
                 }
                 PlayerState.ALBUM -> lastPlayedAlbum?.let {
-                    //TODO: add album to favourites
+                    viewModel.addAlbumToFavourites(it)
+                    Toast.makeText(this, "Album: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
                 }
             }
         }
