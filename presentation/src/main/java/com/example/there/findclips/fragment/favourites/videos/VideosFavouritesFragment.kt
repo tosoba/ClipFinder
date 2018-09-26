@@ -15,7 +15,7 @@ import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.VideoPlaylistWithThumbnails
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -30,18 +30,18 @@ import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java), Injectable {
 
-    private val playlistsRecyclerViewItemView: RecyclerViewItemView<VideoPlaylist> by lazy {
+    private val playlistsRecyclerViewItemView: RecyclerViewItemView<VideoPlaylistWithThumbnails> by lazy {
         RecyclerViewItemView(
                 RecyclerViewItemViewState(
                         ObservableField(false),
                         viewModel.state.playlists
                 ),
-                object : ListItemView<VideoPlaylist>(viewModel.state.playlists) {
-                    override val itemViewBinder: ItemBinder<VideoPlaylist>
-                        get() = ItemBinderBase(BR.playlist, R.layout.video_playlist_item)
+                object : ListItemView<VideoPlaylistWithThumbnails>(viewModel.state.playlists) {
+                    override val itemViewBinder: ItemBinder<VideoPlaylistWithThumbnails>
+                        get() = ItemBinderBase(BR.playlist, R.layout.video_thumbnails_playlist_item)
                 },
                 ClickHandler {
-                    hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = it), true)
+                    hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = it.playlist), true)
                 },
                 SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 null
@@ -58,7 +58,7 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(Video
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
-            this.view = this@VideosFavouritesFragment.view
+            view = this@VideosFavouritesFragment.view
             videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
             val headerBinding = DataBindingUtil.inflate<HeaderItemBinding>(

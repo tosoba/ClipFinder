@@ -43,4 +43,9 @@ class VideosDomainModule {
     fun getVideosFromPlaylistsUseCase(
             repository: IVideosRepository
     ): GetFavouriteVideosFromPlaylist = GetFavouriteVideosFromPlaylist(AsyncSymmetricFlowableTransformer(), repository)
+
+    @Provides
+    fun getVideoPlaylistsWithThumbnails(
+            repository: IVideosRepository
+    ): GetVideoPlaylistsWithThumbnails = GetVideoPlaylistsWithThumbnails(AsyncSymmetricFlowableTransformer(), repository)
 }
