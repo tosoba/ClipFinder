@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.ImageViewListItemBinding
 
-class PlaylistThumbnailFlipperAdapter(private val thumbnailUrls: List<String>) : BaseAdapter() {
+class PlaylistThumbnailFlipperAdapter(val thumbnailUrls: List<String>) : BaseAdapter() {
 
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val inflater = LayoutInflater.from(parent?.context)

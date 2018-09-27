@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -16,6 +15,7 @@ import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.util.ext.dpToPx
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.setHeight
+import com.example.there.findclips.util.ext.setupWithBackNavigation
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -57,9 +57,7 @@ class SearchFragment : Fragment() {
         return binding.apply {
             searchFragmentView = view
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
-            mainActivity?.setSupportActionBar(searchToolbar)
-            searchToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-            searchToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
+            searchToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 

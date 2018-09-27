@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.trackvideos
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +17,7 @@ import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragment.track.TrackFragment
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.setupWithBackNavigation
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import kotlinx.android.synthetic.main.fragment_track_videos.*
@@ -108,10 +108,8 @@ class TrackVideosFragment :
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_videos, container, false)
         return binding.apply {
             view = this@TrackVideosFragment.view
-            binding.trackVideosViewpager.offscreenPageLimit = 1
-            mainActivity?.setSupportActionBar(trackVideosToolbar)
-            trackVideosToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-            trackVideosToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
+            trackVideosViewpager.offscreenPageLimit = 1
+            trackVideosToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.example.there.findclips.fragment.videoplaylist.VideoPlaylistView" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false"
+        tools:context=".fragment.videoplaylist.VideoPlaylistFragment">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/video_playlist_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/video_playlist_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="@color/colorPrimary"
+                app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:title="@{view.state.playlist.name}"
+                app:toolbarId="@+id/video_playlist_toolbar">
+
+                <AdapterViewFlipper
+                    android:id="@+id/playlist_collage_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adapter="@{view.viewFlipperAdapter}"
+                    android:autoStart="true"
+                    android:flipInterval="10000" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bottom_dark_gradient"
+                    android:fitsSystemWindows="true" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/video_playlist_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/videos_fragment_container_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/main_background_gradient"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
+

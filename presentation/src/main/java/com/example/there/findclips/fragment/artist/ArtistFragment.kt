@@ -23,6 +23,7 @@ import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.setupWithBackNavigation
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -143,9 +144,7 @@ class ArtistFragment :
         return binding.apply {
             view = this@ArtistFragment.view
             artistRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            mainActivity?.setSupportActionBar(artistToolbar)
-            artistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-            artistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
+            artistToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 

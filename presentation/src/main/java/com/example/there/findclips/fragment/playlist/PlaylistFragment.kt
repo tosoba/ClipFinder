@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.playlist
 import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +16,7 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.setupWithBackNavigation
 
 class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
 
@@ -71,9 +71,7 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
         val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         return binding.apply {
             view = this@PlaylistFragment.view
-            mainActivity?.setSupportActionBar(playlistToolbar)
-            playlistToolbar.navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)
-            playlistToolbar.setNavigationOnClickListener { mainActivity?.onBackPressed() }
+            playlistToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 
