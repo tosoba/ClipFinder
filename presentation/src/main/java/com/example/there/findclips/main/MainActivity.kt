@@ -1,5 +1,6 @@
 package com.example.there.findclips.main
 
+import android.app.PendingIntent
 import android.app.SearchManager
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Observer
@@ -19,6 +20,7 @@ import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.NotificationCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -33,6 +35,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.BR
+import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
 import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.base.activity.BaseVMActivity
@@ -92,6 +95,38 @@ class MainActivity :
         initSpotifyPlayer()
 
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
+    }
+
+    override fun onStart() {
+        super.onStart()
+        notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+    }
+
+    private fun showPlaybackNotification() {
+        val intent = Intent(this, MainActivity::class.java)
+        val goBackToAppIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val notificationBuilder = NotificationCompat.Builder(this, FindClipsApp.CHANNEL_ID)
+                .setSmallIcon(R.drawable.play)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(goBackToAppIntent)
+                .setAutoCancel(true)
+
+        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private val shouldShowPlaybackNotification: Boolean
+        get() = spotifyPlayer != null &&
+                spotifyPlayer?.isInitialized == true &&
+                playerMetadata?.currentTrack != null &&
+                (lastPlayedAlbum != null || lastPlayedTrack != null || lastPlayedPlaylist != null)
+
+    override fun onStop() {
+        super.onStop()
+        if (shouldShowPlaybackNotification) showPlaybackNotification()
     }
 
     private fun initViewBindings() {
@@ -229,6 +264,8 @@ class MainActivity :
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
         spotifyPlayer?.pause(spotifyPlayerOperationCallback)
         lastPlayedTrack = null
+        lastPlayedPlaylist = null
+        lastPlayedAlbum = null
     }
 
     override fun onSuccess() {
@@ -899,5 +936,7 @@ class MainActivity :
                 "user-read-birthdate",
                 "user-read-email"
         )
+
+        private const val PLAYBACK_NOTIFICATION_ID = 100
     }
 }

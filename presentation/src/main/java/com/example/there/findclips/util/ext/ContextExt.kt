@@ -1,6 +1,7 @@
 package com.example.there.findclips.util.ext
 
 import android.content.Context
+import android.support.v4.app.NotificationManagerCompat
 import android.util.DisplayMetrics
 
 fun Context.dpToPx(dp: Float): Float {
@@ -13,3 +14,6 @@ val Context.screenOrientation: Int
 
 val Context.screenHeight: Int
     get() = resources.configuration.screenHeightDp
+
+val Context.notificationManager: NotificationManagerCompat
+    get() = NotificationManagerCompat.from(this)
