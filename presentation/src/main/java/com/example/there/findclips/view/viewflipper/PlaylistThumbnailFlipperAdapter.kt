@@ -8,20 +8,14 @@ import android.widget.BaseAdapter
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.ImageViewListItemBinding
 
-class PlaylistThumbnailFlipperAdapter(
-        private val thumbnailUrls: List<String>
-) : BaseAdapter() {
+class PlaylistThumbnailFlipperAdapter(private val thumbnailUrls: List<String>) : BaseAdapter() {
 
-    override fun getView(
-            position: Int,
-            view: View?,
-            parent: ViewGroup?
-    ): View {
+    override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val inflater = LayoutInflater.from(parent?.context)
         val url = thumbnailUrls[position]
         val holder: ViewHolder = if (view == null) {
             val binding: ImageViewListItemBinding = DataBindingUtil.inflate(inflater, R.layout.image_view_list_item, parent, false)
-            ViewHolder(binding).apply { binding.url = url }
+            ViewHolder(binding.apply { this.url = url })
             return binding.root
         } else {
             view.tag as ViewHolder

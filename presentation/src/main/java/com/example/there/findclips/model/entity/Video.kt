@@ -2,8 +2,10 @@ package com.example.there.findclips.model.entity
 
 import android.annotation.SuppressLint
 import android.databinding.ObservableField
+import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.*
 import io.mironov.smuggler.AutoParcelable
+import org.joda.time.Duration
 import org.joda.time.Instant
 import java.math.BigInteger
 
@@ -21,7 +23,7 @@ data class Video(
         var playlistId: Long? = null,
         var query: String? = null,
         var relatedVideoId: String? = null
-): AutoParcelable {
+) : AutoParcelable {
 
     val details: String
         get() = "$publishedAgo • ${viewCount.formattedString} views"
@@ -29,17 +31,26 @@ data class Video(
     private val publishedAgo: String
         get() {
             val publishedAtMillis = Instant.parse(publishedAt).millis
-            val diff = System.currentTimeMillis() - publishedAtMillis
-            val diffDurationMillis = org.joda.time.Duration.millis(diff)
-            return when {
-                diffDurationMillis.standardYears > 0 -> diffDurationMillis.standardYears.getPublishedAgoString("year")
-                diffDurationMillis.standardMonths > 0 -> diffDurationMillis.standardMonths.getPublishedAgoString("month")
-                diffDurationMillis.standardWeeks > 0 -> diffDurationMillis.standardWeeks.getPublishedAgoString("week")
-                diffDurationMillis.standardDays > 0 -> diffDurationMillis.standardDays.getPublishedAgoString("day")
-                diffDurationMillis.standardHours > 0 -> diffDurationMillis.standardHours.getPublishedAgoString("hour")
-                diffDurationMillis.standardMinutes > 0 -> diffDurationMillis.standardMinutes.getPublishedAgoString("minute")
-                diffDurationMillis.standardSeconds > 0 -> diffDurationMillis.standardSeconds.getPublishedAgoString("second")
-                else -> "Just now"
+            val difference = System.currentTimeMillis() - publishedAtMillis
+            with(Duration.millis(difference)) {
+                return when {
+                    standardYears > 0 -> standardYears.getPublishedAgoString("year")
+                    standardMonths > 0 -> standardMonths.getPublishedAgoString("month")
+                    standardWeeks > 0 -> standardWeeks.getPublishedAgoString("week")
+                    standardDays > 0 -> standardDays.getPublishedAgoString("day")
+                    standardHours > 0 -> standardHours.getPublishedAgoString("hour")
+                    standardMinutes > 0 -> standardMinutes.getPublishedAgoString("minute")
+                    standardSeconds > 0 -> standardSeconds.getPublishedAgoString("second")
+                    else -> "Just now"
+                }
             }
         }
+
+    companion object {
+        val sortedListCallback: ObservableSortedList.Callback<Video> = object : ObservableSortedList.Callback<Video> {
+            override fun compare(o1: Video, o2: Video): Int = o1.title.toLowerCase().compareTo(o2.title.toLowerCase())
+            override fun areItemsTheSame(item1: Video, item2: Video): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean = oldItem.id == newItem.id
+        }
+    }
 }

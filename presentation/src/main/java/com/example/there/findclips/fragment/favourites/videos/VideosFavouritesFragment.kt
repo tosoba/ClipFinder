@@ -15,7 +15,6 @@ import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
-import com.example.there.findclips.model.entity.VideoPlaylistWithThumbnails
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -26,19 +25,20 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.HeaderDecoration
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
 
 
 class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java), Injectable {
 
-    private val playlistsRecyclerViewItemView: RecyclerViewItemView<VideoPlaylistWithThumbnails> by lazy {
+    private val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView> by lazy {
         RecyclerViewItemView(
                 RecyclerViewItemViewState(
                         ObservableField(false),
                         viewModel.state.playlists
                 ),
-                object : ListItemView<VideoPlaylistWithThumbnails>(viewModel.state.playlists) {
-                    override val itemViewBinder: ItemBinder<VideoPlaylistWithThumbnails>
-                        get() = ItemBinderBase(BR.playlist, R.layout.video_thumbnails_playlist_item)
+                object : ListItemView<PlaylistThumbnailView>(viewModel.state.playlists) {
+                    override val itemViewBinder: ItemBinder<PlaylistThumbnailView>
+                        get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
                 },
                 ClickHandler {
                     hostFragment?.showFragment(VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist = it.playlist), true)

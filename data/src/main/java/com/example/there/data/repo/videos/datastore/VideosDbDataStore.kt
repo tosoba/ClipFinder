@@ -110,7 +110,6 @@ class VideosDbDataStore @Inject constructor(
             .flatMapIterable { it }
             .flatMap { playlist ->
                 videoDao.find5VideosFromPlaylist(playlist.id)
-                        .toFlowable()
                         .map { videos ->
                             VideoPlaylistThumbnailsEntity(
                                     VideoPlaylistMapper.mapFrom(playlist),
