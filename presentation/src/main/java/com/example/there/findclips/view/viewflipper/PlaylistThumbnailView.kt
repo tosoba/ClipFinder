@@ -1,11 +1,13 @@
 package com.example.there.findclips.view.viewflipper
 
+import android.view.View
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ObservableSortedList
 
 class PlaylistThumbnailView(
         val playlist: VideoPlaylist,
-        val adapter: PlaylistThumbnailFlipperAdapter
+        val adapter: PlaylistThumbnailFlipperAdapter,
+        val onRemoveBtnClickListener: View.OnClickListener
 ) {
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<PlaylistThumbnailView> = object : ObservableSortedList.Callback<PlaylistThumbnailView> {

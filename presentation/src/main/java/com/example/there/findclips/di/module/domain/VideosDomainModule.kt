@@ -53,4 +53,9 @@ class VideosDomainModule {
     fun deleteVideo(
             repository: IVideosRepository
     ): DeleteVideo = DeleteVideo(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun deleteVideoPlaylist(
+            repository: IVideosRepository
+    ): DeleteVideoPlaylist = DeleteVideoPlaylist(AsyncCompletableTransformer(), repository)
 }

@@ -18,7 +18,7 @@ class GetFavouriteVideosFromPlaylist(
 
     override fun createFlowable(data: Map<String, Any?>?): Flowable<List<VideoEntity>> {
         val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        return if (playlistEntity != null) {
+        return if (playlistEntity?.id != null) {
             repository.getVideosFromPlaylist(playlistEntity.id)
         } else {
             Flowable.error { IllegalArgumentException("PlaylistEntity must be provided.") }

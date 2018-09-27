@@ -1,8 +1,6 @@
 package com.example.there.data.entity.videos
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
 
 
@@ -13,7 +11,34 @@ data class VideoData(
         val statistics: Statistics
 )
 
-@Entity(tableName = "videos")
+@Entity(
+        tableName = "videos",
+        foreignKeys = [
+            ForeignKey(
+                    entity = VideoPlaylistData::class,
+                    parentColumns = ["id"],
+                    childColumns = ["playlist_id"],
+                    onDelete = ForeignKey.SET_NULL
+            ),
+            ForeignKey(
+                    entity = VideoSearchDbData::class,
+                    parentColumns = ["search_query"],
+                    childColumns = ["search_query"],
+                    onDelete = ForeignKey.SET_NULL
+            ),
+            ForeignKey(
+                    entity = RelatedVideoSearchDbData::class,
+                    parentColumns = ["related_video_id"],
+                    childColumns = ["related_video_id"],
+                    onDelete = ForeignKey.SET_NULL
+            )
+        ],
+        indices = [
+            Index(value = ["playlist_id"]),
+            Index(value = ["search_query"]),
+            Index(value = ["related_video_id"])
+        ]
+)
 data class VideoDbData(
         @PrimaryKey
         val id: String,

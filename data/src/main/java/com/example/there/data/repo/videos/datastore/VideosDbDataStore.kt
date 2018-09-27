@@ -17,7 +17,9 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class VideosDbDataStore @Inject constructor(
         private val videoDao: VideoDao,
         private val videoPlaylistDao: VideoPlaylistDao,
@@ -118,7 +120,13 @@ class VideosDbDataStore @Inject constructor(
                         }
             }
 
-    override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromAction {
-        videoDao.deleteWithId(videoEntity.id)
+    override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromCallable {
+        videoDao.delete(VideoDbMapper.mapBack(videoEntity))
+    }
+
+    override fun deleteVideoPlaylist(
+            videoPlaylistEntity: VideoPlaylistEntity
+    ): Completable = Completable.fromCallable {
+        videoPlaylistDao.delete(VideoPlaylistMapper.mapBack(videoPlaylistEntity))
     }
 }

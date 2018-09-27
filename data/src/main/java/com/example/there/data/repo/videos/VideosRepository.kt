@@ -10,7 +10,9 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class VideosRepository @Inject constructor(
         private val remoteDataStore: IVideosRemoteDataStore,
         private val dbDataStore: IVideosDbDataStore
@@ -87,4 +89,6 @@ class VideosRepository @Inject constructor(
     override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = dbDataStore.getVideoPlaylistsWithThumbnails()
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = dbDataStore.deleteVideo(videoEntity)
+
+    override fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable = dbDataStore.deleteVideoPlaylist(videoPlaylistEntity)
 }

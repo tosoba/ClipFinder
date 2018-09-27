@@ -7,7 +7,9 @@ import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SpotifyDbDataStore @Inject constructor(
         private val albumDao: AlbumDao,
         private val artistDao: ArtistDao,

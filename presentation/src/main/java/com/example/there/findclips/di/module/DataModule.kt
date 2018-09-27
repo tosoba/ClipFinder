@@ -35,38 +35,47 @@ abstract class DataModule {
                 .build()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun albumDao(database: FindClipsDb): AlbumDao = database.albumDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun artistDao(database: FindClipsDb): ArtistDao = database.artistDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun categoryDao(database: FindClipsDb): CategoryDao = database.categoryDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun spotifyPlaylistDao(database: FindClipsDb): SpotifyPlaylistDao = database.spotifyPlaylistDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun trackDao(database: FindClipsDb): TrackDao = database.trackDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun videoDao(database: FindClipsDb): VideoDao = database.videoDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun videoPlaylistDao(database: FindClipsDb): VideoPlaylistDao = database.videoPlaylistDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun videoSearchDao(database: FindClipsDb): VideoSearchDao = database.videoSearchDao()
 
         @Provides
+        @Singleton
         @JvmStatic
         fun relatedVideoSearchDao(database: FindClipsDb): RelatedVideoSearchDao = database.relatedVideoSearchDao()
     }

@@ -80,7 +80,7 @@
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.design.widget.FloatingActionButton
@@ -91,7 +91,7 @@
             android:src="@drawable/delete"
             android:visibility="@{videoView.onRemoveBtnClickListener == null ? View.GONE : View.VISIBLE}"
             app:fabSize="mini"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

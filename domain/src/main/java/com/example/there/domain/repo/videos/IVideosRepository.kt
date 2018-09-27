@@ -24,4 +24,5 @@ interface IVideosRepository {
     fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity>
 
     fun deleteVideo(videoEntity: VideoEntity): Completable
+    fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable
 }

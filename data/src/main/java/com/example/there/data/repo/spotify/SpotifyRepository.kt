@@ -10,7 +10,9 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SpotifyRepository @Inject constructor(
         private val remoteDataStore: ISpotifyRemoteDataStore,
         private val dbDataStore: ISpotifyDbDataStore
