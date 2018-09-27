@@ -110,8 +110,9 @@ class VideosDbDataStore @Inject constructor(
 
     override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = videoPlaylistDao.findAll()
             .flatMapIterable { it }
+            .filter { it.id != null }
             .flatMap { playlist ->
-                videoDao.find5VideosFromPlaylist(playlist.id)
+                videoDao.find5VideosFromPlaylist(playlist.id!!)
                         .map { videos ->
                             VideoPlaylistThumbnailsEntity(
                                     VideoPlaylistMapper.mapFrom(playlist),
@@ -119,6 +120,7 @@ class VideosDbDataStore @Inject constructor(
                             )
                         }
             }
+            .filter { it.thumbnailUrls.isNotEmpty() }
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromCallable {
         videoDao.delete(VideoDbMapper.mapBack(videoEntity))

@@ -5,8 +5,8 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "video_playlists")
 data class VideoPlaylistData(
+        @PrimaryKey(autoGenerate = true)
+        val id: Long?,
+
         val name: String
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0L
-}
+)

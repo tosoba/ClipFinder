@@ -10,5 +10,8 @@ object VideoPlaylistMapper : TwoWayMapper<VideoPlaylistData, VideoPlaylistEntity
             name = from.name
     )
 
-    override fun mapBack(from: VideoPlaylistEntity): VideoPlaylistData = VideoPlaylistData(name = from.name)
+    override fun mapBack(from: VideoPlaylistEntity): VideoPlaylistData = VideoPlaylistData(
+            id = from.id,
+            name = from.name
+    )
 }

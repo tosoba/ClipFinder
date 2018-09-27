@@ -25,7 +25,7 @@ class VideosFavouritesViewModel @Inject constructor(
                     state.playlists.add(PlaylistThumbnailView(
                             playlist,
                             PlaylistThumbnailFlipperAdapter(playlistWithThumbnails.thumbnailUrls),
-                            View.OnClickListener {
+                            View.OnClickListener { _ ->
                                 state.playlists.removeAll { it.playlist == playlist }
                                 deleteVideoPlaylist(VideoPlaylistEntityMapper.mapBack(playlist))
                             }
