@@ -14,7 +14,6 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragment.videoplaylist.VideoPlaylistFragment
 import com.example.there.findclips.util.ext.hostFragment
 import com.example.there.findclips.view.list.ClickHandler

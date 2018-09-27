@@ -2,6 +2,7 @@ package com.example.there.findclips.fragment.favourites
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
@@ -40,7 +41,14 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
     }
 
     private val view: FavouritesView by lazy {
-        FavouritesView(pagerAdapter, onNavigationItemSelectedListener, 1)
+        FavouritesView(
+                pagerAdapter,
+                onNavigationItemSelectedListener,
+                1,
+                AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                    favourites_bottom_navigation_view?.translationY = (-1 * verticalOffset).toFloat()
+                }
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
