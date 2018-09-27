@@ -6,6 +6,7 @@ import com.example.there.domain.usecase.videos.*
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.model.mapper.*
+import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -51,7 +52,7 @@ class MainViewModel @Inject constructor(
                 }
                 .subscribe({ videos ->
                     val mapped = videos.map(VideoEntityMapper::mapFrom)
-                    viewState.videos.addAll(mapped)
+                    viewState.videos.addAll(mapped.map { VideoItemView(it, null) })
                     getChannelThumbnails(videos, onSuccess = {
                         it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
                     })

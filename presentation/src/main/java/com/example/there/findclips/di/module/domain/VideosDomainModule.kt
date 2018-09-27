@@ -48,4 +48,9 @@ class VideosDomainModule {
     fun getVideoPlaylistsWithThumbnails(
             repository: IVideosRepository
     ): GetVideoPlaylistsWithThumbnails = GetVideoPlaylistsWithThumbnails(AsyncSymmetricFlowableTransformer(), repository)
+
+    @Provides
+    fun deleteVideo(
+            repository: IVideosRepository
+    ): DeleteVideo = DeleteVideo(AsyncCompletableTransformer(), repository)
 }

@@ -1,8 +1,8 @@
 package com.example.there.domain.repo.videos
 
-import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
+import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -22,4 +22,6 @@ interface IVideosRepository {
     fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
 
     fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity>
+
+    fun deleteVideo(videoEntity: VideoEntity): Completable
 }

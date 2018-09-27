@@ -85,4 +85,6 @@ class VideosRepository @Inject constructor(
     ): Completable = dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)
 
     override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = dbDataStore.getVideoPlaylistsWithThumbnails()
+
+    override fun deleteVideo(videoEntity: VideoEntity): Completable = dbDataStore.deleteVideo(videoEntity)
 }

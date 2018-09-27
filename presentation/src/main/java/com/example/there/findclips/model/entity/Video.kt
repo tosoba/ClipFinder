@@ -48,7 +48,7 @@ data class Video(
 
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Video> = object : ObservableSortedList.Callback<Video> {
-            override fun compare(o1: Video, o2: Video): Int = o1.title.toLowerCase().compareTo(o2.title.toLowerCase())
+            override fun compare(o1: Video, o2: Video): Int = -1
             override fun areItemsTheSame(item1: Video, item2: Video): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean = oldItem.id == newItem.id
         }

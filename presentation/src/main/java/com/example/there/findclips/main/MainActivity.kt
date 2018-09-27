@@ -58,6 +58,7 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.example.there.findclips.view.list.item.VideoItemView
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
@@ -799,14 +800,14 @@ class MainActivity :
 
     // region relatedVideos
 
-    private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<Video> by lazy(LazyThreadSafetyMode.NONE) {
+    private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
                 RecyclerViewItemViewState(viewModel.viewState.initialVideosLoadingInProgress, viewModel.viewState.videos),
-                object : ListItemView<Video>(viewModel.viewState.videos) {
-                    override val itemViewBinder: ItemBinder<Video>
-                        get() = ItemBinderBase(BR.video, R.layout.video_item)
+                object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
+                    override val itemViewBinder: ItemBinder<VideoItemView>
+                        get() = ItemBinderBase(BR.videoView, R.layout.video_item)
                 },
-                ClickHandler { loadVideo(it) },
+                ClickHandler { loadVideo(it.video) },
                 relatedVideosItemDecoration,
                 onRelatedVideosScrollListener
         )

@@ -3,9 +3,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="video"
-            type="com.example.there.findclips.model.entity.Video" />
+            name="videoView"
+            type="com.example.there.findclips.view.list.item.VideoItemView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +18,7 @@
 
         <ImageView
             android:id="@+id/video_thumbnail_imageview"
-            imageUrl="@{video.thumbnailUrl}"
+            imageUrl="@{videoView.video.thumbnailUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitXY"
@@ -36,7 +38,7 @@
 
         <ImageView
             android:id="@+id/video_channel_thumbnail_imageview"
-            imageUrl="@{video.channelThumbnailUrl}"
+            imageUrl="@{videoView.video.channelThumbnailUrl}"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_margin="5dp"
@@ -51,7 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:text="@{video.title}"
+            android:text="@{videoView.video.title}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/video_description_txt"
@@ -64,7 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="@{video.details}"
+            android:text="@{videoView.video.details}"
             app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
             app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
             app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
@@ -74,11 +76,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="@{video.duration}"
+            android:text="@{videoView.video.duration}"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="@{videoView.onRemoveBtnClickListener}"
+            android:src="@drawable/delete"
+            android:visibility="@{videoView.onRemoveBtnClickListener == null ? View.GONE : View.VISIBLE}"
+            app:fabSize="mini"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

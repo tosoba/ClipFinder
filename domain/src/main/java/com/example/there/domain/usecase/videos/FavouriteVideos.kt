@@ -56,3 +56,24 @@ class AddVideoToPlaylist(
         return execute(withData = data)
     }
 }
+
+class DeleteVideo(
+        transformer: CompletableTransformer,
+        private val repository: IVideosRepository
+) : CompletableUseCase(transformer) {
+    override fun createCompletable(data: Map<String, Any?>?): Completable {
+        val videoEntity = data?.get(UseCaseParams.PARAM_VIDEO) as? VideoEntity
+        return if (videoEntity != null) {
+            repository.deleteVideo(videoEntity)
+        } else {
+            Completable.error { IllegalArgumentException("VideoEntity must be provided.") }
+        }
+    }
+
+    fun execute(videoEntity: VideoEntity): Completable {
+        val data = HashMap<String, Any?>().apply {
+            put(UseCaseParams.PARAM_VIDEO, videoEntity)
+        }
+        return execute(withData = data)
+    }
+}

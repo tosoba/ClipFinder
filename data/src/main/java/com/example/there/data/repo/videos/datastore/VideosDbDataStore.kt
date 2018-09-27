@@ -117,4 +117,8 @@ class VideosDbDataStore @Inject constructor(
                             )
                         }
             }
+
+    override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromAction {
+        videoDao.deleteWithId(videoEntity.id)
+    }
 }

@@ -10,11 +10,13 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.SeekBar
+import android.widget.VideoView
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.User
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.VideoItemView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(
@@ -27,7 +29,7 @@ class MainView(
         val fadeOnClickListener: View.OnClickListener,
         val slideListener: SlidingUpPanelLayout.PanelSlideListener,
         val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
-        val relatedVideosRecyclerViewItemView: RecyclerViewItemView<Video>,
+        val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView>,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val onSpotifyPlayPauseBtnClickListener: View.OnClickListener,
         val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener,
@@ -37,7 +39,7 @@ class MainView(
 )
 
 data class MainViewState(
-        val videos: ObservableList<Video> = ObservableArrayList(),
+        val videos: ObservableList<VideoItemView> = ObservableArrayList(),
         val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
         val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
         val initialVideosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

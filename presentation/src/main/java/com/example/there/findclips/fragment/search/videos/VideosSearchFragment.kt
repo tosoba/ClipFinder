@@ -16,7 +16,6 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.screenOrientation
@@ -26,6 +25,7 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.example.there.findclips.view.list.item.VideoItemView
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_videos_search.*
@@ -53,12 +53,12 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
                                 viewModel.viewState.videosLoadingInProgress,
                                 viewModel.viewState.videos
                         ),
-                        object : ListItemView<Video>(viewModel.viewState.videos) {
-                            override val itemViewBinder: ItemBinder<Video>
-                                get() = ItemBinderBase(BR.video, R.layout.video_item)
+                        object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
+                            override val itemViewBinder: ItemBinder<VideoItemView>
+                                get() = ItemBinderBase(BR.videoView, R.layout.video_item)
                         },
                         ClickHandler {
-                            mainActivity?.loadVideo(video = it)
+                            mainActivity?.loadVideo(video = it.video)
                         },
                         SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                         onScrollListener
