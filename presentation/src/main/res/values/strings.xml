@@ -82,4 +82,6 @@
     <string name="clear_video_cache">Clear video cache</string>
     <string name="pause">Pause</string>
     <string name="play">Play</string>
+    <string name="next_track">Next track</string>
+    <string name="previous_track">Previous track</string>
 </resources>

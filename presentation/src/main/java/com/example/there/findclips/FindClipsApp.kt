@@ -32,8 +32,8 @@ class FindClipsApp : Application(), HasActivityInjector {
     }
 
     override fun onTerminate() {
-        super.onTerminate()
         notificationManager.cancelAll()
+        super.onTerminate()
     }
 
     private fun initLeakCanary() {

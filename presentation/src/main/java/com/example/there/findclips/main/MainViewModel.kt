@@ -1,5 +1,6 @@
 package com.example.there.findclips.main
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.*
@@ -8,7 +9,10 @@ import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.model.mapper.*
 import com.example.there.findclips.view.list.item.VideoItemView
+import com.squareup.picasso.Picasso
+import io.reactivex.Single
 import javax.inject.Inject
+
 
 class MainViewModel @Inject constructor(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
@@ -179,4 +183,15 @@ class MainViewModel @Inject constructor(
 
     fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
             .subscribe({}, { Log.e("ERROR", "Delete all video search data error.") }))
+
+    fun getBitmapSingle(picasso: Picasso, url: String): Single<Bitmap> = Single.create {
+        try {
+            if (!it.isDisposed) {
+                val bitmap: Bitmap = picasso.load(url).get()
+                it.onSuccess(bitmap)
+            }
+        } catch (e: Throwable) {
+            it.onError(e)
+        }
+    }
 }

@@ -12,6 +12,7 @@ import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ObservableField
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -50,6 +51,7 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
@@ -71,7 +73,10 @@ import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.*
+import com.squareup.picasso.Picasso
 import dagger.android.support.HasSupportFragmentInjector
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -89,6 +94,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
 
         viewModel.deleteAllVideoSearchData()
+        lifecycle.addObserver(disposablesComponent)
 
         initViewBindings()
 
@@ -123,56 +129,109 @@ class MainActivity :
         })
     }
 
+    private var backgroundPlaybackNotificationIsShowing = false
+
     override fun onStart() {
         super.onStart()
-        notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+        if (backgroundPlaybackNotificationIsShowing) {
+            notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+            backgroundPlaybackNotificationIsShowing = false
+        }
     }
 
-    private fun showPlaybackNotification() {
-        val goBackToAppIntent = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), 0)
-        val deleteIntent = PendingIntent.getBroadcast(
-                this,
-                0,
-                Intent(ACTION_DELETE_NOTIFICATION),
-                0
-        )
-
-        val notificationBuilder = NotificationCompat.Builder(this, FindClipsApp.CHANNEL_ID)
-                .setSmallIcon(R.drawable.play)
-                .setContentTitle("ClipFinder")
-                .setContentText("Currently playing: ${playerMetadata?.currentTrack?.name
-                        ?: lastPlayedTrack?.name ?: "Unknown track"}")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(goBackToAppIntent)
-                .setDeleteIntent(deleteIntent)
-                .apply {
-                    if (currentPlaybackState?.isPlaying == true) {
-                        val pauseIntent = PendingIntent.getBroadcast(
-                                this@MainActivity,
-                                0,
-                                Intent(ACTION_PAUSE_PLAYBACK),
-                                0
-                        )
-                        addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
-                    } else {
-                        val resumeIntent = PendingIntent.getBroadcast(
-                                this@MainActivity,
-                                0,
-                                Intent(ACTION_RESUME_PLAYBACK),
-                                0
-                        )
-                        addAction(R.drawable.play, getString(R.string.play), resumeIntent)
-                    }
+    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(this, FindClipsApp.CHANNEL_ID)
+            .setSmallIcon(R.drawable.play)
+            .apply {
+                val text = "Currently playing: ${playerMetadata?.currentTrack?.name
+                        ?: lastPlayedTrack?.name ?: "Unknown track"}"
+                if (largeIcon != null)
+                    setStyle(NotificationCompat.BigPictureStyle()
+                            .bigPicture(largeIcon)
+                            .setSummaryText(text)
+                    )
+                else setContentText(text)
+            }
+            .setContentTitle("ClipFinder")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                    PendingIntent.getActivity(
+                            this,
+                            0,
+                            Intent(this, MainActivity::class.java),
+                            0
+                    )
+            )
+            .setDeleteIntent(
+                    PendingIntent.getBroadcast(
+                            this,
+                            0,
+                            Intent(ACTION_DELETE_NOTIFICATION),
+                            0
+                    )
+            )
+            .apply {
+                if (playerMetadata?.prevTrack != null) {
+                    val prevTrackIntent = PendingIntent.getBroadcast(
+                            this@MainActivity,
+                            0,
+                            Intent(ACTION_PREV_TRACK),
+                            0
+                    )
+                    addAction(R.drawable.previous_track, getString(R.string.previous_track), prevTrackIntent)
                 }
-                .setAutoCancel(true)
 
-        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder.build())
+                if (currentPlaybackState?.isPlaying == true) {
+                    val pauseIntent = PendingIntent.getBroadcast(
+                            this@MainActivity,
+                            0,
+                            Intent(ACTION_PAUSE_PLAYBACK),
+                            0
+                    )
+                    addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
+                } else {
+                    val resumeIntent = PendingIntent.getBroadcast(
+                            this@MainActivity,
+                            0,
+                            Intent(ACTION_RESUME_PLAYBACK),
+                            0
+                    )
+                    addAction(R.drawable.play, getString(R.string.play), resumeIntent)
+                }
+
+                if (playerMetadata?.nextTrack != null) {
+                    val nextTrackIntent = PendingIntent.getBroadcast(
+                            this@MainActivity,
+                            0,
+                            Intent(ACTION_NEXT_TRACK),
+                            0
+                    )
+                    addAction(R.drawable.next_track, getString(R.string.next_track), nextTrackIntent)
+                }
+            }
+            .setAutoCancel(true)
+
+    private val disposablesComponent = DisposablesComponent()
+
+    private fun showPlaybackNotification() {
+        if (playerMetadata?.currentTrack != null) {
+            disposablesComponent.add(viewModel.getBitmapSingle(Picasso.with(this), playerMetadata!!.currentTrack.albumCoverWebUrl)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ bitmap ->
+                        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build())
+                    }, {
+                        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build())
+                    }))
+        }
     }
 
     private val deleteNotificationIntentReceiver: DeleteNotificationIntentReceiver by lazy { DeleteNotificationIntentReceiver() }
 
     inner class DeleteNotificationIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = stopSpotifyPlayback()
+        override fun onReceive(context: Context?, intent: Intent?) {
+            backgroundPlaybackNotificationIsShowing = false
+            stopSpotifyPlayback()
+        }
     }
 
     private fun refreshPlaybackNotification() {
@@ -183,19 +242,29 @@ class MainActivity :
     private val pausePlaybackIntentReceiver: PausePlaybackIntentReceiver by lazy { PausePlaybackIntentReceiver() }
 
     inner class PausePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.pause(spotifyPlayerOperationCallback)
-            refreshPlaybackNotification()
-        }
+        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
+                ?: Unit
     }
 
     private val resumePlaybackIntentReceiver: ResumePlaybackIntentReceiver by lazy { ResumePlaybackIntentReceiver() }
 
     inner class ResumePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.resume(spotifyPlayerOperationCallback)
-            refreshPlaybackNotification()
-        }
+        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
+                ?: Unit
+    }
+
+    private val nextTrackIntentReceiver = NextTrackIntentReceiver()
+
+    inner class NextTrackIntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
+                ?: Unit
+    }
+
+    private val prevTrackIntentReceiver = PreviousTrackIntentReceiver()
+
+    inner class PreviousTrackIntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
+                ?: Unit
     }
 
     private val shouldShowPlaybackNotification: Boolean
@@ -205,8 +274,11 @@ class MainActivity :
                 (lastPlayedAlbum != null || lastPlayedTrack != null || lastPlayedPlaylist != null)
 
     override fun onStop() {
+        if (shouldShowPlaybackNotification && !backgroundPlaybackNotificationIsShowing) {
+            backgroundPlaybackNotificationIsShowing = true
+            showPlaybackNotification()
+        }
         super.onStop()
-        if (shouldShowPlaybackNotification) showPlaybackNotification()
     }
 
     private fun initViewBindings() {
@@ -236,6 +308,8 @@ class MainActivity :
         unregisterReceiver(pausePlaybackIntentReceiver)
         unregisterReceiver(resumePlaybackIntentReceiver)
         unregisterReceiver(deleteNotificationIntentReceiver)
+        unregisterReceiver(prevTrackIntentReceiver)
+        unregisterReceiver(nextTrackIntentReceiver)
 
         spotifyPlayer?.removeNotificationCallback(this)
         spotifyPlayer?.removeConnectionStateCallback(this)
@@ -282,7 +356,7 @@ class MainActivity :
     private fun resetProgressAndPlay(uri: String) {
         sliding_layout?.expandIfHidden()
         playback_seek_bar?.progress = 0
-        spotifyPlayer?.playUri(spotifyPlayerOperationCallback, uri, 0, 0)
+        spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
     }
 
     private var lastPlayedTrack: Track? = null
@@ -332,18 +406,18 @@ class MainActivity :
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
         if (currentPlaybackState != null && currentPlaybackState!!.isPlaying) {
-            spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+            spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
         } else {
-            spotifyPlayer?.resume(spotifyPlayerOperationCallback)
+            spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
         }
     }
 
     private val onNextBtnClickListener = View.OnClickListener {
-        spotifyPlayer?.skipToNext(spotifyPlayerOperationCallback)
+        spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
     }
 
     private val onPreviousBtnClickListener = View.OnClickListener {
-        spotifyPlayer?.skipToPrevious(spotifyPlayerOperationCallback)
+        spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
     }
 
     private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
@@ -352,7 +426,7 @@ class MainActivity :
 
     private fun stopSpotifyPlayback() {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-        spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+        spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
         lastPlayedTrack = null
         lastPlayedPlaylist = null
         lastPlayedAlbum = null
@@ -391,7 +465,7 @@ class MainActivity :
                 if (fromUser) {
                     val positionInMs = progress * 1000
                     spotifyPlaybackTimer?.cancel()
-                    spotifyPlayer?.seekToPosition(spotifyPlayerOperationCallback, positionInMs)
+                    spotifyPlayer?.seekToPosition(loggerSpotifyPlayerOperationCallback, positionInMs)
                     spotifyPlaybackTimer = playbackTimer(
                             trackDuration = playerMetadata!!.currentTrack.durationMs,
                             positionMs = positionInMs.toLong()
@@ -413,8 +487,8 @@ class MainActivity :
 
     override fun onPlaybackEvent(event: PlayerEvent) {
         Log.e("PlaybackEvent", event.toString())
-        playerMetadata = spotifyPlayer?.metadata
         currentPlaybackState = spotifyPlayer?.playbackState
+        playerMetadata = spotifyPlayer?.metadata
 
         fun updatePlayback() {
             playerMetadata?.let {
@@ -434,11 +508,13 @@ class MainActivity :
             PlayerEvent.kSpPlaybackNotifyNext, PlayerEvent.kSpPlaybackNotifyPrev, PlayerEvent.kSpPlaybackNotifyPlay -> {
                 updatePlayback()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.pause)
+                if (backgroundPlaybackNotificationIsShowing) refreshPlaybackNotification()
             }
 
             PlayerEvent.kSpPlaybackNotifyPause -> {
                 spotifyPlaybackTimer?.cancel()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
+                if (backgroundPlaybackNotificationIsShowing) refreshPlaybackNotification()
             }
 
             PlayerEvent.kSpPlaybackNotifyTrackChanged -> playerMetadata?.currentTrack?.let {
@@ -522,18 +598,20 @@ class MainActivity :
         registerReceiver(deleteNotificationIntentReceiver, IntentFilter(ACTION_DELETE_NOTIFICATION))
         registerReceiver(pausePlaybackIntentReceiver, IntentFilter(ACTION_PAUSE_PLAYBACK))
         registerReceiver(resumePlaybackIntentReceiver, IntentFilter(ACTION_RESUME_PLAYBACK))
+        registerReceiver(prevTrackIntentReceiver, IntentFilter(ACTION_PREV_TRACK))
+        registerReceiver(nextTrackIntentReceiver, IntentFilter(ACTION_NEXT_TRACK))
 
         spotifyPlayer?.addNotificationCallback(this)
         spotifyPlayer?.addConnectionStateCallback(this)
     }
 
-    private val spotifyPlayerOperationCallback = object : Player.OperationCallback {
+    private val loggerSpotifyPlayerOperationCallback = object : Player.OperationCallback {
         override fun onSuccess() {
-            Log.e("SUCCESS", "spotifyPlayerOperationCallback")
+            Log.e("SUCCESS", "loggerSpotifyPlayerOperationCallback")
         }
 
         override fun onError(error: Error) {
-            Log.e("ERR", "spotifyPlayerOperationCallback ${error.name}")
+            Log.e("ERR", "loggerSpotifyPlayerOperationCallback ${error.name}")
         }
     }
 
@@ -559,7 +637,7 @@ class MainActivity :
 
             spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
-                    spotifyPlayer?.setConnectivityStatus(spotifyPlayerOperationCallback, getNetworkConnectivity(this@MainActivity))
+                    spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, getNetworkConnectivity(this@MainActivity))
                     spotifyPlayer?.addNotificationCallback(this@MainActivity)
                     spotifyPlayer?.addConnectionStateCallback(this@MainActivity)
                 }
@@ -790,7 +868,7 @@ class MainActivity :
                     youTubePlayer?.pause()
                     lastPlayedVideo = null
 
-                    spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+                    spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
                     lastPlayedTrack = null
                     lastPlayedAlbum = null
                     lastPlayedPlaylist = null
@@ -829,7 +907,7 @@ class MainActivity :
         if (video == lastPlayedVideo) return
         lastPlayedVideo = video
 
-        spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+        spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
         lastPlayedTrack = null
         lastPlayedPlaylist = null
         lastPlayedAlbum = null
@@ -1046,5 +1124,7 @@ class MainActivity :
         private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"
         private const val ACTION_RESUME_PLAYBACK = "ACTION_RESUME_PLAYBACK"
         private const val ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION"
+        private const val ACTION_PREV_TRACK = "ACTION_PREV_TRACK"
+        private const val ACTION_NEXT_TRACK = "ACTION_NEXT_TRACK"
     }
 }
