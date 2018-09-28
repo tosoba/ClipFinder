@@ -129,18 +129,73 @@ class MainActivity :
     }
 
     private fun showPlaybackNotification() {
-        val intent = Intent(this, MainActivity::class.java)
-        val goBackToAppIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val goBackToAppIntent = PendingIntent.getActivity(this, 0, Intent(this, MainActivity::class.java), 0)
+        val deleteIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                Intent(ACTION_DELETE_NOTIFICATION),
+                0
+        )
 
         val notificationBuilder = NotificationCompat.Builder(this, FindClipsApp.CHANNEL_ID)
                 .setSmallIcon(R.drawable.play)
-                .setContentTitle("My notification")
-                .setContentText("Hello World!")
+                .setContentTitle("ClipFinder")
+                .setContentText("Currently playing: ${playerMetadata?.currentTrack?.name
+                        ?: lastPlayedTrack?.name ?: "Unknown track"}")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(goBackToAppIntent)
+                .setDeleteIntent(deleteIntent)
+                .apply {
+                    if (currentPlaybackState?.isPlaying == true) {
+                        val pauseIntent = PendingIntent.getBroadcast(
+                                this@MainActivity,
+                                0,
+                                Intent(ACTION_PAUSE_PLAYBACK),
+                                0
+                        )
+                        addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
+                    } else {
+                        val resumeIntent = PendingIntent.getBroadcast(
+                                this@MainActivity,
+                                0,
+                                Intent(ACTION_RESUME_PLAYBACK),
+                                0
+                        )
+                        addAction(R.drawable.play, getString(R.string.play), resumeIntent)
+                    }
+                }
                 .setAutoCancel(true)
 
         notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder.build())
+    }
+
+    private val deleteNotificationIntentReceiver: DeleteNotificationIntentReceiver by lazy { DeleteNotificationIntentReceiver() }
+
+    inner class DeleteNotificationIntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) = stopSpotifyPlayback()
+    }
+
+    private fun refreshPlaybackNotification() {
+        notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+        showPlaybackNotification()
+    }
+
+    private val pausePlaybackIntentReceiver: PausePlaybackIntentReceiver by lazy { PausePlaybackIntentReceiver() }
+
+    inner class PausePlaybackIntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.pause(spotifyPlayerOperationCallback)
+            refreshPlaybackNotification()
+        }
+    }
+
+    private val resumePlaybackIntentReceiver: ResumePlaybackIntentReceiver by lazy { ResumePlaybackIntentReceiver() }
+
+    inner class ResumePlaybackIntentReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.resume(spotifyPlayerOperationCallback)
+            refreshPlaybackNotification()
+        }
     }
 
     private val shouldShowPlaybackNotification: Boolean
@@ -178,6 +233,9 @@ class MainActivity :
         addVideoDialogFragment = null
 
         unregisterReceiver(networkStateReceiver)
+        unregisterReceiver(pausePlaybackIntentReceiver)
+        unregisterReceiver(resumePlaybackIntentReceiver)
+        unregisterReceiver(deleteNotificationIntentReceiver)
 
         spotifyPlayer?.removeNotificationCallback(this)
         spotifyPlayer?.removeConnectionStateCallback(this)
@@ -289,6 +347,10 @@ class MainActivity :
     }
 
     private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
+        stopSpotifyPlayback()
+    }
+
+    private fun stopSpotifyPlayback() {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
         spotifyPlayer?.pause(spotifyPlayerOperationCallback)
         lastPlayedTrack = null
@@ -456,8 +518,10 @@ class MainActivity :
     }
 
     private fun initSpotifyPlayer() {
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        registerReceiver(networkStateReceiver, filter)
+        registerReceiver(networkStateReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+        registerReceiver(deleteNotificationIntentReceiver, IntentFilter(ACTION_DELETE_NOTIFICATION))
+        registerReceiver(pausePlaybackIntentReceiver, IntentFilter(ACTION_PAUSE_PLAYBACK))
+        registerReceiver(resumePlaybackIntentReceiver, IntentFilter(ACTION_RESUME_PLAYBACK))
 
         spotifyPlayer?.addNotificationCallback(this)
         spotifyPlayer?.addConnectionStateCallback(this)
@@ -557,25 +621,23 @@ class MainActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        handleSearchIntent(intent)
+        when (intent?.action) {
+            Intent.ACTION_SEARCH -> handleSearchIntent(intent)
+        }
     }
 
-    private fun handleSearchIntent(intent: Intent?) {
-        fun saveQuery(query: String) {
-            val suggestions = SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE)
-            suggestions.saveRecentQuery(query, null)
+    private fun handleSearchIntent(intent: Intent) {
+        val query = intent.getStringExtra(SearchManager.QUERY)
+        if (query.isNullOrBlank()) return
+
+        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE).run {
+            saveRecentQuery(query, null)
         }
 
-        if (Intent.ACTION_SEARCH == intent?.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY)
-            if (query.isNullOrBlank()) return
-            saveQuery(query)
+        searchViewMenuItem?.collapseActionView()
 
-            searchViewMenuItem?.collapseActionView()
-
-            val currentFragment = pagerAdapter.currentHostFragment
-            currentFragment?.showFragment(SearchFragment.newInstance(query), true)
-        }
+        val currentFragment = pagerAdapter.currentHostFragment
+        currentFragment?.showFragment(SearchFragment.newInstance(query), true)
     }
 
     // endregion
@@ -980,5 +1042,9 @@ class MainActivity :
         )
 
         private const val PLAYBACK_NOTIFICATION_ID = 100
+
+        private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"
+        private const val ACTION_RESUME_PLAYBACK = "ACTION_RESUME_PLAYBACK"
+        private const val ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION"
     }
 }

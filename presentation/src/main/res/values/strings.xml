@@ -80,4 +80,6 @@
     <string name="channel_name">Playback Notification Channel</string>
     <string name="channel_description">Playback channel</string>
     <string name="clear_video_cache">Clear video cache</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
 </resources>
