@@ -48,8 +48,9 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                             override val itemViewBinder: ItemBinder<Album>
                                 get() = ItemBinderBase(BR.album, R.layout.grid_album_item)
                         },
-                        ClickHandler {
-                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                        ClickHandler { album ->
+                            onItemClick?.let { it(album) }
+                                    ?: run { hostFragment?.showFragment(AlbumFragment.newInstance(album), true) }
                         },
                         SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                         null

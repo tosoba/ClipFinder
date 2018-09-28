@@ -45,8 +45,9 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
                         override val itemViewBinder: ItemBinder<Playlist>
                             get() = ItemBinderBase(BR.playlist, R.layout.grid_playlist_item)
                     },
-                    ClickHandler {
-                        hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+                    ClickHandler { playlist ->
+                        onItemClick?.let { it(playlist) }
+                                ?: run { hostFragment?.showFragment(PlaylistFragment.newInstance(playlist), true) }
                     },
                     null,
                     onScrollListener
