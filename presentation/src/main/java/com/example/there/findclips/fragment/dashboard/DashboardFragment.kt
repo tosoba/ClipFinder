@@ -13,9 +13,9 @@ import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.fragment.album.AlbumFragment
-import com.example.there.findclips.fragment.category.CategoryFragment
-import com.example.there.findclips.fragment.playlist.PlaylistFragment
+import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
+import com.example.there.findclips.fragment.spotifyitem.category.CategoryFragment
+import com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent

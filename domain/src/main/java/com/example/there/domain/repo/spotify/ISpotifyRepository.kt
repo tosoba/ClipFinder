@@ -46,4 +46,17 @@ interface ISpotifyRepository {
     fun insertTrack(trackEntity: TrackEntity): Completable
 
     fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity>
+
+    fun isAlbumSaved(albumEntity: AlbumEntity): Single<Boolean>
+    fun isArtistSaved(artistEntity: ArtistEntity): Single<Boolean>
+    fun isCategorySaved(categoryEntity: CategoryEntity): Single<Boolean>
+    fun isPlaylistSaved(playlistEntity: PlaylistEntity): Single<Boolean>
+    fun isTrackSaved(trackEntity: TrackEntity): Single<Boolean>
+
+    fun deleteAlbum(albumEntity: AlbumEntity): Completable
+    fun deleteArtist(artistEntity: ArtistEntity): Completable
+    fun deleteCategory(categoryEntity: CategoryEntity): Completable
+    fun deletePlaylist(playlistEntity: PlaylistEntity): Completable
+    fun deleteTrack(trackEntity: TrackEntity): Completable
+
 }

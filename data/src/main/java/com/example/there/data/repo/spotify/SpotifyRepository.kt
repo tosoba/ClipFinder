@@ -135,4 +135,24 @@ class SpotifyRepository @Inject constructor(
     override fun insertTrack(trackEntity: TrackEntity): Completable = dbDataStore.insertTrack(trackEntity)
 
     override fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity> = remoteDataStore.getCurrentUser(accessToken)
+
+    override fun isAlbumSaved(albumEntity: AlbumEntity): Single<Boolean> = dbDataStore.isAlbumSaved(albumEntity)
+
+    override fun isArtistSaved(artistEntity: ArtistEntity): Single<Boolean> = dbDataStore.isArtistSaved(artistEntity)
+
+    override fun isCategorySaved(categoryEntity: CategoryEntity): Single<Boolean> = dbDataStore.isCategorySaved(categoryEntity)
+
+    override fun isPlaylistSaved(playlistEntity: PlaylistEntity): Single<Boolean> = dbDataStore.isPlaylistSaved(playlistEntity)
+
+    override fun isTrackSaved(trackEntity: TrackEntity): Single<Boolean> = dbDataStore.isTrackSaved(trackEntity)
+
+    override fun deleteAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.deleteAlbum(albumEntity)
+
+    override fun deleteArtist(artistEntity: ArtistEntity): Completable = dbDataStore.deleteArtist(artistEntity)
+
+    override fun deleteCategory(categoryEntity: CategoryEntity): Completable = dbDataStore.deleteCategory(categoryEntity)
+
+    override fun deletePlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.deletePlaylist(playlistEntity)
+
+    override fun deleteTrack(trackEntity: TrackEntity): Completable = dbDataStore.deleteTrack(trackEntity)
 }

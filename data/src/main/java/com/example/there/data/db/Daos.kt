@@ -29,30 +29,45 @@ interface BaseDao<T> {
 interface AlbumDao : BaseDao<AlbumData> {
     @Query("SELECT * FROM albums")
     fun findAll(): Flowable<List<AlbumData>>
+
+    @Query("SELECT * FROM albums WHERE id = :id")
+    fun findById(id: String): Maybe<AlbumData>
 }
 
 @Dao
 interface ArtistDao : BaseDao<ArtistData> {
     @Query("SELECT * FROM artists")
     fun findAll(): Flowable<List<ArtistData>>
+
+    @Query("SELECT * FROM artists WHERE id = :id")
+    fun findById(id: String): Maybe<ArtistData>
 }
 
 @Dao
 interface CategoryDao : BaseDao<CategoryData> {
     @Query("SELECT * FROM categories")
     fun findAll(): Flowable<List<CategoryData>>
+
+    @Query("SELECT * FROM categories WHERE id = :id")
+    fun findById(id: String): Maybe<CategoryData>
 }
 
 @Dao
 interface SpotifyPlaylistDao : BaseDao<PlaylistData> {
     @Query("SELECT * FROM spotify_playlists")
     fun findAll(): Flowable<List<PlaylistData>>
+
+    @Query("SELECT * FROM spotify_playlists WHERE id = :id")
+    fun findById(id: String): Maybe<PlaylistData>
 }
 
 @Dao
 interface TrackDao : BaseDao<TrackData> {
     @Query("SELECT * FROM tracks")
     fun findAll(): Flowable<List<TrackData>>
+
+    @Query("SELECT * FROM tracks WHERE id = :id")
+    fun findById(id: String): Maybe<TrackData>
 }
 
 @Dao

@@ -5,7 +5,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.album.AlbumView" />
+            type="com.example.there.findclips.fragment.spotifyitem.album.AlbumView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".fragment.album.AlbumFragment">
+        tools:context=".fragment.spotifyitem.album.AlbumFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/album_app_bar"
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@drawable/favourite"
+            android:src="@{view.state.isSavedAsFavourite ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/album_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

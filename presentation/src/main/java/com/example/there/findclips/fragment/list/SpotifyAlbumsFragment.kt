@@ -12,7 +12,7 @@ import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
-import com.example.there.findclips.fragment.album.AlbumFragment
+import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.hostFragment

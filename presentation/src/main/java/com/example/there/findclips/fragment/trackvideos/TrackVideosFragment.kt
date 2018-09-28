@@ -14,8 +14,10 @@ import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPresse
 import com.example.there.findclips.databinding.FragmentTrackVideosBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
-import com.example.there.findclips.fragment.track.TrackFragment
+import com.example.there.findclips.fragment.spotifyitem.track.TrackFragment
+import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.util.ext.hideAndShow
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.setupWithBackNavigation
 import com.example.there.findclips.view.OnPageChangeListener
@@ -67,8 +69,13 @@ class TrackVideosFragment :
 
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
         viewModel.viewState.track.get()?.let {
-            viewModel.addFavouriteTrack(it)
-            Toast.makeText(activity, "Added to favourites.", Toast.LENGTH_SHORT).show()
+            if (viewModel.viewState.isSavedAsFavourite.get() == true) {
+                viewModel.deleteFavouriteTrack(it)
+                Toast.makeText(activity, "${it.name} removed from favourite tracks.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.addFavouriteTrack(it)
+                Toast.makeText(activity, "${it.name} added to favourite tracks.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -106,6 +113,9 @@ class TrackVideosFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_videos, container, false)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
+            binding.trackFavouriteFab.hideAndShow()
+        })
         return binding.apply {
             view = this@TrackVideosFragment.view
             trackVideosViewpager.offscreenPageLimit = 1

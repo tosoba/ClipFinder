@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@drawable/favourite"
+            android:src="@{view.state.isSavedAsFavourite ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/track_videos_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

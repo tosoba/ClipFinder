@@ -164,4 +164,54 @@ class SpotifyDomainModule {
     fun getCurrentUser(
             repository: ISpotifyRepository
     ): GetCurrentUser = GetCurrentUser(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun isAlbumSaved(
+            repository: ISpotifyRepository
+    ): IsAlbumSaved = IsAlbumSaved(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun deleteAlbum(
+            repository: ISpotifyRepository
+    ): DeleteAlbum = DeleteAlbum(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun isArtistSaved(
+            repository: ISpotifyRepository
+    ): IsArtistSaved = IsArtistSaved(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun deleteArtist(
+            repository: ISpotifyRepository
+    ): DeleteArtist = DeleteArtist(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun isCategorySaved(
+            repository: ISpotifyRepository
+    ): IsCategorySaved = IsCategorySaved(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun deleteCategory(
+            repository: ISpotifyRepository
+    ): DeleteCategory = DeleteCategory(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun isPlaylistSaved(
+            repository: ISpotifyRepository
+    ): IsPlaylistSaved = IsPlaylistSaved(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun deletePlaylist(
+            repository: ISpotifyRepository
+    ): DeletePlaylist = DeletePlaylist(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun isTrackSaved(
+            repository: ISpotifyRepository
+    ): IsTrackSaved = IsTrackSaved(AsyncSymmetricSingleTransformer(), repository)
+
+    @Provides
+    fun deleteTrack(
+            repository: ISpotifyRepository
+    ): DeleteTrack = DeleteTrack(AsyncCompletableTransformer(), repository)
 }

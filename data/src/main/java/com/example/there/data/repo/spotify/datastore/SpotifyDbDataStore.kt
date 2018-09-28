@@ -2,10 +2,12 @@ package com.example.there.data.repo.spotify.datastore
 
 import com.example.there.data.db.*
 import com.example.there.data.mapper.spotify.*
+import com.example.there.data.util.mapToSingleBoolean
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -51,5 +53,45 @@ class SpotifyDbDataStore @Inject constructor(
 
     override fun insertTrack(trackEntity: TrackEntity): Completable = Completable.fromCallable {
         trackDao.insert(TrackMapper.mapBack(trackEntity))
+    }
+
+    override fun isAlbumSaved(
+            albumEntity: AlbumEntity
+    ): Single<Boolean> = albumDao.findById(albumEntity.id).mapToSingleBoolean()
+
+    override fun isArtistSaved(
+            artistEntity: ArtistEntity
+    ): Single<Boolean> = artistDao.findById(artistEntity.id).mapToSingleBoolean()
+
+    override fun isCategorySaved(
+            categoryEntity: CategoryEntity
+    ): Single<Boolean> = artistDao.findById(categoryEntity.id).mapToSingleBoolean()
+
+    override fun isPlaylistSaved(
+            playlistEntity: PlaylistEntity
+    ): Single<Boolean> = spotifyPlaylistDao.findById(playlistEntity.id).mapToSingleBoolean()
+
+    override fun isTrackSaved(
+            trackEntity: TrackEntity
+    ): Single<Boolean> = trackDao.findById(trackEntity.id).mapToSingleBoolean()
+
+    override fun deleteAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
+        albumDao.delete(AlbumMapper.mapBack(albumEntity))
+    }
+
+    override fun deleteArtist(artistEntity: ArtistEntity): Completable = Completable.fromCallable {
+        artistDao.delete(ArtistMapper.mapBack(artistEntity))
+    }
+
+    override fun deleteCategory(categoryEntity: CategoryEntity): Completable = Completable.fromCallable {
+        categoryDao.delete(CategoryMapper.mapBack(categoryEntity))
+    }
+
+    override fun deletePlaylist(playlistEntity: PlaylistEntity): Completable = Completable.fromCallable {
+        spotifyPlaylistDao.delete(PlaylistMapper.mapBack(playlistEntity))
+    }
+
+    override fun deleteTrack(trackEntity: TrackEntity): Completable = Completable.fromCallable {
+        trackDao.delete(TrackMapper.mapBack(trackEntity))
     }
 }
