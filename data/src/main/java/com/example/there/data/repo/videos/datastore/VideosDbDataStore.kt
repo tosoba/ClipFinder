@@ -131,4 +131,11 @@ class VideosDbDataStore @Inject constructor(
     ): Completable = Completable.fromCallable {
         videoPlaylistDao.delete(VideoPlaylistMapper.mapBack(videoPlaylistEntity))
     }
+
+    override fun deleteAllVideoSearchData(): Completable = Completable.merge(listOf(
+            Completable.fromAction { videoSearchDao.deleteAll() },
+            Completable.fromAction { relatedVideoSearchDao.deleteAll() }
+    )).andThen {
+        Completable.fromAction { videoDao.deleteAllWithNullForeignKeys() }
+    }
 }

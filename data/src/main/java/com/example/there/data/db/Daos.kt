@@ -83,6 +83,9 @@ interface VideoDao : BaseDao<VideoDbData> {
 
     @Query("SELECT * FROM videos WHERE playlist_id = :playlistId LIMIT 5")
     fun find5VideosFromPlaylist(playlistId: Long): Flowable<List<VideoDbData>>
+
+    @Query("DELETE FROM videos WHERE playlist_id = NULL AND search_query = NULL AND related_video_id = NULL")
+    fun deleteAllWithNullForeignKeys()
 }
 
 @Dao

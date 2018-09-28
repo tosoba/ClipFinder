@@ -91,4 +91,6 @@ class VideosRepository @Inject constructor(
     override fun deleteVideo(videoEntity: VideoEntity): Completable = dbDataStore.deleteVideo(videoEntity)
 
     override fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable = dbDataStore.deleteVideoPlaylist(videoPlaylistEntity)
+
+    override fun deleteAllVideoSearchData(): Completable = dbDataStore.deleteAllVideoSearchData()
 }

@@ -11,8 +11,8 @@ import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-        private val searchRelatedVideos: SearchRelatedVideos,
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
+        private val searchRelatedVideos: SearchRelatedVideos,
         private val insertVideoPlaylist: InsertVideoPlaylist,
         private val addVideoToPlaylist: AddVideoToPlaylist,
         private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists,
@@ -26,7 +26,8 @@ class MainViewModel @Inject constructor(
         private val deleteAlbum: DeleteAlbum,
         private val isTrackSaved: IsTrackSaved,
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved,
-        private val isAlbumSaved: IsAlbumSaved
+        private val isAlbumSaved: IsAlbumSaved,
+        private val deleteAllVideoSearchData: DeleteAllVideoSearchData
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState = MainViewState()
@@ -175,4 +176,7 @@ class MainViewModel @Inject constructor(
                     }
                 }, {}))
     }
+
+    fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
+            .subscribe({}, { Log.e("ERROR", "Delete all video search data error.") }))
 }

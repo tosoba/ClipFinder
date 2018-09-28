@@ -88,6 +88,8 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.deleteAllVideoSearchData()
+
         initViewBindings()
 
         setupNavigationFromSimilarTracks()
@@ -135,7 +137,6 @@ class MainActivity :
                 .setContentTitle("My notification")
                 .setContentText("Hello World!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                // Set the intent that will fire when the user taps the notification
                 .setContentIntent(goBackToAppIntent)
                 .setAutoCancel(true)
 
@@ -651,6 +652,11 @@ class MainActivity :
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
             R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run { startActivity(this) }
+
+            R.id.drawer_action_remove_video_search_data -> {
+                viewModel.deleteAllVideoSearchData()
+                Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
+            }
 
             R.id.drawer_action_about -> {
 

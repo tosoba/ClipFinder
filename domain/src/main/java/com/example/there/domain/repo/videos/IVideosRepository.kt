@@ -25,4 +25,6 @@ interface IVideosRepository {
 
     fun deleteVideo(videoEntity: VideoEntity): Completable
     fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable
+
+    fun deleteAllVideoSearchData(): Completable
 }
