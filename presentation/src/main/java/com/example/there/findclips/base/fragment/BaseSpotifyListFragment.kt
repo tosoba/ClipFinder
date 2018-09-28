@@ -26,6 +26,8 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     var loadMore: (() -> Unit)? = null
 
+    var onItemClick: ((T) -> Unit)? = null
+
     protected abstract val itemsRecyclerView: RecyclerView?
 
     protected abstract val defaultHeaderText: String

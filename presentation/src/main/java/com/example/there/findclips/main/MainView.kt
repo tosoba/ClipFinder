@@ -10,10 +10,8 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.SeekBar
-import android.widget.VideoView
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.User
-import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.VideoItemView
@@ -49,7 +47,8 @@ data class MainViewState(
         val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0),
         val nextTrackExists: ObservableField<Boolean> = ObservableField(false),
         val previousTrackExists: ObservableField<Boolean> = ObservableField(false),
-        val currentTrackTitle: ObservableField<String> = ObservableField("")
+        val currentTrackTitle: ObservableField<String> = ObservableField(""),
+        val itemFavouriteState: ObservableField<Boolean> = ObservableField(false)
 )
 
 data class DrawerHeaderViewState(

@@ -43,7 +43,7 @@ class InsertSpotifyPlaylist(
     }
 }
 
-class IsPlaylistSaved(
+class IsSpotifyPlaylistSaved(
         transformer: SymmetricSingleTransformer<Boolean>,
         private val repository: ISpotifyRepository
 ) : SingleUseCase<Boolean>(transformer) {
@@ -65,7 +65,7 @@ class IsPlaylistSaved(
     }
 }
 
-class DeletePlaylist(
+class DeleteSpotifyPlaylist(
         transformer: CompletableTransformer,
         private val repository: ISpotifyRepository
 ) : CompletableUseCase(transformer) {

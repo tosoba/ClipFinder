@@ -198,12 +198,12 @@ class SpotifyDomainModule {
     @Provides
     fun isPlaylistSaved(
             repository: ISpotifyRepository
-    ): IsPlaylistSaved = IsPlaylistSaved(AsyncSymmetricSingleTransformer(), repository)
+    ): IsSpotifyPlaylistSaved = IsSpotifyPlaylistSaved(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun deletePlaylist(
             repository: ISpotifyRepository
-    ): DeletePlaylist = DeletePlaylist(AsyncCompletableTransformer(), repository)
+    ): DeleteSpotifyPlaylist = DeleteSpotifyPlaylist(AsyncCompletableTransformer(), repository)
 
     @Provides
     fun isTrackSaved(

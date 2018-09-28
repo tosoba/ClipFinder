@@ -16,8 +16,8 @@ class PlaylistViewModel @Inject constructor(
         getAccessToken: GetAccessToken,
         private val getPlaylistTracks: GetPlaylistTracks,
         private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
-        private val deletePlaylist: DeletePlaylist,
-        private val isPlaylistSaved: IsPlaylistSaved
+        private val deleteSpotifyPlaylist: DeleteSpotifyPlaylist,
+        private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved
 ) : BaseSpotifyViewModel(getAccessToken) {
 
     val viewState: PlaylistViewState = PlaylistViewState()
@@ -60,11 +60,11 @@ class PlaylistViewModel @Inject constructor(
 
     fun deleteFavouritePlaylist(
             playlist: Playlist
-    ) = addDisposable(deletePlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
+    ) = addDisposable(deleteSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
             .subscribe({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") }))
 
     private fun loadPlaylistFavouriteState(
             playlist: Playlist
-    ) = addDisposable(isPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
+    ) = addDisposable(isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
             .subscribe({ viewState.isSavedAsFavourite.set(it) }, {}))
 }

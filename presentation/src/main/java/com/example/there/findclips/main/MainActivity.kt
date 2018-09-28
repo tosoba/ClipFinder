@@ -49,6 +49,7 @@ import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
+import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
@@ -89,12 +90,35 @@ class MainActivity :
 
         initViewBindings()
 
+        setupNavigationFromSimilarTracks()
+
         initYouTubePlayerView()
         addPlayerViewControls()
 
         initSpotifyPlayer()
 
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
+        addStatePropertyChangedCallbacks()
+    }
+
+    private fun setupNavigationFromSimilarTracks() {
+        similarTracksFragment?.onItemClick = {
+            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            pagerAdapter.currentHostFragment?.showFragment(TrackVideosFragment.newInstance(it), true)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
+        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
+        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
+            val newState = (observable as ObservableField<PlayerState>).get()!!
+            when (newState) {
+                PlayerState.TRACK -> lastPlayedTrack?.let { viewModel.updateTrackFavouriteState(it) }
+                PlayerState.PLAYLIST -> lastPlayedPlaylist?.let { viewModel.updatePlaylistFavouriteState(it) }
+                PlayerState.ALBUM -> lastPlayedAlbum?.let { viewModel.updateAlbumFavouriteState(it) }
+                else -> viewModel.viewState.itemFavouriteState.set(false)
+            }
+        })
     }
 
     override fun onStart() {
@@ -133,6 +157,9 @@ class MainActivity :
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
         binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
+            binding.addToFavouritesFab.hideAndShow()
+        })
 
         val drawerHeaderBinding: DrawerHeaderBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
         drawerHeaderBinding.viewState = viewModel.drawerViewState
@@ -877,16 +904,25 @@ class MainActivity :
                     }
                 }
                 PlayerState.PLAYLIST -> lastPlayedPlaylist?.let {
-                    viewModel.addPlaylistToFavourites(it)
-                    Toast.makeText(this, "Playlist: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
+                    viewModel.togglePlaylistFavouriteState(
+                            it,
+                            { Toast.makeText(this, "${it.name} added to favourite playlists.", Toast.LENGTH_SHORT).show() },
+                            { Toast.makeText(this, "${it.name} deleted from favourite playlists.", Toast.LENGTH_SHORT).show() }
+                    )
                 }
                 PlayerState.TRACK -> lastPlayedTrack?.let {
-                    viewModel.addTrackToFavourites(it)
-                    Toast.makeText(this, "Track: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
+                    viewModel.toggleTrackFavouriteState(
+                            it,
+                            { Toast.makeText(this, "${it.name} added to favourite tracks.", Toast.LENGTH_SHORT).show() },
+                            { Toast.makeText(this, "${it.name} deleted from favourite tracks.", Toast.LENGTH_SHORT).show() }
+                    )
                 }
                 PlayerState.ALBUM -> lastPlayedAlbum?.let {
-                    viewModel.addAlbumToFavourites(it)
-                    Toast.makeText(this, "Album: ${it.name} added to favourites", Toast.LENGTH_SHORT).show()
+                    viewModel.toggleAlbumFavouriteState(
+                            it,
+                            { Toast.makeText(this, "${it.name} added to favourite albums.", Toast.LENGTH_SHORT).show() },
+                            { Toast.makeText(this, "${it.name} deleted from favourite albums.", Toast.LENGTH_SHORT).show() }
+                    )
                 }
             }
         }
