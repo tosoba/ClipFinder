@@ -13,6 +13,7 @@ import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ObservableField
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -142,14 +143,16 @@ class MainActivity :
     private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(this, FindClipsApp.CHANNEL_ID)
             .setSmallIcon(R.drawable.play)
             .apply {
-                val text = "Currently playing: ${playerMetadata?.currentTrack?.name
-                        ?: lastPlayedTrack?.name ?: "Unknown track"}"
-                if (largeIcon != null)
-                    setStyle(NotificationCompat.BigPictureStyle()
-                            .bigPicture(largeIcon)
-                            .setSummaryText(text)
-                    )
-                else setContentText(text)
+                val bigText = playerMetadata?.currentTrack?.name
+                        ?: lastPlayedTrack?.name ?: "Unknown track"
+                if (largeIcon != null) setLargeIcon(largeIcon).setStyle(NotificationCompat.BigPictureStyle()
+                        .bigLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+                        .bigPicture(largeIcon)
+                        .setBigContentTitle(bigText)
+                        .setSummaryText("${playerMetadata?.currentTrack?.artistName
+                                ?: "Unknown artist"} - ${playerMetadata?.currentTrack?.albumName
+                                ?: "Unknown album"}"))
+                else setContentText(bigText)
             }
             .setContentTitle("ClipFinder")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
