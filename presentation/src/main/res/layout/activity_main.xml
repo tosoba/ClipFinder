@@ -82,7 +82,7 @@
                     android:id="@+id/youtube_player_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST? View.VISIBLE : View.GONE}"
                     app:constraint_referenced_ids="youtube_player_view,related_videos_recycler_view" />
 
                 <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
@@ -124,6 +124,7 @@
                     android:layout_margin="10dp"
                     android:onClick="@{mainActivityView.onFavouriteBtnClickListener}"
                     android:src="@{safeUnbox(mainActivityView.state.itemFavouriteState) ? @drawable/delete : @drawable/favourite}"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.GONE : View.VISIBLE}"
                     app:elevation="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
@@ -132,14 +133,14 @@
                     android:id="@+id/spotify_player_and_similar_tracks_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.GONE : View.VISIBLE}"
                     app:constraint_referenced_ids="similar_tracks_fragment,spotify_player_layout" />
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/spotify_player_layout"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO ? View.GONE : View.VISIBLE}">
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.GONE : View.VISIBLE}">
 
                     <ImageButton
                         android:id="@+id/close_spotify_player_image_button"
@@ -157,8 +158,8 @@
                         android:id="@+id/spotify_player_play_pause_image_button"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onSpotifyPlayPauseBtnClickListener}"
@@ -172,9 +173,9 @@
                         android:id="@+id/next_track_btn"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onNextBtnClickListener}"
@@ -189,9 +190,9 @@
                         android:id="@+id/previous_track_btn"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onPreviousBtnClickListener}"
@@ -219,8 +220,8 @@
                         android:id="@+id/current_track_title_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="@{mainActivityView.state.currentTrackTitle}"

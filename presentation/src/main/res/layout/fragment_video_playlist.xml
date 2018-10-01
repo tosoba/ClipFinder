@@ -65,6 +65,14 @@
             android:background="@drawable/main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="10dp"
+            android:onClick="@{view.onPlayBtnClickListener}"
+            android:src="@drawable/play" />
+
     </android.support.design.widget.CoordinatorLayout>
 </layout>
 

@@ -55,6 +55,7 @@ import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
+import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -64,6 +65,7 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.list.item.VideoItemView
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
@@ -854,6 +856,7 @@ class MainActivity :
                 SlidingUpPanelLayout.PanelState.HIDDEN -> {
                     youTubePlayer?.pause()
                     lastPlayedVideo = null
+                    lastPlayedPlaylist = null
 
                     spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
                     lastPlayedTrack = null
@@ -887,30 +890,90 @@ class MainActivity :
     private fun stopYoutubePlayback() {
         youTubePlayer?.pause()
         lastPlayedVideo = null
+        lastPlayedPlaylist = null
     }
 
     private var lastPlayedVideo: Video? = null
+
+    private fun pauseSpotifyPlayerAndNullifyLastPlayedItems() {
+        spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
+        lastPlayedTrack = null
+        lastPlayedPlaylist = null
+        lastPlayedAlbum = null
+    }
+
+    private fun setDragViewToYoutubeAndExpand() {
+        sliding_layout?.setDragView(youtube_player_view)
+        sliding_layout?.expandIfHidden()
+    }
+
+    private fun playVideo(video: Video) {
+        if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
+        else youTubePlayer?.cueVideo(video.id, 0f)
+    }
 
     fun loadVideo(video: Video) {
         if (video == lastPlayedVideo) return
         lastPlayedVideo = video
 
-        spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
-        lastPlayedTrack = null
-        lastPlayedPlaylist = null
-        lastPlayedAlbum = null
+        pauseSpotifyPlayerAndNullifyLastPlayedItems()
+        lastVideoPlaylist = null
 
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
 
-        sliding_layout?.setDragView(youtube_player_view)
-        sliding_layout?.expandIfHidden()
-
-        if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
-        else youTubePlayer?.cueVideo(video.id, 0f)
+        setDragViewToYoutubeAndExpand()
+        youTubePlayer?.removeListener(playlistYoutubePlayerStateChangeListener)
+        playVideo(video)
 
         youtube_player_view?.playerUIController?.setVideoTitle(video.title)
 
         viewModel.searchRelatedVideos(video)
+    }
+
+    private var lastVideoPlaylist: VideoPlaylist? = null
+    private var videosToPlay: List<Video>? = null
+    private var currentVideoIndex = 0
+
+    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+        override fun onStateChange(state: PlayerConstants.PlayerState) {
+            if (state == PlayerConstants.PlayerState.ENDED) {
+                if (videosToPlay?.size ?: 0 > ++currentVideoIndex) {
+                    playVideo(videosToPlay!![currentVideoIndex])
+                } else {
+                    sliding_layout?.hideIfVisible()
+                    Toast.makeText(this@MainActivity, "${lastPlayedPlaylist?.name
+                            ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
+        if (videoPlaylist == lastVideoPlaylist) return
+
+        lastVideoPlaylist = videoPlaylist
+
+        if (videos.isEmpty()) {
+            Toast.makeText(this, "Playlist is empty.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        videosToPlay = videos
+        currentVideoIndex = 0
+
+        pauseSpotifyPlayerAndNullifyLastPlayedItems()
+        lastPlayedVideo = null
+
+        viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
+
+        setDragViewToYoutubeAndExpand()
+        youTubePlayer?.addListener(playlistYoutubePlayerStateChangeListener)
+
+        val firstVideo = videos.first()
+        playVideo(firstVideo)
+
+        youtube_player_view?.playerUIController?.setVideoTitle(firstVideo.title)
+        viewModel.searchRelatedVideos(firstVideo)
     }
 
     private fun updatePlayersDimensions(slideOffset: Float) {
@@ -1058,6 +1121,7 @@ class MainActivity :
                             { Toast.makeText(this, "${it.name} deleted from favourite albums.", Toast.LENGTH_SHORT).show() }
                     )
                 }
+                else -> return@OnClickListener
             }
         }
     }

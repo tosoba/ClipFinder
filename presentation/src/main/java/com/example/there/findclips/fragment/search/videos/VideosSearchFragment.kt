@@ -16,6 +16,7 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.util.ext.screenOrientation
@@ -40,6 +41,15 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
             loadData()
             viewModel.viewState.videos.clear()
         }
+
+    val videosLoaded: Boolean
+        get() {
+            if (!viewModelInitialized) return false
+            return viewModel.viewState.videos.isNotEmpty()
+        }
+
+    val videos: List<Video>
+        get() = viewModel.viewState.videos.map { it.video }
 
     private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
@@ -79,14 +89,12 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         initFromArguments()
     }
 
-    private fun initFromArguments() {
-        arguments?.let {
-            if (it.containsKey(ARG_QUERY)) {
-                query = it.getString(ARG_QUERY)!!
-            } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
-                val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)!!
-                viewModel.getFavouriteVideosFromPlaylist(videoPlaylist)
-            }
+    private fun initFromArguments() = arguments?.let {
+        if (it.containsKey(ARG_QUERY)) {
+            query = it.getString(ARG_QUERY)!!
+        } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
+            val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)!!
+            viewModel.getFavouriteVideosFromPlaylist(videoPlaylist)
         }
     }
 

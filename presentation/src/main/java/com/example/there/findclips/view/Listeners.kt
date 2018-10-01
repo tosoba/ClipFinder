@@ -3,6 +3,8 @@ package com.example.there.findclips.view
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.widget.SeekBar
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener
 
 interface OnTabSelectedListener : TabLayout.OnTabSelectedListener {
     override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -17,4 +19,24 @@ interface OnPageChangeListener : ViewPager.OnPageChangeListener {
 interface OnSeekBarProgressChangeListener : SeekBar.OnSeekBarChangeListener {
     override fun onStartTrackingTouch(p0: SeekBar?) = Unit
     override fun onStopTrackingTouch(p0: SeekBar?) = Unit
+}
+
+interface OnYoutubePlayerStateChangeListener : YouTubePlayerListener {
+    override fun onPlaybackQualityChange(playbackQuality: PlayerConstants.PlaybackQuality) = Unit
+
+    override fun onVideoDuration(duration: Float) = Unit
+
+    override fun onCurrentSecond(second: Float) = Unit
+
+    override fun onReady() = Unit
+
+    override fun onVideoLoadedFraction(loadedFraction: Float) = Unit
+
+    override fun onPlaybackRateChange(playbackRate: PlayerConstants.PlaybackRate) = Unit
+
+    override fun onVideoId(videoId: String) = Unit
+
+    override fun onApiChange() = Unit
+
+    override fun onError(error: PlayerConstants.PlayerError) = Unit
 }
