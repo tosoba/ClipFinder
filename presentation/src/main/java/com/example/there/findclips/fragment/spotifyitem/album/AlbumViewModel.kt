@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.spotifyitem.album
 
 import android.util.Log
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseSpotifyViewModel
@@ -47,20 +46,11 @@ class AlbumViewModel @Inject constructor(
                 .subscribe({ viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom)) }, ::onError))
     }
 
-    private var currentOffset = 0
-    private var totalItems = 0
-
     fun loadTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String) {
-        if (currentOffset == 0 || (currentOffset < totalItems)) {
-            viewState.tracksLoadingInProgress.set(true)
-            addDisposable(getTracksFromAlbum.execute(accessToken, albumId, currentOffset)
-                    .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                    .subscribe({
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
-                        totalItems = it.totalItems
-                        viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
-                    }, ::onError))
-        }
+        viewState.tracksLoadingInProgress.set(true)
+        addDisposable(getTracksFromAlbum.execute(accessToken, albumId)
+                .doFinally { viewState.tracksLoadingInProgress.set(false) }
+                .subscribe({ viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom)) }, ::onError))
     }
 
     fun addFavouriteAlbum(

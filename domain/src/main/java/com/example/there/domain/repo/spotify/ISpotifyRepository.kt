@@ -18,7 +18,7 @@ interface ISpotifyRepository {
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
     fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String, offset: Int): Single<EntityPage<TrackEntity>>
+    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<EntityPage<TrackEntity>>
     fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Single<AlbumEntity>
     fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>>
     fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Single<List<ArtistEntity>>

@@ -311,16 +311,14 @@ class MainActivity :
     // region spotify player
 
     fun showLoginDialog() {
-        if (!playerLoggedIn) {
-            MaterialDialog.Builder(this)
-                    .title(R.string.spotify_login)
-                    .content(R.string.playback_requires_login)
-                    .positiveText(R.string.login)
-                    .negativeText(R.string.cancel)
-                    .onPositive { _, _ -> openLoginWindow() }
-                    .build()
-                    .apply { show() }
-        }
+        if (!playerLoggedIn) MaterialDialog.Builder(this)
+                .title(R.string.spotify_login)
+                .content(R.string.playback_requires_login)
+                .positiveText(R.string.login)
+                .negativeText(R.string.cancel)
+                .onPositive { _, _ -> openLoginWindow() }
+                .build()
+                .apply { show() }
     }
 
     private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
@@ -831,8 +829,7 @@ class MainActivity :
         val currentTopFragment = (pagerAdapter.currentFragment as BaseHostFragment).topFragment
         val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
         setSupportActionBar(mainToolbar)
-        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0)
-            showDrawerHamburger()
+        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
     }
 
     // endregion
@@ -933,25 +930,22 @@ class MainActivity :
         }
     }
 
-    private fun updateFavouriteBtnOnConfigChange(newConfig: Configuration?) {
-        if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            add_to_favourites_fab?.animate()?.alpha(0f)
-        } else {
-            add_to_favourites_fab?.animate()?.alpha(1f)
-        }
-    }
+    private fun updateFavouriteBtnOnConfigChange(
+            newConfig: Configuration?
+    ) = if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) add_to_favourites_fab?.animate()?.alpha(0f)
+    else add_to_favourites_fab?.animate()?.alpha(1f)
 
     // endregion
 
-    private fun updateMainContentLayoutParams() {
-        main_content_layout.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+    private fun updateMainContentLayoutParams() = with(main_content_layout) {
+        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                main_content_layout.layoutParams.apply {
+                layoutParams.apply {
                     height = ViewGroup.LayoutParams.MATCH_PARENT
                     width = ViewGroup.LayoutParams.MATCH_PARENT
                 }
-                main_content_layout.requestLayout()
-                main_content_layout.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                requestLayout()
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
     }

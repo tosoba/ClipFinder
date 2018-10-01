@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:visibility="@{safeUnbox(view.state.initialLoadingInProgress) ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{(safeUnbox(view.state.initialLoadingInProgress) &amp;&amp; view.state.items.size() == 0) ? View.VISIBLE : View.GONE}" />
 
         <ImageButton
             onClickIfNotNull="@{view.onReloadBtnClickListener}"

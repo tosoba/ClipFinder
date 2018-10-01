@@ -80,9 +80,8 @@ class SpotifyRepository @Inject constructor(
 
     override fun getTracksFromAlbum(
             accessToken: AccessTokenEntity,
-            albumId: String,
-            offset: Int
-    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getTracksFromAlbum(accessToken, albumId, offset)
+            albumId: String
+    ): Observable<EntityPage<TrackEntity>> = remoteDataStore.getTracksFromAlbum(accessToken, albumId)
 
     override fun getNewReleases(
             accessToken: AccessTokenEntity,

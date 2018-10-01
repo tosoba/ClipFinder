@@ -223,29 +223,37 @@ class SpotifyRemoteDataStore @Inject constructor(
 
     override fun getTracksFromAlbum(
             accessToken: AccessTokenEntity,
-            albumId: String,
-            offset: Int
-    ): Single<EntityPage<TrackEntity>> = api.getTracksFromAlbum(
-            authorization = getAccessTokenHeader(accessToken.token),
-            albumId = albumId,
-            offset = offset
-    ).map {
-        TrackIdsPage(
-                ids = it.tracks.joinToString(separator = ",") { it.id },
-                offset = it.offset,
-                totalItems = it.totalItems
-        )
-    }.flatMap { idsPage ->
-        api.getTracks(
-                authorization = getAccessTokenHeader(accessToken.token),
-                ids = idsPage.ids
-        ).map {
-            EntityPage(
-                    items = it.tracks.map(TrackMapper::mapFrom),
-                    offset = idsPage.offset,
-                    totalItems = idsPage.totalItems
-            )
+            albumId: String
+    ): Observable<EntityPage<TrackEntity>> {
+        val offsetSubject = BehaviorSubject.createDefault(0)
+        return offsetSubject.concatMap { offset ->
+            api.getTracksFromAlbum(
+                    authorization = getAccessTokenHeader(accessToken.token),
+                    albumId = albumId,
+                    offset = offset
+            ).toObservable().map {
+                TrackIdsPage(
+                        ids = it.tracks.joinToString(separator = ",") { it.id },
+                        offset = it.offset,
+                        totalItems = it.totalItems
+                )
+            }.flatMap { idsPage ->
+                api.getTracks(
+                        authorization = getAccessTokenHeader(accessToken.token),
+                        ids = idsPage.ids
+                ).toObservable().map {
+                    EntityPage(
+                            items = it.tracks.map(TrackMapper::mapFrom),
+                            offset = idsPage.offset,
+                            totalItems = idsPage.totalItems
+                    )
+                }
+            }.doOnNext {
+                if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT) offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
+                else offsetSubject.onComplete()
+            }
         }
+
     }
 
     override fun getNewReleases(

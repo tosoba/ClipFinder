@@ -30,7 +30,7 @@ class SpotifyDomainModule {
     @Provides
     fun tracksFromAlbumUseCase(
             repository: ISpotifyRepository
-    ): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricSingleTransformer(), repository)
+    ): GetTracksFromAlbum = GetTracksFromAlbum(AsyncSymmetricObservableTransformer(), repository)
 
     @Provides
     fun insertArtistUseCase(
