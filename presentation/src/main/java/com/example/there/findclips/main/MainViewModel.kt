@@ -11,6 +11,8 @@ import com.example.there.findclips.model.mapper.*
 import com.example.there.findclips.view.list.item.VideoItemView
 import com.squareup.picasso.Picasso
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -184,7 +186,12 @@ class MainViewModel @Inject constructor(
     fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
             .subscribe({}, { Log.e("ERROR", "Delete all video search data error.") }))
 
-    fun getBitmapSingle(picasso: Picasso, url: String): Single<Bitmap> = Single.create {
+    fun getBitmapSingle(
+            picasso: Picasso,
+            url: String,
+            onSuccess: (Bitmap) -> Unit,
+            onError: () -> Unit
+    ) = addDisposable(Single.create<Bitmap> {
         try {
             if (!it.isDisposed) {
                 val bitmap: Bitmap = picasso.load(url).get()
@@ -193,5 +200,7 @@ class MainViewModel @Inject constructor(
         } catch (e: Throwable) {
             it.onError(e)
         }
-    }
+    }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ onSuccess(it) }, { onError() }))
 }

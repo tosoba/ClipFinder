@@ -30,10 +30,7 @@ import android.support.v7.widget.SearchView
 import android.text.InputType
 import android.util.Log
 import android.view.*
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.SeekBar
-import android.widget.Toast
+import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.BR
@@ -52,7 +49,6 @@ import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
-import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
@@ -76,8 +72,6 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -95,14 +89,13 @@ class MainActivity :
         super.onCreate(savedInstanceState)
 
         viewModel.deleteAllVideoSearchData()
-        lifecycle.addObserver(disposablesComponent)
 
         initViewBindings()
 
         setupNavigationFromSimilarTracks()
 
         initYouTubePlayerView()
-        addPlayerViewControls()
+        initPlayerViewControls()
 
         initSpotifyPlayer()
 
@@ -213,19 +206,13 @@ class MainActivity :
             }
             .setAutoCancel(true)
 
-    private val disposablesComponent = DisposablesComponent()
-
-    private fun showPlaybackNotification() {
-        if (playerMetadata?.currentTrack != null) {
-            disposablesComponent.add(viewModel.getBitmapSingle(Picasso.with(this), playerMetadata!!.currentTrack.albumCoverWebUrl)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ bitmap ->
-                        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build())
-                    }, {
-                        notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build())
-                    }))
-        }
+    private fun showPlaybackNotification() = playerMetadata?.currentTrack?.let {
+        viewModel.getBitmapSingle(
+                Picasso.with(this),
+                playerMetadata!!.currentTrack.albumCoverWebUrl,
+                { bitmap -> notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build()) },
+                { notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build()) }
+        )
     }
 
     private val deleteNotificationIntentReceiver: DeleteNotificationIntentReceiver by lazy { DeleteNotificationIntentReceiver() }
@@ -893,10 +880,11 @@ class MainActivity :
 
     private var youTubePlayer: YouTubePlayer? = null
 
-    private fun initYouTubePlayerView() {
-        lifecycle.addObserver(youtube_player_view)
-        youtube_player_view.initialize({ this.youTubePlayer = it }, true)
-        youtube_player_view.playerUIController.showFullscreenButton(false)
+    private fun initYouTubePlayerView() = with(youtube_player_view) {
+        lifecycle.addObserver(this)
+        initialize({ this@MainActivity.youTubePlayer = it }, true)
+        playerUIController.showFullscreenButton(false)
+        playerUIController.showVideoTitle(true)
     }
 
     private fun stopYoutubePlayback() {
@@ -918,12 +906,12 @@ class MainActivity :
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
 
         sliding_layout?.setDragView(youtube_player_view)
-
         sliding_layout?.expandIfHidden()
-        if (lifecycle.currentState == Lifecycle.State.RESUMED)
-            youTubePlayer?.loadVideo(video.id, 0f)
-        else
-            youTubePlayer?.cueVideo(video.id, 0f)
+
+        if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
+        else youTubePlayer?.cueVideo(video.id, 0f)
+
+        youtube_player_view?.playerUIController?.setVideoTitle(video.title)
 
         viewModel.searchRelatedVideos(video)
     }
@@ -999,14 +987,17 @@ class MainActivity :
             setOnClickListener {
                 sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
                 youTubePlayer?.pause()
+                lastPlayedVideo = null
             }
             setBackgroundColor(Color.TRANSPARENT)
         }
     }
 
-    private fun addPlayerViewControls() = findViewById<RelativeLayout>(R.id.controls_root).apply {
+    private fun initPlayerViewControls() = findViewById<RelativeLayout>(R.id.controls_root).apply {
         addView(minimizeBtn)
         addView(closeBtn)
+        val titleParams = findViewById<TextView>(R.id.video_title)?.layoutParams as RelativeLayout.LayoutParams
+        titleParams.setMargins(dpToPx(20f).toInt(), 0, dpToPx(20f).toInt(), 0)
     }
 
     // endregion
