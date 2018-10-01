@@ -113,7 +113,9 @@ class SpotifyDomainModule {
     ): GetPlaylistTracks = GetPlaylistTracks(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
-    fun searchAllUseCase(repository: ISpotifyRepository): SearchSpotify = SearchSpotify(AsyncSymmetricObservableTransformer(), repository)
+    fun searchAllUseCase(
+            repository: ISpotifyRepository
+    ): SearchSpotify = SearchSpotify(AsyncSymmetricSingleTransformer(), repository)
 
     @Provides
     fun albumUseCase(

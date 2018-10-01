@@ -33,6 +33,12 @@ data class Track(
             override fun areItemsTheSame(item1: Track, item2: Track): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean = oldItem.id == newItem.id
         }
+
+        val unsortedListCallback: ObservableSortedList.Callback<Track> = object : ObservableSortedList.Callback<Track> {
+            override fun compare(o1: Track, o2: Track): Int = -1
+            override fun areItemsTheSame(item1: Track, item2: Track): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean = oldItem.id == newItem.id
+        }
     }
 }
 

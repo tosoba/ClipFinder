@@ -14,7 +14,7 @@ interface ISpotifyRepository {
     fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>
     fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
 
-    fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
+    fun searchAll(accessToken: AccessTokenEntity, query: String, offset: Int): Single<SearchAllEntity>
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
     fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>

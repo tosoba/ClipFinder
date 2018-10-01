@@ -37,11 +37,13 @@ interface SpotifyApi {
     ): Single<TracksOnlyResponse>
 
     @GET("search")
-    fun searchAll(@Header("Authorization") authorization: String,
-                  @Query("q") query: String,
-                  @Query("type") type: String = ALL_SEARCH_TYPES,
-                  @Query("offset") offset: Int = DEFAULT_OFFSET,
-                  @Query("limit") limit: Int = DEFAULT_LIMIT): Observable<SearchAllResponse>
+    fun searchAll(
+            @Header("Authorization") authorization: String,
+            @Query("q") query: String,
+            @Query("type") type: String = ALL_SEARCH_TYPES,
+            @Query("offset") offset: Int = DEFAULT_OFFSET,
+            @Query("limit") limit: Int = DEFAULT_LIMIT
+    ): Single<SearchAllResponse>
 
     @GET("browse/categories/{category_id}/playlists")
     fun getPlaylistsForCategory(

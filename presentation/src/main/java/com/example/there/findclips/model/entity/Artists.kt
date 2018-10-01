@@ -17,6 +17,12 @@ data class Artist(
             override fun areItemsTheSame(item1: Artist, item2: Artist): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean = oldItem.id == newItem.id
         }
+
+        val unsortedListCallback: ObservableSortedList.Callback<Artist> = object : ObservableSortedList.Callback<Artist> {
+            override fun compare(o1: Artist, o2: Artist): Int = -1
+            override fun areItemsTheSame(item1: Artist, item2: Artist): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean = oldItem.id == newItem.id
+        }
     }
 }
 

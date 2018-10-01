@@ -14,7 +14,7 @@ interface ISpotifyRemoteDataStore {
 
     fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
 
-    fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity>
+    fun searchAll(accessToken: AccessTokenEntity, query: String, offset: Int): Single<SearchAllEntity>
 
     fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
 

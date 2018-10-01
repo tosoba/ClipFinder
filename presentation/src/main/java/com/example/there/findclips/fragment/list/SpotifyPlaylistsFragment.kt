@@ -32,7 +32,7 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
 
     override val defaultHeaderText: String = "Playlists"
 
-    override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback))
+    override val viewState: ViewState<Playlist> = ViewState(ObservableSortedList<Playlist>(Playlist::class.java, Playlist.unsortedListCallback))
 
     override val view: BaseSpotifyListFragment.View<Playlist> = BaseSpotifyListFragment.View(
             state = viewState,

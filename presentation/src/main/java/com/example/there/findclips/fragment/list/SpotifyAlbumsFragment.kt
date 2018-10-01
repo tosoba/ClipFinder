@@ -34,7 +34,7 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
 
     override val defaultHeaderText: String = "Albums"
 
-    override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, Album.sortedListCallback))
+    override val viewState: ViewState<Album> =  ViewState(ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback))
 
     override val view: BaseSpotifyListFragment.View<Album> by lazy {
         BaseSpotifyListFragment.View(
@@ -42,9 +42,9 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 ObservableField(false),
-                                viewState.items
+                                viewState.items!!
                         ),
-                        object : ListItemView<Album>(viewState.items) {
+                        object : ListItemView<Album>(viewState.items!!) {
                             override val itemViewBinder: ItemBinder<Album>
                                 get() = ItemBinderBase(BR.album, R.layout.grid_album_item)
                         },

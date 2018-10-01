@@ -34,8 +34,11 @@ class SpotifyRepository @Inject constructor(
             accessToken: AccessTokenEntity
     ): Observable<List<TopTrackEntity>> = remoteDataStore.getDailyViralTracks(accessToken)
 
-    override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
-            remoteDataStore.searchAll(accessToken, query)
+    override fun searchAll(
+            accessToken: AccessTokenEntity,
+            query: String,
+            offset: Int
+    ): Single<SearchAllEntity> = remoteDataStore.searchAll(accessToken, query, offset)
 
     override fun getPlaylistsForCategory(
             accessToken: AccessTokenEntity,

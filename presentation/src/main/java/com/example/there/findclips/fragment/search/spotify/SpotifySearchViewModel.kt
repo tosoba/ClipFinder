@@ -1,6 +1,7 @@
 package com.example.there.findclips.fragment.search.spotify
 
 import android.arch.lifecycle.MutableLiveData
+import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.GetAccessToken
 import com.example.there.domain.usecase.spotify.SearchSpotify
@@ -29,16 +30,23 @@ class SpotifySearchViewModel @Inject constructor(
         }
     }
 
-    private fun loadData(accessTokenEntity: AccessTokenEntity, query: String) {
-        viewState.loadingInProgress.set(true)
-        addDisposable(searchSpotify.execute(accessTokenEntity, query)
-                .doFinally { viewState.loadingInProgress.set(false) }
-                .subscribe({
-                    viewState.albums.addAll(it.albums.map(AlbumEntityMapper::mapFrom))
-                    viewState.artists.addAll(it.artists.map(ArtistEntityMapper::mapFrom))
-                    viewState.playlists.addAll(it.playlists.map(PlaylistEntityMapper::mapFrom))
-                    viewState.tracks.addAll(it.tracks.map(TrackEntityMapper::mapFrom))
-                    loadedFlag.value = Unit
-                }, this::onError))
+    private var currentOffset = 0
+    private var totalItems = 0
+
+    fun loadData(accessTokenEntity: AccessTokenEntity, query: String) {
+        if (currentOffset == 0 || (currentOffset < totalItems)) {
+            viewState.loadingInProgress.set(true)
+            addDisposable(searchSpotify.execute(accessTokenEntity, query, currentOffset)
+                    .doFinally { viewState.loadingInProgress.set(false) }
+                    .subscribe({
+                        currentOffset += SpotifyApi.DEFAULT_LIMIT
+                        totalItems = it.totalItems
+                        viewState.albums.addAll(it.albums.map(AlbumEntityMapper::mapFrom))
+                        viewState.artists.addAll(it.artists.map(ArtistEntityMapper::mapFrom))
+                        viewState.playlists.addAll(it.playlists.map(PlaylistEntityMapper::mapFrom))
+                        viewState.tracks.addAll(it.tracks.map(TrackEntityMapper::mapFrom))
+                        loadedFlag.value = Unit
+                    }, ::onError))
+        }
     }
 }

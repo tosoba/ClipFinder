@@ -90,28 +90,29 @@ class SpotifyRemoteDataStore @Inject constructor(
             }
 
 
-    override fun searchAll(accessToken: AccessTokenEntity, query: String): Observable<SearchAllEntity> =
-            api.searchAll(authorization = getAccessTokenHeader(accessToken.token), query = query)
-                    .map {
-                        SearchAllEntity(
-                                albums = it.albumsResult?.albums?.map(AlbumMapper::mapFrom)
-                                        ?: emptyList(),
-                                artists = it.artistsResult?.artists?.map(ArtistMapper::mapFrom)
-                                        ?: emptyList(),
-                                playlists = it.playlistsResult?.playlists?.map(PlaylistMapper::mapFrom)
-                                        ?: emptyList(),
-                                tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
-                                        ?: emptyList(),
-                                albumsTotalResults = it.albumsResult?.totalItems ?: 0,
-                                albumsOffset = it.albumsResult?.offset ?: 0,
-                                artistsTotalResults = it.artistsResult?.totalItems ?: 0,
-                                artistsOffset = it.artistsResult?.offset ?: 0,
-                                playlistsTotalResults = it.playlistsResult?.totalItems ?: 0,
-                                playlistsOffset = it.playlistsResult?.offset ?: 0,
-                                tracksTotalResults = it.tracksResult?.totalItems ?: 0,
-                                tracksOffset = it.tracksResult?.offset ?: 0
-                        )
-                    }
+    override fun searchAll(
+            accessToken: AccessTokenEntity,
+            query: String,
+            offset: Int
+    ): Single<SearchAllEntity> = api.searchAll(authorization = getAccessTokenHeader(accessToken.token), query = query)
+            .map {
+                SearchAllEntity(
+                        albums = it.albumsResult?.albums?.map(AlbumMapper::mapFrom)
+                                ?: emptyList(),
+                        artists = it.artistsResult?.artists?.map(ArtistMapper::mapFrom)
+                                ?: emptyList(),
+                        playlists = it.playlistsResult?.playlists?.map(PlaylistMapper::mapFrom)
+                                ?: emptyList(),
+                        tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
+                                ?: emptyList(),
+                        totalItems = arrayOf(
+                                it.albumsResult?.totalItems ?: 0,
+                                it.artistsResult?.totalItems ?: 0,
+                                it.playlistsResult?.totalItems ?: 0,
+                                it.tracksResult?.totalItems ?: 0
+                        ).max() ?: 0
+                )
+            }
 
     override fun getPlaylistsForCategory(
             accessToken: AccessTokenEntity,

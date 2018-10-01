@@ -49,20 +49,24 @@ class SpotifySearchFragment :
         }
     }
 
-    private fun updateCurrentFragment() {
-        val fragment = pagerAdapter.currentFragment
-
-        when (fragment) {
-            is SpotifyAlbumsFragment -> fragment.updateItems(viewModel.viewState.albums)
-            is SpotifyArtistsFragment -> fragment.updateItems(viewModel.viewState.artists)
-            is SpotifyPlaylistsFragment -> fragment.updateItems(viewModel.viewState.playlists)
-            is SpotifyTracksFragment -> fragment.updateItems(viewModel.viewState.tracks)
+    private fun updateCurrentFragment() = with(pagerAdapter.currentFragment) {
+        when (this) {
+            is SpotifyAlbumsFragment -> updateItems(viewModel.viewState.albums)
+            is SpotifyArtistsFragment -> updateItems(viewModel.viewState.artists)
+            is SpotifyPlaylistsFragment -> updateItems(viewModel.viewState.playlists)
+            is SpotifyTracksFragment -> updateItems(viewModel.viewState.tracks)
         }
     }
 
     override fun setupObservers() {
         super.setupObservers()
         viewModel.loadedFlag.observe(this, Observer { updateCurrentFragment() })
+    }
+
+    private val loadMore: () -> Unit = {
+        preferenceHelper.accessToken?.let {
+            viewModel.loadData(it, query)
+        }
     }
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
@@ -75,6 +79,7 @@ class SpotifySearchFragment :
                     refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.albums)
                     }
+                    loadMore = this@SpotifySearchFragment.loadMore
                 },
                 SpotifyArtistsFragment.newInstance(
                         getString(R.string.no_artists_loaded_yet),
@@ -84,6 +89,7 @@ class SpotifySearchFragment :
                     refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.artists)
                     }
+                    loadMore = this@SpotifySearchFragment.loadMore
                 },
                 SpotifyPlaylistsFragment.newInstance(
                         getString(R.string.no_playlists_loaded_yet),
@@ -93,6 +99,7 @@ class SpotifySearchFragment :
                     refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.playlists)
                     }
+                    loadMore = this@SpotifySearchFragment.loadMore
                 },
                 SpotifyTracksFragment.newInstance(
                         getString(R.string.no_tracks_loaded_yet),
@@ -102,6 +109,7 @@ class SpotifySearchFragment :
                     refreshData = { fragment ->
                         fragment.updateItems(viewModel.viewState.tracks)
                     }
+                    loadMore = this@SpotifySearchFragment.loadMore
                 }
         ))
     }
@@ -148,11 +156,10 @@ class SpotifySearchFragment :
         initFromArguments()
     }
 
-    private fun initFromArguments() {
-        arguments?.let {
-            if (it.containsKey(ARG_QUERY)) query = it.getString(ARG_QUERY)!!
-        }
+    private fun initFromArguments() = arguments?.let {
+        if (it.containsKey(ARG_QUERY)) query = it.getString(ARG_QUERY)!!
     }
+
 
     private fun loadData() = viewModel.searchAll(preferenceHelper.accessToken, query)
 

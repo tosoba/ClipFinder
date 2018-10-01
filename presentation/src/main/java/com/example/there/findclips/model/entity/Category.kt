@@ -16,5 +16,11 @@ data class Category(
             override fun areItemsTheSame(item1: Category, item2: Category): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean = oldItem.id == newItem.id
         }
+
+        val unsortedListCallback: ObservableSortedList.Callback<Category> = object : ObservableSortedList.Callback<Category> {
+            override fun compare(o1: Category, o2: Category): Int = -1
+            override fun areItemsTheSame(item1: Category, item2: Category): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean = oldItem.id == newItem.id
+        }
     }
 }

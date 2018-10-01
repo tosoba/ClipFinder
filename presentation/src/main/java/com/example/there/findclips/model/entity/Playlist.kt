@@ -18,5 +18,11 @@ data class Playlist(
             override fun areItemsTheSame(item1: Playlist, item2: Playlist): Boolean = item1.id == item2.id
             override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean = oldItem.id == newItem.id
         }
+
+        val unsortedListCallback: ObservableSortedList.Callback<Playlist> = object : ObservableSortedList.Callback<Playlist> {
+            override fun compare(o1: Playlist, o2: Playlist): Int = -1
+            override fun areItemsTheSame(item1: Playlist, item2: Playlist): Boolean = item1.id == item2.id
+            override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean = oldItem.id == newItem.id
+        }
     }
 }
