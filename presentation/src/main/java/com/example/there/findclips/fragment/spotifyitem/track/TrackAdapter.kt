@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.AlbumInfoItemBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
+import com.example.there.findclips.databinding.RadarChartBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
@@ -15,11 +16,13 @@ import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.AlbumInfoItemView
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.radarchart.RadarChartView
 
 class TrackAdapter(
         private val albumInfoItemView: AlbumInfoItemView,
         private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
-        private val similarTracksRecyclerViewItemView: RecyclerViewItemView<Track>
+        private val similarTracksRecyclerViewItemView: RecyclerViewItemView<Track>,
+        private val audioFeaturesChartView: RadarChartView
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
@@ -49,6 +52,12 @@ class TrackAdapter(
             view = similarTracksRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
+        AUDIO_FEATURES_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            viewState = HeaderItemViewState("Audio features")
+        })
+        AUDIO_FEATURES_CHART_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RadarChartBinding>(R.layout.radar_chart).apply {
+            view = audioFeaturesChartView
+        })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
 
@@ -63,6 +72,8 @@ class TrackAdapter(
         private const val ARTISTS_LIST_VIEW_TYPE = 3
         private const val SIMILAR_TRACKS_HEADER_VIEW_TYPE = 4
         private const val SIMILAR_TRACKS_LIST_VIEW_TYPE = 5
+        private const val AUDIO_FEATURES_HEADER_VIEW_TYPE = 6
+        private const val AUDIO_FEATURES_CHART_VIEW_TYPE = 7
 
         private val viewTypes = arrayOf(
                 ALBUM_HEADER_VIEW_TYPE,
@@ -70,7 +81,9 @@ class TrackAdapter(
                 ARTISTS_HEADER_VIEW_TYPE,
                 ARTISTS_LIST_VIEW_TYPE,
                 SIMILAR_TRACKS_HEADER_VIEW_TYPE,
-                SIMILAR_TRACKS_LIST_VIEW_TYPE
+                SIMILAR_TRACKS_LIST_VIEW_TYPE,
+                AUDIO_FEATURES_HEADER_VIEW_TYPE,
+                AUDIO_FEATURES_CHART_VIEW_TYPE
         )
     }
 }

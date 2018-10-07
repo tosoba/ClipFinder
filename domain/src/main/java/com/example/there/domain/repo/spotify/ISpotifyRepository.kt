@@ -59,4 +59,5 @@ interface ISpotifyRepository {
     fun deletePlaylist(playlistEntity: PlaylistEntity): Completable
     fun deleteTrack(trackEntity: TrackEntity): Completable
 
+    fun getAudioFeatures(accessToken: AccessTokenEntity, trackEntity: TrackEntity): Single<AudioFeaturesEntity>
 }

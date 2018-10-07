@@ -1,6 +1,7 @@
 package com.example.there.data.api.spotify
 
 import com.example.there.data.entity.spotify.AlbumData
+import com.example.there.data.entity.spotify.AudioFeaturesData
 import com.example.there.data.entity.spotify.UserData
 import com.example.there.data.response.*
 import io.reactivex.Observable
@@ -154,6 +155,12 @@ interface SpotifyApi {
 
     @GET("me")
     fun getCurrentUser(@Header("Authorization") authorization: String): Single<UserData>
+
+    @GET("audio-features/{id}")
+    fun getAudioFeatures(
+            @Header("Authorization") authorization: String,
+            @Path("id") trackId: String
+    ): Single<AudioFeaturesData>
 
     companion object {
         const val DEFAULT_LIMIT = 50

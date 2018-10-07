@@ -5,6 +5,7 @@ import android.databinding.ObservableField
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
+import com.github.mikephil.charting.data.RadarData
 
 class TrackView(
         val state: TrackViewState,
@@ -17,7 +18,8 @@ data class TrackViewState(
         val similarTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val album: ObservableField<Album> = ObservableField(),
         val artists: ObservableArrayList<Artist> = ObservableArrayList(),
-        val similarTracks: ObservableArrayList<Track> = ObservableArrayList()
+        val similarTracks: ObservableArrayList<Track> = ObservableArrayList(),
+        val audioFeaturesChartData: ObservableField<RadarData> = ObservableField()
 ) {
     fun clearAll() {
         similarTracks.clear()

@@ -216,4 +216,9 @@ class SpotifyDomainModule {
     fun deleteTrack(
             repository: ISpotifyRepository
     ): DeleteTrack = DeleteTrack(AsyncCompletableTransformer(), repository)
+
+    @Provides
+    fun getAudioFeatures(
+            repository: ISpotifyRepository
+    ): GetAudioFeatures = GetAudioFeatures(AsyncSymmetricSingleTransformer(), repository)
 }

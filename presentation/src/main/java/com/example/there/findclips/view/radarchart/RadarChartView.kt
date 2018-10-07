@@ -1,0 +1,35 @@
+package com.example.there.findclips.view.radarchart
+
+import android.databinding.ObservableField
+import android.graphics.Color
+import android.graphics.Typeface
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+
+class RadarChartView(
+        val data: ObservableField<RadarData> = ObservableField(),
+        val xAxisView: RadarChartAxisView,
+        val yAxisView: RadarChartAxisView,
+        val backgroundColor: Int = Color.TRANSPARENT,
+        val descriptionEnabled: Boolean = false,
+        val webLineWidth: Float = 1f,
+        val webColor: Int = Color.LTGRAY,
+        val webLineWidthInner: Float = 1f,
+        val webColorInner: Int = Color.LTGRAY,
+        val webAlpha: Int = 100,
+        val markerView: RadarMarkerView,
+        val legendEnabled: Boolean = false,
+        val nestedScrollingEnabled: Boolean = true
+)
+
+class RadarChartAxisView(
+        val typeface: Typeface,
+        val textSize: Float = 12f,
+        val xOffset: Float = 0f,
+        val yOffset: Float = 0f,
+        val valueFormatter: IAxisValueFormatter? = null,
+        val textColor: Int = Color.WHITE,
+        val axisMinimum: Float = 0f,
+        val axisMaximum: Float = 0f,
+        val drawLabels: Boolean = true
+)
