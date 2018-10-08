@@ -17,20 +17,20 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.hideAndShow
-import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_artist.*
 
 class ArtistFragment :
         BaseSpotifyVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
@@ -138,9 +138,12 @@ class ArtistFragment :
         lifecycle.addObserver(connectivityComponent)
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
         loadData()
     }
 
@@ -153,14 +156,28 @@ class ArtistFragment :
         })
         return binding.apply {
             view = this@ArtistFragment.view
+            loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)
             artistRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             artistToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 
     override fun onBackPressed() {
-        if (!viewModel.onBackPressed()) mainActivity?.backPressedOnNoPreviousFragmentState()
+        if (!viewModel.onBackPressed()) {
+            mainActivity?.backPressedOnNoPreviousFragmentState()
+        } else {
+            loadCollapsingToolbarBackgroundGradient(viewModel.viewState.artist.get()!!.iconUrl)
+        }
     }
+
+    private fun loadCollapsingToolbarBackgroundGradient(
+            url: String
+    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, {
+        it.generateColorGradient {
+            artist_toolbar_gradient_background_view?.background = it
+            artist_toolbar_gradient_background_view?.invalidate()
+        }
+    }))
 
     private fun loadData() = viewModel.loadArtistData(preferenceHelper.accessToken, argArtist)
 

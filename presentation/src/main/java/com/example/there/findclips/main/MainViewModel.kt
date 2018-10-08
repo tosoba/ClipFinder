@@ -8,11 +8,9 @@ import com.example.there.domain.usecase.videos.*
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.model.mapper.*
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.example.there.findclips.view.list.item.VideoItemView
 import com.squareup.picasso.Picasso
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -191,16 +189,5 @@ class MainViewModel @Inject constructor(
             url: String,
             onSuccess: (Bitmap) -> Unit,
             onError: () -> Unit
-    ) = addDisposable(Single.create<Bitmap> {
-        try {
-            if (!it.isDisposed) {
-                val bitmap: Bitmap = picasso.load(url).get()
-                it.onSuccess(bitmap)
-            }
-        } catch (e: Throwable) {
-            it.onError(e)
-        }
-    }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ onSuccess(it) }, { onError() }))
+    ) = addDisposable(picasso.getBitmapSingle(url, onSuccess, onError))
 }

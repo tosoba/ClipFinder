@@ -16,14 +16,12 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.hideAndShow
-import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -31,6 +29,7 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.squareup.picasso.Picasso
 
 class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
 
@@ -117,14 +116,23 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
         })
         return binding.apply {
             view = this@AlbumFragment.view
+            disposablesComponent.add(Picasso.with(context).getBitmapSingle(album.iconUrl, {
+                it.generateColorGradient {
+                    albumToolbarGradientBackgroundView.background = it
+                    albumToolbarGradientBackgroundView.invalidate()
+                }
+            }))
             albumRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             albumToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
         loadData()
     }
 

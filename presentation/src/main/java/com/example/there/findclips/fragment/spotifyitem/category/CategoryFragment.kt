@@ -17,9 +17,8 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.util.ext.hideAndShow
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.*
+import com.squareup.picasso.Picasso
 
 class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
 
@@ -82,6 +81,12 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
         })
         return binding.apply {
             view = this@CategoryFragment.view
+            disposablesComponent.add(Picasso.with(context).getBitmapSingle(category.iconUrl, {
+                it.generateColorGradient {
+                    categoryToolbarGradientBackgroundView.background = it
+                    categoryToolbarGradientBackgroundView.invalidate()
+                }
+            }))
             categoryToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }

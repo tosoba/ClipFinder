@@ -15,13 +15,13 @@ import com.example.there.findclips.databinding.FragmentTrackVideosBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragment.spotifyitem.track.TrackFragment
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.hideAndShow
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 
@@ -103,9 +103,12 @@ class TrackVideosFragment :
         )
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
         viewModel.updateState(argTrack)
     }
 
@@ -118,6 +121,7 @@ class TrackVideosFragment :
         })
         return binding.apply {
             view = this@TrackVideosFragment.view
+            loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
             trackVideosViewpager.offscreenPageLimit = 1
             trackVideosToolbar.setupWithBackNavigation(mainActivity)
         }.root
@@ -128,8 +132,18 @@ class TrackVideosFragment :
             mainActivity?.backPressedOnNoPreviousFragmentState()
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
+            loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
         }
     }
+
+    private fun loadCollapsingToolbarBackgroundGradient(
+            url: String
+    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, {
+        it.generateColorGradient {
+            track_videos_toolbar_gradient_background_view?.background = it
+            track_videos_toolbar_gradient_background_view?.invalidate()
+        }
+    }))
 
     companion object {
         private const val ARG_TRACK = "ARG_TRACK"

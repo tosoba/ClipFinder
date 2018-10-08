@@ -38,6 +38,12 @@
                 app:titleEnabled="true"
                 app:toolbarId="@+id/track_videos_toolbar">
 
+                <View
+                    android:id="@+id/track_videos_toolbar_gradient_background_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true" />
+
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
                     imageUrl="@{view.state.track.iconUrl}"
@@ -51,7 +57,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bottom_dark_gradient"
+                    android:background="@drawable/collapsing_toolbar_bottom_gradient"
                     android:fitsSystemWindows="true" />
 
                 <android.support.v7.widget.Toolbar

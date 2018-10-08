@@ -31,11 +31,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="@color/colorPrimary"
+                app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 app:title="@{view.playlist.name}"
                 app:toolbarId="@+id/playlist_toolbar">
+
+                <View
+                    android:id="@+id/playlist_toolbar_gradient_background_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true" />
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
@@ -50,7 +56,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bottom_dark_gradient"
+                    android:background="@drawable/collapsing_toolbar_bottom_gradient"
                     android:fitsSystemWindows="true" />
 
                 <android.support.v7.widget.Toolbar

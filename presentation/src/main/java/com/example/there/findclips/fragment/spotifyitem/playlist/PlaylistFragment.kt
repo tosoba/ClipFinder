@@ -14,11 +14,11 @@ import com.example.there.findclips.databinding.FragmentPlaylistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
+import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.util.ext.hideAndShow
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.*
+import com.squareup.picasso.Picasso
 
 class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
 
@@ -66,9 +66,12 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
         lifecycle.addObserver(connectivityComponent)
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
         loadData()
     }
 
@@ -81,6 +84,12 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
         })
         return binding.apply {
             view = this@PlaylistFragment.view
+            disposablesComponent.add(Picasso.with(context).getBitmapSingle(playlist.iconUrl, {
+                it.generateColorGradient {
+                    playlistToolbarGradientBackgroundView.background = it
+                    playlistToolbarGradientBackgroundView.invalidate()
+                }
+            }))
             playlistToolbar.setupWithBackNavigation(mainActivity)
         }.root
     }
