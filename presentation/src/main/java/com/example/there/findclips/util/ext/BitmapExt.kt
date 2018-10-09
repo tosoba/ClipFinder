@@ -14,8 +14,12 @@ fun Bitmap.generateColorGradient(
         onGenerated(GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 intArrayOf(
-                        it.getVibrantColor(Color.TRANSPARENT),
-                        it.getDarkVibrantColor(Color.TRANSPARENT)
+                        it.vibrantSwatch?.rgb
+                                ?: it.lightVibrantSwatch?.rgb
+                                ?: it.lightMutedSwatch?.rgb
+                                ?: it.mutedSwatch?.rgb ?: Color.TRANSPARENT,
+                        it.dominantSwatch?.rgb ?: it.darkVibrantSwatch?.rgb
+                        ?: it.darkMutedSwatch?.rgb ?: it.mutedSwatch?.rgb ?: Color.TRANSPARENT
                 )
         ).apply { cornerRadius = 0f })
     }

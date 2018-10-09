@@ -84,4 +84,9 @@
     <string name="play">Play</string>
     <string name="next_track">Next track</string>
     <string name="previous_track">Previous track</string>
+    <string name="category">Category</string>
+    <string name="track_videos">Track videos</string>
+    <string name="artist">Artist</string>
+    <string name="playlist">Playlist</string>
+    <string name="video_playlist">Video playlist</string>
 </resources>
