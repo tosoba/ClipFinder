@@ -12,13 +12,16 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="3dp"
         android:background="@color/colorPrimaryDark"
         android:foreground="@drawable/foreground_ripple">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="7dp"
             android:text="@{playlist.name}"
             android:textColor="@android:color/white"
             android:textSize="20sp"

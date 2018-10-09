@@ -46,7 +46,7 @@ class AddVideoDialogFragment : DialogFragment() {
                             mainActivity?.addVideoToPlaylist(playlist = it)
                             dismiss()
                         },
-                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorPrimary, null), 2f),
                         null
                 ),
                 onAddNewPlaylistBtnClickListener = onAddNewPlaylistsBtnClickListener

@@ -14,7 +14,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark">
+        android:background="@drawable/add_video_dialog_background">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/add_video_playlists_recycler_view"
@@ -49,8 +49,11 @@
             android:id="@+id/add_video_new_playlist_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
             android:background="@color/colorPrimary"
+            android:foreground="@drawable/foreground_ripple"
             android:onClick="@{view.onAddNewPlaylistBtnClickListener}"
             android:text="@string/new_playlist"
             android:textColor="@android:color/white"
