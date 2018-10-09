@@ -44,9 +44,10 @@ class TrackVideosFragment :
         }
     }
 
-    override fun onTrackChanged(newTrack: Track) {
-        viewModel.updateState(newTrack)
-        updateCurrentFragment(newTrack)
+    override fun onTrackChanged(newTrack: Track) = with(newTrack) {
+        viewModel.updateState(this)
+        loadCollapsingToolbarBackgroundGradient(iconUrl)
+        updateCurrentFragment(this)
     }
 
     private fun updateCurrentFragment(newTrack: Track) {
@@ -123,7 +124,7 @@ class TrackVideosFragment :
             view = this@TrackVideosFragment.view
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
             trackVideosViewpager.offscreenPageLimit = 1
-            trackVideosToolbar.setupWithBackNavigation(mainActivity)
+            trackVideosToolbar.setupWithBackNavigation(mainActivity, ::onBackPressed)
         }.root
     }
 

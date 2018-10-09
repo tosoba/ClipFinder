@@ -83,6 +83,7 @@ class ArtistFragment :
                         },
                         ClickHandler {
                             viewModel.loadArtistData(preferenceHelper.accessToken, artist = it)
+                            loadCollapsingToolbarBackgroundGradient(it.iconUrl)
                         },
                         null,
                         null,
@@ -158,7 +159,7 @@ class ArtistFragment :
             view = this@ArtistFragment.view
             loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)
             artistRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            artistToolbar.setupWithBackNavigation(mainActivity)
+            artistToolbar.setupWithBackNavigation(mainActivity, ::onBackPressed)
         }.root
     }
 
