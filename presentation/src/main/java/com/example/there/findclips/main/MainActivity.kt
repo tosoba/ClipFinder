@@ -514,6 +514,12 @@ class MainActivity :
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
                 it.id?.let { id -> viewModel.getSimilarTracks(userReadPrivateAccessTokenEntity, id) }
                 sliding_layout?.setDragView(spotify_player_layout)
+
+                Picasso.with(this)
+                        .load(it.albumCoverWebUrl)
+                        .error(R.drawable.error_placeholder)
+                        .placeholder(R.drawable.track_placeholder)
+                        .into(current_track_image_view)
             }
 
             else -> return
@@ -872,7 +878,7 @@ class MainActivity :
 
     // region YoutubePlayer
 
-    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 2).toInt() }
+    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
     private val playerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
     private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
 
@@ -1154,7 +1160,7 @@ class MainActivity :
     // endregion
 
     companion object {
-        private const val minimumPlayerHeightDp = 100
+        private const val minimumPlayerHeightDp = 110
 
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
 
