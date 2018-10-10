@@ -45,7 +45,8 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
                 activity!!,
                 { viewModel.playlists.value != null },
                 mainActivity!!.connectivitySnackbarParentView!!,
-                ::loadData
+                ::loadData,
+                true
         )
     }
 

@@ -160,7 +160,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                 { isDataLoaded },
                 mainActivity!!.connectivitySnackbarParentView!!,
                 ::loadData,
-                false
+                true
         )
     }
 

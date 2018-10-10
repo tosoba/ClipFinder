@@ -54,7 +54,8 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
                 activity!!,
                 { viewModel.tracks.value != null },
                 mainActivity!!.connectivitySnackbarParentView!!,
-                ::loadData
+                ::loadData,
+                true
         )
     }
 

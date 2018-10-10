@@ -105,7 +105,8 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                 activity!!,
                 { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
                 mainActivity!!.connectivitySnackbarParentView!!,
-                ::loadData
+                ::loadData,
+                true
         )
     }
 

@@ -23,7 +23,7 @@ class ConnectivityComponent(
         private val isDataLoaded: () -> Boolean,
         private val parentView: View,
         private val reloadData: (() -> Unit)? = null,
-        private val shouldShowSnackbarWithBottomMargin: Boolean = false
+        private val shouldShowSnackbarWithBottomMargin: Boolean = true
 ) : LifecycleObserver {
 
     private var internetDisposable: Disposable? = null
@@ -99,7 +99,7 @@ class ConnectivityComponent(
         if (!shouldShowSnackbarWithBottomMargin) {
             snackbar?.show()
         } else {
-            snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(40f).toInt())
+            snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
         }
     }
 }

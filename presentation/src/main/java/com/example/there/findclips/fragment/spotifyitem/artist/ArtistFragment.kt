@@ -126,7 +126,8 @@ class ArtistFragment :
                 mainActivity!!.connectivitySnackbarParentView!!,
                 {
                     viewModel.loadArtistData(preferenceHelper.accessToken, artistToLoad)
-                }
+                },
+                true
         )
     }
 

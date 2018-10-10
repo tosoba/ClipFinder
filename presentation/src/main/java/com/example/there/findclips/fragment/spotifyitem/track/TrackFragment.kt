@@ -135,7 +135,8 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
                             viewModel.viewState.similarTracks.isNotEmpty()
                 },
                 mainActivity!!.connectivitySnackbarParentView!!,
-                ::loadData
+                ::loadData,
+                true
         )
     }
 
