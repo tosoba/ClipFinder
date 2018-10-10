@@ -83,15 +83,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST? View.VISIBLE : View.GONE}"
-                    app:constraint_referenced_ids="youtube_player_view,related_videos_recycler_view" />
+                    app:constraint_referenced_ids="youtube_player_view_container_layout,related_videos_recycler_view" />
 
-                <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-                    android:id="@+id/youtube_player_view"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/youtube_player_view_container_layout"
                     android:layout_width="0dp"
                     android:layout_height="110dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/youtube_player_guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent=".5" />
+
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+                        android:id="@+id/youtube_player_view"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/youtube_player_guideline"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/related_videos_recycler_view"
@@ -105,7 +123,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
+                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view_container_layout" />
 
                 <ProgressBar
                     android:id="@+id/related_videos_progress_bar"
@@ -115,7 +133,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view" />
+                    app:layout_constraintTop_toBottomOf="@id/youtube_player_view_container_layout" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/add_to_favourites_fab"
@@ -177,8 +195,8 @@
                         android:id="@+id/spotify_player_play_pause_image_button"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onSpotifyPlayPauseBtnClickListener}"
@@ -192,9 +210,9 @@
                         android:id="@+id/next_track_btn"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onNextBtnClickListener}"
@@ -209,9 +227,9 @@
                         android:id="@+id/previous_track_btn"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/image_button_background"
                         android:foreground="@drawable/round_foreground_ripple"
                         android:onClick="@{mainActivityView.onPreviousBtnClickListener}"
@@ -242,8 +260,8 @@
                         android:id="@+id/current_track_title_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="@{mainActivityView.state.currentTrackTitle}"

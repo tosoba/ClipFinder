@@ -296,6 +296,8 @@ class MainActivity :
     override fun onDestroy() {
         addVideoDialogFragment = null
 
+        notificationManager.cancelAll()
+
         unregisterReceiver(networkStateReceiver)
         unregisterReceiver(pausePlaybackIntentReceiver)
         unregisterReceiver(resumePlaybackIntentReceiver)
@@ -879,7 +881,7 @@ class MainActivity :
     // region YoutubePlayer
 
     private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
-    private val playerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
+    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
     private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
 
     private var currentSlideOffset: Float = 0.0f
@@ -909,7 +911,7 @@ class MainActivity :
     }
 
     private fun setDragViewToYoutubeAndExpand() {
-        sliding_layout?.setDragView(youtube_player_view)
+        sliding_layout?.setDragView(youtube_player_view_container_layout)
         sliding_layout?.expandIfHidden()
     }
 
@@ -985,17 +987,24 @@ class MainActivity :
     private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
             currentSlideOffset = slideOffset
-            val youtubePlayerLayoutParams = youtube_player_view.layoutParams
+            val youtubePlayerLayoutParams = youtube_player_view_container_layout.layoutParams
             val spotifyPlayerLayoutParams = spotify_player_layout.layoutParams
-            val height = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
+            val youtubePlayerHeight = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
                 (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             } else {
-                (playerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+                (youtubePlayerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
             }
-            youtubePlayerLayoutParams.height = height.toInt()
-            spotifyPlayerLayoutParams.height = height.toInt()
-            youtube_player_view.requestLayout()
+            val spotifyPlayerHeight = ((dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+
+            youtubePlayerLayoutParams.height = youtubePlayerHeight.toInt()
+            spotifyPlayerLayoutParams.height = spotifyPlayerHeight.toInt()
+
+            val youtubePlayerGuidelinePercentage = (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
+            youtube_player_guideline.setGuidelinePercent(youtubePlayerGuidelinePercentage)
+
+            youtube_player_view_container_layout.requestLayout()
             spotify_player_layout.requestLayout()
+            youtube_player_guideline.requestLayout()
         }
     }
 
@@ -1161,6 +1170,7 @@ class MainActivity :
 
     companion object {
         private const val minimumPlayerHeightDp = 110
+        private const val minimumYoutubePlayerGuidelinePercent = .5f
 
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
 
