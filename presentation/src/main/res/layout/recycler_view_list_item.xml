@@ -38,7 +38,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/image_button_background"
             android:foreground="@drawable/round_foreground_ripple"
             android:src="@drawable/reload"
             android:text="@string/reload"
