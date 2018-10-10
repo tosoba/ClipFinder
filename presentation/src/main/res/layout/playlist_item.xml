@@ -18,7 +18,7 @@
         android:foreground="@drawable/foreground_ripple">
 
         <ImageView
-            imageUrl="@{playlist.iconUrl}"
+            imageSrc="@{playlist.imageViewSrc}"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="fitXY" />

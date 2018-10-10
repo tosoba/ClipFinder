@@ -19,7 +19,7 @@
 
         <ImageView
             android:id="@+id/artist_imageview"
-            imageUrl="@{artist.iconUrl}"
+            imageSrc="@{artist.imageViewSrc}"
             android:layout_width="0dp"
             android:layout_height="170dp"
             android:scaleType="fitXY"

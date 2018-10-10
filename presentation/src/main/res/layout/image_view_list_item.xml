@@ -4,12 +4,12 @@
     <data>
 
         <variable
-            name="url"
-            type="String" />
+            name="src"
+            type="com.example.there.findclips.view.imageview.ImageViewSrc" />
     </data>
 
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-        imageUrl="@{url}"
+        imageSrc="@{src}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/black"

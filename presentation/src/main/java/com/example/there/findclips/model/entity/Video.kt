@@ -2,8 +2,10 @@ package com.example.there.findclips.model.entity
 
 import android.annotation.SuppressLint
 import android.databinding.ObservableField
+import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.view.imageview.ImageViewSrc
 import io.mironov.smuggler.AutoParcelable
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -24,6 +26,9 @@ data class Video(
         var query: String? = null,
         var relatedVideoId: String? = null
 ) : AutoParcelable {
+
+    val imageViewSrc: ImageViewSrc
+        get() = ImageViewSrc(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
 
     val details: String
         get() = "$publishedAgo • ${viewCount.formattedString} views"

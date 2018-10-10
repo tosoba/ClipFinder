@@ -1,7 +1,9 @@
 package com.example.there.findclips.model.entity
 
 import android.annotation.SuppressLint
+import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.view.imageview.ImageViewSrc
 import io.mironov.smuggler.AutoParcelable
 
 @SuppressLint("ParcelCreator")
@@ -11,6 +13,9 @@ data class Artist(
         val popularity: Int,
         val iconUrl: String
 ) : AutoParcelable {
+    val imageViewSrc: ImageViewSrc
+        get() = ImageViewSrc(iconUrl, R.drawable.artist_placeholder, R.drawable.error_placeholder)
+
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Artist> = object : ObservableSortedList.Callback<Artist> {
             override fun compare(o1: Artist, o2: Artist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())

@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/similar_track_cover_image_view"
-            imageUrl="@{track.iconUrl}"
+            imageSrc="@{track.imageViewSrc}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

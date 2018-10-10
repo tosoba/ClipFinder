@@ -13,7 +13,7 @@ data class Category(
         val iconUrl: String
 ) : AutoParcelable {
     val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc(iconUrl, R.drawable.category_placeholder, R.drawable.category_placeholder)
+        get() = ImageViewSrc(iconUrl, R.drawable.category_placeholder, R.drawable.error_placeholder)
 
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Category> = object : ObservableSortedList.Callback<Category> {

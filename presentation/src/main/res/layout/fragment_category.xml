@@ -5,10 +5,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.example.there.findclips.view.imageview.ImageViewSrc" />
-
-        <import type="com.example.there.findclips.R" />
-
         <variable
             name="view"
             type="com.example.there.findclips.fragment.spotifyitem.category.CategoryView" />

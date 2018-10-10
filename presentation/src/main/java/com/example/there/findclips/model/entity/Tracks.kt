@@ -1,7 +1,9 @@
 package com.example.there.findclips.model.entity
 
 import android.annotation.SuppressLint
+import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.view.imageview.ImageViewSrc
 import io.mironov.smuggler.AutoParcelable
 
 @SuppressLint("ParcelCreator")
@@ -17,6 +19,9 @@ data class Track(
         val uri: String,
         val durationMs: Int
 ) : AutoParcelable {
+
+    val imageViewSrc: ImageViewSrc
+        get() = ImageViewSrc(iconUrl, R.drawable.track_placeholder, R.drawable.error_placeholder)
 
     val query: String
         get() = "$name $albumName"

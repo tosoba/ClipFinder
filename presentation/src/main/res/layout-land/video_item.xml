@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/video_thumbnail_imageview"
-            imageUrl="@{videoView.video.thumbnailUrl}"
+            imageSrc="@{videoView.video.imageViewSrc}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitXY"

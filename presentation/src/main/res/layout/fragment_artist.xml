@@ -43,7 +43,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
-                    imageUrl="@{view.state.artist.iconUrl}"
+                    imageSrc="@{view.state.artist.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"

@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/album_imageview"
-            imageUrl="@{album.iconUrl}"
+            imageSrc="@{album.imageViewSrc}"
             android:layout_width="0dp"
             android:layout_height="170dp"
             android:scaleType="fitXY"

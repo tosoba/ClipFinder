@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/top_track_album_cover_imageview"
-            imageUrl="@{track.track.iconUrl}"
+            imageSrc="@{track.track.imageViewSrc}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="fitXY"
