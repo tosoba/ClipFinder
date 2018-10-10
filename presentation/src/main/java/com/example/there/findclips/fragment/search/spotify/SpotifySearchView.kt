@@ -18,7 +18,7 @@ class SpotifySearchView(
     val fragmentTabs = arrayOf("Albums", "Artists", "Playlists", "Tracks")
 }
 
-data class SpotifySearchViewState(
+class SpotifySearchViewState(
         val albums: ArrayList<Album> = ArrayList(),
         val artists: ArrayList<Artist> = ArrayList(),
         val playlists: ArrayList<Playlist> = ArrayList(),

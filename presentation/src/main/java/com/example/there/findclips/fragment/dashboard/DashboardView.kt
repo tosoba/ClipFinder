@@ -13,7 +13,7 @@ class DashboardView(
         val dashboardAdapter: DashboardAdapter
 )
 
-data class DashboardViewState(
+class DashboardViewState(
         val categories: ObservableList<Category> = ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback),
         val featuredPlaylists: ObservableList<Playlist> = ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback),
         val topTracks: ObservableList<TopTrack> = ObservableSortedList<TopTrack>(TopTrack::class.java, TopTrack.sortedListCallback),

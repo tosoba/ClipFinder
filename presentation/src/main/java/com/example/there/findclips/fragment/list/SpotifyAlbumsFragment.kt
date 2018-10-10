@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.list
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -23,7 +22,6 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_albums.*
 
 
@@ -34,7 +32,7 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
 
     override val defaultHeaderText: String = "Albums"
 
-    override val viewState: ViewState<Album> =  ViewState(ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback))
+    override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback))
 
     override val view: BaseSpotifyListFragment.View<Album> by lazy {
         BaseSpotifyListFragment.View(
@@ -42,9 +40,9 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 ObservableField(false),
-                                viewState.items!!
+                                viewState.items
                         ),
-                        object : ListItemView<Album>(viewState.items!!) {
+                        object : ListItemView<Album>(viewState.items) {
                             override val itemViewBinder: ItemBinder<Album>
                                 get() = ItemBinderBase(BR.album, R.layout.grid_album_item)
                         },
@@ -52,7 +50,7 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                             onItemClick?.let { it(album) }
                                     ?: run { hostFragment?.showFragment(AlbumFragment.newInstance(album), true) }
                         },
-                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                        null,
                         null
                 )
         )

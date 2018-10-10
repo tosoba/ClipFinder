@@ -12,7 +12,7 @@ class AccountTopView(
         val artistsAndTracksAdapter: ArtistsAndTracksAdapter
 )
 
-data class AccountTopViewState(
+class AccountTopViewState(
         val userLoggedIn: ObservableField<Boolean>,
         val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

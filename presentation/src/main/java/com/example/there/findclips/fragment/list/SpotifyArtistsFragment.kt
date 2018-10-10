@@ -3,7 +3,6 @@ package com.example.there.findclips.fragment.list
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableField
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -23,7 +22,6 @@ import com.example.there.findclips.view.list.binder.ItemBinderBase
 import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_spotify_artists.*
 
 
@@ -52,7 +50,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
                             onItemClick?.let { it(artist) }
                                     ?: run { hostFragment?.showFragment(ArtistFragment.newInstance(artist), true) }
                         },
-                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                        null,
                         null
                 )
         )

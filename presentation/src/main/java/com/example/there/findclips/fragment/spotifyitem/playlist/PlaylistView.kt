@@ -11,7 +11,7 @@ class PlaylistView(
         val onPlayBtnClickListener: View.OnClickListener
 )
 
-data class PlaylistViewState(
+class PlaylistViewState(
         val loadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val isSavedAsFavourite: ObservableField<Boolean> = ObservableField(false)
 )

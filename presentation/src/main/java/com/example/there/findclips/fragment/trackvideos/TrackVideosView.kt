@@ -18,7 +18,7 @@ class TrackVideosView(
     val fragmentTabs = arrayOf("Clips", "Info")
 }
 
-data class TrackVideosViewState(
+class TrackVideosViewState(
         val track: ObservableField<Track> = ObservableField(),
         val isSavedAsFavourite: ObservableField<Boolean> = ObservableField(false)
 )

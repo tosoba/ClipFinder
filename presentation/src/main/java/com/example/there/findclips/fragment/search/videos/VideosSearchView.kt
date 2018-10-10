@@ -11,7 +11,7 @@ class VideosSearchView(
         val recyclerViewItemView: RecyclerViewItemView<VideoItemView>
 )
 
-data class VideosSearchViewState(
+class VideosSearchViewState(
         val videos: ObservableList<VideoItemView> = ObservableSortedList(VideoItemView::class.java, VideoItemView.sortedListCallback),
         val videosLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
 )

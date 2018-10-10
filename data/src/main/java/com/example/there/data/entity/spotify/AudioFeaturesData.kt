@@ -1,6 +1,6 @@
 package com.example.there.data.entity.spotify
 
-data class AudioFeaturesData(
+class AudioFeaturesData(
         val danceability: Float,
         val energy: Float,
         val loudness: Float,

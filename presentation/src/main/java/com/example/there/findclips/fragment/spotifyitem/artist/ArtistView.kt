@@ -14,7 +14,7 @@ class ArtistView(
         val artistAdapter: ArtistAdapter
 )
 
-data class ArtistViewState(
+class ArtistViewState(
         val artist: ObservableField<Artist> = ObservableField(),
         val albums: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback),
         val topTracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName),

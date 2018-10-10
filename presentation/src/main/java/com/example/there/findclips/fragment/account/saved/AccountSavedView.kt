@@ -11,7 +11,7 @@ class AccountSavedView(
         val adapter: AccountSavedAdapter
 )
 
-data class AccountSavedViewState(
+class AccountSavedViewState(
         val userLoggedIn: ObservableField<Boolean>,
         val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

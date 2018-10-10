@@ -10,7 +10,7 @@ class VideosFavouritesFragmentView(
         val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView>
 )
 
-data class VideosFavouritesFragmentViewState(
+class VideosFavouritesFragmentViewState(
         val playlists: ObservableList<PlaylistThumbnailView> = ObservableSortedList<PlaylistThumbnailView>(
                 PlaylistThumbnailView::class.java,
                 PlaylistThumbnailView.sortedListCallback

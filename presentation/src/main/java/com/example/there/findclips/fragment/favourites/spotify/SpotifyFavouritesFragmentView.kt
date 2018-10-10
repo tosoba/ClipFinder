@@ -13,7 +13,7 @@ class SpotifyFavouritesFragmentView(
     val fragmentTabs = arrayOf("Albums", "Artists", "Categories", "Playlists", "Tracks")
 }
 
-data class SpotifyFavouritesFragmentViewState(
+class SpotifyFavouritesFragmentViewState(
         val albums: ArrayList<Album> = ArrayList(),
         val artists: ArrayList<Artist> = ArrayList(),
         val categories: ArrayList<Category> = ArrayList(),

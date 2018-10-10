@@ -12,4 +12,4 @@ class AddVideoView(
         val onAddNewPlaylistBtnClickListener: View.OnClickListener
 )
 
-data class AddVideoViewState(val playlists: ObservableList<VideoPlaylist> = ObservableArrayList())
+class AddVideoViewState(val playlists: ObservableList<VideoPlaylist> = ObservableArrayList())

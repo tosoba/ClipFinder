@@ -17,7 +17,7 @@ class AlbumView(
         val artistsAndTracksAdapter: ArtistsAndTracksAdapter
 )
 
-data class AlbumViewState(
+class AlbumViewState(
         val artists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback),
         val tracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackTrackNumber),
         val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

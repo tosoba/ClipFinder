@@ -97,7 +97,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     abstract val viewState: ViewState<T>
 
-    data class ViewState<T : Parcelable>(
+    class ViewState<T : Parcelable>(
             val items: ObservableSortedList<T>,
             val mainHintText: ObservableField<String> = ObservableField(""),
             val additionalHintText: ObservableField<String> = ObservableField(""),
@@ -106,7 +106,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     abstract val view: View<T>
 
-    data class View<T : Parcelable>(
+    class View<T : Parcelable>(
             val state: BaseSpotifyListFragment.ViewState<T>,
             val recyclerViewItemView: RecyclerViewItemView<T>
     )
@@ -121,7 +121,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         arguments?.let {
             viewState.mainHintText.set(it.getString(EXTRA_MAIN_HINT))
             viewState.additionalHintText.set(it.getString(EXTRA_ADDITIONAL_HINT))
-            if (it.containsKey(EXTRA_ITEMS)) updateItems(it.getParcelableArrayList(EXTRA_ITEMS))
+            if (it.containsKey(EXTRA_ITEMS)) updateItems(it.getParcelableArrayList(EXTRA_ITEMS)!!)
             viewState.shouldShowHeader = it.getBoolean(EXTRA_SHOULD_SHOW_HEADER)
         }
     }

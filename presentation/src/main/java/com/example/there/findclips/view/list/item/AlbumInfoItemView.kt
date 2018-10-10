@@ -4,12 +4,12 @@ import android.databinding.ObservableField
 import android.view.View
 import com.example.there.findclips.model.entity.Album
 
-data class AlbumInfoItemView(
+class AlbumInfoItemView(
         val state: AlbumInfoViewState,
         val onClickListener: View.OnClickListener
 )
 
-data class AlbumInfoViewState(
+class AlbumInfoViewState(
         val albumLoadingInProgress: ObservableField<Boolean>,
         val album: ObservableField<Album>
 )

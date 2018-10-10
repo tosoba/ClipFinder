@@ -10,7 +10,7 @@ class CategoryView(
         val onFavouriteBtnClickListener: View.OnClickListener
 )
 
-data class CategoryViewState(
+class CategoryViewState(
         val loadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val isSavedAsFavourite: ObservableField<Boolean> = ObservableField(false)
 )

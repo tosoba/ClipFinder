@@ -216,7 +216,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             artistId = artistId
     ).map { it.artists.map(ArtistMapper::mapFrom) }
 
-    data class TrackIdsPage(
+    class TrackIdsPage(
             val ids: String,
             val offset: Int,
             val totalItems: Int

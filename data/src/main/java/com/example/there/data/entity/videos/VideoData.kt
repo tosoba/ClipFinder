@@ -4,7 +4,7 @@ import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
 
 
-data class VideoData(
+class VideoData(
         val id: String,
         val snippet: VideoSnippet,
         val contentDetails: VideoContentDetails,
@@ -74,7 +74,7 @@ data class VideoDbData(
         var relatedVideoId: String? = null
 )
 
-data class VideoSnippet(
+class VideoSnippet(
         val publishedAt: String,
         val channelId: String,
         val title: String,
@@ -84,9 +84,9 @@ data class VideoSnippet(
         val tags: List<String>
 )
 
-data class VideoContentDetails(val duration: String)
+class VideoContentDetails(val duration: String)
 
-data class Statistics(
+class Statistics(
         val viewCount: String?,
         val likeCount: String?,
         val dislikeCount: String?,
@@ -94,6 +94,6 @@ data class Statistics(
         val commentCount: String?
 )
 
-data class VideoSearchData(val id: VideoSearchId)
+class VideoSearchData(val id: VideoSearchId)
 
-data class VideoSearchId(@SerializedName("videoId") val id: String)
+class VideoSearchId(@SerializedName("videoId") val id: String)

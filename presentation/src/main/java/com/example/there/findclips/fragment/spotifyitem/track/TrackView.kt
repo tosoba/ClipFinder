@@ -12,7 +12,7 @@ class TrackView(
         val trackAdapter: TrackAdapter
 )
 
-data class TrackViewState(
+class TrackViewState(
         val albumLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val similarTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

@@ -3,78 +3,78 @@ package com.example.there.data.response
 import com.example.there.data.entity.spotify.*
 import com.google.gson.annotations.SerializedName
 
-data class SearchAllResponse(
+class SearchAllResponse(
         @SerializedName("albums") val albumsResult: AlbumsResult?,
         @SerializedName("artists") val artistsResult: ArtistsResult?,
         @SerializedName("playlists") val playlistsResult: PlaylistsResult?,
         @SerializedName("tracks") val tracksResult: TracksResult?
 )
 
-data class TracksOnlyResponse(val tracks: List<TrackData>)
+class TracksOnlyResponse(val tracks: List<TrackData>)
 
-data class SimilarTracksResponse(val tracks: List<SimilarTrackData>)
+class SimilarTracksResponse(val tracks: List<SimilarTrackData>)
 
-data class ArtistsOnlyResponse(val artists: List<ArtistData>)
+class ArtistsOnlyResponse(val artists: List<ArtistData>)
 
-data class CategoriesResponse(
+class CategoriesResponse(
         @SerializedName("categories") val result: CategoriesResult,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class CategoriesResult(@SerializedName("items") val categories: List<CategoryData>)
+class CategoriesResult(@SerializedName("items") val categories: List<CategoryData>)
 
-data class PlaylistsResponse(@SerializedName("playlists") val result: PlaylistsResult)
+class PlaylistsResponse(@SerializedName("playlists") val result: PlaylistsResult)
 
-data class PlaylistTracksResponse(
+class PlaylistTracksResponse(
         @SerializedName("items") val playlistTracks: List<PlaylistTrackData>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class NewReleasesResponse(
+class NewReleasesResponse(
         @SerializedName("albums") val result: AlbumsResult
 )
 
-data class AlbumsResult(
+class AlbumsResult(
         @SerializedName("items") val albums: List<AlbumData>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class ArtistsResult(
+class ArtistsResult(
         @SerializedName("items") val artists: List<ArtistData>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class PlaylistsResult(
+class PlaylistsResult(
         @SerializedName("items") val playlists: List<PlaylistData>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class TracksResult(
+class TracksResult(
         @SerializedName("items") val tracks: List<TrackData>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class SavedTrack(
+class SavedTrack(
         val track: TrackData
 )
 
-data class SavedTracksResult(
+class SavedTracksResult(
         @SerializedName("items") val savedTracks: List<SavedTrack>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int
 )
 
-data class SavedAlbum(
+class SavedAlbum(
         val album: AlbumData
 )
 
-data class SavedAlbumsResult(
+class SavedAlbumsResult(
         @SerializedName("items") val savedAlbums: List<SavedAlbum>,
         val offset: Int,
         @SerializedName("total") val totalItems: Int

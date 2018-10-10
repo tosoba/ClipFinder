@@ -36,7 +36,7 @@ class MainView(
         val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
 )
 
-data class MainViewState(
+class MainViewState(
         val videos: ObservableList<VideoItemView> = ObservableArrayList(),
         val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
         val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
@@ -51,7 +51,7 @@ data class MainViewState(
         val itemFavouriteState: ObservableField<Boolean> = ObservableField(false)
 )
 
-data class DrawerHeaderViewState(
+class DrawerHeaderViewState(
         val user: ObservableField<User> = ObservableField()
 )
 
