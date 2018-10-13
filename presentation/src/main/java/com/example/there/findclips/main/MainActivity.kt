@@ -859,8 +859,18 @@ class MainActivity :
                 newState: SlidingUpPanelLayout.PanelState?
         ) {
             when (newState) {
-                SlidingUpPanelLayout.PanelState.EXPANDED -> minimizeBtn.setImageResource(R.drawable.minimize)
-                SlidingUpPanelLayout.PanelState.COLLAPSED -> minimizeBtn.setImageResource(R.drawable.maximize)
+                SlidingUpPanelLayout.PanelState.DRAGGING -> {
+                    youtube_player_collapsed_controls_group?.visibility = View.GONE
+                }
+                SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                    minimizeBtn.setImageResource(R.drawable.minimize)
+                    youtube_player_view?.playerUIController?.showUI(true)
+                }
+                SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                    youtube_player_collapsed_controls_group?.visibility = View.VISIBLE
+                    minimizeBtn.setImageResource(R.drawable.maximize)
+                    youtube_player_view?.playerUIController?.showUI(false)
+                }
                 SlidingUpPanelLayout.PanelState.HIDDEN -> {
                     youTubePlayer?.pause()
                     lastPlayedVideo = null
@@ -916,6 +926,7 @@ class MainActivity :
     }
 
     private fun playVideo(video: Video) {
+        youtube_player_video_title_when_collapsed_txt?.text = video.title
         if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
         else youTubePlayer?.cueVideo(video.id, 0f)
     }
@@ -944,14 +955,26 @@ class MainActivity :
 
     private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
-            if (state == PlayerConstants.PlayerState.ENDED) {
-                if (videosToPlay?.size ?: 0 > ++currentVideoIndex) {
-                    playVideo(videosToPlay!![currentVideoIndex])
-                } else {
-                    sliding_layout?.hideIfVisible()
-                    Toast.makeText(this@MainActivity, "${lastPlayedPlaylist?.name
-                            ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
+            when (state) {
+                PlayerConstants.PlayerState.ENDED -> {
+                    if (videosToPlay?.size ?: 0 > ++currentVideoIndex) {
+                        playVideo(videosToPlay!![currentVideoIndex])
+                    } else {
+                        sliding_layout?.hideIfVisible()
+                        Toast.makeText(this@MainActivity, "${lastPlayedPlaylist?.name
+                                ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
+                    }
                 }
+
+                PlayerConstants.PlayerState.PAUSED -> {
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
+                }
+
+                PlayerConstants.PlayerState.VIDEO_CUED -> {
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
+                }
+
+                else -> return
             }
         }
     }
@@ -1169,8 +1192,8 @@ class MainActivity :
     // endregion
 
     companion object {
-        private const val minimumPlayerHeightDp = 110
-        private const val minimumYoutubePlayerGuidelinePercent = .5f
+        private const val minimumPlayerHeightDp = 120
+        private const val minimumYoutubePlayerGuidelinePercent = .45f
 
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
 

@@ -30,8 +30,8 @@
             android:gravity="bottom"
             app:umanoDragView="@+id/player_layout"
             app:umanoOverlay="false"
-            app:umanoPanelHeight="110dp"
-            app:umanoParallaxOffset="110dp"
+            app:umanoPanelHeight="120dp"
+            app:umanoParallaxOffset="120dp"
             app:umanoShadowHeight="4dp"
             tools:context=".main.MainActivity">
 
@@ -58,7 +58,7 @@
                     android:id="@+id/main_bottom_navigation_view"
                     onNavigationItemSelectedListener="@{mainActivityView.onNavigationItemSelectedListener}"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="52dp"
                     android:background="@color/colorPrimaryDark"
                     app:itemIconTint="@color/bottom_navigation_color"
                     app:itemTextColor="@color/bottom_navigation_color"
@@ -88,7 +88,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/youtube_player_view_container_layout"
                     android:layout_width="0dp"
-                    android:layout_height="110dp"
+                    android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -108,6 +108,51 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@id/youtube_player_guideline"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.constraint.Group
+                        android:id="@+id/youtube_player_collapsed_controls_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:constraint_referenced_ids="close_youtube_player_when_collapsed_btn,youtube_player_play_pause_when_collapsed_btn,youtube_player_video_title_when_collapsed_txt"/>
+
+                    <ImageButton
+                        android:id="@+id/close_youtube_player_when_collapsed_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/image_button_background"
+                        android:foreground="@drawable/round_foreground_ripple"
+                        android:src="@drawable/close"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintLeft_toRightOf="@id/youtube_player_play_pause_when_collapsed_btn"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/youtube_player_play_pause_when_collapsed_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/image_button_background"
+                        android:foreground="@drawable/round_foreground_ripple"
+                        android:src="@drawable/play"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
+                        app:layout_constraintRight_toLeftOf="@id/close_youtube_player_when_collapsed_btn"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/youtube_player_video_title_when_collapsed_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
+                        app:layout_constraintRight_toRightOf="parent" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -157,7 +202,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/spotify_player_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="120dp"
                     android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.GONE : View.VISIBLE}">
 
                     <ImageButton
