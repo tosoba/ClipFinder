@@ -14,6 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".main.CancelPlayerNotificationService" />
+
         <provider
             android:name=".fragment.search.SearchSuggestionProvider"
             android:authorities="com.example.there.findclips.fragment.search.SearchSuggestionProvider" />
@@ -39,6 +42,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name="com.spotify.sdk.android.authentication.WebAuthResultActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
@@ -53,9 +57,11 @@
                     android:scheme="testschema" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".settings.SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"

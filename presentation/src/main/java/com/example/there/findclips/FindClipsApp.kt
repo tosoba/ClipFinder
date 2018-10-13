@@ -4,9 +4,10 @@ import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.os.Build
 import com.example.there.findclips.di.AppInjector
-import com.example.there.findclips.util.ext.notificationManager
+import com.example.there.findclips.main.CancelPlayerNotificationService
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -26,13 +27,15 @@ class FindClipsApp : Application(), HasActivityInjector {
 
 //        initLeakCanary()
 
+        startService(Intent(this, CancelPlayerNotificationService::class.java))
+
         createNotificationChannel()
 
         AppInjector.init(this)
     }
 
     override fun onTerminate() {
-        notificationManager.cancelAll()
+        stopService(Intent(this, CancelPlayerNotificationService::class.java))
         super.onTerminate()
     }
 
