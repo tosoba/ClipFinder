@@ -33,7 +33,9 @@ class MainView(
         val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener,
         val onPreviousBtnClickListener: View.OnClickListener,
         val onNextBtnClickListener: View.OnClickListener,
-        val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
+        val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener,
+        val onYoutubePlayerCloseBtnClickListener: View.OnClickListener,
+        val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener
 )
 
 class MainViewState(
