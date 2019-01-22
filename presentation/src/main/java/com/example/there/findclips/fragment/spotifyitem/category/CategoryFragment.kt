@@ -8,8 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.there.data.preferences.AppPreferences
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentCategoryBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
@@ -19,8 +20,9 @@ import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.util.ext.*
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
-class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
+class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 
@@ -64,12 +66,15 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
         loadData()
     }
 
-    private fun observePreferences() = disposablesComponent.add(preferenceHelper.countryObservable
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
+    private fun observePreferences() = disposablesComponent.add(appPreferences.countryObservable
             .skip(1)
             .distinctUntilChanged()
-            .subscribe { _ ->
+            .subscribe {
                 playlistsFragment?.clearItems()
-                preferenceHelper.accessToken?.let { viewModel.loadData(it, category.id, true) }
+                viewModel.loadData(category.id, true)
             }
     )
 
@@ -107,7 +112,7 @@ class CategoryFragment : BaseSpotifyVMFragment<CategoryViewModel>(CategoryViewMo
         })
     }
 
-    private fun loadData() = viewModel.loadPlaylists(preferenceHelper.accessToken, category)
+    private fun loadData() = viewModel.loadPlaylists(category)
 
     companion object {
         private const val ARG_CATEGORY = "ARG_CATEGORY"

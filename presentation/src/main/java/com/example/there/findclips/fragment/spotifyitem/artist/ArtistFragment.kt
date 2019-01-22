@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.databinding.FragmentArtistBinding
 import com.example.there.findclips.di.Injectable
@@ -33,7 +33,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
 
 class ArtistFragment :
-        BaseSpotifyVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
+        BaseVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
         Injectable,
         GoesToPreviousStateOnBackPressed {
 
@@ -52,10 +52,8 @@ class ArtistFragment :
                         },
                         null,
                         null,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                viewModel.loadAlbumsFromArtist(it, artistToLoad.id)
-                            }
+                        View.OnClickListener {
+                            viewModel.loadAlbumsFromArtist(artistToLoad.id)
                         }
                 ),
                 RecyclerViewItemView(
@@ -69,10 +67,8 @@ class ArtistFragment :
                         },
                         null,
                         null,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                viewModel.loadTopTracksFromArtist(it, artistToLoad.id)
-                            }
+                        View.OnClickListener {
+                            viewModel.loadTopTracksFromArtist(artistToLoad.id)
                         }
                 ),
                 RecyclerViewItemView(
@@ -82,15 +78,13 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
                         },
                         ClickHandler {
-                            viewModel.loadArtistData(preferenceHelper.accessToken, artist = it)
+                            viewModel.loadArtistData( artist = it)
                             loadCollapsingToolbarBackgroundGradient(it.iconUrl)
                         },
                         null,
                         null,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                viewModel.loadRelatedArtists(it, artistToLoad.id)
-                            }
+                        View.OnClickListener {
+                            viewModel.loadRelatedArtists(artistToLoad.id)
                         }
                 )
         )
@@ -125,7 +119,7 @@ class ArtistFragment :
                 },
                 mainActivity!!.connectivitySnackbarParentView!!,
                 {
-                    viewModel.loadArtistData(preferenceHelper.accessToken, artistToLoad)
+                    viewModel.loadArtistData( artistToLoad)
                 },
                 true
         )
@@ -181,7 +175,7 @@ class ArtistFragment :
         }
     }))
 
-    private fun loadData() = viewModel.loadArtistData(preferenceHelper.accessToken, argArtist)
+    private fun loadData() = viewModel.loadArtistData(argArtist)
 
     companion object {
         private const val ARG_ARTIST = "ARG_ARTIST"

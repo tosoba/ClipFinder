@@ -9,7 +9,7 @@ import android.view.*
 import com.example.there.data.preferences.AppPreferences
 import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.FragmentDashboardBinding
 import com.example.there.findclips.di.Injectable
@@ -38,18 +38,14 @@ import kotlinx.android.synthetic.main.fragment_dashboard.*
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardViewModel::class.java), Injectable, HasMainToolbar {
+class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel::class.java), Injectable, HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
     private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
-            override fun onLoadMore() {
-                preferenceHelper.accessToken?.let {
-                    viewModel.loadNewReleases(it, true)
-                }
-            }
+            override fun onLoadMore() = viewModel.loadNewReleases(true)
         }
     }
 
@@ -69,7 +65,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadCategories(it) } }
+                        View.OnClickListener { viewModel.loadCategories() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -85,7 +81,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadFeaturedPlaylists(it) } }
+                        View.OnClickListener { viewModel.loadFeaturedPlaylists() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -101,7 +97,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         null,
-                        View.OnClickListener { _ -> preferenceHelper.accessToken?.let { viewModel.loadDailyViralTracks(it) } }
+                        View.OnClickListener { viewModel.loadDailyViralTracks() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -117,11 +113,9 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
                         },
                         null,
                         onNewReleasesScrollListener,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                val loadMore = viewModel.viewState.newReleases.size > 0
-                                viewModel.loadNewReleases(it, loadMore)
-                            }
+                        View.OnClickListener {
+                            val loadMore = viewModel.viewState.newReleases.size > 0
+                            viewModel.loadNewReleases(loadMore)
                         }
                 )
         )
@@ -184,7 +178,7 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
         lifecycle.addObserver(connectivityComponent)
     }
 
-    private fun loadData() = viewModel.loadDashboardData(preferenceHelper.accessToken)
+    private fun loadData() = viewModel.loadData()
 
     private val disposablesComponent = DisposablesComponent()
 
@@ -192,9 +186,9 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     lateinit var appPreferences: AppPreferences
 
     private fun observePreferences() {
-        fun reloadDataOnPreferencesChange() = appPreferences.accessToken?.let {
-            viewModel.loadCategories(it, true)
-            viewModel.loadFeaturedPlaylists(it, true)
+        fun reloadDataOnPreferencesChange()  {
+            viewModel.loadCategories(true)
+            viewModel.loadFeaturedPlaylists( true)
         }
 
         disposablesComponent.addAll(

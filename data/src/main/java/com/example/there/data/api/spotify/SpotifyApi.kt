@@ -4,7 +4,6 @@ import com.example.there.data.entity.spotify.AlbumData
 import com.example.there.data.entity.spotify.AudioFeaturesData
 import com.example.there.data.entity.spotify.UserData
 import com.example.there.data.response.*
-import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -20,7 +19,7 @@ interface SpotifyApi {
             @Query("locale") locale: String = DEFAULT_LOCALE,
             @Query("offset") offset: Int = DEFAULT_OFFSET,
             @Query("limit") limit: Int = DEFAULT_LIMIT
-    ): Observable<CategoriesResponse>
+    ): Single<CategoriesResponse>
 
     @GET("browse/featured-playlists")
     fun getFeaturedPlaylists(
@@ -29,7 +28,7 @@ interface SpotifyApi {
             @Query("offset") offset: Int = DEFAULT_OFFSET,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("locale") locale: String = DEFAULT_LOCALE
-    ): Observable<PlaylistsResponse>
+    ): Single<PlaylistsResponse>
 
     @GET("tracks")
     fun getTracks(
@@ -80,7 +79,7 @@ interface SpotifyApi {
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_TRACKS_LIMIT,
             @Query("seed_tracks") trackId: String
-    ): Observable<SimilarTracksResponse>
+    ): Single<SimilarTracksResponse>
 
     @GET("artists/{id}/albums")
     fun getAlbumsFromArtist(
@@ -88,7 +87,7 @@ interface SpotifyApi {
             @Path("id") artistId: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Observable<AlbumsResult>
+    ): Single<AlbumsResult>
 
     @GET("artists/{id}/top-tracks")
     fun getTopTracksFromArtist(

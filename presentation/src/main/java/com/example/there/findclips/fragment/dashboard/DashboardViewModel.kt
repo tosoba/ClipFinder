@@ -1,9 +1,11 @@
 package com.example.there.findclips.fragment.dashboard
 
 import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseSpotifyViewModel
+import com.example.there.domain.usecase.spotify.GetCategories
+import com.example.there.domain.usecase.spotify.GetDailyViralTracks
+import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
+import com.example.there.domain.usecase.spotify.GetNewReleases
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.CategoryEntityMapper
@@ -12,40 +14,24 @@ import com.example.there.findclips.model.mapper.TrackEntityMapper
 import javax.inject.Inject
 
 class DashboardViewModel @Inject constructor(
-        getAccessToken: GetAccessToken,
         private val getFeaturedPlaylists: GetFeaturedPlaylists,
         private val getCategories: GetCategories,
         private val getDailyViralTracks: GetDailyViralTracks,
         private val getNewReleases: GetNewReleases
-) : BaseSpotifyViewModel(getAccessToken) {
+) : BaseViewModel() {
 
     val viewState: DashboardViewState = DashboardViewState()
 
-    fun loadDashboardData(
-            accessToken: AccessTokenEntity?,
-            onNewReleasesFinally: (() -> Unit)? = null
-    ) {
-        if (accessToken != null && accessToken.isValid) {
-            accessTokenLiveData.value = accessToken
-            loadData(accessTokenLiveData.value!!, onNewReleasesFinally)
-        } else {
-            loadAccessToken { loadData(it) }
-        }
+    fun loadData(onNewReleasesFinally: (() -> Unit)? = null) {
+        loadCategories()
+        loadFeaturedPlaylists()
+        loadDailyViralTracks()
+        loadNewReleases(onFinally = onNewReleasesFinally)
     }
 
-    private fun loadData(
-            accessToken: AccessTokenEntity,
-            onNewReleasesFinally: (() -> Unit)? = null
-    ) = with(accessToken) {
-        loadCategories(this)
-        loadFeaturedPlaylists(this)
-        loadDailyViralTracks(this)
-        loadNewReleases(this, onFinally = onNewReleasesFinally)
-    }
-
-    fun loadCategories(accessToken: AccessTokenEntity, shouldClear: Boolean = false) {
+    fun loadCategories(shouldClear: Boolean = false) {
         viewState.categoriesLoadingInProgress.set(true)
-        addDisposable(getCategories.execute(accessToken)
+        addDisposable(getCategories.execute()
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribe({
                     if (shouldClear) viewState.categories.clear()
@@ -53,9 +39,9 @@ class DashboardViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadFeaturedPlaylists(accessToken: AccessTokenEntity, shouldClear: Boolean = false) {
+    fun loadFeaturedPlaylists(shouldClear: Boolean = false) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
-        addDisposable(getFeaturedPlaylists.execute(accessToken)
+        addDisposable(getFeaturedPlaylists.execute()
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribe({
                     if (shouldClear) viewState.featuredPlaylists.clear()
@@ -63,9 +49,9 @@ class DashboardViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadDailyViralTracks(accessToken: AccessTokenEntity) {
+    fun loadDailyViralTracks() {
         viewState.topTracksLoadingInProgress.set(true)
-        addDisposable(getDailyViralTracks.execute(accessToken)
+        addDisposable(getDailyViralTracks.execute()
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({ result ->
                     viewState.topTracks.addAll(result.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) })
@@ -75,12 +61,12 @@ class DashboardViewModel @Inject constructor(
     private var currentNewReleasesOffset: Int = 0
     private var totalNewReleases = 0
 
-    fun loadNewReleases(accessToken: AccessTokenEntity, loadMore: Boolean = false, onFinally: (() -> Unit)? = null) {
+    fun loadNewReleases(loadMore: Boolean = false, onFinally: (() -> Unit)? = null) {
         if (viewState.newReleasesLoadingInProgress.get() != true
                 && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
             if (!loadMore)
                 viewState.newReleasesLoadingInProgress.set(true)
-            addDisposable(getNewReleases.execute(accessToken, currentNewReleasesOffset)
+            addDisposable(getNewReleases.execute(currentNewReleasesOffset)
                     .doFinally {
                         if (!loadMore)
                             viewState.newReleasesLoadingInProgress.set(false)
@@ -92,10 +78,5 @@ class DashboardViewModel @Inject constructor(
                         viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
                     }, ::onError))
         }
-    }
-
-    override fun onError(t: Throwable) {
-        super.onError(t)
-        handleErrors(t, onErrorsResolved = { loadDashboardData(it) })
     }
 }

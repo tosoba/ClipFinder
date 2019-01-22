@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.account.top
 
 import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopTracks
 import com.example.there.findclips.base.vm.BaseViewModel
@@ -19,10 +18,10 @@ class AccountTopViewModel @Inject constructor(
     private var currentTracksOffset = 0
     private var totalTracks = 0
 
-    fun loadTracks(accessToken: AccessTokenEntity) {
+    fun loadTracks() {
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersTopTracks.execute(accessToken, currentTracksOffset)
+            addDisposable(getCurrentUsersTopTracks.execute()
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.topTracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
@@ -40,10 +39,10 @@ class AccountTopViewModel @Inject constructor(
     private var currentArtistsOffset = 0
     private var totalArtists = 0
 
-    fun loadArtists(accessToken: AccessTokenEntity) {
+    fun loadArtists() {
         if (canLoadArtists) {
             viewState.artistsLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersTopArtists.execute(accessToken, currentArtistsOffset)
+            addDisposable(getCurrentUsersTopArtists.execute(currentArtistsOffset)
                     .doFinally { viewState.artistsLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.artists.addAll(it.items.map(ArtistEntityMapper::mapFrom))

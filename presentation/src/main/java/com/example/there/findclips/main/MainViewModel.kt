@@ -2,7 +2,6 @@ package com.example.there.findclips.main
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.domain.usecase.videos.*
 import com.example.there.findclips.base.vm.BaseVideosViewModel
@@ -91,13 +90,12 @@ class MainViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun getSimilarTracks(accessTokenEntity: AccessTokenEntity, trackId: String) {
-        addDisposable(getSimilarTracks.execute(accessTokenEntity, trackId)
+    fun getSimilarTracks(trackId: String) {
+        addDisposable(getSimilarTracks.execute(trackId)
                 .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError))
     }
 
-    fun getCurrentUser(accessToken: AccessTokenEntity) = addDisposable(getCurrentUser
-            .execute(accessToken)
+    fun getCurrentUser() = addDisposable(getCurrentUser.execute()
             .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))
 
     fun toggleTrackFavouriteState(

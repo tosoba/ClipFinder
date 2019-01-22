@@ -6,5 +6,8 @@ import com.example.there.domain.entity.spotify.AccessTokenEntity
 
 
 object AccessTokenMapper : OneWayMapper<AccessTokenData, AccessTokenEntity>() {
-    override fun mapFrom(from: AccessTokenData): AccessTokenEntity = AccessTokenEntity(token = from.accessToken, timestamp = System.currentTimeMillis())
+    override fun mapFrom(from: AccessTokenData): AccessTokenEntity = AccessTokenEntity(
+            token = from.accessToken,
+            timestamp = System.currentTimeMillis()
+    )
 }

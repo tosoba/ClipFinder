@@ -13,11 +13,6 @@ import dagger.Provides
 class SpotifyDomainModule {
 
     @Provides
-    fun accessTokenUseCase(
-            repository: ISpotifyRepository
-    ): GetAccessToken = GetAccessToken(AsyncSymmetricSingleTransformer(), repository)
-
-    @Provides
     fun artistsUseCase(
             repository: ISpotifyRepository
     ): GetArtists = GetArtists(AsyncSymmetricSingleTransformer(), repository)

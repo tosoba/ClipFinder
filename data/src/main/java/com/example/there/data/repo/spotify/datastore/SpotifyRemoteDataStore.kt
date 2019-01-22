@@ -9,6 +9,8 @@ import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.mapper.spotify.*
 import com.example.there.data.preferences.AppPreferences
 import com.example.there.data.response.TracksOnlyResponse
+import com.example.there.data.util.observable
+import com.example.there.data.util.single
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
@@ -27,169 +29,190 @@ class SpotifyRemoteDataStore @Inject constructor(
         private val appPreferences: AppPreferences
 ) : ISpotifyRemoteDataStore {
 
-    override val accessToken: Single<AccessTokenEntity>
+    private val accessToken: Single<AccessTokenEntity>
         get() = accountsApi.getAccessToken(authorization = clientDataHeader)
                 .map(AccessTokenMapper::mapFrom)
 
-    override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
-        val offsetSubject = BehaviorSubject.createDefault(0)
-        return offsetSubject.concatMap { offset ->
-            api.getCategories(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset,
-                    country = appPreferences.country,
-                    locale = appPreferences.language
-            )
-        }.doOnNext {
-            if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
-                offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
-            else
-                offsetSubject.onComplete()
-        }.map { it.result.categories.map(CategoryMapper::mapFrom) }
-    }
-
-    override fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>> {
-        val offsetSubject = BehaviorSubject.createDefault(0)
-        return offsetSubject.concatMap { offset ->
-            api.getFeaturedPlaylists(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    offset = offset,
-                    country = appPreferences.country,
-                    locale = appPreferences.language
-            )
-        }.doOnNext {
-            if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT)
-                offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT)
-            else
-                offsetSubject.onComplete()
-        }.map { it.result.playlists.map(PlaylistMapper::mapFrom) }
-    }
-
-    override fun getDailyViralTracks(
-            accessToken: AccessTokenEntity
-    ): Observable<List<TopTrackEntity>> = chartsApi.getDailyViralTracks()
-            .map { it.split('\n').filter { it.isNotBlank() && it.first().isDigit() } }
-            .map { it.map(ChartTrackIdMapper::mapFrom) }
-            .map { it.chunked(50).map { it.joinToString(",") } }
-            .concatMapIterable { it }
-            .concatMap {
-                api.getTracks(
-                        authorization = getAccessTokenHeader(accessToken.token),
-                        ids = it
-                ).toObservable()
-            }
-            .zipWith(
-                    Observable.range(0, Int.MAX_VALUE),
-                    BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index -> Pair(response, index) }
-            )
-            .map { (response, index) ->
-                response.tracks.mapIndexed { i: Int, trackData: TrackData ->
-                    TopTrackEntity(index * 50 + i + 1, TrackMapper.mapFrom(trackData))
+    override val categories: Observable<List<CategoryEntity>>
+        get() {
+            val offsetSubject = BehaviorSubject.createDefault(0)
+            return offsetSubject.concatMap { offset ->
+                appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid {
+                    api.getCategories(
+                            authorization = getAccessTokenHeader(it),
+                            offset = offset,
+                            country = appPreferences.country,
+                            locale = appPreferences.language
+                    ).toObservable()
                 }
-            }
+            }.doOnNext {
+                if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
+                    offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
+                else offsetSubject.onComplete()
+            }.map { it.result.categories.map(CategoryMapper::mapFrom) }
+        }
 
+    override val featuredPlaylists: Observable<List<PlaylistEntity>>
+        get() {
+            val offsetSubject = BehaviorSubject.createDefault(0)
+            return offsetSubject.concatMap { offset ->
+                appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid {
+                    api.getFeaturedPlaylists(
+                            authorization = getAccessTokenHeader(it),
+                            offset = offset,
+                            country = appPreferences.country,
+                            locale = appPreferences.language
+                    ).toObservable()
+                }
+            }.doOnNext {
+                if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT)
+                    offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT)
+                else
+                    offsetSubject.onComplete()
+            }.map { it.result.playlists.map(PlaylistMapper::mapFrom) }
+        }
+
+    override val dailyViralTracks: Observable<List<TopTrackEntity>>
+        get() = chartsApi.getDailyViralTracks()
+                .map { csv -> csv.split('\n').filter { it.isNotBlank() && it.first().isDigit() } }
+                .map { it.map(ChartTrackIdMapper::mapFrom) }
+                .map { it.chunked(50).map { chunk -> chunk.joinToString(",") } }
+                .concatMapIterable { it }
+                .concatMap { ids ->
+                    appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid {
+                        api.getTracks(
+                                authorization = getAccessTokenHeader(it),
+                                ids = ids
+                        ).toObservable()
+                    }
+                }
+                .zipWith(
+                        Observable.range(0, Int.MAX_VALUE),
+                        BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index -> Pair(response, index) }
+                )
+                .map { (response, index) ->
+                    response.tracks.mapIndexed { i: Int, trackData: TrackData ->
+                        TopTrackEntity(index * 50 + i + 1, TrackMapper.mapFrom(trackData))
+                    }
+                }
+
+    override val currentUser: Single<UserEntity>
+        get() = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+            api.getCurrentUser(getAccessTokenHeader(token))
+                    .map { UserMapper.mapFrom(it) }
+        }
 
     override fun searchAll(
-            accessToken: AccessTokenEntity,
             query: String,
             offset: Int
-    ): Single<SearchAllEntity> = api.searchAll(authorization = getAccessTokenHeader(accessToken.token), query = query)
-            .map {
-                SearchAllEntity(
-                        albums = it.albumsResult?.albums?.map(AlbumMapper::mapFrom)
-                                ?: emptyList(),
-                        artists = it.artistsResult?.artists?.map(ArtistMapper::mapFrom)
-                                ?: emptyList(),
-                        playlists = it.playlistsResult?.playlists?.map(PlaylistMapper::mapFrom)
-                                ?: emptyList(),
-                        tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
-                                ?: emptyList(),
-                        totalItems = arrayOf(
-                                it.albumsResult?.totalItems ?: 0,
-                                it.artistsResult?.totalItems ?: 0,
-                                it.playlistsResult?.totalItems ?: 0,
-                                it.tracksResult?.totalItems ?: 0
-                        ).max() ?: 0
-                )
-            }
+    ): Single<SearchAllEntity> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.searchAll(authorization = getAccessTokenHeader(token), query = query)
+                .map {
+                    SearchAllEntity(
+                            albums = it.albumsResult?.albums?.map(AlbumMapper::mapFrom)
+                                    ?: emptyList(),
+                            artists = it.artistsResult?.artists?.map(ArtistMapper::mapFrom)
+                                    ?: emptyList(),
+                            playlists = it.playlistsResult?.playlists?.map(PlaylistMapper::mapFrom)
+                                    ?: emptyList(),
+                            tracks = it.tracksResult?.tracks?.map(TrackMapper::mapFrom)
+                                    ?: emptyList(),
+                            totalItems = arrayOf(
+                                    it.albumsResult?.totalItems ?: 0,
+                                    it.artistsResult?.totalItems ?: 0,
+                                    it.playlistsResult?.totalItems ?: 0,
+                                    it.tracksResult?.totalItems ?: 0
+                            ).max() ?: 0
+                    )
+                }
+    }
 
     override fun getPlaylistsForCategory(
-            accessToken: AccessTokenEntity,
             categoryId: String,
             offset: Int
-    ): Single<EntityPage<PlaylistEntity>> = api.getPlaylistsForCategory(
-            authorization = getAccessTokenHeader(accessToken.token),
-            categoryId = categoryId,
-            offset = offset,
-            country = appPreferences.country
-    ).map {
-        EntityPage(
-                items = it.result.playlists.map(PlaylistMapper::mapFrom),
-                offset = it.result.offset,
-                totalItems = it.result.totalItems
-        )
+    ): Single<EntityPage<PlaylistEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getPlaylistsForCategory(
+                authorization = getAccessTokenHeader(token),
+                categoryId = categoryId,
+                offset = offset,
+                country = appPreferences.country
+        ).map {
+            EntityPage(
+                    items = it.result.playlists.map(PlaylistMapper::mapFrom),
+                    offset = it.result.offset,
+                    totalItems = it.result.totalItems
+            )
+        }
     }
 
     override fun getPlaylistTracks(
-            accessToken: AccessTokenEntity,
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = api.getPlaylistTracks(
-            authorization = getAccessTokenHeader(accessToken.token),
-            playlistId = playlistId,
-            userId = userId,
-            offset = offset
-    ).map {
-        EntityPage(
-                items = it.playlistTracks.map { TrackMapper.mapFrom(it.track) },
-                offset = it.offset,
-                totalItems = it.totalItems
-        )
+    ): Single<EntityPage<TrackEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getPlaylistTracks(
+                authorization = getAccessTokenHeader(token),
+                playlistId = playlistId,
+                userId = userId,
+                offset = offset
+        ).map { response ->
+            EntityPage(
+                    items = response.playlistTracks.map { TrackMapper.mapFrom(it.track) },
+                    offset = response.offset,
+                    totalItems = response.totalItems
+            )
+        }
     }
 
     override fun getAlbum(
-            accessToken: AccessTokenEntity,
             albumId: String
-    ): Single<AlbumEntity> = api.getAlbum(
-            authorization = getAccessTokenHeader(accessToken.token),
-            albumId = albumId
-    ).map(AlbumMapper::mapFrom)
+    ): Single<AlbumEntity> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getAlbum(
+                authorization = getAccessTokenHeader(token),
+                albumId = albumId
+        ).map(AlbumMapper::mapFrom)
+    }
 
     override fun getArtists(
-            accessToken: AccessTokenEntity,
             artistIds: List<String>
-    ): Single<List<ArtistEntity>> = api.getArtists(
-            authorization = getAccessTokenHeader(accessToken.token),
-            artistIds = artistIds.joinToString(",")
-    ).map { it.artists.map(ArtistMapper::mapFrom) }
+    ): Single<List<ArtistEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getArtists(
+                authorization = getAccessTokenHeader(token),
+                artistIds = artistIds.joinToString(",")
+        ).map { it.artists.map(ArtistMapper::mapFrom) }
+    }
 
     override fun getSimilarTracks(
-            accessToken: AccessTokenEntity,
             trackId: String
-    ): Observable<List<TrackEntity>> = api.getSimilarTracks(authorization = getAccessTokenHeader(accessToken.token), trackId = trackId)
-            .map { it.tracks.chunked(50).map { it.joinToString(",") { it.id } } }
-            .flatMapIterable { it }
-            .flatMap {
-                api.getTracks(
-                        authorization = getAccessTokenHeader(accessToken.token),
-                        ids = it
-                ).toObservable()
-            }
-            .map { it.tracks.map(TrackMapper::mapFrom) }
-
+    ): Observable<List<TrackEntity>> = appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid { token ->
+        api.getSimilarTracks(authorization = getAccessTokenHeader(token), trackId = trackId)
+                .map { response ->
+                    response.tracks.chunked(50)
+                            .map { it.joinToString(",") { track -> track.id } }
+                }
+                .toObservable()
+                .flatMapIterable { it }
+                .flatMap {
+                    api.getTracks(
+                            authorization = getAccessTokenHeader(token),
+                            ids = it
+                    ).toObservable()
+                }
+                .map { it.tracks.map(TrackMapper::mapFrom) }
+    }
 
     override fun getAlbumsFromArtist(
-            accessToken: AccessTokenEntity,
             artistId: String
     ): Observable<List<AlbumEntity>> {
         val offsetSubject = BehaviorSubject.createDefault(0)
         return offsetSubject.concatMap { offset ->
-            api.getAlbumsFromArtist(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    artistId = artistId,
-                    offset = offset
-            )
+            appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid { token ->
+                api.getAlbumsFromArtist(
+                        authorization = getAccessTokenHeader(token),
+                        artistId = artistId,
+                        offset = offset
+                ).toObservable()
+            }
         }.doOnNext {
             if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
                 offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
@@ -199,21 +222,23 @@ class SpotifyRemoteDataStore @Inject constructor(
     }
 
     override fun getTopTracksFromArtist(
-            accessToken: AccessTokenEntity,
             artistId: String
-    ): Single<List<TrackEntity>> = api.getTopTracksFromArtist(
-            authorization = getAccessTokenHeader(accessToken.token),
-            artistId = artistId,
-            country = appPreferences.country
-    ).map { it.tracks.map(TrackMapper::mapFrom) }
+    ): Single<List<TrackEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getTopTracksFromArtist(
+                authorization = getAccessTokenHeader(token),
+                artistId = artistId,
+                country = appPreferences.country
+        ).map { it.tracks.map(TrackMapper::mapFrom) }
+    }
 
     override fun getRelatedArtists(
-            accessToken: AccessTokenEntity,
             artistId: String
-    ): Single<List<ArtistEntity>> = api.getRelatedArtists(
-            authorization = getAccessTokenHeader(accessToken.token),
-            artistId = artistId
-    ).map { it.artists.map(ArtistMapper::mapFrom) }
+    ): Single<List<ArtistEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getRelatedArtists(
+                authorization = getAccessTokenHeader(token),
+                artistId = artistId
+        ).map { it.artists.map(ArtistMapper::mapFrom) }
+    }
 
     class TrackIdsPage(
             val ids: String,
@@ -222,31 +247,32 @@ class SpotifyRemoteDataStore @Inject constructor(
     )
 
     override fun getTracksFromAlbum(
-            accessToken: AccessTokenEntity,
             albumId: String
     ): Observable<EntityPage<TrackEntity>> {
         val offsetSubject = BehaviorSubject.createDefault(0)
         return offsetSubject.concatMap { offset ->
-            api.getTracksFromAlbum(
-                    authorization = getAccessTokenHeader(accessToken.token),
-                    albumId = albumId,
-                    offset = offset
-            ).toObservable().map {
-                TrackIdsPage(
-                        ids = it.tracks.joinToString(separator = ",") { it.id },
-                        offset = it.offset,
-                        totalItems = it.totalItems
-                )
-            }.flatMap { idsPage ->
-                api.getTracks(
-                        authorization = getAccessTokenHeader(accessToken.token),
-                        ids = idsPage.ids
+            appPreferences.accessToken.observable.loadIfNeededThenFlatMapValid { token ->
+                api.getTracksFromAlbum(
+                        authorization = getAccessTokenHeader(token),
+                        albumId = albumId,
+                        offset = offset
                 ).toObservable().map {
-                    EntityPage(
-                            items = it.tracks.map(TrackMapper::mapFrom),
-                            offset = idsPage.offset,
-                            totalItems = idsPage.totalItems
+                    TrackIdsPage(
+                            ids = it.tracks.joinToString(separator = ",") { it.id },
+                            offset = it.offset,
+                            totalItems = it.totalItems
                     )
+                }.flatMap { idsPage ->
+                    api.getTracks(
+                            authorization = getAccessTokenHeader(token),
+                            ids = idsPage.ids
+                    ).toObservable().map {
+                        EntityPage(
+                                items = it.tracks.map(TrackMapper::mapFrom),
+                                offset = idsPage.offset,
+                                totalItems = idsPage.totalItems
+                        )
+                    }
                 }
             }.doOnNext {
                 if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT) offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
@@ -257,104 +283,150 @@ class SpotifyRemoteDataStore @Inject constructor(
     }
 
     override fun getNewReleases(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<AlbumEntity>> = api.getNewReleases(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map {
-        EntityPage(
-                items = it.result.albums.map(AlbumMapper::mapFrom),
-                offset = it.result.offset,
-                totalItems = it.result.totalItems
-        )
+    ): Single<EntityPage<AlbumEntity>> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getNewReleases(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map {
+            EntityPage(
+                    items = it.result.albums.map(AlbumMapper::mapFrom),
+                    offset = it.result.offset,
+                    totalItems = it.result.totalItems
+            )
+        }
     }
 
     override fun getCurrentUsersPlaylists(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<PlaylistEntity>> = api.getCurrentUsersPlaylists(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map {
-        EntityPage(
-                items = it.playlists.map(PlaylistMapper::mapFrom),
-                offset = it.offset,
-                totalItems = it.totalItems
-        )
+    ): Single<EntityPage<PlaylistEntity>> = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+        api.getCurrentUsersPlaylists(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map {
+            EntityPage(
+                    items = it.playlists.map(PlaylistMapper::mapFrom),
+                    offset = it.offset,
+                    totalItems = it.totalItems
+            )
+        }
     }
 
     override fun getCurrentUsersTopTracks(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = api.getCurrentUsersTopTracks(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map {
-        EntityPage(
-                items = it.tracks.map(TrackMapper::mapFrom),
-                offset = it.offset,
-                totalItems = it.totalItems
-        )
+    ): Single<EntityPage<TrackEntity>> = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+        api.getCurrentUsersTopTracks(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map {
+            EntityPage(
+                    items = it.tracks.map(TrackMapper::mapFrom),
+                    offset = it.offset,
+                    totalItems = it.totalItems
+            )
+        }
     }
 
     override fun getCurrentUsersTopArtists(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<ArtistEntity>> = api.getCurrentUsersTopArtists(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map {
-        EntityPage(
-                items = it.artists.map(ArtistMapper::mapFrom),
-                offset = it.offset,
-                totalItems = it.totalItems
-        )
+    ): Single<EntityPage<ArtistEntity>> = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+        api.getCurrentUsersTopArtists(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map {
+            EntityPage(
+                    items = it.artists.map(ArtistMapper::mapFrom),
+                    offset = it.offset,
+                    totalItems = it.totalItems
+            )
+        }
     }
 
     override fun getCurrentUsersSavedTracks(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = api.getCurrentUsersSavedTracks(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map { result ->
-        EntityPage(
-                items = result.savedTracks.map { TrackMapper.mapFrom(it.track) },
-                offset = result.offset,
-                totalItems = result.totalItems
-        )
+    ): Single<EntityPage<TrackEntity>> = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+        api.getCurrentUsersSavedTracks(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map { result ->
+            EntityPage(
+                    items = result.savedTracks.map { TrackMapper.mapFrom(it.track) },
+                    offset = result.offset,
+                    totalItems = result.totalItems
+            )
+        }
     }
 
     override fun getCurrentUsersSavedAlbums(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<AlbumEntity>> = api.getCurrentUsersSavedAlbums(
-            authorization = getAccessTokenHeader(accessToken.token),
-            offset = offset
-    ).map { result ->
-        EntityPage(
-                items = result.savedAlbums.map { AlbumMapper.mapFrom(it.album) },
-                offset = result.offset,
-                totalItems = result.totalItems
-        )
+    ): Single<EntityPage<AlbumEntity>> = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+        api.getCurrentUsersSavedAlbums(
+                authorization = getAccessTokenHeader(token),
+                offset = offset
+        ).map { result ->
+            EntityPage(
+                    items = result.savedAlbums.map { AlbumMapper.mapFrom(it.album) },
+                    offset = result.offset,
+                    totalItems = result.totalItems
+            )
+        }
     }
 
-    override fun getCurrentUser(
-            accessToken: AccessTokenEntity
-    ): Single<UserEntity> = api.getCurrentUser(getAccessTokenHeader(accessToken.token))
-            .map { UserMapper.mapFrom(it) }
-
     override fun getAudioFeatures(
-            accessToken: AccessTokenEntity,
             trackEntity: TrackEntity
-    ): Single<AudioFeaturesEntity> = api.getAudioFeatures(
-            authorization = getAccessTokenHeader(accessToken.token),
-            trackId = trackEntity.id
-    ).map(AudioFeaturesMapper::mapFrom)
+    ): Single<AudioFeaturesEntity> = appPreferences.accessToken.single.loadIfNeededThenFlatMapValid { token ->
+        api.getAudioFeatures(
+                authorization = getAccessTokenHeader(token),
+                trackId = trackEntity.id
+        ).map(AudioFeaturesMapper::mapFrom)
+    }
+
+    private fun <T> Observable<AppPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
+            block: (String) -> Observable<T>
+    ): Observable<T> = flatMap { saved ->
+        when (saved) {
+            is AppPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            else -> accessToken.toObservable()
+                    .doOnNext { appPreferences.accessToken = it }
+                    .map { it.token }
+                    .flatMap(block)
+        }
+    }
+
+    private fun <T> Observable<AppPreferences.SavedAccessTokenEntity>.flatMapValidElseThrow(
+            block: (String) -> Observable<T>
+    ): Observable<T> = flatMap { saved ->
+        when (saved) {
+            is AppPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            else -> Observable.error { IllegalStateException(ACCESS_TOKEN_UNAVAILABLE) }
+        }
+    }
+
+    private fun <T> Single<AppPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
+            block: (String) -> Single<T>
+    ): Single<T> = flatMap { saved ->
+        when (saved) {
+            is AppPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            else -> accessToken
+                    .doOnSuccess { appPreferences.accessToken = it }
+                    .map { it.token }
+                    .flatMap(block)
+        }
+    }
+
+    private fun <T> Single<AppPreferences.SavedAccessTokenEntity>.flatMapValidElseThrow(
+            block: (String) -> Single<T>
+    ): Single<T> = flatMap { saved ->
+        when (saved) {
+            is AppPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            else -> Single.error { IllegalStateException(ACCESS_TOKEN_UNAVAILABLE) }
+        }
+    }
 
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
+
+        private const val ACCESS_TOKEN_UNAVAILABLE = "Access token unavailable."
 
         val clientDataHeader: String
             get() {

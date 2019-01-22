@@ -54,7 +54,7 @@ class AccountPlaylistsFragment :
         }
     }
 
-    private fun loadData() = viewModel.loadPlaylists(mainActivity!!.userReadPrivateAccessTokenEntity)
+    private fun loadData() = viewModel.loadPlaylists()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -46,6 +46,28 @@ open class AppPreferences @Inject constructor(context: Context) {
             }
         }
 
+    var userPrivateAccessToken: AccessTokenEntity?
+        get() {
+            val token = preferences.getString(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN, null)
+            val timestamp = preferences.getLong(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP, 0L)
+            return if (token == null) null
+            else AccessTokenEntity(token, timestamp)
+        }
+        set(value) {
+            if (value == null) return
+            with(preferences.edit()) {
+                putString(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN, value.token)
+                putLong(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP, value.timestamp)
+                apply()
+            }
+        }
+
+    sealed class SavedAccessTokenEntity {
+        class Valid(val token: String) : SavedAccessTokenEntity()
+        object Invalid : SavedAccessTokenEntity()
+        object NoValue : SavedAccessTokenEntity()
+    }
+
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
             if (!contains(PREF_KEY_COUNTRY)) edit().putString(PREF_KEY_COUNTRY, SpotifyApi.DEFAULT_COUNTRY).apply()
@@ -66,7 +88,13 @@ open class AppPreferences @Inject constructor(context: Context) {
     companion object {
         private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
         private const val PREF_KEY_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_ACCESS_TOKEN_TIMESTAMP"
+
+        private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN"
+        private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP"
+
         private const val PREF_KEY_COUNTRY = "Country"
         private const val PREF_KEY_LANGUAGE = "Language"
     }
 }
+
+

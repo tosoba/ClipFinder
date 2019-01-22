@@ -18,108 +18,89 @@ class SpotifyRepository @Inject constructor(
         private val dbDataStore: ISpotifyDbDataStore
 ) : ISpotifyRepository {
 
-    override val accessToken: Single<AccessTokenEntity> = remoteDataStore.accessToken
+    override val categories: Observable<List<CategoryEntity>>
+        get() = remoteDataStore.categories
 
-    override fun getCategories(
-            accessToken: AccessTokenEntity
-    ): Observable<List<CategoryEntity>> = remoteDataStore.getCategories(accessToken)
+    override val featuredPlaylists: Observable<List<PlaylistEntity>>
+        get() = remoteDataStore.featuredPlaylists
 
-    override fun getFeaturedPlaylists(
-            accessToken: AccessTokenEntity
-    ): Observable<List<PlaylistEntity>> = remoteDataStore.getFeaturedPlaylists(accessToken)
+    override val dailyViralTracks: Observable<List<TopTrackEntity>>
+        get() = remoteDataStore.dailyViralTracks
 
-    override fun getDailyViralTracks(
-            accessToken: AccessTokenEntity
-    ): Observable<List<TopTrackEntity>> = remoteDataStore.getDailyViralTracks(accessToken)
+    override val currentUser: Single<UserEntity>
+        get() = remoteDataStore.currentUser
 
     override fun searchAll(
-            accessToken: AccessTokenEntity,
             query: String,
             offset: Int
-    ): Single<SearchAllEntity> = remoteDataStore.searchAll(accessToken, query, offset)
+    ): Single<SearchAllEntity> = remoteDataStore.searchAll(query, offset)
 
     override fun getPlaylistsForCategory(
-            accessToken: AccessTokenEntity,
             categoryId: String,
             offset: Int
-    ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getPlaylistsForCategory(accessToken, categoryId, offset)
+    ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getPlaylistsForCategory(categoryId, offset)
 
     override fun getPlaylistTracks(
-            accessToken: AccessTokenEntity,
             playlistId: String,
             userId: String,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getPlaylistTracks(accessToken, playlistId, userId, offset)
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getPlaylistTracks(playlistId, userId, offset)
 
     override fun getAlbum(
-            accessToken: AccessTokenEntity,
             albumId: String
-    ): Single<AlbumEntity> = remoteDataStore.getAlbum(accessToken, albumId)
+    ): Single<AlbumEntity> = remoteDataStore.getAlbum(albumId)
 
     override fun getArtists(
-            accessToken: AccessTokenEntity,
             artistIds: List<String>
-    ): Single<List<ArtistEntity>> = remoteDataStore.getArtists(accessToken, artistIds)
+    ): Single<List<ArtistEntity>> = remoteDataStore.getArtists(artistIds)
 
     override fun getSimilarTracks(
-            accessToken: AccessTokenEntity,
             trackId: String
-    ): Observable<List<TrackEntity>> = remoteDataStore.getSimilarTracks(accessToken, trackId)
+    ): Observable<List<TrackEntity>> = remoteDataStore.getSimilarTracks(trackId)
 
     override fun getAlbumsFromArtist(
-            accessToken: AccessTokenEntity,
             artistId: String
-    ): Observable<List<AlbumEntity>> = remoteDataStore.getAlbumsFromArtist(accessToken, artistId)
+    ): Observable<List<AlbumEntity>> = remoteDataStore.getAlbumsFromArtist(artistId)
 
     override fun getTopTracksFromArtist(
-            accessToken: AccessTokenEntity,
             artistId: String
-    ): Single<List<TrackEntity>> = remoteDataStore.getTopTracksFromArtist(accessToken, artistId)
+    ): Single<List<TrackEntity>> = remoteDataStore.getTopTracksFromArtist(artistId)
 
     override fun getRelatedArtists(
-            accessToken: AccessTokenEntity,
             artistId: String
-    ): Single<List<ArtistEntity>> = remoteDataStore.getRelatedArtists(accessToken, artistId)
+    ): Single<List<ArtistEntity>> = remoteDataStore.getRelatedArtists(artistId)
 
     override fun getTracksFromAlbum(
-            accessToken: AccessTokenEntity,
             albumId: String
-    ): Observable<EntityPage<TrackEntity>> = remoteDataStore.getTracksFromAlbum(accessToken, albumId)
+    ): Observable<EntityPage<TrackEntity>> = remoteDataStore.getTracksFromAlbum(albumId)
 
     override fun getNewReleases(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<AlbumEntity>> = remoteDataStore.getNewReleases(accessToken, offset)
+    ): Single<EntityPage<AlbumEntity>> = remoteDataStore.getNewReleases(offset)
 
     override fun getCurrentUsersPlaylists(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getCurrentUsersPlaylists(accessToken, offset)
+    ): Single<EntityPage<PlaylistEntity>> = remoteDataStore.getCurrentUsersPlaylists(offset)
 
     override fun getCurrentUsersTopTracks(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getCurrentUsersTopTracks(accessToken, offset)
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getCurrentUsersTopTracks(offset)
 
     override fun getCurrentUsersTopArtists(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<ArtistEntity>> = remoteDataStore.getCurrentUsersTopArtists(accessToken, offset)
+    ): Single<EntityPage<ArtistEntity>> = remoteDataStore.getCurrentUsersTopArtists(offset)
 
     override fun getCurrentUsersSavedTracks(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getCurrentUsersSavedTracks(accessToken, offset)
+    ): Single<EntityPage<TrackEntity>> = remoteDataStore.getCurrentUsersSavedTracks(offset)
 
     override fun getCurrentUsersSavedAlbums(
-            accessToken: AccessTokenEntity,
             offset: Int
-    ): Single<EntityPage<AlbumEntity>> = remoteDataStore.getCurrentUsersSavedAlbums(accessToken, offset)
+    ): Single<EntityPage<AlbumEntity>> = remoteDataStore.getCurrentUsersSavedAlbums(offset)
 
     override fun getAudioFeatures(
-            accessToken: AccessTokenEntity,
             trackEntity: TrackEntity
-    ): Single<AudioFeaturesEntity> = remoteDataStore.getAudioFeatures(accessToken, trackEntity)
+    ): Single<AudioFeaturesEntity> = remoteDataStore.getAudioFeatures(trackEntity)
 
     override val favouriteAlbums: Flowable<List<AlbumEntity>>
         get() = dbDataStore.favouriteAlbums
@@ -145,8 +126,6 @@ class SpotifyRepository @Inject constructor(
     override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
 
     override fun insertTrack(trackEntity: TrackEntity): Completable = dbDataStore.insertTrack(trackEntity)
-
-    override fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity> = remoteDataStore.getCurrentUser(accessToken)
 
     override fun isAlbumSaved(albumEntity: AlbumEntity): Single<Boolean> = dbDataStore.isAlbumSaved(albumEntity)
 

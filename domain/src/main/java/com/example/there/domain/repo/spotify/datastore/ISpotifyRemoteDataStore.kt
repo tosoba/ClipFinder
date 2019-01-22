@@ -6,44 +6,43 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface ISpotifyRemoteDataStore {
-    val accessToken: Single<AccessTokenEntity>
 
-    fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
+    val categories: Observable<List<CategoryEntity>>
 
-    fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>
+    val featuredPlaylists: Observable<List<PlaylistEntity>>
 
-    fun getDailyViralTracks(accessToken: AccessTokenEntity): Observable<List<TopTrackEntity>>
+    val dailyViralTracks: Observable<List<TopTrackEntity>>
 
-    fun searchAll(accessToken: AccessTokenEntity, query: String, offset: Int): Single<SearchAllEntity>
+    val currentUser: Single<UserEntity>
 
-    fun getPlaylistsForCategory(accessToken: AccessTokenEntity, categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
+    fun searchAll(query: String, offset: Int): Single<SearchAllEntity>
 
-    fun getPlaylistTracks(accessToken: AccessTokenEntity, playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>
+    fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<EntityPage<PlaylistEntity>>
 
-    fun getAlbum(accessToken: AccessTokenEntity, albumId: String): Single<AlbumEntity>
+    fun getPlaylistTracks(playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>>
 
-    fun getArtists(accessToken: AccessTokenEntity, artistIds: List<String>): Single<List<ArtistEntity>>
+    fun getAlbum(albumId: String): Single<AlbumEntity>
 
-    fun getSimilarTracks(accessToken: AccessTokenEntity, trackId: String): Observable<List<TrackEntity>>
+    fun getArtists(artistIds: List<String>): Single<List<ArtistEntity>>
 
-    fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>>
+    fun getSimilarTracks(trackId: String): Observable<List<TrackEntity>>
 
-    fun getTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String): Single<List<TrackEntity>>
+    fun getAlbumsFromArtist(artistId: String): Observable<List<AlbumEntity>>
 
-    fun getRelatedArtists(accessToken: AccessTokenEntity, artistId: String): Single<List<ArtistEntity>>
+    fun getTopTracksFromArtist(artistId: String): Single<List<TrackEntity>>
 
-    fun getTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String): Observable<EntityPage<TrackEntity>>
+    fun getRelatedArtists(artistId: String): Single<List<ArtistEntity>>
 
-    fun getNewReleases(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
+    fun getTracksFromAlbum(albumId: String): Observable<EntityPage<TrackEntity>>
 
-    fun getCurrentUsersPlaylists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<PlaylistEntity>>
-    fun getCurrentUsersTopTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
-    fun getCurrentUsersTopArtists(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<ArtistEntity>>
+    fun getNewReleases(offset: Int): Single<EntityPage<AlbumEntity>>
 
-    fun getCurrentUsersSavedTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
-    fun getCurrentUsersSavedAlbums(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
+    fun getCurrentUsersPlaylists(offset: Int): Single<EntityPage<PlaylistEntity>>
+    fun getCurrentUsersTopTracks(offset: Int): Single<EntityPage<TrackEntity>>
 
-    fun getCurrentUser(accessToken: AccessTokenEntity): Single<UserEntity>
+    fun getCurrentUsersTopArtists(offset: Int): Single<EntityPage<ArtistEntity>>
+    fun getCurrentUsersSavedTracks(offset: Int): Single<EntityPage<TrackEntity>>
+    fun getCurrentUsersSavedAlbums(offset: Int): Single<EntityPage<AlbumEntity>>
 
-    fun getAudioFeatures(accessToken: AccessTokenEntity, trackEntity: TrackEntity): Single<AudioFeaturesEntity>
+    fun getAudioFeatures(trackEntity: TrackEntity): Single<AudioFeaturesEntity>
 }

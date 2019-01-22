@@ -2,9 +2,8 @@ package com.example.there.findclips.fragment.spotifyitem.artist
 
 import android.databinding.ObservableField
 import android.util.Log
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.ArtistEntityMapper
@@ -13,14 +12,13 @@ import java.util.*
 import javax.inject.Inject
 
 class ArtistViewModel @Inject constructor(
-        getAccessToken: GetAccessToken,
         private val getAlbumsFromArtist: GetAlbumsFromArtist,
         private val getTopTracksFromArtist: GetTopTracksFromArtist,
         private val getRelatedArtists: GetRelatedArtists,
         private val insertArtist: InsertArtist,
         private val deleteArtist: DeleteArtist,
         private val isArtistSaved: IsArtistSaved
-) : BaseSpotifyViewModel(getAccessToken) {
+) : BaseViewModel() {
 
     private val viewStates: Stack<ArtistViewState> = Stack()
 
@@ -42,31 +40,26 @@ class ArtistViewModel @Inject constructor(
         true
     }
 
-    fun loadArtistData(accessToken: AccessTokenEntity?, artist: Artist) {
+    fun loadArtistData(artist: Artist) {
         if (artist.id == lastArtist?.id) return
 
         viewState.artist.set(artist)
         viewStates.push(ArtistViewState(ObservableField(artist)))
 
-        if (accessToken != null && accessToken.isValid) {
-            accessTokenLiveData.value = accessToken
-            loadData(accessTokenLiveData.value!!, artist = artist)
-        } else {
-            loadAccessToken { loadData(it, artist) }
-        }
+        loadData(artist = artist)
     }
 
-    private fun loadData(accessToken: AccessTokenEntity, artist: Artist) {
+    private fun loadData(artist: Artist) {
         viewState.clearAll()
-        loadAlbumsFromArtist(accessToken, artist.id)
-        loadTopTracksFromArtist(accessToken, artist.id)
-        loadRelatedArtists(accessToken, artist.id)
+        loadAlbumsFromArtist(artist.id)
+        loadTopTracksFromArtist(artist.id)
+        loadRelatedArtists(artist.id)
         loadArtistFavouriteState()
     }
 
-    fun loadAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadAlbumsFromArtist(artistId: String) {
         viewState.albumsLoadingInProgress.set(true)
-        addDisposable(getAlbumsFromArtist.execute(accessToken, artistId)
+        addDisposable(getAlbumsFromArtist.execute(artistId)
                 .doFinally { viewState.albumsLoadingInProgress.set(false) }
                 .subscribe({
                     val toAdd = it.map(AlbumEntityMapper::mapFrom)
@@ -75,9 +68,9 @@ class ArtistViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadTopTracksFromArtist(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadTopTracksFromArtist(artistId: String) {
         viewState.topTracksLoadingInProgress.set(true)
-        addDisposable(getTopTracksFromArtist.execute(accessToken, artistId)
+        addDisposable(getTopTracksFromArtist.execute(artistId)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribe({
                     val toAdd = it.map(TrackEntityMapper::mapFrom)
@@ -86,9 +79,9 @@ class ArtistViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadRelatedArtists(accessToken: AccessTokenEntity, artistId: String) {
+    fun loadRelatedArtists(artistId: String) {
         viewState.relatedArtistsLoadingInProgress.set(true)
-        addDisposable(getRelatedArtists.execute(accessToken, artistId)
+        addDisposable(getRelatedArtists.execute(artistId)
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
                 .subscribe({
                     val toAdd = it.map(ArtistEntityMapper::mapFrom)
@@ -119,12 +112,5 @@ class ArtistViewModel @Inject constructor(
                     viewStates.peek().isSavedAsFavourite.set(it)
                     viewState.isSavedAsFavourite.set(it)
                 }, {}))
-    }
-
-    override fun onError(t: Throwable) {
-        super.onError(t)
-        handleErrors(t, onErrorsResolved = { token ->
-            lastArtist?.let { loadArtistData(token, it) }
-        })
     }
 }

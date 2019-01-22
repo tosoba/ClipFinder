@@ -33,6 +33,7 @@ import android.view.*
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.data.api.SpotifyClient
+import com.example.there.data.preferences.AppPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.BR
 import com.example.there.findclips.FindClipsApp
@@ -75,6 +76,7 @@ import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 class MainActivity :
@@ -514,7 +516,7 @@ class MainActivity :
                 val artistName = it.artistName
                 val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
-                it.id?.let { id -> viewModel.getSimilarTracks(userReadPrivateAccessTokenEntity, id) }
+                it.id?.let { id -> viewModel.getSimilarTracks(id) }
                 sliding_layout?.setDragView(spotify_player_layout)
 
                 Picasso.with(this)
@@ -621,14 +623,12 @@ class MainActivity :
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
 
-    private lateinit var userReadPrivateAccessToken: String
-
-    val userReadPrivateAccessTokenEntity: AccessTokenEntity
-        get() = AccessTokenEntity(userReadPrivateAccessToken, System.currentTimeMillis())
+    @Inject
+    lateinit var appPreferences: AppPreferences
 
     private fun onAuthenticationComplete(accessToken: String) {
-        userReadPrivateAccessToken = accessToken
-        viewModel.getCurrentUser(userReadPrivateAccessTokenEntity)
+        appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
+        viewModel.getCurrentUser()
 
         if (spotifyPlayer == null) {
             val playerConfig = Config(applicationContext, accessToken, SpotifyClient.id)

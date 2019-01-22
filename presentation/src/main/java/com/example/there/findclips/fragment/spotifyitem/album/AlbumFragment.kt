@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentAlbumBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.spotifyitem.artist.ArtistFragment
@@ -31,7 +31,7 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.squareup.picasso.Picasso
 
-class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
+class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
@@ -48,10 +48,8 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                         },
                         null,
                         null,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                viewModel.loadAlbumsArtists(it, album.artists.map { it.id })
-                            }
+                        View.OnClickListener {
+                            viewModel.loadAlbumsArtists(album.artists.map { it.id })
                         }
                 ),
                 RecyclerViewItemView(
@@ -65,11 +63,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
                         },
                         null,
                         null,
-                        View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let {
-                                viewModel.loadTracksFromAlbum(it, album.id)
-                            }
-                        }
+                        View.OnClickListener { viewModel.loadTracksFromAlbum(album.id) }
                 )
         )
     }
@@ -144,7 +138,7 @@ class AlbumFragment : BaseSpotifyVMFragment<AlbumViewModel>(AlbumViewModel::clas
         lifecycle.addObserver(connectivityComponent)
     }
 
-    private fun loadData() = viewModel.loadAlbumData(preferenceHelper.accessToken, album)
+    private fun loadData() = viewModel.loadAlbumData(album)
 
     companion object {
         private const val ARG_ALBUM = "ARG_ALBUM"

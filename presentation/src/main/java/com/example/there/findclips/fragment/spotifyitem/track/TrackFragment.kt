@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.android.databinding.library.baseAdapters.BR
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentTrackBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
@@ -31,13 +31,13 @@ import com.example.there.findclips.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 
-class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
+class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
 
     var track: Track? = null
         set(value) {
             if (field == value || value == null) return
             field = value
-            viewModel.loadDataForTrack(preferenceHelper.accessToken, value)
+            viewModel.loadData(value)
             viewModel.viewState.clearAll()
         }
 
@@ -68,9 +68,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
                         null,
                         null,
                         View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let { token ->
-                                track?.let { viewModel.loadArtists(token, it.artists.map { it.id }) }
-                            }
+                            track?.let { viewModel.loadArtists(it.artists.map { artist -> artist.id }) }
                         }
                 ),
                 RecyclerViewItemView(
@@ -85,9 +83,9 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
                         null,
                         null,
                         View.OnClickListener { _ ->
-                            preferenceHelper.accessToken?.let { token ->
-                                track?.let { viewModel.loadSimilarTracks(token, it) }
-                            }
+
+                            track?.let { viewModel.loadSimilarTracks(it) }
+
                         }
                 ),
                 RadarChartView(
@@ -146,7 +144,7 @@ class TrackFragment : BaseSpotifyVMFragment<TrackViewModel>(TrackViewModel::clas
     }
 
     private fun loadData() {
-        track?.let { viewModel.loadDataForTrack(preferenceHelper.accessToken, it) }
+        track?.let { viewModel.loadData(it) }
     }
 
     companion object {

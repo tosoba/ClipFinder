@@ -58,11 +58,7 @@ class AccountSavedFragment :
                                 },
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() {
-                                        mainActivity?.userReadPrivateAccessTokenEntity?.let {
-                                            viewModel.loadAlbums(it)
-                                        }
-                                    }
+                                    override fun onLoadMore() = viewModel.loadAlbums()
                                 }
                         ),
                         RecyclerViewItemView(
@@ -77,9 +73,7 @@ class AccountSavedFragment :
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() {
-                                        mainActivity?.userReadPrivateAccessTokenEntity?.let {
-                                            viewModel.loadTracks(it)
-                                        }
+                                        viewModel.loadTracks()
                                     }
                                 }
                         )
@@ -95,9 +89,9 @@ class AccountSavedFragment :
         }.root
     }
 
-    private fun loadData() = with(mainActivity!!.userReadPrivateAccessTokenEntity) {
-        viewModel.loadTracks(this)
-        viewModel.loadAlbums(this)
+    private fun loadData()  {
+        viewModel.loadTracks()
+        viewModel.loadAlbums()
     }
 
     private val loginCallback: Observable.OnPropertyChangedCallback by lazy {

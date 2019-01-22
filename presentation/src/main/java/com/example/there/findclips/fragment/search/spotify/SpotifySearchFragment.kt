@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyAlbumsFragment
@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 
 class SpotifySearchFragment :
-        BaseSpotifyVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
+        BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
         MainSearchFragment,
         Injectable {
 
@@ -64,9 +64,7 @@ class SpotifySearchFragment :
     }
 
     private val loadMore: () -> Unit = {
-        preferenceHelper.accessToken?.let {
-            viewModel.loadData(it, query)
-        }
+        viewModel.searchAll(query)
     }
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
@@ -160,8 +158,7 @@ class SpotifySearchFragment :
         if (it.containsKey(ARG_QUERY)) query = it.getString(ARG_QUERY)!!
     }
 
-
-    private fun loadData() = viewModel.searchAll(preferenceHelper.accessToken, query)
+    private fun loadData() = viewModel.searchAll(query)
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

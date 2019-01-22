@@ -2,7 +2,6 @@ package com.example.there.findclips.fragment.account.playlists
 
 import android.arch.lifecycle.MutableLiveData
 import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper
@@ -19,10 +18,10 @@ class AccountPlaylistsViewModel @Inject constructor(
     private var currentOffset = 0
     private var totalItems = 0
 
-    fun loadPlaylists(accessToken: AccessTokenEntity) {
+    fun loadPlaylists() {
         if (canLoadPlaylists) {
             viewState.playlistsLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersPlaylists.execute(accessToken, currentOffset)
+            addDisposable(getCurrentUsersPlaylists.execute(currentOffset)
                     .doFinally { viewState.playlistsLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.playlists.addAll(it.items.map(PlaylistEntityMapper::mapFrom))

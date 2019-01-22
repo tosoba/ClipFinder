@@ -58,11 +58,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 },
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() {
-                                        mainActivity?.userReadPrivateAccessTokenEntity?.let {
-                                            viewModel.loadArtists(it)
-                                        }
-                                    }
+                                    override fun onLoadMore() = viewModel.loadArtists()
                                 }
                         ),
                         RecyclerViewItemView(
@@ -76,11 +72,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 },
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() {
-                                        mainActivity?.userReadPrivateAccessTokenEntity?.let {
-                                            viewModel.loadTracks(it)
-                                        }
-                                    }
+                                    override fun onLoadMore() = viewModel.loadTracks()
                                 }
                         )
                 )
@@ -104,9 +96,9 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
         }
     }
 
-    private fun loadData() = with(mainActivity!!.userReadPrivateAccessTokenEntity) {
-        viewModel.loadTracks(this)
-        viewModel.loadArtists(this)
+    private fun loadData() {
+        viewModel.loadTracks()
+        viewModel.loadArtists()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

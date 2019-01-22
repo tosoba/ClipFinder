@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentPlaylistBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
@@ -20,7 +20,7 @@ import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.util.ext.*
 import com.squareup.picasso.Picasso
 
-class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
+class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 
@@ -107,7 +107,7 @@ class PlaylistFragment : BaseSpotifyVMFragment<PlaylistViewModel>(PlaylistViewMo
         })
     }
 
-    private fun loadData() = viewModel.loadTracks(preferenceHelper.accessToken, playlist)
+    private fun loadData() = viewModel.loadTracks( playlist)
 
     companion object {
         private const val ARG_PLAYLIST = "ARG_PLAYLIST"

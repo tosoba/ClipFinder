@@ -1,9 +1,8 @@
 package com.example.there.findclips.fragment.spotifyitem.album
 
 import android.util.Log
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseSpotifyViewModel
+import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.ArtistEntityMapper
@@ -11,44 +10,38 @@ import com.example.there.findclips.model.mapper.TrackEntityMapper
 import javax.inject.Inject
 
 class AlbumViewModel @Inject constructor(
-        getAccessToken: GetAccessToken,
         private val getArtists: GetArtists,
         private val getTracksFromAlbum: GetTracksFromAlbum,
         private val insertAlbum: InsertAlbum,
         private val deleteAlbum: DeleteAlbum,
         private val isAlbumSaved: IsAlbumSaved
-) : BaseSpotifyViewModel(getAccessToken) {
+) : BaseViewModel() {
 
     val viewState: AlbumViewState = AlbumViewState()
 
     private var lastAlbum: Album? = null
 
-    fun loadAlbumData(accessToken: AccessTokenEntity?, album: Album) {
+    fun loadAlbumData(album: Album) {
         lastAlbum = album
-        if (accessToken != null && accessToken.isValid) {
-            accessTokenLiveData.value = accessToken
-            loadData(accessTokenLiveData.value!!, album)
-        } else {
-            loadAccessToken { loadData(it, album) }
-        }
+        loadData(album)
     }
 
-    private fun loadData(accessToken: AccessTokenEntity, album: Album) {
-        loadAlbumsArtists(accessToken, artistIds = album.artists.map { it.id })
-        loadTracksFromAlbum(accessToken, albumId = album.id)
+    private fun loadData(album: Album) {
+        loadAlbumsArtists(artistIds = album.artists.map { it.id })
+        loadTracksFromAlbum(albumId = album.id)
         loadAlbumFavouriteState(album)
     }
 
-    fun loadAlbumsArtists(accessToken: AccessTokenEntity, artistIds: List<String>) {
+    fun loadAlbumsArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
-        addDisposable(getArtists.execute(accessToken, artistIds)
+        addDisposable(getArtists.execute(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
                 .subscribe({ viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom)) }, ::onError))
     }
 
-    fun loadTracksFromAlbum(accessToken: AccessTokenEntity, albumId: String) {
+    fun loadTracksFromAlbum(albumId: String) {
         viewState.tracksLoadingInProgress.set(true)
-        addDisposable(getTracksFromAlbum.execute(accessToken, albumId)
+        addDisposable(getTracksFromAlbum.execute(albumId)
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
                 .subscribe({ viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom)) }, ::onError))
     }
@@ -67,11 +60,4 @@ class AlbumViewModel @Inject constructor(
             album: Album
     ) = addDisposable(isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
             .subscribe({ viewState.isSavedAsFavourite.set(it) }, {}))
-
-    override fun onError(t: Throwable) {
-        super.onError(t)
-        handleErrors(t, onErrorsResolved = { token ->
-            lastAlbum?.let { loadAlbumData(token, it) }
-        })
-    }
 }
