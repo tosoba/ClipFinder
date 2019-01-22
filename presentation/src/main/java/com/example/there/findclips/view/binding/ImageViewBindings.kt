@@ -21,10 +21,10 @@ fun bindImageUrl(view: ImageView, url: String?) {
 }
 
 @BindingAdapter("imageSrc")
-fun bindImageSrc(view: ImageView, src: ImageViewSrc) = with(src) {
-    if (iconUrl != null) {
+fun bindImageSrc(view: ImageView, src: ImageViewSrc?) = src?.let {
+    if (it.iconUrl != null) {
         Glide.with(view.context)
-                .load(iconUrl)
+                .load(it.iconUrl)
                 .apply(RequestOptions()
                         .fitCenter()
                         .placeholder(src.loadingPlaceholder)

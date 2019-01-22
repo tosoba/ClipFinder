@@ -781,7 +781,9 @@ class MainActivity :
                 onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener,
                 onPreviousBtnClickListener = onPreviousBtnClickListener,
                 onNextBtnClickListener = onNextBtnClickListener,
-                onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
+                onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener,
+                onYoutubePlayerCloseBtnClickListener = onYoutubePlayerCloseBtnClickListener,
+                onYoutubePlayerPlayPauseBtnClickListener = onYoutubePlayerPlayPauseBtnClickListener
         )
     }
 
@@ -900,7 +902,10 @@ class MainActivity :
 
     private fun initYouTubePlayerView() = with(youtube_player_view) {
         lifecycle.addObserver(this)
-        initialize({ this@MainActivity.youTubePlayer = it }, true)
+        initialize({
+            youTubePlayer = it
+            youTubePlayer?.addListener(singleVideoYoutubePlayerStateChangeListener)
+        }, true)
         playerUIController.showFullscreenButton(false)
         playerUIController.showVideoTitle(true)
     }
@@ -953,6 +958,8 @@ class MainActivity :
     private var videosToPlay: List<Video>? = null
     private var currentVideoIndex = 0
 
+    private var youtubePlaybackInProgress: Boolean = false
+
     private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
             when (state) {
@@ -965,18 +972,28 @@ class MainActivity :
                                 ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
                     }
                 }
+                else -> return
+            }
+        }
+    }
 
-                PlayerConstants.PlayerState.PAUSED -> {
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
+    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+        override fun onStateChange(state: PlayerConstants.PlayerState) {
+            when (state) {
+                PlayerConstants.PlayerState.PLAYING -> {
+                    youtubePlaybackInProgress = true
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
                 }
 
-                PlayerConstants.PlayerState.VIDEO_CUED -> {
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
+                PlayerConstants.PlayerState.PAUSED -> {
+                    youtubePlaybackInProgress = false
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
                 }
 
                 else -> return
             }
         }
+
     }
 
     fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
@@ -1072,6 +1089,19 @@ class MainActivity :
         }
     }
 
+    private val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
+        if (youTubePlayer == null || (lastPlayedVideo == null && lastVideoPlaylist == null)) return@OnClickListener
+        if (youtubePlaybackInProgress) youTubePlayer?.pause()
+        else youTubePlayer?.play()
+    }
+
+    private val onYoutubePlayerCloseBtnClickListener: View.OnClickListener = View.OnClickListener {
+        sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
+        youTubePlayer?.pause()
+        lastPlayedVideo = null
+        lastVideoPlaylist = null
+    }
+
     private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
         ImageButton(this).apply {
             setImageResource(R.drawable.close)
@@ -1079,11 +1109,7 @@ class MainActivity :
                 setMargins(10, 10, 10, 10)
                 addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             }
-            setOnClickListener {
-                sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-                youTubePlayer?.pause()
-                lastPlayedVideo = null
-            }
+            setOnClickListener(onYoutubePlayerCloseBtnClickListener)
             setBackgroundColor(Color.TRANSPARENT)
         }
     }
