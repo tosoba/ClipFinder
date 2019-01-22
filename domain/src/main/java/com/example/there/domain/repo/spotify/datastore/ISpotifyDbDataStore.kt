@@ -6,11 +6,11 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface ISpotifyDbDataStore {
-    fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
-    fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
-    fun getFavouriteCategories(): Flowable<List<CategoryEntity>>
-    fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>>
-    fun getFavouriteTracks(): Flowable<List<TrackEntity>>
+    val favouriteAlbums: Flowable<List<AlbumEntity>>
+    val favouriteArtists: Flowable<List<ArtistEntity>>
+    val favouriteCategories: Flowable<List<CategoryEntity>>
+    val favouritePlaylists: Flowable<List<PlaylistEntity>>
+    val favouriteTracks: Flowable<List<TrackEntity>>
 
     fun insertAlbum(albumEntity: AlbumEntity): Completable
     fun insertArtist(artistEntity: ArtistEntity): Completable

@@ -18,7 +18,7 @@ class GetFavouriteArtists(
         private val repository: ISpotifyRepository
 ) : FlowableUseCase<List<ArtistEntity>>(transformer) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<ArtistEntity>> = repository.getFavouriteArtists()
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<ArtistEntity>> = repository.favouriteArtists
 }
 
 class InsertArtist(

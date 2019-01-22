@@ -1,18 +1,18 @@
 package com.example.there.findclips.model.entity
 
-import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class Artist(
         val id: String,
         val name: String,
         val popularity: Int,
         val iconUrl: String
-) : AutoParcelable {
+) : Parcelable {
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.artist_placeholder, R.drawable.error_placeholder)
 
@@ -31,8 +31,8 @@ data class Artist(
     }
 }
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class SimpleArtist(
         val id: String,
         val name: String
-) : AutoParcelable
+) : Parcelable

@@ -79,7 +79,7 @@ class ConnectivityComponent(
     private fun showNoConnectionSnackbar() {
         snackbar = Snackbar
                 .make(parentView, "No internet connection.", Snackbar.LENGTH_LONG)
-                .setAction("SETTINGS") { _ ->
+                .setAction("SETTINGS") {
                     val settingsIntent = Intent(Settings.ACTION_SETTINGS)
                     activity.startActivity(settingsIntent)
                 }

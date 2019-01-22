@@ -1,11 +1,11 @@
 package com.example.there.findclips.model.entity
 
-import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.example.there.findclips.util.ObservableSortedList
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
-data class VideoPlaylist(val id: Long? = null, val name: String): AutoParcelable {
+@Parcelize
+data class VideoPlaylist(val id: Long? = null, val name: String): Parcelable {
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<VideoPlaylist> = object : ObservableSortedList.Callback<VideoPlaylist> {
             override fun compare(o1: VideoPlaylist, o2: VideoPlaylist): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())

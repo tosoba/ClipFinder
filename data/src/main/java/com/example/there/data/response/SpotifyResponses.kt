@@ -60,9 +60,7 @@ class TracksResult(
         @SerializedName("total") val totalItems: Int
 )
 
-class SavedTrack(
-        val track: TrackData
-)
+class SavedTrack(val track: TrackData)
 
 class SavedTracksResult(
         @SerializedName("items") val savedTracks: List<SavedTrack>,
@@ -70,9 +68,7 @@ class SavedTracksResult(
         @SerializedName("total") val totalItems: Int
 )
 
-class SavedAlbum(
-        val album: AlbumData
-)
+class SavedAlbum(val album: AlbumData)
 
 class SavedAlbumsResult(
         @SerializedName("items") val savedAlbums: List<SavedAlbum>,

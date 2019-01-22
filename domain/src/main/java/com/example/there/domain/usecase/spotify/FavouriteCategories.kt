@@ -18,7 +18,7 @@ class GetFavouriteCategories(
         private val repository: ISpotifyRepository
 ) : FlowableUseCase<List<CategoryEntity>>(transformer) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<CategoryEntity>> = repository.getFavouriteCategories()
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<CategoryEntity>> = repository.favouriteCategories
 }
 
 class InsertCategory(

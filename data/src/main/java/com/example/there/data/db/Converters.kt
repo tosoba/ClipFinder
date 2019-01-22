@@ -15,7 +15,9 @@ class SimplifiedAlbumDataConverter {
     fun toString(obj: SimplifiedAlbumData): String = Gson().toJson(obj)
 
     @TypeConverter
-    fun toObject(string: String): SimplifiedAlbumData = Gson().fromJson(string, object : TypeToken<SimplifiedAlbumData>() {}.type)
+    fun toObject(
+            string: String
+    ): SimplifiedAlbumData = Gson().fromJson(string, object : TypeToken<SimplifiedAlbumData>() {}.type)
 }
 
 class SimplifiedArtistDataConverter {
@@ -26,8 +28,12 @@ class SimplifiedArtistDataConverter {
     }
 
     @TypeConverter
-    fun stringToList(string: String): List<SimplifiedArtistData> =
-            Gson().fromJson<ArrayList<SimplifiedArtistData>>(string, object : TypeToken<ArrayList<SimplifiedArtistData>>() {}.type)
+    fun stringToList(
+            string: String
+    ): List<SimplifiedArtistData> = Gson().fromJson<ArrayList<SimplifiedArtistData>>(
+            string,
+            object : TypeToken<ArrayList<SimplifiedArtistData>>() {}.type
+    )
 }
 
 class IconDataConverter {
@@ -38,8 +44,12 @@ class IconDataConverter {
     }
 
     @TypeConverter
-    fun stringToList(string: String): List<IconData> =
-            Gson().fromJson<ArrayList<IconData>>(string, object : TypeToken<ArrayList<IconData>>() {}.type)
+    fun stringToList(
+            string: String
+    ): List<IconData> = Gson().fromJson<ArrayList<IconData>>(
+            string,
+            object : TypeToken<ArrayList<IconData>>() {}.type
+    )
 }
 
 class OwnerDataConverter {
@@ -47,5 +57,7 @@ class OwnerDataConverter {
     fun toString(obj: OwnerData): String = Gson().toJson(obj)
 
     @TypeConverter
-    fun toObject(string: String): OwnerData = Gson().fromJson(string, object : TypeToken<OwnerData>() {}.type)
+    fun toObject(
+            string: String
+    ): OwnerData = Gson().fromJson(string, object : TypeToken<OwnerData>() {}.type)
 }

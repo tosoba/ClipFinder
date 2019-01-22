@@ -20,7 +20,7 @@ class GetFavouriteVideoPlaylists(
 
     override fun createFlowable(
             data: Map<String, Any?>?
-    ): Flowable<List<VideoPlaylistEntity>> = repository.getFavouritePlaylists()
+    ): Flowable<List<VideoPlaylistEntity>> = repository.favouritePlaylists
 }
 
 class InsertVideoPlaylist(

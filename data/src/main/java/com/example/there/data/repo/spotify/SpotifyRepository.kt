@@ -18,9 +18,7 @@ class SpotifyRepository @Inject constructor(
         private val dbDataStore: ISpotifyDbDataStore
 ) : ISpotifyRepository {
 
-    override fun getAccessToken(
-            clientId: String, clientSecret: String
-    ): Single<AccessTokenEntity> = remoteDataStore.getAccessToken(clientId, clientSecret)
+    override val accessToken: Single<AccessTokenEntity> = remoteDataStore.accessToken
 
     override fun getCategories(
             accessToken: AccessTokenEntity
@@ -68,8 +66,10 @@ class SpotifyRepository @Inject constructor(
             trackId: String
     ): Observable<List<TrackEntity>> = remoteDataStore.getSimilarTracks(accessToken, trackId)
 
-    override fun getAlbumsFromArtist(accessToken: AccessTokenEntity, artistId: String): Observable<List<AlbumEntity>> =
-            remoteDataStore.getAlbumsFromArtist(accessToken, artistId)
+    override fun getAlbumsFromArtist(
+            accessToken: AccessTokenEntity,
+            artistId: String
+    ): Observable<List<AlbumEntity>> = remoteDataStore.getAlbumsFromArtist(accessToken, artistId)
 
     override fun getTopTracksFromArtist(
             accessToken: AccessTokenEntity,
@@ -121,15 +121,20 @@ class SpotifyRepository @Inject constructor(
             trackEntity: TrackEntity
     ): Single<AudioFeaturesEntity> = remoteDataStore.getAudioFeatures(accessToken, trackEntity)
 
-    override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = dbDataStore.getFavouriteAlbums()
+    override val favouriteAlbums: Flowable<List<AlbumEntity>>
+        get() = dbDataStore.favouriteAlbums
 
-    override fun getFavouriteArtists(): Flowable<List<ArtistEntity>> = dbDataStore.getFavouriteArtists()
+    override val favouriteArtists: Flowable<List<ArtistEntity>>
+        get() = dbDataStore.favouriteArtists
 
-    override fun getFavouriteCategories(): Flowable<List<CategoryEntity>> = dbDataStore.getFavouriteCategories()
+    override val favouriteCategories: Flowable<List<CategoryEntity>>
+        get() = dbDataStore.favouriteCategories
 
-    override fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>> = dbDataStore.getFavouritePlaylists()
+    override val favouritePlaylists: Flowable<List<PlaylistEntity>>
+        get() = dbDataStore.favouritePlaylists
 
-    override fun getFavouriteTracks(): Flowable<List<TrackEntity>> = dbDataStore.getFavouriteTracks()
+    override val favouriteTracks: Flowable<List<TrackEntity>>
+        get() = dbDataStore.favouriteTracks
 
     override fun insertAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.insertAlbum(albumEntity)
 

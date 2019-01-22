@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.domain.usecase.spotify.GetAccessToken
-import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.util.ext.messageOrDefault
 import retrofit2.HttpException
 
@@ -19,7 +18,7 @@ open class BaseSpotifyViewModel(
         if (!accessTokenLoading) {
             clearDisposables()
             accessTokenLoading = true
-            addDisposable(getAccessToken.execute(SpotifyClient.id, SpotifyClient.secret)
+            addDisposable(getAccessToken.execute()
                     .doFinally { accessTokenLoading = false }
                     .subscribe({
                         accessTokenLiveData.value = it

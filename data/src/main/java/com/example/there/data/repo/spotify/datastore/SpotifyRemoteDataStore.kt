@@ -1,12 +1,13 @@
 package com.example.there.data.repo.spotify.datastore
 
 import android.util.Base64
+import com.example.there.data.api.SpotifyClient
 import com.example.there.data.api.spotify.SpotifyAccountsApi
 import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.data.api.spotify.SpotifyChartsApi
 import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.mapper.spotify.*
-import com.example.there.data.preferences.PreferencesHelper
+import com.example.there.data.preferences.AppPreferences
 import com.example.there.data.response.TracksOnlyResponse
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
@@ -23,14 +24,12 @@ class SpotifyRemoteDataStore @Inject constructor(
         private val api: SpotifyApi,
         private val accountsApi: SpotifyAccountsApi,
         private val chartsApi: SpotifyChartsApi,
-        private val preferencesHelper: PreferencesHelper
+        private val appPreferences: AppPreferences
 ) : ISpotifyRemoteDataStore {
 
-    override fun getAccessToken(
-            clientId: String,
-            clientSecret: String
-    ): Single<AccessTokenEntity> = accountsApi.getAccessToken(authorization = getClientDataHeader(clientId, clientSecret))
-            .map(AccessTokenMapper::mapFrom)
+    override val accessToken: Single<AccessTokenEntity>
+        get() = accountsApi.getAccessToken(authorization = clientDataHeader)
+                .map(AccessTokenMapper::mapFrom)
 
     override fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>> {
         val offsetSubject = BehaviorSubject.createDefault(0)
@@ -38,8 +37,8 @@ class SpotifyRemoteDataStore @Inject constructor(
             api.getCategories(
                     authorization = getAccessTokenHeader(accessToken.token),
                     offset = offset,
-                    country = preferencesHelper.country,
-                    locale = preferencesHelper.language
+                    country = appPreferences.country,
+                    locale = appPreferences.language
             )
         }.doOnNext {
             if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
@@ -55,8 +54,8 @@ class SpotifyRemoteDataStore @Inject constructor(
             api.getFeaturedPlaylists(
                     authorization = getAccessTokenHeader(accessToken.token),
                     offset = offset,
-                    country = preferencesHelper.country,
-                    locale = preferencesHelper.language
+                    country = appPreferences.country,
+                    locale = appPreferences.language
             )
         }.doOnNext {
             if (it.result.offset < it.result.totalItems - SpotifyApi.DEFAULT_LIMIT)
@@ -122,7 +121,7 @@ class SpotifyRemoteDataStore @Inject constructor(
             authorization = getAccessTokenHeader(accessToken.token),
             categoryId = categoryId,
             offset = offset,
-            country = preferencesHelper.country
+            country = appPreferences.country
     ).map {
         EntityPage(
                 items = it.result.playlists.map(PlaylistMapper::mapFrom),
@@ -205,7 +204,7 @@ class SpotifyRemoteDataStore @Inject constructor(
     ): Single<List<TrackEntity>> = api.getTopTracksFromArtist(
             authorization = getAccessTokenHeader(accessToken.token),
             artistId = artistId,
-            country = preferencesHelper.country
+            country = appPreferences.country
     ).map { it.tracks.map(TrackMapper::mapFrom) }
 
     override fun getRelatedArtists(
@@ -357,9 +356,10 @@ class SpotifyRemoteDataStore @Inject constructor(
     companion object {
         fun getAccessTokenHeader(accessToken: String): String = "Bearer $accessToken"
 
-        fun getClientDataHeader(clientId: String, clientSecret: String): String {
-            val encoded = Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)
-            return "Basic $encoded"
-        }
+        val clientDataHeader: String
+            get() {
+                val encoded = Base64.encodeToString("${SpotifyClient.id}:${SpotifyClient.secret}".toByteArray(), Base64.NO_WRAP)
+                return "Basic $encoded"
+            }
     }
 }

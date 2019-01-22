@@ -1,17 +1,17 @@
 package com.example.there.findclips.model.entity
 
-import android.annotation.SuppressLint
 import android.databinding.ObservableField
+import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.imageview.ImageViewSrc
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 import org.joda.time.Duration
 import org.joda.time.Instant
 import java.math.BigInteger
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class Video(
         val id: String,
         val channelId: String,
@@ -25,7 +25,7 @@ data class Video(
         var playlistId: Long? = null,
         var query: String? = null,
         var relatedVideoId: String? = null
-) : AutoParcelable {
+) : Parcelable {
 
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)

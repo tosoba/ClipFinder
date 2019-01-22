@@ -13,5 +13,5 @@ class GetVideoPlaylistsWithThumbnails(
 
     override fun createFlowable(
             data: Map<String, Any?>?
-    ): Flowable<VideoPlaylistThumbnailsEntity> = repository.getVideoPlaylistsWithThumbnails()
+    ): Flowable<VideoPlaylistThumbnailsEntity> = repository.videoPlaylistsWithThumbnails
 }

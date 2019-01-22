@@ -1,17 +1,17 @@
 package com.example.there.findclips.model.entity
 
-import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class Category(
         val id: String,
         val name: String,
         val iconUrl: String
-) : AutoParcelable {
+) : Parcelable {
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.category_placeholder, R.drawable.error_placeholder)
 

@@ -32,11 +32,11 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.there.data.api.SpotifyClient
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.BR
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
-import com.example.there.findclips.SpotifyClient
 import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed

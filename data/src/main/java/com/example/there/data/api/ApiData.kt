@@ -1,7 +1,7 @@
-package com.example.there.findclips
+package com.example.there.data.api
 
-object Keys {
-    const val youtubeApi = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
+object YoutubeClient {
+    const val key = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
 }
 
 object SpotifyClient {

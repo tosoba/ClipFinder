@@ -71,7 +71,8 @@ class VideosRepository @Inject constructor(
                         .andThen(Single.just(videos))
             }
 
-    override fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>> = dbDataStore.getFavouritePlaylists()
+    override val favouritePlaylists: Flowable<List<VideoPlaylistEntity>>
+        get() = dbDataStore.getFavouritePlaylists()
 
     override fun getVideosFromPlaylist(
             playlistId: Long
@@ -86,7 +87,8 @@ class VideosRepository @Inject constructor(
             playlistEntity: VideoPlaylistEntity
     ): Completable = dbDataStore.addVideoToPlaylist(videoEntity, playlistEntity)
 
-    override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = dbDataStore.getVideoPlaylistsWithThumbnails()
+    override val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
+        get() = dbDataStore.videoPlaylistsWithThumbnails
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = dbDataStore.deleteVideo(videoEntity)
 

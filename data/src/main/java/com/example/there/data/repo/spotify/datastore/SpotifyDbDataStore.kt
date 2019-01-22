@@ -20,20 +20,20 @@ class SpotifyDbDataStore @Inject constructor(
         private val trackDao: TrackDao
 ) : ISpotifyDbDataStore {
 
-    override fun getFavouriteAlbums(): Flowable<List<AlbumEntity>> = albumDao.findAll()
-            .map { it.map(AlbumMapper::mapFrom) }
+    override val favouriteAlbums: Flowable<List<AlbumEntity>>
+        get() = albumDao.findAll().map { it.map(AlbumMapper::mapFrom) }
 
-    override fun getFavouriteArtists(): Flowable<List<ArtistEntity>> = artistDao.findAll()
-            .map { it.map(ArtistMapper::mapFrom) }
+    override val favouriteArtists: Flowable<List<ArtistEntity>>
+        get() = artistDao.findAll().map { it.map(ArtistMapper::mapFrom) }
 
-    override fun getFavouriteCategories(): Flowable<List<CategoryEntity>> = categoryDao.findAll()
-            .map { it.map(CategoryMapper::mapFrom) }
+    override val favouriteCategories: Flowable<List<CategoryEntity>>
+        get() = categoryDao.findAll().map { it.map(CategoryMapper::mapFrom) }
 
-    override fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>> = spotifyPlaylistDao.findAll()
-            .map { it.map(PlaylistMapper::mapFrom) }
+    override val favouritePlaylists: Flowable<List<PlaylistEntity>>
+        get() = spotifyPlaylistDao.findAll().map { it.map(PlaylistMapper::mapFrom) }
 
-    override fun getFavouriteTracks(): Flowable<List<TrackEntity>> = trackDao.findAll()
-            .map { it.map(TrackMapper::mapFrom) }
+    override val favouriteTracks: Flowable<List<TrackEntity>>
+        get() = trackDao.findAll().map { it.map(TrackMapper::mapFrom) }
 
     override fun insertAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
         albumDao.insert(AlbumMapper.mapBack(albumEntity))

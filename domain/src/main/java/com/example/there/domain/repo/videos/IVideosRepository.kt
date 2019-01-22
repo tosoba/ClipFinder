@@ -16,12 +16,12 @@ interface IVideosRepository {
 
     fun getChannelsThumbnailUrls(videos: List<VideoEntity>): Single<List<Pair<Int, String>>>
 
-    fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>>
+    val favouritePlaylists: Flowable<List<VideoPlaylistEntity>>
     fun getVideosFromPlaylist(playlistId: Long): Flowable<List<VideoEntity>>
     fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long>
     fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
 
-    fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity>
+    val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
 
     fun deleteVideo(videoEntity: VideoEntity): Completable
     fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable

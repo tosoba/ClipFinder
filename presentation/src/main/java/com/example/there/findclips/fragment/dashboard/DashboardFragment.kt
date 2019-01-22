@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
-import com.example.there.data.preferences.PreferencesHelper
+import com.example.there.data.preferences.AppPreferences
 import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyVMFragment
@@ -189,20 +189,20 @@ class DashboardFragment : BaseSpotifyVMFragment<DashboardViewModel>(DashboardVie
     private val disposablesComponent = DisposablesComponent()
 
     @Inject
-    lateinit var preferencesHelper: PreferencesHelper
+    lateinit var appPreferences: AppPreferences
 
     private fun observePreferences() {
-        fun reloadDataOnPreferencesChange() = preferencesHelper.accessToken?.let {
+        fun reloadDataOnPreferencesChange() = appPreferences.accessToken?.let {
             viewModel.loadCategories(it, true)
             viewModel.loadFeaturedPlaylists(it, true)
         }
 
         disposablesComponent.addAll(
-                preferencesHelper.countryObservable
+                appPreferences.countryObservable
                         .skip(1)
                         .distinctUntilChanged()
                         .subscribe { reloadDataOnPreferencesChange() },
-                preferencesHelper.languageObservable
+                appPreferences.languageObservable
                         .skip(1)
                         .distinctUntilChanged()
                         .subscribe { reloadDataOnPreferencesChange() }

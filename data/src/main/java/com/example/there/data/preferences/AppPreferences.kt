@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class PreferencesHelper @Inject constructor(context: Context) {
+open class AppPreferences @Inject constructor(context: Context) {
 
     private val preferences: SharedPreferences
     private val rxPreferences: RxSharedPreferences

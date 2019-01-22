@@ -1,5 +1,6 @@
 package com.example.there.data.api.youtube
 
+import com.example.there.data.api.YoutubeClient
 import com.example.there.data.response.ChannelsResponse
 import com.example.there.data.response.VideosResponse
 import com.example.there.data.response.VideosSearchResponse
@@ -13,7 +14,7 @@ interface YoutubeApi {
             @Query("part") part: String = "snippet,contentDetails,statistics",
             @Query("id") ids: String,
             @Query("maxResults") maxResults: String = "50",
-            @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
+            @Query("key") key: String = YoutubeClient.key
     ): Single<VideosResponse>
 
     @GET("search")
@@ -23,7 +24,7 @@ interface YoutubeApi {
             @Query("type") type: String = "video",
             @Query("maxResults") maxResults: String = "50",
             @Query("pageToken") pageToken: String? = null,
-            @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
+            @Query("key") key: String = YoutubeClient.key
     ): Single<VideosSearchResponse>
 
     @GET("search")
@@ -33,7 +34,7 @@ interface YoutubeApi {
             @Query("type") type: String = "video",
             @Query("maxResults") maxResults: String = "50",
             @Query("pageToken") pageToken: String? = null,
-            @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
+            @Query("key") key: String = YoutubeClient.key
     ): Single<VideosSearchResponse>
 
     @GET("channels")
@@ -41,6 +42,6 @@ interface YoutubeApi {
             @Query("part") part: String = "snippet",
             @Query("id") ids: String,
             @Query("maxResults") maxResults: String = "50",
-            @Query("key") key: String = "AIzaSyDunN4g06F7QjOJfEkQPJ8Ahhp1bvBY-Bs"
+            @Query("key") key: String = YoutubeClient.key
     ): Single<ChannelsResponse>
 }

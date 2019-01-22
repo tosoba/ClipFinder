@@ -39,7 +39,7 @@ class AccountPlaylistsFragment :
 
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.loadedFlag.observe(this, Observer { _ ->
+        viewModel.loadedFlag.observe(this, Observer {
             playlistsFragment.updateItems(viewModel.viewState.playlists, false)
             if (playlistsFragment.loadMore == null) playlistsFragment.loadMore = ::loadData
         })

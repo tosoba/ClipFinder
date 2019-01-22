@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface ISpotifyRemoteDataStore {
-    fun getAccessToken(clientId: String, clientSecret: String): Single<AccessTokenEntity>
+    val accessToken: Single<AccessTokenEntity>
 
     fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
 

@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface ISpotifyRepository {
-    fun getAccessToken(clientId: String, clientSecret: String): Single<AccessTokenEntity>
+    val accessToken: Single<AccessTokenEntity>
 
     fun getCategories(accessToken: AccessTokenEntity): Observable<List<CategoryEntity>>
     fun getFeaturedPlaylists(accessToken: AccessTokenEntity): Observable<List<PlaylistEntity>>
@@ -34,11 +34,11 @@ interface ISpotifyRepository {
     fun getCurrentUsersSavedTracks(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<TrackEntity>>
     fun getCurrentUsersSavedAlbums(accessToken: AccessTokenEntity, offset: Int): Single<EntityPage<AlbumEntity>>
 
-    fun getFavouriteAlbums(): Flowable<List<AlbumEntity>>
-    fun getFavouriteArtists(): Flowable<List<ArtistEntity>>
-    fun getFavouriteCategories(): Flowable<List<CategoryEntity>>
-    fun getFavouritePlaylists(): Flowable<List<PlaylistEntity>>
-    fun getFavouriteTracks(): Flowable<List<TrackEntity>>
+    val favouriteAlbums: Flowable<List<AlbumEntity>>
+    val favouriteArtists: Flowable<List<ArtistEntity>>
+    val favouriteCategories: Flowable<List<CategoryEntity>>
+    val favouritePlaylists: Flowable<List<PlaylistEntity>>
+    val favouriteTracks: Flowable<List<TrackEntity>>
     fun insertAlbum(albumEntity: AlbumEntity): Completable
     fun insertArtist(artistEntity: ArtistEntity): Completable
     fun insertCategory(categoryEntity: CategoryEntity): Completable

@@ -25,7 +25,7 @@ interface IVideosDbDataStore {
     fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long>
     fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable
 
-    fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity>
+    val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
 
     fun deleteVideo(videoEntity: VideoEntity): Completable
     fun deleteVideoPlaylist(videoPlaylistEntity: VideoPlaylistEntity): Completable

@@ -18,7 +18,7 @@ class GetFavouriteTracks(
         private val repository: ISpotifyRepository
 ) : FlowableUseCase<List<TrackEntity>>(transformer) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<TrackEntity>> = repository.getFavouriteTracks()
+    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<TrackEntity>> = repository.favouriteTracks
 }
 
 class InsertTrack(

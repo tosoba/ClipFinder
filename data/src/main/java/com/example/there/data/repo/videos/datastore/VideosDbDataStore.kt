@@ -108,19 +108,20 @@ class VideosDbDataStore @Inject constructor(
         videoDao.insert(VideoDbMapper.mapBack(videoEntity))
     }
 
-    override fun getVideoPlaylistsWithThumbnails(): Flowable<VideoPlaylistThumbnailsEntity> = videoPlaylistDao.findAll()
-            .flatMapIterable { it }
-            .filter { it.id != null }
-            .flatMap { playlist ->
-                videoDao.find5VideosFromPlaylist(playlist.id!!)
-                        .map { videos ->
-                            VideoPlaylistThumbnailsEntity(
-                                    VideoPlaylistMapper.mapFrom(playlist),
-                                    videos.map { it.thumbnailUrl }
-                            )
-                        }
-            }
-            .filter { it.thumbnailUrls.isNotEmpty() }
+    override val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
+        get() = videoPlaylistDao.findAll()
+                .flatMapIterable { it }
+                .filter { it.id != null }
+                .flatMap { playlist ->
+                    videoDao.find5VideosFromPlaylist(playlist.id!!)
+                            .map { videos ->
+                                VideoPlaylistThumbnailsEntity(
+                                        VideoPlaylistMapper.mapFrom(playlist),
+                                        videos.map { it.thumbnailUrl }
+                                )
+                            }
+                }
+                .filter { it.thumbnailUrls.isNotEmpty() }
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromCallable {
         videoDao.delete(VideoDbMapper.mapBack(videoEntity))

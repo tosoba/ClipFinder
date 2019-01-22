@@ -1,12 +1,12 @@
 package com.example.there.findclips.model.entity
 
-import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class Track(
         val id: String,
         val name: String,
@@ -18,7 +18,7 @@ data class Track(
         val trackNumber: Int,
         val uri: String,
         val durationMs: Int
-) : AutoParcelable {
+) : Parcelable {
 
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.track_placeholder, R.drawable.error_placeholder)
@@ -47,8 +47,8 @@ data class Track(
     }
 }
 
-@SuppressLint("ParcelCreator")
-data class TopTrack(val position: Int, val track: Track) : AutoParcelable {
+@Parcelize
+data class TopTrack(val position: Int, val track: Track) : Parcelable {
     companion object {
         val sortedListCallback = object : ObservableSortedList.Callback<TopTrack> {
             override fun compare(o1: TopTrack, o2: TopTrack): Int = o1.position.compareTo(o2.position)
