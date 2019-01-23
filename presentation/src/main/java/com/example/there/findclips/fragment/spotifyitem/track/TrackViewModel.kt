@@ -47,7 +47,7 @@ class TrackViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadSimilarTracks( track: Track) {
+    fun loadSimilarTracks(track: Track) {
         viewState.similarTracksLoadingInProgress.set(true)
         addDisposable(getSimilarTracks.execute(track.id)
                 .doFinally { viewState.similarTracksLoadingInProgress.set(false) }
@@ -56,7 +56,7 @@ class TrackViewModel @Inject constructor(
                 }, ::onError))
     }
 
-    fun loadAudioFeatures( track: Track) {
+    fun loadAudioFeatures(track: Track) {
         addDisposable(getAudioFeatures.execute(TrackEntityMapper.mapBack(track))
                 .subscribe({
                     val entries = ArrayList<RadarEntry>().apply {
