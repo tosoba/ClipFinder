@@ -1,1 +1,1 @@
-include ':presentation', ':domain', ':data', ':core'
+include ':presentation', ':domain', ':data', ':core-ui', ':artists'

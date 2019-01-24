@@ -9,6 +9,8 @@ dependencies {
     implementation rootProject.ext.rxJava
     testImplementation rootProject.ext.junit
     testImplementation rootProject.ext.mockito
+
+    implementation 'com.github.badoo.mvicore:mvicore:1.1.4'
 }
 repositories {
     mavenCentral()
