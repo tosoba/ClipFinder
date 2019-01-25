@@ -1,4 +1,4 @@
-package com.example.there.domain.common
+package com.example.there.domain.common.mvi
 
 import com.badoo.mvicore.element.Actor
 import com.badoo.mvicore.element.NewsPublisher
@@ -8,22 +8,17 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 
 
-open class AsyncLoadingFeature<Input : Any, Value : Any, Result : Any>(
-        initialState: State<Value>,
+open class SimpleStatefulAsyncFeature<Input : Any, Value : Any, Result : Any>(
+        initialState: AsyncState<Value>,
         actor: ActorImpl<Input, Value>,
         reducer: ReducerImpl<Value, Result>,
         newsPublisher: NewsPublisherImpl<Input, Value> = NewsPublisherImpl()
-) : ActorReducerFeature<AsyncLoadingFeature.LoadWish<Input>, AsyncLoadingFeature.Effect, AsyncLoadingFeature.State<Value>, AsyncLoadingFeature.ErrorNews>(
+) : ActorReducerFeature<LoadAsyncWish<Input>, SimpleStatefulAsyncFeature.Effect, AsyncState<Value>, ErrorNews>(
         initialState = initialState,
         actor = actor,
         reducer = reducer,
         newsPublisher = newsPublisher
 ) {
-    class LoadWish<Input>(val input: Input)
-
-    data class State<Value : Any>(val isLoading: Boolean, val value: Value)
-
-    open class ErrorNews(val throwable: Throwable)
 
     sealed class Effect {
         object StartedLoading : Effect()
@@ -33,42 +28,42 @@ open class AsyncLoadingFeature<Input : Any, Value : Any, Result : Any>(
 
     open class ReducerImpl<Value : Any, Result : Any>(
             private val mapToStateValue: Result.() -> Value
-    ) : Reducer<State<Value>, Effect> {
+    ) : Reducer<AsyncState<Value>, Effect> {
 
         @Suppress("UNCHECKED_CAST")
         override fun invoke(
-                state: State<Value>,
+                previousState: AsyncState<Value>,
                 effect: Effect
-        ): State<Value> = when (effect) {
-            is Effect.StartedLoading -> state.copy(isLoading = true)
-            is Effect.Loaded<*> -> state.copy(
+        ): AsyncState<Value> = when (effect) {
+            is Effect.StartedLoading -> previousState.copy(isLoading = true)
+            is Effect.Loaded<*> -> previousState.copy(
                     isLoading = false,
                     value = (effect.result as Result).mapToStateValue()
             )
-            is Effect.ErrorLoading -> state.copy(isLoading = false)
+            is Effect.ErrorLoading -> previousState.copy(isLoading = false)
         }
     }
 
     open class ActorImpl<Input : Any, Value : Any>(
             private val transformer: ObservableTransformer<Effect, Effect>,
             private val mapInputToEffect: Input.() -> Observable<out Effect>
-    ) : Actor<State<Value>, LoadWish<Input>, Effect> {
+    ) : Actor<AsyncState<Value>, LoadAsyncWish<Input>, Effect> {
 
         override fun invoke(
-                state: State<Value>,
-                wish: LoadWish<Input>
+                previousState: AsyncState<Value>,
+                wish: LoadAsyncWish<Input>
         ): Observable<out Effect> = wish.input.mapInputToEffect()
                 .compose(transformer)
                 .startWith(Effect.StartedLoading)
                 .onErrorReturn { Effect.ErrorLoading(it) }
     }
 
-    open class NewsPublisherImpl<Input : Any, Value : Any> : NewsPublisher<LoadWish<Input>, Effect, State<Value>, ErrorNews> {
+    open class NewsPublisherImpl<Input : Any, Value : Any> : NewsPublisher<LoadAsyncWish<Input>, Effect, AsyncState<Value>, ErrorNews> {
 
         override fun invoke(
-                wish: LoadWish<Input>,
+                wish: LoadAsyncWish<Input>,
                 effect: Effect,
-                state: State<Value>
+                state: AsyncState<Value>
         ): ErrorNews? = when (effect) {
             is Effect.ErrorLoading -> ErrorNews(effect.throwable)
             else -> null
