@@ -13,12 +13,9 @@ open class BaseViewModel : ViewModel() {
         compositeDisposable.add(disposable)
     }
 
-    protected fun clearDisposables() {
-        compositeDisposable.clear()
-    }
-
     override fun onCleared() {
-        clearDisposables()
+        compositeDisposable.clear()
+        super.onCleared()
     }
 
     val errorState: SingleLiveEvent<Throwable?> = SingleLiveEvent()
