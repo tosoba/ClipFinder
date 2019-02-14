@@ -241,52 +241,44 @@
 
                     <ImageButton
                         android:id="@+id/spotify_player_play_pause_image_button"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/image_button_background"
-                        android:foreground="@drawable/round_foreground_ripple"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/player_image_button_background"
+                        android:foreground="@drawable/foreground_ripple"
                         android:onClick="@{mainActivityView.onSpotifyPlayPauseBtnClickListener}"
                         android:src="@drawable/play"
                         app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
                         app:layout_constraintLeft_toRightOf="@id/previous_track_btn"
                         app:layout_constraintRight_toLeftOf="@id/next_track_btn"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/close_spotify_player_image_button" />
 
                     <ImageButton
                         android:id="@+id/next_track_btn"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/image_button_background"
-                        android:foreground="@drawable/round_foreground_ripple"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/player_image_button_background"
+                        android:foreground="@drawable/foreground_ripple"
                         android:onClick="@{mainActivityView.onNextBtnClickListener}"
                         android:src="@drawable/next_track"
                         android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.nextTrackExists)) ? View.VISIBLE : View.GONE }"
                         app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
                         app:layout_constraintLeft_toRightOf="@id/spotify_player_play_pause_image_button"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/close_spotify_player_image_button" />
 
                     <ImageButton
                         android:id="@+id/previous_track_btn"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/image_button_background"
-                        android:foreground="@drawable/round_foreground_ripple"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:background="@drawable/player_image_button_background"
+                        android:foreground="@drawable/foreground_ripple"
                         android:onClick="@{mainActivityView.onPreviousBtnClickListener}"
                         android:src="@drawable/previous_track"
                         android:visibility="@{((mainActivityView.state.playerState == PlayerState.ALBUM || mainActivityView.state.playerState == PlayerState.PLAYLIST) &amp;&amp; safeUnbox(mainActivityView.state.previousTrackExists)) ? View.VISIBLE : View.GONE }"
                         app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
                         app:layout_constraintLeft_toRightOf="@id/spotify_player_guideline"
                         app:layout_constraintRight_toLeftOf="@id/spotify_player_play_pause_image_button"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/close_spotify_player_image_button" />
 
                     <SeekBar
                         android:id="@+id/playback_seek_bar"
