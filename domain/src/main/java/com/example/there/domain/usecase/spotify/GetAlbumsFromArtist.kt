@@ -1,30 +1,18 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricObservableTransformer
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.ObservableUseCase
+import com.example.there.domain.usecase.base.ObservableUseCaseWithInput
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetAlbumsFromArtist(
-        transformer: SymmetricObservableTransformer<List<AlbumEntity>>,
+class GetAlbumsFromArtist @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : ObservableUseCase<List<AlbumEntity>>(transformer) {
+) : ObservableUseCaseWithInput<String, List<AlbumEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<List<AlbumEntity>> {
-        val artistId = data?.get(UseCaseParams.PARAM_ARTIST_ID) as? String
-        return if (artistId != null) {
-            repository.getAlbumsFromArtist(artistId)
-        } else {
-            Observable.error { IllegalArgumentException("artistId must be provided.") }
-        }
-    }
-
-    fun execute(artistId: String): Observable<List<AlbumEntity>> {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_ARTIST_ID, artistId)
-        }
-        return execute(withData = data)
-    }
+    override fun createObservable(input: String): Observable<List<AlbumEntity>> = repository.getAlbumsFromArtist(artistId = input)
 }

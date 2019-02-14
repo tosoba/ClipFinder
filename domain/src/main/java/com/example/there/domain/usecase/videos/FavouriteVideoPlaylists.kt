@@ -1,67 +1,41 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.there.domain.common.SymmetricFlowableTransformer
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.repo.videos.IVideosRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
 import com.example.there.domain.usecase.base.FlowableUseCase
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import io.reactivex.Completable
-import io.reactivex.CompletableTransformer
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetFavouriteVideoPlaylists(
-        transformer: SymmetricFlowableTransformer<List<VideoPlaylistEntity>>,
+class GetFavouriteVideoPlaylists @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : FlowableUseCase<List<VideoPlaylistEntity>>(transformer) {
+) : FlowableUseCase<List<VideoPlaylistEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createFlowable(
-            data: Map<String, Any?>?
-    ): Flowable<List<VideoPlaylistEntity>> = repository.favouritePlaylists
+    override val flowable: Flowable<List<VideoPlaylistEntity>>
+        get() = repository.favouritePlaylists
 }
 
-class InsertVideoPlaylist(
-        transformer: SymmetricSingleTransformer<Long>,
+class InsertVideoPlaylist @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : SingleUseCase<Long>(transformer) {
+) : SingleUseCaseWithInput<VideoPlaylistEntity, Long>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<Long> {
-        val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        return if (playlistEntity != null) {
-            repository.insertPlaylist(playlistEntity)
-        } else {
-            Single.error { IllegalArgumentException("VideoPlaylistEntity must be provided.") }
-        }
-    }
-
-    fun execute(playlistEntity: VideoPlaylistEntity): Single<Long> {
-        val data = HashMap<String, VideoPlaylistEntity>().apply {
-            put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: VideoPlaylistEntity): Single<Long> = repository.insertPlaylist(input)
 }
 
-class DeleteVideoPlaylist(
-        transformer: CompletableTransformer,
+class DeleteVideoPlaylist @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : CompletableUseCase(transformer) {
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val videoPlaylistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        return if (videoPlaylistEntity != null) {
-            repository.deleteVideoPlaylist(videoPlaylistEntity)
-        } else {
-            Completable.error { IllegalArgumentException("VideoPlaylistEntity must be provided.") }
-        }
-    }
+) : CompletableUseCaseWithInput<VideoPlaylistEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    fun execute(videoPlaylistEntity: VideoPlaylistEntity): Completable {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_VIDEO_PLAYLIST, videoPlaylistEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: VideoPlaylistEntity): Completable = repository.deleteVideoPlaylist(input)
 }

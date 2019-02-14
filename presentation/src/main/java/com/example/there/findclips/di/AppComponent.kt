@@ -5,8 +5,7 @@ import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.di.module.AppModule
 import com.example.there.findclips.di.module.DataModule
 import com.example.there.findclips.di.module.NetworkModule
-import com.example.there.findclips.di.module.domain.SpotifyDomainModule
-import com.example.there.findclips.di.module.domain.VideosDomainModule
+import com.example.there.findclips.di.module.SchedulersModule
 import com.example.there.findclips.di.module.ui.ActivitiesModule
 import com.example.there.findclips.di.module.ui.FragmentsModule
 import com.example.there.findclips.di.module.ui.ViewModelsModule
@@ -19,11 +18,10 @@ import javax.inject.Singleton
     AppModule::class,
     NetworkModule::class,
     DataModule::class,
-    SpotifyDomainModule::class,
-    VideosDomainModule::class,
     ActivitiesModule::class,
     FragmentsModule::class,
-    ViewModelsModule::class
+    ViewModelsModule::class,
+    SchedulersModule::class
 ])
 interface AppComponent {
     @Component.Builder

@@ -1,88 +1,50 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricFlowableTransformer
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
 import com.example.there.domain.usecase.base.FlowableUseCase
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import io.reactivex.Completable
-import io.reactivex.CompletableTransformer
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetFavouriteCategories(
-        transformer: SymmetricFlowableTransformer<List<CategoryEntity>>,
+class GetFavouriteCategories @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : FlowableUseCase<List<CategoryEntity>>(transformer) {
+) : FlowableUseCase<List<CategoryEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<CategoryEntity>> = repository.favouriteCategories
+    override val flowable: Flowable<List<CategoryEntity>>
+        get() = repository.favouriteCategories
 }
 
-class InsertCategory(
-        transformer: CompletableTransformer,
+class InsertCategory @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<CategoryEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val categoryEntity = data?.get(UseCaseParams.PARAM_CATEGORY) as? CategoryEntity
-        return if (categoryEntity != null) {
-            repository.insertCategory(categoryEntity)
-        } else {
-            Completable.error { IllegalArgumentException("CategoryEntity must be provided.") }
-        }
-    }
-
-    fun execute(categoryEntity: CategoryEntity): Completable {
-        val data = HashMap<String, CategoryEntity>().apply {
-            put(UseCaseParams.PARAM_CATEGORY, categoryEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: CategoryEntity): Completable = repository.insertCategory(input)
 }
 
-class IsCategorySaved(
-        transformer: SymmetricSingleTransformer<Boolean>,
+class IsCategorySaved @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<Boolean>(transformer) {
+) : SingleUseCaseWithInput<CategoryEntity, Boolean>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<Boolean> {
-        val categoryEntity = data?.get(UseCaseParams.PARAM_CATEGORY) as? CategoryEntity
-        return if (categoryEntity != null) {
-            repository.isCategorySaved(categoryEntity)
-        } else {
-            Single.error { IllegalArgumentException("CategoryEntity must be provided.") }
-        }
-    }
-
-    fun execute(categoryEntity: CategoryEntity): Single<Boolean> {
-        val data = HashMap<String, CategoryEntity>().apply {
-            put(UseCaseParams.PARAM_CATEGORY, categoryEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: CategoryEntity): Single<Boolean> = repository.isCategorySaved(input)
 }
 
-class DeleteCategory(
-        transformer: CompletableTransformer,
+class DeleteCategory @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<CategoryEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val categoryEntity = data?.get(UseCaseParams.PARAM_CATEGORY) as? CategoryEntity
-        return if (categoryEntity != null) {
-            repository.deleteCategory(categoryEntity)
-        } else {
-            Completable.error { IllegalArgumentException("CategoryEntity must be provided.") }
-        }
-    }
-
-    fun execute(categoryEntity: CategoryEntity): Completable {
-        val data = HashMap<String, CategoryEntity>().apply {
-            put(UseCaseParams.PARAM_CATEGORY, categoryEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: CategoryEntity): Completable = repository.deleteCategory(input)
 }

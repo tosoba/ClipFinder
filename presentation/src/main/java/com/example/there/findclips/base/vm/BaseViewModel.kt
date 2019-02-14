@@ -1,7 +1,7 @@
 package com.example.there.findclips.base.vm
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.example.there.findclips.util.rx.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -18,7 +18,7 @@ open class BaseViewModel : ViewModel() {
         super.onCleared()
     }
 
-    val errorState: SingleLiveEvent<Throwable?> = SingleLiveEvent()
+    val errorState: MutableLiveData<Throwable?> = MutableLiveData()
 
     protected open fun onError(t: Throwable) {
         errorState.value = t

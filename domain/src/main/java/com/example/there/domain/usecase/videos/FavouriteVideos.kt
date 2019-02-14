@@ -1,79 +1,44 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.there.domain.common.SymmetricFlowableTransformer
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.repo.videos.IVideosRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.CompletableUseCase
-import com.example.there.domain.usecase.base.FlowableUseCase
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
+import com.example.there.domain.usecase.base.FlowableUseCaseWithInput
 import io.reactivex.Completable
-import io.reactivex.CompletableTransformer
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetFavouriteVideosFromPlaylist(
-        transformer: SymmetricFlowableTransformer<List<VideoEntity>>,
+class GetFavouriteVideosFromPlaylist @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : FlowableUseCase<List<VideoEntity>>(transformer) {
+) : FlowableUseCaseWithInput<Long, List<VideoEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<VideoEntity>> {
-        val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        return if (playlistEntity?.id != null) {
-            repository.getVideosFromPlaylist(playlistEntity.id)
-        } else {
-            Flowable.error { IllegalArgumentException("PlaylistEntity must be provided.") }
-        }
-    }
-
-    fun execute(playlistEntity: VideoPlaylistEntity): Flowable<List<VideoEntity>> {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createFlowable(input: Long): Flowable<List<VideoEntity>> = repository.getVideosFromPlaylist(input)
 }
 
-class AddVideoToPlaylist(
-        transformer: CompletableTransformer,
+class AddVideoToPlaylist @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<AddVideoToPlaylist.Input>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val playlistEntity = data?.get(UseCaseParams.PARAM_VIDEO_PLAYLIST) as? VideoPlaylistEntity
-        val videoEntity = data?.get(UseCaseParams.PARAM_VIDEO) as? VideoEntity
-        return if (playlistEntity != null && videoEntity != null) {
-            repository.addVideoToPlaylist(videoEntity, playlistEntity)
-        } else {
-            Completable.error { IllegalArgumentException("VideoEntity and PlaylistEntity must be provided.") }
-        }
-    }
+    class Input(
+            val playlistEntity: VideoPlaylistEntity,
+            val videoEntity: VideoEntity
+    )
 
-    fun execute(playlistEntity: VideoPlaylistEntity, videoEntity: VideoEntity): Completable {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_VIDEO_PLAYLIST, playlistEntity)
-            put(UseCaseParams.PARAM_VIDEO, videoEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: Input): Completable = repository.addVideoToPlaylist(input.videoEntity, input.playlistEntity)
 }
 
-class DeleteVideo(
-        transformer: CompletableTransformer,
+class DeleteVideo @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : CompletableUseCase(transformer) {
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val videoEntity = data?.get(UseCaseParams.PARAM_VIDEO) as? VideoEntity
-        return if (videoEntity != null) {
-            repository.deleteVideo(videoEntity)
-        } else {
-            Completable.error { IllegalArgumentException("VideoEntity must be provided.") }
-        }
-    }
+) : CompletableUseCaseWithInput<VideoEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    fun execute(videoEntity: VideoEntity): Completable {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_VIDEO, videoEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: VideoEntity): Completable = repository.deleteVideo(input)
 }

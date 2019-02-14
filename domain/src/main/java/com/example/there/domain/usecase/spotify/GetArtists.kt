@@ -1,31 +1,18 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-@Suppress("UNCHECKED_CAST")
-class GetArtists(
-        transformer: SymmetricSingleTransformer<List<ArtistEntity>>,
+class GetArtists @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<List<ArtistEntity>>(transformer) {
+) : SingleUseCaseWithInput<List<String>, List<ArtistEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<List<ArtistEntity>> {
-        val artistIds = data?.get(UseCaseParams.PARAM_ARTIST_IDS) as? List<String>
-        return if (artistIds != null) {
-            repository.getArtists(artistIds)
-        } else {
-            Single.error { IllegalArgumentException("artistIds must be provided.") }
-        }
-    }
-
-    fun execute(artistIds: List<String>): Single<List<ArtistEntity>> {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_ARTIST_IDS, artistIds)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: List<String>): Single<List<ArtistEntity>> = repository.getArtists(artistIds = input)
 }

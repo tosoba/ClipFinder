@@ -1,30 +1,19 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetCurrentUsersPlaylists(
-        transformer: SymmetricSingleTransformer<EntityPage<PlaylistEntity>>,
+class GetCurrentUsersPlaylists @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<EntityPage<PlaylistEntity>>(transformer) {
+) : SingleUseCaseWithInput<Int, EntityPage<PlaylistEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<EntityPage<PlaylistEntity>> {
-        val offset = data?.get(UseCaseParams.PARAM_OFFSET) as? Int
-        return if (offset != null) {
-            repository.getCurrentUsersPlaylists(offset)
-        } else {
-            Single.error { IllegalArgumentException("offset must be provided.") }
-        }
-    }
-
-    fun execute(
-            offset: Int
-    ): Single<EntityPage<PlaylistEntity>> = execute(withData = mapOf(
-            UseCaseParams.PARAM_OFFSET to offset
-    ))
+    override fun createSingle(input: Int): Single<EntityPage<PlaylistEntity>> = repository.getCurrentUsersPlaylists(offset = input)
 }

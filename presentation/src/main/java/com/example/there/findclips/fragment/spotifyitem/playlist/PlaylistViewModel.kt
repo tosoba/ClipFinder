@@ -36,7 +36,7 @@ class PlaylistViewModel @Inject constructor(
     private fun loadData(playlist: Playlist) {
         if (currentOffset == 0 || (currentOffset < totalItems)) {
             viewState.loadingInProgress.set(true)
-            addDisposable(getPlaylistTracks.execute(playlist.id, playlist.userId, currentOffset)
+            addDisposable(getPlaylistTracks.execute(GetPlaylistTracks.Input(playlist.id, playlist.userId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribe({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT

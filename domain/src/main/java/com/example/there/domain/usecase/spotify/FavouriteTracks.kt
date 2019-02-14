@@ -1,88 +1,50 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricFlowableTransformer
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
 import com.example.there.domain.usecase.base.FlowableUseCase
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import io.reactivex.Completable
-import io.reactivex.CompletableTransformer
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetFavouriteTracks(
-        transformer: SymmetricFlowableTransformer<List<TrackEntity>>,
+class GetFavouriteTracks @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : FlowableUseCase<List<TrackEntity>>(transformer) {
+) : FlowableUseCase<List<TrackEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<TrackEntity>> = repository.favouriteTracks
+    override val flowable: Flowable<List<TrackEntity>>
+        get() = repository.favouriteTracks
 }
 
-class InsertTrack(
-        transformer: CompletableTransformer,
+class InsertTrack @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<TrackEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val trackEntity = data?.get(UseCaseParams.PARAM_TRACK) as? TrackEntity
-        return if (trackEntity != null) {
-            repository.insertTrack(trackEntity)
-        } else {
-            Completable.error { IllegalArgumentException("TrackEntity must be provided.") }
-        }
-    }
-
-    fun execute(trackEntity: TrackEntity): Completable {
-        val data = HashMap<String, TrackEntity>().apply {
-            put(UseCaseParams.PARAM_TRACK, trackEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: TrackEntity): Completable = repository.insertTrack(input)
 }
 
-class IsTrackSaved(
-        transformer: SymmetricSingleTransformer<Boolean>,
+class IsTrackSaved @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<Boolean>(transformer) {
+) : SingleUseCaseWithInput<TrackEntity, Boolean>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<Boolean> {
-        val trackEntity = data?.get(UseCaseParams.PARAM_TRACK) as? TrackEntity
-        return if (trackEntity != null) {
-            repository.isTrackSaved(trackEntity)
-        } else {
-            Single.error { IllegalArgumentException("TrackEntity must be provided.") }
-        }
-    }
-
-    fun execute(trackEntity: TrackEntity): Single<Boolean> {
-        val data = HashMap<String, TrackEntity>().apply {
-            put(UseCaseParams.PARAM_TRACK, trackEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: TrackEntity): Single<Boolean> = repository.isTrackSaved(input)
 }
 
-class DeleteTrack(
-        transformer: CompletableTransformer,
+class DeleteTrack @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<TrackEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val trackEntity = data?.get(UseCaseParams.PARAM_TRACK) as? TrackEntity
-        return if (trackEntity != null) {
-            repository.deleteTrack(trackEntity)
-        } else {
-            Completable.error { IllegalArgumentException("TrackEntity must be provided.") }
-        }
-    }
-
-    fun execute(trackEntity: TrackEntity): Completable {
-        val data = HashMap<String, TrackEntity>().apply {
-            put(UseCaseParams.PARAM_TRACK, trackEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: TrackEntity): Completable = repository.deleteTrack(input)
 }

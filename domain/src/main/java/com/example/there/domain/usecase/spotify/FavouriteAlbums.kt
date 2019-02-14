@@ -1,88 +1,51 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricFlowableTransformer
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
 import com.example.there.domain.usecase.base.FlowableUseCase
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import io.reactivex.Completable
-import io.reactivex.CompletableTransformer
 import io.reactivex.Flowable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetFavouriteAlbums(
-        transformer: SymmetricFlowableTransformer<List<AlbumEntity>>,
+
+class GetFavouriteAlbums @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : FlowableUseCase<List<AlbumEntity>>(transformer) {
+) : FlowableUseCase<List<AlbumEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createFlowable(data: Map<String, Any?>?): Flowable<List<AlbumEntity>> = repository.favouriteAlbums
+    override val flowable: Flowable<List<AlbumEntity>>
+        get() = repository.favouriteAlbums
 }
 
-class InsertAlbum(
-        transformer: CompletableTransformer,
+class InsertAlbum @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<AlbumEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val albumEntity = data?.get(UseCaseParams.PARAM_ALBUM) as? AlbumEntity
-        return if (albumEntity != null) {
-            repository.insertAlbum(albumEntity)
-        } else {
-            Completable.error { IllegalArgumentException("AlbumEntity must be provided.") }
-        }
-    }
-
-    fun execute(albumEntity: AlbumEntity): Completable {
-        val data = HashMap<String, AlbumEntity>().apply {
-            put(UseCaseParams.PARAM_ALBUM, albumEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: AlbumEntity): Completable = repository.insertAlbum(input)
 }
 
-class IsAlbumSaved(
-        transformer: SymmetricSingleTransformer<Boolean>,
+class IsAlbumSaved @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<Boolean>(transformer) {
+) : SingleUseCaseWithInput<AlbumEntity, Boolean>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<Boolean> {
-        val albumEntity = data?.get(UseCaseParams.PARAM_ALBUM) as? AlbumEntity
-        return if (albumEntity != null) {
-            repository.isAlbumSaved(albumEntity)
-        } else {
-            Single.error { IllegalArgumentException("AlbumEntity must be provided.") }
-        }
-    }
-
-    fun execute(albumEntity: AlbumEntity): Single<Boolean> {
-        val data = HashMap<String, AlbumEntity>().apply {
-            put(UseCaseParams.PARAM_ALBUM, albumEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(input)
 }
 
-class DeleteAlbum(
-        transformer: CompletableTransformer,
+class DeleteAlbum @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : CompletableUseCase(transformer) {
+) : CompletableUseCaseWithInput<AlbumEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createCompletable(data: Map<String, Any?>?): Completable {
-        val albumEntity = data?.get(UseCaseParams.PARAM_ALBUM) as? AlbumEntity
-        return if (albumEntity != null) {
-            repository.deleteAlbum(albumEntity)
-        } else {
-            Completable.error { IllegalArgumentException("AlbumEntity must be provided.") }
-        }
-    }
-
-    fun execute(albumEntity: AlbumEntity): Completable {
-        val data = HashMap<String, AlbumEntity>().apply {
-            put(UseCaseParams.PARAM_ALBUM, albumEntity)
-        }
-        return execute(withData = data)
-    }
+    override fun createCompletable(input: AlbumEntity): Completable = repository.deleteAlbum(input)
 }

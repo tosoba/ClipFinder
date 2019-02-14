@@ -1,32 +1,19 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricObservableTransformer
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.ObservableUseCase
+import com.example.there.domain.usecase.base.ObservableUseCaseWithInput
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetTracksFromAlbum(
-        transformer: SymmetricObservableTransformer<EntityPage<TrackEntity>>,
+class GetTracksFromAlbum @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : ObservableUseCase<EntityPage<TrackEntity>>(transformer) {
+) : ObservableUseCaseWithInput<String, EntityPage<TrackEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<EntityPage<TrackEntity>> {
-
-        val albumId = data?.get(UseCaseParams.PARAM_ALBUM_ID) as? String
-        return if (albumId != null) {
-            repository.getTracksFromAlbum(albumId)
-        } else {
-            Observable.error { IllegalArgumentException("albumId must be provided.") }
-        }
-    }
-
-    fun execute(albumId: String): Observable<EntityPage<TrackEntity>> {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_ALBUM_ID, albumId)
-        }
-        return execute(withData = data)
-    }
+    override fun createObservable(input: String): Observable<EntityPage<TrackEntity>> = repository.getTracksFromAlbum(input)
 }

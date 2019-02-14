@@ -1,32 +1,20 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.spotify.SearchAllEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class SearchSpotify(
-        transformer: SymmetricSingleTransformer<SearchAllEntity>,
+class SearchSpotify @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<SearchAllEntity>(transformer) {
+) : SingleUseCaseWithInput<SearchSpotify.Input, SearchAllEntity>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<SearchAllEntity> {
-        val query = data?.get(UseCaseParams.PARAM_SEARCH_ALL_QUERY) as? String
-        val offset = data?.get(UseCaseParams.PARAM_OFFSET) as? Int
-        return if (query != null && offset != null) {
-            repository.searchAll(query, offset)
-        } else {
-            Single.error { IllegalArgumentException("AccessToken, query and offset must be provided.") }
-        }
-    }
+    class Input(val query: String, val offset: Int)
 
-    fun execute(query: String, offset: Int): Single<SearchAllEntity> {
-        val data = HashMap<String, Any>().apply {
-            put(UseCaseParams.PARAM_SEARCH_ALL_QUERY, query)
-            put(UseCaseParams.PARAM_OFFSET, offset)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: Input): Single<SearchAllEntity> = repository.searchAll(input.query, input.offset)
 }

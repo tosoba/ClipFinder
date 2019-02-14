@@ -1,35 +1,25 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetPlaylistTracks(
-        transformer: SymmetricSingleTransformer<EntityPage<TrackEntity>>,
+class GetPlaylistTracks @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : SingleUseCase<EntityPage<TrackEntity>>(transformer) {
+) : SingleUseCaseWithInput<GetPlaylistTracks.Input, EntityPage<TrackEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<EntityPage<TrackEntity>> {
-        val playlistId = data?.get(UseCaseParams.PARAM_PLAYLIST_ID) as? String
-        val userId = data?.get(UseCaseParams.PARAM_USER_ID) as? String
-        val offset = data?.get(UseCaseParams.PARAM_OFFSET) as? Int
-        return if (playlistId != null && userId != null && offset != null) {
-            repository.getPlaylistTracks(playlistId, userId, offset)
-        } else {
-            Single.error { IllegalArgumentException("Access token, playlistId and userId must be provided.") }
-        }
-    }
+    class Input(
+            val playlistId: String,
+            val userId: String,
+            val offset: Int
+    )
 
-    fun execute(playlistId: String, userId: String, offset: Int): Single<EntityPage<TrackEntity>> {
-        val data = HashMap<String, Any>().apply {
-            put(UseCaseParams.PARAM_PLAYLIST_ID, playlistId)
-            put(UseCaseParams.PARAM_USER_ID, userId)
-            put(UseCaseParams.PARAM_OFFSET, offset)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: Input): Single<EntityPage<TrackEntity>> = repository.getPlaylistTracks(input.playlistId, input.userId, input.offset)
 }

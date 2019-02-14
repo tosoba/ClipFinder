@@ -21,7 +21,7 @@ class AccountTopViewModel @Inject constructor(
     fun loadTracks() {
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersTopTracks.execute()
+            addDisposable(getCurrentUsersTopTracks.execute(currentTracksOffset)
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribe({
                         viewState.topTracks.addAll(it.items.map(TrackEntityMapper::mapFrom))

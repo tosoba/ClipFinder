@@ -42,7 +42,7 @@ class CategoryViewModel @Inject constructor(
             }
 
             viewState.loadingInProgress.set(true)
-            addDisposable(getPlaylistsForCategory.execute(categoryId, currentOffset)
+            addDisposable(getPlaylistsForCategory.execute(GetPlaylistsForCategory.Input(categoryId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribe({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT

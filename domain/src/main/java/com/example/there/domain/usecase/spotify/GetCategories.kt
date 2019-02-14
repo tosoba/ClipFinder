@@ -1,16 +1,19 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.common.SymmetricObservableTransformer
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.base.ObservableUseCase
 import io.reactivex.Observable
+import io.reactivex.Scheduler
+import javax.inject.Inject
+import javax.inject.Named
 
-class GetCategories(
-        transformer: SymmetricObservableTransformer<List<CategoryEntity>>,
+class GetCategories @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: ISpotifyRepository
-) : ObservableUseCase<List<CategoryEntity>>(transformer) {
+) : ObservableUseCase<List<CategoryEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createObservable(data: Map<String, Any?>?): Observable<List<CategoryEntity>> = repository.categories
-
+    override val observable: Observable<List<CategoryEntity>>
+        get() = repository.categories
 }

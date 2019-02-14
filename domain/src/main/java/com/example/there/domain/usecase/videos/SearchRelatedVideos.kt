@@ -1,34 +1,25 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.there.domain.common.SymmetricSingleTransformer
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosRepository
-import com.example.there.domain.usecase.UseCaseParams
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import io.reactivex.Scheduler
 import io.reactivex.Single
-import java.lang.IllegalArgumentException
+import javax.inject.Inject
+import javax.inject.Named
 
-class SearchRelatedVideos(
-        transformer: SymmetricSingleTransformer<List<VideoEntity>>,
+class SearchRelatedVideos @Inject constructor(
+        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
+        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
         private val repository: IVideosRepository
-) : SingleUseCase<List<VideoEntity>>(transformer) {
+) : SingleUseCaseWithInput<SearchRelatedVideos.Input, List<VideoEntity>>(subscribeOnScheduler, observeOnScheduler) {
 
-    override fun createSingle(data: Map<String, Any?>?): Single<List<VideoEntity>> {
-        val videoId = data?.get(UseCaseParams.PARAM_VIDEO_ID) as? String
-        val loadMore = data?.get(UseCaseParams.PARAM_LOAD_MORE) as? Boolean
-        return if (videoId != null) {
-            if (loadMore != null && loadMore) repository.getMoreRelatedVideos(videoId)
-            else repository.getRelatedVideos(videoId)
-        } else {
-            Single.error { IllegalArgumentException("VideoId and optionally page token must be provided.") }
-        }
-    }
+    class Input(
+            val videoId: String,
+            val loadMore: Boolean
+    )
 
-    fun execute(videoId: String, loadMore: Boolean): Single<List<VideoEntity>> {
-        val data = HashMap<String, Any?>().apply {
-            put(UseCaseParams.PARAM_VIDEO_ID, videoId)
-            put(UseCaseParams.PARAM_LOAD_MORE, loadMore)
-        }
-        return execute(withData = data)
-    }
+    override fun createSingle(input: Input): Single<List<VideoEntity>> = if (input.loadMore)
+        repository.getMoreRelatedVideos(input.videoId)
+    else repository.getRelatedVideos(input.videoId)
 }

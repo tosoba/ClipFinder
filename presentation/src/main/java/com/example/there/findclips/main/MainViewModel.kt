@@ -55,7 +55,7 @@ class MainViewModel @Inject constructor(
         if (loadMore) viewState.loadingMoreVideosInProgress.set(true)
         else viewState.initialVideosLoadingInProgress.set(true)
 
-        addDisposable(searchRelatedVideos.execute(video.id, loadMore)
+        addDisposable(searchRelatedVideos.execute(SearchRelatedVideos.Input(video.id, loadMore))
                 .doFinally {
                     if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
                     else viewState.initialVideosLoadingInProgress.set(false)
@@ -71,9 +71,10 @@ class MainViewModel @Inject constructor(
     }
 
     fun addVideoToPlaylist(video: Video, videoPlaylist: VideoPlaylist, onSuccess: () -> Unit) {
-        addDisposable(addVideoToPlaylist.execute(playlistEntity = VideoPlaylistEntityMapper.mapBack(videoPlaylist),
+        addDisposable(addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
+                playlistEntity = VideoPlaylistEntityMapper.mapBack(videoPlaylist),
                 videoEntity = VideoEntityMapper.mapBack(video))
-                .subscribe({ onSuccess() }, ::onError))
+        ).subscribe({ onSuccess() }, ::onError))
     }
 
     fun getFavouriteVideoPlaylists() {

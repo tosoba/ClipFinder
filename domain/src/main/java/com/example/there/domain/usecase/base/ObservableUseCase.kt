@@ -1,13 +1,43 @@
 package com.example.there.domain.usecase.base
 
-import com.example.there.domain.common.SymmetricObservableTransformer
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 
-abstract class ObservableUseCase<T>(private val transformer: SymmetricObservableTransformer<T>) {
+abstract class BaseObservableUseCase<Result>(
+        subscribeOnScheduler: Scheduler,
+        observeOnScheduler: Scheduler
+) : BaseRxUseCase(subscribeOnScheduler, observeOnScheduler) {
 
-    protected abstract fun createObservable(data: Map<String, Any?>? = null): Observable<T>
-
-    fun execute(withData: Map<String, Any?>? = null): Observable<T> {
-        return createObservable(withData).compose(transformer)
+    protected fun Observable<Result>.applySchedulersIfRequested(
+            applySchedulers: Boolean
+    ): Observable<Result> = run {
+        if (applySchedulers)
+            this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)
+        else this
     }
+}
+
+abstract class ObservableUseCase<Result>(
+        subscribeOnScheduler: Scheduler,
+        observeOnScheduler: Scheduler
+) : BaseObservableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+
+    protected abstract val observable: Observable<Result>
+
+    fun execute(
+            applySchedulers: Boolean = true
+    ): Observable<Result> = observable.applySchedulersIfRequested(applySchedulers)
+}
+
+abstract class ObservableUseCaseWithInput<Input, Result>(
+        subscribeOnScheduler: Scheduler,
+        observeOnScheduler: Scheduler
+) : BaseObservableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+
+    protected abstract fun createObservable(input: Input): Observable<Result>
+
+    fun execute(
+            input: Input,
+            applySchedulers: Boolean = true
+    ): Observable<Result> = createObservable(input).applySchedulersIfRequested(applySchedulers)
 }
