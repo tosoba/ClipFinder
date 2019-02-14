@@ -35,6 +35,8 @@
             app:umanoShadowHeight="4dp"
             tools:context=".main.MainActivity">
 
+            <!--TODO: main_content_layout will be replaced with a main fragment container for both spotify and soundcloud fragments -->
+
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/main_content_layout"
                 android:layout_width="match_parent"
@@ -84,6 +86,8 @@
                     android:layout_height="match_parent"
                     android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST? View.VISIBLE : View.GONE}"
                     app:constraint_referenced_ids="youtube_player_view_container_layout,related_videos_recycler_view" />
+
+                <!-- TODO: youtube_player_view_container_layout -> yt player fragment -->
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/youtube_player_view_container_layout"
@@ -159,6 +163,8 @@
 
                 </android.support.constraint.ConstraintLayout>
 
+                <!-- TODO: related_videos_recycler_view, related_videos_progress_bar, add_to_favourites_fab -> related vids fragment -->
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/related_videos_recycler_view"
                     clickHandler="@{mainActivityView.relatedVideosRecyclerViewItemView.onItemClickListener}"
@@ -201,6 +207,8 @@
                     android:layout_height="match_parent"
                     android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.GONE : View.VISIBLE}"
                     app:constraint_referenced_ids="similar_tracks_fragment,spotify_player_layout" />
+
+                <!-- TODO: spotify_player_layout -> spotify player fragment -->
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/spotify_player_layout"
