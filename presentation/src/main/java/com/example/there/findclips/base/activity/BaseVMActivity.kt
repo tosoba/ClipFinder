@@ -21,8 +21,6 @@ abstract class BaseVMActivity<T : BaseViewModel> constructor(
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
-
     @Inject
     lateinit var factory: ViewModelFactory
 
@@ -37,16 +35,18 @@ abstract class BaseVMActivity<T : BaseViewModel> constructor(
         setupObservers()
     }
 
-    protected open val onViewModelInitialized: ((T) -> Unit)? = null
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
 
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
-        onViewModelInitialized?.invoke(viewModel)
-    }
+    protected open fun T.onInitialized() = Unit
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
             error?.let { Log.e(javaClass.name ?: "Error", it.messageOrDefault()) }
         })
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
+        viewModel.onInitialized()
     }
 }

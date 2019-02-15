@@ -34,10 +34,6 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
         AccountTopViewModel::class.java
 ), Injectable, TracksDataLoaded {
 
-    override val onViewModelInitialized: (() -> Unit)? = {
-        viewModel.viewState = AccountTopViewState(mainActivity!!.loggedInObservable)
-    }
-
     override val isDataLoaded: Boolean
         get() = viewModelInitialized
                 && viewModel.viewState.artists.isNotEmpty()
@@ -79,14 +75,6 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
-        return binding.apply {
-            view = this@AccountTopFragment.view
-            accountTopRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        }.root
-    }
-
     private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -96,13 +84,25 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
         }
     }
 
-    private fun loadData() {
-        viewModel.loadTracks()
-        viewModel.loadArtists()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
+        return binding.apply {
+            view = this@AccountTopFragment.view
+            accountTopRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        }.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
+    }
+
+    override fun AccountTopViewModel.onInitialized() {
+        viewState = AccountTopViewState(mainActivity!!.loggedInObservable)
+    }
+
+    private fun loadData() {
+        viewModel.loadTracks()
+        viewModel.loadArtists()
     }
 }

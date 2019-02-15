@@ -22,15 +22,25 @@ class AccountPlaylistsFragment :
         Injectable,
         TracksDataLoaded {
 
-    override val onViewModelInitialized: (() -> Unit)? = {
-        viewModel.viewState = AccountPlaylistViewState(mainActivity!!.loggedInObservable)
-    }
-
     override val isDataLoaded: Boolean
         get() = viewModelInitialized && viewModel.viewState.playlists.isNotEmpty()
 
     private val playlistsFragment: SpotifyPlaylistsFragment
         get() = childFragmentManager.findFragmentById(R.id.account_spotify_playlists_fragment) as SpotifyPlaylistsFragment
+
+    private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
+        object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded)
+                    loadData()
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_playlists, container, false)
@@ -45,19 +55,9 @@ class AccountPlaylistsFragment :
         })
     }
 
-    private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
-        object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded)
-                    loadData()
-            }
-        }
+    override fun AccountPlaylistsViewModel.onInitialized() {
+        viewState = AccountPlaylistViewState(mainActivity!!.loggedInObservable)
     }
 
     private fun loadData() = viewModel.loadPlaylists()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
-    }
 }

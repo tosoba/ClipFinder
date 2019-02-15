@@ -14,6 +14,7 @@ data class Playlist(
         val userId: String,
         val uri: String
 ) : Parcelable {
+
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.playlist_placeholder, R.drawable.error_placeholder)
 

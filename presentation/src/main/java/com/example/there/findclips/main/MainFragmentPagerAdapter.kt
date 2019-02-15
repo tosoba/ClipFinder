@@ -12,10 +12,10 @@ class MainFragmentPagerAdapter(manager: FragmentManager) : CurrentFragmentStateP
 
     private val fragments: Array<Fragment> = arrayOf(DashboardHostFragment(), AccountHostFragment(), FavouritesHostFragment())
 
+    val currentHostFragment: BaseHostFragment?
+        get() = currentFragment as? BaseHostFragment
+
     override fun getItem(position: Int): Fragment = fragments[position]
 
     override fun getCount(): Int = fragments.size
-
-    val currentHostFragment: BaseHostFragment?
-        get() = currentFragment as? BaseHostFragment
 }

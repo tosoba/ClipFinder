@@ -15,6 +15,11 @@ class AccountSavedViewModel @Inject constructor(
 
     lateinit var viewState: AccountSavedViewState
 
+    private val canLoadTracks: Boolean
+        get() = viewState.tracksLoadingInProgress.get() == false &&
+                viewState.userLoggedIn.get() == true &&
+                (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
+
     private var currentTracksOffset = 0
     private var totalTracks = 0
 
@@ -31,10 +36,10 @@ class AccountSavedViewModel @Inject constructor(
         }
     }
 
-    private val canLoadTracks: Boolean
-        get() = viewState.tracksLoadingInProgress.get() == false &&
+    private val canLoadAlbums: Boolean
+        get() = viewState.albumsLoadingInProgress.get() == false &&
                 viewState.userLoggedIn.get() == true &&
-                (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
+                (currentAlbumsOffset == 0 || (currentAlbumsOffset < totalAlbums))
 
     private var currentAlbumsOffset = 0
     private var totalAlbums = 0
@@ -51,9 +56,4 @@ class AccountSavedViewModel @Inject constructor(
                     }, ::onError))
         }
     }
-
-    private val canLoadAlbums: Boolean
-        get() = viewState.albumsLoadingInProgress.get() == false &&
-                viewState.userLoggedIn.get() == true &&
-                (currentAlbumsOffset == 0 || (currentAlbumsOffset < totalAlbums))
 }

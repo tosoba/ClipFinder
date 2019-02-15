@@ -44,6 +44,13 @@ class ConnectivityComponent(
                 }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun clear() {
+        snackbar?.dismiss()
+        snackbar = null
+        safelyDispose(internetDisposable)
+    }
+
     private fun handleConnectionStatus(isConnectedToInternet: Boolean) {
         if (!isConnectedToInternet) {
             connectionInterrupted = true
@@ -61,13 +68,6 @@ class ConnectivityComponent(
             isSnackbarShowing = false
             snackbar?.dismiss()
         }
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun clear() {
-        snackbar?.dismiss()
-        snackbar = null
-        safelyDispose(internetDisposable)
     }
 
     private fun safelyDispose(disposable: Disposable?) {

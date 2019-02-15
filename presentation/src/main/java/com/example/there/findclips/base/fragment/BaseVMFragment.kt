@@ -23,26 +23,26 @@ abstract class BaseVMFragment<T : BaseViewModel> constructor(
     protected val viewModelInitialized: Boolean
         get() = ::viewModel.isInitialized
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupObservers()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModel()
     }
 
-    protected open val onViewModelInitialized: (() -> Unit)? = null
-
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
-        onViewModelInitialized?.invoke()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setupObservers()
     }
+
+    protected open fun T.onInitialized() = Unit
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
             error?.let { Log.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault()) }
         })
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
+        viewModel.onInitialized()
     }
 }

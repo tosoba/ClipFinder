@@ -9,18 +9,18 @@ open class BaseViewModel : ViewModel() {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    protected fun addDisposable(disposable: Disposable) {
-        compositeDisposable.add(disposable)
-    }
+    val errorState: MutableLiveData<Throwable?> = MutableLiveData()
 
     override fun onCleared() {
         compositeDisposable.clear()
         super.onCleared()
     }
 
-    val errorState: MutableLiveData<Throwable?> = MutableLiveData()
-
     protected open fun onError(t: Throwable) {
         errorState.value = t
+    }
+
+    protected fun addDisposable(disposable: Disposable) {
+        compositeDisposable.add(disposable)
     }
 }

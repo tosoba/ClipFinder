@@ -34,10 +34,6 @@ class AccountSavedFragment :
         Injectable,
         TracksDataLoaded {
 
-    override val onViewModelInitialized: (() -> Unit)? = {
-        viewModel.viewState = AccountSavedViewState(mainActivity!!.loggedInObservable)
-    }
-
     override val isDataLoaded: Boolean
         get() = viewModelInitialized
                 && viewModel.viewState.albums.isNotEmpty()
@@ -81,19 +77,6 @@ class AccountSavedFragment :
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
-        return binding.apply {
-            view = this@AccountSavedFragment.view
-            accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        }.root
-    }
-
-    private fun loadData()  {
-        viewModel.loadTracks()
-        viewModel.loadAlbums()
-    }
-
     private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
@@ -106,5 +89,22 @@ class AccountSavedFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
+        return binding.apply {
+            view = this@AccountSavedFragment.view
+            accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        }.root
+    }
+
+    override fun AccountSavedViewModel.onInitialized() {
+        viewState = AccountSavedViewState(mainActivity!!.loggedInObservable)
+    }
+
+    private fun loadData()  {
+        viewModel.loadTracks()
+        viewModel.loadAlbums()
     }
 }

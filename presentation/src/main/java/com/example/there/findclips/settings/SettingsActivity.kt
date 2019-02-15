@@ -20,12 +20,6 @@ class SettingsActivity : AppCompatActivity() {
         setupActionBar()
     }
 
-    private fun setupActionBar() = supportActionBar?.let {
-        it.setDisplayShowHomeEnabled(true)
-        it.setDisplayHomeAsUpEnabled(true)
-        it.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimaryDark)))
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -34,5 +28,11 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupActionBar() = supportActionBar?.let {
+        it.setDisplayShowHomeEnabled(true)
+        it.setDisplayHomeAsUpEnabled(true)
+        it.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimaryDark)))
     }
 }

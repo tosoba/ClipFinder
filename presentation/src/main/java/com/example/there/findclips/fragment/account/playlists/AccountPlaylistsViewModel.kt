@@ -15,6 +15,11 @@ class AccountPlaylistsViewModel @Inject constructor(
 
     val loadedFlag: MutableLiveData<Unit> = MutableLiveData()
 
+    private val canLoadPlaylists
+        get() = viewState.playlistsLoadingInProgress.get() == false &&
+                viewState.userLoggedIn.get() == true &&
+                (currentOffset == 0 || (currentOffset < totalItems))
+
     private var currentOffset = 0
     private var totalItems = 0
 
@@ -31,9 +36,4 @@ class AccountPlaylistsViewModel @Inject constructor(
                     }, ::onError))
         }
     }
-
-    private val canLoadPlaylists
-        get() = viewState.playlistsLoadingInProgress.get() == false &&
-                viewState.userLoggedIn.get() == true &&
-                (currentOffset == 0 || (currentOffset < totalItems))
 }

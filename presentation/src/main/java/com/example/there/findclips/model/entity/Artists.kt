@@ -13,6 +13,7 @@ data class Artist(
         val popularity: Int,
         val iconUrl: String
 ) : Parcelable {
+
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.artist_placeholder, R.drawable.error_placeholder)
 

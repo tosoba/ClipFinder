@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment
 
 abstract class BaseHostFragment : Fragment() {
 
+    val topFragment: Fragment?
+        get() = childFragmentManager.findFragmentById(backStackLayoutId)
+
     abstract val backStackLayoutId: Int
 
     fun showFragment(fragment: Fragment, addToBackStack: Boolean) = with(childFragmentManager.beginTransaction()) {
@@ -12,7 +15,4 @@ abstract class BaseHostFragment : Fragment() {
         if (addToBackStack) addToBackStack(null)
         commit()
     }
-
-    val topFragment: Fragment?
-        get() = childFragmentManager.findFragmentById(backStackLayoutId)
 }

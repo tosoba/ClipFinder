@@ -23,9 +23,7 @@ import com.example.there.findclips.view.recycler.HeaderDecoration
 abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     var refreshData: ((BaseSpotifyListFragment<T>) -> Unit)? = null
-
     var loadMore: (() -> Unit)? = null
-
     var onItemClick: ((T) -> Unit)? = null
 
     protected abstract val itemsRecyclerView: RecyclerView?
@@ -34,35 +32,14 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
-    protected fun headerItemDecoration(): RecyclerView.ItemDecoration {
-        val binding = DataBindingUtil.inflate<HeaderItemBinding>(
-                LayoutInflater.from(context),
-                R.layout.header_item,
-                null,
-                false
-        ).apply {
-            viewState = HeaderItemViewState(xmlHeaderText ?: defaultHeaderText)
-            executePendingBindings()
-        }
+    private var xmlHeaderText: String? = null
 
-        currentHeaderDecoration = HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
-        return currentHeaderDecoration!!
-    }
+    abstract val view: View<T>
 
-    private fun updateRecyclerViewOnConfigChange() {
-        itemsRecyclerView?.let { recyclerView ->
-            if (viewState.shouldShowHeader) {
-                currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
-                recyclerView.addItemDecoration(headerItemDecoration())
-            }
-            recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
-        }
-    }
+    abstract val viewState: ViewState<T>
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        updateRecyclerViewOnConfigChange()
-    }
+    protected val listColumnCount: Int
+        get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
     protected val onScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener() {
@@ -72,8 +49,34 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         }
     }
 
-    protected val listColumnCount: Int
-        get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initFromArguments()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updateRecyclerViewOnConfigChange()
+    }
+
+    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+        super.onInflate(context, attrs, savedInstanceState)
+
+        val attributes = activity?.obtainStyledAttributes(attrs, R.styleable.BaseSpotifyListFragment)
+        attributes?.getText(R.styleable.BaseSpotifyListFragment_main_hint_text)?.let {
+            viewState.mainHintText.set(it.toString())
+        }
+        attributes?.getText(R.styleable.BaseSpotifyListFragment_additional_hint_text)?.let {
+            viewState.additionalHintText.set(it.toString())
+        }
+        attributes?.getBoolean(R.styleable.BaseSpotifyListFragment_should_show_header, false)?.let {
+            viewState.shouldShowHeader = it
+        }
+        attributes?.getString(R.styleable.BaseSpotifyListFragment_header_text)?.let {
+            xmlHeaderText = it
+        }
+        attributes?.recycle()
+    }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
@@ -95,26 +98,19 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         viewState.items.addAll(items)
     }
 
-    abstract val viewState: ViewState<T>
+    protected fun headerItemDecoration(): RecyclerView.ItemDecoration {
+        val binding = DataBindingUtil.inflate<HeaderItemBinding>(
+                LayoutInflater.from(context),
+                R.layout.header_item,
+                null,
+                false
+        ).apply {
+            viewState = HeaderItemViewState(xmlHeaderText ?: defaultHeaderText)
+            executePendingBindings()
+        }
 
-    class ViewState<T : Parcelable>(
-            val items: ObservableSortedList<T>,
-            val mainHintText: ObservableField<String> = ObservableField(""),
-            val additionalHintText: ObservableField<String> = ObservableField(""),
-            var shouldShowHeader: Boolean = false
-    )
-
-    abstract val view: View<T>
-
-    class View<T : Parcelable>(
-            val state: BaseSpotifyListFragment.ViewState<T>,
-            val recyclerViewItemView: RecyclerViewItemView<T>
-    )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        initFromArguments()
+        currentHeaderDecoration = HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
+        return currentHeaderDecoration!!
     }
 
     private fun initFromArguments() {
@@ -126,26 +122,27 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         }
     }
 
-    private var xmlHeaderText: String? = null
-
-    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
-        super.onInflate(context, attrs, savedInstanceState)
-
-        val attributes = activity?.obtainStyledAttributes(attrs, R.styleable.BaseSpotifyListFragment)
-        attributes?.getText(R.styleable.BaseSpotifyListFragment_main_hint_text)?.let {
-            viewState.mainHintText.set(it.toString())
+    private fun updateRecyclerViewOnConfigChange() {
+        itemsRecyclerView?.let { recyclerView ->
+            if (viewState.shouldShowHeader) {
+                currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
+                recyclerView.addItemDecoration(headerItemDecoration())
+            }
+            recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
         }
-        attributes?.getText(R.styleable.BaseSpotifyListFragment_additional_hint_text)?.let {
-            viewState.additionalHintText.set(it.toString())
-        }
-        attributes?.getBoolean(R.styleable.BaseSpotifyListFragment_should_show_header, false)?.let {
-            viewState.shouldShowHeader = it
-        }
-        attributes?.getString(R.styleable.BaseSpotifyListFragment_header_text)?.let {
-            xmlHeaderText = it
-        }
-        attributes?.recycle()
     }
+
+    class ViewState<T : Parcelable>(
+            val items: ObservableSortedList<T>,
+            val mainHintText: ObservableField<String> = ObservableField(""),
+            val additionalHintText: ObservableField<String> = ObservableField(""),
+            var shouldShowHeader: Boolean = false
+    )
+
+    class View<T : Parcelable>(
+            val state: BaseSpotifyListFragment.ViewState<T>,
+            val recyclerViewItemView: RecyclerViewItemView<T>
+    )
 
     companion object {
         const val EXTRA_MAIN_HINT = "EXTRA_MAIN_HINT"
