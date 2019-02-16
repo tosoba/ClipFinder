@@ -30,7 +30,9 @@ import com.example.there.findclips.main.MainActivity
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.id
+import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.notificationManager
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -309,17 +311,6 @@ class SpotifyPlayerFragment :
 
         lastPlayedPlaylist = playlist
         resetProgressAndPlay(playlist.uri)
-    }
-
-    fun onPlayerDimensionsChange(slideOffset: Float) {
-        val spotifyPlayerLayoutParams = spotify_player_layout?.layoutParams
-
-        val spotifyPlayerHeight = ((context!!.dpToPx(context!!.screenHeight.toFloat()) / 5 * 2).toInt() - mainActivity!!.minimumPlayerHeight) * slideOffset + mainActivity!!.minimumPlayerHeight
-
-
-        spotifyPlayerLayoutParams?.height = spotifyPlayerHeight.toInt()
-
-        spotify_player_layout?.requestLayout()
     }
 
     override fun stopPlayback() {

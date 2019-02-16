@@ -195,19 +195,12 @@ class MainActivity :
         spotifyPlayerFragment?.loadPlaylist(playlist)
 
         viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
-
     }
 
     //TODO: move this to an interface
     fun hidePlayer() {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
     }
-
-    private fun stopSpotifyPlayback() {
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
-        spotifyPlayerFragment?.stopPlayback()
-    }
-
 
     private val similarTracksFragment: SpotifyTracksFragment?
         get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment) as? SpotifyTracksFragment
@@ -549,12 +542,29 @@ class MainActivity :
         sliding_layout?.expandIfHidden()
     }
 
+    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
+
 
     private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
             currentSlideOffset = slideOffset
+
+            val youtubePlayerLayoutParams = youtube_player_fragment?.view?.layoutParams
+            val spotifyPlayerLayoutParams = spotify_player_fragment?.view?.layoutParams
+            val youtubePlayerHeight = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+            } else {
+                (youtubePlayerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+            }
+            val spotifyPlayerHeight = ((dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+
+            youtubePlayerLayoutParams?.height = youtubePlayerHeight.toInt()
+            spotifyPlayerLayoutParams?.height = spotifyPlayerHeight.toInt()
+
             youtubePlayerFragment?.onPlayerDimensionsChange(slideOffset)
-            spotifyPlayerFragment?.onPlayerDimensionsChange(slideOffset)
+
+            youtube_player_fragment?.view?.requestLayout()
+            spotify_player_fragment?.view?.requestLayout()
         }
     }
 

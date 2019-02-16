@@ -160,7 +160,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spotify_player_layout"
+                    app:layout_constraintTop_toBottomOf="@id/spotify_player_fragment"
                     app:main_hint_text="@string/no_tracks_loaded_yet"
                     app:should_show_header="true" />
 

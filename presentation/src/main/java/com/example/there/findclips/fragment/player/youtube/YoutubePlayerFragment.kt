@@ -1,7 +1,6 @@
 package com.example.there.findclips.fragment.player.youtube
 
 import android.arch.lifecycle.Lifecycle
-import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
@@ -24,8 +23,6 @@ import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.dpToPx
 import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.screenHeight
-import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
@@ -53,8 +50,6 @@ class YoutubePlayerFragment :
         ReactsToSlidingPanelStateChanges,
         StopsPlayback,
         Injectable {
-
-    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { context!!.dpToPx(context!!.screenHeight.toFloat()).toInt() }
 
     private var youTubePlayer: YouTubePlayer? = null
 
@@ -155,21 +150,10 @@ class YoutubePlayerFragment :
     }
 
     fun onPlayerDimensionsChange(slideOffset: Float) {
-        val youtubePlayerLayoutParams = youtube_player_layout?.layoutParams
-        val youtubePlayerHeight = if (context?.screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            (mainActivity!!.playerMaxVerticalHeight - mainActivity!!.minimumPlayerHeight) * slideOffset + mainActivity!!.minimumPlayerHeight
-        } else {
-            (youtubePlayerMaxHorizontalHeight - mainActivity!!.minimumPlayerHeight) * slideOffset + mainActivity!!.minimumPlayerHeight
-        }
-        youtubePlayerLayoutParams?.height = youtubePlayerHeight.toInt()
-
         val youtubePlayerGuidelinePercentage = (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
         youtube_player_guideline.setGuidelinePercent(youtubePlayerGuidelinePercentage)
-
-        youtube_player_layout?.requestLayout()
         youtube_player_guideline?.requestLayout()
     }
-
 
     private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
         ImageButton(context).apply {
