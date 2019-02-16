@@ -7,15 +7,17 @@ import com.example.there.findclips.di.vm.ViewModelKey
 import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsViewModel
 import com.example.there.findclips.fragment.account.saved.AccountSavedViewModel
 import com.example.there.findclips.fragment.account.top.AccountTopViewModel
-import com.example.there.findclips.fragment.spotifyitem.album.AlbumViewModel
-import com.example.there.findclips.fragment.spotifyitem.artist.ArtistViewModel
-import com.example.there.findclips.fragment.spotifyitem.category.CategoryViewModel
 import com.example.there.findclips.fragment.dashboard.DashboardViewModel
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesViewModel
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesViewModel
-import com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistViewModel
+import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerViewModel
+import com.example.there.findclips.fragment.player.youtube.YoutubePlayerViewModel
 import com.example.there.findclips.fragment.search.spotify.SpotifySearchViewModel
 import com.example.there.findclips.fragment.search.videos.VideosSearchViewModel
+import com.example.there.findclips.fragment.spotifyitem.album.AlbumViewModel
+import com.example.there.findclips.fragment.spotifyitem.artist.ArtistViewModel
+import com.example.there.findclips.fragment.spotifyitem.category.CategoryViewModel
+import com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistViewModel
 import com.example.there.findclips.fragment.spotifyitem.track.TrackViewModel
 import com.example.there.findclips.fragment.trackvideos.TrackVideosViewModel
 import com.example.there.findclips.main.MainViewModel
@@ -103,4 +105,14 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(AccountSavedViewModel::class)
     abstract fun accountSavedViewModel(viewModel: AccountSavedViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SpotifyPlayerViewModel::class)
+    abstract fun spotifyPlayerViewModel(viewModel: SpotifyPlayerViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(YoutubePlayerViewModel::class)
+    abstract fun youtubePlayerViewModel(viewModel: YoutubePlayerViewModel): ViewModel
 }

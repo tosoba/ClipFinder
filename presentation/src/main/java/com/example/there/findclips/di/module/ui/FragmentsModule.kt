@@ -3,15 +3,17 @@ package com.example.there.findclips.di.module.ui
 import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.fragment.account.saved.AccountSavedFragment
 import com.example.there.findclips.fragment.account.top.AccountTopFragment
-import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
-import com.example.there.findclips.fragment.spotifyitem.artist.ArtistFragment
-import com.example.there.findclips.fragment.spotifyitem.category.CategoryFragment
 import com.example.there.findclips.fragment.dashboard.DashboardFragment
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
-import com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistFragment
+import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerFragment
+import com.example.there.findclips.fragment.player.youtube.YoutubePlayerFragment
 import com.example.there.findclips.fragment.search.spotify.SpotifySearchFragment
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
+import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
+import com.example.there.findclips.fragment.spotifyitem.artist.ArtistFragment
+import com.example.there.findclips.fragment.spotifyitem.category.CategoryFragment
+import com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistFragment
 import com.example.there.findclips.fragment.spotifyitem.track.TrackFragment
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import dagger.Module
@@ -61,4 +63,10 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun accountSavedFragment(): AccountSavedFragment
+
+    @ContributesAndroidInjector
+    abstract fun spotifyPlayerFragment(): SpotifyPlayerFragment
+
+    @ContributesAndroidInjector
+    abstract fun youtubePlayerFragment(): YoutubePlayerFragment
 }
