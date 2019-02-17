@@ -1,4 +1,4 @@
-package com.example.there.findclips.main
+package com.example.there.findclips.fragment.player.spotify
 
 import android.app.Service
 import android.content.Intent

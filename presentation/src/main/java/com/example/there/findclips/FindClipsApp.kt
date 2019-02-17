@@ -7,7 +7,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.example.there.findclips.di.AppInjector
-import com.example.there.findclips.main.CancelPlayerNotificationService
+import com.example.there.findclips.fragment.player.spotify.CancelPlayerNotificationService
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
