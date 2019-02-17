@@ -19,8 +19,8 @@ import com.example.there.findclips.fragment.trackvideos.OnTrackChangeListener
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.util.ext.connectivitySnackbarHost
 import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.util.ext.mainActivity
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -132,7 +132,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                             viewModel.viewState.artists.isNotEmpty() &&
                             viewModel.viewState.similarTracks.isNotEmpty()
                 },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )

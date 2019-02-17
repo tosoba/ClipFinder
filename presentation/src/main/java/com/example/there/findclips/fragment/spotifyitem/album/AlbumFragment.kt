@@ -82,12 +82,12 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                     }
                 },
                 onPlayBtnClickListener = View.OnClickListener {
-                    val playAlbum: () -> Unit = { mainActivity?.loadAlbum(album) }
-                    if (mainActivity?.playerLoggedIn == true) {
+                    val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
+                    if (spotifyPlayerController?.isPlayerLoggedIn == true) {
                         playAlbum()
                     } else {
-                        mainActivity?.showLoginDialog()
-                        mainActivity?.onLoginSuccessful = playAlbum
+                        spotifyLoginController?.showLoginDialog()
+                        spotifyLoginController?.onLoginSuccessful = playAlbum
                     }
                 },
                 artistsAndTracksAdapter = artistsAndTracksAdapter
@@ -98,7 +98,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
         ConnectivityComponent(
                 activity!!,
                 { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )
@@ -118,7 +118,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                 }
             }))
             albumRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            albumToolbar.setupWithBackNavigation(mainActivity)
+            albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
 

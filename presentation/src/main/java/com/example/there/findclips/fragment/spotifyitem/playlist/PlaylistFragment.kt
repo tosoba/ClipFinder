@@ -38,12 +38,12 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
                     }
                 },
                 onPlayBtnClickListener = View.OnClickListener {
-                    val playPlaylist: () -> Unit = { mainActivity?.loadPlaylist(playlist) }
-                    if (mainActivity?.playerLoggedIn == true) {
+                    val playPlaylist: () -> Unit = { spotifyPlayerController?.loadPlaylist(playlist) }
+                    if (spotifyPlayerController?.isPlayerLoggedIn == true) {
                         playPlaylist()
                     } else {
-                        mainActivity?.showLoginDialog()
-                        mainActivity?.onLoginSuccessful = playPlaylist
+                        spotifyLoginController?.showLoginDialog()
+                        spotifyLoginController?.onLoginSuccessful = playPlaylist
                     }
                 }
         )
@@ -53,7 +53,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         ConnectivityComponent(
                 activity!!,
                 { viewModel.tracks.value != null },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )
@@ -91,7 +91,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
                     playlistToolbarGradientBackgroundView.invalidate()
                 }
             }))
-            playlistToolbar.setupWithBackNavigation(mainActivity)
+            playlistToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
 

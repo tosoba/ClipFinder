@@ -13,8 +13,8 @@ import com.example.there.findclips.databinding.FragmentAccountBinding
 import com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.fragment.account.saved.AccountSavedFragment
 import com.example.there.findclips.fragment.account.top.AccountTopFragment
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.openDrawer
+import com.example.there.findclips.util.ext.appCompatActivity
+import com.example.there.findclips.util.ext.navigationDrawerController
 import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
@@ -53,8 +53,8 @@ class AccountFragment : Fragment(), HasMainToolbar {
         return binding.apply {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)
-            mainActivity?.setSupportActionBar(accountToolbar)
-            mainActivity?.showDrawerHamburger()
+            appCompatActivity?.setSupportActionBar(accountToolbar)
+            appCompatActivity?.showDrawerHamburger()
         }.root
     }
 
@@ -65,13 +65,13 @@ class AccountFragment : Fragment(), HasMainToolbar {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
     }
 
     override fun onOptionsItemSelected(
             item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        mainActivity?.openDrawer()
+        navigationDrawerController?.openDrawer()
         true
     } else false
 }

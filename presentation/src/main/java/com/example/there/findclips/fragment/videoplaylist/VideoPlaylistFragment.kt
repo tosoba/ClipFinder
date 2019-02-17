@@ -11,8 +11,9 @@ import com.example.there.findclips.R
 import com.example.there.findclips.databinding.FragmentVideoPlaylistBinding
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.appCompatActivity
 import com.example.there.findclips.util.ext.setupWithBackNavigation
+import com.example.there.findclips.util.ext.youtubePlayerController
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
 
 
@@ -41,12 +42,12 @@ class VideoPlaylistFragment : Fragment() {
                 PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList()),
                 View.OnClickListener { _ ->
                     videoFragment?.let {
-                        if (it.videosLoaded) mainActivity?.loadVideoPlaylist(playlist, it.videos)
+                        if (it.videosLoaded) youtubePlayerController?.loadVideoPlaylist(playlist, it.videos)
                         else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
                     }
                 }
         )
-        videoPlaylistToolbar.setupWithBackNavigation(mainActivity)
+        videoPlaylistToolbar.setupWithBackNavigation(appCompatActivity)
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -55,8 +55,8 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
         val binding: FragmentFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_favourites, container, false)
         return binding.apply {
             favouritesFragmentView = view
-            mainActivity?.setSupportActionBar(favouritesToolbar)
-            mainActivity?.showDrawerHamburger()
+            appCompatActivity?.setSupportActionBar(favouritesToolbar)
+            appCompatActivity?.showDrawerHamburger()
             favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
         }.root
     }
@@ -68,13 +68,13 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
     }
 
     override fun onOptionsItemSelected(
             item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        mainActivity?.openDrawer()
+        navigationDrawerController?.openDrawer()
         true
     } else false
 }

@@ -19,7 +19,7 @@ import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.spotifyLoginController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -98,7 +98,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
     }
 
     override fun AccountTopViewModel.onInitialized() {
-        viewState = AccountTopViewState(mainActivity!!.loggedInObservable)
+        viewState = AccountTopViewState(spotifyLoginController!!.loggedInObservable)
     }
 
     private fun loadData() {

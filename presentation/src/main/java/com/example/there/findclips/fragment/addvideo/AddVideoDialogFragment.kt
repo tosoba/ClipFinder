@@ -13,7 +13,7 @@ import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.DialogAddVideoBinding
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.videoPlaylistController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -27,7 +27,7 @@ class AddVideoDialogFragment : DialogFragment() {
     lateinit var state: AddVideoViewState
 
     private val onAddNewPlaylistsBtnClickListener = View.OnClickListener {
-        mainActivity?.showNewPlaylistDialog()
+        videoPlaylistController?.showNewPlaylistDialog()
     }
 
     private val view: AddVideoView by lazy {
@@ -43,7 +43,7 @@ class AddVideoDialogFragment : DialogFragment() {
                                 get() = ItemBinderBase(BR.playlist, R.layout.video_playlist_item)
                         },
                         ClickHandler {
-                            mainActivity?.addVideoToPlaylist(playlist = it)
+                            videoPlaylistController?.addVideoToPlaylist(playlist = it)
                             dismiss()
                         },
                         SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorPrimary, null), 2f),

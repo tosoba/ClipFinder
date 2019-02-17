@@ -30,9 +30,7 @@ import com.example.there.findclips.main.MainActivity
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.id
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.notificationManager
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -111,7 +109,7 @@ class SpotifyPlayerFragment :
     }
 
     private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
-        mainActivity?.hidePlayer()
+        slidingPanelController?.hideIfVisible()
         stopPlayback()
     }
 
@@ -209,7 +207,7 @@ class SpotifyPlayerFragment :
             registerReceiver(nextTrackIntentReceiver, IntentFilter(ACTION_NEXT_TRACK))
         }
         spotifyPlayer?.addNotificationCallback(this)
-        spotifyPlayer?.addConnectionStateCallback(mainActivity)
+        spotifyPlayer?.addConnectionStateCallback(connectionStateCallback)
     }
 
     private fun refreshBackgroundPlaybackNotificationIfShowing() {
@@ -224,7 +222,7 @@ class SpotifyPlayerFragment :
                 override fun onInitialized(player: SpotifyPlayer) {
                     spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, getNetworkConnectivity(applicationContext))
                     spotifyPlayer?.addNotificationCallback(this@SpotifyPlayerFragment)
-                    spotifyPlayer?.addConnectionStateCallback(mainActivity)
+                    spotifyPlayer?.addConnectionStateCallback(connectionStateCallback)
                 }
 
                 override fun onError(error: Throwable) {
@@ -274,7 +272,7 @@ class SpotifyPlayerFragment :
                 val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
                 it.id?.let { id ->
-                    mainActivity?.onSpotifyTrackChanged(id)
+                    spotifyTrackChangeHandler?.onTrackChanged(id)
                 }
 
                 Picasso.with(context)
@@ -321,7 +319,7 @@ class SpotifyPlayerFragment :
     }
 
     private fun resetProgressAndPlay(uri: String) {
-        mainActivity?.maximizePlayer()
+        slidingPanelController?.expandIfHidden()
         playback_seek_bar?.progress = 0
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
     }
@@ -365,8 +363,9 @@ class SpotifyPlayerFragment :
             unregisterReceiver(prevTrackIntentReceiver)
             unregisterReceiver(nextTrackIntentReceiver)
         }
+
         spotifyPlayer?.removeNotificationCallback(this)
-        spotifyPlayer?.removeConnectionStateCallback(mainActivity)
+        spotifyPlayer?.removeConnectionStateCallback(connectionStateCallback)
         Spotify.destroyPlayer(this)
 
         super.onDestroy()

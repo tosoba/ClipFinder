@@ -23,10 +23,7 @@ import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Category
 import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
-import com.example.there.findclips.util.ext.hostFragment
-import com.example.there.findclips.util.ext.mainActivity
-import com.example.there.findclips.util.ext.openDrawer
-import com.example.there.findclips.util.ext.showDrawerHamburger
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -132,15 +129,15 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         return binding.apply {
             dashboardView = view
-            mainActivity?.setSupportActionBar(dashboardToolbar)
-            mainActivity?.showDrawerHamburger()
+            appCompatActivity?.setSupportActionBar(dashboardToolbar)
+            appCompatActivity?.showDrawerHamburger()
             dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         }.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) mainActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
     }
 
     private val isDataLoaded: Boolean
@@ -152,7 +149,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         ConnectivityComponent(
                 activity!!,
                 { isDataLoaded },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )
@@ -169,7 +166,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
     override fun onOptionsItemSelected(
             item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        mainActivity?.openDrawer()
+        navigationDrawerController?.openDrawer()
         true
     } else false
 
@@ -186,9 +183,9 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
     lateinit var appPreferences: AppPreferences
 
     private fun observePreferences() {
-        fun reloadDataOnPreferencesChange()  {
+        fun reloadDataOnPreferencesChange() {
             viewModel.loadCategories(true)
-            viewModel.loadFeaturedPlaylists( true)
+            viewModel.loadFeaturedPlaylists(true)
         }
 
         disposablesComponent.addAll(

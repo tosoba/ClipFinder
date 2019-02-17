@@ -14,7 +14,7 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.account.TracksDataLoaded
 import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.spotifyLoginController
 
 
 class AccountPlaylistsFragment :
@@ -56,7 +56,7 @@ class AccountPlaylistsFragment :
     }
 
     override fun AccountPlaylistsViewModel.onInitialized() {
-        viewState = AccountPlaylistViewState(mainActivity!!.loggedInObservable)
+        viewState = AccountPlaylistViewState(spotifyLoginController!!.loggedInObservable)
     }
 
     private fun loadData() = viewModel.loadPlaylists()

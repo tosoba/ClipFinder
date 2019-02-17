@@ -18,8 +18,9 @@ import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.connectivitySnackbarHost
 import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.util.ext.youtubePlayerController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -68,7 +69,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
                                 get() = ItemBinderBase(BR.videoView, R.layout.video_item)
                         },
                         ClickHandler {
-                            mainActivity?.loadVideo(video = it.video)
+                            youtubePlayerController?.loadVideo(video = it.video)
                         },
                         SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                         onScrollListener
@@ -122,7 +123,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         ConnectivityComponent(
                 activity!!,
                 { query == "" || viewModel.viewState.videos.isNotEmpty() },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )

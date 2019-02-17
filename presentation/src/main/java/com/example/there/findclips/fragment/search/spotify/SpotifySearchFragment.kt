@@ -17,7 +17,7 @@ import com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.search.MainSearchFragment
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.connectivitySnackbarHost
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -138,7 +138,7 @@ class SpotifySearchFragment :
                                     viewModel.viewState.playlists.isNotEmpty() &&
                                     viewModel.viewState.tracks.isNotEmpty())
                 },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )

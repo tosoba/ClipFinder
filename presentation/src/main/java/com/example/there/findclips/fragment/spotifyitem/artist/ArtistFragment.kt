@@ -117,7 +117,7 @@ class ArtistFragment :
                             viewModel.viewState.topTracks.isNotEmpty() &&
                             viewModel.viewState.topTracks.isNotEmpty()
                 },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 {
                     viewModel.loadArtistData( artistToLoad)
                 },
@@ -154,13 +154,13 @@ class ArtistFragment :
             view = this@ArtistFragment.view
             loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)
             artistRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            artistToolbar.setupWithBackNavigation(mainActivity, ::onBackPressed)
+            artistToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {
-            mainActivity?.backPressedOnNoPreviousFragmentState()
+            backPressedWithNoPreviousStateHandler?.onBackPressedWithNoPreviousState()
         } else {
             loadCollapsingToolbarBackgroundGradient(viewModel.viewState.artist.get()!!.iconUrl)
         }

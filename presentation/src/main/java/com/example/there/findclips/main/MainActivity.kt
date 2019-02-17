@@ -14,6 +14,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.view.GravityCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
@@ -39,6 +40,7 @@ import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.there.findclips.main.controller.*
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
@@ -62,19 +64,36 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-
 class MainActivity :
         BaseVMActivity<MainViewModel>(MainViewModel::class.java),
         HasSupportFragmentInjector,
-        ConnectionStateCallback {
+        ConnectionStateCallback,
+        SlidingPanelController,
+        VideoPlaylistController,
+        SpotifyPlayerController,
+        YoutubePlayerController,
+        SpotifyTrackChangeHandler,
+        BackPressedWithNoPreviousStateHandler,
+        SpotifyLoginController,
+        ConnectivitySnackbarHost,
+        NavigationDrawerController {
+
+    override fun openDrawer() {
+        main_drawer_layout?.openDrawer(GravityCompat.START)
+    }
+
+    override val slidingPanel: SlidingUpPanelLayout?
+        get() = sliding_layout
 
     private val youtubePlayerFragment: YoutubePlayerFragment?
-        get() = supportFragmentManager?.findFragmentById(R.id.youtube_player_fragment) as? YoutubePlayerFragment
+        get() = supportFragmentManager?.findFragmentById(R.id.youtube_player_fragment)
+                as? YoutubePlayerFragment
 
     private val spotifyPlayerFragment: SpotifyPlayerFragment?
-        get() = supportFragmentManager?.findFragmentById(R.id.spotify_player_fragment) as? SpotifyPlayerFragment
+        get() = supportFragmentManager?.findFragmentById(R.id.spotify_player_fragment)
+                as? SpotifyPlayerFragment
 
-    val connectivitySnackbarParentView: View?
+    override val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +102,6 @@ class MainActivity :
         viewModel.deleteAllVideoSearchData()
 
         initViewBindings()
-
         setupNavigationFromSimilarTracks()
 
         addStatePropertyChangedCallbacks()
@@ -134,8 +152,8 @@ class MainActivity :
 
     // region spotify player
 
-    fun showLoginDialog() {
-        if (!playerLoggedIn) MaterialDialog.Builder(this)
+    override fun showLoginDialog() {
+        if (!isPlayerLoggedIn) MaterialDialog.Builder(this)
                 .title(R.string.spotify_login)
                 .content(R.string.playback_requires_login)
                 .positiveText(R.string.login)
@@ -166,40 +184,28 @@ class MainActivity :
     }
 
 
-    fun loadTrack(track: Track) {
+    override fun loadTrack(track: Track) {
         //TODO: check if player is actually in the middle of playing the track (maybe) same with album and playlist
         if (viewModel.viewState.isLoggedIn.get() == false) return //TODO: maybe show a toast with you need to be logged in msg
         youtubePlayerFragment?.stopPlayback()
-
         spotifyPlayerFragment?.loadTrack(track)
-
         viewModel.viewState.playerState.set(PlayerState.TRACK)
     }
 
 
-    fun loadAlbum(album: Album) {
+    override fun loadAlbum(album: Album) {
         if (viewModel.viewState.isLoggedIn.get() == false) return
-
         youtubePlayerFragment?.stopPlayback()
-
         spotifyPlayerFragment?.loadAlbum(album)
-
         viewModel.viewState.playerState.set(PlayerState.ALBUM)
     }
 
 
-    fun loadPlaylist(playlist: Playlist) {
+    override fun loadPlaylist(playlist: Playlist) {
         if (viewModel.viewState.isLoggedIn.get() == false) return
-
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadPlaylist(playlist)
-
         viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
-    }
-
-    //TODO: move this to an interface
-    fun hidePlayer() {
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.HIDDEN
     }
 
     private val similarTracksFragment: SpotifyTracksFragment?
@@ -212,8 +218,8 @@ class MainActivity :
         })
     }
 
-    fun onSpotifyTrackChanged(id: String) {
-        viewModel.getSimilarTracks(id)
+    override fun onTrackChanged(trackId: String) {
+        viewModel.getSimilarTracks(trackId)
         sliding_layout?.setDragView(spotifyPlayerFragment?.view)
     }
 
@@ -247,16 +253,15 @@ class MainActivity :
     }
 
 
-    val loggedInObservable: ObservableField<Boolean>
+    override val loggedInObservable: ObservableField<Boolean>
         get() = viewModel.viewState.isLoggedIn
 
-    val playerLoggedIn: Boolean
+    override val isPlayerLoggedIn: Boolean
         get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
 
     private fun logOutPlayer() {
         spotifyPlayerFragment?.logOutPlayer()
     }
-
 
     private fun openLoginWindow() {
         val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
@@ -276,7 +281,7 @@ class MainActivity :
         spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
     }
 
-    var onLoginSuccessful: (() -> Unit)? = null
+    override var onLoginSuccessful: (() -> Unit)? = null
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -312,11 +317,11 @@ class MainActivity :
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.search_view_menu_item -> true
         R.id.action_login -> {
-            if (!playerLoggedIn) openLoginWindow()
+            if (!isPlayerLoggedIn) openLoginWindow()
             true
         }
         R.id.action_logout -> {
-            if (playerLoggedIn) logOutPlayer()
+            if (isPlayerLoggedIn) logOutPlayer()
             true
         }
         else -> super.onOptionsItemSelected(item)
@@ -364,14 +369,13 @@ class MainActivity :
             }
 
             showMainToolbarOnBackPressed(currentFragment)
-
             currentFragment.childFragmentManager.popBackStackImmediate()
         } else {
             super.onBackPressed()
         }
     }
 
-    fun backPressedOnNoPreviousFragmentState() {
+    override fun onBackPressedWithNoPreviousState() {
         val currentFragment = pagerAdapter.currentFragment
         if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
             showMainToolbarOnBackPressed(currentFragment)
@@ -424,9 +428,9 @@ class MainActivity :
 
             }
 
-            R.id.drawer_action_login -> if (!playerLoggedIn) openLoginWindow()
+            R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
 
-            R.id.drawer_action_logout -> if (playerLoggedIn) logOutPlayer()
+            R.id.drawer_action_logout -> if (isPlayerLoggedIn) logOutPlayer()
         }
 
         main_drawer_layout?.closeDrawer(Gravity.START)
@@ -505,25 +509,21 @@ class MainActivity :
 
     // region YoutubePlayer
 
-    val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
-    val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
+    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
+    private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
 
     private var currentSlideOffset: Float = 0.0f
 
-    fun onVideoPlaylistEnded() {
-        sliding_layout?.hideIfVisible()
-    }
-
-    fun loadVideo(video: Video) {
+    override fun loadVideo(video: Video) {
         spotifyPlayerFragment?.stopPlayback()
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
         youtubePlayerFragment?.loadVideo(video)
         sliding_layout?.setDragView(youtubePlayerFragment?.view)
-        maximizePlayer()
+        expandIfHidden()
         viewModel.searchRelatedVideos(video)
     }
 
-    fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
+    override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
         if (videos.isEmpty()) {
             Toast.makeText(this, "Playlist is empty.", Toast.LENGTH_SHORT).show()
             return
@@ -533,17 +533,11 @@ class MainActivity :
         spotifyPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
         sliding_layout?.setDragView(youtubePlayerFragment?.view)
-        maximizePlayer()
+        expandIfHidden()
         viewModel.searchRelatedVideos(videos.first())
     }
 
-
-    fun maximizePlayer() {
-        sliding_layout?.expandIfHidden()
-    }
-
     private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
-
 
     private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
@@ -589,7 +583,7 @@ class MainActivity :
     }
 
     // region relatedVideos
-
+    //TODO: move this to a fragment
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
                 RecyclerViewItemViewState(viewModel.viewState.initialVideosLoadingInProgress, viewModel.viewState.videos),
@@ -613,10 +607,6 @@ class MainActivity :
         SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
     }
 
-    // endregion
-
-    // region favourites
-
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
         viewModel.viewState.playerState.get()?.let { playerState ->
             when (playerState) {
@@ -629,15 +619,13 @@ class MainActivity :
         }
     }
 
-    fun addVideoToPlaylist(playlist: VideoPlaylist) {
+    override fun addVideoToPlaylist(playlist: VideoPlaylist) {
         youtubePlayerFragment?.addVideoToPlaylist(playlist)
     }
 
-    fun showNewPlaylistDialog() {
+    override fun showNewPlaylistDialog() {
         youtubePlayerFragment?.showNewPlaylistDialog()
     }
-
-    // endregion
 
     private fun togglePlaylistFavouriteState() {
         spotifyPlayerFragment?.lastPlayedPlaylist?.let {

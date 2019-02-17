@@ -46,7 +46,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         ConnectivityComponent(
                 activity!!,
                 { viewModel.playlists.value != null },
-                mainActivity!!.connectivitySnackbarParentView!!,
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
                 true
         )
@@ -93,7 +93,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
                     categoryToolbarGradientBackgroundView.invalidate()
                 }
             }))
-            categoryToolbar.setupWithBackNavigation(mainActivity)
+            categoryToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
 

@@ -76,6 +76,7 @@ class ConnectivityComponent(
         }
     }
 
+    //TODO: move this out of here
     private fun showNoConnectionSnackbar() {
         snackbar = Snackbar
                 .make(parentView, "No internet connection.", Snackbar.LENGTH_LONG)

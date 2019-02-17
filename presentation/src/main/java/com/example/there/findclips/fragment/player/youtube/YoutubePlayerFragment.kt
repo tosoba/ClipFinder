@@ -22,7 +22,7 @@ import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
 import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.mainActivity
+import com.example.there.findclips.util.ext.slidingPanelController
 import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
@@ -64,7 +64,7 @@ class YoutubePlayerFragment :
     }
 
     private val onYoutubePlayerCloseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        mainActivity?.hidePlayer()
+        slidingPanelController?.hideIfVisible()
         youTubePlayer?.pause()
         lastPlayedVideo = null
         lastVideoPlaylist = null
@@ -225,7 +225,7 @@ class YoutubePlayerFragment :
                     } else {
                         Toast.makeText(context, "${lastVideoPlaylist?.name
                                 ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
-                        mainActivity?.onVideoPlaylistEnded()
+                        slidingPanelController?.hideIfVisible()
                     }
                 }
                 else -> return

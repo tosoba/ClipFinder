@@ -82,12 +82,12 @@ class TrackVideosFragment :
 
     private val onPlayBtnClickListener = View.OnClickListener { _ ->
         viewModel.viewState.track.get()?.let {
-            val playTrack: () -> Unit = { mainActivity?.loadTrack(track = it) }
-            if (mainActivity?.playerLoggedIn == true) {
+            val playTrack: () -> Unit = { spotifyPlayerController?.loadTrack(track = it) }
+            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
                 playTrack()
             } else {
-                mainActivity?.showLoginDialog()
-                mainActivity?.onLoginSuccessful = playTrack
+                spotifyLoginController?.showLoginDialog()
+                spotifyLoginController?.onLoginSuccessful = playTrack
             }
         }
     }
@@ -124,13 +124,13 @@ class TrackVideosFragment :
             view = this@TrackVideosFragment.view
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
             trackVideosViewpager.offscreenPageLimit = 1
-            trackVideosToolbar.setupWithBackNavigation(mainActivity, ::onBackPressed)
+            trackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {
-            mainActivity?.backPressedOnNoPreviousFragmentState()
+            backPressedWithNoPreviousStateHandler?.onBackPressedWithNoPreviousState()
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
