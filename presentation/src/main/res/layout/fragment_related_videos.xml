@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.relatedvideos.RelatedVideosFragment">
+<layout>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fragmentView"
+            type="com.example.there.findclips.fragment.relatedvideos.RelatedVideosView" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".fragment.relatedvideos.RelatedVideosFragment">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/related_videos_recycler_view"
+            clickHandler="@{fragmentView.relatedVideosRecyclerViewItemView.onItemClickListener}"
+            itemDecoration="@{fragmentView.relatedVideosRecyclerViewItemView.itemDecoration}"
+            itemViewBinder="@{fragmentView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
+            items="@{fragmentView.relatedVideosRecyclerViewItemView.state.items}"
+            onScrollListener="@{fragmentView.relatedVideosRecyclerViewItemView.onScrollListener}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/related_videos_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{safeUnbox(fragmentView.state.initialVideosLoadingInProgress) ? View.VISIBLE : View.GONE}" />
+
+    </FrameLayout>
+</layout>

@@ -98,29 +98,15 @@
 
                 <!-- TODO: related_videos_recycler_view, related_videos_progress_bar, add_to_favourites_fab -> related vids fragment -->
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/related_videos_recycler_view"
-                    clickHandler="@{mainActivityView.relatedVideosRecyclerViewItemView.onItemClickListener}"
-                    itemDecoration="@{mainActivityView.relatedVideosRecyclerViewItemView.itemDecoration}"
-                    itemViewBinder="@{mainActivityView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
-                    items="@{mainActivityView.relatedVideosRecyclerViewItemView.state.items}"
-                    onScrollListener="@{mainActivityView.relatedVideosRecyclerViewItemView.onScrollListener}"
+                <fragment
+                    android:name="com.example.there.findclips.fragment.relatedvideos.RelatedVideosFragment"
+                    android:id="@+id/related_videos_fragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/youtube_player_fragment" />
-
-                <ProgressBar
-                    android:id="@+id/related_videos_progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="@{safeUnbox(mainActivityView.state.initialVideosLoadingInProgress) ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/youtube_player_fragment" />
+                    app:layout_constraintTop_toBottomOf="@id/youtube_player_fragment"/>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/add_to_favourites_fab"

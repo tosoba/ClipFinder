@@ -3,21 +3,18 @@ package com.example.there.findclips.main
 import android.util.Log
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
-import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
-import com.example.there.domain.usecase.videos.SearchRelatedVideos
-import com.example.there.findclips.base.vm.BaseVideosViewModel
-import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.base.vm.BaseViewModel
+import com.example.there.findclips.model.entity.Album
+import com.example.there.findclips.model.entity.Playlist
+import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.User
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper
-import com.example.there.findclips.model.mapper.VideoEntityMapper
-import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
 
 class MainViewModel @Inject constructor(
-        getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
-        private val searchRelatedVideos: SearchRelatedVideos,
         private val getSimilarTracks: GetSimilarTracks,
         private val getCurrentUser: GetCurrentUser,
         private val insertTrack: InsertTrack,
@@ -30,50 +27,16 @@ class MainViewModel @Inject constructor(
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved,
         private val isAlbumSaved: IsAlbumSaved,
         private val deleteAllVideoSearchData: DeleteAllVideoSearchData
-) : BaseVideosViewModel(getChannelsThumbnailUrls) {
+) : BaseViewModel() {
 
     val viewState = MainViewState()
 
     val drawerViewState = DrawerHeaderViewState()
 
-    private var lastSearchVideo: Video? = null
-
     fun getSimilarTracks(trackId: String) {
         addDisposable(getSimilarTracks.execute(trackId)
                 .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError))
     }
-
-    fun searchRelatedVideosWithToLastId() {
-        lastSearchVideo?.let {
-            addSearchRelatedVideosDisposable(it, true)
-        }
-    }
-
-    fun searchRelatedVideos(toVideo: Video, onFinally: (() -> Unit)? = null) {
-        lastSearchVideo = toVideo
-        viewState.videos.clear()
-        addSearchRelatedVideosDisposable(toVideo, false, onFinally)
-    }
-
-    private fun addSearchRelatedVideosDisposable(video: Video, loadMore: Boolean, onFinally: (() -> Unit)? = null) {
-        if (loadMore) viewState.loadingMoreVideosInProgress.set(true)
-        else viewState.initialVideosLoadingInProgress.set(true)
-
-        addDisposable(searchRelatedVideos.execute(SearchRelatedVideos.Input(video.id, loadMore))
-                .doFinally {
-                    if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
-                    else viewState.initialVideosLoadingInProgress.set(false)
-                    onFinally?.invoke()
-                }
-                .subscribe({ videos ->
-                    val mapped = videos.map(VideoEntityMapper::mapFrom)
-                    viewState.videos.addAll(mapped.map { VideoItemView(it, null) })
-                    getChannelThumbnails(videos, onSuccess = {
-                        it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
-                    })
-                }, ::onError))
-    }
-
 
     fun getCurrentUser() = addDisposable(getCurrentUser.execute()
             .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))

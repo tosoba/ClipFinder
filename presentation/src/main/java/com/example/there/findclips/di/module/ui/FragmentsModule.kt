@@ -8,6 +8,7 @@ import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavourites
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesFragment
 import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerFragment
 import com.example.there.findclips.fragment.player.youtube.YoutubePlayerFragment
+import com.example.there.findclips.fragment.relatedvideos.RelatedVideosFragment
 import com.example.there.findclips.fragment.search.spotify.SpotifySearchFragment
 import com.example.there.findclips.fragment.search.videos.VideosSearchFragment
 import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
@@ -69,4 +70,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun youtubePlayerFragment(): YoutubePlayerFragment
+
+    @ContributesAndroidInjector
+    abstract fun relatedVideosFragment(): RelatedVideosFragment
 }

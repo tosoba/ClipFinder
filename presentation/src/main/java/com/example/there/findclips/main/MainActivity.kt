@@ -13,10 +13,7 @@ import android.provider.SearchRecentSuggestions
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.GravityCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.*
@@ -25,7 +22,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.data.api.SpotifyClient
 import com.example.there.data.preferences.AppPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.base.fragment.BaseHostFragment
@@ -36,6 +32,7 @@ import com.example.there.findclips.databinding.DrawerHeaderBinding
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerFragment
 import com.example.there.findclips.fragment.player.youtube.YoutubePlayerFragment
+import com.example.there.findclips.fragment.relatedvideos.RelatedVideosFragment
 import com.example.there.findclips.fragment.search.SearchFragment
 import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
@@ -45,15 +42,6 @@ import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.list.item.VideoItemView
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -86,16 +74,20 @@ class MainActivity :
         get() = sliding_layout
 
     private val youtubePlayerFragment: YoutubePlayerFragment?
-        get() = supportFragmentManager?.findFragmentById(R.id.youtube_player_fragment)
+        get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
                 as? YoutubePlayerFragment
 
     private val spotifyPlayerFragment: SpotifyPlayerFragment?
-        get() = supportFragmentManager?.findFragmentById(R.id.spotify_player_fragment)
+        get() = supportFragmentManager.findFragmentById(R.id.spotify_player_fragment)
                 as? SpotifyPlayerFragment
 
     private val similarTracksFragment: SpotifyTracksFragment?
         get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
                 as? SpotifyTracksFragment
+
+    private val relatedVideosFragment: RelatedVideosFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
+                as? RelatedVideosFragment
 
     override val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
@@ -111,7 +103,6 @@ class MainActivity :
                 fadeOnClickListener = fadeOnClickListener,
                 slideListener = slideListener,
                 initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-                relatedVideosRecyclerViewItemView = relatedVideosRecyclerViewItemView,
                 onFavouriteBtnClickListener = onFavouriteBtnClickListener
         )
     }
@@ -273,7 +264,7 @@ class MainActivity :
         youtubePlayerFragment?.loadVideo(video)
         sliding_layout?.setDragView(youtubePlayerFragment?.view)
         expandIfHidden()
-        viewModel.searchRelatedVideos(video)
+        relatedVideosFragment?.searchRelatedVideos(video)
     }
 
     override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
@@ -287,7 +278,7 @@ class MainActivity :
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
         sliding_layout?.setDragView(youtubePlayerFragment?.view)
         expandIfHidden()
-        viewModel.searchRelatedVideos(videos.first())
+        relatedVideosFragment?.searchRelatedVideos(videos.first())
     }
 
     override fun addVideoToPlaylist(playlist: VideoPlaylist) {
@@ -386,7 +377,6 @@ class MainActivity :
     private fun initViewBindings() {
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
-        binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
             binding.addToFavouritesFab.hideAndShow()
         })
@@ -554,30 +544,6 @@ class MainActivity :
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-    }
-
-    //TODO: move this to a fragment
-    private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
-        RecyclerViewItemView(
-                RecyclerViewItemViewState(viewModel.viewState.initialVideosLoadingInProgress, viewModel.viewState.videos),
-                object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
-                    override val itemViewBinder: ItemBinder<VideoItemView>
-                        get() = ItemBinderBase(BR.videoView, R.layout.video_item)
-                },
-                ClickHandler { loadVideo(it.video) },
-                relatedVideosItemDecoration,
-                onRelatedVideosScrollListener
-        )
-    }
-
-    private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
-            override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
-        }
-    }
-
-    private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
-        SeparatorDecoration(this, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
     }
 
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
