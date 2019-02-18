@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import com.example.there.findclips.util.ext.notificationManager
 
-class CancelPlayerNotificationService : Service() {
+class SpotifyPlayerCancelNotificationService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
