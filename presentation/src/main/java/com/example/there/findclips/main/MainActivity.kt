@@ -93,8 +93,33 @@ class MainActivity :
         get() = supportFragmentManager?.findFragmentById(R.id.spotify_player_fragment)
                 as? SpotifyPlayerFragment
 
+    private val similarTracksFragment: SpotifyTracksFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
+                as? SpotifyTracksFragment
+
     override val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
+
+    private val view: MainView by lazy {
+        MainView(
+                state = viewModel.viewState,
+                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+                onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
+                pagerAdapter = pagerAdapter,
+                onPageChangeListener = onPageChangeListener,
+                offScreenPageLimit = 2,
+                fadeOnClickListener = fadeOnClickListener,
+                slideListener = slideListener,
+                initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
+                relatedVideosRecyclerViewItemView = relatedVideosRecyclerViewItemView,
+                onFavouriteBtnClickListener = onFavouriteBtnClickListener
+        )
+    }
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
+    private var searchViewMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,250 +132,12 @@ class MainActivity :
         addStatePropertyChangedCallbacks()
     }
 
-    private fun setupNavigationFromSimilarTracks() {
-        similarTracksFragment?.onItemClick = {
-            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            pagerAdapter.currentHostFragment?.showFragment(TrackVideosFragment.newInstance(it), true)
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
-        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
-        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
-            val newState = (observable as ObservableField<PlayerState>).get()!!
-            when (newState) {
-                PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let { viewModel.updateTrackFavouriteState(it) }
-                PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let { viewModel.updatePlaylistFavouriteState(it) }
-                PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let { viewModel.updateAlbumFavouriteState(it) }
-                else -> viewModel.viewState.itemFavouriteState.set(false)
-            }
-        })
-    }
-
-
-    private fun initViewBindings() {
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainActivityView = view
-        binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
-            binding.addToFavouritesFab.hideAndShow()
-        })
-
-        val drawerHeaderBinding: DrawerHeaderBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
-        drawerHeaderBinding.viewState = viewModel.drawerViewState
-        binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        updatePlayersDimensions(currentSlideOffset)
-        updateMainContentLayoutParams()
-        updateFavouriteBtnOnConfigChange(newConfig)
-    }
-
-
-    // region spotify player
-
-    override fun showLoginDialog() {
-        if (!isPlayerLoggedIn) MaterialDialog.Builder(this)
-                .title(R.string.spotify_login)
-                .content(R.string.playback_requires_login)
-                .positiveText(R.string.login)
-                .negativeText(R.string.cancel)
-                .onPositive { _, _ -> openLoginWindow() }
-                .build()
-                .apply { show() }
-    }
-
-    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
-
-        menu?.apply {
-            findItem(R.id.action_login)?.isVisible = !isLoggedIn
-            findItem(R.id.action_logout)?.isVisible = isLoggedIn
-        }
-
-        drawer_navigation_view?.menu?.apply {
-            findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
-            findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
-        }
-
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-
-    override fun loadTrack(track: Track) {
-        //TODO: check if player is actually in the middle of playing the track (maybe) same with album and playlist
-        if (viewModel.viewState.isLoggedIn.get() == false) return //TODO: maybe show a toast with you need to be logged in msg
-        youtubePlayerFragment?.stopPlayback()
-        spotifyPlayerFragment?.loadTrack(track)
-        viewModel.viewState.playerState.set(PlayerState.TRACK)
-    }
-
-
-    override fun loadAlbum(album: Album) {
-        if (viewModel.viewState.isLoggedIn.get() == false) return
-        youtubePlayerFragment?.stopPlayback()
-        spotifyPlayerFragment?.loadAlbum(album)
-        viewModel.viewState.playerState.set(PlayerState.ALBUM)
-    }
-
-
-    override fun loadPlaylist(playlist: Playlist) {
-        if (viewModel.viewState.isLoggedIn.get() == false) return
-        youtubePlayerFragment?.stopPlayback()
-        spotifyPlayerFragment?.loadPlaylist(playlist)
-        viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
-    }
-
-    private val similarTracksFragment: SpotifyTracksFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment) as? SpotifyTracksFragment
-
-    override fun setupObservers() {
-        super.setupObservers()
-        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
-            tracks?.let { similarTracksFragment?.resetItems(it) }
-        })
-    }
-
-    override fun onTrackChanged(trackId: String) {
-        viewModel.getSimilarTracks(trackId)
-        sliding_layout?.setDragView(spotifyPlayerFragment?.view)
-    }
-
-    override fun onLoggedOut() {
-        viewModel.viewState.isLoggedIn.set(false)
-        viewModel.drawerViewState.user.set(null)
-        Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onLoggedIn() {
-        viewModel.viewState.isLoggedIn.set(true)
-        Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
-
-        if (spotifyPlayerFragment?.isPlayerInitialized == true)
-            onLoginSuccessful?.invoke()
-        onLoginSuccessful = null
-    }
-
-    override fun onConnectionMessage(message: String?) {
-        Log.e("onConnectionMessage: ", message ?: "Unknown connection message.")
-    }
-
-    override fun onLoginFailed(error: Error?) {
-        Log.e("ERR", "onLoginFailed")
-        Toast.makeText(this, "Login failed: ${error?.name
-                ?: "error unknown"}", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onTemporaryError() {
-        Log.e("ERR", "onTemporaryError")
-    }
-
-
-    override val loggedInObservable: ObservableField<Boolean>
-        get() = viewModel.viewState.isLoggedIn
-
-    override val isPlayerLoggedIn: Boolean
-        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
-
-    private fun logOutPlayer() {
-        spotifyPlayerFragment?.logOutPlayer()
-    }
-
-    private fun openLoginWindow() {
-        val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(SCOPES)
-                .build()
-
-        AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
-    }
-
-    @Inject
-    lateinit var appPreferences: AppPreferences
-
-    private fun onAuthenticationComplete(accessToken: String) {
-        appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
-        viewModel.getCurrentUser()
-
-        spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
-    }
-
-    override var onLoginSuccessful: (() -> Unit)? = null
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == LOGIN_REQUEST_CODE) {
-            val response = AuthenticationClient.getResponse(resultCode, data)
-
-            when (response.type) {
-                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
-                AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
-                else -> Log.e("ERR", "Auth result: " + response.type)
-            }
-        }
-    }
-
-    // endregion
-
-    // region search
-
-    private var searchViewMenuItem: MenuItem? = null
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
-
-        searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
-        val searchView = searchViewMenuItem?.actionView as? SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
-        R.id.search_view_menu_item -> true
-        R.id.action_login -> {
-            if (!isPlayerLoggedIn) openLoginWindow()
-            true
-        }
-        R.id.action_logout -> {
-            if (isPlayerLoggedIn) logOutPlayer()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         when (intent?.action) {
             Intent.ACTION_SEARCH -> handleSearchIntent(intent)
         }
     }
-
-    private fun handleSearchIntent(intent: Intent) {
-        val query = intent.getStringExtra(SearchManager.QUERY)
-        if (query.isNullOrBlank()) return
-
-        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE).run {
-            saveRecentQuery(query, null)
-        }
-
-        searchViewMenuItem?.collapseActionView()
-
-        val currentFragment = pagerAdapter.currentHostFragment
-        currentFragment?.showFragment(SearchFragment.newInstance(query), true)
-    }
-
-    // endregion
-
-    // region backNavigation
 
     override fun onBackPressed() {
         val currentFragment = pagerAdapter.currentHostFragment
@@ -385,6 +172,251 @@ class MainActivity :
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            val response = AuthenticationClient.getResponse(resultCode, data)
+
+            when (response.type) {
+                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
+                AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
+                else -> Log.e("ERR", "Auth result: " + response.type)
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updatePlayersDimensions(currentSlideOffset)
+        updateMainContentLayoutParams()
+        updateFavouriteBtnOnConfigChange(newConfig)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
+
+        menu?.apply {
+            findItem(R.id.action_login)?.isVisible = !isLoggedIn
+            findItem(R.id.action_logout)?.isVisible = isLoggedIn
+        }
+
+        drawer_navigation_view?.menu?.apply {
+            findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
+            findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+        }
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+
+        searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
+        val searchView = searchViewMenuItem?.actionView as? SearchView
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+        R.id.search_view_menu_item -> true
+        R.id.action_login -> {
+            if (!isPlayerLoggedIn) openLoginWindow()
+            true
+        }
+        R.id.action_logout -> {
+            if (isPlayerLoggedIn) logOutPlayer()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
+            tracks?.let { similarTracksFragment?.resetItems(it) }
+        })
+    }
+
+    override fun loadTrack(track: Track) {
+        //TODO: check if player is actually in the middle of playing the track (maybe) same with album and playlist
+        if (viewModel.viewState.isLoggedIn.get() == false) return //TODO: maybe show a toast with you need to be logged in msg
+        youtubePlayerFragment?.stopPlayback()
+        spotifyPlayerFragment?.loadTrack(track)
+        viewModel.viewState.playerState.set(PlayerState.TRACK)
+    }
+
+    override fun loadAlbum(album: Album) {
+        if (viewModel.viewState.isLoggedIn.get() == false) return
+        youtubePlayerFragment?.stopPlayback()
+        spotifyPlayerFragment?.loadAlbum(album)
+        viewModel.viewState.playerState.set(PlayerState.ALBUM)
+    }
+
+    override fun loadPlaylist(playlist: Playlist) {
+        if (viewModel.viewState.isLoggedIn.get() == false) return
+        youtubePlayerFragment?.stopPlayback()
+        spotifyPlayerFragment?.loadPlaylist(playlist)
+        viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
+    }
+
+    override fun onTrackChanged(trackId: String) {
+        viewModel.getSimilarTracks(trackId)
+        sliding_layout?.setDragView(spotifyPlayerFragment?.view)
+    }
+
+    override fun loadVideo(video: Video) {
+        spotifyPlayerFragment?.stopPlayback()
+        viewModel.viewState.playerState.set(PlayerState.VIDEO)
+        youtubePlayerFragment?.loadVideo(video)
+        sliding_layout?.setDragView(youtubePlayerFragment?.view)
+        expandIfHidden()
+        viewModel.searchRelatedVideos(video)
+    }
+
+    override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
+        if (videos.isEmpty()) {
+            Toast.makeText(this, "Playlist is empty.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
+        spotifyPlayerFragment?.stopPlayback()
+        youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
+        sliding_layout?.setDragView(youtubePlayerFragment?.view)
+        expandIfHidden()
+        viewModel.searchRelatedVideos(videos.first())
+    }
+
+    override fun addVideoToPlaylist(playlist: VideoPlaylist) {
+        youtubePlayerFragment?.addVideoToPlaylist(playlist)
+    }
+
+    override fun showNewPlaylistDialog() {
+        youtubePlayerFragment?.showNewPlaylistDialog()
+    }
+
+    override fun onLoggedOut() {
+        viewModel.viewState.isLoggedIn.set(false)
+        viewModel.drawerViewState.user.set(null)
+        Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onLoggedIn() {
+        viewModel.viewState.isLoggedIn.set(true)
+        Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
+
+        if (spotifyPlayerFragment?.isPlayerInitialized == true)
+            onLoginSuccessful?.invoke()
+        onLoginSuccessful = null
+    }
+
+    override fun onConnectionMessage(message: String?) {
+        Log.e("onConnectionMessage: ", message ?: "Unknown connection message.")
+    }
+
+    override fun onLoginFailed(error: Error?) {
+        Log.e("ERR", "onLoginFailed")
+        Toast.makeText(this, "Login failed: ${error?.name
+                ?: "error unknown"}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onTemporaryError() {
+        Log.e("ERR", "onTemporaryError")
+    }
+
+    private fun setupNavigationFromSimilarTracks() {
+        similarTracksFragment?.onItemClick = {
+            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            pagerAdapter.currentHostFragment?.showFragment(TrackVideosFragment.newInstance(it), true)
+        }
+    }
+
+    override fun showLoginDialog() {
+        if (!isPlayerLoggedIn) MaterialDialog.Builder(this)
+                .title(R.string.spotify_login)
+                .content(R.string.playback_requires_login)
+                .positiveText(R.string.login)
+                .negativeText(R.string.cancel)
+                .onPositive { _, _ -> openLoginWindow() }
+                .build()
+                .apply { show() }
+    }
+
+    override val loggedInObservable: ObservableField<Boolean>
+        get() = viewModel.viewState.isLoggedIn
+
+    override val isPlayerLoggedIn: Boolean
+        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
+
+    override var onLoginSuccessful: (() -> Unit)? = null
+
+    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
+    }
+
+    private fun logOutPlayer() {
+        spotifyPlayerFragment?.logOutPlayer()
+    }
+
+    private fun openLoginWindow() {
+        val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setScopes(SCOPES)
+                .build()
+
+        AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
+        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
+        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
+            val newState = (observable as ObservableField<PlayerState>).get()!!
+            when (newState) {
+                PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let { viewModel.updateTrackFavouriteState(it) }
+                PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let { viewModel.updatePlaylistFavouriteState(it) }
+                PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let { viewModel.updateAlbumFavouriteState(it) }
+                else -> viewModel.viewState.itemFavouriteState.set(false)
+            }
+        })
+    }
+
+    private fun initViewBindings() {
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.mainActivityView = view
+        binding.relatedVideosRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
+            binding.addToFavouritesFab.hideAndShow()
+        })
+
+        val drawerHeaderBinding: DrawerHeaderBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
+        drawerHeaderBinding.viewState = viewModel.drawerViewState
+        binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
+    }
+
+    private fun onAuthenticationComplete(accessToken: String) {
+        appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
+        viewModel.getCurrentUser()
+
+        spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
+    }
+
+    private fun handleSearchIntent(intent: Intent) {
+        val query = intent.getStringExtra(SearchManager.QUERY)
+        if (query.isNullOrBlank()) return
+
+        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE).run {
+            saveRecentQuery(query, null)
+        }
+
+        searchViewMenuItem?.collapseActionView()
+
+        val currentFragment = pagerAdapter.currentHostFragment
+        currentFragment?.showFragment(SearchFragment.newInstance(query), true)
+    }
+
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
             val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
@@ -392,26 +424,6 @@ class MainActivity :
             showDrawerHamburger()
         }
     }
-
-    // endregion
-
-    private val view: MainView by lazy {
-        MainView(
-                state = viewModel.viewState,
-                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
-                onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                offScreenPageLimit = 2,
-                fadeOnClickListener = fadeOnClickListener,
-                slideListener = slideListener,
-                initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-                relatedVideosRecyclerViewItemView = relatedVideosRecyclerViewItemView,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener
-        )
-    }
-
-    // region drawer navigation
 
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
@@ -436,10 +448,6 @@ class MainActivity :
         main_drawer_layout?.closeDrawer(Gravity.START)
         true
     }
-
-    // endregion
-
-    // region pager navigation
 
     private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 
@@ -469,10 +477,6 @@ class MainActivity :
         setSupportActionBar(mainToolbar)
         if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
     }
-
-    // endregion
-
-    // region SlidingPanel
 
     private val fadeOnClickListener = View.OnClickListener {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -505,39 +509,11 @@ class MainActivity :
         }
     }
 
-    // endregion
-
-    // region YoutubePlayer
-
     private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
     private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
+    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
 
     private var currentSlideOffset: Float = 0.0f
-
-    override fun loadVideo(video: Video) {
-        spotifyPlayerFragment?.stopPlayback()
-        viewModel.viewState.playerState.set(PlayerState.VIDEO)
-        youtubePlayerFragment?.loadVideo(video)
-        sliding_layout?.setDragView(youtubePlayerFragment?.view)
-        expandIfHidden()
-        viewModel.searchRelatedVideos(video)
-    }
-
-    override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
-        if (videos.isEmpty()) {
-            Toast.makeText(this, "Playlist is empty.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
-        spotifyPlayerFragment?.stopPlayback()
-        youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
-        sliding_layout?.setDragView(youtubePlayerFragment?.view)
-        expandIfHidden()
-        viewModel.searchRelatedVideos(videos.first())
-    }
-
-    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
 
     private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
@@ -567,8 +543,6 @@ class MainActivity :
     ) = if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) add_to_favourites_fab?.animate()?.alpha(0f)
     else add_to_favourites_fab?.animate()?.alpha(1f)
 
-    // endregion
-
     private fun updateMainContentLayoutParams() = with(main_content_layout) {
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -582,7 +556,6 @@ class MainActivity :
         })
     }
 
-    // region relatedVideos
     //TODO: move this to a fragment
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
@@ -617,14 +590,6 @@ class MainActivity :
                 else -> return@OnClickListener
             }
         }
-    }
-
-    override fun addVideoToPlaylist(playlist: VideoPlaylist) {
-        youtubePlayerFragment?.addVideoToPlaylist(playlist)
-    }
-
-    override fun showNewPlaylistDialog() {
-        youtubePlayerFragment?.showNewPlaylistDialog()
     }
 
     private fun togglePlaylistFavouriteState() {
