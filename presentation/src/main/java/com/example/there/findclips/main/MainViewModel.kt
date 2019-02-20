@@ -64,16 +64,17 @@ class MainViewModel @Inject constructor(
             .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))
 
     fun updateTrackFavouriteState(track: Track) = addDisposable(isTrackSaved.execute(TrackEntityMapper.mapBack(track))
-            .subscribe({ viewState.itemFavouriteState.set(it) }, {}))
+            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) }
+    )
 
     fun updatePlaylistFavouriteState(playlist: Playlist) = addDisposable(isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
-            .subscribe({ viewState.itemFavouriteState.set(it) }, {}))
+            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) })
 
     fun updateAlbumFavouriteState(album: Album) = addDisposable(isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
-            .subscribe({ viewState.itemFavouriteState.set(it) }, {}))
+            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) })
 
     fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
-            .subscribe({}, { Log.e("ERROR", "Delete all video search data error.") }))
+            .subscribe())
 
     fun togglePlaylistFavouriteState(
             playlist: Playlist,
@@ -82,7 +83,7 @@ class MainViewModel @Inject constructor(
     ) {
         val entity = PlaylistEntityMapper.mapBack(playlist)
         addDisposable(isSpotifyPlaylistSaved.execute(entity)
-                .subscribe({ isSaved ->
+                .subscribe { isSaved ->
                     if (isSaved) {
                         addDisposable(deleteSpotifyPlaylist.execute(entity)
                                 .subscribe({
@@ -96,7 +97,7 @@ class MainViewModel @Inject constructor(
                                     onPlaylistAdded()
                                 }, { Log.e("ERROR", "Insert error") }))
                     }
-                }, {}))
+                })
     }
 
     fun toggleTrackFavouriteState(
@@ -106,7 +107,7 @@ class MainViewModel @Inject constructor(
     ) {
         val entity = TrackEntityMapper.mapBack(track)
         addDisposable(isTrackSaved.execute(entity)
-                .subscribe({ isSaved ->
+                .subscribe { isSaved ->
                     if (isSaved) {
                         addDisposable(deleteTrack.execute(entity)
                                 .subscribe({
@@ -120,7 +121,7 @@ class MainViewModel @Inject constructor(
                                     onTrackAdded()
                                 }, { Log.e("ERROR", "Insert error") }))
                     }
-                }, {}))
+                })
     }
 
     fun toggleAlbumFavouriteState(
@@ -130,7 +131,7 @@ class MainViewModel @Inject constructor(
     ) {
         val entity = AlbumEntityMapper.mapBack(album)
         addDisposable(isAlbumSaved.execute(entity)
-                .subscribe({ isSaved ->
+                .subscribe { isSaved ->
                     if (isSaved) {
                         addDisposable(deleteAlbum.execute(entity)
                                 .subscribe({
@@ -144,6 +145,6 @@ class MainViewModel @Inject constructor(
                                     onAlbumAdded()
                                 }, { Log.e("ERROR", "Insert error") }))
                     }
-                }, {}))
+                })
     }
 }

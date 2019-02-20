@@ -96,8 +96,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- TODO: related_videos_recycler_view, related_videos_progress_bar, add_to_favourites_fab -> related vids fragment -->
-
                 <fragment
                     android:name="com.example.there.findclips.fragment.relatedvideos.RelatedVideosFragment"
                     android:id="@+id/related_videos_fragment"

@@ -178,7 +178,7 @@ class MainActivity :
             val response = AuthenticationClient.getResponse(resultCode, data)
 
             when (response.type) {
-                AuthenticationResponse.Type.TOKEN -> onAuthenticationComplete(response.accessToken)
+                AuthenticationResponse.Type.TOKEN -> onSpotifyAuthenticationComplete(response.accessToken)
                 AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
                 else -> Log.e("ERR", "Auth result: " + response.type)
             }
@@ -427,7 +427,7 @@ class MainActivity :
         binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
     }
 
-    private fun onAuthenticationComplete(accessToken: String) {
+    private fun onSpotifyAuthenticationComplete(accessToken: String) {
         appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
         viewModel.getCurrentUser()
 
