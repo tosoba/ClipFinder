@@ -10,7 +10,6 @@ import android.databinding.Observable
 import android.databinding.ObservableField
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -25,7 +24,6 @@ import com.example.there.data.preferences.AppPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
-import com.example.there.findclips.base.fragment.BaseHostFragment
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.ActivityMainBinding
@@ -41,10 +39,10 @@ import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.main.controller.*
+import com.example.there.findclips.main.spotify.SpotifyMainFragment
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
-import com.example.there.findclips.view.OnPageChangeListener
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -67,7 +65,8 @@ class MainActivity :
         BackPressedWithNoPreviousStateHandler,
         SpotifyLoginController,
         ConnectivitySnackbarHost,
-        NavigationDrawerController {
+        NavigationDrawerController,
+        ToolbarController {
 
     override fun openDrawer() {
         main_drawer_layout?.openDrawer(GravityCompat.START)
@@ -75,6 +74,10 @@ class MainActivity :
 
     override val slidingPanel: SlidingUpPanelLayout?
         get() = sliding_layout
+
+    private val spotifyMainFragment: SpotifyMainFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.main_content_layout)
+                as? SpotifyMainFragment
 
     private val youtubePlayerFragment: YoutubePlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
@@ -98,11 +101,7 @@ class MainActivity :
     private val view: MainView by lazy {
         MainView(
                 state = viewModel.viewState,
-                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
                 onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                offScreenPageLimit = 2,
                 fadeOnClickListener = fadeOnClickListener,
                 slideListener = slideListener,
                 initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
@@ -119,6 +118,10 @@ class MainActivity :
         super.onCreate(savedInstanceState)
 
         viewModel.deleteAllVideoSearchData()
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.main_content_layout, SpotifyMainFragment())
+                .commit()
 
         initViewBindings()
         setupNavigationFromSimilarTracks()
@@ -139,35 +142,41 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        val currentFragment = pagerAdapter.currentHostFragment
+        spotifyMainFragment?.let {
+            val currentFragment = it.currentHostFragment
 
-        if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            return
-        }
-
-        if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
-            currentFragment.topFragment?.let {
-                if (it is GoesToPreviousStateOnBackPressed) {
-                    it.onBackPressed()
-                    return
-                }
+            if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+                return
             }
 
-            showMainToolbarOnBackPressed(currentFragment)
-            currentFragment.childFragmentManager.popBackStackImmediate()
-        } else {
+            if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+                currentFragment.topFragment?.let { topFragment ->
+                    if (topFragment is GoesToPreviousStateOnBackPressed) {
+                        topFragment.onBackPressed()
+                        return
+                    }
+                }
+
+                showMainToolbarOnBackPressed(currentFragment)
+                currentFragment.childFragmentManager.popBackStackImmediate()
+            } else {
+                super.onBackPressed()
+            }
+        } ?: run {
             super.onBackPressed()
         }
     }
 
     override fun onBackPressedWithNoPreviousState() {
-        val currentFragment = pagerAdapter.currentFragment
-        if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
-            showMainToolbarOnBackPressed(currentFragment)
-            currentFragment.childFragmentManager.popBackStackImmediate()
-        } else {
-            super.onBackPressed()
+        spotifyMainFragment?.let {
+            val currentFragment = it.currentFragment
+            if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+                showMainToolbarOnBackPressed(currentFragment)
+                currentFragment.childFragmentManager.popBackStackImmediate()
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -230,6 +239,15 @@ class MainActivity :
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    override fun toggleToolbar() {
+        spotifyMainFragment?.let {
+            val currentTopFragment = it.currentHostFragment?.topFragment
+            val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
+            setSupportActionBar(mainToolbar)
+            if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
+        }
     }
 
     override fun setupObservers() {
@@ -350,7 +368,8 @@ class MainActivity :
     private fun setupNavigationFromSimilarTracks() {
         similarTracksFragment?.onItemClick = {
             sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            pagerAdapter.currentHostFragment?.showFragment(TrackVideosFragment.newInstance(it), true)
+            spotifyMainFragment?.currentHostFragment
+                    ?.showFragment(TrackVideosFragment.newInstance(it), true)
         }
     }
 
@@ -444,8 +463,12 @@ class MainActivity :
 
         searchViewMenuItem?.collapseActionView()
 
-        val currentFragment = pagerAdapter.currentHostFragment
-        currentFragment?.showFragment(SearchFragment.newInstance(query), true)
+        spotifyMainFragment?.let {
+            val currentFragment = it.currentHostFragment
+            currentFragment?.showFragment(SearchFragment.newInstance(query), true)
+        }
+
+        //TODO: handle soundcloud search here
     }
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
@@ -458,6 +481,16 @@ class MainActivity :
 
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
+            R.id.drawer_action_show_spotify_main -> {
+                spotifyMainFragment?.let {
+                    return@OnNavigationItemSelectedListener true
+                } ?: run {
+
+                }
+            }
+            R.id.drawer_action_show_soundcloud_main -> {
+
+            }
             R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
                 startActivity(this)
             }
@@ -468,7 +501,7 @@ class MainActivity :
             }
 
             R.id.drawer_action_about -> {
-
+                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
             }
 
             R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
@@ -478,35 +511,6 @@ class MainActivity :
 
         main_drawer_layout?.closeDrawer(Gravity.START)
         true
-    }
-
-    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
-
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (item.itemId == main_bottom_navigation_view.selectedItemId) {
-            return@OnNavigationItemSelectedListener false
-        }
-
-        main_view_pager.currentItem = itemIds.indexOf(item.itemId)
-        toggleToolbar()
-
-        return@OnNavigationItemSelectedListener true
-    }
-
-    private val pagerAdapter by lazy { MainFragmentPagerAdapter(supportFragmentManager) }
-
-    private val onPageChangeListener = object : OnPageChangeListener {
-        override fun onPageSelected(position: Int) {
-            main_bottom_navigation_view?.checkItem(itemIds[position])
-            toggleToolbar()
-        }
-    }
-
-    private fun toggleToolbar() {
-        val currentTopFragment = (pagerAdapter.currentFragment as BaseHostFragment).topFragment
-        val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
-        setSupportActionBar(mainToolbar)
-        if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
     }
 
     private val fadeOnClickListener = View.OnClickListener {

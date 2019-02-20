@@ -43,6 +43,9 @@ val Fragment.connectionStateCallback: ConnectionStateCallback?
 val Fragment.navigationDrawerController: NavigationDrawerController?
     get() = activity as? NavigationDrawerController
 
+val Fragment.toolbarController: ToolbarController?
+    get() = activity as? ToolbarController
+
 fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
         mainHintText: String,
         additionalHintText: String,
@@ -61,7 +64,7 @@ fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
 val Fragment.hostFragment: BaseHostFragment?
     get() {
         var fragment: Fragment? = this
-        while (fragment?.parentFragment != null) {
+        while (fragment?.parentFragment?.parentFragment != null) {
             fragment = fragment.parentFragment
         }
         return if (fragment != null && fragment is BaseHostFragment) fragment else null

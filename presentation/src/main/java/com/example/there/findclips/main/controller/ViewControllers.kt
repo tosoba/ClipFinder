@@ -24,3 +24,7 @@ interface NavigationDrawerController {
 interface ConnectivitySnackbarHost {
     val connectivitySnackbarParentView: View?
 }
+
+interface ToolbarController {
+    fun toggleToolbar()
+}
