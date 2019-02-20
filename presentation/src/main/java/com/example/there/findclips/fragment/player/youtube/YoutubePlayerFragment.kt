@@ -4,7 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +12,9 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentYoutubePlayerBinding
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
-import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.player.IPlayerFragment
 import com.example.there.findclips.model.entity.Video
 import com.example.there.findclips.model.entity.VideoPlaylist
@@ -31,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
+        Fragment(),
         IPlayerFragment,
         Injectable {
 
@@ -54,8 +50,6 @@ class YoutubePlayerFragment :
         YoutubePlayerView(onYoutubePlayerCloseBtnClickListener, onYoutubePlayerPlayPauseBtnClickListener)
     }
 
-    private var addVideoDialogFragment: AddVideoDialogFragment? = null
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -73,11 +67,6 @@ class YoutubePlayerFragment :
         super.onViewCreated(view, savedInstanceState)
         initYouTubePlayerView()
         initPlayerViewControls(view)
-    }
-
-    override fun onDestroy() {
-        addVideoDialogFragment = null
-        super.onDestroy()
     }
 
     override fun onDragging() {
@@ -102,41 +91,6 @@ class YoutubePlayerFragment :
         youTubePlayer?.pause()
         lastPlayedVideo = null
         lastVideoPlaylist = null
-    }
-
-    fun onFavouriteBtnClick() {
-        lastPlayedVideo?.let {
-            viewModel.getFavouriteVideoPlaylists()
-            addVideoDialogFragment = AddVideoDialogFragment().apply {
-                state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
-                show(childFragmentManager, TAG_ADD_VIDEO)
-            }
-        }
-    }
-
-    fun addVideoToPlaylist(playlist: VideoPlaylist) = lastPlayedVideo?.let {
-        viewModel.addVideoToPlaylist(it, playlist) {
-            Toast.makeText(context, "Video added to playlist: ${playlist.name}.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun showNewPlaylistDialog() = lastPlayedVideo?.let {
-        MaterialDialog.Builder(context!!)
-                .title(getString(R.string.new_playlist))
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.playlist_name), "") { _, input ->
-                    val newPlaylistName = input.trim().toString()
-                    addVideoDialogFragment?.dismiss()
-                    viewModel.addVideoPlaylistWithVideo(VideoPlaylist(name = newPlaylistName), video = it) {
-                        Toast.makeText(
-                                context,
-                                "Video added to playlist: $newPlaylistName.",
-                                Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }.positiveText(getString(R.string.ok))
-                .build()
-                .apply { show() }
     }
 
     fun onPlayerDimensionsChange(slideOffset: Float) {
@@ -173,7 +127,8 @@ class YoutubePlayerFragment :
         playerUIController.showVideoTitle(true)
     }
 
-    private var lastPlayedVideo: Video? = null
+    var lastPlayedVideo: Video? = null
+        private set
 
     private var youtubePlaybackInProgress: Boolean = false
 
@@ -252,8 +207,6 @@ class YoutubePlayerFragment :
     }
 
     companion object {
-        private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
-
         private const val minimumYoutubePlayerGuidelinePercent = .45f
     }
 }

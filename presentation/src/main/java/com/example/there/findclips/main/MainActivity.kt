@@ -15,6 +15,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.widget.SearchView
+import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -29,6 +30,8 @@ import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPresse
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.databinding.DrawerHeaderBinding
+import com.example.there.findclips.fragment.addvideo.AddVideoDialogFragment
+import com.example.there.findclips.fragment.addvideo.AddVideoViewState
 import com.example.there.findclips.fragment.list.SpotifyTracksFragment
 import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerFragment
 import com.example.there.findclips.fragment.player.youtube.YoutubePlayerFragment
@@ -121,6 +124,11 @@ class MainActivity :
         setupNavigationFromSimilarTracks()
 
         addStatePropertyChangedCallbacks()
+    }
+
+    override fun onDestroy() {
+        addVideoDialogFragment = null
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -282,11 +290,32 @@ class MainActivity :
     }
 
     override fun addVideoToPlaylist(playlist: VideoPlaylist) {
-        youtubePlayerFragment?.addVideoToPlaylist(playlist)
+        youtubePlayerFragment?.lastPlayedVideo?.let {
+            viewModel.addVideoToPlaylist(it, playlist) {
+                Toast.makeText(this, "Video added to playlist: ${playlist.name}.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun showNewPlaylistDialog() {
-        youtubePlayerFragment?.showNewPlaylistDialog()
+        youtubePlayerFragment?.lastPlayedVideo?.let {
+            MaterialDialog.Builder(this)
+                    .title(getString(R.string.new_playlist))
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(getString(R.string.playlist_name), "") { _, input ->
+                        val newPlaylistName = input.trim().toString()
+                        addVideoDialogFragment?.dismiss()
+                        viewModel.addVideoPlaylistWithVideo(VideoPlaylist(name = newPlaylistName), video = it) {
+                            Toast.makeText(
+                                    this,
+                                    "Video added to playlist: $newPlaylistName.",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }.positiveText(getString(R.string.ok))
+                    .build()
+                    .apply { show() }
+        }
     }
 
     override fun onLoggedOut() {
@@ -358,6 +387,18 @@ class MainActivity :
                 .build()
 
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
+    }
+
+    private var addVideoDialogFragment: AddVideoDialogFragment? = null
+
+    private fun addVideoToFavourites() {
+        youtubePlayerFragment?.lastPlayedVideo?.let {
+            viewModel.getFavouriteVideoPlaylists()
+            addVideoDialogFragment = AddVideoDialogFragment().apply {
+                state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
+                show(childFragmentManager, TAG_ADD_VIDEO)
+            }
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -549,7 +590,7 @@ class MainActivity :
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
         viewModel.viewState.playerState.get()?.let { playerState ->
             when (playerState) {
-                PlayerState.VIDEO -> youtubePlayerFragment?.onFavouriteBtnClick()
+                PlayerState.VIDEO -> addVideoToFavourites()
                 PlayerState.PLAYLIST -> togglePlaylistFavouriteState()
                 PlayerState.TRACK -> toggleTrackFavouriteState()
                 PlayerState.ALBUM -> toggleAlbumFavouriteState()
@@ -603,6 +644,8 @@ class MainActivity :
                 "user-read-birthdate",
                 "user-read-email"
         )
+
+        private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
     }
 }
 

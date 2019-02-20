@@ -1,7 +1,9 @@
 package com.example.there.findclips.main
 
 import android.arch.lifecycle.MutableLiveData
+import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
+import android.databinding.ObservableList
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -9,6 +11,7 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.User
+import com.example.there.findclips.model.entity.VideoPlaylist
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(
@@ -28,7 +31,8 @@ class MainViewState(
         val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
         val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
         val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
-        val similarTracks: MutableLiveData<List<Track>> = MutableLiveData()
+        val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
+        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList<VideoPlaylist>()
 )
 
 class DrawerHeaderViewState(

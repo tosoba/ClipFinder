@@ -20,7 +20,7 @@ open class BaseViewModel : ViewModel() {
         errorState.value = t
     }
 
-    protected fun addDisposable(disposable: Disposable) {
+    fun addDisposable(disposable: Disposable) {
         compositeDisposable.add(disposable)
     }
 }

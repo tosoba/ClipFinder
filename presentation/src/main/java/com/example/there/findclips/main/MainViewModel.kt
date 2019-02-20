@@ -2,15 +2,13 @@ package com.example.there.findclips.main
 
 import android.util.Log
 import com.example.there.domain.usecase.spotify.*
+import com.example.there.domain.usecase.videos.AddVideoToPlaylist
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
+import com.example.there.domain.usecase.videos.GetFavouriteVideoPlaylists
+import com.example.there.domain.usecase.videos.InsertVideoPlaylist
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.model.entity.User
-import com.example.there.findclips.model.mapper.AlbumEntityMapper
-import com.example.there.findclips.model.mapper.PlaylistEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.model.mapper.*
 import javax.inject.Inject
 
 
@@ -26,12 +24,36 @@ class MainViewModel @Inject constructor(
         private val isTrackSaved: IsTrackSaved,
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved,
         private val isAlbumSaved: IsAlbumSaved,
-        private val deleteAllVideoSearchData: DeleteAllVideoSearchData
+        private val deleteAllVideoSearchData: DeleteAllVideoSearchData,
+        private val insertVideoPlaylist: InsertVideoPlaylist,
+        private val addVideoToPlaylist: AddVideoToPlaylist,
+        private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
 ) : BaseViewModel() {
 
     val viewState = MainViewState()
 
     val drawerViewState = DrawerHeaderViewState()
+
+    fun addVideoToPlaylist(video: Video, videoPlaylist: VideoPlaylist, onSuccess: () -> Unit) {
+        addDisposable(addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
+                playlistEntity = VideoPlaylistEntityMapper.mapBack(videoPlaylist),
+                videoEntity = VideoEntityMapper.mapBack(video))
+        ).subscribe(onSuccess, ::onError))
+    }
+
+    fun getFavouriteVideoPlaylists() {
+        addDisposable(getFavouriteVideoPlaylists.execute().subscribe({
+            viewState.favouriteVideoPlaylists.clear()
+            viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntityMapper::mapFrom))
+        }, ::onError))
+    }
+
+    fun addVideoPlaylistWithVideo(playlist: VideoPlaylist, video: Video, onSuccess: () -> Unit) {
+        addDisposable(insertVideoPlaylist.execute(VideoPlaylistEntityMapper.mapBack(playlist))
+                .subscribe({ playlistId ->
+                    addVideoToPlaylist(video, VideoPlaylist(playlistId, playlist.name), onSuccess)
+                }, ::onError))
+    }
 
     fun getSimilarTracks(trackId: String) {
         addDisposable(getSimilarTracks.execute(trackId)
@@ -41,7 +63,6 @@ class MainViewModel @Inject constructor(
     fun getCurrentUser() = addDisposable(getCurrentUser.execute()
             .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))
 
-
     fun updateTrackFavouriteState(track: Track) = addDisposable(isTrackSaved.execute(TrackEntityMapper.mapBack(track))
             .subscribe({ viewState.itemFavouriteState.set(it) }, {}))
 
@@ -50,7 +71,6 @@ class MainViewModel @Inject constructor(
 
     fun updateAlbumFavouriteState(album: Album) = addDisposable(isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
             .subscribe({ viewState.itemFavouriteState.set(it) }, {}))
-
 
     fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
             .subscribe({}, { Log.e("ERROR", "Delete all video search data error.") }))
@@ -78,7 +98,6 @@ class MainViewModel @Inject constructor(
                     }
                 }, {}))
     }
-
 
     fun toggleTrackFavouriteState(
             track: Track,
@@ -127,6 +146,4 @@ class MainViewModel @Inject constructor(
                     }
                 }, {}))
     }
-
-
 }
