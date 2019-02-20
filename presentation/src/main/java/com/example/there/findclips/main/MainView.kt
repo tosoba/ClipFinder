@@ -5,6 +5,7 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.support.design.widget.NavigationView
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.View
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.model.entity.User
@@ -17,7 +18,9 @@ class MainView(
         val fadeOnClickListener: View.OnClickListener,
         val slideListener: SlidingUpPanelLayout.PanelSlideListener,
         val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
-        val onFavouriteBtnClickListener: View.OnClickListener
+        val onFavouriteBtnClickListener: View.OnClickListener,
+        val pagerAdapter: FragmentStatePagerAdapter,
+        val offScreenPageLimit: Int
 )
 
 class MainViewState(

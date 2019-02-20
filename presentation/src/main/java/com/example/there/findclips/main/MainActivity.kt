@@ -39,10 +39,12 @@ import com.example.there.findclips.fragment.search.SearchSuggestionProvider
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.main.controller.*
+import com.example.there.findclips.main.soundcloud.SoundCloudMainFragment
 import com.example.there.findclips.main.spotify.SpotifyMainFragment
 import com.example.there.findclips.model.entity.*
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -76,8 +78,10 @@ class MainActivity :
         get() = sliding_layout
 
     private val spotifyMainFragment: SpotifyMainFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.main_content_layout)
-                as? SpotifyMainFragment
+        get() = mainContentViewPagerAdapter.currentFragment as? SpotifyMainFragment
+
+    private val soundCloudMainFragment: SoundCloudMainFragment?
+        get() = mainContentViewPagerAdapter.currentFragment as? SoundCloudMainFragment
 
     private val youtubePlayerFragment: YoutubePlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
@@ -105,7 +109,9 @@ class MainActivity :
                 fadeOnClickListener = fadeOnClickListener,
                 slideListener = slideListener,
                 initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener
+                onFavouriteBtnClickListener = onFavouriteBtnClickListener,
+                pagerAdapter = mainContentViewPagerAdapter,
+                offScreenPageLimit = 1 //TODO: change to 2 after adding AboutFragment to ViewPager
         )
     }
 
@@ -114,14 +120,18 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
+    private val mainContentFragments: Array<Fragment> by lazy {
+        arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
+    }
+
+    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+        CustomCurrentStatePagerAdapter(supportFragmentManager, mainContentFragments)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.deleteAllVideoSearchData()
-
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.main_content_layout, SpotifyMainFragment())
-                .commit()
 
         initViewBindings()
         setupNavigationFromSimilarTracks()
@@ -484,13 +494,19 @@ class MainActivity :
             R.id.drawer_action_show_spotify_main -> {
                 spotifyMainFragment?.let {
                     return@OnNavigationItemSelectedListener true
-                } ?: run {
-
-                }
+                } ?: run { main_content_view_pager?.currentItem = 0 }
             }
+
             R.id.drawer_action_show_soundcloud_main -> {
-
+                soundCloudMainFragment?.let {
+                    return@OnNavigationItemSelectedListener true
+                } ?: run { main_content_view_pager?.currentItem = 1 }
             }
+
+            R.id.drawer_action_about -> {
+                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
+            }
+
             R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
                 startActivity(this)
             }
@@ -498,10 +514,6 @@ class MainActivity :
             R.id.drawer_action_remove_video_search_data -> {
                 viewModel.deleteAllVideoSearchData()
                 Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.drawer_action_about -> {
-                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
             }
 
             R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
@@ -578,7 +590,7 @@ class MainActivity :
     ) = if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) add_to_favourites_fab?.animate()?.alpha(0f)
     else add_to_favourites_fab?.animate()?.alpha(1f)
 
-    private fun updateMainContentLayoutParams() = with(main_content_layout) {
+    private fun updateMainContentLayoutParams() = with(main_content_view_pager) {
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 layoutParams.apply {

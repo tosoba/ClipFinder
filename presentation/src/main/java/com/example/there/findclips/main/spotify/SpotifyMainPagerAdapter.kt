@@ -1,4 +1,4 @@
-package com.example.there.findclips.main
+package com.example.there.findclips.main.spotify
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,7 +8,7 @@ import com.example.there.findclips.fragment.dashboard.DashboardHostFragment
 import com.example.there.findclips.fragment.favourites.FavouritesHostFragment
 import com.example.there.findclips.view.viewpager.adapter.CurrentFragmentStatePagerAdapter
 
-class MainFragmentPagerAdapter(manager: FragmentManager) : CurrentFragmentStatePagerAdapter(manager) {
+class SpotifyMainPagerAdapter(manager: FragmentManager) : CurrentFragmentStatePagerAdapter(manager) {
 
     private val fragments: Array<Fragment> = arrayOf(DashboardHostFragment(), AccountHostFragment(), FavouritesHostFragment())
 

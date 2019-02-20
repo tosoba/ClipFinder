@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseHostFragment
-import com.example.there.findclips.main.MainFragmentPagerAdapter
 import com.example.there.findclips.util.ext.checkItem
 import com.example.there.findclips.util.ext.toolbarController
 import com.example.there.findclips.view.OnPageChangeListener
@@ -31,7 +30,7 @@ class SpotifyMainFragment : Fragment() {
         return@OnNavigationItemSelectedListener true
     }
 
-    private val pagerAdapter by lazy { MainFragmentPagerAdapter(childFragmentManager) }
+    private val pagerAdapter by lazy { SpotifyMainPagerAdapter(childFragmentManager) }
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
