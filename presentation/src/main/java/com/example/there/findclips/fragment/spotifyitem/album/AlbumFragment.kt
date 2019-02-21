@@ -44,7 +44,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+                            navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
                         null,
                         null,
@@ -59,7 +59,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                                 get() = ItemBinderBase(BR.track, R.layout.track_popularity_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
                         null,
                         null,
@@ -104,6 +104,8 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
         )
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, R.layout.fragment_album, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
@@ -121,8 +123,6 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
             albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
-
-    private val disposablesComponent = DisposablesComponent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

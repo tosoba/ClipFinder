@@ -52,12 +52,18 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         )
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
+    private val playlistsFragment: SpotifyPlaylistsFragment?
+        get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as? SpotifyPlaylistsFragment
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
     }
-
-    private val disposablesComponent = DisposablesComponent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,20 +71,6 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         observePreferences()
         loadData()
     }
-
-    @Inject
-    lateinit var appPreferences: AppPreferences
-
-    private fun observePreferences() = disposablesComponent.add(appPreferences.countryObservable
-            .skip(1)
-            .distinctUntilChanged()
-            .subscribe {
-                playlistsFragment?.clearItems()
-                viewModel.loadData(category.id, true)
-            }
-    )
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
@@ -102,8 +94,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         playlistsFragment!!.loadMore = ::loadData
     }
 
-    private val playlistsFragment: SpotifyPlaylistsFragment?
-        get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as? SpotifyPlaylistsFragment
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun setupObservers() {
         super.setupObservers()
@@ -111,6 +102,15 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
             playlists?.let { playlistsFragment?.updateItems(it, false) }
         })
     }
+
+    private fun observePreferences() = disposablesComponent.add(appPreferences.countryObservable
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribe {
+                playlistsFragment?.clearItems()
+                viewModel.loadData(category.id, true)
+            }
+    )
 
     private fun loadData() = viewModel.loadPlaylists(category)
 

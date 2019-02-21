@@ -62,11 +62,6 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
     private val tracksFragment: SpotifyTracksFragment
         get() = childFragmentManager.findFragmentById(R.id.playlist_spotify_tracks_fragment) as SpotifyTracksFragment
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,8 +70,6 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         lifecycle.addObserver(disposablesComponent)
         loadData()
     }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
@@ -94,6 +87,13 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
             playlistToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lifecycle.addObserver(connectivityComponent)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

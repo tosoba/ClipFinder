@@ -14,7 +14,7 @@ import com.example.there.findclips.databinding.FragmentSpotifyAlbumsBinding
 import com.example.there.findclips.fragment.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -48,7 +48,7 @@ class SpotifyAlbumsFragment : BaseSpotifyListFragment<Album>() {
                         },
                         ClickHandler { album ->
                             onItemClick?.let { it(album) }
-                                    ?: run { hostFragment?.showFragment(AlbumFragment.newInstance(album), true) }
+                                    ?: run { navHostFragment?.showFragment(AlbumFragment.newInstance(album), true) }
                         },
                         null,
                         null

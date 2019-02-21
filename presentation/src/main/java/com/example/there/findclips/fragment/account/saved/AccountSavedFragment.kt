@@ -18,7 +18,7 @@ import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.model.entity.Album
 import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.util.ext.spotifyLoginController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -50,7 +50,7 @@ class AccountSavedFragment :
                                         get() = ItemBinderBase(BR.album, R.layout.album_item)
                                 },
                                 ClickHandler {
-                                    hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                                    navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                                 },
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {
@@ -64,7 +64,7 @@ class AccountSavedFragment :
                                         get() = ItemBinderBase(BR.track, R.layout.track_item)
                                 },
                                 ClickHandler {
-                                    hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                                    navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                                 },
                                 null,
                                 object : EndlessRecyclerOnScrollListener() {

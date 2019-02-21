@@ -15,7 +15,7 @@ import com.example.there.findclips.databinding.FragmentVideosFavouritesBinding
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.videoplaylist.VideoPlaylistFragment
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -41,7 +41,7 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(Video
                         get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
                 },
                 ClickHandler {
-                    hostFragment?.showFragment(VideoPlaylistFragment.newInstance(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
+                    navHostFragment?.showFragment(VideoPlaylistFragment.newInstance(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
                 },
                 SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 null

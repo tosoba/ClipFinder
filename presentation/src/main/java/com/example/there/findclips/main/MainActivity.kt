@@ -248,7 +248,7 @@ class MainActivity :
 
     override fun onBackPressed() {
         spotifyMainFragment?.let {
-            val currentFragment = it.currentHostFragment
+            val currentFragment = it.currentNavHostFragment
 
             if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
@@ -359,7 +359,7 @@ class MainActivity :
 
     override fun toggleToolbar() {
         spotifyMainFragment?.let {
-            val currentTopFragment = it.currentHostFragment?.topFragment
+            val currentTopFragment = it.currentNavHostFragment?.topFragment
             val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
             if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
@@ -477,7 +477,7 @@ class MainActivity :
     private fun setupNavigationFromSimilarTracks() {
         similarTracksFragment?.onItemClick = {
             sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            spotifyMainFragment?.currentHostFragment
+            spotifyMainFragment?.currentNavHostFragment
                     ?.showFragment(TrackVideosFragment.newInstance(it), true)
         }
     }
@@ -559,7 +559,7 @@ class MainActivity :
         searchViewMenuItem?.collapseActionView()
 
         spotifyMainFragment?.let {
-            val currentFragment = it.currentHostFragment
+            val currentFragment = it.currentNavHostFragment
             currentFragment?.showFragment(SearchFragment.newInstance(query), true)
         }
 

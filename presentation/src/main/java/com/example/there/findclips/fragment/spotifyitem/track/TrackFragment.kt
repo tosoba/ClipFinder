@@ -20,7 +20,7 @@ import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ext.connectivitySnackbarHost
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -42,9 +42,18 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
         }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        track = arguments?.getParcelable(ARG_TRACK)
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                activity!!,
+                {
+                    viewModel.viewState.album.get() != null &&
+                            viewModel.viewState.artists.isNotEmpty() &&
+                            viewModel.viewState.similarTracks.isNotEmpty()
+                },
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
+                ::loadData,
+                true
+        )
     }
 
     private val trackAdapter: TrackAdapter by lazy {
@@ -53,7 +62,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         AlbumInfoViewState(viewModel.viewState.albumLoadingInProgress, viewModel.viewState.album),
                         View.OnClickListener { _ ->
                             val album = viewModel.viewState.album.get()
-                            album?.let { hostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
+                            album?.let { navHostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
                         }
                 ),
                 RecyclerViewItemView(
@@ -63,7 +72,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+                            navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
                         null,
                         null,
@@ -124,18 +133,9 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
         trackRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }.root
 
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                {
-                    viewModel.viewState.album.get() != null &&
-                            viewModel.viewState.artists.isNotEmpty() &&
-                            viewModel.viewState.similarTracks.isNotEmpty()
-                },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
-        )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        track = arguments?.getParcelable(ARG_TRACK)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

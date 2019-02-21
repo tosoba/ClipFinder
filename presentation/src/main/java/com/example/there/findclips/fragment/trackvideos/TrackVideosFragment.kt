@@ -44,20 +44,6 @@ class TrackVideosFragment :
         }
     }
 
-    override fun onTrackChanged(newTrack: Track) = with(newTrack) {
-        viewModel.updateState(this)
-        loadCollapsingToolbarBackgroundGradient(iconUrl)
-        updateCurrentFragment(this)
-    }
-
-    private fun updateCurrentFragment(newTrack: Track) {
-        val currentFragment = pagerAdapter.currentFragment
-        when (currentFragment) {
-            is VideosSearchFragment -> currentFragment.query = newTrack.query
-            is TrackFragment -> currentFragment.track = newTrack
-        }
-    }
-
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
         TrackVideosPagerAdapter(
                 manager = childFragmentManager,
@@ -134,6 +120,20 @@ class TrackVideosFragment :
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
+        }
+    }
+
+    override fun onTrackChanged(newTrack: Track) = with(newTrack) {
+        viewModel.updateState(this)
+        loadCollapsingToolbarBackgroundGradient(iconUrl)
+        updateCurrentFragment(this)
+    }
+
+    private fun updateCurrentFragment(newTrack: Track) {
+        val currentFragment = pagerAdapter.currentFragment
+        when (currentFragment) {
+            is VideosSearchFragment -> currentFragment.query = newTrack.query
+            is TrackFragment -> currentFragment.track = newTrack
         }
     }
 

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import com.example.there.findclips.base.fragment.BaseHostFragment
+import com.example.there.findclips.base.fragment.BaseNavHostFragment
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.main.controller.*
 import com.spotify.sdk.android.player.ConnectionStateCallback
@@ -61,11 +61,11 @@ fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
     arguments = args
 }
 
-val Fragment.hostFragment: BaseHostFragment?
+val Fragment.navHostFragment: BaseNavHostFragment?
     get() {
         var fragment: Fragment? = this
         while (fragment?.parentFragment?.parentFragment != null) {
             fragment = fragment.parentFragment
         }
-        return if (fragment != null && fragment is BaseHostFragment) fragment else null
+        return if (fragment != null && fragment is BaseNavHostFragment) fragment else null
     }

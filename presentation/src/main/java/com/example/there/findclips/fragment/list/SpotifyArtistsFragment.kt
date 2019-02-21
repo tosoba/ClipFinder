@@ -14,7 +14,7 @@ import com.example.there.findclips.databinding.FragmentSpotifyArtistsBinding
 import com.example.there.findclips.fragment.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.model.entity.Artist
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -48,7 +48,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
                         },
                         ClickHandler { artist ->
                             onItemClick?.let { it(artist) }
-                                    ?: run { hostFragment?.showFragment(ArtistFragment.newInstance(artist), true) }
+                                    ?: run { navHostFragment?.showFragment(ArtistFragment.newInstance(artist), true) }
                         },
                         null,
                         null

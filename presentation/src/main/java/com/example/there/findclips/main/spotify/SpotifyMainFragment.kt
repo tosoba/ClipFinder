@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseHostFragment
+import com.example.there.findclips.base.fragment.BaseNavHostFragment
 import com.example.there.findclips.util.ext.checkItem
 import com.example.there.findclips.util.ext.toolbarController
 import com.example.there.findclips.view.OnPageChangeListener
@@ -42,8 +42,8 @@ class SpotifyMainFragment : Fragment() {
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    val currentHostFragment: BaseHostFragment?
-        get() = pagerAdapter.currentHostFragment
+    val currentNavHostFragment: BaseNavHostFragment?
+        get() = pagerAdapter.currentNavHostFragment
 
     private val view: SpotifyMainView by lazy {
         SpotifyMainView(

@@ -48,7 +48,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.album, R.layout.album_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                            navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                         },
                         null,
                         null,
@@ -63,7 +63,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.track, R.layout.track_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
                         null,
                         null,
@@ -129,21 +129,7 @@ class ArtistFragment :
         get() = if (viewModelInitialized && viewModel.viewState.artist.get() != null) viewModel.viewState.artist.get()!!
         else argArtist
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
     private val disposablesComponent = DisposablesComponent()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
-        loadData()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
@@ -157,6 +143,20 @@ class ArtistFragment :
             artistToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        lifecycle.addObserver(disposablesComponent)
+        loadData()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lifecycle.addObserver(connectivityComponent)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {

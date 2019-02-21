@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseHostFragment
+import com.example.there.findclips.base.fragment.BaseNavHostFragment
 
 
-class FavouritesHostFragment : BaseHostFragment() {
+class FavouritesHostFragment : BaseNavHostFragment() {
 
     override val backStackLayoutId: Int = R.id.favourites_back_stack_layout
 

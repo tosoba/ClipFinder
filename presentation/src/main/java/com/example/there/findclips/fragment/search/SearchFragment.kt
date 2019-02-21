@@ -45,6 +45,8 @@ class SearchFragment : Fragment() {
         SearchView(query, pagerAdapter, onNavigationItemSelectedListener, 1)
     }
 
+    private val query: String by lazy { arguments!!.getString(ARG_QUERY) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -60,8 +62,6 @@ class SearchFragment : Fragment() {
             searchToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
-
-    private val query: String by lazy { arguments!!.getString(ARG_QUERY) }
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

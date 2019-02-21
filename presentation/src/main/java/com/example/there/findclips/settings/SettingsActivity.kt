@@ -30,9 +30,9 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupActionBar() = supportActionBar?.let {
-        it.setDisplayShowHomeEnabled(true)
-        it.setDisplayHomeAsUpEnabled(true)
-        it.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimaryDark)))
+    private fun setupActionBar() = supportActionBar?.apply {
+        setDisplayShowHomeEnabled(true)
+        setDisplayHomeAsUpEnabled(true)
+        setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@SettingsActivity, R.color.colorPrimaryDark)))
     }
 }

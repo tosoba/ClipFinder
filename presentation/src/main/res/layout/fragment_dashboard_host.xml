@@ -3,4 +3,4 @@
     android:id="@+id/dashboard_back_stack_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.there.findclips.fragment.dashboard.DashboardHostFragment" />
+    tools:context="com.example.there.findclips.fragment.dashboard.DashboardNavHostFragment" />

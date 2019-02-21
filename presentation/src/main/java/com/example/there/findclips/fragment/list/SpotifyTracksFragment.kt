@@ -14,7 +14,7 @@ import com.example.there.findclips.databinding.FragmentSpotifyTracksBinding
 import com.example.there.findclips.fragment.trackvideos.TrackVideosFragment
 import com.example.there.findclips.model.entity.Track
 import com.example.there.findclips.util.ObservableSortedList
-import com.example.there.findclips.util.ext.hostFragment
+import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
@@ -48,7 +48,7 @@ class SpotifyTracksFragment : BaseSpotifyListFragment<Track>() {
                         },
                         ClickHandler { track ->
                             onItemClick?.let { it(track) }
-                                    ?: run { hostFragment?.showFragment(TrackVideosFragment.newInstance(track), true) }
+                                    ?: run { navHostFragment?.showFragment(TrackVideosFragment.newInstance(track), true) }
                         },
                         null,
                         onScrollListener

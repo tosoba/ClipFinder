@@ -56,6 +56,16 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
+    private val connectivityComponent: ConnectivityComponent by lazy {
+        ConnectivityComponent(
+                activity!!,
+                { query == "" || viewModel.viewState.videos.isNotEmpty() },
+                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
+                ::loadData,
+                true
+        )
+    }
+
     private val view: VideosSearchView by lazy {
         VideosSearchView(
                 state = viewModel.viewState,
@@ -77,6 +87,13 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         )
     }
 
+    private val videosLayoutManager: RecyclerView.LayoutManager
+        get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        } else {
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_search, container, false)
         return binding.apply {
@@ -90,6 +107,16 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         initFromArguments()
     }
 
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updateRecyclerViewOnConfigChange()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        lifecycle.addObserver(connectivityComponent)
+    }
     private fun initFromArguments() = arguments?.let {
         if (it.containsKey(ARG_QUERY)) {
             query = it.getString(ARG_QUERY)!!
@@ -99,39 +126,12 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        updateRecyclerViewOnConfigChange()
-    }
-
-    private val videosLayoutManager: RecyclerView.LayoutManager
-        get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
-        } else {
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
-
     private fun updateRecyclerViewOnConfigChange() {
         val adapter = videos_recycler_view?.adapter
         videos_recycler_view?.adapter = null
         videos_recycler_view?.layoutManager = videosLayoutManager
         videos_recycler_view?.adapter = adapter
         adapter?.notifyDataSetChanged()
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { query == "" || viewModel.viewState.videos.isNotEmpty() },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
-        )
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
     }
 
     private fun loadData() = viewModel.searchVideos(query)

@@ -58,7 +58,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
                                 get() = ItemBinderBase(BR.category, R.layout.category_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+                            navHostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
                         },
                         null,
                         null,
@@ -74,7 +74,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
                                 get() = ItemBinderBase(BR.playlist, R.layout.playlist_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+                            navHostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
                         },
                         null,
                         null,
@@ -90,7 +90,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
                                 get() = ItemBinderBase(BR.track, R.layout.top_track_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
+                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
                         },
                         null,
                         null,
@@ -106,7 +106,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
                                 get() = ItemBinderBase(BR.album, R.layout.album_item)
                         },
                         ClickHandler {
-                            hostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                            navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                         },
                         null,
                         onNewReleasesScrollListener,
@@ -125,21 +125,6 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
-        return binding.apply {
-            dashboardView = view
-            appCompatActivity?.setSupportActionBar(dashboardToolbar)
-            appCompatActivity?.showDrawerHamburger()
-            dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        }.root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
-    }
-
     private val isDataLoaded: Boolean
         get() = viewModel.viewState.categories.isNotEmpty() &&
                 viewModel.viewState.featuredPlaylists.isNotEmpty() &&
@@ -155,12 +140,32 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         )
     }
 
+    private val disposablesComponent = DisposablesComponent()
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         lifecycle.addObserver(disposablesComponent)
         observePreferences()
         loadData()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
+        return binding.apply {
+            dashboardView = view
+            appCompatActivity?.setSupportActionBar(dashboardToolbar)
+            appCompatActivity?.showDrawerHamburger()
+            dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        }.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
     }
 
     override fun onOptionsItemSelected(
@@ -176,11 +181,6 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
     }
 
     private fun loadData() = viewModel.loadData()
-
-    private val disposablesComponent = DisposablesComponent()
-
-    @Inject
-    lateinit var appPreferences: AppPreferences
 
     private fun observePreferences() {
         fun reloadDataOnPreferencesChange() {

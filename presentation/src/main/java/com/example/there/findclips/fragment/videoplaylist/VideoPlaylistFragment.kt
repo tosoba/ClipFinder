@@ -27,6 +27,9 @@ class VideoPlaylistFragment : Fragment() {
         arguments!!.getStringArray(ARG_THUMBNAIL_URLS)
     }
 
+    private val videoFragment: VideosSearchFragment?
+        get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? VideosSearchFragment
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -58,9 +61,6 @@ class VideoPlaylistFragment : Fragment() {
     private fun showVideosFragment() = childFragmentManager.beginTransaction()
             .replace(R.id.videos_fragment_container_layout, VideosSearchFragment.newInstanceWithVideoPlaylist(playlist))
             .commit()
-
-    private val videoFragment: VideosSearchFragment?
-        get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? VideosSearchFragment
 
     companion object {
         private const val ARG_PLAYLIST = "ARG_PLAYLIST"
