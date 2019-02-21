@@ -70,10 +70,6 @@ class MainActivity :
         NavigationDrawerController,
         ToolbarController {
 
-    override fun openDrawer() {
-        main_drawer_layout?.openDrawer(GravityCompat.START)
-    }
-
     override val slidingPanel: SlidingUpPanelLayout?
         get() = sliding_layout
 
@@ -126,6 +122,105 @@ class MainActivity :
 
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(supportFragmentManager, mainContentFragments)
+    }
+
+    private var addVideoDialogFragment: AddVideoDialogFragment? = null
+
+    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
+        when (it.itemId) {
+            R.id.drawer_action_show_spotify_main -> {
+                spotifyMainFragment?.let {
+                    return@OnNavigationItemSelectedListener true
+                } ?: run { main_content_view_pager?.currentItem = 0 }
+            }
+
+            R.id.drawer_action_show_soundcloud_main -> {
+                soundCloudMainFragment?.let {
+                    return@OnNavigationItemSelectedListener true
+                } ?: run { main_content_view_pager?.currentItem = 1 }
+            }
+
+            R.id.drawer_action_about -> {
+                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
+            }
+
+            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
+                startActivity(this)
+            }
+
+            R.id.drawer_action_remove_video_search_data -> {
+                viewModel.deleteAllVideoSearchData()
+                Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
+            }
+
+            R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
+
+            R.id.drawer_action_logout -> if (isPlayerLoggedIn) logOutPlayer()
+        }
+
+        main_drawer_layout?.closeDrawer(Gravity.START)
+        true
+    }
+
+    private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
+        viewModel.viewState.playerState.get()?.let { playerState ->
+            when (playerState) {
+                PlayerState.VIDEO -> addVideoToFavourites()
+                PlayerState.PLAYLIST -> togglePlaylistFavouriteState()
+                PlayerState.TRACK -> toggleTrackFavouriteState()
+                PlayerState.ALBUM -> toggleAlbumFavouriteState()
+                else -> return@OnClickListener
+            }
+        }
+    }
+
+    private val fadeOnClickListener = View.OnClickListener {
+        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+    }
+
+    private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
+        override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
+
+        override fun onPanelStateChanged(
+                panel: View?,
+                previousState: SlidingUpPanelLayout.PanelState?,
+                newState: SlidingUpPanelLayout.PanelState?
+        ) {
+            when (newState) {
+                SlidingUpPanelLayout.PanelState.DRAGGING -> {
+                    youtubePlayerFragment?.onDragging()
+                }
+                SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                    youtubePlayerFragment?.onExpanded()
+                }
+                SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                    youtubePlayerFragment?.onCollapsed()
+                }
+                SlidingUpPanelLayout.PanelState.HIDDEN -> {
+                    youtubePlayerFragment?.onHidden()
+                    spotifyPlayerFragment?.onHidden()
+                }
+                else -> return
+            }
+        }
+    }
+
+    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
+    private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
+    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
+
+    private var currentSlideOffset: Float = 0.0f
+
+    override val loggedInObservable: ObservableField<Boolean>
+        get() = viewModel.viewState.isLoggedIn
+
+    override val isPlayerLoggedIn: Boolean
+        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
+
+    override var onLoginSuccessful: (() -> Unit)? = null
+
+    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -251,6 +346,17 @@ class MainActivity :
         else -> super.onOptionsItemSelected(item)
     }
 
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
+            tracks?.let { similarTracksFragment?.resetItems(it) }
+        })
+    }
+
+    override fun openDrawer() {
+        main_drawer_layout?.openDrawer(GravityCompat.START)
+    }
+
     override fun toggleToolbar() {
         spotifyMainFragment?.let {
             val currentTopFragment = it.currentHostFragment?.topFragment
@@ -258,13 +364,6 @@ class MainActivity :
             setSupportActionBar(mainToolbar)
             if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
         }
-    }
-
-    override fun setupObservers() {
-        super.setupObservers()
-        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
-            tracks?.let { similarTracksFragment?.resetItems(it) }
-        })
     }
 
     override fun loadTrack(track: Track) {
@@ -394,18 +493,6 @@ class MainActivity :
                 .apply { show() }
     }
 
-    override val loggedInObservable: ObservableField<Boolean>
-        get() = viewModel.viewState.isLoggedIn
-
-    override val isPlayerLoggedIn: Boolean
-        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
-
-    override var onLoginSuccessful: (() -> Unit)? = null
-
-    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
-    }
-
     private fun logOutPlayer() {
         spotifyPlayerFragment?.logOutPlayer()
     }
@@ -417,8 +504,6 @@ class MainActivity :
 
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
-
-    private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
     private fun addVideoToFavourites() {
         youtubePlayerFragment?.lastPlayedVideo?.let {
@@ -489,79 +574,6 @@ class MainActivity :
         }
     }
 
-    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
-        when (it.itemId) {
-            R.id.drawer_action_show_spotify_main -> {
-                spotifyMainFragment?.let {
-                    return@OnNavigationItemSelectedListener true
-                } ?: run { main_content_view_pager?.currentItem = 0 }
-            }
-
-            R.id.drawer_action_show_soundcloud_main -> {
-                soundCloudMainFragment?.let {
-                    return@OnNavigationItemSelectedListener true
-                } ?: run { main_content_view_pager?.currentItem = 1 }
-            }
-
-            R.id.drawer_action_about -> {
-                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
-            }
-
-            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
-                startActivity(this)
-            }
-
-            R.id.drawer_action_remove_video_search_data -> {
-                viewModel.deleteAllVideoSearchData()
-                Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
-
-            R.id.drawer_action_logout -> if (isPlayerLoggedIn) logOutPlayer()
-        }
-
-        main_drawer_layout?.closeDrawer(Gravity.START)
-        true
-    }
-
-    private val fadeOnClickListener = View.OnClickListener {
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-    }
-
-    private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
-        override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
-
-        override fun onPanelStateChanged(
-                panel: View?,
-                previousState: SlidingUpPanelLayout.PanelState?,
-                newState: SlidingUpPanelLayout.PanelState?
-        ) {
-            when (newState) {
-                SlidingUpPanelLayout.PanelState.DRAGGING -> {
-                    youtubePlayerFragment?.onDragging()
-                }
-                SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                    youtubePlayerFragment?.onExpanded()
-                }
-                SlidingUpPanelLayout.PanelState.COLLAPSED -> {
-                    youtubePlayerFragment?.onCollapsed()
-                }
-                SlidingUpPanelLayout.PanelState.HIDDEN -> {
-                    youtubePlayerFragment?.onHidden()
-                    spotifyPlayerFragment?.onHidden()
-                }
-                else -> return
-            }
-        }
-    }
-
-    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
-    private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
-    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
-
-    private var currentSlideOffset: Float = 0.0f
-
     private fun updatePlayersDimensions(slideOffset: Float) {
         if (sliding_layout.panelState != SlidingUpPanelLayout.PanelState.HIDDEN && slideOffset >= 0) {
             currentSlideOffset = slideOffset
@@ -601,18 +613,6 @@ class MainActivity :
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-    }
-
-    private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
-        viewModel.viewState.playerState.get()?.let { playerState ->
-            when (playerState) {
-                PlayerState.VIDEO -> addVideoToFavourites()
-                PlayerState.PLAYLIST -> togglePlaylistFavouriteState()
-                PlayerState.TRACK -> toggleTrackFavouriteState()
-                PlayerState.ALBUM -> toggleAlbumFavouriteState()
-                else -> return@OnClickListener
-            }
-        }
     }
 
     private fun togglePlaylistFavouriteState() {

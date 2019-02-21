@@ -5,4 +5,5 @@ import javax.inject.Inject
 
 class SpotifyPlayerViewModel @Inject constructor() : BaseViewModel() {
     val viewState = SpotifyPlayerViewState()
+    val playerState = SpotifyPlayerState()
 }

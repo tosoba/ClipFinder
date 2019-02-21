@@ -1,6 +1,8 @@
 package com.example.there.findclips.main
 
 import android.util.Log
+import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
+import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.domain.usecase.videos.AddVideoToPlaylist
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
@@ -80,71 +82,74 @@ class MainViewModel @Inject constructor(
             playlist: Playlist,
             onPlaylistAdded: () -> Unit,
             onPlaylistDeleted: () -> Unit
-    ) {
-        val entity = PlaylistEntityMapper.mapBack(playlist)
-        addDisposable(isSpotifyPlaylistSaved.execute(entity)
-                .subscribe { isSaved ->
-                    if (isSaved) {
-                        addDisposable(deleteSpotifyPlaylist.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(false)
-                                    onPlaylistDeleted()
-                                }, { Log.e("ERROR", "Delete error") }))
-                    } else {
-                        addDisposable(insertSpotifyPlaylist.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(true)
-                                    onPlaylistAdded()
-                                }, { Log.e("ERROR", "Insert error") }))
-                    }
-                })
-    }
+    ) = toggleItemFavouriteState(
+            PlaylistEntityMapper.mapBack(playlist),
+            isSpotifyPlaylistSaved,
+            insertSpotifyPlaylist,
+            deleteSpotifyPlaylist,
+            onPlaylistAdded,
+            onPlaylistDeleted
+    )
 
     fun toggleTrackFavouriteState(
             track: Track,
             onTrackAdded: () -> Unit,
             onTrackDeleted: () -> Unit
-    ) {
-        val entity = TrackEntityMapper.mapBack(track)
-        addDisposable(isTrackSaved.execute(entity)
-                .subscribe { isSaved ->
-                    if (isSaved) {
-                        addDisposable(deleteTrack.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(false)
-                                    onTrackDeleted()
-                                }, { Log.e("ERROR", "Delete error") }))
-                    } else {
-                        addDisposable(insertTrack.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(true)
-                                    onTrackAdded()
-                                }, { Log.e("ERROR", "Insert error") }))
-                    }
-                })
-    }
+    ) = toggleItemFavouriteState(
+            TrackEntityMapper.mapBack(track),
+            isTrackSaved,
+            insertTrack,
+            deleteTrack,
+            onTrackAdded,
+            onTrackDeleted
+    )
 
     fun toggleAlbumFavouriteState(
             album: Album,
             onAlbumAdded: () -> Unit,
             onAlbumDeleted: () -> Unit
-    ) {
-        val entity = AlbumEntityMapper.mapBack(album)
-        addDisposable(isAlbumSaved.execute(entity)
-                .subscribe { isSaved ->
-                    if (isSaved) {
-                        addDisposable(deleteAlbum.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(false)
-                                    onAlbumDeleted()
-                                }, { Log.e("ERROR", "Delete error") }))
-                    } else {
-                        addDisposable(insertAlbum.execute(entity)
-                                .subscribe({
-                                    viewState.itemFavouriteState.set(true)
-                                    onAlbumAdded()
-                                }, { Log.e("ERROR", "Insert error") }))
-                    }
-                })
+    ) = toggleItemFavouriteState(
+            AlbumEntityMapper.mapBack(album),
+            isAlbumSaved,
+            insertAlbum,
+            deleteAlbum,
+            onAlbumAdded,
+            onAlbumDeleted
+    )
+
+
+    sealed class ItemInsertDeleteResult {
+        object Inserted
+        object Deleted
     }
+
+    private fun <T> toggleItemFavouriteState(
+            item: T,
+            isSavedUseCase: SingleUseCaseWithInput<T, Boolean>,
+            insertUseCase: CompletableUseCaseWithInput<T>,
+            deleteUseCase: CompletableUseCaseWithInput<T>,
+            onInserted: () -> Unit,
+            onDeleted: () -> Unit
+    ) {
+        addDisposable(isSavedUseCase.execute(item)
+                .flatMap { isSaved ->
+                    if (isSaved) deleteUseCase.execute(item)
+                            .toSingle { ItemInsertDeleteResult.Deleted }
+                    else insertUseCase.execute(item)
+                            .toSingle { ItemInsertDeleteResult.Inserted }
+                }
+                .subscribe({
+                    when (it) {
+                        ItemInsertDeleteResult.Inserted -> {
+                            viewState.itemFavouriteState.set(true)
+                            onInserted()
+                        }
+                        ItemInsertDeleteResult.Deleted -> {
+                            viewState.itemFavouriteState.set(false)
+                            onDeleted()
+                        }
+                    }
+                }, { Log.e("ERROR", "Insert/Delete item error") }))
+    }
+
 }

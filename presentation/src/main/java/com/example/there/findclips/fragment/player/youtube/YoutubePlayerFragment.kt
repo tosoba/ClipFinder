@@ -4,7 +4,6 @@ import android.arch.lifecycle.Lifecycle
 import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.there.findclips.R
+import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentYoutubePlayerBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.fragment.player.IPlayerFragment
@@ -27,28 +27,77 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        Fragment(),
+        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
         IPlayerFragment,
         Injectable {
 
     private var youTubePlayer: YouTubePlayer? = null
 
     private val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        if (youTubePlayer == null || (lastPlayedVideo == null && lastVideoPlaylist == null)) return@OnClickListener
-        if (youtubePlaybackInProgress) youTubePlayer?.pause()
+        if (youTubePlayer == null || (viewModel.playerState.lastPlayedVideo == null && viewModel.playerState.lastVideoPlaylist == null))
+            return@OnClickListener
+        if (viewModel.playerState.youtubePlaybackInProgress) youTubePlayer?.pause()
         else youTubePlayer?.play()
     }
 
     private val onYoutubePlayerCloseBtnClickListener: View.OnClickListener = View.OnClickListener {
         slidingPanelController?.hideIfVisible()
-        youTubePlayer?.pause()
-        lastPlayedVideo = null
-        lastVideoPlaylist = null
+        stopPlaybackAndNullifyLastPlayedItems()
+    }
+
+    private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
+        ImageButton(context).apply {
+            setImageResource(R.drawable.close)
+            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(10, 10, 10, 10)
+                addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+            }
+            setOnClickListener(onYoutubePlayerCloseBtnClickListener)
+            setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     private val fragmentView: YoutubePlayerView by lazy(LazyThreadSafetyMode.NONE) {
         YoutubePlayerView(onYoutubePlayerCloseBtnClickListener, onYoutubePlayerPlayPauseBtnClickListener)
     }
+
+    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+        override fun onStateChange(state: PlayerConstants.PlayerState) {
+            when (state) {
+                PlayerConstants.PlayerState.ENDED -> {
+                    if (viewModel.playerState.videosToPlay?.size ?: 0 > ++viewModel.playerState.currentVideoIndex) {
+                        playVideo(viewModel.playerState.videosToPlay!![viewModel.playerState.currentVideoIndex])
+                    } else {
+                        Toast.makeText(context, "${viewModel.playerState.lastVideoPlaylist?.name
+                                ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
+                        slidingPanelController?.hideIfVisible()
+                    }
+                }
+                else -> return
+            }
+        }
+    }
+
+    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+        override fun onStateChange(state: PlayerConstants.PlayerState) {
+            when (state) {
+                PlayerConstants.PlayerState.PLAYING -> {
+                    viewModel.playerState.youtubePlaybackInProgress = true
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
+                }
+
+                PlayerConstants.PlayerState.PAUSED -> {
+                    viewModel.playerState.youtubePlaybackInProgress = false
+                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
+                }
+
+                else -> return
+            }
+        }
+    }
+
+    val lastPlayedVideo: Video?
+        get() = viewModel.playerState.lastPlayedVideo
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -82,16 +131,9 @@ class YoutubePlayerFragment :
         youtube_player_view?.playerUIController?.showUI(false)
     }
 
-    override fun onHidden() {
-        youTubePlayer?.pause()
-        lastPlayedVideo = null
-    }
+    override fun onHidden() = stopPlaybackAndNullifyLastPlayedItems()
 
-    override fun stopPlayback() {
-        youTubePlayer?.pause()
-        lastPlayedVideo = null
-        lastVideoPlaylist = null
-    }
+    override fun stopPlayback() = stopPlaybackAndNullifyLastPlayedItems()
 
     fun onPlayerDimensionsChange(slideOffset: Float) {
         val youtubePlayerGuidelinePercentage = (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
@@ -99,16 +141,33 @@ class YoutubePlayerFragment :
         youtube_player_guideline?.requestLayout()
     }
 
-    private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
-        ImageButton(context).apply {
-            setImageResource(R.drawable.close)
-            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(10, 10, 10, 10)
-                addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-            }
-            setOnClickListener(onYoutubePlayerCloseBtnClickListener)
-            setBackgroundColor(Color.TRANSPARENT)
-        }
+    fun loadVideo(video: Video) {
+        if (video == viewModel.playerState.lastPlayedVideo) return
+
+        viewModel.onLoadVideo(video)
+
+        youTubePlayer?.removeListener(playlistYoutubePlayerStateChangeListener)
+        playVideo(video)
+
+        youtube_player_view?.playerUIController?.setVideoTitle(video.title)
+    }
+
+    fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
+        if (videoPlaylist == viewModel.playerState.lastVideoPlaylist) return
+
+        viewModel.onLoadVideoPlaylist(videoPlaylist, videos)
+
+        youTubePlayer?.addListener(playlistYoutubePlayerStateChangeListener)
+
+        val firstVideo = videos.first()
+        playVideo(firstVideo)
+        youtube_player_view?.playerUIController?.setVideoTitle(firstVideo.title)
+    }
+
+    private fun stopPlaybackAndNullifyLastPlayedItems() {
+        youTubePlayer?.pause()
+        viewModel.playerState.lastPlayedVideo = null
+        viewModel.playerState.lastVideoPlaylist = null
     }
 
     private fun initPlayerViewControls(view: View) = view.findViewById<RelativeLayout>(R.id.controls_root).apply {
@@ -127,83 +186,10 @@ class YoutubePlayerFragment :
         playerUIController.showVideoTitle(true)
     }
 
-    var lastPlayedVideo: Video? = null
-        private set
-
-    private var youtubePlaybackInProgress: Boolean = false
-
-    private var lastVideoPlaylist: VideoPlaylist? = null
-    private var videosToPlay: List<Video>? = null
-    private var currentVideoIndex = 0
-
-    fun loadVideo(video: Video) {
-        if (video == lastPlayedVideo) return
-        lastPlayedVideo = video
-
-        lastVideoPlaylist = null
-
-
-        youTubePlayer?.removeListener(playlistYoutubePlayerStateChangeListener)
-        playVideo(video)
-
-        youtube_player_view?.playerUIController?.setVideoTitle(video.title)
-    }
-
-    fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
-        if (videoPlaylist == lastVideoPlaylist) return
-
-        lastVideoPlaylist = videoPlaylist
-        videosToPlay = videos
-        currentVideoIndex = 0
-
-        lastPlayedVideo = null
-
-        youTubePlayer?.addListener(playlistYoutubePlayerStateChangeListener)
-
-        val firstVideo = videos.first()
-        playVideo(firstVideo)
-        youtube_player_view?.playerUIController?.setVideoTitle(firstVideo.title)
-    }
-
     private fun playVideo(video: Video) {
         youtube_player_video_title_when_collapsed_txt?.text = video.title
         if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
         else youTubePlayer?.cueVideo(video.id, 0f)
-    }
-
-    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
-        override fun onStateChange(state: PlayerConstants.PlayerState) {
-            when (state) {
-                PlayerConstants.PlayerState.ENDED -> {
-                    if (videosToPlay?.size ?: 0 > ++currentVideoIndex) {
-                        playVideo(videosToPlay!![currentVideoIndex])
-                    } else {
-                        Toast.makeText(context, "${lastVideoPlaylist?.name
-                                ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
-                        slidingPanelController?.hideIfVisible()
-                    }
-                }
-                else -> return
-            }
-        }
-    }
-
-    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
-        override fun onStateChange(state: PlayerConstants.PlayerState) {
-            when (state) {
-                PlayerConstants.PlayerState.PLAYING -> {
-                    youtubePlaybackInProgress = true
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
-                }
-
-                PlayerConstants.PlayerState.PAUSED -> {
-                    youtubePlaybackInProgress = false
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
-                }
-
-                else -> return
-            }
-        }
     }
 
     companion object {

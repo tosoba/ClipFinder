@@ -11,6 +11,7 @@ import com.example.there.findclips.fragment.dashboard.DashboardViewModel
 import com.example.there.findclips.fragment.favourites.spotify.SpotifyFavouritesViewModel
 import com.example.there.findclips.fragment.favourites.videos.VideosFavouritesViewModel
 import com.example.there.findclips.fragment.player.spotify.SpotifyPlayerViewModel
+import com.example.there.findclips.fragment.player.youtube.YoutubePlayerViewModel
 import com.example.there.findclips.fragment.relatedvideos.RelatedVideosViewModel
 import com.example.there.findclips.fragment.search.spotify.SpotifySearchViewModel
 import com.example.there.findclips.fragment.search.videos.VideosSearchViewModel
@@ -115,4 +116,9 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(RelatedVideosViewModel::class)
     abstract fun relatedVideosViewModel(viewModel: RelatedVideosViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(YoutubePlayerViewModel::class)
+    abstract fun youtubePlayerViewModel(viewModel: YoutubePlayerViewModel): ViewModel
 }
