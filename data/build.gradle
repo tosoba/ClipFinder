@@ -51,6 +51,8 @@ dependencies {
     implementation project(':domain')
 
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
+
+    implementation 'com.github.vpaliy:SoundCloud-API:1.3.2'
 }
 
 repositories {

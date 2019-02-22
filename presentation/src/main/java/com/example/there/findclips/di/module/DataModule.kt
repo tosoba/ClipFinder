@@ -3,12 +3,18 @@ package com.example.there.findclips.di.module
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.example.there.data.db.*
+import com.example.there.data.repo.soundcloud.SoundCloudRepository
+import com.example.there.data.repo.soundcloud.datastore.SoundCloudDbDataStore
+import com.example.there.data.repo.soundcloud.datastore.SoundCloudRemoteDataStore
 import com.example.there.data.repo.spotify.SpotifyRepository
 import com.example.there.data.repo.spotify.datastore.SpotifyDbDataStore
 import com.example.there.data.repo.spotify.datastore.SpotifyRemoteDataStore
 import com.example.there.data.repo.videos.VideosRepository
 import com.example.there.data.repo.videos.datastore.VideosDbDataStore
 import com.example.there.data.repo.videos.datastore.VideosRemoteDataStore
+import com.example.there.domain.repo.soundcloud.ISoundCloudRepository
+import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
+import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
 import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
@@ -97,4 +103,13 @@ abstract class DataModule {
 
     @Binds
     abstract fun videosRepository(repo: VideosRepository): IVideosRepository
+
+    @Binds
+    abstract fun soundCloudDbDataStore(ds: SoundCloudDbDataStore): ISoundCloudDbDataStore
+
+    @Binds
+    abstract fun soundCloudRemoteDataStore(ds: SoundCloudRemoteDataStore): ISoundCloudRemoteDataStore
+
+    @Binds
+    abstract fun soundCloudRepository(repo: SoundCloudRepository): ISoundCloudRepository
 }

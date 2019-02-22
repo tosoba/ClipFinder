@@ -14,5 +14,4 @@ class SoundCloudMainFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_soundcloud_main, container, false)
     }
-
 }
