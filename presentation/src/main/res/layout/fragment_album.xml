@@ -5,7 +5,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.spotifyitem.album.AlbumView" />
+            type="com.example.there.findclips.spotify.spotifyitem.album.AlbumView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".fragment.spotifyitem.album.AlbumFragment">
+        tools:context=".spotify.spotifyitem.album.AlbumFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/album_app_bar"

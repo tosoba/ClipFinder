@@ -4,7 +4,7 @@
 
         <variable
             name="fragmentView"
-            type="com.example.there.findclips.main.soundcloud.SoundCloudMainView" />
+            type="com.example.there.findclips.soundcloud.SoundCloudMainView" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        tools:context=".main.soundcloud.SoundCloudMainFragment">
+        tools:context=".soundcloud.SoundCloudMainFragment">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/sound_cloud_view_pager"

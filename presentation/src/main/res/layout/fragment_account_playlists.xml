@@ -6,18 +6,18 @@
 
         <variable
             name="viewState"
-            type="com.example.there.findclips.fragment.account.playlists.AccountPlaylistViewState" />
+            type="com.example.there.findclips.spotify.account.playlists.AccountPlaylistViewState" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.fragment.account.playlists.AccountPlaylistsFragment">
+        tools:context=".spotify.account.playlists.AccountPlaylistsFragment">
 
         <fragment
             android:id="@+id/account_spotify_playlists_fragment"
-            android:name="com.example.there.findclips.fragment.list.SpotifyPlaylistsFragment"
+            android:name="com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

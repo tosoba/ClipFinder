@@ -6,14 +6,14 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.account.saved.AccountSavedView" />
+            type="com.example.there.findclips.spotify.account.saved.AccountSavedView" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.fragment.account.saved.AccountSavedFragment">
+        tools:context=".spotify.account.saved.AccountSavedFragment">
 
         <TextView
             style="@style/EmptyListTextView"

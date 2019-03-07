@@ -4,14 +4,14 @@
 
         <variable
             name="favouritesFragmentView"
-            type="com.example.there.findclips.fragment.favourites.FavouritesView" />
+            type="com.example.there.findclips.spotify.favourites.FavouritesView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.fragment.favourites.FavouritesFragment">
+        tools:context="com.example.there.findclips.spotify.favourites.FavouritesFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/favourites_app_bar_layout"

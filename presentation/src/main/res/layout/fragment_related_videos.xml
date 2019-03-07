@@ -7,14 +7,14 @@
 
         <variable
             name="fragmentView"
-            type="com.example.there.findclips.fragment.relatedvideos.RelatedVideosView" />
+            type="com.example.there.findclips.videos.relatedvideos.RelatedVideosView" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.relatedvideos.RelatedVideosFragment">
+        tools:context=".videos.relatedvideos.RelatedVideosFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/related_videos_recycler_view"

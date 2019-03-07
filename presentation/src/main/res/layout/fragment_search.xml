@@ -4,7 +4,7 @@
 
         <variable
             name="searchFragmentView"
-            type="com.example.there.findclips.fragment.search.SearchView" />
+            type="com.example.there.findclips.spotify.search.SearchView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"

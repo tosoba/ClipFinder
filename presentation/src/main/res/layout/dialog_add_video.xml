@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.addvideo.AddVideoView" />
+            type="com.example.there.findclips.videos.addvideo.AddVideoView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

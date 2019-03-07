@@ -4,7 +4,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.account.AccountView" />
+            type="com.example.there.findclips.spotify.account.AccountView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context="com.example.there.findclips.fragment.account.AccountFragment">
+        tools:context=".spotify.account.AccountFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/account_app_bar_layout"

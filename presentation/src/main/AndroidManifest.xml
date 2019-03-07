@@ -15,11 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".fragment.player.spotify.SpotifyPlayerCancelNotificationService" />
+        <service android:name=".spotify.player.SpotifyPlayerCancelNotificationService" />
 
         <provider
-            android:name=".fragment.search.SearchSuggestionProvider"
-            android:authorities="com.example.there.findclips.fragment.search.SearchSuggestionProvider" />
+            android:name=".spotify.search.SearchSuggestionProvider"
+            android:authorities="com.example.there.findclips.spotify.search.SearchSuggestionProvider" />
 
         <activity
             android:name=".main.MainActivity"

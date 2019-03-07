@@ -6,7 +6,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.spotifyitem.track.TrackView" />
+            type="com.example.there.findclips.spotify.spotifyitem.track.TrackView" />
     </data>
 
     <android.support.v7.widget.RecyclerView

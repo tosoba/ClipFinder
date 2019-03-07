@@ -7,7 +7,7 @@
 
         <variable
             name="playerView"
-            type="com.example.there.findclips.fragment.player.youtube.YoutubePlayerView" />
+            type="com.example.there.findclips.videos.player.YoutubePlayerView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

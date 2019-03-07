@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.fragment.spotifyitem.playlist.PlaylistView" />
+            type="com.example.there.findclips.spotify.spotifyitem.playlist.PlaylistView" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".fragment.spotifyitem.playlist.PlaylistFragment">
+        tools:context=".spotify.spotifyitem.playlist.PlaylistFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/playlist_app_bar"
@@ -92,7 +92,7 @@
 
             <fragment
                 android:id="@+id/playlist_spotify_tracks_fragment"
-                android:name="com.example.there.findclips.fragment.list.SpotifyTracksFragment"
+                android:name="com.example.there.findclips.spotify.list.SpotifyTracksFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:additional_hint_text=""
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{view.state.isSavedAsFavourite ? @drawable/delete : @drawable/favourite}"
+            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/playlist_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
