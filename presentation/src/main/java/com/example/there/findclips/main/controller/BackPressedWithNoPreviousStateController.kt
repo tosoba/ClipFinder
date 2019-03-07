@@ -1,5 +1,5 @@
 package com.example.there.findclips.main.controller
 
-interface BackPressedWithNoPreviousStateHandler {
+interface BackPressedWithNoPreviousStateController {
     fun onBackPressedWithNoPreviousState()
 }

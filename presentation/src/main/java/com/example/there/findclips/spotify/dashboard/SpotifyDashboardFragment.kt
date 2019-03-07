@@ -11,7 +11,7 @@ import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.databinding.FragmentDashboardBinding
+import com.example.there.findclips.databinding.FragmentSpotifyDashboardBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent
@@ -31,11 +31,11 @@ import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
-import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
 
 
-class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel::class.java), Injectable, HasMainToolbar {
+class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(SpotifyDashboardViewModel::class.java), Injectable, HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
@@ -46,8 +46,8 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         }
     }
 
-    private val dashboardAdapter: DashboardAdapter by lazy {
-        DashboardAdapter(
+    private val dashboardAdapter: SpotifyDashboardAdapter by lazy {
+        SpotifyDashboardAdapter(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.categoriesLoadingInProgress,
@@ -118,8 +118,8 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
         )
     }
 
-    private val view: DashboardView by lazy {
-        DashboardView(
+    private val view: SpotifyDashboardView by lazy {
+        SpotifyDashboardView(
                 state = viewModel.viewState,
                 dashboardAdapter = dashboardAdapter
         )
@@ -154,7 +154,7 @@ class DashboardFragment : BaseVMFragment<DashboardViewModel>(DashboardViewModel:
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
+        val binding: FragmentSpotifyDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_dashboard, container, false)
         return binding.apply {
             dashboardView = view
             appCompatActivity?.setSupportActionBar(dashboardToolbar)

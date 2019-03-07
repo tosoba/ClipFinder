@@ -9,20 +9,21 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.databinding.FragmentFavouritesBinding
+import com.example.there.findclips.databinding.FragmentSpotifyFavouritesMainBinding
 import com.example.there.findclips.spotify.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.videos.favourites.VideosFavouritesFragment
-import kotlinx.android.synthetic.main.fragment_favourites.*
+import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
 
 
-class FavouritesFragment : Fragment(), HasMainToolbar {
+class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = favourites_toolbar
 
-    private val pagerAdapter: FavouritesFragmentPagerAdapter by lazy {
-        FavouritesFragmentPagerAdapter(childFragmentManager, arrayOf(
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+        CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
                 SpotifyFavouritesFragment(),
                 VideosFavouritesFragment()
         ))
@@ -40,8 +41,8 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
         return@OnNavigationItemSelectedListener true
     }
 
-    private val view: FavouritesView by lazy {
-        FavouritesView(
+    private val view: SpotifyFavouritesMainView by lazy {
+        SpotifyFavouritesMainView(
                 pagerAdapter,
                 onNavigationItemSelectedListener,
                 1,
@@ -52,7 +53,7 @@ class FavouritesFragment : Fragment(), HasMainToolbar {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_favourites, container, false)
+        val binding: FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites_main, container, false)
         return binding.apply {
             favouritesFragmentView = view
             appCompatActivity?.setSupportActionBar(favouritesToolbar)

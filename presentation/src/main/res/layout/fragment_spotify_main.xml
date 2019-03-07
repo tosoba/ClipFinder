@@ -33,13 +33,13 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@color/colorPrimaryDark"
-            app:itemIconTint="@color/bottom_navigation_color"
-            app:itemTextColor="@color/bottom_navigation_color"
+            app:itemIconTint="@color/spotify_bottom_navigation_color"
+            app:itemTextColor="@color/spotify_bottom_navigation_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/main_view_pager"
-            app:menu="@menu/bottom_navigation" />
+            app:menu="@menu/spotify_bottom_navigation" />
 
     </LinearLayout>
 </layout>

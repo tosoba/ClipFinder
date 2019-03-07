@@ -3,7 +3,7 @@ package com.example.there.findclips.di.module.ui
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.spotify.account.saved.AccountSavedFragment
 import com.example.there.findclips.spotify.account.top.AccountTopFragment
-import com.example.there.findclips.spotify.dashboard.DashboardFragment
+import com.example.there.findclips.spotify.dashboard.SpotifyDashboardFragment
 import com.example.there.findclips.spotify.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.spotify.player.SpotifyPlayerFragment
 import com.example.there.findclips.spotify.search.spotify.SpotifySearchFragment
@@ -24,7 +24,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentsModule {
 
     @ContributesAndroidInjector
-    abstract fun dashboardFragment(): DashboardFragment
+    abstract fun dashboardFragment(): SpotifyDashboardFragment
 
     @ContributesAndroidInjector
     abstract fun spotifyFavouritesFragment(): SpotifyFavouritesFragment

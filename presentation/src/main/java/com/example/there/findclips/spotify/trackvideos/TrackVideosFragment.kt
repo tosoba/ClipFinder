@@ -116,7 +116,7 @@ class TrackVideosFragment :
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {
-            backPressedWithNoPreviousStateHandler?.onBackPressedWithNoPreviousState()
+            backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)

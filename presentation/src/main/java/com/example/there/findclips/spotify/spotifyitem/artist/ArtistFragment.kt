@@ -160,7 +160,7 @@ class ArtistFragment :
 
     override fun onBackPressed() {
         if (!viewModel.onBackPressed()) {
-            backPressedWithNoPreviousStateHandler?.onBackPressedWithNoPreviousState()
+            backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
         } else {
             loadCollapsingToolbarBackgroundGradient(viewModel.viewState.artist.get()!!.iconUrl)
         }

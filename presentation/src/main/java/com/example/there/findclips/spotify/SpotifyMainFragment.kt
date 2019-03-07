@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseNavHostFragment
 import com.example.there.findclips.spotify.account.AccountNavHostFragment
-import com.example.there.findclips.spotify.dashboard.DashboardNavHostFragment
-import com.example.there.findclips.spotify.favourites.FavouritesNavHostFragment
+import com.example.there.findclips.spotify.dashboard.SpotifyDashboardNavHostFragment
+import com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainNavHostFragment
 import com.example.there.findclips.util.ext.checkItem
 import com.example.there.findclips.util.ext.toolbarController
 import com.example.there.findclips.view.OnPageChangeListener
@@ -37,7 +37,7 @@ class SpotifyMainFragment : Fragment() {
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
                 childFragmentManager,
-                arrayOf(DashboardNavHostFragment(), AccountNavHostFragment(), FavouritesNavHostFragment())
+                arrayOf(SpotifyDashboardNavHostFragment(), AccountNavHostFragment(), SpotifyFavouritesMainNavHostFragment())
         )
     }
 

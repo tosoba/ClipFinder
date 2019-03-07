@@ -28,8 +28,8 @@ val Fragment.youtubePlayerController: YoutubePlayerController?
 val Fragment.spotifyTrackChangeHandler: SpotifyTrackChangeHandler?
     get() = activity as? SpotifyTrackChangeHandler
 
-val Fragment.backPressedWithNoPreviousStateHandler: BackPressedWithNoPreviousStateHandler?
-    get() = activity as? BackPressedWithNoPreviousStateHandler
+val Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
+    get() = activity as? BackPressedWithNoPreviousStateController
 
 val Fragment.spotifyLoginController: SpotifyLoginController?
     get() = activity as? SpotifyLoginController

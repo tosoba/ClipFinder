@@ -36,8 +36,8 @@ import com.example.there.findclips.soundcloud.SoundCloudMainFragment
 import com.example.there.findclips.spotify.SpotifyMainFragment
 import com.example.there.findclips.spotify.list.SpotifyTracksFragment
 import com.example.there.findclips.spotify.player.SpotifyPlayerFragment
-import com.example.there.findclips.spotify.search.SearchFragment
 import com.example.there.findclips.spotify.search.SearchSuggestionProvider
+import com.example.there.findclips.spotify.search.SpotifySearchMainFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.videos.addvideo.AddVideoDialogFragment
@@ -64,7 +64,7 @@ class MainActivity :
         SpotifyPlayerController,
         YoutubePlayerController,
         SpotifyTrackChangeHandler,
-        BackPressedWithNoPreviousStateHandler,
+        BackPressedWithNoPreviousStateController,
         SpotifyLoginController,
         ConnectivitySnackbarHost,
         NavigationDrawerController,
@@ -323,7 +323,7 @@ class MainActivity :
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_menu, menu)
+        menuInflater.inflate(R.menu.spotify_search_menu, menu)
 
         searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
         val searchView = searchViewMenuItem?.actionView as? SearchView
@@ -560,7 +560,7 @@ class MainActivity :
 
         spotifyMainFragment?.let {
             val currentFragment = it.currentNavHostFragment
-            currentFragment?.showFragment(SearchFragment.newInstance(query), true)
+            currentFragment?.showFragment(SpotifySearchMainFragment.newInstance(query), true)
         }
 
         //TODO: handle soundcloud search here

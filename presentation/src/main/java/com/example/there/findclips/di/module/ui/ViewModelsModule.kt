@@ -8,7 +8,7 @@ import com.example.there.findclips.main.MainViewModel
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsViewModel
 import com.example.there.findclips.spotify.account.saved.AccountSavedViewModel
 import com.example.there.findclips.spotify.account.top.AccountTopViewModel
-import com.example.there.findclips.spotify.dashboard.DashboardViewModel
+import com.example.there.findclips.spotify.dashboard.SpotifyDashboardViewModel
 import com.example.there.findclips.spotify.favourites.spotify.SpotifyFavouritesViewModel
 import com.example.there.findclips.spotify.player.SpotifyPlayerViewModel
 import com.example.there.findclips.spotify.search.spotify.SpotifySearchViewModel
@@ -64,8 +64,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DashboardViewModel::class)
-    abstract fun dashboardViewModel(viewModel: DashboardViewModel): ViewModel
+    @ViewModelKey(SpotifyDashboardViewModel::class)
+    abstract fun dashboardViewModel(viewModel: SpotifyDashboardViewModel): ViewModel
 
     @Binds
     @IntoMap

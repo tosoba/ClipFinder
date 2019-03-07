@@ -13,14 +13,14 @@ import com.example.there.findclips.model.mapper.PlaylistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper
 import javax.inject.Inject
 
-class DashboardViewModel @Inject constructor(
+class SpotifyDashboardViewModel @Inject constructor(
         private val getFeaturedPlaylists: GetFeaturedPlaylists,
         private val getCategories: GetCategories,
         private val getDailyViralTracks: GetDailyViralTracks,
         private val getNewReleases: GetNewReleases
 ) : BaseViewModel() {
 
-    val viewState: DashboardViewState = DashboardViewState()
+    val viewState: SpotifyDashboardViewState = SpotifyDashboardViewState()
 
     fun loadData(onNewReleasesFinally: (() -> Unit)? = null) {
         loadCategories()

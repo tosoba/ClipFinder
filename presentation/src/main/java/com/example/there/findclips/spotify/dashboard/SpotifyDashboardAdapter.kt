@@ -16,7 +16,7 @@ import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
 
-class DashboardAdapter(
+class SpotifyDashboardAdapter(
         private val categoriesRecyclerViewItemView: RecyclerViewItemView<Category>,
         private val playlistsRecyclerViewItemView: RecyclerViewItemView<Playlist>,
         private val tracksRecyclerViewItemState: RecyclerViewItemView<TopTrack>,

@@ -8,12 +8,12 @@ import com.example.there.findclips.model.entity.Playlist
 import com.example.there.findclips.model.entity.TopTrack
 import com.example.there.findclips.util.ObservableSortedList
 
-class DashboardView(
-        val state: DashboardViewState,
-        val dashboardAdapter: DashboardAdapter
+class SpotifyDashboardView(
+        val state: SpotifyDashboardViewState,
+        val dashboardAdapter: SpotifyDashboardAdapter
 )
 
-class DashboardViewState(
+class SpotifyDashboardViewState(
         val categories: ObservableList<Category> = ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback),
         val featuredPlaylists: ObservableList<Playlist> = ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback),
         val topTracks: ObservableList<TopTrack> = ObservableSortedList<TopTrack>(TopTrack::class.java, TopTrack.sortedListCallback),
