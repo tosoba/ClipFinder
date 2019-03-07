@@ -22,7 +22,7 @@ val ThumbnailsData.urlHigh: String
 val ThumbnailsData.urlMedium: String
     get() = medium?.url ?: high?.url ?: default?.url ?: fallbackURL
 
-val ThumbnailsData.fallbackURL: String
+private val fallbackURL: String
     get() = "https://i.ytimg.com/vi/T0Jqdjbed40/sddefault.jpg"
 
 fun <T> Maybe<T>.mapToSingleBoolean(): Single<Boolean> = this

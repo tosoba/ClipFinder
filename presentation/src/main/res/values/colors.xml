@@ -5,4 +5,7 @@
     <color name="colorAccent">#84bd00</color>
 
     <color name="rippleColor">#a1bf97</color>
+
+    <color name="soundCloudOrange">#FD6A02</color>
+    <color name="soundCloudOrangeDark">#ff2200</color>
 </resources>

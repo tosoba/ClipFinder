@@ -664,4 +664,3 @@ class MainActivity :
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
     }
 }
-
