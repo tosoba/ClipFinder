@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
 
 @Module
@@ -52,7 +53,12 @@ class NetworkModule {
 
     @Provides
     @Named(Dependencies.SPOTIFY_CHARTS_RETROFIT)
-    fun spotifyChartsRetrofit(): Retrofit = buildDefaultRetrofitWithUrl(spotifyChartsBaseUrl)
+    fun spotifyChartsRetrofit(): Retrofit = Retrofit.Builder()
+            .client(OkHttpClient())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .baseUrl(spotifyChartsBaseUrl)
+            .build()
 
     @Provides
     @Named(Dependencies.YOUTUBE_API_RETROFIT)
