@@ -30,7 +30,11 @@ import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.databinding.DrawerHeaderBinding
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.main.controller.*
-import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.Track
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.soundcloud.SoundCloudMainFragment
 import com.example.there.findclips.spotify.SpotifyMainFragment

@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.entity
+package com.example.there.findclips.model.entity.spotify
 
 import com.example.there.findclips.R
 import com.example.there.findclips.view.imageview.ImageViewSrc

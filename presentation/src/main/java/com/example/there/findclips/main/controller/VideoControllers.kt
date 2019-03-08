@@ -1,7 +1,7 @@
 package com.example.there.findclips.main.controller
 
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 
 interface VideoPlaylistController {
     fun addVideoToPlaylist(playlist: VideoPlaylist)

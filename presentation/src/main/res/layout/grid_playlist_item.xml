@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
         <variable
             name="playlist"
-            type="com.example.there.findclips.model.entity.Playlist" />
+            type="com.example.there.findclips.model.entity.spotify.Playlist" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        imageSrc="@{playlist.imageViewSrc}"
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:layout_marginBottom="6dp"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:foreground="@drawable/foreground_ripple">
-
-        <ImageView
-            imageSrc="@{playlist.imageViewSrc}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+        android:layout_marginBottom="6dp"
+        android:foreground="@drawable/foreground_ripple"
+        android:scaleType="fitXY" />
 
 </layout>

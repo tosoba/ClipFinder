@@ -10,8 +10,8 @@ class RecyclerViewItemView<T>(
         val state: RecyclerViewItemViewState<T>,
         val listItemView: ListItemView<T>,
         val onItemClickListener: ClickHandler<T>,
-        val itemDecoration: RecyclerView.ItemDecoration?,
-        val onScrollListener: RecyclerView.OnScrollListener?,
+        val itemDecoration: RecyclerView.ItemDecoration? = null,
+        val onScrollListener: RecyclerView.OnScrollListener? = null,
         val onReloadBtnClickListener: View.OnClickListener? = null,
         val nestedScrollingEnabled: Boolean = false
 )

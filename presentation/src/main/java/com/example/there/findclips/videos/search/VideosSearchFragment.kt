@@ -16,8 +16,8 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.ISearchFragment
 import com.example.there.findclips.databinding.FragmentVideosSearchBinding
 import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.util.ext.connectivitySnackbarHost
 import com.example.there.findclips.util.ext.screenOrientation
 import com.example.there.findclips.util.ext.youtubePlayerController

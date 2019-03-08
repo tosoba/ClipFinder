@@ -3,9 +3,9 @@ package com.example.there.findclips.spotify.player
 import android.databinding.ObservableField
 import android.view.View
 import android.widget.SeekBar
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.Track
 import com.spotify.sdk.android.player.Metadata
 import com.spotify.sdk.android.player.PlaybackState
 

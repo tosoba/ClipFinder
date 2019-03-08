@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.DialogAddVideoBinding
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.util.ext.videoPlaylistController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder

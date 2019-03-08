@@ -1,7 +1,7 @@
 package com.example.there.findclips.view.list.item
 
 import android.view.View
-import com.example.there.findclips.model.entity.Video
+import com.example.there.findclips.model.entity.videos.Video
 import com.example.there.findclips.util.ObservableSortedList
 
 class VideoItemView(

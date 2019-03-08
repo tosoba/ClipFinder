@@ -15,7 +15,7 @@ import com.example.there.findclips.databinding.FragmentTrackVideosBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.spotifyitem.track.TrackFragment
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.videos.search.VideosSearchFragment

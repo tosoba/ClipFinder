@@ -11,7 +11,7 @@ import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.databinding.FragmentSpotifyArtistsBinding
-import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.model.entity.spotify.Artist
 import com.example.there.findclips.spotify.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.navHostFragment

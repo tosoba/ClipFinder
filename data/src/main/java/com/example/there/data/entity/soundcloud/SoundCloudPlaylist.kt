@@ -3,7 +3,7 @@ package com.example.there.data.entity.soundcloud
 import com.google.gson.annotations.SerializedName
 
 data class SoundCloudPlaylist(
-        @SerializedName("artwork_url") val artworkUrl: String,
+        @SerializedName("artwork_url") val artworkUrl: String?,
         @SerializedName("created_at") val createdAt: String,
         @SerializedName("display_date") val displayDate: String,
         val duration: Int,
@@ -14,7 +14,7 @@ data class SoundCloudPlaylist(
         val permalink: String,
         @SerializedName("permalink_url") val permalinkUrl: String,
         @SerializedName("public") val `public`: Boolean,
-        @SerializedName("published_at") val publishedAt: String,
+        @SerializedName("published_at") val publishedAt: String?,
         @SerializedName("reposts_count") val repostsCount: Int,
         val title: String,
         @SerializedName("track_count") val trackCount: Int,

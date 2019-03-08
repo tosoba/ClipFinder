@@ -16,8 +16,8 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.IPlayerFragment
 import com.example.there.findclips.databinding.FragmentYoutubePlayerBinding
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.util.ext.dpToPx
 import com.example.there.findclips.util.ext.slidingPanelController
 import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener

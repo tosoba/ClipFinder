@@ -7,7 +7,7 @@ import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
 import com.example.there.findclips.base.vm.BaseVideosViewModel
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.model.mapper.VideoEntityMapper
 import com.example.there.findclips.model.mapper.VideoPlaylistEntityMapper
 import com.example.there.findclips.view.list.item.VideoItemView

@@ -4,7 +4,7 @@ import android.databinding.ObservableField
 import android.util.Log
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Artist
+import com.example.there.findclips.model.entity.spotify.Artist
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.ArtistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper

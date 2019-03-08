@@ -3,7 +3,7 @@ package com.example.there.findclips.spotify.spotifyitem.album
 import android.util.Log
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Album
+import com.example.there.findclips.model.entity.spotify.Album
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.ArtistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper

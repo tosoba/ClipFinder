@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.entity
+package com.example.there.findclips.model.entity.spotify
 
 import android.os.Parcelable
 import com.example.there.findclips.R

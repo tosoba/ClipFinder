@@ -19,10 +19,10 @@ class SoundCloudRemoteDataStore @Inject constructor(
         get() = api.discover().map { response ->
             SoundCloudDiscoverEntity(
                     playlists = response.collection.map {
-                        it.playlists.map(SoundCloudPlaylist::domain)
+                        it.playlists?.map(SoundCloudPlaylist::domain) ?: emptyList()
                     }.flatten(),
                     systemPlaylists = response.collection.map {
-                        it.systemPlaylists.map(SoundCloudSystemPlaylist::domain)
+                        it.systemPlaylists?.map(SoundCloudSystemPlaylist::domain) ?: emptyList()
                     }.flatten()
             )
         }

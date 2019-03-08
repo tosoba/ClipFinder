@@ -16,7 +16,7 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.Category
+import com.example.there.findclips.model.entity.spotify.Category
 import com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.util.ext.*
 import com.squareup.picasso.Picasso

@@ -9,7 +9,12 @@ import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
 import com.example.there.domain.usecase.videos.GetFavouriteVideoPlaylists
 import com.example.there.domain.usecase.videos.InsertVideoPlaylist
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.*
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.Track
+import com.example.there.findclips.model.entity.spotify.User
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.model.mapper.*
 import javax.inject.Inject
 

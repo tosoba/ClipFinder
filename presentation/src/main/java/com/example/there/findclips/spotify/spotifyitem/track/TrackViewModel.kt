@@ -6,7 +6,7 @@ import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.ArtistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper

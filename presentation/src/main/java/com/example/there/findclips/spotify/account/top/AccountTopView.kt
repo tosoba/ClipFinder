@@ -3,8 +3,8 @@ package com.example.there.findclips.spotify.account.top
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
-import com.example.there.findclips.model.entity.Artist
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Artist
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
 
 class AccountTopView(

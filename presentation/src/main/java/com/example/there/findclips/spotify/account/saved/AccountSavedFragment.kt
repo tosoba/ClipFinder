@@ -13,8 +13,8 @@ import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentAccountSavedBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.account.TracksDataLoaded
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment

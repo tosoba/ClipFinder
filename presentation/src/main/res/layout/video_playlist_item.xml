@@ -5,31 +5,26 @@
 
         <variable
             name="playlist"
-            type="com.example.there.findclips.model.entity.VideoPlaylist" />
+            type="com.example.there.findclips.model.entity.videos.VideoPlaylist" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
         android:layout_marginTop="3dp"
+        android:layout_marginRight="3dp"
         android:background="@color/colorPrimaryDark"
         android:foreground="@drawable/foreground_ripple">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
             android:text="@{playlist.name}"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </layout>

@@ -3,9 +3,9 @@ package com.example.there.findclips.spotify.spotifyitem.artist
 import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.view.View
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Artist
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Artist
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.util.ObservableSortedList
 
 class ArtistView(

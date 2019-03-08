@@ -6,7 +6,7 @@
 
         <variable
             name="view"
-            type="com.example.there.findclips.base.fragment.BaseSpotifyListFragment.View&lt;com.example.there.findclips.model.entity.Artist&gt;" />
+            type="com.example.there.findclips.base.fragment.BaseSpotifyListFragment.View&lt;com.example.there.findclips.model.entity.spotify.Artist&gt;" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

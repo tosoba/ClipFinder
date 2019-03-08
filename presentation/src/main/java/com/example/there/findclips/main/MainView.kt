@@ -7,9 +7,9 @@ import android.databinding.ObservableList
 import android.support.design.widget.NavigationView
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.View
-import com.example.there.findclips.model.entity.Track
-import com.example.there.findclips.model.entity.User
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.spotify.Track
+import com.example.there.findclips.model.entity.spotify.User
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(

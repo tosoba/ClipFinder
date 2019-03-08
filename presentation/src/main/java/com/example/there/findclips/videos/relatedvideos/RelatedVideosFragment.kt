@@ -12,7 +12,7 @@ import com.example.there.findclips.BR
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.model.entity.Video
+import com.example.there.findclips.model.entity.videos.Video
 import com.example.there.findclips.util.ext.youtubePlayerController
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder

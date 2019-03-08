@@ -1,7 +1,7 @@
 package com.example.there.domain.entity.soundcloud
 
 data class SoundCloudPlaylistEntity(
-        val artworkUrl: String,
+        val artworkUrl: String?,
         val createdAt: String,
         val displayDate: String,
         val duration: Int,
@@ -12,7 +12,7 @@ data class SoundCloudPlaylistEntity(
         val permalink: String,
         val permalinkUrl: String,
         val `public`: Boolean,
-        val publishedAt: String,
+        val publishedAt: String?,
         val repostsCount: Int,
         val title: String,
         val trackCount: Int,

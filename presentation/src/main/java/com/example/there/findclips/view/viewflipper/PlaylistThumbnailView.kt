@@ -1,7 +1,7 @@
 package com.example.there.findclips.view.viewflipper
 
 import android.view.View
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.util.ObservableSortedList
 
 class PlaylistThumbnailView(

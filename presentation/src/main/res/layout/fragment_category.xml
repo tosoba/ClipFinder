@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{view.state.isSavedAsFavourite ? @drawable/delete : @drawable/favourite}"
+            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/category_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

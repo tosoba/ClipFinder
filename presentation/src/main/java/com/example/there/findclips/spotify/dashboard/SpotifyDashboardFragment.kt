@@ -15,10 +15,10 @@ import com.example.there.findclips.databinding.FragmentSpotifyDashboardBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.TopTrack
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Category
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.TopTrack
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.spotifyitem.category.CategoryFragment
 import com.example.there.findclips.spotify.spotifyitem.playlist.PlaylistFragment
@@ -35,7 +35,9 @@ import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
 
 
-class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(SpotifyDashboardViewModel::class.java), Injectable, HasMainToolbar {
+class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
+        SpotifyDashboardViewModel::class.java
+), Injectable, HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
@@ -60,9 +62,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(Spoti
                         ClickHandler {
                             navHostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { viewModel.loadCategories() }
+                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadCategories() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -76,9 +76,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(Spoti
                         ClickHandler {
                             navHostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { viewModel.loadFeaturedPlaylists() }
+                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadFeaturedPlaylists() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -92,9 +90,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(Spoti
                         ClickHandler {
                             navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { viewModel.loadDailyViralTracks() }
+                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadDailyViralTracks() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
@@ -108,9 +104,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(Spoti
                         ClickHandler {
                             navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                         },
-                        null,
-                        onNewReleasesScrollListener,
-                        View.OnClickListener {
+                        onScrollListener = onNewReleasesScrollListener,
+                        onReloadBtnClickListener = View.OnClickListener {
                             val loadMore = viewModel.viewState.newReleases.size > 0
                             viewModel.loadNewReleases(loadMore)
                         }

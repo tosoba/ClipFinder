@@ -1,5 +1,6 @@
 package com.example.there.findclips.di.module.ui
 
+import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardFragment
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.spotify.account.saved.AccountSavedFragment
 import com.example.there.findclips.spotify.account.top.AccountTopFragment
@@ -73,4 +74,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun relatedVideosFragment(): RelatedVideosFragment
+
+    @ContributesAndroidInjector
+    abstract fun soundCloudDashboardFragment(): SoundCloudDashboardFragment
 }

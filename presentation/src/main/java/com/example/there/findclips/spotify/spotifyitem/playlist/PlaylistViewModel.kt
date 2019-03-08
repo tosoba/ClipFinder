@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.spotify.GetPlaylistTracks
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper
 import com.example.there.findclips.model.mapper.TrackEntityMapper
 import javax.inject.Inject

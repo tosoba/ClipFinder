@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.util.ext.makeItemBinding
 import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState

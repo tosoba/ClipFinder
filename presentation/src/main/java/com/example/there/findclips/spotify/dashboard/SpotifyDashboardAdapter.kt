@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.databinding.RecyclerViewListItemBinding
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.TopTrack
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Category
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.TopTrack
 import com.example.there.findclips.util.ext.makeItemBinding
 import com.example.there.findclips.view.list.BaseBindingViewHolder
 import com.example.there.findclips.view.list.item.HeaderItemViewState
@@ -19,7 +19,7 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemView
 class SpotifyDashboardAdapter(
         private val categoriesRecyclerViewItemView: RecyclerViewItemView<Category>,
         private val playlistsRecyclerViewItemView: RecyclerViewItemView<Playlist>,
-        private val tracksRecyclerViewItemState: RecyclerViewItemView<TopTrack>,
+        private val tracksRecyclerViewItemView: RecyclerViewItemView<TopTrack>,
         private val albumsRecyclerViewItemView: RecyclerViewItemView<Album>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -63,7 +63,7 @@ class SpotifyDashboardAdapter(
             })
         TRACKS_LIST_VIEW_TYPE ->
             BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
-                view = tracksRecyclerViewItemState as RecyclerViewItemView<Any>
+                view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
             })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")

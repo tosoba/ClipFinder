@@ -3,8 +3,8 @@ package com.example.there.findclips.spotify.account.saved
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Track
 
 class AccountSavedView(
         val state: AccountSavedViewState,

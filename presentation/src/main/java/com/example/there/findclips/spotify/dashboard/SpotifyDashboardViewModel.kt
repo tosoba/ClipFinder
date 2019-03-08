@@ -6,7 +6,7 @@ import com.example.there.domain.usecase.spotify.GetDailyViralTracks
 import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.TopTrack
+import com.example.there.findclips.model.entity.spotify.TopTrack
 import com.example.there.findclips.model.mapper.AlbumEntityMapper
 import com.example.there.findclips.model.mapper.CategoryEntityMapper
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper

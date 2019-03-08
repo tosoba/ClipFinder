@@ -3,7 +3,7 @@ package com.example.there.findclips.videos.relatedvideos
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.SearchRelatedVideos
 import com.example.there.findclips.base.vm.BaseVideosViewModel
-import com.example.there.findclips.model.entity.Video
+import com.example.there.findclips.model.entity.videos.Video
 import com.example.there.findclips.model.mapper.VideoEntityMapper
 import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject

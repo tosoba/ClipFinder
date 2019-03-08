@@ -25,9 +25,9 @@ import com.example.there.findclips.base.fragment.IPlayerFragment
 import com.example.there.findclips.databinding.FragmentSpotifyPlayerBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.main.MainActivity
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.Playlist
-import com.example.there.findclips.model.entity.Track
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.Playlist
+import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*

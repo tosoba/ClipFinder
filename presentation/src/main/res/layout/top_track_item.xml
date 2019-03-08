@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
     <data>
 
         <variable
             name="track"
-            type="com.example.there.findclips.model.entity.TopTrack" />
+            type="com.example.there.findclips.model.entity.spotify.TopTrack" />
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_margin="3dp"
@@ -18,31 +18,19 @@
         <ImageView
             android:id="@+id/top_track_album_cover_imageview"
             imageSrc="@{track.track.imageViewSrc}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
 
         <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/top_dark_gradient"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/top_dark_gradient" />
 
         <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/bottom_dark_gradient"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_dark_gradient" />
 
         <TextView
             style="@style/ShadowText"
@@ -56,18 +44,16 @@
 
         <TextView
             android:id="@+id/top_track_name_txt"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@{track.track.name}"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:textStyle="bold" />
 
-    </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </layout>

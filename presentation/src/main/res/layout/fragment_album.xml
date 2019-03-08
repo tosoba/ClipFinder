@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{view.state.isSavedAsFavourite ? @drawable/delete : @drawable/favourite}"
+            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/album_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

@@ -1,14 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".soundcloud.dashboard.SoundCloudDashboardFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="dashboardView"
+            type="com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardView" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="dash" />
+        android:fitsSystemWindows="false"
+        tools:context=".soundcloud.dashboard.SoundCloudDashboardFragment">
 
-</FrameLayout>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/sound_cloud_dashboard_app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/sound_cloud_dashboard_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/colorPrimaryDark"
+                app:collapseIcon="@drawable/back"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/ActionBar"
+                app:title="@string/dashboard"
+                app:titleTextColor="#fff" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/sound_cloud_dashboard_recycler_view"
+            hasFixedSize="@{true}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adapter="@{dashboardView.dashboardAdapter}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context=".soundcloud.dashboard.SoundCloudDashboardFragment" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

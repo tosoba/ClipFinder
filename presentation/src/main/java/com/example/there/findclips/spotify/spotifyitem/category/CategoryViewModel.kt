@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.spotify.GetPlaylistsForCategory
 import com.example.there.domain.usecase.spotify.InsertCategory
 import com.example.there.domain.usecase.spotify.IsCategorySaved
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Category
-import com.example.there.findclips.model.entity.Playlist
+import com.example.there.findclips.model.entity.spotify.Category
+import com.example.there.findclips.model.entity.spotify.Playlist
 import com.example.there.findclips.model.mapper.CategoryEntityMapper
 import com.example.there.findclips.model.mapper.PlaylistEntityMapper
 import javax.inject.Inject

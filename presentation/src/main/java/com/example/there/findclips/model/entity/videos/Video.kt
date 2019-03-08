@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.entity
+package com.example.there.findclips.model.entity.videos
 
 import android.databinding.ObservableField
 import android.os.Parcelable

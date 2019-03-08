@@ -3,8 +3,8 @@ package com.example.there.findclips.model.mapper
 import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.SimpleArtistEntity
-import com.example.there.findclips.model.entity.Album
-import com.example.there.findclips.model.entity.SimpleArtist
+import com.example.there.findclips.model.entity.spotify.Album
+import com.example.there.findclips.model.entity.spotify.SimpleArtist
 
 object AlbumEntityMapper : TwoWayMapper<AlbumEntity, Album>() {
     override fun mapFrom(from: AlbumEntity): Album = Album(

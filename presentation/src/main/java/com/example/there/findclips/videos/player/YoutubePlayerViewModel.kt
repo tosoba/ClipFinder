@@ -1,8 +1,8 @@
 package com.example.there.findclips.videos.player
 
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.Video
-import com.example.there.findclips.model.entity.VideoPlaylist
+import com.example.there.findclips.model.entity.videos.Video
+import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import javax.inject.Inject
 
 
