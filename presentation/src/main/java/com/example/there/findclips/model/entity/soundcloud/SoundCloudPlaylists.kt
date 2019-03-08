@@ -20,8 +20,12 @@ data class SoundCloudPlaylist(
 ) : NamedImageListItem {
 
     override val name: String = title
+
     override val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc(artworkUrl, R.drawable.playlist_placeholder, R.drawable.error_placeholder)
+        get() = ImageViewSrc(artworkUrl, R.drawable.playlist_placeholder, R.drawable.playlist_placeholder)
+
+    override val foregroundDrawableId: Int
+        get() = R.drawable.sound_cloud_foreground_ripple
 
     companion object {
         val sortedListCallback = object : ObservableSortedList.Callback<SoundCloudPlaylist> {
@@ -66,8 +70,12 @@ data class SoundCloudSystemPlaylist(
 ) : NamedImageListItem {
 
     override val name: String = title
+
     override val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc(artworkUrl, R.drawable.playlist_placeholder, R.drawable.error_placeholder)
+        get() = ImageViewSrc(artworkUrl, R.drawable.playlist_placeholder, R.drawable.playlist_placeholder)
+
+    override val foregroundDrawableId: Int
+        get() = R.drawable.sound_cloud_foreground_ripple
 
     companion object {
         val sortedListCallback = object : ObservableSortedList.Callback<SoundCloudSystemPlaylist> {

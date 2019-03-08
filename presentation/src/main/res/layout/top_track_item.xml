@@ -13,7 +13,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_margin="3dp"
-        android:foreground="@drawable/foreground_ripple">
+        android:foreground="@drawable/spotify_foreground_ripple">
 
         <ImageView
             android:id="@+id/top_track_album_cover_imageview"

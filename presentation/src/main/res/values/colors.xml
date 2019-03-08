@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#030405</color>
     <color name="colorAccent">#84bd00</color>
 
-    <color name="rippleColor">#a1bf97</color>
+    <color name="spotifyRippleColor">#a1bf97</color>
+
+    <color name="soundCloudRippleColor">#FFDB99</color>
 
     <color name="soundCloudOrange">#FD6A02</color>
     <color name="soundCloudOrangeDark">#ff2200</color>

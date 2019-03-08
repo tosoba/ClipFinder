@@ -15,7 +15,7 @@
         android:layout_marginRight="3dp"
         android:layout_marginBottom="6dp"
         android:background="@color/colorPrimaryDark"
-        android:foreground="@drawable/foreground_ripple">
+        android:foreground="@drawable/spotify_foreground_ripple">
 
         <ImageView
             android:id="@+id/category_imageview"

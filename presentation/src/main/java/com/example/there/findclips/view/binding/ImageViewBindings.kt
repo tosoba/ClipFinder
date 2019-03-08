@@ -17,6 +17,8 @@ fun bindImageUrl(view: ImageView, url: String?) {
                         .fitCenter()
                         .error(R.drawable.placeholder))
                 .into(view)
+    } else {
+        view.setImageResource(R.drawable.placeholder)
     }
 }
 
@@ -27,9 +29,11 @@ fun bindImageSrc(view: ImageView, src: ImageViewSrc?) = src?.let {
                 .load(it.iconUrl)
                 .apply(RequestOptions()
                         .fitCenter()
-                        .placeholder(src.loadingPlaceholder)
-                        .error(src.errorPlaceholder))
+                        .placeholder(it.loadingPlaceholder)
+                        .error(it.errorPlaceholder))
                 .into(view)
+    } else {
+        view.setImageResource(it.errorPlaceholder)
     }
 }
 

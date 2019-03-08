@@ -35,12 +35,13 @@
             app:umanoShadowHeight="4dp"
             tools:context=".main.MainActivity">
 
-            <android.support.v4.view.ViewPager
+            <com.example.there.findclips.view.viewpager.LockableViewPager
                 android:id="@+id/main_content_view_pager"
+                offScreenPageLimit="@{mainActivityView.offScreenPageLimit}"
+                swipeLocked="@{true}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adapter="@{mainActivityView.pagerAdapter}"
-                offScreenPageLimit="@{mainActivityView.offScreenPageLimit}"
                 android:fitsSystemWindows="false" />
 
             <android.support.constraint.ConstraintLayout

@@ -16,7 +16,7 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
         android:layout_marginBottom="6dp"
-        android:foreground="@drawable/foreground_ripple"
+        android:foreground="@drawable/spotify_foreground_ripple"
         android:scaleType="fitXY" />
 
 </layout>

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_margin="10dp"
-        android:foreground="@drawable/foreground_ripple">
+        android:foreground="@drawable/spotify_foreground_ripple">
 
         <ImageView
             android:id="@+id/video_thumbnail_imageview"

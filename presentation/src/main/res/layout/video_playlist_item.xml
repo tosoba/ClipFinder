@@ -15,7 +15,7 @@
         android:layout_marginTop="3dp"
         android:layout_marginRight="3dp"
         android:background="@color/colorPrimaryDark"
-        android:foreground="@drawable/foreground_ripple">
+        android:foreground="@drawable/spotify_foreground_ripple">
 
         <TextView
             android:layout_width="match_parent"

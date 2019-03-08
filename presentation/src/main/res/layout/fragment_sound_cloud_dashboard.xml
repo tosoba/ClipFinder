@@ -26,7 +26,7 @@
                 android:id="@+id/sound_cloud_dashboard_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/soundCloudOrangeDark"
                 app:collapseIcon="@drawable/back"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/ActionBar"

@@ -11,7 +11,7 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="@drawable/foreground_ripple"
+        android:foreground="@drawable/spotify_foreground_ripple"
         android:padding="10dp">
 
         <ImageView
