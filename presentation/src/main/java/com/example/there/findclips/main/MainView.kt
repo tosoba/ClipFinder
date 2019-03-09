@@ -28,7 +28,8 @@ class MainViewState(
         val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
         val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
         val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
-        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList<VideoPlaylist>()
+        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList<VideoPlaylist>(),
+        val mainContent: ObservableField<MainContent> = ObservableField(MainContent.SPOTIFY)
 )
 
 class DrawerHeaderViewState(
@@ -37,4 +38,8 @@ class DrawerHeaderViewState(
 
 enum class PlayerState {
     VIDEO, TRACK, ALBUM, PLAYLIST, VIDEO_PLAYLIST
+}
+
+enum class MainContent {
+    SPOTIFY, SOUNDCLOUD
 }

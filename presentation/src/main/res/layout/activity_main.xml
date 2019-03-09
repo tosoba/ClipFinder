@@ -7,6 +7,8 @@
 
         <import type="com.example.there.findclips.main.PlayerState" />
 
+        <import type="com.example.there.findclips.main.MainContent" />
+
         <variable
             name="mainActivityView"
             type="com.example.there.findclips.main.MainView" />
@@ -130,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@drawable/dark_background_gradient"
+            android:background="@{mainActivityView.state.mainContent == MainContent.SPOTIFY ? @drawable/dark_background_gradient : @drawable/sound_cloud_dark_background_gradient}"
             android:fitsSystemWindows="false"
             app:itemIconTint="@android:color/white"
             app:itemTextColor="@android:color/white"

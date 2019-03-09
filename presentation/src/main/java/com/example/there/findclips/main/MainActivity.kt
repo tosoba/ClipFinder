@@ -130,18 +130,38 @@ class MainActivity :
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
+    private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+    }
+
+    private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
+        DataBindingUtil.inflate<DrawerHeaderBinding>(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
+    }
+
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
             R.id.drawer_action_show_spotify_main -> {
                 spotifyMainFragment?.let {
                     return@OnNavigationItemSelectedListener true
                 } ?: run { main_content_view_pager?.currentItem = 0 }
+
+                viewModel.viewState.mainContent.set(MainContent.SPOTIFY)
+
+                if (binding.drawerNavigationView.headerCount == 0) {
+                    binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
+                }
             }
 
             R.id.drawer_action_show_soundcloud_main -> {
                 soundCloudMainFragment?.let {
                     return@OnNavigationItemSelectedListener true
                 } ?: run { main_content_view_pager?.currentItem = 1 }
+
+                viewModel.viewState.mainContent.set(MainContent.SOUNDCLOUD)
+
+                if (binding.drawerNavigationView.headerCount > 0) {
+                    binding.drawerNavigationView.removeHeaderView(drawerHeaderBinding.root)
+                }
             }
 
             R.id.drawer_action_about -> {
@@ -162,6 +182,7 @@ class MainActivity :
             R.id.drawer_action_logout -> if (isPlayerLoggedIn) logOutPlayer()
         }
 
+        it.isChecked = false
         main_drawer_layout?.closeDrawer(Gravity.START)
         true
     }
@@ -534,13 +555,11 @@ class MainActivity :
     }
 
     private fun initViewBindings() {
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.mainActivityView = view
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
             binding.addToFavouritesFab.hideAndShow()
         })
 
-        val drawerHeaderBinding: DrawerHeaderBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
         drawerHeaderBinding.viewState = viewModel.drawerViewState
         binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
     }
