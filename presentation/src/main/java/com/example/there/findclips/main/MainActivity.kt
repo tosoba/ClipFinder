@@ -150,6 +150,10 @@ class MainActivity :
                 if (binding.drawerNavigationView.headerCount == 0) {
                     binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
                 }
+
+                binding.drawerNavigationView.menu.clear()
+                binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
+                invalidateOptionsMenu()
             }
 
             R.id.drawer_action_show_soundcloud_main -> {
@@ -162,6 +166,10 @@ class MainActivity :
                 if (binding.drawerNavigationView.headerCount > 0) {
                     binding.drawerNavigationView.removeHeaderView(drawerHeaderBinding.root)
                 }
+
+                binding.drawerNavigationView.menu.clear()
+                binding.drawerNavigationView.inflateMenu(R.menu.sound_cloud_drawer_menu)
+                invalidateOptionsMenu()
             }
 
             R.id.drawer_action_about -> {
@@ -332,23 +340,36 @@ class MainActivity :
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
-
-        menu?.apply {
-            findItem(R.id.action_login)?.isVisible = !isLoggedIn
-            findItem(R.id.action_logout)?.isVisible = isLoggedIn
-        }
-
-        drawer_navigation_view?.menu?.apply {
-            findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
-            findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
-        }
-
-        return super.onPrepareOptionsMenu(menu)
+        updateLoginLogoutMenuItems(menu)
+        return true
     }
 
+    private fun updateLoginLogoutMenuItems(menu: Menu?) {
+        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
+
+        if (viewModel.viewState.mainContent.get() == MainContent.SPOTIFY) {
+            menu?.apply {
+                findItem(R.id.action_login)?.isVisible = !isLoggedIn
+                findItem(R.id.action_logout)?.isVisible = isLoggedIn
+            }
+
+            drawer_navigation_view?.menu?.apply {
+                findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
+                findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+            }
+        } else {
+            menu?.apply {
+                findItem(R.id.action_login)?.isVisible = false
+                findItem(R.id.action_logout)?.isVisible = false
+            }
+        }
+    }
+
+    private var toolbarMenu: Menu? = null
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.spotify_search_menu, menu)
+        toolbarMenu = menu
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
 
         searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
         val searchView = searchViewMenuItem?.actionView as? SearchView
