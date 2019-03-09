@@ -22,61 +22,70 @@ class SpotifyDashboardViewModel @Inject constructor(
 
     val viewState: SpotifyDashboardViewState = SpotifyDashboardViewState()
 
-    fun loadData(onNewReleasesFinally: (() -> Unit)? = null) {
+    fun loadData() {
         loadCategories()
         loadFeaturedPlaylists()
         loadDailyViralTracks()
-        loadNewReleases(onFinally = onNewReleasesFinally)
+        loadNewReleases()
     }
 
     fun loadCategories(shouldClear: Boolean = false) {
         viewState.categoriesLoadingInProgress.set(true)
-        addDisposable(getCategories.execute()
+        getCategories.execute()
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
-                .subscribe({
+                .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.categories.clear()
                     viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom))
-                }, ::onError))
+                    viewState.categoriesLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.categoriesLoadingErrorOccurred.set(true)
+                })
     }
 
     fun loadFeaturedPlaylists(shouldClear: Boolean = false) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
-        addDisposable(getFeaturedPlaylists.execute()
+        getFeaturedPlaylists.execute()
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
-                .subscribe({
+                .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.featuredPlaylists.clear()
                     viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom))
-                }, ::onError))
+                    viewState.featuredPlaylistsLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.featuredPlaylistsLoadingErrorOccurred.set(true)
+                })
     }
 
     fun loadDailyViralTracks() {
         viewState.topTracksLoadingInProgress.set(true)
-        addDisposable(getDailyViralTracks.execute()
+        getDailyViralTracks.execute()
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
-                .subscribe({ result ->
+                .subscribeAndDisposeOnCleared({ result ->
                     viewState.topTracks.addAll(result.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) })
-                }, ::onError))
+                    viewState.topTracksLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.topTracksLoadingErrorOccurred.set(true)
+                })
     }
 
     private var currentNewReleasesOffset: Int = 0
     private var totalNewReleases = 0
 
-    fun loadNewReleases(loadMore: Boolean = false, onFinally: (() -> Unit)? = null) {
+    fun loadNewReleases(loadMore: Boolean = false) {
         if (viewState.newReleasesLoadingInProgress.get() != true
                 && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
-            if (!loadMore)
-                viewState.newReleasesLoadingInProgress.set(true)
-            addDisposable(getNewReleases.execute(currentNewReleasesOffset)
+            if (!loadMore) viewState.newReleasesLoadingInProgress.set(true)
+            getNewReleases.execute(currentNewReleasesOffset)
                     .doFinally {
-                        if (!loadMore)
-                            viewState.newReleasesLoadingInProgress.set(false)
-                        onFinally?.invoke()
+                        if (!loadMore) viewState.newReleasesLoadingInProgress.set(false)
                     }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalNewReleases = it.totalItems
                         viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
-                    }, ::onError))
+                        viewState.newReleasesLoadingErrorOccurred.set(false)
+                    }, getOnErrorWith {
+                        viewState.newReleasesLoadingErrorOccurred.set(true)
+                    })
         }
     }
 }

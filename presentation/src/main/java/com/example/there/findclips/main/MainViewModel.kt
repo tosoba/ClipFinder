@@ -42,46 +42,57 @@ class MainViewModel @Inject constructor(
     val drawerViewState = DrawerHeaderViewState()
 
     fun addVideoToPlaylist(video: Video, videoPlaylist: VideoPlaylist, onSuccess: () -> Unit) {
-        addDisposable(addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
+        addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
                 playlistEntity = VideoPlaylistEntityMapper.mapBack(videoPlaylist),
                 videoEntity = VideoEntityMapper.mapBack(video))
-        ).subscribe(onSuccess, ::onError))
+        ).subscribeAndDisposeOnCleared(onSuccess, ::onError)
     }
 
     fun getFavouriteVideoPlaylists() {
-        addDisposable(getFavouriteVideoPlaylists.execute().subscribe({
-            viewState.favouriteVideoPlaylists.clear()
-            viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntityMapper::mapFrom))
-        }, ::onError))
+        getFavouriteVideoPlaylists.execute()
+                .subscribeAndDisposeOnCleared({
+                    viewState.favouriteVideoPlaylists.clear()
+                    viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntityMapper::mapFrom))
+                }, ::onError)
     }
 
     fun addVideoPlaylistWithVideo(playlist: VideoPlaylist, video: Video, onSuccess: () -> Unit) {
-        addDisposable(insertVideoPlaylist.execute(VideoPlaylistEntityMapper.mapBack(playlist))
-                .subscribe({ playlistId ->
+        insertVideoPlaylist.execute(VideoPlaylistEntityMapper.mapBack(playlist))
+                .subscribeAndDisposeOnCleared({ playlistId ->
                     addVideoToPlaylist(video, VideoPlaylist(playlistId, playlist.name), onSuccess)
-                }, ::onError))
+                }, ::onError)
     }
 
     fun getSimilarTracks(trackId: String) {
-        addDisposable(getSimilarTracks.execute(trackId)
-                .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError))
+        getSimilarTracks.execute(trackId)
+                .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError)
+                .disposeOnCleared()
     }
 
-    fun getCurrentUser() = addDisposable(getCurrentUser.execute()
-            .subscribe({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError))
+    fun getCurrentUser() {
+        getCurrentUser.execute()
+                .subscribeAndDisposeOnCleared({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError)
+    }
 
-    fun updateTrackFavouriteState(track: Track) = addDisposable(isTrackSaved.execute(TrackEntityMapper.mapBack(track))
-            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) }
-    )
+    fun updateTrackFavouriteState(track: Track) {
+        isTrackSaved.execute(TrackEntityMapper.mapBack(track))
+                .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
+    }
 
-    fun updatePlaylistFavouriteState(playlist: Playlist) = addDisposable(isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
-            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) })
+    fun updatePlaylistFavouriteState(playlist: Playlist) {
+        isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
+                .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
+    }
 
-    fun updateAlbumFavouriteState(album: Album) = addDisposable(isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
-            .subscribe { isSaved -> viewState.itemFavouriteState.set(isSaved) })
+    fun updateAlbumFavouriteState(album: Album) {
+        isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
+                .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
+    }
 
-    fun deleteAllVideoSearchData() = addDisposable(deleteAllVideoSearchData.execute()
-            .subscribe())
+    fun deleteAllVideoSearchData() {
+        deleteAllVideoSearchData.execute()
+                .subscribeAndDisposeOnCleared()
+    }
 
     fun togglePlaylistFavouriteState(
             playlist: Playlist,
@@ -136,14 +147,14 @@ class MainViewModel @Inject constructor(
             onInserted: () -> Unit,
             onDeleted: () -> Unit
     ) {
-        addDisposable(isSavedUseCase.execute(item)
+        isSavedUseCase.execute(item)
                 .flatMap { isSaved ->
                     if (isSaved) deleteUseCase.execute(item)
                             .toSingle { ItemInsertDeleteResult.Deleted }
                     else insertUseCase.execute(item)
                             .toSingle { ItemInsertDeleteResult.Inserted }
                 }
-                .subscribe({
+                .subscribeAndDisposeOnCleared({
                     when (it) {
                         ItemInsertDeleteResult.Inserted -> {
                             viewState.itemFavouriteState.set(true)
@@ -154,7 +165,7 @@ class MainViewModel @Inject constructor(
                             onDeleted()
                         }
                     }
-                }, { Log.e("ERROR", "Insert/Delete item error") }))
+                }, { Log.e("ERROR", "Insert/Delete item error") })
     }
 
 }

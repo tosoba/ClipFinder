@@ -72,7 +72,8 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
                 recyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.videosLoadingInProgress,
-                                viewModel.viewState.videos
+                                viewModel.viewState.videos,
+                                viewModel.viewState.videosLoadingErrorOccurred
                         ),
                         object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
                             override val itemViewBinder: ItemBinder<VideoItemView>
@@ -117,6 +118,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
     }
+
     private fun initFromArguments() = arguments?.let {
         if (it.containsKey(ARG_QUERY)) {
             query = it.getString(ARG_QUERY)!!

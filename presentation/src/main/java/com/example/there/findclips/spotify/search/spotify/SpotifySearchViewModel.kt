@@ -25,9 +25,9 @@ class SpotifySearchViewModel @Inject constructor(
     fun searchAll(query: String) {
         if (currentOffset == 0 || (currentOffset < totalItems)) {
             viewState.loadingInProgress.set(true)
-            addDisposable(searchSpotify.execute(SearchSpotify.Input(query, currentOffset))
+            searchSpotify.execute(SearchSpotify.Input(query, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         currentOffset += SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         viewState.albums.addAll(it.albums.map(AlbumEntityMapper::mapFrom))
@@ -35,7 +35,7 @@ class SpotifySearchViewModel @Inject constructor(
                         viewState.playlists.addAll(it.playlists.map(PlaylistEntityMapper::mapFrom))
                         viewState.tracks.addAll(it.tracks.map(TrackEntityMapper::mapFrom))
                         loadedFlag.value = Unit
-                    }, ::onError))
+                    }, ::onError)
         }
     }
 }

@@ -44,7 +44,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                 viewModel.viewState,
                 ArtistsAndTracksAdapter(
                         RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists),
+                                RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
                                 object : ListItemView<Artist>(viewModel.viewState.artists) {
                                     override val itemViewBinder: ItemBinder<Artist>
                                         get() = ItemBinderBase(BR.artist, R.layout.artist_item)
@@ -58,7 +58,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 }
                         ),
                         RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks),
+                                RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.tracksLoadingErrorOccurred),
                                 object : ListItemView<Track>(viewModel.viewState.topTracks) {
                                     override val itemViewBinder: ItemBinder<Track>
                                         get() = ItemBinderBase(BR.track, R.layout.track_item)

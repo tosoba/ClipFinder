@@ -9,7 +9,8 @@ import com.example.there.findclips.view.list.item.VideoItemView
 class RelatedVideosViewState(
         val videos: ObservableList<VideoItemView> = ObservableArrayList(),
         val initialVideosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
-        val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false)
+        val loadingMoreVideosInProgress: ObservableField<Boolean> = ObservableField(false),
+        val videosLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false)
 )
 
 class RelatedVideosView(

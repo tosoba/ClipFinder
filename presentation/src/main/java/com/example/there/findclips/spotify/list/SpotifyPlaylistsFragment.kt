@@ -39,7 +39,8 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
             recyclerViewItemView = RecyclerViewItemView(
                     RecyclerViewItemViewState(
                             ObservableField(false),
-                            viewState.items
+                            viewState.items,
+                            ObservableField(false)
                     ),
                     object : ListItemView<Playlist>(viewState.items) {
                         override val itemViewBinder: ItemBinder<Playlist>

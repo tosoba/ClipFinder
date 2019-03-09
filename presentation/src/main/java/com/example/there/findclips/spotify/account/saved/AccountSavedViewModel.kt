@@ -26,13 +26,16 @@ class AccountSavedViewModel @Inject constructor(
     fun loadTracks() {
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersSavedTracks.execute(currentTracksOffset)
+            getCurrentUsersSavedTracks.execute(currentTracksOffset)
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
                         currentTracksOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalTracks = it.totalItems
-                    }, ::onError))
+                        viewState.tracksLoadingErrorOccurred.set(false)
+                    }, getOnErrorWith {
+                        viewState.tracksLoadingErrorOccurred.set(true)
+                    })
         }
     }
 
@@ -47,13 +50,16 @@ class AccountSavedViewModel @Inject constructor(
     fun loadAlbums() {
         if (canLoadAlbums) {
             viewState.albumsLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersSavedAlbums.execute(currentAlbumsOffset)
+            getCurrentUsersSavedAlbums.execute(currentAlbumsOffset)
                     .doFinally { viewState.albumsLoadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         viewState.albums.addAll(it.items.map(AlbumEntityMapper::mapFrom))
                         currentAlbumsOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalAlbums = it.totalItems
-                    }, ::onError))
+                        viewState.albumsLoadingErrorOccurred.set(false)
+                    }, getOnErrorWith {
+                        viewState.albumsLoadingErrorOccurred.set(true)
+                    })
         }
     }
 }

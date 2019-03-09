@@ -38,7 +38,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
     private val artistsAndTracksAdapter: ArtistsAndTracksAdapter by lazy {
         ArtistsAndTracksAdapter(
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists),
+                        RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
                         object : ListItemView<Artist>(viewModel.viewState.artists) {
                             override val itemViewBinder: ItemBinder<Artist>
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
@@ -53,7 +53,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                         }
                 ),
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks),
+                        RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks, viewModel.viewState.tracksLoadingErrorOccurred),
                         object : ListItemView<Track>(viewModel.viewState.tracks) {
                             override val itemViewBinder: ItemBinder<Track>
                                 get() = ItemBinderBase(BR.track, R.layout.track_popularity_item)

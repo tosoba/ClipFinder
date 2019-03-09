@@ -26,14 +26,14 @@ class AccountPlaylistsViewModel @Inject constructor(
     fun loadPlaylists() {
         if (canLoadPlaylists) {
             viewState.playlistsLoadingInProgress.set(true)
-            addDisposable(getCurrentUsersPlaylists.execute(currentOffset)
+            getCurrentUsersPlaylists.execute(currentOffset)
                     .doFinally { viewState.playlistsLoadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         viewState.playlists.addAll(it.items.map(PlaylistEntityMapper::mapFrom))
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         loadedFlag.value = Unit
-                    }, ::onError))
+                    }, ::onError)
         }
     }
 }

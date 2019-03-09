@@ -42,25 +42,25 @@ class TrackVideosViewModel @Inject constructor(
 
     fun addFavouriteTrack(
             track: Track
-    ) = addDisposable(insertTrack.execute(TrackEntityMapper.mapBack(track))
-            .subscribe({
+    ) = insertTrack.execute(TrackEntityMapper.mapBack(track))
+            .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(true)
                 viewState.isSavedAsFavourite.set(true)
-            }, { Log.e(javaClass.name, "Insert error.") }))
+            }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouriteTrack(
             track: Track
-    ) = addDisposable(deleteTrack.execute(TrackEntityMapper.mapBack(track))
-            .subscribe({
+    ) = deleteTrack.execute(TrackEntityMapper.mapBack(track))
+            .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(false)
                 viewState.isSavedAsFavourite.set(false)
-            }, { Log.e(javaClass.name, "Delete error.") }))
+            }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadTrackFavouriteState(
             track: Track
-    ) = addDisposable(isTrackSaved.execute(TrackEntityMapper.mapBack(track))
-            .subscribe({
+    ) = isTrackSaved.execute(TrackEntityMapper.mapBack(track))
+            .subscribeAndDisposeOnCleared {
                 viewStates.peek().isSavedAsFavourite.set(it)
                 viewState.isSavedAsFavourite.set(it)
-            }, {}))
+            }
 }

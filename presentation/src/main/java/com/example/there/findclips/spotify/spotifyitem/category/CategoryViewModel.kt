@@ -42,29 +42,29 @@ class CategoryViewModel @Inject constructor(
             }
 
             viewState.loadingInProgress.set(true)
-            addDisposable(getPlaylistsForCategory.execute(GetPlaylistsForCategory.Input(categoryId, currentOffset))
+            getPlaylistsForCategory.execute(GetPlaylistsForCategory.Input(categoryId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
                         playlists.value = it.items.map(PlaylistEntityMapper::mapFrom)
-                    }, ::onError))
+                    }, ::onError)
         }
     }
 
     fun addFavouriteCategory(
             category: Category
-    ) = addDisposable(insertCategory.execute(CategoryEntityMapper.mapBack(category))
-            .subscribe({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") }))
+    ) = insertCategory.execute(CategoryEntityMapper.mapBack(category))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
 
     fun deleteFavouriteCategory(
             category: Category
-    ) = addDisposable(deleteCategory.execute(CategoryEntityMapper.mapBack(category))
-            .subscribe({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") }))
+    ) = deleteCategory.execute(CategoryEntityMapper.mapBack(category))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadCategoryFavouriteState(
             category: Category
-    ) = addDisposable(isCategorySaved.execute(CategoryEntityMapper.mapBack(category))
-            .subscribe({ viewState.isSavedAsFavourite.set(it) }, {}))
+    ) = isCategorySaved.execute(CategoryEntityMapper.mapBack(category))
+            .subscribe(viewState.isSavedAsFavourite::set)
 }

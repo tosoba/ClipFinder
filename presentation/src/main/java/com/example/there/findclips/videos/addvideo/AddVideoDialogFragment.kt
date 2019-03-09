@@ -36,7 +36,8 @@ class AddVideoDialogFragment : DialogFragment() {
                 playlistsRecyclerViewItemView = RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 ObservableField(false),
-                                state.playlists
+                                state.playlists,
+                                ObservableField(false)
                         ),
                         object : ListItemView<VideoPlaylist>(state.playlists) {
                             override val itemViewBinder: ItemBinder<VideoPlaylist>

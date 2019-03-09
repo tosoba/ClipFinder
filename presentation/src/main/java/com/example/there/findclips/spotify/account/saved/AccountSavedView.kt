@@ -16,5 +16,7 @@ class AccountSavedViewState(
         val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val tracks: ObservableList<Track> = ObservableArrayList(),
-        val albums: ObservableList<Album> = ObservableArrayList()
+        val albums: ObservableList<Album> = ObservableArrayList(),
+        val tracksLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val albumsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false)
 )

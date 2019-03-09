@@ -53,7 +53,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.categoriesLoadingInProgress,
-                                viewModel.viewState.categories
+                                viewModel.viewState.categories,
+                                viewModel.viewState.categoriesLoadingErrorOccurred
                         ),
                         object : ListItemView<Category>(viewModel.viewState.categories) {
                             override val itemViewBinder: ItemBinder<Category>
@@ -67,7 +68,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.featuredPlaylistsLoadingInProgress,
-                                viewModel.viewState.featuredPlaylists
+                                viewModel.viewState.featuredPlaylists,
+                                viewModel.viewState.featuredPlaylistsLoadingErrorOccurred
                         ),
                         object : ListItemView<Playlist>(viewModel.viewState.featuredPlaylists) {
                             override val itemViewBinder: ItemBinder<Playlist>
@@ -81,7 +83,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.topTracksLoadingInProgress,
-                                viewModel.viewState.topTracks
+                                viewModel.viewState.topTracks,
+                                viewModel.viewState.topTracksLoadingErrorOccurred
                         ),
                         object : ListItemView<TopTrack>(viewModel.viewState.topTracks) {
                             override val itemViewBinder: ItemBinder<TopTrack>
@@ -95,7 +98,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.newReleasesLoadingInProgress,
-                                viewModel.viewState.newReleases
+                                viewModel.viewState.newReleases,
+                                viewModel.viewState.newReleasesLoadingErrorOccurred
                         ),
                         object : ListItemView<Album>(viewModel.viewState.newReleases) {
                             override val itemViewBinder: ItemBinder<Album>

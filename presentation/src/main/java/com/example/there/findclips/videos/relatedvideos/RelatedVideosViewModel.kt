@@ -33,17 +33,20 @@ class RelatedVideosViewModel @Inject constructor(
         if (loadMore) viewState.loadingMoreVideosInProgress.set(true)
         else viewState.initialVideosLoadingInProgress.set(true)
 
-        addDisposable(searchRelatedVideos.execute(SearchRelatedVideos.Input(video.id, loadMore))
+        searchRelatedVideos.execute(SearchRelatedVideos.Input(video.id, loadMore))
                 .doFinally {
                     if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
                     else viewState.initialVideosLoadingInProgress.set(false)
                 }
-                .subscribe({ videos ->
+                .subscribeAndDisposeOnCleared({ videos ->
                     val mapped = videos.map(VideoEntityMapper::mapFrom)
                     viewState.videos.addAll(mapped.map { VideoItemView(it, null) })
                     getChannelThumbnails(videos, onSuccess = {
                         it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
                     })
-                }, ::onError))
+                    viewState.videosLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.videosLoadingErrorOccurred.set(true)
+                })
     }
 }

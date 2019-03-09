@@ -19,10 +19,14 @@ class TrackViewState(
         val album: ObservableField<Album> = ObservableField(),
         val artists: ObservableArrayList<Artist> = ObservableArrayList(),
         val similarTracks: ObservableArrayList<Track> = ObservableArrayList(),
+        val artistsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val similarTracksErrorOccurred: ObservableField<Boolean> = ObservableField(false),
         val audioFeaturesChartData: ObservableField<RadarData> = ObservableField()
 ) {
     fun clearAll() {
         similarTracks.clear()
         artists.clear()
+        similarTracksErrorOccurred.set(false)
+        artistsLoadingErrorOccurred.set(false)
     }
 }

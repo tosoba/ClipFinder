@@ -20,5 +20,6 @@ fun Picasso.getBitmapSingle(
     } catch (e: Throwable) {
         it.onError(e)
     }
-}.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-        .subscribe({ onSuccess(it) }, { onError?.invoke() })
+}.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(onSuccess, { onError?.invoke() })

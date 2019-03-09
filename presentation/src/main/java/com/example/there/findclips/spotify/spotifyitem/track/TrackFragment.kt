@@ -66,7 +66,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         }
                 ),
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists),
+                        RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
                         object : ListItemView<Artist>(viewModel.viewState.artists) {
                             override val itemViewBinder: ItemBinder<Artist>
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)
@@ -81,7 +81,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         }
                 ),
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.similarTracksLoadingInProgress, viewModel.viewState.similarTracks),
+                        RecyclerViewItemViewState(viewModel.viewState.similarTracksLoadingInProgress, viewModel.viewState.similarTracks, viewModel.viewState.similarTracksErrorOccurred),
                         object : ListItemView<Track>(viewModel.viewState.similarTracks) {
                             override val itemViewBinder: ItemBinder<Track>
                                 get() = ItemBinderBase(BR.track, R.layout.track_item)

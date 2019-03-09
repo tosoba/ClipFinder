@@ -33,32 +33,38 @@ class TrackViewModel @Inject constructor(
 
     private fun loadAlbum(albumId: String) {
         viewState.albumLoadingInProgress.set(true)
-        addDisposable(getAlbum.execute(albumId)
+        getAlbum.execute(albumId)
                 .doFinally { viewState.albumLoadingInProgress.set(false) }
-                .subscribe({ viewState.album.set(AlbumEntityMapper.mapFrom(it)) }, ::onError))
+                .subscribeAndDisposeOnCleared({ viewState.album.set(AlbumEntityMapper.mapFrom(it)) }, ::onError)
     }
 
     fun loadArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
-        addDisposable(getArtists.execute(artistIds)
+        getArtists.execute(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
-                .subscribe({
+                .subscribeAndDisposeOnCleared({
                     viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom).sortedBy { it.name })
-                }, ::onError))
+                    viewState.artistsLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.artistsLoadingErrorOccurred.set(true)
+                })
     }
 
-    fun loadSimilarTracks( track: Track) {
+    fun loadSimilarTracks(track: Track) {
         viewState.similarTracksLoadingInProgress.set(true)
-        addDisposable(getSimilarTracks.execute(track.id)
+        getSimilarTracks.execute(track.id)
                 .doFinally { viewState.similarTracksLoadingInProgress.set(false) }
-                .subscribe({
+                .subscribeAndDisposeOnCleared({
                     viewState.similarTracks.addAll(it.map(TrackEntityMapper::mapFrom).sortedBy { it.name })
-                }, ::onError))
+                    viewState.similarTracksErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.similarTracksErrorOccurred.set(true)
+                })
     }
 
-    fun loadAudioFeatures( track: Track) {
-        addDisposable(getAudioFeatures.execute(TrackEntityMapper.mapBack(track))
-                .subscribe({
+    private fun loadAudioFeatures(track: Track) {
+        getAudioFeatures.execute(TrackEntityMapper.mapBack(track))
+                .subscribeAndDisposeOnCleared({
                     val entries = ArrayList<RadarEntry>().apply {
                         add(RadarEntry(it.acousticness))
                         add(RadarEntry(it.danceability))
@@ -75,6 +81,6 @@ class TrackViewModel @Inject constructor(
                         setDrawValues(false)
                         setValueTextColor(Color.WHITE)
                     })
-                }, ::onError))
+                }, ::onError)
     }
 }

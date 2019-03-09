@@ -42,7 +42,7 @@ class ArtistFragment :
     private val artistAdapter: ArtistAdapter by lazy {
         ArtistAdapter(
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums),
+                        RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums, viewModel.viewState.albumsLoadingErrorOccurred),
                         object : ListItemView<Album>(viewModel.viewState.albums) {
                             override val itemViewBinder: ItemBinder<Album>
                                 get() = ItemBinderBase(BR.album, R.layout.album_item)
@@ -57,7 +57,7 @@ class ArtistFragment :
                         }
                 ),
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.topTracksLoadingInProgress, viewModel.viewState.topTracks),
+                        RecyclerViewItemViewState(viewModel.viewState.topTracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.topTracksLoadingErrorOccurred),
                         object : ListItemView<Track>(viewModel.viewState.topTracks) {
                             override val itemViewBinder: ItemBinder<Track>
                                 get() = ItemBinderBase(BR.track, R.layout.track_item)
@@ -72,7 +72,7 @@ class ArtistFragment :
                         }
                 ),
                 RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.relatedArtistsLoadingInProgress, viewModel.viewState.relatedArtists),
+                        RecyclerViewItemViewState(viewModel.viewState.relatedArtistsLoadingInProgress, viewModel.viewState.relatedArtists, viewModel.viewState.relatedArtistsLoadingErrorOccurred),
                         object : ListItemView<Artist>(viewModel.viewState.relatedArtists) {
                             override val itemViewBinder: ItemBinder<Artist>
                                 get() = ItemBinderBase(BR.artist, R.layout.artist_item)

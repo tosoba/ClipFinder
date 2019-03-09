@@ -22,6 +22,9 @@ class ArtistViewState(
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val relatedArtistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
+        val albumsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val topTracksLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val relatedArtistsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
         val isSavedAsFavourite: ObservableField<Boolean> = ObservableField(false)
 ) {
     fun clearAll() {

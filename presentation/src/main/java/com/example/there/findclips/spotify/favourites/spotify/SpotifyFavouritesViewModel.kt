@@ -20,7 +20,7 @@ class SpotifyFavouritesViewModel @Inject constructor(
     val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 
     fun loadFavourites() {
-        addDisposable(Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
+        Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
                 getFavouriteAlbums.execute(),
                 getFavouriteArtists.execute(),
                 getFavouriteCategories.execute(),
@@ -35,6 +35,6 @@ class SpotifyFavouritesViewModel @Inject constructor(
                             ArrayList(tracks.map(TrackEntityMapper::mapFrom))
                     )
                 })
-                .subscribe { viewState.value = it })
+                .subscribeAndDisposeOnCleared { viewState.value = it }
     }
 }

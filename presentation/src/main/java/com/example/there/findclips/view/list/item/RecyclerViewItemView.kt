@@ -18,5 +18,6 @@ class RecyclerViewItemView<T>(
 
 class RecyclerViewItemViewState<T>(
         val initialLoadingInProgress: ObservableField<Boolean>,
-        val items: ObservableList<T>
+        val items: ObservableList<T>,
+        val loadingErrorOccurred: ObservableField<Boolean>
 )

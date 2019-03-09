@@ -13,5 +13,6 @@ class VideosSearchView(
 
 class VideosSearchViewState(
         val videos: ObservableList<VideoItemView> = ObservableSortedList(VideoItemView::class.java, VideoItemView.sortedListCallback),
-        val videosLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
+        val videosLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
+        val videosLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false)
 )

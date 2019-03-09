@@ -34,7 +34,8 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(Video
         RecyclerViewItemView(
                 RecyclerViewItemViewState(
                         ObservableField(false),
-                        viewModel.state.playlists
+                        viewModel.state.playlists,
+                        ObservableField(false)
                 ),
                 object : ListItemView<PlaylistThumbnailView>(viewModel.state.playlists) {
                     override val itemViewBinder: ItemBinder<PlaylistThumbnailView>

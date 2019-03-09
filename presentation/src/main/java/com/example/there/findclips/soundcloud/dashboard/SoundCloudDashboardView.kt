@@ -16,5 +16,6 @@ class SoundCloudDashboardViewState(
         val playlists: ObservableList<SoundCloudPlaylist> =
                 ObservableSortedList(SoundCloudPlaylist::class.java, SoundCloudPlaylist.sortedListCallback),
         val systemPlaylists: ObservableList<SoundCloudSystemPlaylist> =
-                ObservableSortedList(SoundCloudSystemPlaylist::class.java, SoundCloudSystemPlaylist.sortedListCallback)
+                ObservableSortedList(SoundCloudSystemPlaylist::class.java, SoundCloudSystemPlaylist.sortedListCallback),
+        val loadingErrorOccurred: ObservableField<Boolean> = ObservableField(false)
 )

@@ -36,28 +36,28 @@ class PlaylistViewModel @Inject constructor(
     private fun loadData(playlist: Playlist) {
         if (currentOffset == 0 || (currentOffset < totalItems)) {
             viewState.loadingInProgress.set(true)
-            addDisposable(getPlaylistTracks.execute(GetPlaylistTracks.Input(playlist.id, playlist.userId, currentOffset))
+            getPlaylistTracks.execute(GetPlaylistTracks.Input(playlist.id, playlist.userId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
-                    .subscribe({
+                    .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT
                         totalItems = it.totalItems
                         tracks.value = it.items.map(TrackEntityMapper::mapFrom)
-                    }, ::onError))
+                    }, ::onError)
         }
     }
 
     fun addFavouritePlaylist(
             playlist: Playlist
-    ) = addDisposable(insertSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
-            .subscribe({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") }))
+    ) = insertSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouritePlaylist(
             playlist: Playlist
-    ) = addDisposable(deleteSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
-            .subscribe({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") }))
+    ) = deleteSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadPlaylistFavouriteState(
             playlist: Playlist
-    ) = addDisposable(isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
-            .subscribe({ viewState.isSavedAsFavourite.set(it) }, {}))
+    ) = isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
+            .subscribe(viewState.isSavedAsFavourite::set)
 }

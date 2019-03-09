@@ -52,7 +52,8 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.loadingInProgress,
-                                viewModel.viewState.playlists
+                                viewModel.viewState.playlists,
+                                viewModel.viewState.loadingErrorOccurred
                         ),
                         object : ListItemView<SoundCloudPlaylist>(viewModel.viewState.playlists) {
                             override val itemViewBinder: ItemBinder<SoundCloudPlaylist>
@@ -66,7 +67,8 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(
                                 viewModel.viewState.loadingInProgress,
-                                viewModel.viewState.systemPlaylists
+                                viewModel.viewState.systemPlaylists,
+                                viewModel.viewState.loadingErrorOccurred
                         ),
                         object : ListItemView<SoundCloudSystemPlaylist>(viewModel.viewState.systemPlaylists) {
                             override val itemViewBinder: ItemBinder<SoundCloudSystemPlaylist>

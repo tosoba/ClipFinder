@@ -22,5 +22,7 @@ class AlbumViewState(
         val tracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackTrackNumber),
         val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
+        val artistsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val tracksLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
         val isSavedAsFavourite: ObservableField<Boolean> = ObservableField(false)
 )

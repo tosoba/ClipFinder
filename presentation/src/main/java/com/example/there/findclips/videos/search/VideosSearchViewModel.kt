@@ -38,16 +38,19 @@ class VideosSearchViewModel @Inject constructor(
     }
 
     private fun addSearchVideosDisposable(query: String, loadMore: Boolean) {
-        addDisposable(searchVideos.execute(SearchVideos.Input(query, loadMore))
+        searchVideos.execute(SearchVideos.Input(query, loadMore))
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
-                .subscribe({ videos -> updateVideos(videos) }, ::onError))
+                .subscribeAndDisposeOnCleared({ videos ->
+                    updateVideos(videos)
+                    viewState.videosLoadingErrorOccurred.set(false)
+                }, getOnErrorWith { viewState.videosLoadingErrorOccurred.set(true) })
     }
 
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {
         //TODO: check if it isn't broken after usecase changes
         VideoPlaylistEntityMapper.mapBack(videoPlaylist).id?.let { id ->
-            addDisposable(getFavouriteVideosFromPlaylist.execute(id)
-                    .subscribe({ updateVideos(it, true) }, ::onError))
+            getFavouriteVideosFromPlaylist.execute(id)
+                    .subscribeAndDisposeOnCleared({ updateVideos(it, true) }, ::onError)
         }
     }
 
@@ -68,5 +71,6 @@ class VideosSearchViewModel @Inject constructor(
         })
     }
 
-    private fun deleteVideo(video: VideoEntity) = addDisposable(deleteVideo.execute(video).subscribe())
+    private fun deleteVideo(video: VideoEntity) = deleteVideo.execute(video)
+            .subscribeAndDisposeOnCleared()
 }

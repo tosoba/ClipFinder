@@ -21,5 +21,9 @@ class SpotifyDashboardViewState(
         val categoriesLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val featuredPlaylistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
-        val newReleasesLoadingInProgress: ObservableField<Boolean> = ObservableField(false)
+        val newReleasesLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
+        val categoriesLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val featuredPlaylistsLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val topTracksLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false),
+        val newReleasesLoadingErrorOccurred: ObservableField<Boolean> = ObservableField(false)
 )

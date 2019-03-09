@@ -9,4 +9,4 @@ fun BaseViewModel.getBitmapSingle(
         url: String,
         onSuccess: (Bitmap) -> Unit,
         onError: () -> Unit
-) = addDisposable(picasso.getBitmapSingle(url, onSuccess, onError))
+) = picasso.getBitmapSingle(url, onSuccess, onError)

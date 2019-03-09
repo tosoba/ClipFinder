@@ -44,7 +44,7 @@ class AccountSavedFragment :
                 viewModel.viewState,
                 AccountSavedAdapter(
                         RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums),
+                                RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums, viewModel.viewState.albumsLoadingErrorOccurred),
                                 object : ListItemView<Album>(viewModel.viewState.albums) {
                                     override val itemViewBinder: ItemBinder<Album>
                                         get() = ItemBinderBase(BR.album, R.layout.album_item)
@@ -58,7 +58,7 @@ class AccountSavedFragment :
                                 }
                         ),
                         RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks),
+                                RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks, viewModel.viewState.tracksLoadingErrorOccurred),
                                 object : ListItemView<Track>(viewModel.viewState.tracks) {
                                     override val itemViewBinder: ItemBinder<Track>
                                         get() = ItemBinderBase(BR.track, R.layout.track_item)
@@ -103,7 +103,7 @@ class AccountSavedFragment :
         viewState = AccountSavedViewState(spotifyLoginController!!.loggedInObservable)
     }
 
-    private fun loadData()  {
+    private fun loadData() {
         viewModel.loadTracks()
         viewModel.loadAlbums()
     }

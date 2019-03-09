@@ -34,30 +34,35 @@ class AlbumViewModel @Inject constructor(
 
     fun loadAlbumsArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
-        addDisposable(getArtists.execute(artistIds)
+        getArtists.execute(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
-                .subscribe({ viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom)) }, ::onError))
+                .subscribeAndDisposeOnCleared({
+                    viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom))
+                    viewState.artistsLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.artistsLoadingErrorOccurred.set(true)
+                })
     }
 
     fun loadTracksFromAlbum(albumId: String) {
         viewState.tracksLoadingInProgress.set(true)
-        addDisposable(getTracksFromAlbum.execute(albumId)
+        getTracksFromAlbum.execute(albumId)
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                .subscribe({ viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom)) }, ::onError))
+                .subscribeAndDisposeOnCleared({ viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom)) }, ::onError)
     }
 
     fun addFavouriteAlbum(
             album: Album
-    ) = addDisposable(insertAlbum.execute(AlbumEntityMapper.mapBack(album))
-            .subscribe({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") }))
+    ) = insertAlbum.execute(AlbumEntityMapper.mapBack(album))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouriteAlbum(
             album: Album
-    ) = addDisposable(deleteAlbum.execute(AlbumEntityMapper.mapBack(album))
-            .subscribe({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") }))
+    ) = deleteAlbum.execute(AlbumEntityMapper.mapBack(album))
+            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadAlbumFavouriteState(
             album: Album
-    ) = addDisposable(isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
-            .subscribe({ viewState.isSavedAsFavourite.set(it) }, {}))
+    ) = isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
+            .subscribeAndDisposeOnCleared { viewState.isSavedAsFavourite.set(it) }
 }
