@@ -44,8 +44,7 @@ class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(Video
                 ClickHandler {
                     navHostFragment?.showFragment(VideoPlaylistFragment.newInstance(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
                 },
-                SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
-                null
+                SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 

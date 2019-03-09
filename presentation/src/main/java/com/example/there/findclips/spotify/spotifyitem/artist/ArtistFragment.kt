@@ -50,9 +50,7 @@ class ArtistFragment :
                         ClickHandler {
                             navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener {
+                        onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadAlbumsFromArtist(artistToLoad.id)
                         }
                 ),
@@ -65,9 +63,7 @@ class ArtistFragment :
                         ClickHandler {
                             navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener {
+                        onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadTopTracksFromArtist(artistToLoad.id)
                         }
                 ),
@@ -81,9 +77,7 @@ class ArtistFragment :
                             viewModel.loadArtistData( artist = it)
                             loadCollapsingToolbarBackgroundGradient(it.iconUrl)
                         },
-                        null,
-                        null,
-                        View.OnClickListener {
+                        onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadRelatedArtists(artistToLoad.id)
                         }
                 )

@@ -46,9 +46,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                         ClickHandler {
                             navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener {
+                        onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadAlbumsArtists(album.artists.map { it.id })
                         }
                 ),
@@ -61,9 +59,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                         ClickHandler {
                             navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { viewModel.loadTracksFromAlbum(album.id) }
+                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadTracksFromAlbum(album.id) }
                 )
         )
     }

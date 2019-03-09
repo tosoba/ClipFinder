@@ -60,9 +60,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler { },
-                        null,
-                        null,
-                        View.OnClickListener { viewModel.loadPlaylists() }
+                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadPlaylists() }
                 ),
                 RecyclerViewItemView(
                         RecyclerViewItemViewState(

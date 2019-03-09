@@ -49,9 +49,7 @@ class SpotifyCategoriesFragment : BaseSpotifyListFragment<Category>() {
                         ClickHandler { category ->
                             onItemClick?.let { it(category) }
                                     ?: run { navHostFragment?.showFragment(CategoryFragment.newInstance(category), true) }
-                        },
-                        null,
-                        null
+                        }
                 )
         )
     }

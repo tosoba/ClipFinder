@@ -50,9 +50,7 @@ class SpotifyArtistsFragment : BaseSpotifyListFragment<Artist>() {
                         ClickHandler { artist ->
                             onItemClick?.let { it(artist) }
                                     ?: run { navHostFragment?.showFragment(ArtistFragment.newInstance(artist), true) }
-                        },
-                        null,
-                        null
+                        }
                 )
         )
     }

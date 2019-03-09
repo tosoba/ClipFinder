@@ -74,9 +74,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         ClickHandler {
                             navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { _ ->
+                        onReloadBtnClickListener = View.OnClickListener { _ ->
                             track?.let { viewModel.loadArtists(it.artists.map { artist -> artist.id }) }
                         }
                 ),
@@ -89,12 +87,8 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         ClickHandler {
                             (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
                         },
-                        null,
-                        null,
-                        View.OnClickListener { _ ->
-
+                        onReloadBtnClickListener = View.OnClickListener { _ ->
                             track?.let { viewModel.loadSimilarTracks(it) }
-
                         }
                 ),
                 RadarChartView(

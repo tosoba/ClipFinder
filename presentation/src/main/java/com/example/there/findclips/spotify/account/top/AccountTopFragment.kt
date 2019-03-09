@@ -52,8 +52,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 ClickHandler {
                                     navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
                                 },
-                                null,
-                                object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadArtists()
                                 }
                         ),
@@ -66,8 +65,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 ClickHandler {
                                     navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                                 },
-                                null,
-                                object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadTracks()
                                 }
                         )

@@ -50,8 +50,7 @@ class SpotifyPlaylistsFragment : BaseSpotifyListFragment<Playlist>() {
                         onItemClick?.let { it(playlist) }
                                 ?: run { navHostFragment?.showFragment(PlaylistFragment.newInstance(playlist), true) }
                     },
-                    null,
-                    onScrollListener
+                    onScrollListener = onScrollListener
             )
     )
 

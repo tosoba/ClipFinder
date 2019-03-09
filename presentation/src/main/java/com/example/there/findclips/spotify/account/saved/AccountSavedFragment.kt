@@ -52,8 +52,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                                 },
-                                null,
-                                object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadAlbums()
                                 }
                         ),
@@ -66,8 +65,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                                 },
-                                null,
-                                object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() {
                                         viewModel.loadTracks()
                                     }
