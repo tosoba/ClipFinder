@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--TODO: separate groups, fix icons, make it so selected item does not remain checked -->
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/drawer_group_main"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_action_show_spotify_main"
-            android:icon="@drawable/about"
+            android:icon="@drawable/spotify"
             android:title="@string/spotify" />
-        <item
-            android:id="@+id/drawer_action_settings"
-            android:icon="@drawable/settings"
-            android:title="@string/settings" />
+    </group>
+    <group
+        android:id="@+id/drawer_group_other"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_action_remove_video_search_data"
             android:icon="@drawable/delete"

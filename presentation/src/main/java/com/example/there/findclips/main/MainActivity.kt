@@ -172,6 +172,12 @@ class MainActivity :
 
                 binding.drawerNavigationView.menu.clear()
                 binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
+
+                val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
+                binding.drawerNavigationView.menu?.apply {
+                    findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
+                    findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+                }
             }
 
             R.id.drawer_action_show_soundcloud_main -> {
