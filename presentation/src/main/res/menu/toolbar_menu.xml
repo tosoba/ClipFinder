@@ -8,17 +8,4 @@
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
-
-    <item
-        android:id="@+id/action_login"
-        android:icon="@drawable/login"
-        android:title="@string/login"
-        app:showAsAction="ifRoom|collapseActionView" />
-
-    <item
-        android:id="@+id/action_logout"
-        android:icon="@drawable/logout"
-        android:title="@string/logout"
-        app:showAsAction="ifRoom|collapseActionView" />
-
 </menu>

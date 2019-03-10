@@ -2,6 +2,8 @@ package com.example.there.findclips.view
 
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
+import android.view.View
 import android.widget.SeekBar
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener
@@ -39,4 +41,10 @@ interface OnYoutubePlayerStateChangeListener : YouTubePlayerListener {
     override fun onApiChange() = Unit
 
     override fun onError(error: PlayerConstants.PlayerError) = Unit
+}
+
+interface OnNavigationDrawerClosedListerner: DrawerLayout.DrawerListener {
+    override fun onDrawerOpened(p0: View) = Unit
+    override fun onDrawerSlide(p0: View, p1: Float) = Unit
+    override fun onDrawerStateChanged(p0: Int) = Unit
 }

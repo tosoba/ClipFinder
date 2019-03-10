@@ -48,6 +48,7 @@ import com.example.there.findclips.videos.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.videos.addvideo.AddVideoViewState
 import com.example.there.findclips.videos.player.YoutubePlayerFragment
 import com.example.there.findclips.videos.relatedvideos.RelatedVideosFragment
+import com.example.there.findclips.view.OnNavigationDrawerClosedListerner
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
@@ -138,6 +139,24 @@ class MainActivity :
         DataBindingUtil.inflate<DrawerHeaderBinding>(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
     }
 
+    private val loginDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
+        object : OnNavigationDrawerClosedListerner {
+            override fun onDrawerClosed(drawerView: View) {
+                if (!isPlayerLoggedIn) openLoginWindow()
+                main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
+            }
+        }
+    }
+
+    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
+        object : OnNavigationDrawerClosedListerner {
+            override fun onDrawerClosed(drawerView: View) {
+                if (isPlayerLoggedIn) logOutPlayer()
+                main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
+            }
+        }
+    }
+
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
             R.id.drawer_action_show_spotify_main -> {
@@ -153,7 +172,6 @@ class MainActivity :
 
                 binding.drawerNavigationView.menu.clear()
                 binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
-                invalidateOptionsMenu()
             }
 
             R.id.drawer_action_show_soundcloud_main -> {
@@ -169,7 +187,6 @@ class MainActivity :
 
                 binding.drawerNavigationView.menu.clear()
                 binding.drawerNavigationView.inflateMenu(R.menu.sound_cloud_drawer_menu)
-                invalidateOptionsMenu()
             }
 
             R.id.drawer_action_about -> {
@@ -185,9 +202,9 @@ class MainActivity :
                 Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
             }
 
-            R.id.drawer_action_login -> if (!isPlayerLoggedIn) openLoginWindow()
+            R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
 
-            R.id.drawer_action_logout -> if (isPlayerLoggedIn) logOutPlayer()
+            R.id.drawer_action_logout -> main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
         }
 
         it.isChecked = false
@@ -253,7 +270,11 @@ class MainActivity :
     override var onLoginSuccessful: (() -> Unit)? = null
 
     private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(observable: Observable, id: Int) = invalidateOptionsMenu()
+        override fun onPropertyChanged(observable: Observable, id: Int) {
+            @Suppress("UNCHECKED_CAST") val o = observable as ObservableField<Boolean>
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !o.get()!!
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = o.get()!!
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -339,36 +360,7 @@ class MainActivity :
         updateFavouriteBtnOnConfigChange(newConfig)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        updateLoginLogoutMenuItems(menu)
-        return true
-    }
-
-    private fun updateLoginLogoutMenuItems(menu: Menu?) {
-        val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
-
-        if (viewModel.viewState.mainContent.get() == MainContent.SPOTIFY) {
-            menu?.apply {
-                findItem(R.id.action_login)?.isVisible = !isLoggedIn
-                findItem(R.id.action_logout)?.isVisible = isLoggedIn
-            }
-
-            drawer_navigation_view?.menu?.apply {
-                findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
-                findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
-            }
-        } else {
-            menu?.apply {
-                findItem(R.id.action_login)?.isVisible = false
-                findItem(R.id.action_logout)?.isVisible = false
-            }
-        }
-    }
-
-    private var toolbarMenu: Menu? = null
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        toolbarMenu = menu
         menuInflater.inflate(R.menu.toolbar_menu, menu)
 
         searchViewMenuItem = menu?.findItem(R.id.search_view_menu_item)
@@ -381,14 +373,6 @@ class MainActivity :
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
         R.id.search_view_menu_item -> true
-        R.id.action_login -> {
-            if (!isPlayerLoggedIn) openLoginWindow()
-            true
-        }
-        R.id.action_logout -> {
-            if (isPlayerLoggedIn) logOutPlayer()
-            true
-        }
         else -> super.onOptionsItemSelected(item)
     }
 
@@ -583,6 +567,7 @@ class MainActivity :
 
         drawerHeaderBinding.viewState = viewModel.drawerViewState
         binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
+        binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = false
     }
 
     private fun onSpotifyAuthenticationComplete(accessToken: String) {
