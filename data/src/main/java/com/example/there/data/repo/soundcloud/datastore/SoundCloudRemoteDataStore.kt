@@ -33,4 +33,9 @@ class SoundCloudRemoteDataStore @Inject constructor(
             id: String
     ): Single<List<SoundCloudTrackEntity>> = service.fetchPlaylistTracks(id)
             .map { it.map(TrackEntity::domain) }
+
+    override fun getTracks(
+            ids: List<String>
+    ): Single<List<SoundCloudTrackEntity>> = api.getTracks(ids.joinToString(separator = ","))
+            .map { it.map(TrackEntity::domain) }
 }

@@ -16,9 +16,9 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (it.containsKey(ARG_PLAYLIST)) {
-                viewModel.loadTracksFromPlaylist(it.getParcelable<SoundCloudPlaylist>(ARG_PLAYLIST).id.toString())
+                viewModel.loadTracksFromPlaylist(it.getParcelable<SoundCloudPlaylist>(ARG_PLAYLIST)!!.id.toString())
             } else if (it.containsKey(ARG_SYSTEM_PLAYLIST)) {
-
+                viewModel.loadTracksWithIds(it.getParcelable<SoundCloudSystemPlaylist>(ARG_SYSTEM_PLAYLIST)!!.trackIds.map(Int::toString))
             }
         }
     }

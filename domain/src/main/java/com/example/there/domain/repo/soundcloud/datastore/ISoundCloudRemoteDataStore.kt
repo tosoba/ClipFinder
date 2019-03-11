@@ -7,4 +7,5 @@ import io.reactivex.Single
 interface ISoundCloudRemoteDataStore {
     val discover: Single<SoundCloudDiscoverEntity>
     fun getTracksFromPlaylist(id: String): Single<List<SoundCloudTrackEntity>>
+    fun getTracks(ids: List<String>): Single<List<SoundCloudTrackEntity>>
 }

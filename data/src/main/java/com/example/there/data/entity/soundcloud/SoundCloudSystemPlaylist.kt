@@ -14,5 +14,5 @@ data class SoundCloudSystemPlaylist(
         @SerializedName("short_title") val shortTitle: String,
         val title: String,
         @SerializedName("tracking_feature_name") val trackingFeatureName: String,
-        val tracks: List<Track>
+        val tracks: List<TrackId>
 )

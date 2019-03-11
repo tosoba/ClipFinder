@@ -2,7 +2,7 @@ package com.example.there.data.mapper.soundcloud
 
 import com.example.there.data.entity.soundcloud.SoundCloudPlaylist
 import com.example.there.data.entity.soundcloud.SoundCloudSystemPlaylist
-import com.example.there.data.entity.soundcloud.Track
+import com.example.there.data.entity.soundcloud.TrackId
 import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 
@@ -41,5 +41,5 @@ val SoundCloudSystemPlaylist.domain: SoundCloudSystemPlaylistEntity
             shortTitle = shortTitle,
             title = title,
             trackingFeatureName = trackingFeatureName,
-            tracks = tracks.map(Track::domain)
+            tracks = tracks.map(TrackId::domain)
     )
