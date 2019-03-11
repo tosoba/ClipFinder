@@ -12,16 +12,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SoundCloudPlaylist(
-        val artworkUrl: String?,
+        override val artworkUrl: String?,
         val createdAt: String,
         val duration: Int,
         val id: Int,
         val likesCount: Int,
         val publishedAt: String?,
-        val title: String,
+        override val title: String,
         val trackCount: Int,
         val userId: Int
-) : NamedImageListItem, Parcelable {
+) : NamedImageListItem, Parcelable, ISoundCloudPlaylist {
 
     @IgnoredOnParcel
     override val name: String = title
@@ -65,15 +65,20 @@ val SoundCloudPlaylistEntity.ui: SoundCloudPlaylist
             userId = userId
     )
 
+interface ISoundCloudPlaylist {
+    val artworkUrl: String?
+    val title: String
+}
+
 @Parcelize
 data class SoundCloudSystemPlaylist(
-        val artworkUrl: String?,
+        override val artworkUrl: String?,
         val description: String,
         val id: String,
         val shortDescription: String,
-        val title: String,
+        override val title: String,
         val trackIds: List<Int>
-) : NamedImageListItem, Parcelable {
+) : NamedImageListItem, Parcelable, ISoundCloudPlaylist {
 
     @IgnoredOnParcel
     override val name: String = title
