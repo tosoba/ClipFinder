@@ -26,6 +26,7 @@ import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.base.fragment.HasMainToolbar
+import com.example.there.findclips.base.fragment.IMainContentFragment
 import com.example.there.findclips.databinding.ActivityMainBinding
 import com.example.there.findclips.databinding.DrawerHeaderBinding
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
@@ -122,7 +123,7 @@ class MainActivity :
     private var searchViewMenuItem: MenuItem? = null
 
     private val mainContentFragments: Array<Fragment> by lazy {
-        arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
+        arrayOf<Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
     }
 
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy {
@@ -307,7 +308,7 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        spotifyMainFragment?.let {
+        (mainContentViewPagerAdapter.currentFragment as? IMainContentFragment)?.let {
             val currentFragment = it.currentNavHostFragment
 
             if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {

@@ -13,10 +13,8 @@ import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.lifecycle.ConnectivityComponent
 import com.example.there.findclips.model.entity.soundcloud.SoundCloudPlaylist
 import com.example.there.findclips.model.entity.soundcloud.SoundCloudSystemPlaylist
-import com.example.there.findclips.util.ext.appCompatActivity
-import com.example.there.findclips.util.ext.connectivitySnackbarHost
-import com.example.there.findclips.util.ext.navigationDrawerController
-import com.example.there.findclips.util.ext.showDrawerHamburger
+import com.example.there.findclips.soundcloud.playlist.SoundCloudPlaylistFragment
+import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.binder.ItemBinder
 import com.example.there.findclips.view.list.binder.ItemBinderBase
@@ -59,7 +57,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                             override val itemViewBinder: ItemBinder<SoundCloudPlaylist>
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
-                        ClickHandler { },
+                        ClickHandler { navHostFragment?.showFragment(SoundCloudPlaylistFragment.newInstance(it), true) },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadPlaylists() }
                 ),
                 RecyclerViewItemView(
@@ -72,7 +70,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                             override val itemViewBinder: ItemBinder<SoundCloudSystemPlaylist>
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
-                        ClickHandler { },
+                        ClickHandler { navHostFragment?.showFragment(SoundCloudPlaylistFragment.newInstance(it), true) },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadPlaylists() }
                 )
         )

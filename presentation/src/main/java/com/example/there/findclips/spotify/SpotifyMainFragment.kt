@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseNavHostFragment
+import com.example.there.findclips.base.fragment.IMainContentFragment
 import com.example.there.findclips.spotify.account.AccountNavHostFragment
 import com.example.there.findclips.spotify.dashboard.SpotifyDashboardNavHostFragment
 import com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainNavHostFragment
@@ -19,7 +20,7 @@ import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePage
 import kotlinx.android.synthetic.main.fragment_spotify_main.*
 
 
-class SpotifyMainFragment : Fragment() {
+class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 
@@ -51,7 +52,7 @@ class SpotifyMainFragment : Fragment() {
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    val currentNavHostFragment: BaseNavHostFragment?
+    override val currentNavHostFragment: BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
     private val view: SpotifyMainView by lazy {

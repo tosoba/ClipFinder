@@ -12,5 +12,5 @@ data class SoundCloudSystemPlaylistEntity(
         val shortTitle: String,
         val title: String,
         val trackingFeatureName: String,
-        val tracks: List<SoundCloudTrackEntity>
+        val tracks: List<SoundCloudTrackIdEntity>
 )

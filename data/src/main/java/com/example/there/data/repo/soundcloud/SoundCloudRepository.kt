@@ -1,6 +1,7 @@
 package com.example.there.data.repo.soundcloud
 
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
+import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.ISoundCloudRepository
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
@@ -14,4 +15,6 @@ class SoundCloudRepository @Inject constructor(
 
     override val discover: Single<SoundCloudDiscoverEntity>
         get() = remote.discover
+
+    override fun getTracksFromPlaylist(id: String): Single<List<SoundCloudTrackEntity>> = remote.getTracksFromPlaylist(id)
 }

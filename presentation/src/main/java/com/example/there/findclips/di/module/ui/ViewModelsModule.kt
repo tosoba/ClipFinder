@@ -6,6 +6,7 @@ import com.example.there.findclips.di.vm.ViewModelFactory
 import com.example.there.findclips.di.vm.ViewModelKey
 import com.example.there.findclips.main.MainViewModel
 import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardViewModel
+import com.example.there.findclips.soundcloud.playlist.SoundCloudPlaylistViewModel
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsViewModel
 import com.example.there.findclips.spotify.account.saved.AccountSavedViewModel
 import com.example.there.findclips.spotify.account.top.AccountTopViewModel
@@ -127,4 +128,9 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(SoundCloudDashboardViewModel::class)
     abstract fun soundCloudDashboardViewModel(viewModel: SoundCloudDashboardViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SoundCloudPlaylistViewModel::class)
+    abstract fun soundCloudPlaylistViewModel(viewModel: SoundCloudPlaylistViewModel): ViewModel
 }

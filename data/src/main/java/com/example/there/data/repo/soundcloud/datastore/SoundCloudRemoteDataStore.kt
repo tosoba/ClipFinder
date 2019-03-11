@@ -5,8 +5,10 @@ import com.example.there.data.entity.soundcloud.SoundCloudPlaylist
 import com.example.there.data.entity.soundcloud.SoundCloudSystemPlaylist
 import com.example.there.data.mapper.soundcloud.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
+import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
 import com.vpaliy.soundcloud.SoundCloudService
+import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -26,4 +28,9 @@ class SoundCloudRemoteDataStore @Inject constructor(
                     }.flatten()
             )
         }
+
+    override fun getTracksFromPlaylist(
+            id: String
+    ): Single<List<SoundCloudTrackEntity>> = service.fetchPlaylistTracks(id)
+            .map { it.map(TrackEntity::domain) }
 }

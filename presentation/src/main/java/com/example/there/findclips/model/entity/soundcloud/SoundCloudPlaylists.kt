@@ -1,12 +1,16 @@
 package com.example.there.findclips.model.entity.soundcloud
 
+import android.os.Parcelable
 import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
 import com.example.there.findclips.view.list.item.NamedImageListItem
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class SoundCloudPlaylist(
         val artworkUrl: String?,
         val createdAt: String,
@@ -17,8 +21,9 @@ data class SoundCloudPlaylist(
         val title: String,
         val trackCount: Int,
         val userId: Int
-) : NamedImageListItem {
+) : NamedImageListItem, Parcelable {
 
+    @IgnoredOnParcel
     override val name: String = title
 
     override val imageViewSrc: ImageViewSrc
@@ -60,6 +65,7 @@ val SoundCloudPlaylistEntity.ui: SoundCloudPlaylist
             userId = userId
     )
 
+@Parcelize
 data class SoundCloudSystemPlaylist(
         val artworkUrl: String?,
         val description: String,
@@ -67,8 +73,9 @@ data class SoundCloudSystemPlaylist(
         val shortDescription: String,
         val title: String,
         val trackIds: List<Int>
-) : NamedImageListItem {
+) : NamedImageListItem, Parcelable {
 
+    @IgnoredOnParcel
     override val name: String = title
 
     override val imageViewSrc: ImageViewSrc
