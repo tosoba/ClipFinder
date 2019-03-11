@@ -1,15 +1,16 @@
 package com.example.there.findclips.spotify.spotifyitem.track
 
 import android.graphics.Color
+import com.example.there.domain.entity.spotify.ArtistEntity
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetAlbum
 import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.AlbumEntityMapper
-import com.example.there.findclips.model.mapper.ArtistEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -35,15 +36,15 @@ class TrackViewModel @Inject constructor(
         viewState.albumLoadingInProgress.set(true)
         getAlbum.execute(albumId)
                 .doFinally { viewState.albumLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({ viewState.album.set(AlbumEntityMapper.mapFrom(it)) }, ::onError)
+                .subscribeAndDisposeOnCleared({ viewState.album.set(it.ui) }, ::onError)
     }
 
     fun loadArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
         getArtists.execute(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom).sortedBy { it.name })
+                .subscribeAndDisposeOnCleared({ artists ->
+                    viewState.artists.addAll(artists.map(ArtistEntity::ui).sortedBy { it.name })
                     viewState.artistsLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.artistsLoadingErrorOccurred.set(true)
@@ -54,8 +55,8 @@ class TrackViewModel @Inject constructor(
         viewState.similarTracksLoadingInProgress.set(true)
         getSimilarTracks.execute(track.id)
                 .doFinally { viewState.similarTracksLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    viewState.similarTracks.addAll(it.map(TrackEntityMapper::mapFrom).sortedBy { it.name })
+                .subscribeAndDisposeOnCleared({ tracks ->
+                    viewState.similarTracks.addAll(tracks.map(TrackEntity::ui).sortedBy { it.name })
                     viewState.similarTracksErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.similarTracksErrorOccurred.set(true)
@@ -63,7 +64,7 @@ class TrackViewModel @Inject constructor(
     }
 
     private fun loadAudioFeatures(track: Track) {
-        getAudioFeatures.execute(TrackEntityMapper.mapBack(track))
+        getAudioFeatures.execute(track.domain)
                 .subscribeAndDisposeOnCleared({
                     val entries = ArrayList<RadarEntry>().apply {
                         add(RadarEntry(it.acousticness))

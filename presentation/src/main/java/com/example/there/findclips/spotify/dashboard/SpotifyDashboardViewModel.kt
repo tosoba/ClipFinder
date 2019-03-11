@@ -1,16 +1,16 @@
 package com.example.there.findclips.spotify.dashboard
 
 import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.domain.entity.spotify.AlbumEntity
+import com.example.there.domain.entity.spotify.CategoryEntity
+import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCategories
 import com.example.there.domain.usecase.spotify.GetDailyViralTracks
 import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.TopTrack
-import com.example.there.findclips.model.mapper.AlbumEntityMapper
-import com.example.there.findclips.model.mapper.CategoryEntityMapper
-import com.example.there.findclips.model.mapper.PlaylistEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 class SpotifyDashboardViewModel @Inject constructor(
@@ -35,7 +35,7 @@ class SpotifyDashboardViewModel @Inject constructor(
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.categories.clear()
-                    viewState.categories.addAll(it.map(CategoryEntityMapper::mapFrom))
+                    viewState.categories.addAll(it.map(CategoryEntity::ui))
                     viewState.categoriesLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.categoriesLoadingErrorOccurred.set(true)
@@ -48,7 +48,7 @@ class SpotifyDashboardViewModel @Inject constructor(
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.featuredPlaylists.clear()
-                    viewState.featuredPlaylists.addAll(it.map(PlaylistEntityMapper::mapFrom))
+                    viewState.featuredPlaylists.addAll(it.map(PlaylistEntity::ui))
                     viewState.featuredPlaylistsLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.featuredPlaylistsLoadingErrorOccurred.set(true)
@@ -60,7 +60,7 @@ class SpotifyDashboardViewModel @Inject constructor(
         getDailyViralTracks.execute()
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ result ->
-                    viewState.topTracks.addAll(result.map { TopTrack(it.position, TrackEntityMapper.mapFrom(it.track)) })
+                    viewState.topTracks.addAll(result.map { TopTrack(it.position, it.track.ui) })
                     viewState.topTracksLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.topTracksLoadingErrorOccurred.set(true)
@@ -81,7 +81,7 @@ class SpotifyDashboardViewModel @Inject constructor(
                     .subscribeAndDisposeOnCleared({
                         currentNewReleasesOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalNewReleases = it.totalItems
-                        viewState.newReleases.addAll(it.items.map(AlbumEntityMapper::mapFrom))
+                        viewState.newReleases.addAll(it.items.map(AlbumEntity::ui))
                         viewState.newReleasesLoadingErrorOccurred.set(false)
                     }, getOnErrorWith {
                         viewState.newReleasesLoadingErrorOccurred.set(true)

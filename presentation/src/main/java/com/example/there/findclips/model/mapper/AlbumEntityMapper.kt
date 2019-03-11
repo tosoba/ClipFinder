@@ -1,27 +1,26 @@
 package com.example.there.findclips.model.mapper
 
-import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.SimpleArtistEntity
 import com.example.there.findclips.model.entity.spotify.Album
 import com.example.there.findclips.model.entity.spotify.SimpleArtist
 
-object AlbumEntityMapper : TwoWayMapper<AlbumEntity, Album>() {
-    override fun mapFrom(from: AlbumEntity): Album = Album(
-            id = from.id,
-            name = from.name,
-            artists = from.artists.map { SimpleArtist(it.id, it.name) },
-            albumType = from.albumType,
-            iconUrl = from.iconUrl,
-            uri = from.uri
+val AlbumEntity.ui: Album
+    get() = Album(
+            id = id,
+            name = name,
+            artists = artists.map { SimpleArtist(it.id, it.name) },
+            albumType = albumType,
+            iconUrl = iconUrl,
+            uri = uri
     )
 
-    override fun mapBack(from: Album): AlbumEntity = AlbumEntity(
-            id = from.id,
-            name = from.name,
-            artists = from.artists.map { SimpleArtistEntity(it.id, it.name) },
-            albumType = from.albumType,
-            iconUrl = from.iconUrl,
-            uri = from.uri
+val Album.domain: AlbumEntity
+    get() = AlbumEntity(
+            id = id,
+            name = name,
+            artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+            albumType = albumType,
+            iconUrl = iconUrl,
+            uri = uri
     )
-}

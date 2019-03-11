@@ -1,6 +1,8 @@
 package com.example.there.findclips.main
 
 import android.util.Log
+import com.example.there.domain.entity.spotify.TrackEntity
+import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
 import com.example.there.domain.usecase.base.SingleUseCaseWithInput
 import com.example.there.domain.usecase.spotify.*
@@ -15,7 +17,8 @@ import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.model.entity.spotify.User
 import com.example.there.findclips.model.entity.videos.Video
 import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.*
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 
@@ -43,8 +46,8 @@ class MainViewModel @Inject constructor(
 
     fun addVideoToPlaylist(video: Video, videoPlaylist: VideoPlaylist, onSuccess: () -> Unit) {
         addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
-                playlistEntity = VideoPlaylistEntityMapper.mapBack(videoPlaylist),
-                videoEntity = VideoEntityMapper.mapBack(video))
+                playlistEntity = videoPlaylist.domain,
+                videoEntity = video.domain)
         ).subscribeAndDisposeOnCleared(onSuccess, ::onError)
     }
 
@@ -52,12 +55,12 @@ class MainViewModel @Inject constructor(
         getFavouriteVideoPlaylists.execute()
                 .subscribeAndDisposeOnCleared({
                     viewState.favouriteVideoPlaylists.clear()
-                    viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntityMapper::mapFrom))
+                    viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntity::ui))
                 }, ::onError)
     }
 
     fun addVideoPlaylistWithVideo(playlist: VideoPlaylist, video: Video, onSuccess: () -> Unit) {
-        insertVideoPlaylist.execute(VideoPlaylistEntityMapper.mapBack(playlist))
+        insertVideoPlaylist.execute(playlist.domain)
                 .subscribeAndDisposeOnCleared({ playlistId ->
                     addVideoToPlaylist(video, VideoPlaylist(playlistId, playlist.name), onSuccess)
                 }, ::onError)
@@ -65,7 +68,7 @@ class MainViewModel @Inject constructor(
 
     fun getSimilarTracks(trackId: String) {
         getSimilarTracks.execute(trackId)
-                .subscribe({ viewState.similarTracks.value = it.map(TrackEntityMapper::mapFrom) }, ::onError)
+                .subscribe({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
                 .disposeOnCleared()
     }
 
@@ -75,17 +78,17 @@ class MainViewModel @Inject constructor(
     }
 
     fun updateTrackFavouriteState(track: Track) {
-        isTrackSaved.execute(TrackEntityMapper.mapBack(track))
+        isTrackSaved.execute(track.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updatePlaylistFavouriteState(playlist: Playlist) {
-        isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
+        isSpotifyPlaylistSaved.execute(playlist.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updateAlbumFavouriteState(album: Album) {
-        isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
+        isAlbumSaved.execute(album.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
@@ -99,7 +102,7 @@ class MainViewModel @Inject constructor(
             onPlaylistAdded: () -> Unit,
             onPlaylistDeleted: () -> Unit
     ) = toggleItemFavouriteState(
-            PlaylistEntityMapper.mapBack(playlist),
+            playlist.domain,
             isSpotifyPlaylistSaved,
             insertSpotifyPlaylist,
             deleteSpotifyPlaylist,
@@ -112,7 +115,7 @@ class MainViewModel @Inject constructor(
             onTrackAdded: () -> Unit,
             onTrackDeleted: () -> Unit
     ) = toggleItemFavouriteState(
-            TrackEntityMapper.mapBack(track),
+            track.domain,
             isTrackSaved,
             insertTrack,
             deleteTrack,
@@ -125,7 +128,7 @@ class MainViewModel @Inject constructor(
             onAlbumAdded: () -> Unit,
             onAlbumDeleted: () -> Unit
     ) = toggleItemFavouriteState(
-            AlbumEntityMapper.mapBack(album),
+            album.domain,
             isAlbumSaved,
             insertAlbum,
             deleteAlbum,

@@ -7,7 +7,7 @@ import com.example.there.domain.usecase.spotify.InsertTrack
 import com.example.there.domain.usecase.spotify.IsTrackSaved
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.domain
 import java.util.*
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class TrackVideosViewModel @Inject constructor(
 
     fun addFavouriteTrack(
             track: Track
-    ) = insertTrack.execute(TrackEntityMapper.mapBack(track))
+    ) = insertTrack.execute(track.domain)
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(true)
                 viewState.isSavedAsFavourite.set(true)
@@ -50,7 +50,7 @@ class TrackVideosViewModel @Inject constructor(
 
     fun deleteFavouriteTrack(
             track: Track
-    ) = deleteTrack.execute(TrackEntityMapper.mapBack(track))
+    ) = deleteTrack.execute(track.domain)
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(false)
                 viewState.isSavedAsFavourite.set(false)
@@ -58,7 +58,7 @@ class TrackVideosViewModel @Inject constructor(
 
     private fun loadTrackFavouriteState(
             track: Track
-    ) = isTrackSaved.execute(TrackEntityMapper.mapBack(track))
+    ) = isTrackSaved.execute(track.domain)
             .subscribeAndDisposeOnCleared {
                 viewStates.peek().isSavedAsFavourite.set(it)
                 viewState.isSavedAsFavourite.set(it)

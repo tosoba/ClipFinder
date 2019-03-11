@@ -6,7 +6,8 @@ import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.videos.DeleteVideoPlaylist
 import com.example.there.domain.usecase.videos.GetVideoPlaylistsWithThumbnails
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.VideoPlaylistEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
@@ -19,15 +20,15 @@ class VideosFavouritesViewModel @Inject constructor(
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 
     fun loadVideoPlaylists() {
-       getVideoPlaylistsWithThumbnails.execute()
+        getVideoPlaylistsWithThumbnails.execute()
                 .subscribeAndDisposeOnCleared({ playlistWithThumbnails ->
-                    val playlist = VideoPlaylistEntityMapper.mapFrom(playlistWithThumbnails.playlist)
+                    val playlist = playlistWithThumbnails.playlist.ui
                     state.playlists.add(PlaylistThumbnailView(
                             playlist,
                             PlaylistThumbnailFlipperAdapter(playlistWithThumbnails.thumbnailUrls),
                             View.OnClickListener { _ ->
                                 state.playlists.removeAll { it.playlist == playlist }
-                                deleteVideoPlaylist(VideoPlaylistEntityMapper.mapBack(playlist))
+                                deleteVideoPlaylist(playlist.domain)
                             }
                     ))
                 }, { Log.e(javaClass.name, "VideoPlaylists load error") })
@@ -35,6 +36,6 @@ class VideosFavouritesViewModel @Inject constructor(
 
     private fun deleteVideoPlaylist(videoPlaylist: VideoPlaylistEntity) {
         deleteVideoPlaylist.execute(videoPlaylist)
-            .subscribeAndDisposeOnCleared()
+                .subscribeAndDisposeOnCleared()
     }
 }

@@ -5,41 +5,40 @@ import com.example.there.data.entity.spotify.SimplifiedAlbumData
 import com.example.there.data.entity.spotify.SimplifiedArtistData
 import com.example.there.data.entity.spotify.TrackData
 import com.example.there.data.util.secondIconUrlOrDefault
-import com.example.there.domain.common.OneWayMapper
-import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entity.spotify.SimpleArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 
-object TrackMapper : TwoWayMapper<TrackData, TrackEntity>() {
-    override fun mapFrom(from: TrackData): TrackEntity = TrackEntity(
-            id = from.id,
-            name = from.name,
-            iconUrl = from.album.icons.secondIconUrlOrDefault,
-            albumId = from.album.id,
-            albumName = from.album.name,
-            artists = from.artists.map { SimpleArtistEntity(it.id, it.name) },
-            popularity = from.popularity,
-            trackNumber = from.trackNumber,
-            uri = from.uri,
-            durationMs = from.durationMs
+
+val TrackData.domain: TrackEntity
+    get() = TrackEntity(
+            id = id,
+            name = name,
+            iconUrl = album.icons.secondIconUrlOrDefault,
+            albumId = album.id,
+            albumName = album.name,
+            artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+            popularity = popularity,
+            trackNumber = trackNumber,
+            uri = uri,
+            durationMs = durationMs
     )
 
-    override fun mapBack(from: TrackEntity): TrackData = TrackData(
-            id = from.id,
-            name = from.name,
+val TrackEntity.data: TrackData
+    get() = TrackData(
+            id = id,
+            name = name,
             album = SimplifiedAlbumData(
-                    id = from.albumId,
-                    name = from.albumName,
-                    icons = listOf(IconData(url = from.iconUrl))
+                    id = albumId,
+                    name = albumName,
+                    icons = listOf(IconData(url = iconUrl))
             ),
-            artists = from.artists.map { SimplifiedArtistData(it.id, it.name) },
-            popularity = from.popularity,
-            trackNumber = from.trackNumber,
-            uri = from.uri,
-            durationMs = from.durationMs
+            artists = artists.map { SimplifiedArtistData(it.id, it.name) },
+            popularity = popularity,
+            trackNumber = trackNumber,
+            uri = uri,
+            durationMs = durationMs
     )
-}
 
-object ChartTrackIdMapper : OneWayMapper<String, String>() {
-    override fun mapFrom(from: String): String = from.substring(from.lastIndexOf('/') + 1)
+object ChartTrackIdMapper {
+    fun map(from: String): String = from.substring(from.lastIndexOf('/') + 1)
 }

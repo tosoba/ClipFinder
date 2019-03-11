@@ -1,10 +1,11 @@
 package com.example.there.findclips.videos.relatedvideos
 
+import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.SearchRelatedVideos
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.mapper.VideoEntityMapper
+import com.example.there.findclips.model.mapper.ui
 import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
@@ -39,7 +40,7 @@ class RelatedVideosViewModel @Inject constructor(
                     else viewState.initialVideosLoadingInProgress.set(false)
                 }
                 .subscribeAndDisposeOnCleared({ videos ->
-                    val mapped = videos.map(VideoEntityMapper::mapFrom)
+                    val mapped = videos.map(VideoEntity::ui)
                     viewState.videos.addAll(mapped.map { VideoItemView(it, null) })
                     getChannelThumbnails(videos, onSuccess = {
                         it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }

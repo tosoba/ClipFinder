@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.*
+import com.example.there.findclips.model.mapper.ui
 import io.reactivex.Flowable
 import io.reactivex.functions.Function5
 import javax.inject.Inject
@@ -28,11 +28,11 @@ class SpotifyFavouritesViewModel @Inject constructor(
                 getFavouriteTracks.execute(),
                 Function5 { albums, artists, categories, playlists, tracks ->
                     SpotifyFavouritesFragmentViewState(
-                            ArrayList(albums.map(AlbumEntityMapper::mapFrom)),
-                            ArrayList(artists.map(ArtistEntityMapper::mapFrom)),
-                            ArrayList(categories.map(CategoryEntityMapper::mapFrom)),
-                            ArrayList(playlists.map(PlaylistEntityMapper::mapFrom)),
-                            ArrayList(tracks.map(TrackEntityMapper::mapFrom))
+                            ArrayList(albums.map(AlbumEntity::ui)),
+                            ArrayList(artists.map(ArtistEntity::ui)),
+                            ArrayList(categories.map(CategoryEntity::ui)),
+                            ArrayList(playlists.map(PlaylistEntity::ui)),
+                            ArrayList(tracks.map(TrackEntity::ui))
                     )
                 })
                 .subscribeAndDisposeOnCleared { viewState.value = it }

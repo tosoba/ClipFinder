@@ -1,11 +1,12 @@
 package com.example.there.findclips.spotify.account.saved
 
 import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.domain.entity.spotify.AlbumEntity
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedAlbums
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedTracks
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.AlbumEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 class AccountSavedViewModel @Inject constructor(
@@ -29,7 +30,7 @@ class AccountSavedViewModel @Inject constructor(
             getCurrentUsersSavedTracks.execute(currentTracksOffset)
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
-                        viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom))
+                        viewState.tracks.addAll(it.items.map(TrackEntity::ui))
                         currentTracksOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalTracks = it.totalItems
                         viewState.tracksLoadingErrorOccurred.set(false)
@@ -53,7 +54,7 @@ class AccountSavedViewModel @Inject constructor(
             getCurrentUsersSavedAlbums.execute(currentAlbumsOffset)
                     .doFinally { viewState.albumsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
-                        viewState.albums.addAll(it.items.map(AlbumEntityMapper::mapFrom))
+                        viewState.albums.addAll(it.items.map(AlbumEntity::ui))
                         currentAlbumsOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalAlbums = it.totalItems
                         viewState.albumsLoadingErrorOccurred.set(false)

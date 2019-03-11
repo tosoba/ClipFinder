@@ -4,26 +4,26 @@ import com.example.there.data.entity.spotify.AlbumData
 import com.example.there.data.entity.spotify.IconData
 import com.example.there.data.entity.spotify.SimplifiedArtistData
 import com.example.there.data.util.secondIconUrlOrDefault
-import com.example.there.domain.common.TwoWayMapper
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.SimpleArtistEntity
 
-object AlbumMapper : TwoWayMapper<AlbumData, AlbumEntity>() {
-    override fun mapFrom(from: AlbumData): AlbumEntity = AlbumEntity(
-            id = from.id,
-            name = from.name,
-            albumType = from.albumType,
-            artists = from.artists.map { SimpleArtistEntity(it.id, it.name) },
-            iconUrl = from.icons.secondIconUrlOrDefault,
-            uri = from.uri
+
+val AlbumData.domain: AlbumEntity
+    get() = AlbumEntity(
+            id = id,
+            name = name,
+            albumType = albumType,
+            artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+            iconUrl = icons.secondIconUrlOrDefault,
+            uri = uri
     )
 
-    override fun mapBack(from: AlbumEntity): AlbumData = AlbumData(
-            id = from.id,
-            name = from.name,
-            albumType = from.albumType,
-            artists = from.artists.map { SimplifiedArtistData(it.id, it.name) },
-            icons = listOf(IconData(url = from.iconUrl)),
-            uri = from.uri
+val AlbumEntity.data: AlbumData
+    get() = AlbumData(
+            id = id,
+            name = name,
+            albumType = albumType,
+            artists = artists.map { SimplifiedArtistData(it.id, it.name) },
+            icons = listOf(IconData(url = iconUrl)),
+            uri = uri
     )
-}

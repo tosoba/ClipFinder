@@ -3,6 +3,7 @@ package com.example.there.findclips.spotify.spotifyitem.category
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.DeleteCategory
 import com.example.there.domain.usecase.spotify.GetPlaylistsForCategory
 import com.example.there.domain.usecase.spotify.InsertCategory
@@ -10,8 +11,8 @@ import com.example.there.domain.usecase.spotify.IsCategorySaved
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Category
 import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.mapper.CategoryEntityMapper
-import com.example.there.findclips.model.mapper.PlaylistEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 
@@ -47,24 +48,24 @@ class CategoryViewModel @Inject constructor(
                     .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
                         totalItems = it.totalItems
-                        playlists.value = it.items.map(PlaylistEntityMapper::mapFrom)
+                        playlists.value = it.items.map(PlaylistEntity::ui)
                     }, ::onError)
         }
     }
 
     fun addFavouriteCategory(
             category: Category
-    ) = insertCategory.execute(CategoryEntityMapper.mapBack(category))
+    ) = insertCategory.execute(category.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
 
     fun deleteFavouriteCategory(
             category: Category
-    ) = deleteCategory.execute(CategoryEntityMapper.mapBack(category))
+    ) = deleteCategory.execute(category.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadCategoryFavouriteState(
             category: Category
-    ) = isCategorySaved.execute(CategoryEntityMapper.mapBack(category))
+    ) = isCategorySaved.execute(category.domain)
             .subscribe(viewState.isSavedAsFavourite::set)
 }

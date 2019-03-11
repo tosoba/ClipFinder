@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.VideoEntityMapper
-import com.example.there.findclips.model.mapper.VideoPlaylistEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
@@ -48,20 +48,20 @@ class VideosSearchViewModel @Inject constructor(
 
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {
         //TODO: check if it isn't broken after usecase changes
-        VideoPlaylistEntityMapper.mapBack(videoPlaylist).id?.let { id ->
+        videoPlaylist.domain.id?.let { id ->
             getFavouriteVideosFromPlaylist.execute(id)
                     .subscribeAndDisposeOnCleared({ updateVideos(it, true) }, ::onError)
         }
     }
 
     private fun updateVideos(videos: List<VideoEntity>, withRemoveOption: Boolean = false) {
-        val mapped = videos.map(VideoEntityMapper::mapFrom)
+        val mapped = videos.map(VideoEntity::ui)
 
         viewState.videos.addAll(mapped.map { video ->
             VideoItemView(video = video, onRemoveBtnClickListener = if (withRemoveOption) {
                 View.OnClickListener {
                     viewState.videos.removeAll { it.video == video }
-                    deleteVideo(VideoEntityMapper.mapBack(video))
+                    deleteVideo(video.domain)
                 }
             } else null)
         })

@@ -1,7 +1,9 @@
 package com.example.there.data.repo.spotify.datastore
 
 import com.example.there.data.db.*
-import com.example.there.data.mapper.spotify.*
+import com.example.there.data.entity.spotify.*
+import com.example.there.data.mapper.spotify.data
+import com.example.there.data.mapper.spotify.domain
 import com.example.there.data.util.mapToSingleBoolean
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.datastore.ISpotifyDbDataStore
@@ -21,38 +23,38 @@ class SpotifyDbDataStore @Inject constructor(
 ) : ISpotifyDbDataStore {
 
     override val favouriteAlbums: Flowable<List<AlbumEntity>>
-        get() = albumDao.findAll().map { it.map(AlbumMapper::mapFrom) }
+        get() = albumDao.findAll().map { it.map(AlbumData::domain) }
 
     override val favouriteArtists: Flowable<List<ArtistEntity>>
-        get() = artistDao.findAll().map { it.map(ArtistMapper::mapFrom) }
+        get() = artistDao.findAll().map { it.map(ArtistData::domain) }
 
     override val favouriteCategories: Flowable<List<CategoryEntity>>
-        get() = categoryDao.findAll().map { it.map(CategoryMapper::mapFrom) }
+        get() = categoryDao.findAll().map { it.map(CategoryData::domain) }
 
     override val favouritePlaylists: Flowable<List<PlaylistEntity>>
-        get() = spotifyPlaylistDao.findAll().map { it.map(PlaylistMapper::mapFrom) }
+        get() = spotifyPlaylistDao.findAll().map { it.map(PlaylistData::domain) }
 
     override val favouriteTracks: Flowable<List<TrackEntity>>
-        get() = trackDao.findAll().map { it.map(TrackMapper::mapFrom) }
+        get() = trackDao.findAll().map { it.map(TrackData::domain) }
 
     override fun insertAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
-        albumDao.insert(AlbumMapper.mapBack(albumEntity))
+        albumDao.insert(albumEntity.data)
     }
 
     override fun insertArtist(artistEntity: ArtistEntity): Completable = Completable.fromCallable {
-        artistDao.insert(ArtistMapper.mapBack(artistEntity))
+        artistDao.insert(artistEntity.data)
     }
 
     override fun insertCategory(categoryEntity: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.insert(CategoryMapper.mapBack(categoryEntity))
+        categoryDao.insert(categoryEntity.data)
     }
 
     override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = Completable.fromCallable {
-        spotifyPlaylistDao.insert(PlaylistMapper.mapBack(playlistEntity))
+        spotifyPlaylistDao.insert(playlistEntity.data)
     }
 
     override fun insertTrack(trackEntity: TrackEntity): Completable = Completable.fromCallable {
-        trackDao.insert(TrackMapper.mapBack(trackEntity))
+        trackDao.insert(trackEntity.data)
     }
 
     override fun isAlbumSaved(
@@ -76,22 +78,22 @@ class SpotifyDbDataStore @Inject constructor(
     ): Single<Boolean> = trackDao.findById(trackEntity.id).mapToSingleBoolean()
 
     override fun deleteAlbum(albumEntity: AlbumEntity): Completable = Completable.fromCallable {
-        albumDao.delete(AlbumMapper.mapBack(albumEntity))
+        albumDao.delete(albumEntity.data)
     }
 
     override fun deleteArtist(artistEntity: ArtistEntity): Completable = Completable.fromCallable {
-        artistDao.delete(ArtistMapper.mapBack(artistEntity))
+        artistDao.delete(artistEntity.data)
     }
 
     override fun deleteCategory(categoryEntity: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.delete(CategoryMapper.mapBack(categoryEntity))
+        categoryDao.delete(categoryEntity.data)
     }
 
     override fun deletePlaylist(playlistEntity: PlaylistEntity): Completable = Completable.fromCallable {
-        spotifyPlaylistDao.delete(PlaylistMapper.mapBack(playlistEntity))
+        spotifyPlaylistDao.delete(playlistEntity.data)
     }
 
     override fun deleteTrack(trackEntity: TrackEntity): Completable = Completable.fromCallable {
-        trackDao.delete(TrackMapper.mapBack(trackEntity))
+        trackDao.delete(trackEntity.data)
     }
 }

@@ -3,6 +3,7 @@ package com.example.there.findclips.spotify.spotifyitem.playlist
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.example.there.data.api.spotify.SpotifyApi
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.GetPlaylistTracks
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
@@ -10,8 +11,8 @@ import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Playlist
 import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.PlaylistEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 class PlaylistViewModel @Inject constructor(
@@ -41,23 +42,23 @@ class PlaylistViewModel @Inject constructor(
                     .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT
                         totalItems = it.totalItems
-                        tracks.value = it.items.map(TrackEntityMapper::mapFrom)
+                        tracks.value = it.items.map(TrackEntity::ui)
                     }, ::onError)
         }
     }
 
     fun addFavouritePlaylist(
             playlist: Playlist
-    ) = insertSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
+    ) = insertSpotifyPlaylist.execute(playlist.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouritePlaylist(
             playlist: Playlist
-    ) = deleteSpotifyPlaylist.execute(PlaylistEntityMapper.mapBack(playlist))
+    ) = deleteSpotifyPlaylist.execute(playlist.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadPlaylistFavouriteState(
             playlist: Playlist
-    ) = isSpotifyPlaylistSaved.execute(PlaylistEntityMapper.mapBack(playlist))
+    ) = isSpotifyPlaylistSaved.execute(playlist.domain)
             .subscribe(viewState.isSavedAsFavourite::set)
 }

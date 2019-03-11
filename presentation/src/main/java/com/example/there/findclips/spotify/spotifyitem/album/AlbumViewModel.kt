@@ -1,12 +1,13 @@
 package com.example.there.findclips.spotify.spotifyitem.album
 
 import android.util.Log
+import com.example.there.domain.entity.spotify.ArtistEntity
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.mapper.AlbumEntityMapper
-import com.example.there.findclips.model.mapper.ArtistEntityMapper
-import com.example.there.findclips.model.mapper.TrackEntityMapper
+import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.ui
 import javax.inject.Inject
 
 class AlbumViewModel @Inject constructor(
@@ -37,7 +38,7 @@ class AlbumViewModel @Inject constructor(
         getArtists.execute(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
-                    viewState.artists.addAll(it.map(ArtistEntityMapper::mapFrom))
+                    viewState.artists.addAll(it.map(ArtistEntity::ui))
                     viewState.artistsLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.artistsLoadingErrorOccurred.set(true)
@@ -48,21 +49,21 @@ class AlbumViewModel @Inject constructor(
         viewState.tracksLoadingInProgress.set(true)
         getTracksFromAlbum.execute(albumId)
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({ viewState.tracks.addAll(it.items.map(TrackEntityMapper::mapFrom)) }, ::onError)
+                .subscribeAndDisposeOnCleared({ viewState.tracks.addAll(it.items.map(TrackEntity::ui)) }, ::onError)
     }
 
     fun addFavouriteAlbum(
             album: Album
-    ) = insertAlbum.execute(AlbumEntityMapper.mapBack(album))
+    ) = insertAlbum.execute(album.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouriteAlbum(
             album: Album
-    ) = deleteAlbum.execute(AlbumEntityMapper.mapBack(album))
+    ) = deleteAlbum.execute(album.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadAlbumFavouriteState(
             album: Album
-    ) = isAlbumSaved.execute(AlbumEntityMapper.mapBack(album))
+    ) = isAlbumSaved.execute(album.domain)
             .subscribeAndDisposeOnCleared { viewState.isSavedAsFavourite.set(it) }
 }
