@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.example.there.findclips.base.fragment.BaseListFragment
 import com.example.there.findclips.base.fragment.BaseNavHostFragment
-import com.example.there.findclips.base.fragment.BaseSpotifyListFragment
 import com.example.there.findclips.main.controller.*
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
@@ -46,17 +46,17 @@ val Fragment.navigationDrawerController: NavigationDrawerController?
 val Fragment.toolbarController: ToolbarController?
     get() = activity as? ToolbarController
 
-fun <I : Parcelable> BaseSpotifyListFragment<I>.putArguments(
+fun <I : Parcelable> BaseListFragment<I>.putArguments(
         mainHintText: String,
         additionalHintText: String,
         items: ArrayList<I>?,
         shouldShowHeader: Boolean
 ) {
     val args = Bundle().apply {
-        putString(BaseSpotifyListFragment.EXTRA_MAIN_HINT, mainHintText)
-        putString(BaseSpotifyListFragment.EXTRA_ADDITIONAL_HINT, additionalHintText)
-        items?.let { putParcelableArrayList(BaseSpotifyListFragment.EXTRA_ITEMS, it) }
-        putBoolean(BaseSpotifyListFragment.EXTRA_SHOULD_SHOW_HEADER, shouldShowHeader)
+        putString(BaseListFragment.EXTRA_MAIN_HINT, mainHintText)
+        putString(BaseListFragment.EXTRA_ADDITIONAL_HINT, additionalHintText)
+        items?.let { putParcelableArrayList(BaseListFragment.EXTRA_ITEMS, it) }
+        putBoolean(BaseListFragment.EXTRA_SHOULD_SHOW_HEADER, shouldShowHeader)
     }
     arguments = args
 }

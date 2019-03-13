@@ -14,15 +14,20 @@ import android.view.LayoutInflater
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.ext.navHostFragment
+import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.item.HeaderItemViewState
+import com.example.there.findclips.view.list.item.ListItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemView
+import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
 
-abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
+abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
-    var refreshData: ((BaseSpotifyListFragment<T>) -> Unit)? = null
+    var refreshData: ((BaseListFragment<T>) -> Unit)? = null
     var loadMore: (() -> Unit)? = null
     var onItemClick: ((T) -> Unit)? = null
 
@@ -34,9 +39,28 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
 
     private var xmlHeaderText: String? = null
 
-    abstract val view: View<T>
+    protected val view: View<T> by lazy(LazyThreadSafetyMode.NONE) {
+        BaseListFragment.View(
+                state = viewState,
+                recyclerViewItemView = RecyclerViewItemView(
+                        RecyclerViewItemViewState(
+                                ObservableField(false),
+                                viewState.items,
+                                ObservableField(false)
+                        ),
+                        listItemView,
+                        ClickHandler { item ->
+                            onItemClick?.let { it(item) }
+                                    ?: run { navHostFragment?.showFragment(newInstanceOfFragmentToShowOnClick(item), true) }
+                        },
+                        onScrollListener = onScrollListener
+                )
+        )
+    }
 
     abstract val viewState: ViewState<T>
+
+    protected abstract val listItemView: ListItemView<T>
 
     protected val listColumnCount: Int
         get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
@@ -48,6 +72,8 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
             }
         }
     }
+
+    protected abstract fun newInstanceOfFragmentToShowOnClick(item: T): Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,17 +88,17 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
     override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
 
-        val attributes = activity?.obtainStyledAttributes(attrs, R.styleable.BaseSpotifyListFragment)
-        attributes?.getText(R.styleable.BaseSpotifyListFragment_main_hint_text)?.let {
+        val attributes = activity?.obtainStyledAttributes(attrs, R.styleable.BaseListFragment)
+        attributes?.getText(R.styleable.BaseListFragment_main_hint_text)?.let {
             viewState.mainHintText.set(it.toString())
         }
-        attributes?.getText(R.styleable.BaseSpotifyListFragment_additional_hint_text)?.let {
+        attributes?.getText(R.styleable.BaseListFragment_additional_hint_text)?.let {
             viewState.additionalHintText.set(it.toString())
         }
-        attributes?.getBoolean(R.styleable.BaseSpotifyListFragment_should_show_header, false)?.let {
+        attributes?.getBoolean(R.styleable.BaseListFragment_should_show_header, false)?.let {
             viewState.shouldShowHeader = it
         }
-        attributes?.getString(R.styleable.BaseSpotifyListFragment_header_text)?.let {
+        attributes?.getString(R.styleable.BaseListFragment_header_text)?.let {
             xmlHeaderText = it
         }
         attributes?.recycle()
@@ -140,7 +166,7 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
     )
 
     class View<T : Parcelable>(
-            val state: BaseSpotifyListFragment.ViewState<T>,
+            val state: BaseListFragment.ViewState<T>,
             val recyclerViewItemView: RecyclerViewItemView<T>
     )
 
@@ -149,5 +175,14 @@ abstract class BaseSpotifyListFragment<T : Parcelable> : Fragment() {
         const val EXTRA_ADDITIONAL_HINT = "EXTRA_ADDITIONAL_HINT"
         const val EXTRA_ITEMS = "EXTRA_ITEMS"
         const val EXTRA_SHOULD_SHOW_HEADER = "SHOULD_SHOW_HEADER"
+
+        inline fun <reified F : BaseListFragment<I>, I : Parcelable> newInstance(
+                mainHintText: String,
+                additionalHintText: String,
+                items: ArrayList<I>?,
+                shouldShowHeader: Boolean = false
+        ): F = F::class.java.newInstance().apply {
+            putArguments(mainHintText, additionalHintText, items, shouldShowHeader)
+        }
     }
 }

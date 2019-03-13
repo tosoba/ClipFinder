@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
+import com.example.there.findclips.base.fragment.BaseListFragment
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.databinding.FragmentSpotifyFavouritesBinding
 import com.example.there.findclips.di.Injectable
+import com.example.there.findclips.model.entity.spotify.*
 import com.example.there.findclips.spotify.list.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
@@ -34,7 +36,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                SpotifyAlbumsFragment.newInstance(
+                BaseListFragment.newInstance<SpotifyAlbumsFragment, Album>(
                         getString(R.string.no_favourite_albums_addded_yet),
                         getString(R.string.browse_for_albums),
                         viewModel.viewState.value?.albums
@@ -45,7 +47,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                         }
                     }
                 },
-                SpotifyArtistsFragment.newInstance(
+                BaseListFragment.newInstance<SpotifyArtistsFragment, Artist>(
                         getString(R.string.no_favourite_artists_added_yet),
                         getString(R.string.browse_for_artists),
                         viewModel.viewState.value?.artists
@@ -56,7 +58,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                         }
                     }
                 },
-                SpotifyCategoriesFragment.newInstance(
+                BaseListFragment.newInstance<SpotifyCategoriesFragment, Category>(
                         getString(R.string.no_favourite_categories_added_yet),
                         getString(R.string.browse_for_categories),
                         viewModel.viewState.value?.categories
@@ -67,7 +69,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                         }
                     }
                 },
-                SpotifyPlaylistsFragment.newInstance(
+                BaseListFragment.newInstance<SpotifyPlaylistsFragment, Playlist>(
                         getString(R.string.no_favourite_playlists_added_yet),
                         getString(R.string.browse_for_playlists),
                         viewModel.viewState.value?.playlists
@@ -78,7 +80,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                         }
                     }
                 },
-                SpotifyTracksFragment.newInstance(
+                BaseListFragment.newInstance<SpotifyTracksFragment, Track>(
                         getString(R.string.no_favourite_tracks_added_yet),
                         getString(R.string.browse_for_tracks),
                         viewModel.viewState.value?.tracks

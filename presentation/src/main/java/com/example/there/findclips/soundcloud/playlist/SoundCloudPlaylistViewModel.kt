@@ -10,9 +10,11 @@ class SoundCloudPlaylistViewModel @Inject constructor(
         private val getTracks: GetTracks
 ) : BaseViewModel() {
 
+    val viewState = SoundCloudPlaylistViewState()
+
     fun loadTracksWithIds(ids: List<String>) {
         getTracks.execute(ids).subscribeAndDisposeOnCleared({
-            it
+
         }, {
             it
         })
