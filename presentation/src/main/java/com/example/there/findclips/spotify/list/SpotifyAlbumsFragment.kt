@@ -21,7 +21,7 @@ class SpotifyAlbumsFragment : BaseListFragment<Album>() {
     override val listItemView: ListItemView<Album>
         get() = object : ListItemView<Album>(viewState.items) {
             override val itemViewBinder: ItemBinder<Album>
-                get() = ItemBinderBase(BR.album, R.layout.grid_album_item)
+                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_grid_list_item)
         }
 
     override fun newInstanceOfFragmentToShowOnClick(

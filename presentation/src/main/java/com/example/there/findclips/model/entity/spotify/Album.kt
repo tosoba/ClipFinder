@@ -4,19 +4,24 @@ import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
+import com.example.there.findclips.view.list.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Album(
         val id: String,
-        val name: String,
+        override val name: String,
         val artists: List<SimpleArtist>,
         val albumType: String,
         val iconUrl: String,
         val uri: String
-) : Parcelable {
-    val imageViewSrc: ImageViewSrc
+) : Parcelable, NamedImageListItem {
+
+    override val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.album_placeholder, R.drawable.error_placeholder)
+
+    override val foregroundDrawableId: Int
+        get() = R.drawable.spotify_foreground_ripple
 
     companion object {
         val sortedListCallback: ObservableSortedList.Callback<Album> = object : ObservableSortedList.Callback<Album> {
