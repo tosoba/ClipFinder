@@ -58,7 +58,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<Category>(viewModel.viewState.categories) {
                             override val itemViewBinder: ItemBinder<Category>
-                                get() = ItemBinderBase(BR.category, R.layout.category_item)
+                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
@@ -103,7 +103,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<Album>(viewModel.viewState.newReleases) {
                             override val itemViewBinder: ItemBinder<Album>
-                                get() = ItemBinderBase(BR.album, R.layout.album_item)
+                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)

@@ -47,7 +47,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
                                 object : ListItemView<Artist>(viewModel.viewState.artists) {
                                     override val itemViewBinder: ItemBinder<Artist>
-                                        get() = ItemBinderBase(BR.artist, R.layout.artist_item)
+                                        get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
                                     navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)

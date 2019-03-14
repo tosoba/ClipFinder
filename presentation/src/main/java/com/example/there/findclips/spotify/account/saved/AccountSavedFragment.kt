@@ -47,7 +47,7 @@ class AccountSavedFragment :
                                 RecyclerViewItemViewState(viewModel.viewState.albumsLoadingInProgress, viewModel.viewState.albums, viewModel.viewState.albumsLoadingErrorOccurred),
                                 object : ListItemView<Album>(viewModel.viewState.albums) {
                                     override val itemViewBinder: ItemBinder<Album>
-                                        get() = ItemBinderBase(BR.album, R.layout.album_item)
+                                        get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
                                     navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
