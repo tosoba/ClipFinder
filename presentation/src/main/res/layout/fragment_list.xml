@@ -4,19 +4,21 @@
 
         <import type="android.view.View" />
 
+        <import type="android.os.Parcelable" />
+
         <variable
             name="view"
-            type="com.example.there.findclips.base.fragment.BaseListFragment.View&lt;com.example.there.findclips.model.entity.spotify.Category&gt;" />
+            type="com.example.there.findclips.base.fragment.BaseListFragment.View&lt;android.os.Parcelable&gt;" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".spotify.list.SpotifyCategoriesFragment">
+        tools:context=".spotify.list.SpotifyArtistsFragment">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/categories_recycler_view"
+            android:id="@+id/list_fragment_recycler_view"
             clickHandler="@{view.recyclerViewItemView.onItemClickListener}"
             itemDecoration="@{view.recyclerViewItemView.itemDecoration}"
             itemViewBinder="@{view.recyclerViewItemView.listItemView.itemViewBinder}"
@@ -30,19 +32,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/no_categories_loaded_txt"
+            android:id="@+id/list_fragment_loaded_txt"
             style="@style/EmptyListTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{view.state.mainHintText}"
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toTopOf="@+id/search_for_some_categories_txt"
+            app:layout_constraintBottom_toTopOf="@+id/list_fragment_search_for_txt"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/search_for_some_categories_txt"
+            android:id="@+id/list_fragment_search_for_txt"
             style="@style/AdditionalHintTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,7 +52,7 @@
             android:visibility="@{safeUnbox(view.state.items.size()) == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/no_categories_loaded_txt" />
+            app:layout_constraintTop_toBottomOf="@+id/list_fragment_loaded_txt" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

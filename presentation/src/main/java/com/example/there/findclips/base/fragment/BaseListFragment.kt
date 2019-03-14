@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
 import com.example.there.findclips.util.ObservableSortedList
@@ -24,6 +25,7 @@ import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.HeaderDecoration
+import kotlinx.android.synthetic.main.fragment_list.*
 
 abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
@@ -31,15 +33,13 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     var loadMore: (() -> Unit)? = null
     var onItemClick: ((T) -> Unit)? = null
 
-    protected abstract val itemsRecyclerView: RecyclerView?
-
     protected abstract val defaultHeaderText: String
 
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
     private var xmlHeaderText: String? = null
 
-    protected val view: View<T> by lazy(LazyThreadSafetyMode.NONE) {
+    private val view: View<T> by lazy(LazyThreadSafetyMode.NONE) {
         BaseListFragment.View(
                 state = viewState,
                 recyclerViewItemView = RecyclerViewItemView(
@@ -62,10 +62,10 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     protected abstract val listItemView: ListItemView<T>
 
-    protected val listColumnCount: Int
+    private val listColumnCount: Int
         get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
-    protected val onScrollListener: RecyclerView.OnScrollListener by lazy {
+    private val onScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore() {
                 loadMore?.invoke()
@@ -78,6 +78,16 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initFromArguments()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
+        val binding: com.example.there.findclips.databinding.FragmentListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
+        return binding.apply {
+            @Suppress("UNCHECKED_CAST")
+            view = this@BaseListFragment.view as View<Parcelable>
+            listFragmentRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+            if (viewState.shouldShowHeader) listFragmentRecyclerView.addItemDecoration(headerItemDecoration())
+        }.root
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -124,7 +134,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         viewState.items.addAll(items)
     }
 
-    protected fun headerItemDecoration(): RecyclerView.ItemDecoration {
+    private fun headerItemDecoration(): RecyclerView.ItemDecoration {
         val binding = DataBindingUtil.inflate<HeaderItemBinding>(
                 LayoutInflater.from(context),
                 R.layout.header_item,
@@ -149,7 +159,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     }
 
     private fun updateRecyclerViewOnConfigChange() {
-        itemsRecyclerView?.let { recyclerView ->
+        list_fragment_recycler_view?.let { recyclerView ->
             if (viewState.shouldShowHeader) {
                 currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
                 recyclerView.addItemDecoration(headerItemDecoration())
