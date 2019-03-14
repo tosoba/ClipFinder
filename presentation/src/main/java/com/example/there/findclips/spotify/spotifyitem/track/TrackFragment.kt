@@ -82,7 +82,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                         RecyclerViewItemViewState(viewModel.viewState.similarTracksLoadingInProgress, viewModel.viewState.similarTracks, viewModel.viewState.similarTracksErrorOccurred),
                         object : ListItemView<Track>(viewModel.viewState.similarTracks) {
                             override val itemViewBinder: ItemBinder<Track>
-                                get() = ItemBinderBase(BR.track, R.layout.track_item)
+                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
                             (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)

@@ -60,7 +60,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(
                                 RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.tracksLoadingErrorOccurred),
                                 object : ListItemView<Track>(viewModel.viewState.topTracks) {
                                     override val itemViewBinder: ItemBinder<Track>
-                                        get() = ItemBinderBase(BR.track, R.layout.track_item)
+                                        get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
                                     navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)

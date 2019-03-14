@@ -4,12 +4,13 @@ import android.os.Parcelable
 import com.example.there.findclips.R
 import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.view.imageview.ImageViewSrc
+import com.example.there.findclips.view.list.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Track(
         val id: String,
-        val name: String,
+        override val name: String,
         val iconUrl: String,
         val albumId: String,
         val albumName: String,
@@ -18,9 +19,12 @@ data class Track(
         val trackNumber: Int,
         val uri: String,
         val durationMs: Int
-) : Parcelable {
+) : Parcelable, NamedImageListItem {
 
-    val imageViewSrc: ImageViewSrc
+    override val foregroundDrawableId: Int
+        get() = R.drawable.spotify_foreground_ripple
+
+    override val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc(iconUrl, R.drawable.track_placeholder, R.drawable.error_placeholder)
 
     val query: String

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:padding="5dp"
             android:shadowColor="@android:color/black"
             android:shadowDx="0"
