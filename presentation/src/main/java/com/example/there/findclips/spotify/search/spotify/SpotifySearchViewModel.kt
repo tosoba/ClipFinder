@@ -8,7 +8,7 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.SearchSpotify
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 

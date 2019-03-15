@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
 import com.example.there.findclips.base.vm.BaseVideosViewModel
 import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.domain
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.videos.domain
+import com.example.there.findclips.model.mapper.videos.ui
 import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 

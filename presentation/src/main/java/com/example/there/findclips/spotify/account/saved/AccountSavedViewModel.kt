@@ -6,7 +6,7 @@ import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedAlbums
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedTracks
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class AccountSavedViewModel @Inject constructor(

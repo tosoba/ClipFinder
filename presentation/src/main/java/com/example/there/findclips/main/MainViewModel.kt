@@ -17,8 +17,10 @@ import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.model.entity.spotify.User
 import com.example.there.findclips.model.entity.videos.Video
 import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.domain
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.domain
+import com.example.there.findclips.model.mapper.spotify.ui
+import com.example.there.findclips.model.mapper.videos.domain
+import com.example.there.findclips.model.mapper.videos.ui
 import javax.inject.Inject
 
 

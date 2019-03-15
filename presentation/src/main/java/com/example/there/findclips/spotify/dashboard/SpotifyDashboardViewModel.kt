@@ -10,7 +10,7 @@ import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.TopTrack
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class SpotifyDashboardViewModel @Inject constructor(

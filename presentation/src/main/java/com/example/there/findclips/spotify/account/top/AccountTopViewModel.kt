@@ -6,7 +6,7 @@ import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopTracks
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class AccountTopViewModel @Inject constructor(

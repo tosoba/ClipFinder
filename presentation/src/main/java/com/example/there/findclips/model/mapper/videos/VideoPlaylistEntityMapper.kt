@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.mapper
+package com.example.there.findclips.model.mapper.videos
 
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.findclips.model.entity.videos.VideoPlaylist

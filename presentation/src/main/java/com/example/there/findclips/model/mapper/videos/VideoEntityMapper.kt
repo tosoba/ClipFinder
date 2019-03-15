@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.mapper
+package com.example.there.findclips.model.mapper.videos
 
 import android.databinding.ObservableField
 import com.example.there.domain.entity.videos.VideoEntity

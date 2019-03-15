@@ -3,7 +3,6 @@ package com.example.there.findclips.model.entity.videos
 import android.databinding.ObservableField
 import android.os.Parcelable
 import com.example.there.findclips.R
-import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.imageview.ImageViewSrc
 import kotlinx.android.parcel.Parcelize
@@ -28,7 +27,7 @@ data class Video(
 ) : Parcelable {
 
     val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
+        get() = ImageViewSrc.with(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
 
     val details: String
         get() = "$publishedAgo • ${viewCount.formattedString} views"
@@ -50,12 +49,4 @@ data class Video(
                 }
             }
         }
-
-    companion object {
-        val sortedListCallback: ObservableSortedList.Callback<Video> = object : ObservableSortedList.Callback<Video> {
-            override fun compare(o1: Video, o2: Video): Int = -1
-            override fun areItemsTheSame(item1: Video, item2: Video): Boolean = item1.id == item2.id
-            override fun areContentsTheSame(oldItem: Video, newItem: Video): Boolean = oldItem.id == newItem.id
-        }
-    }
 }

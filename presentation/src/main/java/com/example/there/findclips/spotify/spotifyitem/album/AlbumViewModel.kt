@@ -6,8 +6,8 @@ import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.mapper.domain
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.domain
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class AlbumViewModel @Inject constructor(

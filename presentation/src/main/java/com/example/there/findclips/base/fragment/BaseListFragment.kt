@@ -14,10 +14,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.databinding.HeaderItemBinding
-import com.example.there.findclips.util.ObservableSortedList
 import com.example.there.findclips.util.ext.navHostFragment
 import com.example.there.findclips.util.ext.putArguments
 import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.util.list.ObservableSortedList
 import com.example.there.findclips.view.list.ClickHandler
 import com.example.there.findclips.view.list.item.HeaderItemViewState
 import com.example.there.findclips.view.list.item.ListItemView
@@ -51,7 +51,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
                         listItemView,
                         ClickHandler { item ->
                             onItemClick?.let { it(item) }
-                                    ?: run { navHostFragment?.showFragment(newInstanceOfFragmentToShowOnClick(item), true) }
+                                    ?: run { navHostFragment?.showFragment(fragmentToShowOnItemClick(item), true) }
                         },
                         onScrollListener = onScrollListener
                 )
@@ -73,7 +73,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         }
     }
 
-    protected abstract fun newInstanceOfFragmentToShowOnClick(item: T): Fragment
+    protected abstract fun fragmentToShowOnItemClick(item: T): Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

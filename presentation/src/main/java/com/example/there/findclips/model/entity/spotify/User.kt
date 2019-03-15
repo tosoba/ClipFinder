@@ -7,7 +7,6 @@ data class User(
         val name: String,
         val iconUrl: String
 ) {
-
     val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc(iconUrl, R.drawable.user_placeholder, R.drawable.error_placeholder)
+        get() = ImageViewSrc.with(iconUrl, R.drawable.user_placeholder, R.drawable.error_placeholder)
 }

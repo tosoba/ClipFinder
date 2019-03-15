@@ -5,7 +5,7 @@ import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
 import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class AccountPlaylistsViewModel @Inject constructor(

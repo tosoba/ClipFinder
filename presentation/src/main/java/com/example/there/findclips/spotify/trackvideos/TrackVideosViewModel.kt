@@ -7,7 +7,7 @@ import com.example.there.domain.usecase.spotify.InsertTrack
 import com.example.there.domain.usecase.spotify.IsTrackSaved
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.domain
+import com.example.there.findclips.model.mapper.spotify.domain
 import java.util.*
 import javax.inject.Inject
 

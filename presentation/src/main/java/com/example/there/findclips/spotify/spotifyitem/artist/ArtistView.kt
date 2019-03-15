@@ -6,7 +6,9 @@ import android.view.View
 import com.example.there.findclips.model.entity.spotify.Album
 import com.example.there.findclips.model.entity.spotify.Artist
 import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.list.IdentifiableNamedObservableListItem
+import com.example.there.findclips.util.list.IdentifiableObservableListItem
+import com.example.there.findclips.util.list.ObservableSortedList
 
 class ArtistView(
         val state: ArtistViewState,
@@ -16,9 +18,9 @@ class ArtistView(
 
 class ArtistViewState(
         val artist: ObservableField<Artist> = ObservableField(),
-        val albums: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback),
-        val topTracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, Track.sortedListCallbackName),
-        val relatedArtists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, Artist.sortedListCallback),
+        val albums: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, IdentifiableObservableListItem.unsortedCallback()),
+        val topTracks: ObservableList<Track> = ObservableSortedList<Track>(Track::class.java, IdentifiableNamedObservableListItem.sortedByNameCallback()),
+        val relatedArtists: ObservableList<Artist> = ObservableSortedList<Artist>(Artist::class.java, IdentifiableNamedObservableListItem.sortedByNameCallback()),
         val albumsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val relatedArtistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

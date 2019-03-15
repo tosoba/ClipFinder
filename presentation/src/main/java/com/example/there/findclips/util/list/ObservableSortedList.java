@@ -1,4 +1,4 @@
-package com.example.there.findclips.util;
+package com.example.there.findclips.util.list;
 
 import android.databinding.ListChangeRegistry;
 import android.databinding.ObservableList;

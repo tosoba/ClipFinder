@@ -6,7 +6,10 @@ import com.example.there.findclips.model.entity.spotify.Album
 import com.example.there.findclips.model.entity.spotify.Category
 import com.example.there.findclips.model.entity.spotify.Playlist
 import com.example.there.findclips.model.entity.spotify.TopTrack
-import com.example.there.findclips.util.ObservableSortedList
+import com.example.there.findclips.util.list.IdentifiableNamedObservableListItem
+import com.example.there.findclips.util.list.IdentifiableNumberedObservableListItem
+import com.example.there.findclips.util.list.IdentifiableObservableListItem
+import com.example.there.findclips.util.list.ObservableSortedList
 
 class SpotifyDashboardView(
         val state: SpotifyDashboardViewState,
@@ -14,10 +17,10 @@ class SpotifyDashboardView(
 )
 
 class SpotifyDashboardViewState(
-        val categories: ObservableList<Category> = ObservableSortedList<Category>(Category::class.java, Category.sortedListCallback),
-        val featuredPlaylists: ObservableList<Playlist> = ObservableSortedList<Playlist>(Playlist::class.java, Playlist.sortedListCallback),
-        val topTracks: ObservableList<TopTrack> = ObservableSortedList<TopTrack>(TopTrack::class.java, TopTrack.sortedListCallback),
-        val newReleases: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, Album.unsortedListCallback),
+        val categories: ObservableList<Category> = ObservableSortedList<Category>(Category::class.java, IdentifiableNamedObservableListItem.sortedByNameCallback()),
+        val featuredPlaylists: ObservableList<Playlist> = ObservableSortedList<Playlist>(Playlist::class.java, IdentifiableNamedObservableListItem.sortedByNameCallback()),
+        val topTracks: ObservableList<TopTrack> = ObservableSortedList<TopTrack>(TopTrack::class.java, IdentifiableNumberedObservableListItem.sortedByNumberCallback()),
+        val newReleases: ObservableList<Album> = ObservableSortedList<Album>(Album::class.java, IdentifiableObservableListItem.unsortedCallback()),
         val categoriesLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val featuredPlaylistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
         val topTracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),

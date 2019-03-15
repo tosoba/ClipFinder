@@ -78,8 +78,8 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         })
         return binding.apply {
             view = this@PlaylistFragment.view
-            disposablesComponent.add(Picasso.with(context).getBitmapSingle(playlist.iconUrl, {
-                it.generateColorGradient {
+            disposablesComponent.add(Picasso.with(context).getBitmapSingle(playlist.iconUrl, { bitmap ->
+                bitmap.generateColorGradient {
                     playlistToolbarGradientBackgroundView.background = it
                     playlistToolbarGradientBackgroundView.invalidate()
                 }
@@ -107,7 +107,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         })
     }
 
-    private fun loadData() = viewModel.loadTracks( playlist)
+    private fun loadData() = viewModel.loadTracks(playlist)
 
     companion object {
         private const val ARG_PLAYLIST = "ARG_PLAYLIST"

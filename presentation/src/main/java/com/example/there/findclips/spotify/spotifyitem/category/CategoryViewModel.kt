@@ -11,8 +11,8 @@ import com.example.there.domain.usecase.spotify.IsCategorySaved
 import com.example.there.findclips.base.vm.BaseViewModel
 import com.example.there.findclips.model.entity.spotify.Category
 import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.mapper.domain
-import com.example.there.findclips.model.mapper.ui
+import com.example.there.findclips.model.mapper.spotify.domain
+import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 

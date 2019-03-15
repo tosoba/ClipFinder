@@ -1,4 +1,4 @@
-package com.example.there.findclips.model.mapper
+package com.example.there.findclips.model.mapper.spotify
 
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.findclips.model.entity.spotify.Category

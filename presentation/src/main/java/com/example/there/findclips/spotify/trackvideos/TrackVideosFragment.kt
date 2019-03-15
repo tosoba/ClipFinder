@@ -139,8 +139,8 @@ class TrackVideosFragment :
 
     private fun loadCollapsingToolbarBackgroundGradient(
             url: String
-    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, {
-        it.generateColorGradient {
+    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, { bitmap ->
+        bitmap.generateColorGradient {
             track_videos_toolbar_gradient_background_view?.background = it
             track_videos_toolbar_gradient_background_view?.invalidate()
         }
