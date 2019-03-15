@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 
-
 class SettingsFragment : PreferenceFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,8 +17,7 @@ class SettingsFragment : PreferenceFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return super.onCreateView(inflater, container, savedInstanceState).apply {
-            this?.background = ContextCompat.getDrawable(activity, R.drawable.main_background_gradient)
+            this?.background = ContextCompat.getDrawable(activity, R.drawable.spotify_main_background_gradient)
         }
     }
-
 }

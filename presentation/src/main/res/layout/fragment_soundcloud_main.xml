@@ -31,7 +31,7 @@
             onNavigationItemSelectedListener="@{fragmentView.onNavigationItemSelectedListener}"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:background="@color/soundCloudOrange"
+            android:background="@color/colorPrimaryDark"
             app:itemIconTint="@color/sound_cloud_bottom_navigation_color"
             app:itemTextColor="@color/sound_cloud_bottom_navigation_color"
             app:layout_constraintBottom_toBottomOf="parent"

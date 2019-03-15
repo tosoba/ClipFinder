@@ -57,7 +57,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/collapsing_toolbar_bottom_gradient"
+                    android:background="@drawable/spotify_collapsing_toolbar_bottom_gradient"
                     android:fitsSystemWindows="true" />
 
                 <android.support.v7.widget.Toolbar
@@ -75,7 +75,7 @@
             android:id="@+id/videos_fragment_container_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/main_background_gradient"
+            android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.FloatingActionButton
