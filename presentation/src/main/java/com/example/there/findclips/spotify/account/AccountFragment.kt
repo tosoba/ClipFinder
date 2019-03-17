@@ -11,8 +11,8 @@ import com.example.there.findclips.R
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.spotify.account.saved.AccountSavedFragment
 import com.example.there.findclips.spotify.account.top.AccountTopFragment
-import com.example.there.findclips.view.OnTabSelectedListener
-import com.example.there.findclips.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.OnTabSelectedListener
+import com.example.coreandroid.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_account.*
 
 
@@ -22,7 +22,7 @@ class AccountFragment : Fragment(), com.example.coreandroid.base.fragment.HasMai
         get() = account_toolbar
 
     private val onTabSelectedListener: TabLayout.OnTabSelectedListener by lazy {
-        object : OnTabSelectedListener {
+        object : com.example.coreandroid.view.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 account_view_pager?.currentItem = tab.position
             }

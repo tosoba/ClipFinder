@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.videos.search.VideosSearchFragment
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
 
 
 class VideoPlaylistFragment : Fragment() {

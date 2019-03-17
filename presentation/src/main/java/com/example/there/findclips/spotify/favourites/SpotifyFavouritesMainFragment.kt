@@ -10,7 +10,7 @@ import android.view.*
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.favourites.spotify.SpotifyFavouritesFragment
 import com.example.there.findclips.videos.favourites.VideosFavouritesFragment
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
 
 

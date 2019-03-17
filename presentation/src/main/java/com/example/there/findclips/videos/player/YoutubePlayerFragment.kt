@@ -12,7 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener
+import com.example.coreandroid.view.OnYoutubePlayerStateChangeListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 
@@ -52,7 +52,7 @@ class YoutubePlayerFragment :
         YoutubePlayerView(onYoutubePlayerCloseBtnClickListener, onYoutubePlayerPlayPauseBtnClickListener)
     }
 
-    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+    private val playlistYoutubePlayerStateChangeListener = object : com.example.coreandroid.view.OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
             when (state) {
                 PlayerConstants.PlayerState.ENDED -> {
@@ -69,7 +69,7 @@ class YoutubePlayerFragment :
         }
     }
 
-    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
+    private val singleVideoYoutubePlayerStateChangeListener = object : com.example.coreandroid.view.OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
             when (state) {
                 PlayerConstants.PlayerState.PLAYING -> {

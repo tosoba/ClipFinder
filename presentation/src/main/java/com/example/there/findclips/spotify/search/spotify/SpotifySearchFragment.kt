@@ -12,9 +12,9 @@ import com.example.there.findclips.spotify.list.SpotifyAlbumsFragment
 import com.example.there.findclips.spotify.list.SpotifyArtistsFragment
 import com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.spotify.list.SpotifyTracksFragment
-import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.OnTabSelectedListener
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 
 
 class SpotifySearchFragment :
@@ -30,13 +30,13 @@ class SpotifySearchFragment :
             viewModel.viewState.clearAll()
         }
 
-    private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
+    private val onSpotifyTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { spotify_tab_view_pager?.currentItem = it.position }
         }
     }
 
-    private val onSpotifyPageChangedListener = object : OnPageChangeListener {
+    private val onSpotifyPageChangedListener = object : com.example.coreandroid.view.OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_tab_layout?.getTabAt(position)?.select()
         }

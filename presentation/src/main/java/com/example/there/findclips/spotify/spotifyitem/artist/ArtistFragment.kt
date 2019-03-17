@@ -11,8 +11,8 @@ import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.generateColorGradient
-import com.example.there.findclips.util.ext.getBitmapSingle
+import com.example.coreandroid.util.ext.generateColorGradient
+import com.example.coreandroid.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 
 class ArtistFragment :

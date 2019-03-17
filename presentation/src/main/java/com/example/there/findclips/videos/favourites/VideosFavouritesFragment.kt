@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.videos.videoplaylist.VideoPlaylistFragment
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 
 
 class VideosFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java), com.example.coreandroid.di.Injectable {

@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.spotifyitem.track.TrackFragment
-import com.example.there.findclips.util.ext.generateColorGradient
-import com.example.there.findclips.util.ext.getBitmapSingle
+import com.example.coreandroid.util.ext.generateColorGradient
+import com.example.coreandroid.util.ext.getBitmapSingle
 import com.example.there.findclips.videos.search.VideosSearchFragment
-import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.OnTabSelectedListener
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
 import com.squareup.picasso.Picasso
 
 
@@ -24,14 +24,14 @@ class TrackVideosFragment :
         com.example.coreandroid.di.Injectable,
         com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed {
 
-    private val onPageChangeListener = object : OnPageChangeListener {
+    private val onPageChangeListener = object : com.example.coreandroid.view.OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             track_videos_tab_layout?.getTabAt(position)?.select()
             updateCurrentFragment(viewModel.viewState.track.get()!!)
         }
     }
 
-    private val onTabSelectedListener = object : OnTabSelectedListener {
+    private val onTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { track_videos_viewpager?.currentItem = it.position }
         }

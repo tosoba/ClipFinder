@@ -12,9 +12,9 @@ import com.example.there.findclips.R
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.spotify.trackvideos.OnTrackChangeListener
-import com.example.there.findclips.view.radarchart.RadarChartAxisView
-import com.example.there.findclips.view.radarchart.RadarChartView
-import com.example.there.findclips.view.radarchart.RadarMarkerView
+import com.example.coreandroid.view.radarchart.RadarChartAxisView
+import com.example.coreandroid.view.radarchart.RadarChartView
+import com.example.coreandroid.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 

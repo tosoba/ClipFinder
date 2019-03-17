@@ -2,7 +2,7 @@ package com.example.there.findclips.spotify.trackvideos
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.example.there.findclips.view.viewpager.adapter.CurrentFragmentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CurrentFragmentStatePagerAdapter
 
 class TrackVideosPagerAdapter(
         manager: FragmentManager,

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.search.spotify.SpotifySearchFragment
 import com.example.there.findclips.videos.search.VideosSearchFragment
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*
 
 

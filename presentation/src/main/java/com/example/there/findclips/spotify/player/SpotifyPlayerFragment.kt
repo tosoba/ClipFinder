@@ -19,8 +19,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
-import com.example.there.findclips.main.MainActivity
-import com.example.there.findclips.view.OnSeekBarProgressChangeListener
+import com.example.coreandroid.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -99,7 +98,7 @@ class SpotifyPlayerFragment :
     private var spotifyPlaybackTimer: CountDownTimer? = null
 
     private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
-        object : OnSeekBarProgressChangeListener {
+        object : com.example.coreandroid.view.OnSeekBarProgressChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     val positionInMs = progress * 1000

@@ -1,7 +1,7 @@
 package com.example.there.findclips.videos.favourites
 
 import android.databinding.ObservableList
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 
 class VideosFavouritesFragmentView(
         val state: VideosFavouritesFragmentViewState,

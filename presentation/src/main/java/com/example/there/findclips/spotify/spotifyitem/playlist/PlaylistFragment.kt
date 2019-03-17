@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.list.SpotifyTracksFragment
-import com.example.there.findclips.util.ext.generateColorGradient
-import com.example.there.findclips.util.ext.getBitmapSingle
+import com.example.coreandroid.util.ext.generateColorGradient
+import com.example.coreandroid.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 
 class PlaylistFragment : com.example.coreandroid.base.fragment.BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), com.example.coreandroid.di.Injectable {

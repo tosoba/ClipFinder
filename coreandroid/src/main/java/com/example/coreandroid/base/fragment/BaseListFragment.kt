@@ -17,13 +17,13 @@ import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.util.ext.putArguments
 import com.example.coreandroid.util.ext.screenOrientation
 import com.example.coreandroid.util.list.ObservableSortedList
-import com.example.coreandroid.view.list.decoration.HeaderDecoration
-import com.example.coreandroid.view.list.item.HeaderItemViewState
-import com.example.coreandroid.view.list.item.ListItemView
-import com.example.coreandroid.view.list.item.RecyclerViewItemView
-import com.example.coreandroid.view.list.item.RecyclerViewItemViewState
-import com.example.coreandroid.view.list.listener.ClickHandler
-import com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener
+import com.example.coreandroid.view.recyclerview.decoration.HeaderDecoration
+import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
+import com.example.coreandroid.view.recyclerview.item.ListItemView
+import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
+import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
+import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_list.*
 
 abstract class BaseListFragment<T : Parcelable> : Fragment() {

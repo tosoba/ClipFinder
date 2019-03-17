@@ -1,7 +1,7 @@
 package com.example.there.findclips.videos.videoplaylist
 
 import android.view.View
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
 
 class VideoPlaylistView(
         val state: VideoPlaylistViewState,

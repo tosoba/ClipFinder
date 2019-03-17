@@ -2,7 +2,7 @@ package com.example.there.findclips.di.module.ui
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.example.there.findclips.main.MainViewModel
+import com.example.main.MainViewModel
 import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardViewModel
 import com.example.there.findclips.soundcloud.playlist.SoundCloudPlaylistViewModel
 import com.example.there.findclips.soundcloud.trackvideos.SoundCloudTrackVideosViewModel
@@ -35,8 +35,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    abstract fun mainViewModel(viewModel: MainViewModel): ViewModel
+    @ViewModelKey(com.example.main.MainViewModel::class)
+    abstract fun mainViewModel(viewModel: com.example.main.MainViewModel): ViewModel
 
     @Binds
     @IntoMap

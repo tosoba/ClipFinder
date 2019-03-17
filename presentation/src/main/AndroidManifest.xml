@@ -22,7 +22,7 @@
             android:authorities="com.example.there.findclips.spotify.search.SearchSuggestionProvider" />
 
         <activity
-            android:name=".main.MainActivity"
+            android:name="com.example.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"

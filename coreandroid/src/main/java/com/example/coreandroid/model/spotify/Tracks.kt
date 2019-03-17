@@ -5,7 +5,7 @@ import com.example.coreandroid.R
 import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
 import com.example.coreandroid.util.list.IdentifiableNumberedObservableListItem
 import com.example.coreandroid.view.imageview.ImageViewSrc
-import com.example.coreandroid.view.list.item.NamedImageListItem
+import com.example.coreandroid.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

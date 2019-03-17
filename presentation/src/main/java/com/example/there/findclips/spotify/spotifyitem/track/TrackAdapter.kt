@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.view.radarchart.RadarChartView
+import com.example.coreandroid.view.radarchart.RadarChartView
 
 class TrackAdapter(
         private val albumInfoItemView: AlbumInfoItemView,

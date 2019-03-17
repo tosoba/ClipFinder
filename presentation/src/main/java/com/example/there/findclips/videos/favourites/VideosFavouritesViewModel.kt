@@ -5,8 +5,8 @@ import android.view.View
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.videos.DeleteVideoPlaylist
 import com.example.there.domain.usecase.videos.GetVideoPlaylistsWithThumbnails
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
-import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
 
 class VideosFavouritesViewModel @Inject constructor(

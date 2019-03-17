@@ -9,20 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.list.*
-import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.OnTabSelectedListener
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 
 
 class SpotifyFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), com.example.coreandroid.di.Injectable {
 
-    private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
+    private val onSpotifyTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { spotify_favourites_tab_view_pager?.currentItem = it.position }
         }
     }
 
-    private val onSpotifyPageChangedListener = object : OnPageChangeListener {
+    private val onSpotifyPageChangedListener = object : com.example.coreandroid.view.OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_favourites_tab_layout?.getTabAt(position)?.select()
         }
