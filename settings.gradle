@@ -1,1 +1,1 @@
-include ':presentation', ':domain', ':data', ':soundcloudapi', ':youtubeapi', ':db', ':spotifyapi', ':core'
+include ':presentation', ':domain', ':soundcloudapi', ':youtubeapi', ':db', ':spotifyapi', ':core', ':soundcloudrepo', ':spotifyrepo', ':coreandroid', ':videosrepo'
