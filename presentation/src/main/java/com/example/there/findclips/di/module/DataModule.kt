@@ -2,16 +2,6 @@ package com.example.there.findclips.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.example.there.data.db.*
-import com.example.there.data.repo.soundcloud.SoundCloudRepository
-import com.example.there.data.repo.soundcloud.datastore.SoundCloudDbDataStore
-import com.example.there.data.repo.soundcloud.datastore.SoundCloudRemoteDataStore
-import com.example.there.data.repo.spotify.SpotifyRepository
-import com.example.there.data.repo.spotify.datastore.SpotifyDbDataStore
-import com.example.there.data.repo.spotify.datastore.SpotifyRemoteDataStore
-import com.example.there.data.repo.videos.VideosRepository
-import com.example.there.data.repo.videos.datastore.VideosDbDataStore
-import com.example.there.data.repo.videos.datastore.VideosRemoteDataStore
 import com.example.there.domain.repo.soundcloud.ISoundCloudRepository
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
@@ -37,53 +27,53 @@ abstract class DataModule {
         @JvmStatic
         fun database(
                 context: Context
-        ): FindClipsDb = Room.databaseBuilder(context, FindClipsDb::class.java, "FindClipsDb.db")
+        ): com.example.db.model.FindClipsDb = Room.databaseBuilder(context, com.example.db.model.FindClipsDb::class.java, "FindClipsDb.db")
                 .build()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun albumDao(database: FindClipsDb): AlbumDao = database.albumDao()
+        fun albumDao(database: com.example.db.model.FindClipsDb): com.example.db.model.AlbumDao = database.albumDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun artistDao(database: FindClipsDb): ArtistDao = database.artistDao()
+        fun artistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.ArtistDao = database.artistDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun categoryDao(database: FindClipsDb): CategoryDao = database.categoryDao()
+        fun categoryDao(database: com.example.db.model.FindClipsDb): com.example.db.model.CategoryDao = database.categoryDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun spotifyPlaylistDao(database: FindClipsDb): SpotifyPlaylistDao = database.spotifyPlaylistDao()
+        fun spotifyPlaylistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.SpotifyPlaylistDao = database.spotifyPlaylistDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun trackDao(database: FindClipsDb): TrackDao = database.trackDao()
+        fun trackDao(database: com.example.db.model.FindClipsDb): com.example.db.model.TrackDao = database.trackDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun videoDao(database: FindClipsDb): VideoDao = database.videoDao()
+        fun videoDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoDao = database.videoDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun videoPlaylistDao(database: FindClipsDb): VideoPlaylistDao = database.videoPlaylistDao()
+        fun videoPlaylistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoPlaylistDao = database.videoPlaylistDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun videoSearchDao(database: FindClipsDb): VideoSearchDao = database.videoSearchDao()
+        fun videoSearchDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoSearchDao = database.videoSearchDao()
 
         @Provides
         @Singleton
         @JvmStatic
-        fun relatedVideoSearchDao(database: FindClipsDb): RelatedVideoSearchDao = database.relatedVideoSearchDao()
+        fun relatedVideoSearchDao(database: com.example.db.model.FindClipsDb): com.example.db.model.RelatedVideoSearchDao = database.relatedVideoSearchDao()
     }
 
     @Binds

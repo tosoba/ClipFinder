@@ -3,7 +3,6 @@ package com.example.there.findclips.spotify.spotifyitem.playlist
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.GetPlaylistTracks

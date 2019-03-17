@@ -1,10 +1,11 @@
 package com.example.there.data.repo.videos.datastore
 
-import com.example.there.data.api.youtube.YoutubeApi
-import com.example.there.data.mapper.videos.ChannelThumbnailUrlMapper
-import com.example.there.data.mapper.videos.VideoMapper
+import com.example.there.data.mapper.videos.domain
+import com.example.there.data.util.urlMedium
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
+import com.example.youtubeapi.YoutubeApi
+import com.example.youtubeapi.model.VideoApiModel
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -28,7 +29,7 @@ class VideosRemoteDataStore @Inject constructor(
             .flatMap { (chunkIndex, vids) ->
                 api.loadChannelsInfo(ids = vids.joinToString(",") { it.channelId })
                         .toObservable()
-                        .map { it.channels.map(ChannelThumbnailUrlMapper::mapFrom) }
+                        .map { response -> response.channels.map { it.snippet.thumbnails.urlMedium } }
                         .concatMapIterable { it }
                         .zipWith(
                                 Observable.range(0, Int.MAX_VALUE),
@@ -45,7 +46,7 @@ class VideosRemoteDataStore @Inject constructor(
     ): Single<Pair<String?, List<VideoEntity>>> = api.searchVideos(query = query, pageToken = pageToken)
             .flatMap { searchResponse ->
                 api.loadVideosInfo(ids = searchResponse.videos.joinToString(",") { it.id.id })
-                        .map { it.videos.map(VideoMapper::mapFrom) }
+                        .map { it.videos.map(VideoApiModel::domain) }
                         .map { Pair(searchResponse.nextPageToken, it) }
             }
 
@@ -55,7 +56,7 @@ class VideosRemoteDataStore @Inject constructor(
     ): Single<Pair<String?, List<VideoEntity>>> = api.searchRelatedVideos(toVideoId = toVideoId, pageToken = pageToken)
             .flatMap { searchResponse ->
                 api.loadVideosInfo(ids = searchResponse.videos.joinToString(",") { it.id.id })
-                        .map { it.videos.map(VideoMapper::mapFrom) }
+                        .map { it.videos.map(VideoApiModel::domain) }
                         .map { Pair(searchResponse.nextPageToken, it) }
             }
 }

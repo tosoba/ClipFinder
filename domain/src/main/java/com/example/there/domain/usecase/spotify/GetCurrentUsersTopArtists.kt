@@ -1,19 +1,17 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.base.SingleUseCaseWithInput
-import io.reactivex.Scheduler
 import io.reactivex.Single
 import javax.inject.Inject
-import javax.inject.Named
 
 class GetCurrentUsersTopArtists @Inject constructor(
-        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
-        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
+        schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyRepository
-) : SingleUseCaseWithInput<Int, EntityPage<ArtistEntity>>(subscribeOnScheduler, observeOnScheduler) {
+) : SingleUseCaseWithInput<Int, EntityPage<ArtistEntity>>(schedulersProvider) {
 
     override fun createSingle(input: Int): Single<EntityPage<ArtistEntity>> = repository.getCurrentUsersTopArtists(offset = input)
 }

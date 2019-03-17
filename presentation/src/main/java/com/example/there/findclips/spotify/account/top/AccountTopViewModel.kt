@@ -1,6 +1,5 @@
 package com.example.there.findclips.spotify.account.top
 
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists

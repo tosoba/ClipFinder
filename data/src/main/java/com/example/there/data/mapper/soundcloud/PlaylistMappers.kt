@@ -1,12 +1,12 @@
 package com.example.there.data.mapper.soundcloud
 
-import com.example.there.data.entity.soundcloud.SoundCloudPlaylist
-import com.example.there.data.entity.soundcloud.SoundCloudSystemPlaylist
-import com.example.there.data.entity.soundcloud.TrackId
+import com.example.api.model.SoundCloudPlaylistApiModel
+import com.example.api.model.SoundCloudSystemPlaylistApiModel
+import com.example.api.model.SoundCloudTrackIdApiModel
 import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 
-val SoundCloudPlaylist.domain: SoundCloudPlaylistEntity
+val SoundCloudPlaylistApiModel.domain: SoundCloudPlaylistEntity
     get() = SoundCloudPlaylistEntity(
             artworkUrl = artworkUrl,
             createdAt = createdAt,
@@ -28,7 +28,7 @@ val SoundCloudPlaylist.domain: SoundCloudPlaylistEntity
             userId = userId
     )
 
-val SoundCloudSystemPlaylist.domain: SoundCloudSystemPlaylistEntity
+val SoundCloudSystemPlaylistApiModel.domain: SoundCloudSystemPlaylistEntity
     get() = SoundCloudSystemPlaylistEntity(
             artworkUrl = artworkUrl,
             calculatedArtworkUrl = calculatedArtworkUrl,
@@ -41,5 +41,5 @@ val SoundCloudSystemPlaylist.domain: SoundCloudSystemPlaylistEntity
             shortTitle = shortTitle,
             title = title,
             trackingFeatureName = trackingFeatureName,
-            tracks = tracks.map(TrackId::domain)
+            tracks = tracks.map(SoundCloudTrackIdApiModel::domain)
     )

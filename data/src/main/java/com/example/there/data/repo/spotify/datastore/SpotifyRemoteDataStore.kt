@@ -1,15 +1,14 @@
 package com.example.there.data.repo.spotify.datastore
 
 import android.util.Base64
-import com.example.there.data.api.SpotifyClient
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
-import com.example.there.data.entity.spotify.*
+import com.example.spotifyapi.SpotifyAccountsApi
+import com.example.spotifyapi.SpotifyApi
+import com.example.spotifyapi.SpotifyAuth
+import com.example.spotifyapi.SpotifyChartsApi
+import com.example.spotifyapi.model.*
 import com.example.there.data.mapper.spotify.ChartTrackIdMapper
 import com.example.there.data.mapper.spotify.domain
 import com.example.there.data.preferences.AppPreferences
-import com.example.there.data.response.TracksOnlyResponse
 import com.example.there.data.util.observable
 import com.example.there.data.util.single
 import com.example.there.domain.entity.EntityPage
@@ -32,7 +31,7 @@ class SpotifyRemoteDataStore @Inject constructor(
 
     private val accessToken: Single<AccessTokenEntity>
         get() = accountsApi.getAccessToken(authorization = clientDataHeader)
-                .map(AccessTokenData::domain)
+                .map(AccessTokenApiModel::domain)
 
     override val categories: Observable<List<CategoryEntity>>
         get() {
@@ -50,7 +49,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 if (it.offset < it.totalItems - SpotifyApi.DEFAULT_LIMIT)
                     offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
                 else offsetSubject.onComplete()
-            }.map { it.result.categories.map(CategoryData::domain) }
+            }.map { it.result.categories.map(CategoryApiModel::domain) }
         }
 
     override val featuredPlaylists: Observable<List<PlaylistEntity>>
@@ -70,7 +69,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                     offsetSubject.onNext(it.result.offset + SpotifyApi.DEFAULT_LIMIT)
                 else
                     offsetSubject.onComplete()
-            }.map { it.result.playlists.map(PlaylistData::domain) }
+            }.map { it.result.playlists.map(PlaylistApiModel::domain) }
         }
 
     override val dailyViralTracks: Observable<List<TopTrackEntity>>
@@ -92,7 +91,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                         BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index -> Pair(response, index) }
                 )
                 .map { (response, index) ->
-                    response.tracks.mapIndexed { i: Int, trackData: TrackData ->
+                    response.tracks.mapIndexed { i: Int, trackData: TrackApiModel ->
                         TopTrackEntity(index * 50 + i + 1, trackData.domain)
                     }
                 }
@@ -100,7 +99,7 @@ class SpotifyRemoteDataStore @Inject constructor(
     override val currentUser: Single<UserEntity>
         get() = appPreferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
             api.getCurrentUser(getAccessTokenHeader(token))
-                    .map(UserData::domain)
+                    .map(UserApiModel::domain)
         }
 
     override fun searchAll(
@@ -110,13 +109,13 @@ class SpotifyRemoteDataStore @Inject constructor(
         api.searchAll(authorization = getAccessTokenHeader(token), query = query)
                 .map {
                     SearchAllEntity(
-                            albums = it.albumsResult?.albums?.map(AlbumData::domain)
+                            albums = it.albumsResult?.albums?.map(AlbumApiModel::domain)
                                     ?: emptyList(),
-                            artists = it.artistsResult?.artists?.map(ArtistData::domain)
+                            artists = it.artistsResult?.artists?.map(ArtistApiModel::domain)
                                     ?: emptyList(),
-                            playlists = it.playlistsResult?.playlists?.map(PlaylistData::domain)
+                            playlists = it.playlistsResult?.playlists?.map(PlaylistApiModel::domain)
                                     ?: emptyList(),
-                            tracks = it.tracksResult?.tracks?.map(TrackData::domain)
+                            tracks = it.tracksResult?.tracks?.map(TrackApiModel::domain)
                                     ?: emptyList(),
                             totalItems = arrayOf(
                                     it.albumsResult?.totalItems ?: 0,
@@ -139,7 +138,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 country = appPreferences.country
         ).map {
             EntityPage(
-                    items = it.result.playlists.map(PlaylistData::domain),
+                    items = it.result.playlists.map(PlaylistApiModel::domain),
                     offset = it.result.offset,
                     totalItems = it.result.totalItems
             )
@@ -171,7 +170,7 @@ class SpotifyRemoteDataStore @Inject constructor(
         api.getAlbum(
                 authorization = getAccessTokenHeader(token),
                 albumId = albumId
-        ).map(AlbumData::domain)
+        ).map(AlbumApiModel::domain)
     }
 
     override fun getArtists(
@@ -180,7 +179,7 @@ class SpotifyRemoteDataStore @Inject constructor(
         api.getArtists(
                 authorization = getAccessTokenHeader(token),
                 artistIds = artistIds.joinToString(",")
-        ).map { it.artists.map(ArtistData::domain) }
+        ).map { it.artists.map(ArtistApiModel::domain) }
     }
 
     override fun getSimilarTracks(
@@ -199,7 +198,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                             ids = it
                     ).toObservable()
                 }
-                .map { it.tracks.map(TrackData::domain) }
+                .map { it.tracks.map(TrackApiModel::domain) }
     }
 
     override fun getAlbumsFromArtist(
@@ -219,7 +218,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 offsetSubject.onNext(it.offset + SpotifyApi.DEFAULT_LIMIT)
             else
                 offsetSubject.onComplete()
-        }.map { it.albums.map(AlbumData::domain) }
+        }.map { it.albums.map(AlbumApiModel::domain) }
     }
 
     override fun getTopTracksFromArtist(
@@ -229,7 +228,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 authorization = getAccessTokenHeader(token),
                 artistId = artistId,
                 country = appPreferences.country
-        ).map { it.tracks.map(TrackData::domain) }
+        ).map { it.tracks.map(TrackApiModel::domain) }
     }
 
     override fun getRelatedArtists(
@@ -238,7 +237,7 @@ class SpotifyRemoteDataStore @Inject constructor(
         api.getRelatedArtists(
                 authorization = getAccessTokenHeader(token),
                 artistId = artistId
-        ).map { it.artists.map(ArtistData::domain) }
+        ).map { it.artists.map(ArtistApiModel::domain) }
     }
 
     class TrackIdsPage(
@@ -269,7 +268,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                             ids = idsPage.ids
                     ).toObservable().map {
                         EntityPage(
-                                items = it.tracks.map(TrackData::domain),
+                                items = it.tracks.map(TrackApiModel::domain),
                                 offset = idsPage.offset,
                                 totalItems = idsPage.totalItems
                         )
@@ -291,7 +290,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 offset = offset
         ).map {
             EntityPage(
-                    items = it.result.albums.map(AlbumData::domain),
+                    items = it.result.albums.map(AlbumApiModel::domain),
                     offset = it.result.offset,
                     totalItems = it.result.totalItems
             )
@@ -306,7 +305,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 offset = offset
         ).map {
             EntityPage(
-                    items = it.playlists.map(PlaylistData::domain),
+                    items = it.playlists.map(PlaylistApiModel::domain),
                     offset = it.offset,
                     totalItems = it.totalItems
             )
@@ -321,7 +320,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 offset = offset
         ).map {
             EntityPage(
-                    items = it.tracks.map(TrackData::domain),
+                    items = it.tracks.map(TrackApiModel::domain),
                     offset = it.offset,
                     totalItems = it.totalItems
             )
@@ -336,7 +335,7 @@ class SpotifyRemoteDataStore @Inject constructor(
                 offset = offset
         ).map {
             EntityPage(
-                    items = it.artists.map(ArtistData::domain),
+                    items = it.artists.map(ArtistApiModel::domain),
                     offset = it.offset,
                     totalItems = it.totalItems
             )
@@ -379,7 +378,7 @@ class SpotifyRemoteDataStore @Inject constructor(
         api.getAudioFeatures(
                 authorization = getAccessTokenHeader(token),
                 trackId = trackEntity.id
-        ).map(AudioFeaturesData::domain)
+        ).map(AudioFeaturesApiModel::domain)
     }
 
     private fun <T> Observable<AppPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
@@ -431,7 +430,7 @@ class SpotifyRemoteDataStore @Inject constructor(
 
         val clientDataHeader: String
             get() {
-                val encoded = Base64.encodeToString("${SpotifyClient.id}:${SpotifyClient.secret}".toByteArray(), Base64.NO_WRAP)
+                val encoded = Base64.encodeToString("${SpotifyAuth.id}:${SpotifyAuth.secret}".toByteArray(), Base64.NO_WRAP)
                 return "Basic $encoded"
             }
     }

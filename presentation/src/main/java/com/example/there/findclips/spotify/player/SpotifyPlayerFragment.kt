@@ -17,12 +17,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import com.example.there.data.api.SpotifyClient
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
 import com.example.there.findclips.base.fragment.BaseVMFragment
 import com.example.there.findclips.base.fragment.IPlayerFragment
-import com.example.there.findclips.databinding.FragmentSpotifyPlayerBinding
 import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.main.MainActivity
 import com.example.there.findclips.model.entity.spotify.Album
@@ -275,7 +273,7 @@ class SpotifyPlayerFragment :
 
     fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
-            val playerConfig = Config(applicationContext, accessToken, SpotifyClient.id)
+            val playerConfig = Config(applicationContext, accessToken, com.example.api.SpotifyClient.id)
 
             spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {

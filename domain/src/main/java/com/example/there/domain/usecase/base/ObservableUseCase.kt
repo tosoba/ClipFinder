@@ -1,26 +1,25 @@
 package com.example.there.domain.usecase.base
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 
 abstract class BaseObservableUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseRxUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseRxUseCase(schedulersProvider) {
 
     protected fun Observable<Result>.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Observable<Result> = run {
         if (applySchedulers)
-            this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)
+            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                    .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
 
 abstract class ObservableUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseObservableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseObservableUseCase<Result>(schedulersProvider) {
 
     protected abstract val observable: Observable<Result>
 
@@ -30,9 +29,8 @@ abstract class ObservableUseCase<Result>(
 }
 
 abstract class ObservableUseCaseWithInput<Input, Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseObservableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseObservableUseCase<Result>(schedulersProvider) {
 
     protected abstract fun createObservable(input: Input): Observable<Result>
 

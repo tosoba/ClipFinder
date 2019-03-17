@@ -1,26 +1,25 @@
 package com.example.there.domain.usecase.base
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Completable
-import io.reactivex.Scheduler
 
 abstract class BaseCompletableUseCase(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseRxUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseRxUseCase(schedulersProvider) {
 
     protected fun Completable.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Completable = run {
         if (applySchedulers)
-            this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)
+            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                    .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
 
 abstract class CompletableUseCase(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseCompletableUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseCompletableUseCase(schedulersProvider) {
 
     protected abstract val completable: Completable
 
@@ -30,9 +29,8 @@ abstract class CompletableUseCase(
 }
 
 abstract class CompletableUseCaseWithInput<Input>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseCompletableUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseCompletableUseCase(schedulersProvider) {
 
     protected abstract fun createCompletable(input: Input): Completable
 

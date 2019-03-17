@@ -1,26 +1,25 @@
 package com.example.there.domain.usecase.base
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Flowable
-import io.reactivex.Scheduler
 
 abstract class BaseFlowableUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseRxUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseRxUseCase(schedulersProvider) {
 
     protected fun Flowable<Result>.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Flowable<Result> = run {
         if (applySchedulers)
-            this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)
+            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                    .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
 
 abstract class FlowableUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseFlowableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseFlowableUseCase<Result>(schedulersProvider) {
 
     protected abstract val flowable: Flowable<Result>
 
@@ -30,9 +29,8 @@ abstract class FlowableUseCase<Result>(
 }
 
 abstract class FlowableUseCaseWithInput<Input, Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseFlowableUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseFlowableUseCase<Result>(schedulersProvider) {
 
     protected abstract fun createFlowable(input: Input): Flowable<Result>
 

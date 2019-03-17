@@ -1,7 +1,6 @@
 package com.example.there.findclips.spotify.account.playlists
 
 import android.arch.lifecycle.MutableLiveData
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
 import com.example.there.findclips.base.vm.BaseViewModel

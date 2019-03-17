@@ -1,18 +1,16 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.base.ObservableUseCase
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import javax.inject.Inject
-import javax.inject.Named
 
 class GetCategories @Inject constructor(
-        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
-        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
+        schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyRepository
-) : ObservableUseCase<List<CategoryEntity>>(subscribeOnScheduler, observeOnScheduler) {
+) : ObservableUseCase<List<CategoryEntity>>(schedulersProvider) {
 
     override val observable: Observable<List<CategoryEntity>>
         get() = repository.categories

@@ -1,19 +1,17 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRepository
 import com.example.there.domain.usecase.base.SingleUseCaseWithInput
-import io.reactivex.Scheduler
 import io.reactivex.Single
 import javax.inject.Inject
-import javax.inject.Named
 
 class GetPlaylistsForCategory @Inject constructor(
-        @Named("subscribeOnScheduler") subscribeOnScheduler: Scheduler,
-        @Named("observeOnScheduler") observeOnScheduler: Scheduler,
+        schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyRepository
-) : SingleUseCaseWithInput<GetPlaylistsForCategory.Input, EntityPage<PlaylistEntity>>(subscribeOnScheduler, observeOnScheduler) {
+) : SingleUseCaseWithInput<GetPlaylistsForCategory.Input, EntityPage<PlaylistEntity>>(schedulersProvider) {
 
     class Input(
             val categoryId: String,

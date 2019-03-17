@@ -1,26 +1,25 @@
 package com.example.there.domain.usecase.base
 
-import io.reactivex.Scheduler
+import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Single
 
 abstract class BaseSingleUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseRxUseCase(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseRxUseCase(schedulersProvider) {
 
     protected fun Single<Result>.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Single<Result> = run {
         if (applySchedulers)
-            this.subscribeOn(subscribeOnScheduler).observeOn(observeOnScheduler)
+            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                    .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
 
 abstract class SingleUseCase<Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseSingleUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseSingleUseCase<Result>(schedulersProvider) {
 
     protected abstract val single: Single<Result>
 
@@ -30,9 +29,8 @@ abstract class SingleUseCase<Result>(
 }
 
 abstract class SingleUseCaseWithInput<Input, Result>(
-        subscribeOnScheduler: Scheduler,
-        observeOnScheduler: Scheduler
-) : BaseSingleUseCase<Result>(subscribeOnScheduler, observeOnScheduler) {
+        schedulersProvider: UseCaseSchedulersProvider
+) : BaseSingleUseCase<Result>(schedulersProvider) {
 
     protected abstract fun createSingle(input: Input): Single<Result>
 

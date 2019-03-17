@@ -117,33 +117,33 @@ class SpotifyRepository @Inject constructor(
     override val favouriteTracks: Flowable<List<TrackEntity>>
         get() = dbDataStore.favouriteTracks
 
-    override fun insertAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.insertAlbum(albumEntity)
+    override fun insertAlbum(album: AlbumEntity): Completable = dbDataStore.insertAlbum(album)
 
-    override fun insertArtist(artistEntity: ArtistEntity): Completable = dbDataStore.insertArtist(artistEntity)
+    override fun insertArtist(artist: ArtistEntity): Completable = dbDataStore.insertArtist(artist)
 
-    override fun insertCategory(categoryEntity: CategoryEntity): Completable = dbDataStore.insertCategory(categoryEntity)
+    override fun insertCategory(category: CategoryEntity): Completable = dbDataStore.insertCategory(category)
 
-    override fun insertPlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.insertPlaylist(playlistEntity)
+    override fun insertPlaylist(playlist: PlaylistEntity): Completable = dbDataStore.insertPlaylist(playlist)
 
-    override fun insertTrack(trackEntity: TrackEntity): Completable = dbDataStore.insertTrack(trackEntity)
+    override fun insertTrack(track: TrackEntity): Completable = dbDataStore.insertTrack(track)
 
-    override fun isAlbumSaved(albumEntity: AlbumEntity): Single<Boolean> = dbDataStore.isAlbumSaved(albumEntity)
+    override fun isAlbumSaved(album: AlbumEntity): Single<Boolean> = dbDataStore.isAlbumSaved(album)
 
-    override fun isArtistSaved(artistEntity: ArtistEntity): Single<Boolean> = dbDataStore.isArtistSaved(artistEntity)
+    override fun isArtistSaved(artist: ArtistEntity): Single<Boolean> = dbDataStore.isArtistSaved(artist)
 
-    override fun isCategorySaved(categoryEntity: CategoryEntity): Single<Boolean> = dbDataStore.isCategorySaved(categoryEntity)
+    override fun isCategorySaved(category: CategoryEntity): Single<Boolean> = dbDataStore.isCategorySaved(category)
 
-    override fun isPlaylistSaved(playlistEntity: PlaylistEntity): Single<Boolean> = dbDataStore.isPlaylistSaved(playlistEntity)
+    override fun isPlaylistSaved(playlist: PlaylistEntity): Single<Boolean> = dbDataStore.isPlaylistSaved(playlist)
 
-    override fun isTrackSaved(trackEntity: TrackEntity): Single<Boolean> = dbDataStore.isTrackSaved(trackEntity)
+    override fun isTrackSaved(track: TrackEntity): Single<Boolean> = dbDataStore.isTrackSaved(track)
 
-    override fun deleteAlbum(albumEntity: AlbumEntity): Completable = dbDataStore.deleteAlbum(albumEntity)
+    override fun deleteAlbum(album: AlbumEntity): Completable = dbDataStore.deleteAlbum(album)
 
-    override fun deleteArtist(artistEntity: ArtistEntity): Completable = dbDataStore.deleteArtist(artistEntity)
+    override fun deleteArtist(artist: ArtistEntity): Completable = dbDataStore.deleteArtist(artist)
 
-    override fun deleteCategory(categoryEntity: CategoryEntity): Completable = dbDataStore.deleteCategory(categoryEntity)
+    override fun deleteCategory(category: CategoryEntity): Completable = dbDataStore.deleteCategory(category)
 
-    override fun deletePlaylist(playlistEntity: PlaylistEntity): Completable = dbDataStore.deletePlaylist(playlistEntity)
+    override fun deletePlaylist(playlist: PlaylistEntity): Completable = dbDataStore.deletePlaylist(playlist)
 
-    override fun deleteTrack(trackEntity: TrackEntity): Completable = dbDataStore.deleteTrack(trackEntity)
+    override fun deleteTrack(track: TrackEntity): Completable = dbDataStore.deleteTrack(track)
 }

@@ -1,12 +1,6 @@
 package com.example.there.findclips.di.module
 
 import android.content.Context
-import com.example.there.data.api.SoundCloudClient
-import com.example.there.data.api.soundcloud.SoundCloudApi
-import com.example.there.data.api.spotify.SpotifyAccountsApi
-import com.example.there.data.api.spotify.SpotifyApi
-import com.example.there.data.api.spotify.SpotifyChartsApi
-import com.example.there.data.api.youtube.YoutubeApi
 import com.example.there.findclips.di.Dependencies
 import com.vpaliy.soundcloud.SoundCloud
 import com.vpaliy.soundcloud.SoundCloudService
@@ -96,7 +90,7 @@ class NetworkModule {
     @Provides
     fun soundCloudService(
             applicationContext: Context
-    ): SoundCloudService = SoundCloud.create(SoundCloudClient.key).createService(applicationContext)
+    ): SoundCloudService = SoundCloud.create(com.example.api.SoundCloudClient.key).createService(applicationContext)
 
     private fun buildDefaultRetrofitWithUrl(url: String): Retrofit = Retrofit.Builder()
             .client(OkHttpClient())

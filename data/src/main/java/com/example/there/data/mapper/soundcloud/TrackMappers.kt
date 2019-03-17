@@ -1,15 +1,15 @@
 package com.example.there.data.mapper.soundcloud
 
-import com.example.there.data.entity.soundcloud.TrackId
+import com.example.api.model.SoundCloudTrackIdApiModel
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackIdEntity
 import com.vpaliy.soundcloud.model.TrackEntity
 
-val TrackId.domain: SoundCloudTrackIdEntity
+val SoundCloudTrackIdApiModel.domain: SoundCloudTrackIdEntity
     get() = SoundCloudTrackIdEntity(id, kind)
 
-val SoundCloudTrackIdEntity.data: TrackId
-    get() = TrackId(id, kind)
+val SoundCloudTrackIdEntity.data: SoundCloudTrackIdApiModel
+    get() = SoundCloudTrackIdApiModel(id, kind)
 
 val TrackEntity.domain: SoundCloudTrackEntity
     get() = SoundCloudTrackEntity(

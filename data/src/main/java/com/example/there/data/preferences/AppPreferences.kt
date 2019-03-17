@@ -3,7 +3,7 @@ package com.example.there.data.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.example.there.data.api.spotify.SpotifyApi
+import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences

@@ -1,9 +1,9 @@
 package com.example.there.data.mapper.soundcloud
 
-import com.example.there.data.entity.soundcloud.User
+import com.example.api.model.SoundCloudUserApiModel
 import com.example.there.domain.entity.soundcloud.SoundCloudUserEntity
 
-val User.domain: SoundCloudUserEntity
+val SoundCloudUserApiModel.domain: SoundCloudUserEntity
     get() = SoundCloudUserEntity(
             avatarUrl = avatarUrl,
             firstName = firstName,

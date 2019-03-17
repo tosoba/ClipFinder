@@ -19,16 +19,12 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
-import com.example.there.data.api.SpotifyClient
-import com.example.there.data.preferences.AppPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.R
 import com.example.there.findclips.base.activity.BaseVMActivity
 import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.there.findclips.base.fragment.HasMainToolbar
 import com.example.there.findclips.base.fragment.IMainContentFragment
-import com.example.there.findclips.databinding.ActivityMainBinding
-import com.example.there.findclips.databinding.DrawerHeaderBinding
 import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.main.controller.*
 import com.example.there.findclips.model.entity.spotify.Album
@@ -44,7 +40,10 @@ import com.example.there.findclips.spotify.player.SpotifyPlayerFragment
 import com.example.there.findclips.spotify.search.SearchSuggestionProvider
 import com.example.there.findclips.spotify.search.SpotifySearchMainFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.dpToPx
+import com.example.there.findclips.util.ext.screenHeight
+import com.example.there.findclips.util.ext.screenOrientation
+import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.videos.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.videos.addvideo.AddVideoViewState
 import com.example.there.findclips.videos.player.YoutubePlayerFragment
@@ -535,7 +534,7 @@ class MainActivity :
     }
 
     private fun openLoginWindow() {
-        val request = AuthenticationRequest.Builder(SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+        val request = AuthenticationRequest.Builder(com.example.api.SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(SCOPES)
                 .build()
 

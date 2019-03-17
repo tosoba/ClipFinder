@@ -1,6 +1,5 @@
 package com.example.there.findclips.spotify.account.saved
 
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedAlbums

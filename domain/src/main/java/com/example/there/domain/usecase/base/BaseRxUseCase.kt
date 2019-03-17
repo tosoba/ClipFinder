@@ -1,8 +1,7 @@
 package com.example.there.domain.usecase.base
 
-import io.reactivex.Scheduler
+import com.example.there.domain.UseCaseSchedulersProvider
 
 abstract class BaseRxUseCase(
-        protected val subscribeOnScheduler: Scheduler,
-        protected val observeOnScheduler: Scheduler
+        protected val schedulersProvider: UseCaseSchedulersProvider
 )

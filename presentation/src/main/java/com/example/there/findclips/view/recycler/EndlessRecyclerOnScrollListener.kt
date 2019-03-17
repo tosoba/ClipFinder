@@ -13,7 +13,7 @@ abstract class EndlessRecyclerOnScrollListener(
      */
     private var mPreviousTotal = 0
     /**
-     * True if we are still waiting for the last set of data to load.
+     * True if we are still waiting for the last set of db to load.
      */
     private var mLoading = true
 

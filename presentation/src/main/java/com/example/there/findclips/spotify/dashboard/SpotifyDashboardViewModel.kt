@@ -1,6 +1,5 @@
 package com.example.there.findclips.spotify.dashboard
 
-import com.example.there.data.api.spotify.SpotifyApi
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity

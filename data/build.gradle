@@ -49,6 +49,11 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:1.1.1"
 
     implementation project(':domain')
+    implementation project(':youtubeapi')
+    implementation project(':spotifyapi')
+    implementation project(':soundcloudapi')
+    implementation project(':db')
+    implementation project(':core')
 
     implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
 

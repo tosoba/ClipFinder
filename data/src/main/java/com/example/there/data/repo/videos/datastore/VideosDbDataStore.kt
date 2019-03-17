@@ -1,13 +1,16 @@
 package com.example.there.data.repo.videos.datastore
 
-import com.example.there.data.db.RelatedVideoSearchDao
-import com.example.there.data.db.VideoDao
-import com.example.there.data.db.VideoPlaylistDao
-import com.example.there.data.db.VideoSearchDao
-import com.example.there.data.entity.videos.RelatedVideoSearchDbData
-import com.example.there.data.entity.videos.VideoSearchDbData
-import com.example.there.data.mapper.videos.VideoDbMapper
-import com.example.there.data.mapper.videos.VideoPlaylistMapper
+import com.example.db.RelatedVideoSearchDao
+import com.example.db.VideoDao
+import com.example.db.VideoPlaylistDao
+import com.example.db.VideoSearchDao
+import com.example.db.model.videos.RelatedVideoSearchDbModel
+import com.example.db.model.videos.VideoDbModel
+import com.example.db.model.videos.VideoPlaylistDbModel
+import com.example.db.model.videos.VideoSearchDbModel
+import com.example.there.data.mapper.videos.data
+import com.example.there.data.mapper.videos.db
+import com.example.there.data.mapper.videos.domain
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
@@ -30,7 +33,7 @@ class VideosDbDataStore @Inject constructor(
     override fun getRelatedVideosForVideoId(
             videoId: String
     ): Single<List<VideoEntity>> = videoDao.findAllRelatedToVideo(videoId)
-            .map { it.map(VideoDbMapper::mapFrom) }
+            .map { it.map(VideoDbModel::domain) }
 
     override fun getNextPageTokenForVideoId(
             videoId: String
@@ -41,7 +44,7 @@ class VideosDbDataStore @Inject constructor(
             videos: List<VideoEntity>,
             nextPageToken: String?
     ): Completable = Completable.fromAction {
-        relatedVideoSearchDao.insert(RelatedVideoSearchDbData(videoId, nextPageToken))
+        relatedVideoSearchDao.insert(RelatedVideoSearchDbModel(videoId, nextPageToken))
         insertRelatedVideos(videoId, videos)
     }
 
@@ -56,7 +59,7 @@ class VideosDbDataStore @Inject constructor(
 
     private fun insertRelatedVideos(videoId: String, videos: List<VideoEntity>) {
         videos.forEach { it.relatedVideoId = videoId }
-        videoDao.insertMany(*videos.map(VideoDbMapper::mapBack).toTypedArray())
+        videoDao.insertMany(*videos.map(VideoEntity::db).toTypedArray())
     }
 
     override fun getNextPageTokenForQuery(
@@ -68,7 +71,7 @@ class VideosDbDataStore @Inject constructor(
             videos: List<VideoEntity>,
             nextPageToken: String?
     ): Completable = Completable.fromAction {
-        videoSearchDao.insert(VideoSearchDbData(query, nextPageToken))
+        videoSearchDao.insert(VideoSearchDbModel(query, nextPageToken))
         insertVideosWithQuery(query, videos)
     }
 
@@ -83,29 +86,29 @@ class VideosDbDataStore @Inject constructor(
 
     private fun insertVideosWithQuery(query: String, videos: List<VideoEntity>) {
         videos.forEach { it.query = query }
-        videoDao.insertMany(*videos.map(VideoDbMapper::mapBack).toTypedArray())
+        videoDao.insertMany(*videos.map(VideoEntity::db).toTypedArray())
     }
 
     override fun getSavedVideosForQuery(
             query: String
     ): Single<List<VideoEntity>> = videoDao.findAllWithQuery(query)
-            .map { it.map(VideoDbMapper::mapFrom) }
+            .map { it.map(VideoDbModel::domain) }
 
     override fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>> = videoPlaylistDao.findAll()
-            .map { it.map(VideoPlaylistMapper::mapFrom) }
+            .map { it.map(VideoPlaylistDbModel::domain) }
 
     override fun getVideosFromPlaylist(
             playlistId: Long
     ): Flowable<List<VideoEntity>> = videoDao.findVideosFromPlaylist(playlistId)
-            .map { it.map(VideoDbMapper::mapFrom) }
+            .map { it.map(VideoDbModel::domain) }
 
     override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable {
-        videoPlaylistDao.insert(VideoPlaylistMapper.mapBack(playlistEntity))
+        videoPlaylistDao.insert(playlistEntity.data)
     }
 
     override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable = Completable.fromCallable {
         videoEntity.playlistId = playlistEntity.id
-        videoDao.insert(VideoDbMapper.mapBack(videoEntity))
+        videoDao.insert(videoEntity.db)
     }
 
     override val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
@@ -116,7 +119,7 @@ class VideosDbDataStore @Inject constructor(
                     videoDao.find5VideosFromPlaylist(playlist.id!!)
                             .map { videos ->
                                 VideoPlaylistThumbnailsEntity(
-                                        VideoPlaylistMapper.mapFrom(playlist),
+                                        playlist.domain,
                                         videos.map { it.thumbnailUrl }
                                 )
                             }
@@ -124,13 +127,13 @@ class VideosDbDataStore @Inject constructor(
                 .filter { it.thumbnailUrls.isNotEmpty() }
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromCallable {
-        videoDao.delete(VideoDbMapper.mapBack(videoEntity))
+        videoDao.delete(videoEntity.db)
     }
 
     override fun deleteVideoPlaylist(
             videoPlaylistEntity: VideoPlaylistEntity
     ): Completable = Completable.fromCallable {
-        videoPlaylistDao.delete(VideoPlaylistMapper.mapBack(videoPlaylistEntity))
+        videoPlaylistDao.delete(videoPlaylistEntity.data)
     }
 
     override fun deleteAllVideoSearchData(): Completable = Completable.merge(listOf(

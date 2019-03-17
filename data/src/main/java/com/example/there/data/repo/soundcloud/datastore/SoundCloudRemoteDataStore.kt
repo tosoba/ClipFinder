@@ -1,8 +1,8 @@
 package com.example.there.data.repo.soundcloud.datastore
 
-import com.example.there.data.api.soundcloud.SoundCloudApi
-import com.example.there.data.entity.soundcloud.SoundCloudPlaylist
-import com.example.there.data.entity.soundcloud.SoundCloudSystemPlaylist
+import com.example.api.SoundCloudApi
+import com.example.api.model.SoundCloudPlaylistApiModel
+import com.example.api.model.SoundCloudSystemPlaylistApiModel
 import com.example.there.data.mapper.soundcloud.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -21,10 +21,11 @@ class SoundCloudRemoteDataStore @Inject constructor(
         get() = api.discover().map { response ->
             SoundCloudDiscoverEntity(
                     playlists = response.collection.map {
-                        it.playlists?.map(SoundCloudPlaylist::domain) ?: emptyList()
+                        it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
                     }.flatten(),
                     systemPlaylists = response.collection.map {
-                        it.systemPlaylists?.map(SoundCloudSystemPlaylist::domain) ?: emptyList()
+                        it.systemPlaylists?.map(SoundCloudSystemPlaylistApiModel::domain)
+                                ?: emptyList()
                     }.flatten()
             )
         }
