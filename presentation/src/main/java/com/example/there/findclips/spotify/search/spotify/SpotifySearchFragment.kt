@@ -8,31 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseListFragment
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.ISearchFragment
-import com.example.there.findclips.databinding.FragmentSpotifySearchBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.list.SpotifyAlbumsFragment
 import com.example.there.findclips.spotify.list.SpotifyArtistsFragment
 import com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment
 import com.example.there.findclips.spotify.list.SpotifyTracksFragment
-import com.example.there.findclips.util.ext.connectivitySnackbarHost
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 
 class SpotifySearchFragment :
-        BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
-        ISearchFragment,
-        Injectable {
+        com.example.coreandroid.base.fragment.BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
+        com.example.coreandroid.base.fragment.ISearchFragment,
+        com.example.coreandroid.di.Injectable {
 
     override var query: String = ""
         set(value) {

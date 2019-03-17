@@ -8,21 +8,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.there.data.preferences.AppPreferences
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentCategoryBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.spotify.Category
 import com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.generateColorGradient
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
+class CategoryFragment : com.example.coreandroid.base.fragment.BaseVMFragment<CategoryViewModel>(CategoryViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 

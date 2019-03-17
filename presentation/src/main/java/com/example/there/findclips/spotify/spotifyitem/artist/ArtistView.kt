@@ -3,12 +3,6 @@ package com.example.there.findclips.spotify.spotifyitem.artist
 import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.view.View
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.util.list.IdentifiableNamedObservableListItem
-import com.example.there.findclips.util.list.IdentifiableObservableListItem
-import com.example.there.findclips.util.list.ObservableSortedList
 
 class ArtistView(
         val state: ArtistViewState,

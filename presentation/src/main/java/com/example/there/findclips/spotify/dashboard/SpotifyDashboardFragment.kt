@@ -6,44 +6,23 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
-import com.example.there.data.preferences.AppPreferences
-import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.databinding.FragmentSpotifyDashboardBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Category
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.TopTrack
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.spotifyitem.category.CategoryFragment
 import com.example.there.findclips.spotify.spotifyitem.playlist.PlaylistFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.*
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
-import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
 
 
-class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
+class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFragment<SpotifyDashboardViewModel>(
         SpotifyDashboardViewModel::class.java
-), Injectable, HasMainToolbar {
+), com.example.coreandroid.di.Injectable, com.example.coreandroid.base.fragment.HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
     private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
-        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
+        object : com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
             override fun onLoadMore() = viewModel.loadNewReleases(true)
         }
     }

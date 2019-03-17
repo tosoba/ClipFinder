@@ -1,13 +1,11 @@
 package com.example.there.findclips.soundcloud.dashboard
 
 import com.example.there.domain.usecase.soundcloud.DiscoverSoundCloud
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.soundcloud.ui
 import javax.inject.Inject
 
 class SoundCloudDashboardViewModel @Inject constructor(
         private val discoverSoundCloud: DiscoverSoundCloud
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState = SoundCloudDashboardViewState()
 

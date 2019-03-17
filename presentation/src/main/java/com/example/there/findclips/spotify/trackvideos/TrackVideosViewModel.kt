@@ -5,9 +5,6 @@ import android.util.Log
 import com.example.there.domain.usecase.spotify.DeleteTrack
 import com.example.there.domain.usecase.spotify.InsertTrack
 import com.example.there.domain.usecase.spotify.IsTrackSaved
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.spotify.domain
 import java.util.*
 import javax.inject.Inject
 
@@ -15,7 +12,7 @@ class TrackVideosViewModel @Inject constructor(
         private val insertTrack: InsertTrack,
         private val deleteTrack: DeleteTrack,
         private val isTrackSaved: IsTrackSaved
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState = TrackVideosViewState()
 

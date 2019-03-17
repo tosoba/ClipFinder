@@ -5,9 +5,6 @@ import android.view.View
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.videos.DeleteVideoPlaylist
 import com.example.there.domain.usecase.videos.GetVideoPlaylistsWithThumbnails
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.videos.domain
-import com.example.there.findclips.model.mapper.videos.ui
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
@@ -15,7 +12,7 @@ import javax.inject.Inject
 class VideosFavouritesViewModel @Inject constructor(
         private val getVideoPlaylistsWithThumbnails: GetVideoPlaylistsWithThumbnails,
         private val deleteVideoPlaylist: DeleteVideoPlaylist
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 

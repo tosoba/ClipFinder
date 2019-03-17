@@ -3,10 +3,9 @@ package com.example.there.findclips.spotify.dashboard
 
 import android.support.v4.app.Fragment
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseNavHostFragment
 
 
-class SpotifyDashboardNavHostFragment : BaseNavHostFragment() {
+class SpotifyDashboardNavHostFragment : com.example.coreandroid.base.fragment.BaseNavHostFragment() {
 
     override val layoutId: Int = R.layout.fragment_spotify_dashboard_host
 

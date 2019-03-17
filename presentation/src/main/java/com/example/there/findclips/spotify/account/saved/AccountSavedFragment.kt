@@ -7,31 +7,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentAccountSavedBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.account.TracksDataLoaded
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.navHostFragment
-import com.example.there.findclips.util.ext.spotifyLoginController
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 
 
 class AccountSavedFragment :
-        BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
-        Injectable,
+        com.example.coreandroid.base.fragment.BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
+        com.example.coreandroid.di.Injectable,
         TracksDataLoaded {
 
     override val isDataLoaded: Boolean
@@ -52,7 +36,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadAlbums()
                                 }
                         ),
@@ -65,7 +49,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
+                                onScrollListener = object : com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() {
                                         viewModel.loadTracks()
                                     }

@@ -2,10 +2,9 @@ package com.example.there.findclips.spotify.account
 
 import android.support.v4.app.Fragment
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseNavHostFragment
 
 
-class AccountNavHostFragment : BaseNavHostFragment() {
+class AccountNavHostFragment : com.example.coreandroid.base.fragment.BaseNavHostFragment() {
 
     override val layoutId: Int = R.layout.fragment_account_host
 

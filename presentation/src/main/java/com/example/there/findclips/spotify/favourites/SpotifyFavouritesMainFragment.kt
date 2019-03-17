@@ -8,16 +8,13 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.view.*
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.databinding.FragmentSpotifyFavouritesMainBinding
 import com.example.there.findclips.spotify.favourites.spotify.SpotifyFavouritesFragment
-import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.videos.favourites.VideosFavouritesFragment
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
 
 
-class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
+class SpotifyFavouritesMainFragment : Fragment(), com.example.coreandroid.base.fragment.HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = favourites_toolbar

@@ -8,11 +8,6 @@ import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.GetPlaylistTracks
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class PlaylistViewModel @Inject constructor(
@@ -20,7 +15,7 @@ class PlaylistViewModel @Inject constructor(
         private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
         private val deleteSpotifyPlaylist: DeleteSpotifyPlaylist,
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: PlaylistViewState = PlaylistViewState()
 

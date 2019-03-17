@@ -8,19 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseListFragment
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentSpotifyFavouritesBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.model.entity.spotify.*
 import com.example.there.findclips.spotify.list.*
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 
-class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {
+class SpotifyFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {

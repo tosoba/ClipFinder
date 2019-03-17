@@ -3,8 +3,6 @@ package com.example.there.findclips.spotify.favourites.spotify
 import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.spotify.ui
 import io.reactivex.Flowable
 import io.reactivex.functions.Function5
 import javax.inject.Inject
@@ -15,7 +13,7 @@ class SpotifyFavouritesViewModel @Inject constructor(
         private val getFavouriteCategories: GetFavouriteCategories,
         private val getFavouriteSpotifyPlaylists: GetFavouriteSpotifyPlaylists,
         private val getFavouriteTracks: GetFavouriteTracks
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 

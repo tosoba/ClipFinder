@@ -7,31 +7,18 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.databinding.library.baseAdapters.BR
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentTrackBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumFragment
 import com.example.there.findclips.spotify.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.spotify.trackvideos.OnTrackChangeListener
-import com.example.there.findclips.util.ext.connectivitySnackbarHost
-import com.example.there.findclips.util.ext.navHostFragment
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.*
 import com.example.there.findclips.view.radarchart.RadarChartAxisView
 import com.example.there.findclips.view.radarchart.RadarChartView
 import com.example.there.findclips.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 
-class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
+class TrackFragment : com.example.coreandroid.base.fragment.BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     var track: Track? = null
         set(value) {

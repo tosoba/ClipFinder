@@ -4,14 +4,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.HeaderItemBinding
-import com.example.there.findclips.databinding.RecyclerViewListItemBinding
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudPlaylist
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudSystemPlaylist
-import com.example.there.findclips.util.ext.makeItemBinding
-import com.example.there.findclips.view.list.BaseBindingViewHolder
-import com.example.there.findclips.view.list.item.HeaderItemViewState
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
 
 class SoundCloudDashboardAdapter(
         private val playlistsRecyclerItemView: RecyclerViewItemView<SoundCloudPlaylist>,

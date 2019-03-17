@@ -8,19 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentSoundCloudPlaylistBinding
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.model.entity.soundcloud.ISoundCloudPlaylist
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudPlaylist
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudSystemPlaylist
 import com.example.there.findclips.soundcloud.list.SoundCloudTracksFragment
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.generateColorGradient
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 
 
-class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class.java) {
+class SoundCloudPlaylistFragment : com.example.coreandroid.base.fragment.BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class.java) {
 
     private val tracksFragment: SoundCloudTracksFragment
         get() = childFragmentManager.findFragmentById(R.id.sound_cloud_playlist_tracks_fragment) as SoundCloudTracksFragment

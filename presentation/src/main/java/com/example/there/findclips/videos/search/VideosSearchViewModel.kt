@@ -6,11 +6,6 @@ import com.example.there.domain.usecase.videos.DeleteVideo
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
-import com.example.there.findclips.base.vm.BaseVideosViewModel
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.videos.domain
-import com.example.there.findclips.model.mapper.videos.ui
-import com.example.there.findclips.view.list.item.VideoItemView
 import javax.inject.Inject
 
 class VideosSearchViewModel @Inject constructor(
@@ -18,7 +13,7 @@ class VideosSearchViewModel @Inject constructor(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist,
         private val deleteVideo: DeleteVideo
-) : BaseVideosViewModel(getChannelsThumbnailUrls) {
+) : com.example.coreandroid.base.vm.BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 

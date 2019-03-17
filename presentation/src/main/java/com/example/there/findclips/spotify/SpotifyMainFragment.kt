@@ -8,19 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseNavHostFragment
-import com.example.there.findclips.base.fragment.IMainContentFragment
 import com.example.there.findclips.spotify.account.AccountNavHostFragment
 import com.example.there.findclips.spotify.dashboard.SpotifyDashboardNavHostFragment
 import com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainNavHostFragment
 import com.example.there.findclips.util.ext.checkItem
-import com.example.there.findclips.util.ext.toolbarController
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_main.*
 
 
-class SpotifyMainFragment : Fragment(), IMainContentFragment {
+class SpotifyMainFragment : Fragment(), com.example.coreandroid.base.fragment.IMainContentFragment {
 
     private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 
@@ -52,7 +49,7 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: BaseNavHostFragment?
+    override val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
     private val view: SpotifyMainView by lazy {

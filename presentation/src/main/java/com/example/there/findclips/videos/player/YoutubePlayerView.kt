@@ -1,8 +1,6 @@
 package com.example.there.findclips.videos.player
 
 import android.view.View
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
 
 class YoutubePlayerView(
         val onYoutubePlayerCloseBtnClickListener: View.OnClickListener,

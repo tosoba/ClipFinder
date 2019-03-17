@@ -4,10 +4,6 @@ import android.util.Log
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 class AlbumViewModel @Inject constructor(
@@ -16,7 +12,7 @@ class AlbumViewModel @Inject constructor(
         private val insertAlbum: InsertAlbum,
         private val deleteAlbum: DeleteAlbum,
         private val isAlbumSaved: IsAlbumSaved
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: AlbumViewState = AlbumViewState()
 

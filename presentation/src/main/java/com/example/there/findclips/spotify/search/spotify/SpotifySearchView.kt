@@ -4,10 +4,6 @@ import android.databinding.ObservableField
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
 
 class SpotifySearchView(
         val state: SpotifySearchViewState,

@@ -1,10 +1,9 @@
 package com.example.there.findclips.soundcloud.trackvideos
 
-import com.example.there.findclips.base.vm.BaseViewModel
 import javax.inject.Inject
 
 class SoundCloudTrackVideosViewModel @Inject constructor(
 
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
     val viewState = SoundCloudTrackVideosViewState()
 }

@@ -2,10 +2,6 @@ package com.example.there.findclips.soundcloud.dashboard
 
 import android.databinding.ObservableField
 import android.databinding.ObservableList
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudPlaylist
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudSystemPlaylist
-import com.example.there.findclips.util.list.IdentifiableNamedObservableListItem
-import com.example.there.findclips.util.list.ObservableSortedList
 
 class SoundCloudDashboardView(
         val state: SoundCloudDashboardViewState,

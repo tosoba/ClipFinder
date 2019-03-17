@@ -10,30 +10,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.ISearchFragment
-import com.example.there.findclips.databinding.FragmentVideosSearchBinding
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.util.ext.connectivitySnackbarHost
-import com.example.there.findclips.util.ext.screenOrientation
-import com.example.there.findclips.util.ext.youtubePlayerController
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.list.item.VideoItemView
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
-import kotlinx.android.synthetic.main.fragment_videos_search.*
 
 
-class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java), ISearchFragment {
+class VideosSearchFragment : com.example.coreandroid.base.fragment.BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java), com.example.coreandroid.base.fragment.ISearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -52,7 +33,7 @@ class VideosSearchFragment : BaseVMFragment<VideosSearchViewModel>(VideosSearchV
     val videos: List<Video>
         get() = viewModel.viewState.videos.map { it.video }
 
-    private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
+    private val onScrollListener: RecyclerView.OnScrollListener = object : com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener() {
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 

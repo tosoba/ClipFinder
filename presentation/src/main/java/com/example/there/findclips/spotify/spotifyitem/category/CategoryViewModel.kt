@@ -7,11 +7,6 @@ import com.example.there.domain.usecase.spotify.DeleteCategory
 import com.example.there.domain.usecase.spotify.GetPlaylistsForCategory
 import com.example.there.domain.usecase.spotify.InsertCategory
 import com.example.there.domain.usecase.spotify.IsCategorySaved
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Category
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 
@@ -20,7 +15,7 @@ class CategoryViewModel @Inject constructor(
         private val insertCategory: InsertCategory,
         private val deleteCategory: DeleteCategory,
         private val isCategorySaved: IsCategorySaved
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: CategoryViewState = CategoryViewState()
 

@@ -7,10 +7,6 @@ import com.example.there.domain.usecase.spotify.GetAlbum
 import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -21,7 +17,7 @@ class TrackViewModel @Inject constructor(
         private val getArtists: GetArtists,
         private val getSimilarTracks: GetSimilarTracks,
         private val getAudioFeatures: GetAudioFeatures
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: TrackViewState = TrackViewState()
 

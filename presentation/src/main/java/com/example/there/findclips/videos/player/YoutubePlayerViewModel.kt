@@ -1,12 +1,9 @@
 package com.example.there.findclips.videos.player
 
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import javax.inject.Inject
 
 
-class YoutubePlayerViewModel @Inject constructor() : BaseViewModel() {
+class YoutubePlayerViewModel @Inject constructor() : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val playerState = YoutubePlayerState()
 

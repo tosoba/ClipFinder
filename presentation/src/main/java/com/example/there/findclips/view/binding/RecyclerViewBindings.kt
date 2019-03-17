@@ -2,10 +2,6 @@ package com.example.there.findclips.view.binding
 
 import android.databinding.BindingAdapter
 import android.support.v7.widget.RecyclerView
-import com.example.there.findclips.view.list.BindingRecyclerViewAdapter
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.LongClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
 
 
 @BindingAdapter("itemDecoration")

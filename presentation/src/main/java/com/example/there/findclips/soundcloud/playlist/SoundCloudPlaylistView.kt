@@ -2,7 +2,6 @@ package com.example.there.findclips.soundcloud.playlist
 
 import android.databinding.ObservableField
 import android.view.View
-import com.example.there.findclips.model.entity.soundcloud.ISoundCloudPlaylist
 
 class SoundCloudPlaylistView(
         val state: SoundCloudPlaylistViewState,

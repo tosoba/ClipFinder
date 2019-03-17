@@ -8,18 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentAccountPlaylistsBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.spotify.account.TracksDataLoaded
 import com.example.there.findclips.spotify.list.SpotifyPlaylistsFragment
-import com.example.there.findclips.util.ext.spotifyLoginController
 
 
 class AccountPlaylistsFragment :
-        BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
-        Injectable,
+        com.example.coreandroid.base.fragment.BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
+        com.example.coreandroid.di.Injectable,
         TracksDataLoaded {
 
     override val isDataLoaded: Boolean

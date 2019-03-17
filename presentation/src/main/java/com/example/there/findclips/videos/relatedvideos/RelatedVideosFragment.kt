@@ -8,23 +8,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.util.ext.youtubePlayerController
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
-import com.example.there.findclips.view.list.item.VideoItemView
-import com.example.there.findclips.view.recycler.EndlessRecyclerOnScrollListener
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
-class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java), Injectable {
+class RelatedVideosFragment : com.example.coreandroid.base.fragment.BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
@@ -40,7 +27,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
+        object : com.example.coreandroid.view.list.listener.EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
             override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
         }
     }

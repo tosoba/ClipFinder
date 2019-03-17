@@ -5,16 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.HeaderItemBinding
-import com.example.there.findclips.databinding.RecyclerViewListItemBinding
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Category
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.TopTrack
-import com.example.there.findclips.util.ext.makeItemBinding
-import com.example.there.findclips.view.list.BaseBindingViewHolder
-import com.example.there.findclips.view.list.item.HeaderItemViewState
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
 
 class SpotifyDashboardAdapter(
         private val categoriesRecyclerViewItemView: RecyclerViewItemView<Category>,

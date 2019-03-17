@@ -5,15 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.GetTracks
 import com.example.there.domain.usecase.soundcloud.GetTracksFromPlaylist
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.soundcloud.SoundCloudTrack
-import com.example.there.findclips.model.mapper.soundcloud.ui
 import javax.inject.Inject
 
 class SoundCloudPlaylistViewModel @Inject constructor(
         private val getTracksFromPlaylist: GetTracksFromPlaylist,
         private val getTracks: GetTracks
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState = SoundCloudPlaylistViewState()
 
