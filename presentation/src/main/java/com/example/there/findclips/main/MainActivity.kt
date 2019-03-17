@@ -21,17 +21,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.there.findclips.R
-import com.example.there.findclips.base.activity.BaseVMActivity
-import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.base.fragment.IMainContentFragment
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.there.findclips.main.controller.*
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
 import com.example.there.findclips.settings.SettingsActivity
 import com.example.there.findclips.soundcloud.SoundCloudMainFragment
 import com.example.there.findclips.spotify.SpotifyMainFragment
@@ -40,10 +30,6 @@ import com.example.there.findclips.spotify.player.SpotifyPlayerFragment
 import com.example.there.findclips.spotify.search.SearchSuggestionProvider
 import com.example.there.findclips.spotify.search.SpotifySearchMainFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.screenHeight
-import com.example.there.findclips.util.ext.screenOrientation
-import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.videos.addvideo.AddVideoDialogFragment
 import com.example.there.findclips.videos.addvideo.AddVideoViewState
 import com.example.there.findclips.videos.player.YoutubePlayerFragment
@@ -57,11 +43,10 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import com.spotify.sdk.android.player.Error
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity :
-        BaseVMActivity<MainViewModel>(MainViewModel::class.java),
+        com.example.coreandroid.base.activity.BaseVMActivity<MainViewModel>(MainViewModel::class.java),
         HasSupportFragmentInjector,
         ConnectionStateCallback,
         SlidingPanelController,
@@ -69,7 +54,7 @@ class MainActivity :
         SpotifyPlayerController,
         YoutubePlayerController,
         SpotifyTrackChangeHandler,
-        BackPressedWithNoPreviousStateController,
+        com.example.coreandroid.base.handler.BackPressedWithNoPreviousStateController,
         SpotifyLoginController,
         ConnectivitySnackbarHost,
         NavigationDrawerController,
@@ -307,7 +292,7 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        (mainContentViewPagerAdapter.currentFragment as? IMainContentFragment)?.let {
+        (mainContentViewPagerAdapter.currentFragment as? com.example.coreandroid.base.fragment.IMainContentFragment)?.let {
             val currentFragment = it.currentNavHostFragment
 
             if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -317,7 +302,7 @@ class MainActivity :
 
             if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
                 currentFragment.topFragment?.let { topFragment ->
-                    if (topFragment is GoesToPreviousStateOnBackPressed) {
+                    if (topFragment is com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed) {
                         topFragment.onBackPressed()
                         return
                     }
@@ -396,7 +381,7 @@ class MainActivity :
     override fun toggleToolbar() {
         spotifyMainFragment?.let {
             val currentTopFragment = it.currentNavHostFragment?.topFragment
-            val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
+            val mainToolbar = (currentTopFragment as? com.example.coreandroid.base.fragment.HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
             if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
         }
@@ -603,7 +588,7 @@ class MainActivity :
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
-            val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
+            val mainToolbar = (currentFragment as? com.example.coreandroid.base.fragment.HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
             showDrawerHamburger()
         }

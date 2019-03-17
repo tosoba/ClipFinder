@@ -12,24 +12,15 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.IPlayerFragment
-import com.example.there.findclips.databinding.FragmentYoutubePlayerBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.slidingPanelController
 import com.example.there.findclips.view.OnYoutubePlayerStateChangeListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
-import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
-        IPlayerFragment,
-        Injectable {
+        com.example.coreandroid.base.fragment.BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
+        com.example.coreandroid.base.fragment.IPlayerFragment,
+        com.example.coreandroid.di.Injectable {
 
     private var youTubePlayer: YouTubePlayer? = null
 

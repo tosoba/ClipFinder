@@ -10,17 +10,6 @@ import com.example.there.domain.usecase.videos.AddVideoToPlaylist
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
 import com.example.there.domain.usecase.videos.GetFavouriteVideoPlaylists
 import com.example.there.domain.usecase.videos.InsertVideoPlaylist
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.model.entity.spotify.User
-import com.example.there.findclips.model.entity.videos.Video
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
-import com.example.there.findclips.model.mapper.videos.domain
-import com.example.there.findclips.model.mapper.videos.ui
 import javax.inject.Inject
 
 
@@ -40,7 +29,7 @@ class MainViewModel @Inject constructor(
         private val insertVideoPlaylist: InsertVideoPlaylist,
         private val addVideoToPlaylist: AddVideoToPlaylist,
         private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState = MainViewState()
 

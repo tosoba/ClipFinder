@@ -2,7 +2,6 @@ package com.example.there.findclips.view.viewpager.adapter
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import com.example.there.findclips.base.fragment.BaseNavHostFragment
 
 
 open class CustomCurrentStatePagerAdapter(
@@ -10,8 +9,8 @@ open class CustomCurrentStatePagerAdapter(
         private val fragments: Array<Fragment>
 ) : CurrentFragmentStatePagerAdapter(fragmentManager) {
 
-    val currentNavHostFragment: BaseNavHostFragment?
-        get() = currentFragment as? BaseNavHostFragment
+    val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
+        get() = currentFragment as? com.example.coreandroid.base.fragment.BaseNavHostFragment
 
     override fun getItem(position: Int): Fragment = fragments[position]
 

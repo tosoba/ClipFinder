@@ -9,18 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentPlaylistBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.spotify.Playlist
 import com.example.there.findclips.spotify.list.SpotifyTracksFragment
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.generateColorGradient
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 
-class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
+class PlaylistFragment : com.example.coreandroid.base.fragment.BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 

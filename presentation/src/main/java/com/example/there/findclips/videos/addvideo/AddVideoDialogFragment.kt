@@ -9,17 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.databinding.library.baseAdapters.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.DialogAddVideoBinding
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.util.ext.videoPlaylistController
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
 class AddVideoDialogFragment : DialogFragment() {

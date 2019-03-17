@@ -9,12 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.FragmentSpotifySearchMainBinding
 import com.example.there.findclips.spotify.search.spotify.SpotifySearchFragment
-import com.example.there.findclips.util.ext.appCompatActivity
-import com.example.there.findclips.util.ext.dpToPx
-import com.example.there.findclips.util.ext.setHeight
-import com.example.there.findclips.util.ext.setupWithBackNavigation
 import com.example.there.findclips.videos.search.VideosSearchFragment
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#84bd00</color>
+
+    <color name="spotifyRippleColor">#a1bf97</color>
+    <color name="soundCloudRippleColor">#FFDB99</color>
+</resources>

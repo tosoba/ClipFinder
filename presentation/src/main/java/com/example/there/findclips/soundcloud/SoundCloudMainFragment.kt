@@ -8,18 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseNavHostFragment
-import com.example.there.findclips.base.fragment.IMainContentFragment
 import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardNavHostFragment
 import com.example.there.findclips.soundcloud.favourites.SoundCloudFavouritesNavHostFragment
 import com.example.there.findclips.util.ext.checkItem
-import com.example.there.findclips.util.ext.toolbarController
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
 
 
-class SoundCloudMainFragment : Fragment(), IMainContentFragment {
+class SoundCloudMainFragment : Fragment(), com.example.coreandroid.base.fragment.IMainContentFragment {
 
     private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard, R.id.sound_cloud_action_favorites)
 
@@ -51,7 +48,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: BaseNavHostFragment?
+    override val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
     private val view: SoundCloudMainView by lazy {

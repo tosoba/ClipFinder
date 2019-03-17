@@ -9,27 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.there.findclips.databinding.FragmentTrackVideosBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.spotifyitem.track.TrackFragment
-import com.example.there.findclips.util.ext.*
+import com.example.there.findclips.util.ext.generateColorGradient
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.example.there.findclips.videos.search.VideosSearchFragment
 import com.example.there.findclips.view.OnPageChangeListener
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 
 class TrackVideosFragment :
-        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
+        com.example.coreandroid.base.fragment.BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
         OnTrackChangeListener,
-        Injectable,
-        GoesToPreviousStateOnBackPressed {
+        com.example.coreandroid.di.Injectable,
+        com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed {
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {

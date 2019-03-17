@@ -2,7 +2,6 @@ package com.example.there.findclips.spotify.spotifyitem.playlist
 
 import android.databinding.ObservableField
 import android.view.View
-import com.example.there.findclips.model.entity.spotify.Playlist
 
 class PlaylistView(
         val state: PlaylistViewState,

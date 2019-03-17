@@ -2,8 +2,6 @@ package com.example.there.findclips.di.module.ui
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.example.there.findclips.di.vm.ViewModelFactory
-import com.example.there.findclips.di.vm.ViewModelKey
 import com.example.there.findclips.main.MainViewModel
 import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardViewModel
 import com.example.there.findclips.soundcloud.playlist.SoundCloudPlaylistViewModel

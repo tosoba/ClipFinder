@@ -2,9 +2,6 @@ package com.example.there.findclips.spotify.spotifyitem.track
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Track
 import com.github.mikephil.charting.data.RadarData
 
 class TrackView(

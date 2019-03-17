@@ -6,14 +6,12 @@ import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.SearchSpotify
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.mapper.spotify.ui
 import javax.inject.Inject
 
 
 class SpotifySearchViewModel @Inject constructor(
         private val searchSpotify: SearchSpotify
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     val viewState: SpotifySearchViewState = SpotifySearchViewState()
 

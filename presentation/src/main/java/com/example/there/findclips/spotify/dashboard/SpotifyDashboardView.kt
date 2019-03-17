@@ -2,14 +2,6 @@ package com.example.there.findclips.spotify.dashboard
 
 import android.databinding.ObservableField
 import android.databinding.ObservableList
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Category
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.TopTrack
-import com.example.there.findclips.util.list.IdentifiableNamedObservableListItem
-import com.example.there.findclips.util.list.IdentifiableNumberedObservableListItem
-import com.example.there.findclips.util.list.IdentifiableObservableListItem
-import com.example.there.findclips.util.list.ObservableSortedList
 
 class SpotifyDashboardView(
         val state: SpotifyDashboardViewState,

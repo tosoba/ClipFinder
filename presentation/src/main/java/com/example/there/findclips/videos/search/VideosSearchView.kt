@@ -2,9 +2,6 @@ package com.example.there.findclips.videos.search
 
 import android.databinding.ObservableField
 import android.databinding.ObservableList
-import com.example.there.findclips.util.list.ObservableSortedList
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.VideoItemView
 
 class VideosSearchView(
         val state: VideosSearchViewState,

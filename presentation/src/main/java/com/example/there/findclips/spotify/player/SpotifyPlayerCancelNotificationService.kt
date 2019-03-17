@@ -3,7 +3,6 @@ package com.example.there.findclips.spotify.player
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.example.there.findclips.util.ext.notificationManager
 
 class SpotifyPlayerCancelNotificationService : Service() {
 

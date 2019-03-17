@@ -1,8 +1,6 @@
 package com.example.there.findclips.view.viewflipper
 
 import android.view.View
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.util.list.ObservableSortedList
 
 class PlaylistThumbnailView(
         val playlist: VideoPlaylist,

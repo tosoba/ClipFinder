@@ -8,30 +8,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.there.findclips.BR
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.databinding.FragmentAlbumBinding
-import com.example.there.findclips.di.Injectable
-import com.example.there.findclips.lifecycle.ConnectivityComponent
-import com.example.there.findclips.lifecycle.DisposablesComponent
-import com.example.there.findclips.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Track
 import com.example.there.findclips.spotify.spotifyitem.artist.ArtistFragment
 import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.util.ext.*
-import com.example.there.findclips.view.list.ClickHandler
-import com.example.there.findclips.view.list.adapter.ArtistsAndTracksAdapter
-import com.example.there.findclips.view.list.binder.ItemBinder
-import com.example.there.findclips.view.list.binder.ItemBinderBase
-import com.example.there.findclips.view.list.item.ListItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
-import com.example.there.findclips.view.list.item.RecyclerViewItemViewState
+import com.example.there.findclips.util.ext.generateColorGradient
+import com.example.there.findclips.util.ext.getBitmapSingle
 import com.squareup.picasso.Picasso
 
-class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
+class AlbumFragment : com.example.coreandroid.base.fragment.BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), com.example.coreandroid.di.Injectable {
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 

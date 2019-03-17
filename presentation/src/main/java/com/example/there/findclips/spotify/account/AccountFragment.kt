@@ -8,20 +8,15 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.Toolbar
 import android.view.*
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.HasMainToolbar
-import com.example.there.findclips.databinding.FragmentAccountBinding
 import com.example.there.findclips.spotify.account.playlists.AccountPlaylistsFragment
 import com.example.there.findclips.spotify.account.saved.AccountSavedFragment
 import com.example.there.findclips.spotify.account.top.AccountTopFragment
-import com.example.there.findclips.util.ext.appCompatActivity
-import com.example.there.findclips.util.ext.navigationDrawerController
-import com.example.there.findclips.util.ext.showDrawerHamburger
 import com.example.there.findclips.view.OnTabSelectedListener
 import com.example.there.findclips.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_account.*
 
 
-class AccountFragment : Fragment(), HasMainToolbar {
+class AccountFragment : Fragment(), com.example.coreandroid.base.fragment.HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = account_toolbar

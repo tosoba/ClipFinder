@@ -5,17 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.AlbumInfoItemBinding
-import com.example.there.findclips.databinding.HeaderItemBinding
-import com.example.there.findclips.databinding.RadarChartBinding
-import com.example.there.findclips.databinding.RecyclerViewListItemBinding
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.util.ext.makeItemBinding
-import com.example.there.findclips.view.list.BaseBindingViewHolder
-import com.example.there.findclips.view.list.item.AlbumInfoItemView
-import com.example.there.findclips.view.list.item.HeaderItemViewState
-import com.example.there.findclips.view.list.item.RecyclerViewItemView
 import com.example.there.findclips.view.radarchart.RadarChartView
 
 class TrackAdapter(

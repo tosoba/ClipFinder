@@ -8,11 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.there.findclips.R
-import com.example.there.findclips.databinding.FragmentVideoPlaylistBinding
-import com.example.there.findclips.model.entity.videos.VideoPlaylist
-import com.example.there.findclips.util.ext.appCompatActivity
-import com.example.there.findclips.util.ext.setupWithBackNavigation
-import com.example.there.findclips.util.ext.youtubePlayerController
 import com.example.there.findclips.videos.search.VideosSearchFragment
 import com.example.there.findclips.view.viewflipper.PlaylistThumbnailFlipperAdapter
 

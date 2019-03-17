@@ -6,10 +6,6 @@ import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
-import com.example.there.findclips.base.vm.BaseViewModel
-import com.example.there.findclips.model.entity.spotify.Artist
-import com.example.there.findclips.model.mapper.spotify.domain
-import com.example.there.findclips.model.mapper.spotify.ui
 import java.util.*
 import javax.inject.Inject
 
@@ -20,7 +16,7 @@ class ArtistViewModel @Inject constructor(
         private val insertArtist: InsertArtist,
         private val deleteArtist: DeleteArtist,
         private val isArtistSaved: IsArtistSaved
-) : BaseViewModel() {
+) : com.example.coreandroid.base.vm.BaseViewModel() {
 
     private val viewStates: Stack<ArtistViewState> = Stack()
 

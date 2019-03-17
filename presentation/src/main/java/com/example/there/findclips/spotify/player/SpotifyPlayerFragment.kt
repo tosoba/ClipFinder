@@ -19,26 +19,18 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
-import com.example.there.findclips.base.fragment.BaseVMFragment
-import com.example.there.findclips.base.fragment.IPlayerFragment
-import com.example.there.findclips.di.Injectable
 import com.example.there.findclips.main.MainActivity
-import com.example.there.findclips.model.entity.spotify.Album
-import com.example.there.findclips.model.entity.spotify.Playlist
-import com.example.there.findclips.model.entity.spotify.Track
-import com.example.there.findclips.util.ext.*
 import com.example.there.findclips.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import javax.inject.Inject
 
 class SpotifyPlayerFragment :
-        BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class.java),
-        IPlayerFragment,
+        com.example.coreandroid.base.fragment.BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class.java),
+        com.example.coreandroid.base.fragment.IPlayerFragment,
         Player.NotificationCallback,
         Player.OperationCallback,
-        Injectable {
+        com.example.coreandroid.di.Injectable {
 
     private val view: SpotifyPlayerView by lazy(LazyThreadSafetyMode.NONE) {
         SpotifyPlayerView(
