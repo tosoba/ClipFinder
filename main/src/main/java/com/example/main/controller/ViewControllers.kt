@@ -1,8 +1,8 @@
 package com.example.main.controller
 
 import android.view.View
-import com.example.there.findclips.util.ext.expandIfHidden
-import com.example.there.findclips.util.ext.hideIfVisible
+import com.example.coreandroid.util.ext.expandIfHidden
+import com.example.coreandroid.util.ext.hideIfVisible
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 interface SlidingPanelController {

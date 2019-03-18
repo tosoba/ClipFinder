@@ -19,6 +19,18 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.coreandroid.base.activity.BaseVMActivity
+import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Playlist
+import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.model.videos.Video
+import com.example.coreandroid.model.videos.VideoPlaylist
+import com.example.coreandroid.util.ext.dpToPx
+import com.example.coreandroid.util.ext.screenHeight
+import com.example.coreandroid.util.ext.screenOrientation
+import com.example.coreandroid.util.ext.showDrawerHamburger
+import com.example.coreandroid.view.OnNavigationDrawerClosedListerner
 import com.example.main.controller.*
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
@@ -38,7 +50,10 @@ import com.example.there.findclips.videos.addvideo.AddVideoViewState
 import com.example.there.findclips.videos.player.YoutubePlayerFragment
 import com.example.there.findclips.videos.relatedvideos.RelatedVideosFragment
 import com.example.there.findclips.view.OnNavigationDrawerClosedListerner
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.settings.SettingsActivity
+import com.example.spotifyapi.SpotifyAuth
+import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -50,7 +65,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity :
-        com.example.coreandroid.base.activity.BaseVMActivity<MainViewModel>(MainViewModel::class.java),
+        BaseVMActivity<MainViewModel>(MainViewModel::class.java),
         HasSupportFragmentInjector,
         ConnectionStateCallback,
         SlidingPanelController,
@@ -106,7 +121,7 @@ class MainActivity :
     }
 
     @Inject
-    lateinit var appPreferences: AppPreferences
+    lateinit var appPreferences: SpotifyPreferences
 
     private var searchViewMenuItem: MenuItem? = null
 
@@ -523,7 +538,7 @@ class MainActivity :
     }
 
     private fun openLoginWindow() {
-        val request = AuthenticationRequest.Builder(com.example.api.SpotifyClient.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+        val request = AuthenticationRequest.Builder(SpotifyAuth.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(SCOPES)
                 .build()
 

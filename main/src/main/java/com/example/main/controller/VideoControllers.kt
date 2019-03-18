@@ -1,5 +1,8 @@
 package com.example.main.controller
 
+import com.example.coreandroid.model.videos.Video
+import com.example.coreandroid.model.videos.VideoPlaylist
+
 interface VideoPlaylistController {
     fun addVideoToPlaylist(playlist: VideoPlaylist)
     fun showNewPlaylistDialog()

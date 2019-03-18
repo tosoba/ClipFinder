@@ -7,13 +7,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.util.ext.checkItem
 import com.example.coreandroid.util.ext.toolbarController
+import com.example.coreandroid.view.OnPageChangeListener
 import com.example.main.R
 import com.example.there.findclips.R
 import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardNavHostFragment
 import com.example.there.findclips.soundcloud.favourites.SoundCloudFavouritesNavHostFragment
 import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
 
 

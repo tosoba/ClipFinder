@@ -1,6 +1,16 @@
 package com.example.main
 
 import android.util.Log
+import com.example.coreandroid.mapper.spotify.domain
+import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.mapper.videos.domain
+import com.example.coreandroid.mapper.videos.ui
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Playlist
+import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.model.spotify.User
+import com.example.coreandroid.model.videos.Video
+import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.base.CompletableUseCaseWithInput

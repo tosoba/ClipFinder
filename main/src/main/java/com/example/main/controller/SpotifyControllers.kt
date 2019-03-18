@@ -1,6 +1,9 @@
 package com.example.main.controller
 
 import android.databinding.ObservableField
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Playlist
+import com.example.coreandroid.model.spotify.Track
 
 interface SpotifyPlayerController {
     val isPlayerLoggedIn: Boolean

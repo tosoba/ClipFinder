@@ -7,12 +7,16 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.util.ext.checkItem
+import com.example.coreandroid.util.ext.toolbarController
+import com.example.coreandroid.view.OnPageChangeListener
 import com.example.there.findclips.R
 import com.example.there.findclips.spotify.account.AccountNavHostFragment
 import com.example.there.findclips.spotify.dashboard.SpotifyDashboardNavHostFragment
 import com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainNavHostFragment
 import com.example.there.findclips.view.OnPageChangeListener
-import com.example.there.findclips.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.main.R
 import kotlinx.android.synthetic.main.fragment_spotify_main.*
 
 
@@ -51,8 +55,8 @@ class SpotifyMainFragment : Fragment(), com.example.coreandroid.base.fragment.IM
     override val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
-    private val view: com.example.main.spotify.SpotifyMainView by lazy {
-        com.example.main.spotify.SpotifyMainView(
+    private val view: SpotifyMainView by lazy {
+        SpotifyMainView(
                 onNavigationItemSelectedListener = onNavigationItemSelectedListener,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
