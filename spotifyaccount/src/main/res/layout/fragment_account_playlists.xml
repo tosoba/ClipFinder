@@ -1,0 +1,48 @@
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewState"
+            type="com.example.spotifyaccount.playlist.AccountPlaylistViewState" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".spotify.account.playlists.AccountPlaylistsFragment">
+
+        <fragment
+            android:id="@+id/account_spotify_playlists_fragment"
+            android:name="com.example.itemlist.spotify.SpotifyPlaylistsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{(safeUnbox(viewState.playlistsLoadingInProgress) &amp;&amp; viewState.playlists.size() == 0) ? View.VISIBLE : View.GONE}" />
+
+        <TextView
+            style="@style/EmptyListTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/need_to_login_to_see_playlists"
+            android:visibility="@{((!safeUnbox(viewState.playlistsLoadingInProgress) &amp;&amp; !safeUnbox(viewState.userLoggedIn) &amp;&amp; viewState.playlists.size() == 0) ? View.VISIBLE : View.GONE) }" />
+
+        <TextView
+            style="@style/EmptyListTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/no_spotify_playlists"
+            android:visibility="@{((!safeUnbox(viewState.playlistsLoadingInProgress) &amp;&amp; safeUnbox(viewState.userLoggedIn) &amp;&amp; viewState.playlists.size() == 0) ? View.VISIBLE : View.GONE) }" />
+
+    </FrameLayout>
+</layout>
+
+

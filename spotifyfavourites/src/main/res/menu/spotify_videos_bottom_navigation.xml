@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_spotify"
+        android:icon="@drawable/music"
+        android:title="@string/spotify" />
+
+    <item
+        android:id="@+id/action_videos"
+        android:icon="@drawable/video"
+        android:title="@string/videos" />
+</menu>

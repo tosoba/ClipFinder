@@ -92,7 +92,7 @@
 
             <fragment
                 android:id="@+id/playlist_spotify_tracks_fragment"
-                android:name="com.example.there.findclips.spotify.list.SpotifyTracksFragment"
+                android:name="com.example.itemlist.spotify.SpotifyTracksFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:additional_hint_text=""

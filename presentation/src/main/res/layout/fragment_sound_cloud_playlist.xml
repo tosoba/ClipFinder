@@ -92,7 +92,7 @@
 
             <fragment
                 android:id="@+id/sound_cloud_playlist_tracks_fragment"
-                android:name="com.example.there.findclips.soundcloud.list.SoundCloudTracksFragment"
+                android:name="com.example.itemlist.soundcloud.SoundCloudTracksFragment"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:additional_hint_text=""
