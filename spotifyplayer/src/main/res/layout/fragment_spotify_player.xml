@@ -7,7 +7,7 @@
 
         <variable
             name="fragmentView"
-            type="com.example.there.findclips.spotify.player.SpotifyPlayerView" />
+            type="com.example.spotifyplayer.SpotifyPlayerView" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,4 +1,4 @@
-package com.example.there.findclips.spotify.player
+package com.example.spotifyplayer
 
 import android.databinding.ObservableField
 import android.view.View

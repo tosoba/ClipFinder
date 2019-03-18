@@ -11,7 +11,7 @@ import com.example.spotifyaccount.saved.AccountSavedViewModel
 import com.example.spotifyaccount.top.AccountTopViewModel
 import com.example.spotifydashboard.SpotifyDashboardViewModel
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
-import com.example.there.findclips.spotify.player.SpotifyPlayerViewModel
+import com.example.spotifyplayer.SpotifyPlayerViewModel
 import com.example.there.findclips.spotify.search.spotify.SpotifySearchViewModel
 import com.example.there.findclips.spotify.spotifyitem.album.AlbumViewModel
 import com.example.there.findclips.spotify.spotifyitem.artist.ArtistViewModel
@@ -110,8 +110,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SpotifyPlayerViewModel::class)
-    abstract fun spotifyPlayerViewModel(viewModel: SpotifyPlayerViewModel): ViewModel
+    @ViewModelKey(com.example.spotifyplayer.SpotifyPlayerViewModel::class)
+    abstract fun spotifyPlayerViewModel(viewModel: com.example.spotifyplayer.SpotifyPlayerViewModel): ViewModel
 
     @Binds
     @IntoMap

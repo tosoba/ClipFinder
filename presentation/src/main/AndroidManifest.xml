@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".spotify.player.SpotifyPlayerCancelNotificationService" />
+        <service android:name="com.example.spotifyplayer.SpotifyPlayerCancelNotificationService" />
 
         <provider
             android:name=".spotify.search.SearchSuggestionProvider"

@@ -1,4 +1,4 @@
-package com.example.there.findclips.spotify.player
+package com.example.spotifyplayer
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -17,11 +17,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Playlist
+import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.util.ext.connectionStateCallback
+import com.example.coreandroid.util.ext.notificationManager
+import com.example.coreandroid.util.ext.slidingPanelController
+import com.example.coreandroid.util.ext.spotifyTrackChangeHandler
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
 import com.example.coreandroid.view.OnSeekBarProgressChangeListener
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import javax.inject.Inject
 
 class SpotifyPlayerFragment :
@@ -53,7 +61,7 @@ class SpotifyPlayerFragment :
 
     private var spotifyPlayer: SpotifyPlayer? = null
 
-    val lastPlayedTrack: Metadata.Track?
+    val lastPlayedTrack: Track?
         get() = viewModel.playerState.lastPlayedTrack
 
     val lastPlayedAlbum: Album?
@@ -439,7 +447,7 @@ class SpotifyPlayerFragment :
         applicationContext.notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
         showPlaybackNotification()
     }
-    
+
     inner class DeleteNotificationIntentReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = false

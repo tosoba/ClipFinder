@@ -1,4 +1,4 @@
-package com.example.there.findclips.spotify.player
+package com.example.spotifyplayer
 
 import javax.inject.Inject
 
