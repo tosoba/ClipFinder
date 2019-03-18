@@ -20,10 +20,7 @@ import android.widget.SeekBar
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.ext.connectionStateCallback
-import com.example.coreandroid.util.ext.notificationManager
-import com.example.coreandroid.util.ext.slidingPanelController
-import com.example.coreandroid.util.ext.spotifyTrackChangeHandler
+import com.example.coreandroid.util.ext.*
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
 import com.example.coreandroid.view.OnSeekBarProgressChangeListener
@@ -361,6 +358,7 @@ class SpotifyPlayerFragment :
         else Connectivity.OFFLINE
     }
 
+    //TODO: move this?
     private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(context!!, FindClipsApp.CHANNEL_ID)
             .setSmallIcon(R.drawable.play)
             .apply {
