@@ -12,13 +12,13 @@ import com.example.spotifyaccount.top.AccountTopViewModel
 import com.example.spotifydashboard.SpotifyDashboardViewModel
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
 import com.example.spotifyplayer.SpotifyPlayerViewModel
-import com.example.there.findclips.spotify.search.spotify.SpotifySearchViewModel
-import com.example.there.findclips.spotify.spotifyitem.album.AlbumViewModel
-import com.example.there.findclips.spotify.spotifyitem.artist.ArtistViewModel
-import com.example.there.findclips.spotify.spotifyitem.category.CategoryViewModel
-import com.example.there.findclips.spotify.spotifyitem.playlist.PlaylistViewModel
-import com.example.there.findclips.spotify.spotifyitem.track.TrackViewModel
-import com.example.there.findclips.spotify.trackvideos.TrackVideosViewModel
+import com.example.spotifysearch.spotify.SpotifySearchViewModel
+import com.example.spotifyalbum.AlbumViewModel
+import com.example.spotifyartist.ArtistViewModel
+import com.example.spotifycategory.CategoryViewModel
+import com.example.spotifyplaylist.PlaylistViewModel
+import com.example.spotifytrack.TrackViewModel
+import com.example.spotifytrackvideos.TrackVideosViewModel
 import com.example.there.findclips.videos.favourites.VideosFavouritesViewModel
 import com.example.there.findclips.videos.player.YoutubePlayerViewModel
 import com.example.there.findclips.videos.relatedvideos.RelatedVideosViewModel
@@ -40,28 +40,28 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AlbumViewModel::class)
-    abstract fun albumViewModel(viewModel: AlbumViewModel): ViewModel
+    @ViewModelKey(com.example.spotifyalbum.AlbumViewModel::class)
+    abstract fun albumViewModel(viewModel: com.example.spotifyalbum.AlbumViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(ArtistViewModel::class)
-    abstract fun artistViewModel(viewModel: ArtistViewModel): ViewModel
+    @ViewModelKey(com.example.spotifyartist.ArtistViewModel::class)
+    abstract fun artistViewModel(viewModel: com.example.spotifyartist.ArtistViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(CategoryViewModel::class)
-    abstract fun categoryViewModel(viewModel: CategoryViewModel): ViewModel
+    @ViewModelKey(com.example.spotifycategory.CategoryViewModel::class)
+    abstract fun categoryViewModel(viewModel: com.example.spotifycategory.CategoryViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(PlaylistViewModel::class)
-    abstract fun playlistViewModel(viewModel: PlaylistViewModel): ViewModel
+    @ViewModelKey(com.example.spotifyplaylist.PlaylistViewModel::class)
+    abstract fun playlistViewModel(viewModel: com.example.spotifyplaylist.PlaylistViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(TrackVideosViewModel::class)
-    abstract fun trackVideosViewModel(viewModel: TrackVideosViewModel): ViewModel
+    @ViewModelKey(com.example.spotifytrackvideos.TrackVideosViewModel::class)
+    abstract fun trackVideosViewModel(viewModel: com.example.spotifytrackvideos.TrackVideosViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -80,8 +80,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SpotifySearchViewModel::class)
-    abstract fun spotifySearchViewModel(viewModel: SpotifySearchViewModel): ViewModel
+    @ViewModelKey(com.example.spotifysearch.spotify.SpotifySearchViewModel::class)
+    abstract fun spotifySearchViewModel(viewModel: com.example.spotifysearch.spotify.SpotifySearchViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -90,8 +90,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(TrackViewModel::class)
-    abstract fun trackViewModel(viewModel: TrackViewModel): ViewModel
+    @ViewModelKey(com.example.spotifytrack.TrackViewModel::class)
+    abstract fun trackViewModel(viewModel: com.example.spotifytrack.TrackViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -18,8 +18,8 @@
         <service android:name="com.example.spotifyplayer.SpotifyPlayerCancelNotificationService" />
 
         <provider
-            android:name=".spotify.search.SearchSuggestionProvider"
-            android:authorities="com.example.there.findclips.spotify.search.SearchSuggestionProvider" />
+            android:name="com.example.spotifysearch.SearchSuggestionProvider"
+            android:authorities="com.example.spotifysearch.SearchSuggestionProvider" />
 
         <activity
             android:name="com.example.main.MainActivity"
