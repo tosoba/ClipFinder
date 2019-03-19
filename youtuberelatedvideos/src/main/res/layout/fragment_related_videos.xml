@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fragmentView"
+            type="com.example.youtuberelatedvideos.RelatedVideosView" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".videos.relatedvideos.RelatedVideosFragment">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/related_videos_recycler_view"
+            clickHandler="@{fragmentView.relatedVideosRecyclerViewItemView.onItemClickListener}"
+            itemDecoration="@{fragmentView.relatedVideosRecyclerViewItemView.itemDecoration}"
+            itemViewBinder="@{fragmentView.relatedVideosRecyclerViewItemView.listItemView.itemViewBinder}"
+            items="@{fragmentView.relatedVideosRecyclerViewItemView.state.items}"
+            onScrollListener="@{fragmentView.relatedVideosRecyclerViewItemView.onScrollListener}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/related_videos_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{safeUnbox(fragmentView.state.initialVideosLoadingInProgress) ? View.VISIBLE : View.GONE}" />
+
+    </FrameLayout>
+</layout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="view"
+            type="com.example.youtubeaddvideo.AddVideoView" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/add_video_dialog_background">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/add_video_playlists_recycler_view"
+            clickHandler="@{view.playlistsRecyclerViewItemView.onItemClickListener}"
+            itemDecoration="@{view.playlistsRecyclerViewItemView.itemDecoration}"
+            itemViewBinder="@{view.playlistsRecyclerViewItemView.listItemView.itemViewBinder}"
+            items="@{view.state.playlists}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{safeUnbox(view.state.playlists.size()) > 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/add_video_new_playlist_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="@string/no_playlists_created_yet_make_a_new_one"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="@{safeUnbox(view.state.playlists.size()) == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/add_video_new_playlist_btn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/add_video_new_playlist_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:background="@color/colorPrimary"
+            android:foreground="@drawable/spotify_foreground_ripple"
+            android:onClick="@{view.onAddNewPlaylistBtnClickListener}"
+            android:text="@string/new_playlist"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_video_playlists_recycler_view" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

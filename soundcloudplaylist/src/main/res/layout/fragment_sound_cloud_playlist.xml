@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="view"
+            type="com.example.soundcloudplaylist.SoundCloudPlaylistView" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/sound_cloud_playlist_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false"
+        tools:context=".spotify.spotifyitem.playlist.PlaylistFragment">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/sound_cloud_playlist_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/sound_cloud_playlist_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="@color/colorPrimaryDark"
+                app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:title="@{view.playlist.title}"
+                app:toolbarId="@+id/playlist_toolbar">
+
+                <View
+                    android:id="@+id/sound_cloud_playlist_toolbar_gradient_background_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fitsSystemWindows="true" />
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/sound_cloud_playlist_profile_image"
+                    imageSrc="@{view.playlist.imageViewSrc}"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    app:civ_border_color="#fff"
+                    app:civ_border_width="2dp"
+                    app:layout_collapseMode="parallax" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/sound_cloud_collapsing_toolbar_bottom_gradient"
+                    android:fitsSystemWindows="true" />
+
+                <TextView
+                    style="@style/ShadowText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_margin="5dp"
+                    android:text="@string/playlist"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textDirection="firstStrongLtr"
+                    android:textSize="14sp" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/sound_cloud_playlist_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/sound_cloud_playlist_main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/sound_cloud_background_gradient"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <fragment
+                android:id="@+id/sound_cloud_playlist_tracks_fragment"
+                android:name="com.example.itemlist.soundcloud.SoundCloudTracksFragment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:additional_hint_text=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:main_hint_text="@string/no_tracks_loaded_yet"
+                app:should_show_header="true" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="50dp"
+                android:visibility="@{safeUnbox(view.state.loadingInProgress) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/play_sound_cloud_playlist_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="@{view.onPlayBtnClickListener}"
+            android:src="@drawable/play"
+            app:layout_anchor="@id/sound_cloud_playlist_main_content"
+            app:layout_anchorGravity="bottom|end" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/sound_cloud_playlist_favourite_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="@{view.onFavouriteBtnClickListener}"
+            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
+            app:layout_anchor="@id/sound_cloud_playlist_app_bar"
+            app:layout_anchorGravity="bottom|end" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>
+

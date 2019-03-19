@@ -63,7 +63,7 @@
 
                 <fragment
                     android:id="@+id/youtube_player_fragment"
-                    android:name="com.example.there.findclips.videos.player.YoutubePlayerFragment"
+                    android:name="com.example.youtubeplayer.YoutubePlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -72,7 +72,7 @@
 
                 <fragment
                     android:id="@+id/related_videos_fragment"
-                    android:name="com.example.there.findclips.videos.relatedvideos.RelatedVideosFragment"
+                    android:name="com.example.youtuberelatedvideos.RelatedVideosFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
