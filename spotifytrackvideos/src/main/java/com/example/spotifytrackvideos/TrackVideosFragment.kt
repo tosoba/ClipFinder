@@ -8,34 +8,42 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.coreandroid.base.handler.OnTrackChangeListener
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
+import com.example.spotifytrack.TrackFragment
+import com.example.youtubesearch.VideosSearchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifytrackvideos.TrackVideosViewModel>(com.example.spotifytrackvideos.TrackVideosViewModel::class.java),
-        com.example.spotifytrackvideos.OnTrackChangeListener,
-        com.example.coreandroid.di.Injectable,
-        com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed {
+        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
+        OnTrackChangeListener,
+        Injectable,
+        GoesToPreviousStateOnBackPressed {
 
-    private val onPageChangeListener = object : com.example.coreandroid.view.OnPageChangeListener {
+    private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             track_videos_tab_layout?.getTabAt(position)?.select()
             updateCurrentFragment(viewModel.viewState.track.get()!!)
         }
     }
 
-    private val onTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
+    private val onTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { track_videos_viewpager?.currentItem = it.position }
         }
     }
 
-    private val pagerAdapter: com.example.spotifytrackvideos.TrackVideosPagerAdapter by lazy {
-        com.example.spotifytrackvideos.TrackVideosPagerAdapter(
+    private val pagerAdapter: TrackVideosPagerAdapter by lazy {
+        TrackVideosPagerAdapter(
                 manager = childFragmentManager,
                 fragments = arrayOf(
                         VideosSearchFragment.newInstanceWithQuery(argTrack.query),

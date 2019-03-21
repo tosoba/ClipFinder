@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
@@ -21,11 +24,16 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
+import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
+import javax.inject.Inject
 
-class AccountTopFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyaccount.top.AccountTopViewModel>(
-        com.example.spotifyaccount.top.AccountTopViewModel::class.java
-), com.example.coreandroid.di.Injectable, com.example.spotifyaccount.TracksDataLoaded {
+class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class.java),
+        Injectable,
+        TracksDataLoaded {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     override val isDataLoaded: Boolean
         get() = viewModelInitialized
@@ -43,7 +51,7 @@ class AccountTopFragment : com.example.coreandroid.base.fragment.BaseVMFragment<
                                         get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
-                                    navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
                                 },
                                 onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadArtists()
@@ -56,7 +64,7 @@ class AccountTopFragment : com.example.coreandroid.base.fragment.BaseVMFragment<
                                         get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
-                                    navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                                 },
                                 onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadTracks()

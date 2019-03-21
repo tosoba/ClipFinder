@@ -11,6 +11,10 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.IPlayerFragment
+import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.dpToPx
@@ -22,9 +26,12 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
-        com.example.coreandroid.base.fragment.IPlayerFragment,
-        com.example.coreandroid.di.Injectable {
+        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
+        IYoutubePlayerFragment,
+        Injectable {
+
+    override val playerView: View?
+        get() = view
 
     private var youTubePlayer: YouTubePlayer? = null
 
@@ -56,7 +63,7 @@ class YoutubePlayerFragment :
         YoutubePlayerView(onYoutubePlayerCloseBtnClickListener, onYoutubePlayerPlayPauseBtnClickListener)
     }
 
-    private val playlistYoutubePlayerStateChangeListener = object : com.example.coreandroid.view.OnYoutubePlayerStateChangeListener {
+    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
             when (state) {
                 PlayerConstants.PlayerState.ENDED -> {
@@ -73,7 +80,7 @@ class YoutubePlayerFragment :
         }
     }
 
-    private val singleVideoYoutubePlayerStateChangeListener = object : com.example.coreandroid.view.OnYoutubePlayerStateChangeListener {
+    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
         override fun onStateChange(state: PlayerConstants.PlayerState) {
             when (state) {
                 PlayerConstants.PlayerState.PLAYING -> {
@@ -91,7 +98,7 @@ class YoutubePlayerFragment :
         }
     }
 
-    val lastPlayedVideo: Video?
+   override val lastPlayedVideo: Video?
         get() = viewModel.playerState.lastPlayedVideo
 
     override fun onCreateView(
@@ -104,7 +111,7 @@ class YoutubePlayerFragment :
             container,
             false
     ).apply {
-        playerView = fragmentView
+        fragmentView = this@YoutubePlayerFragment.fragmentView
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -130,13 +137,13 @@ class YoutubePlayerFragment :
 
     override fun stopPlayback() = stopPlaybackAndNullifyLastPlayedItems()
 
-    fun onPlayerDimensionsChange(slideOffset: Float) {
+    override fun onPlayerDimensionsChange(slideOffset: Float) {
         val youtubePlayerGuidelinePercentage = (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
         youtube_player_guideline.setGuidelinePercent(youtubePlayerGuidelinePercentage)
         youtube_player_guideline?.requestLayout()
     }
 
-    fun loadVideo(video: Video) {
+    override fun loadVideo(video: Video) {
         if (video == viewModel.playerState.lastPlayedVideo) return
 
         viewModel.onLoadVideo(video)
@@ -147,7 +154,7 @@ class YoutubePlayerFragment :
         youtube_player_view?.playerUIController?.setVideoTitle(video.title)
     }
 
-    fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
+    override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
         if (videoPlaylist == viewModel.playerState.lastVideoPlaylist) return
 
         viewModel.onLoadVideoPlaylist(videoPlaylist, videos)

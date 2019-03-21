@@ -37,6 +37,8 @@ dependencies {
     implementation project(':coreandroid')
     implementation project(':spotifyapi')
     implementation project(':itemlist')
+    implementation project(':youtubesearch')
+    implementation project(':spotifytrack')
 
     implementation rootProject.ext.rxJava
 

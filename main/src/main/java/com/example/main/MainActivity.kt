@@ -19,7 +19,12 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.BaseVMActivity
+import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
+import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
+import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
+import com.example.coreandroid.base.handler.*
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
@@ -31,7 +36,6 @@ import com.example.coreandroid.util.ext.screenHeight
 import com.example.coreandroid.util.ext.screenOrientation
 import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.view.OnNavigationDrawerClosedListerner
-import com.example.main.controller.*
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.there.domain.entity.spotify.AccessTokenEntity
@@ -51,9 +55,12 @@ import com.example.there.findclips.videos.player.YoutubePlayerFragment
 import com.example.there.findclips.videos.relatedvideos.RelatedVideosFragment
 import com.example.there.findclips.view.OnNavigationDrawerClosedListerner
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.settings.SettingsActivity
 import com.example.spotifyapi.SpotifyAuth
 import com.example.spotifyrepo.preferences.SpotifyPreferences
+import com.example.youtubeaddvideo.AddVideoDialogFragment
+import com.example.youtubeaddvideo.AddVideoViewState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -73,11 +80,14 @@ class MainActivity :
         SpotifyPlayerController,
         YoutubePlayerController,
         SpotifyTrackChangeHandler,
-        com.example.coreandroid.base.handler.BackPressedWithNoPreviousStateController,
+        BackPressedWithNoPreviousStateController,
         SpotifyLoginController,
         ConnectivitySnackbarHost,
         NavigationDrawerController,
         ToolbarController {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     override val slidingPanel: SlidingUpPanelLayout?
         get() = sliding_layout
@@ -88,21 +98,21 @@ class MainActivity :
     private val soundCloudMainFragment: SoundCloudMainFragment?
         get() = mainContentViewPagerAdapter.currentFragment as? SoundCloudMainFragment
 
-    private val youtubePlayerFragment: YoutubePlayerFragment?
+    private val youtubePlayerFragment: IYoutubePlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
-                as? YoutubePlayerFragment
+                as? IYoutubePlayerFragment
 
-    private val spotifyPlayerFragment: SpotifyPlayerFragment?
+    private val spotifyPlayerFragment: ISpotifyPlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.spotify_player_fragment)
-                as? SpotifyPlayerFragment
+                as? ISpotifyPlayerFragment
 
     private val similarTracksFragment: SpotifyTracksFragment?
         get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
                 as? SpotifyTracksFragment
 
-    private val relatedVideosFragment: RelatedVideosFragment?
+    private val relatedVideosFragment: IRelatedVideosSearchFragment?
         get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
-                as? RelatedVideosFragment
+                as? IRelatedVideosSearchFragment
 
     override val connectivitySnackbarParentView: View?
         get() = findViewById(R.id.main_view_pager)
@@ -135,11 +145,11 @@ class MainActivity :
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
-    private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
+    private val binding: com.example.main.databinding.ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 
-    private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
+    private val drawerHeaderBinding: com.example.main.databinding.DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.inflate<DrawerHeaderBinding>(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
     }
 
@@ -430,14 +440,14 @@ class MainActivity :
 
     override fun onTrackChanged(trackId: String) {
         viewModel.getSimilarTracks(trackId)
-        sliding_layout?.setDragView(spotifyPlayerFragment?.view)
+        sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
     }
 
     override fun loadVideo(video: Video) {
         spotifyPlayerFragment?.stopPlayback()
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
         youtubePlayerFragment?.loadVideo(video)
-        sliding_layout?.setDragView(youtubePlayerFragment?.view)
+        sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()
         relatedVideosFragment?.searchRelatedVideos(video)
     }
@@ -451,7 +461,7 @@ class MainActivity :
         viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
         spotifyPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
-        sliding_layout?.setDragView(youtubePlayerFragment?.view)
+        sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()
         relatedVideosFragment?.searchRelatedVideos(videos.first())
     }
@@ -518,7 +528,7 @@ class MainActivity :
         similarTracksFragment?.onItemClick = {
             sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
             spotifyMainFragment?.currentNavHostFragment
-                    ?.showFragment(TrackVideosFragment.newInstance(it), true)
+                    ?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(it), true)
         }
     }
 
@@ -599,7 +609,7 @@ class MainActivity :
 
         spotifyMainFragment?.let {
             val currentFragment = it.currentNavHostFragment
-            currentFragment?.showFragment(SpotifySearchMainFragment.newInstance(query), true)
+            currentFragment?.showFragment(fragmentFactory.newSpotifySearchFragment(query), true)
         }
 
         //TODO: handle soundcloud search here

@@ -1,4 +1,4 @@
-package com.example.main.controller
+package com.example.coreandroid.base.handler
 
 import android.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Album

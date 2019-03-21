@@ -8,6 +8,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
@@ -23,8 +26,12 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
-class AlbumFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyalbum.AlbumViewModel>(com.example.spotifyalbum.AlbumViewModel::class.java), com.example.coreandroid.di.Injectable {
+class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
@@ -37,7 +44,7 @@ class AlbumFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.e
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadAlbumsArtists(album.artists.map { it.id })
@@ -50,7 +57,7 @@ class AlbumFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.e
                                 get() = ItemBinderBase(BR.track, R.layout.track_popularity_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadTracksFromAlbum(album.id) }
                 )

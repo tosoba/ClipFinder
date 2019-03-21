@@ -1,14 +1,16 @@
 package com.example.coreandroid.base.fragment
 
-interface IPlayerFragment : StopsPlayback, ReactsToSlidingPanelStateChanges
+import android.view.View
 
-interface ReactsToSlidingPanelStateChanges {
+interface IPlayerFragment {
+    val playerView: View?
+
     fun onDragging() = Unit
     fun onExpanded() = Unit
     fun onCollapsed() = Unit
     fun onHidden() = Unit
-}
 
-interface StopsPlayback {
+    fun onPlayerDimensionsChange(slideOffset: Float) = Unit
+
     fun stopPlayback() = Unit
 }

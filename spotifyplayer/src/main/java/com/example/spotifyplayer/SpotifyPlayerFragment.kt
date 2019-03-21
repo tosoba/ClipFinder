@@ -17,6 +17,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
@@ -24,20 +27,20 @@ import com.example.coreandroid.util.ext.*
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.R
 import com.example.coreandroid.view.OnSeekBarProgressChangeListener
+import com.example.spotifyapi.SpotifyAuth
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import javax.inject.Inject
 
-class SpotifyPlayerFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyplayer.SpotifyPlayerViewModel>(com.example.spotifyplayer.SpotifyPlayerViewModel::class.java),
-        com.example.coreandroid.base.fragment.IPlayerFragment,
+class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class.java),
+        ISpotifyPlayerFragment,
         Player.NotificationCallback,
         Player.OperationCallback,
-        com.example.coreandroid.di.Injectable {
+        Injectable {
 
-    private val view: com.example.spotifyplayer.SpotifyPlayerView by lazy(LazyThreadSafetyMode.NONE) {
-        com.example.spotifyplayer.SpotifyPlayerView(
+    private val spotifyPlayerView: SpotifyPlayerView by lazy(LazyThreadSafetyMode.NONE) {
+        SpotifyPlayerView(
                 state = viewModel.viewState,
                 onSpotifyPlayPauseBtnClickListener = onSpotifyPlayPauseBtnClickListener,
                 onCloseSpotifyPlayerBtnClickListener = onCloseSpotifyPlayerBtnClickListener,
@@ -47,10 +50,13 @@ class SpotifyPlayerFragment :
         )
     }
 
-    val isPlayerLoggedIn: Boolean
+    override val playerView: View?
+        get() = this.view
+
+    override val isPlayerLoggedIn: Boolean
         get() = spotifyPlayer?.isLoggedIn == true
 
-    val isPlayerInitialized: Boolean
+    override val isPlayerInitialized: Boolean
         get() = spotifyPlayer?.isInitialized == true
 
     @Inject
@@ -58,13 +64,13 @@ class SpotifyPlayerFragment :
 
     private var spotifyPlayer: SpotifyPlayer? = null
 
-    val lastPlayedTrack: Track?
+    override val lastPlayedTrack: Track?
         get() = viewModel.playerState.lastPlayedTrack
 
-    val lastPlayedAlbum: Album?
+    override val lastPlayedAlbum: Album?
         get() = viewModel.playerState.lastPlayedAlbum
 
-    val lastPlayedPlaylist: Playlist?
+    override val lastPlayedPlaylist: Playlist?
         get() = viewModel.playerState.lastPlayedPlaylist
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
@@ -103,7 +109,7 @@ class SpotifyPlayerFragment :
     private var spotifyPlaybackTimer: CountDownTimer? = null
 
     private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
-        object : com.example.coreandroid.view.OnSeekBarProgressChangeListener {
+        object : OnSeekBarProgressChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     val positionInMs = progress * 1000
@@ -149,7 +155,7 @@ class SpotifyPlayerFragment :
             container,
             false
     ).apply {
-        fragmentView = view
+        fragmentView = spotifyPlayerView
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -267,9 +273,9 @@ class SpotifyPlayerFragment :
         viewModel.playerState.lastPlayedAlbum = null
     }
 
-    fun onAuthenticationComplete(accessToken: String) {
+    override fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
-            val playerConfig = Config(applicationContext, accessToken, com.example.api.SpotifyClient.id)
+            val playerConfig = Config(applicationContext, accessToken, SpotifyAuth.id)
 
             spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
@@ -287,11 +293,11 @@ class SpotifyPlayerFragment :
         }
     }
 
-    fun logOutPlayer() {
+    override fun logOutPlayer() {
         spotifyPlayer?.logout()
     }
 
-    fun loadTrack(track: Track) {
+    override fun loadTrack(track: Track) {
         viewModel.playerState.lastPlayedAlbum = null
         viewModel.playerState.lastPlayedPlaylist = null
 
@@ -299,7 +305,7 @@ class SpotifyPlayerFragment :
         resetProgressAndPlay(track.uri)
     }
 
-    fun loadAlbum(album: Album) {
+    override fun loadAlbum(album: Album) {
         viewModel.playerState.lastPlayedTrack = null
         viewModel.playerState.lastPlayedPlaylist = null
 
@@ -307,7 +313,7 @@ class SpotifyPlayerFragment :
         resetProgressAndPlay(album.uri)
     }
 
-    fun loadPlaylist(playlist: Playlist) {
+    override fun loadPlaylist(playlist: Playlist) {
         viewModel.playerState.lastPlayedTrack = null
         viewModel.playerState.lastPlayedAlbum = null
 

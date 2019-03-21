@@ -25,5 +25,5 @@ class SpotifyAlbumsFragment : BaseListFragment<Album>() {
 
     override fun fragmentToShowOnItemClick(
             item: Album
-    ): Fragment = AlbumFragment.newInstance(item)
+    ): Fragment = fragmentFactory.newSpotifyAlbumFragment(album = item)
 }

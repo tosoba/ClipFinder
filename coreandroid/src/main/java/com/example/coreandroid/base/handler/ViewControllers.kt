@@ -1,4 +1,4 @@
-package com.example.main.controller
+package com.example.coreandroid.base.handler
 
 import android.view.View
 import com.example.coreandroid.util.ext.expandIfHidden

@@ -5,7 +5,8 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.example.coreandroid.base.fragment.BaseListFragment
-import com.example.coreandroid.base.handler.BackPressedWithNoPreviousStateController
+import com.example.coreandroid.base.handler.*
+import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
 
 val Fragment.appCompatActivity: AppCompatActivity?

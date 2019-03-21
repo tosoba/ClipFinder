@@ -38,6 +38,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
+    implementation project(':spotifyapi')
 
     implementation rootProject.ext.rxJava
 

@@ -25,5 +25,5 @@ class SpotifyCategoriesFragment : BaseListFragment<Category>() {
 
     override fun fragmentToShowOnItemClick(
             item: Category
-    ): Fragment = CategoryFragment.newInstance(item)
+    ): Fragment = fragmentFactory.newSpotifyCategoryFragment(category = item)
 }

@@ -7,6 +7,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Track
@@ -20,20 +23,25 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
+import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountSavedBinding
+import javax.inject.Inject
 
 class AccountSavedFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyaccount.saved.AccountSavedViewModel>(com.example.spotifyaccount.saved.AccountSavedViewModel::class.java),
-        com.example.coreandroid.di.Injectable,
-        com.example.spotifyaccount.TracksDataLoaded {
+        BaseVMFragment<AccountSavedViewModel>(com.example.spotifyaccount.saved.AccountSavedViewModel::class.java),
+        Injectable,
+        TracksDataLoaded {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     override val isDataLoaded: Boolean
         get() = viewModelInitialized
                 && viewModel.viewState.albums.isNotEmpty()
                 && viewModel.viewState.tracks.isNotEmpty()
 
-    private val view: com.example.spotifyaccount.saved.AccountSavedView by lazy {
-        com.example.spotifyaccount.saved.AccountSavedView(
+    private val view: AccountSavedView by lazy {
+        AccountSavedView(
                 viewModel.viewState,
                 AccountSavedAdapter(
                         RecyclerViewItemView(
@@ -43,7 +51,7 @@ class AccountSavedFragment :
                                         get() = ItemBinderBase(BR.imageListItem, com.example.coreandroid.R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
-                                    navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyAlbumFragment(album = it), true)
                                 },
                                 onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() = viewModel.loadAlbums()
@@ -56,7 +64,7 @@ class AccountSavedFragment :
                                         get() = ItemBinderBase(BR.imageListItem, com.example.coreandroid.R.layout.named_image_list_item)
                                 },
                                 ClickHandler {
-                                    navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                                 },
                                 onScrollListener = object : EndlessRecyclerOnScrollListener() {
                                     override fun onLoadMore() {

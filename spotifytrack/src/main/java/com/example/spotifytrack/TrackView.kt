@@ -2,6 +2,9 @@ package com.example.spotifytrack
 
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Artist
+import com.example.coreandroid.model.spotify.Track
 import com.github.mikephil.charting.data.RadarData
 
 class TrackView(

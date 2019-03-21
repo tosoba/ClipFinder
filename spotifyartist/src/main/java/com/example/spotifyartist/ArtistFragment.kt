@@ -8,6 +8,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
@@ -23,11 +27,15 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
+import javax.inject.Inject
 
 class ArtistFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyartist.ArtistViewModel>(com.example.spotifyartist.ArtistViewModel::class.java),
-        com.example.coreandroid.di.Injectable,
-        com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed {
+        BaseVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
+        Injectable,
+        GoesToPreviousStateOnBackPressed {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
@@ -40,7 +48,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyAlbumFragment(album = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadAlbumsFromArtist(artistToLoad.id)

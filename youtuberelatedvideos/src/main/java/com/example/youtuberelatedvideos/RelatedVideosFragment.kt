@@ -8,6 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
@@ -22,7 +25,9 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import com.example.there.findclips.R
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 
-class RelatedVideosFragment : com.example.coreandroid.base.fragment.BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java), com.example.coreandroid.di.Injectable {
+class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java),
+        Injectable,
+        IRelatedVideosSearchFragment {
 
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
@@ -62,7 +67,7 @@ class RelatedVideosFragment : com.example.coreandroid.base.fragment.BaseVMFragme
         relatedVideosRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }.root
 
-    fun searchRelatedVideos(video: Video) {
+    override fun searchRelatedVideos(video: Video) {
         viewModel.searchRelatedVideos(video)
     }
 }

@@ -7,6 +7,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.handler.OnTrackChangeListener
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
@@ -20,8 +24,13 @@ import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.*
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import javax.inject.Inject
 
-class TrackFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifytrack.TrackViewModel>(com.example.spotifytrack.TrackViewModel::class.java), com.example.coreandroid.di.Injectable {
+class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     var track: Track? = null
         set(value) {
@@ -52,7 +61,12 @@ class TrackFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.e
                         AlbumInfoViewState(viewModel.viewState.albumLoadingInProgress, viewModel.viewState.album),
                         View.OnClickListener { _ ->
                             val album = viewModel.viewState.album.get()
-                            album?.let { navHostFragment?.showFragment(AlbumFragment.newInstance(it), true) }
+                            album?.let {
+                                navHostFragment?.showFragment(
+                                    fragmentFactory.newSpotifyAlbumFragment(album = it),
+                                    true
+                                )
+                            }
                         }
                 ),
                 RecyclerViewItemView(
@@ -62,7 +76,7 @@ class TrackFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.e
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(ArtistFragment.newInstance(artist = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener { _ ->
                             track?.let { viewModel.loadArtists(it.artists.map { artist -> artist.id }) }
@@ -75,7 +89,7 @@ class TrackFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.e
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            (parentFragment as? com.example.spotifytrackvideos.OnTrackChangeListener)?.onTrackChanged(newTrack = it)
+                            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
                         },
                         onReloadBtnClickListener = View.OnClickListener { _ ->
                             track?.let { viewModel.loadSimilarTracks(it) }

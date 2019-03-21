@@ -13,6 +13,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.coreandroid.R
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.databinding.HeaderItemBinding
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.util.ext.putArguments
 import com.example.coreandroid.util.ext.screenOrientation
@@ -25,14 +28,19 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_list.*
+import javax.inject.Inject
 
-abstract class BaseListFragment<T : Parcelable> : Fragment() {
+
+abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
 
     var refreshData: ((BaseListFragment<T>) -> Unit)? = null
     var loadMore: (() -> Unit)? = null
     var onItemClick: ((T) -> Unit)? = null
 
     protected abstract val defaultHeaderText: String
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
@@ -134,7 +142,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     }
 
     private fun headerItemDecoration(): RecyclerView.ItemDecoration {
-        val binding = DataBindingUtil.inflate<HeaderItemBinding>(
+        val binding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
                 LayoutInflater.from(context),
                 R.layout.header_item,
                 null,

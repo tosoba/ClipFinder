@@ -43,6 +43,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
+    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
     implementation project(':domain')
     implementation project(':core')

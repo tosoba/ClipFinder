@@ -2,6 +2,8 @@ package com.example.coreandroid.model.videos
 
 import android.databinding.ObservableField
 import android.os.Parcelable
+import com.example.core.util.ext.formattedString
+import com.example.core.util.ext.getPublishedAgoString
 import com.example.coreandroid.R
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.imageview.ImageViewSrc

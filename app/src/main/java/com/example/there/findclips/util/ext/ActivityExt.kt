@@ -17,8 +17,4 @@ fun Activity.registerFragmentLifecycleCallbacks(
         ?.supportFragmentManager
         ?.registerFragmentLifecycleCallbacks(callbacks, recursive)
 
-fun AppCompatActivity.showDrawerHamburger() = supportActionBar?.apply {
-    setDisplayHomeAsUpEnabled(true)
-    setHomeAsUpIndicator(R.drawable.spotify_drawer_menu_background)
-}
 

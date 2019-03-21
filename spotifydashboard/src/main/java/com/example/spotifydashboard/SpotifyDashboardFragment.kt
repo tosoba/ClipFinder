@@ -5,6 +5,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.spotify.Album
@@ -23,9 +27,12 @@ import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
 
-class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifydashboard.SpotifyDashboardViewModel>(
-        com.example.spotifydashboard.SpotifyDashboardViewModel::class.java
-), com.example.coreandroid.di.Injectable, com.example.coreandroid.base.fragment.HasMainToolbar {
+class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
+       SpotifyDashboardViewModel::class.java
+), Injectable, HasMainToolbar {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
@@ -49,7 +56,7 @@ class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFra
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(CategoryFragment.newInstance(category = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyCategoryFragment(category = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadCategories() }
                 ),
@@ -64,7 +71,7 @@ class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFra
                                 get() = ItemBinderBase(BR.playlist, R.layout.playlist_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(PlaylistFragment.newInstance(playlist = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyPlaylistFragment(playlist = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadFeaturedPlaylists() }
                 ),
@@ -79,7 +86,10 @@ class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFra
                                 get() = ItemBinderBase(BR.track, R.layout.top_track_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it.track), true)
+                            navHostFragment?.showFragment(
+                                    fragmentFactory.newSpotifyTrackVideosFragment(track = it.track),
+                                    true
+                            )
                         },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadDailyViralTracks() }
                 ),
@@ -94,7 +104,7 @@ class SpotifyDashboardFragment : com.example.coreandroid.base.fragment.BaseVMFra
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(AlbumFragment.newInstance(album = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyAlbumFragment(album = it), true)
                         },
                         onScrollListener = onNewReleasesScrollListener,
                         onReloadBtnClickListener = View.OnClickListener {

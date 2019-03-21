@@ -8,6 +8,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
@@ -17,7 +19,7 @@ import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
 import com.squareup.picasso.Picasso
 
-class PlaylistFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyplaylist.PlaylistViewModel>(com.example.spotifyplaylist.PlaylistViewModel::class.java), com.example.coreandroid.di.Injectable {
+class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 

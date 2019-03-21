@@ -25,5 +25,5 @@ class SpotifyPlaylistsFragment : BaseListFragment<Playlist>() {
                 get() = ItemBinderBase(BR.playlist, R.layout.grid_playlist_item)
         }
 
-    override fun fragmentToShowOnItemClick(item: Playlist): Fragment = PlaylistFragment.newInstance(item)
+    override fun fragmentToShowOnItemClick(item: Playlist): Fragment = fragmentFactory.newSpotifyPlaylistFragment(item)
 }

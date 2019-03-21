@@ -1,4 +1,4 @@
-package com.example.coreandroid.util.ext
+package com.example.core.util.ext
 
 import java.math.BigInteger
 import java.util.*

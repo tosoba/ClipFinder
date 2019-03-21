@@ -2,6 +2,13 @@ package com.example.there.findclips.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import com.example.db.*
+import com.example.soundcloudrepo.SoundCloudRepository
+import com.example.soundcloudrepo.datastore.SoundCloudDbDataStore
+import com.example.soundcloudrepo.datastore.SoundCloudRemoteDataStore
+import com.example.spotifyrepo.SpotifyRepository
+import com.example.spotifyrepo.datastore.SpotifyDbDataStore
+import com.example.spotifyrepo.datastore.SpotifyRemoteDataStore
 import com.example.there.domain.repo.soundcloud.ISoundCloudRepository
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
@@ -11,6 +18,9 @@ import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
 import com.example.there.domain.repo.videos.IVideosRepository
 import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
 import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
+import com.example.videosrepo.VideosRepository
+import com.example.videosrepo.datastore.VideosDbDataStore
+import com.example.videosrepo.datastore.VideosRemoteDataStore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -27,53 +37,44 @@ abstract class DataModule {
         @JvmStatic
         fun database(
                 context: Context
-        ): com.example.db.model.FindClipsDb = Room.databaseBuilder(context, com.example.db.model.FindClipsDb::class.java, "FindClipsDb.db")
+        ): FindClipsDb = Room.databaseBuilder(context, FindClipsDb::class.java, "FindClipsDb.db")
                 .build()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun albumDao(database: com.example.db.model.FindClipsDb): com.example.db.model.AlbumDao = database.albumDao()
+        fun albumDao(database: FindClipsDb): AlbumDao = database.albumDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun artistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.ArtistDao = database.artistDao()
+        fun artistDao(database: FindClipsDb): ArtistDao = database.artistDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun categoryDao(database: com.example.db.model.FindClipsDb): com.example.db.model.CategoryDao = database.categoryDao()
+        fun categoryDao(database: FindClipsDb): CategoryDao = database.categoryDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun spotifyPlaylistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.SpotifyPlaylistDao = database.spotifyPlaylistDao()
+        fun spotifyPlaylistDao(database: FindClipsDb): SpotifyPlaylistDao = database.spotifyPlaylistDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun trackDao(database: com.example.db.model.FindClipsDb): com.example.db.model.TrackDao = database.trackDao()
+        fun trackDao(database: FindClipsDb): TrackDao = database.trackDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun videoDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoDao = database.videoDao()
+        fun videoDao(database: FindClipsDb): VideoDao = database.videoDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun videoPlaylistDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoPlaylistDao = database.videoPlaylistDao()
+        fun videoPlaylistDao(database: FindClipsDb): VideoPlaylistDao = database.videoPlaylistDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun videoSearchDao(database: com.example.db.model.FindClipsDb): com.example.db.model.VideoSearchDao = database.videoSearchDao()
+        fun videoSearchDao(database: FindClipsDb): VideoSearchDao = database.videoSearchDao()
 
         @Provides
-        @Singleton
         @JvmStatic
-        fun relatedVideoSearchDao(database: com.example.db.model.FindClipsDb): com.example.db.model.RelatedVideoSearchDao = database.relatedVideoSearchDao()
+        fun relatedVideoSearchDao(database: FindClipsDb): RelatedVideoSearchDao = database.relatedVideoSearchDao()
     }
 
     @Binds

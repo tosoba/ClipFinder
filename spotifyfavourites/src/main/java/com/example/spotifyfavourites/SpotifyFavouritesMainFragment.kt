@@ -7,6 +7,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.navigationDrawerController
@@ -15,8 +18,12 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesMainBinding
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesFragment
 import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
+import javax.inject.Inject
 
-class SpotifyFavouritesMainFragment : Fragment(), com.example.coreandroid.base.fragment.HasMainToolbar {
+class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar, Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     override val toolbar: Toolbar
         get() = favourites_toolbar
@@ -24,7 +31,7 @@ class SpotifyFavouritesMainFragment : Fragment(), com.example.coreandroid.base.f
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
                 SpotifyFavouritesFragment(),
-                VideosFavouritesFragment()
+                fragmentFactory.newVideosFavouritesFragment
         ))
     }
 

@@ -1,4 +1,4 @@
-package com.example.main.controller
+package com.example.coreandroid.base.handler
 
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist

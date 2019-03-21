@@ -8,9 +8,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
+import com.example.coreandroid.view.recyclerview.decoration.HeaderDecoration
 import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
 import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 import com.example.coreandroid.view.recyclerview.item.ListItemView
@@ -21,9 +25,14 @@ import com.example.there.findclips.R
 import com.example.there.findclips.videos.videoplaylist.VideoPlaylistFragment
 import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
+import javax.inject.Inject
 
 
-class VideosFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java), com.example.coreandroid.di.Injectable {
+class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java),
+        Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView> by lazy {
         RecyclerViewItemView(
@@ -37,7 +46,7 @@ class VideosFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFra
                         get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
                 },
                 ClickHandler {
-                    navHostFragment?.showFragment(VideoPlaylistFragment.newInstance(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
+                    navHostFragment?.showFragment(fragmentFactory.newVideoPlaylistFragment(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
                 },
                 SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
@@ -51,12 +60,12 @@ class VideosFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFra
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
+        val binding: com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
             view = this@VideosFavouritesFragment.view
             videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-            val headerBinding = DataBindingUtil.inflate<HeaderItemBinding>(
+            val headerBinding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
                     LayoutInflater.from(context),
                     R.layout.header_item,
                     null,
@@ -66,7 +75,7 @@ class VideosFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFra
                 executePendingBindings()
             }
 
-            videosFavouritesPlaylistsRecyclerView.addItemDecoration(com.example.coreandroid.view.list.decoration.HeaderDecoration(headerBinding.root, false, 1f, 0f, 1))
+            videosFavouritesPlaylistsRecyclerView.addItemDecoration(HeaderDecoration(headerBinding.root, false, 1f, 0f, 1))
         }.root
     }
 

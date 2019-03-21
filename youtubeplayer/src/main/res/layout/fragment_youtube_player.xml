@@ -6,7 +6,7 @@
         <import type="android.view.View" />
 
         <variable
-            name="playerView"
+            name="fragmentView"
             type="com.example.youtubeplayer.YoutubePlayerView" />
     </data>
 

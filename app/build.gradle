@@ -47,7 +47,6 @@ android {
 
 dependencies {
     implementation 'com.spotify.android:auth:1.0.0-alpha'
-    implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
     implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -58,6 +57,40 @@ dependencies {
     implementation "com.android.support:design:$androidSupportLibVersion"
     implementation "com.android.support:cardview-v7:$androidSupportLibVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation "com.android.support:palette-v7:28.0.0"
+    implementation 'com.android.support:customtabs:28.0.0'
+
+    implementation project(':coreandroid')
+    implementation project(':db')
+    implementation project(':domain')
+    implementation project(':main')
+    implementation project(':soundcloudapi')
+    implementation project(':soundclouddashboard')
+    implementation project(':soundcloudfavourites')
+    implementation project(':soundcloudplaylist')
+    implementation project(':soundcloudrepo')
+    implementation project(':soundcloudtrackvideos')
+    implementation project(':spotifyaccount')
+    implementation project(':spotifyalbum')
+    implementation project(':spotifyapi')
+    implementation project(':spotifyartist')
+    implementation project(':spotifycategory')
+    implementation project(':spotifydashboard')
+    implementation project(':spotifyfavourites')
+    implementation project(':spotifyplayer')
+    implementation project(':spotifyplaylist')
+    implementation project(':spotifyrepo')
+    implementation project(':spotifysearch')
+    implementation project(':spotifytrack')
+    implementation project(':spotifytrackvideos')
+    implementation project(':videosrepo')
+    implementation project(':youtubeaddvideo')
+    implementation project(':youtubeapi')
+    implementation project(':youtubefavourites')
+    implementation project(':youtubeplayer')
+    implementation project(':youtuberelatedvideos')
+    implementation project(':youtubesearch')
+    implementation project(':youtubevideoplaylist')
 
     kapt rootProject.ext.daggerCompiler
     implementation rootProject.ext.dagger
@@ -69,35 +102,33 @@ dependencies {
     implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
     implementation rootProject.ext.room
+
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'android.arch.lifecycle:extensions:1.1.1'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'co.lujun:androidtagview:1.1.4'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:2.1.0'
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
+
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    implementation 'joda-time:joda-time:2.9.9'
-    // Material dialogs
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'co.lujun:androidtagview:1.1.4'
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
-    implementation 'com.github.pwittchen:reactivenetwork-rx2:2.1.0'
+    implementation 'com.github.lopei:collageview:0.1.3'
+    implementation "com.github.bumptech.glide:glide:4.7.1"
+
+    implementation 'joda-time:joda-time:2.9.9'
+
     testImplementation rootProject.ext.junit
     testImplementation rootProject.ext.mockito
     androidTestImplementation rootProject.ext.androidTestRunner
     androidTestImplementation 'org.mockito:mockito-android:2.8.47'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':db')
-    implementation project(':domain')
+
     implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1"
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation "com.github.bumptech.glide:glide:4.7.1"
-    implementation 'com.android.support:customtabs:28.0.0'
-
-    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
-    implementation 'com.github.lopei:collageview:0.1.3'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.11"
-    implementation "com.android.support:palette-v7:28.0.0"
 
     implementation 'com.github.vpaliy:SoundCloud-API:1.3.2'
 }
