@@ -11,6 +11,7 @@ import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.util.ext.spotifyLoginController
+import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding

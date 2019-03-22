@@ -1,6 +1,8 @@
 package com.example.coreandroid.view.recyclerview.item
 
 import android.view.View
+import com.example.coreandroid.model.videos.Video
+import com.example.coreandroid.util.list.ObservableSortedList
 
 class VideoItemView(
         val video: Video,

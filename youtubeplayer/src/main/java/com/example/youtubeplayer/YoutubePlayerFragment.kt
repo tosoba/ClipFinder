@@ -19,7 +19,7 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.slidingPanelController
-import com.example.there.findclips.R
+import com.example.youtubeplayer.databinding.FragmentYoutubePlayerBinding
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import kotlinx.android.synthetic.main.fragment_youtube_player.*
@@ -105,7 +105,7 @@ class YoutubePlayerFragment :
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentYoutubePlayerBinding>(
+    ): View? = DataBindingUtil.inflate<com.example.youtubeplayer.databinding.FragmentYoutubePlayerBinding>(
             inflater,
             R.layout.fragment_youtube_player,
             container,

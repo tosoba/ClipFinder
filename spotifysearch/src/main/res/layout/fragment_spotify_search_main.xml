@@ -12,7 +12,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.search.SearchFragment">
+        tools:context="com.example.spotifysearch.SearchFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/search_app_bar_layout"

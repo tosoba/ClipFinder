@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.View
+import com.example.coreandroid.model.spotify.Track
 
 class TrackVideosView(
         val state: TrackVideosViewState,

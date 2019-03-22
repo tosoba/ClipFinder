@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -35,12 +39,19 @@ dependencies {
     implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
+    implementation project(':youtubesearch')
 
     implementation rootProject.ext.rxJava
+
+    kapt rootProject.ext.daggerCompiler
+    implementation rootProject.ext.dagger
+    implementation rootProject.ext.daggerSupport
+    kapt rootProject.ext.daggerProcessor
 
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     implementation "com.android.support:appcompat-v7:$androidSupportLibVersion"
     implementation "com.android.support:support-v4:$androidSupportLibVersion"

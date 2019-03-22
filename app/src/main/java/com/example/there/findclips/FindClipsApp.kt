@@ -6,8 +6,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
+import com.example.coreandroid.util.Constants
 import com.example.there.findclips.di.AppInjector
-import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -48,18 +48,12 @@ class FindClipsApp : Application(), HasActivityInjector {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.channel_name)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            val channel = NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_DEFAULT).apply {
                 description = getString(R.string.channel_description)
             }
             getSystemService(NotificationManager::class.java).run {
                 createNotificationChannel(channel)
             }
         }
-    }
-
-    companion object {
-        const val CHANNEL_ID = "PLAYBACK_CHANNEL"
     }
 }

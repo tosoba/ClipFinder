@@ -15,7 +15,7 @@ val AlbumDbModel.domain: AlbumEntity
             name = name,
             albumType = albumType,
             artists = artists.map { SimpleArtistEntity(it.id, it.name) },
-            iconUrl = icons.secondIconUrlOrDefault,
+            iconUrl = icons.map { StringUrlModel(it) }.secondIconUrlOrDefault,
             uri = uri
     )
 
@@ -25,7 +25,7 @@ val AlbumEntity.db: AlbumDbModel
             name = name,
             albumType = albumType,
             artists = artists.map { SimplifiedArtistDbModel(it.id, it.name) },
-            icons = listOf(StringUrlModel(url = iconUrl)),
+            icons = listOf(iconUrl),
             uri = uri
     )
 

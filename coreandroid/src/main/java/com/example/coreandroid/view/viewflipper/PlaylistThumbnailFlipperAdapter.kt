@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.example.coreandroid.R
+import com.example.coreandroid.databinding.ImageViewListItemBinding
 import com.example.coreandroid.view.imageview.ImageViewSrc
 
 class PlaylistThumbnailFlipperAdapter(val thumbnailUrls: List<String>) : BaseAdapter() {

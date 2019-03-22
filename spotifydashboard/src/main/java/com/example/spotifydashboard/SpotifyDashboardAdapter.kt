@@ -12,6 +12,8 @@ import com.example.coreandroid.util.ext.makeItemBinding
 import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.R
+import com.example.coreandroid.databinding.HeaderItemBinding
+import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 
 class SpotifyDashboardAdapter(

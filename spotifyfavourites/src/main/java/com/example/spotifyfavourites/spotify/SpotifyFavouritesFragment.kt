@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.coreandroid.base.fragment.BaseListFragment
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.*
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.*
@@ -15,7 +17,7 @@ import com.example.spotifyfavourites.R
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
-class SpotifyFavouritesFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel>(com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel::class.java), com.example.coreandroid.di.Injectable {
+class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {
 
     private val onSpotifyTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {

@@ -3,8 +3,7 @@ package com.example.db.model.spotify
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
-import com.example.core.model.StringUrlModel
-import com.example.db.StringUrlModelConverter
+import com.example.db.StringListConverter
 
 @Entity(tableName = "albums")
 data class AlbumDbModel(
@@ -15,8 +14,8 @@ data class AlbumDbModel(
         @PrimaryKey
         val id: String,
 
-        @TypeConverters(StringUrlModelConverter::class)
-        val icons: List<StringUrlModel>,
+        @TypeConverters(StringListConverter::class)
+        val icons: List<String>,
 
         val name: String,
 
@@ -26,5 +25,5 @@ data class AlbumDbModel(
 data class SimplifiedAlbumDbModel(
         val id: String,
         val name: String,
-        val icons: List<StringUrlModel>
+        val icons: List<String>
 )

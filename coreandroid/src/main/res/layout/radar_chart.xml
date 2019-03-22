@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.example.coreandroid.view.radarchart.RadarChartView" />
+    </data>
+
+    <com.github.mikephil.charting.charts.RadarChart xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radar_chart"
+        radarChartData="@{view.data}"
+        radarChartView="@{view}"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" />
+</layout>
+

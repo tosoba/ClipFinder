@@ -8,19 +8,26 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.dpToPx
+import com.example.coreandroid.util.ext.setHeight
+import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
-import com.example.spotifysearch.spotify.SpotifySearchFragment
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*
+import javax.inject.Inject
 
-class SpotifySearchMainFragment : Fragment() {
+class SpotifySearchMainFragment : Fragment(), Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                SpotifySearchFragment.newInstanceWithQuery(query),
-                VideosSearchFragment.newInstanceWithQuery(query)
+                fragmentFactory.newSpotifySearchFragment(query),
+                fragmentFactory.newVideosSearchFragment(query)
         ))
     }
 
@@ -50,7 +57,7 @@ class SpotifySearchMainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search_main, container, false)
+        val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search_main, container, false)
         return binding.apply {
             searchFragmentView = view
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())

@@ -2,6 +2,9 @@ package com.example.spotifyartist
 
 import android.databinding.ObservableField
 import android.util.Log
+import com.example.coreandroid.mapper.spotify.domain
+import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.model.spotify.Artist
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity

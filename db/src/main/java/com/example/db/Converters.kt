@@ -1,8 +1,6 @@
 package com.example.db
 
 import android.arch.persistence.room.TypeConverter
-import com.example.core.model.StringIdModel
-import com.example.core.model.StringUrlModel
 import com.example.db.model.spotify.SimplifiedAlbumDbModel
 import com.example.db.model.spotify.SimplifiedArtistDbModel
 import com.google.gson.Gson
@@ -36,28 +34,10 @@ class SimplifiedArtistConverter {
     )
 }
 
-class StringUrlModelConverter {
+class StringListConverter {
     @TypeConverter
-    fun listToString(list: List<StringUrlModel>): String = Gson().toJson(ArrayList(list))
+    fun listFromString(string: String): List<String> = Gson().fromJson(string, object : TypeToken<List<String>>() {}.type)
 
     @TypeConverter
-    fun stringToList(
-            string: String
-    ): List<StringUrlModel> = Gson().fromJson<ArrayList<StringUrlModel>>(
-            string,
-            object : TypeToken<ArrayList<StringUrlModel>>() {}.type
-    )
-}
-
-class StringIdModelConverter {
-    @TypeConverter
-    fun toString(obj: StringIdModel): String = Gson().toJson(obj)
-
-    @TypeConverter
-    fun toObject(
-            string: String
-    ): StringIdModel = Gson().fromJson(
-            string,
-            object : TypeToken<StringIdModel>() {}.type
-    )
+    fun stringToList(list: List<String>): String = Gson().toJson(list)
 }

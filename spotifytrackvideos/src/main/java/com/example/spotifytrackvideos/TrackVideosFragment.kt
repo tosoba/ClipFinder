@@ -19,6 +19,7 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.spotifytrack.TrackFragment
+import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
@@ -78,8 +79,9 @@ class TrackVideosFragment :
 
     private val argTrack: Track by lazy { arguments!!.getParcelable<Track>(ARG_TRACK) }
 
-    private val view: com.example.spotifytrackvideos.TrackVideosView by lazy {
-        com.example.spotifytrackvideos.TrackVideosView(state = viewModel.viewState,
+    private val view: TrackVideosView by lazy {
+        TrackVideosView(
+                state = viewModel.viewState,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,

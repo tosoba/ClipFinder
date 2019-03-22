@@ -21,6 +21,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.BaseVMActivity
+import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
 import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
 import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
@@ -31,34 +32,18 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.util.ext.dpToPx
-import com.example.coreandroid.util.ext.screenHeight
-import com.example.coreandroid.util.ext.screenOrientation
-import com.example.coreandroid.util.ext.showDrawerHamburger
+import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnNavigationDrawerClosedListerner
-import com.example.main.soundcloud.SoundCloudMainFragment
-import com.example.main.spotify.SpotifyMainFragment
-import com.example.there.domain.entity.spotify.AccessTokenEntity
-import com.example.there.findclips.R
-import com.example.there.findclips.main.controller.*
-import com.example.there.findclips.settings.SettingsActivity
-import com.example.there.findclips.soundcloud.SoundCloudMainFragment
-import com.example.there.findclips.spotify.SpotifyMainFragment
-import com.example.there.findclips.spotify.list.SpotifyTracksFragment
-import com.example.there.findclips.spotify.player.SpotifyPlayerFragment
-import com.example.there.findclips.spotify.search.SearchSuggestionProvider
-import com.example.there.findclips.spotify.search.SpotifySearchMainFragment
-import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
-import com.example.there.findclips.videos.addvideo.AddVideoDialogFragment
-import com.example.there.findclips.videos.addvideo.AddVideoViewState
-import com.example.there.findclips.videos.player.YoutubePlayerFragment
-import com.example.there.findclips.videos.relatedvideos.RelatedVideosFragment
-import com.example.there.findclips.view.OnNavigationDrawerClosedListerner
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.SpotifyTracksFragment
+import com.example.main.databinding.ActivityMainBinding
+import com.example.main.databinding.DrawerHeaderBinding
+import com.example.main.soundcloud.SoundCloudMainFragment
+import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
 import com.example.spotifyapi.SpotifyAuth
 import com.example.spotifyrepo.preferences.SpotifyPreferences
+import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.example.youtubeaddvideo.AddVideoViewState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -84,7 +69,8 @@ class MainActivity :
         SpotifyLoginController,
         ConnectivitySnackbarHost,
         NavigationDrawerController,
-        ToolbarController {
+        ToolbarController,
+        IntentProvider {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -145,7 +131,7 @@ class MainActivity :
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
-    private val binding: com.example.main.databinding.ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
+    private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 
@@ -495,6 +481,9 @@ class MainActivity :
         }
     }
 
+    override val providedIntent: Intent
+        get() = Intent(this, MainActivity::class.java)
+
     override fun onLoggedOut() {
         viewModel.viewState.isLoggedIn.set(false)
         viewModel.drawerViewState.user.set(null)
@@ -524,14 +513,6 @@ class MainActivity :
         Log.e("ERR", "onTemporaryError")
     }
 
-    private fun setupNavigationFromSimilarTracks() {
-        similarTracksFragment?.onItemClick = {
-            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            spotifyMainFragment?.currentNavHostFragment
-                    ?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(it), true)
-        }
-    }
-
     override fun showLoginDialog() {
         if (!isPlayerLoggedIn) MaterialDialog.Builder(this)
                 .title(R.string.spotify_login)
@@ -541,6 +522,14 @@ class MainActivity :
                 .onPositive { _, _ -> openLoginWindow() }
                 .build()
                 .apply { show() }
+    }
+
+    private fun setupNavigationFromSimilarTracks() {
+        similarTracksFragment?.onItemClick = {
+            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+            spotifyMainFragment?.currentNavHostFragment
+                    ?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(it), true)
+        }
     }
 
     private fun logOutPlayer() {
@@ -609,7 +598,7 @@ class MainActivity :
 
         spotifyMainFragment?.let {
             val currentFragment = it.currentNavHostFragment
-            currentFragment?.showFragment(fragmentFactory.newSpotifySearchFragment(query), true)
+            currentFragment?.showFragment(fragmentFactory.newSpotifySearchMainFragment(query), true)
         }
 
         //TODO: handle soundcloud search here

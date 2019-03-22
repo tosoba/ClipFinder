@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
-import com.example.there.findclips.R;
+import com.example.coreandroid.R;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;

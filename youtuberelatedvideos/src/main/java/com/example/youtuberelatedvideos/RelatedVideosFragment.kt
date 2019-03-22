@@ -22,8 +22,9 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.item.VideoItemView
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
-import com.example.there.findclips.R
-import com.example.there.findclips.view.recycler.SeparatorDecoration
+import com.example.coreandroid.BR
+import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
+
 
 class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java),
         Injectable,
@@ -60,7 +61,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.there.findclips.databinding.FragmentRelatedVideosBinding>(
+    ): View? = DataBindingUtil.inflate<FragmentRelatedVideosBinding>(
             inflater, R.layout.fragment_related_videos, container, false
     ).apply {
         fragmentView = this@RelatedVideosFragment.view

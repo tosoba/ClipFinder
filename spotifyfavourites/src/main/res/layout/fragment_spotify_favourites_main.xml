@@ -11,7 +11,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainFragment">
+        tools:context="com.example.spotifyfavourites.SpotifyFavouritesMainFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/favourites_app_bar_layout"

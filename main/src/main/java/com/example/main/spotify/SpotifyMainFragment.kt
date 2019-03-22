@@ -7,20 +7,23 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.IMainContentFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.checkItem
 import com.example.coreandroid.util.ext.toolbarController
 import com.example.coreandroid.view.OnPageChangeListener
-import com.example.there.findclips.R
-import com.example.there.findclips.spotify.account.AccountNavHostFragment
-import com.example.there.findclips.spotify.dashboard.SpotifyDashboardNavHostFragment
-import com.example.there.findclips.spotify.favourites.SpotifyFavouritesMainNavHostFragment
-import com.example.there.findclips.view.OnPageChangeListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.main.R
+import com.example.main.databinding.FragmentSpotifyMainBinding
 import kotlinx.android.synthetic.main.fragment_spotify_main.*
+import javax.inject.Inject
 
 
-class SpotifyMainFragment : Fragment(), com.example.coreandroid.base.fragment.IMainContentFragment {
+class SpotifyMainFragment : Fragment(), IMainContentFragment, Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 
@@ -38,7 +41,11 @@ class SpotifyMainFragment : Fragment(), com.example.coreandroid.base.fragment.IM
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
                 childFragmentManager,
-                arrayOf(SpotifyDashboardNavHostFragment(), AccountNavHostFragment(), SpotifyFavouritesMainNavHostFragment())
+                arrayOf(
+                        fragmentFactory.newSpotifyDashboardNavHostFragment,
+                        fragmentFactory.newSpotifyAccountNavHostFragment,
+                        fragmentFactory.newSpotifyFavouritesMainNavHostFragment
+                )
         )
     }
 
@@ -68,7 +75,7 @@ class SpotifyMainFragment : Fragment(), com.example.coreandroid.base.fragment.IM
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.there.findclips.databinding.FragmentSpotifyMainBinding>(
+    ): View? = DataBindingUtil.inflate<FragmentSpotifyMainBinding>(
             inflater,
             R.layout.fragment_spotify_main,
             container,

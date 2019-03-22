@@ -1,5 +1,6 @@
 package com.example.spotifydashboard
 
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -23,9 +24,11 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
+import com.example.coreandroid.BR
 
 class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
        SpotifyDashboardViewModel::class.java
@@ -53,7 +56,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<Category>(viewModel.viewState.categories) {
                             override val itemViewBinder: ItemBinder<Category>
-                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
+                                get() = ItemBinderBase(BR.imageListItem, com.example.coreandroid.R.layout.named_image_list_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(fragmentFactory.newSpotifyCategoryFragment(category = it), true)
@@ -68,7 +71,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<Playlist>(viewModel.viewState.featuredPlaylists) {
                             override val itemViewBinder: ItemBinder<Playlist>
-                                get() = ItemBinderBase(BR.playlist, R.layout.playlist_item)
+                                get() = ItemBinderBase(BR.playlist,  com.example.coreandroid.R.layout.playlist_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(fragmentFactory.newSpotifyPlaylistFragment(playlist = it), true)
@@ -83,7 +86,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<TopTrack>(viewModel.viewState.topTracks) {
                             override val itemViewBinder: ItemBinder<TopTrack>
-                                get() = ItemBinderBase(BR.track, R.layout.top_track_item)
+                                get() = ItemBinderBase(BR.track,  com.example.coreandroid.R.layout.top_track_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(
@@ -151,7 +154,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifyDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_dashboard, container, false)
+        val binding: com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_dashboard, container, false)
         return binding.apply {
             dashboardView = view
             appCompatActivity?.setSupportActionBar(dashboardToolbar)

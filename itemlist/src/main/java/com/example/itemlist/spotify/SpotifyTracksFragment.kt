@@ -9,14 +9,16 @@ import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.R
-import com.example.there.findclips.spotify.trackvideos.TrackVideosFragment
+import com.example.coreandroid.BR
 
 
 class SpotifyTracksFragment : BaseListFragment<Track>() {
 
     override val defaultHeaderText: String = "Tracks"
 
-    override val viewState: ViewState<Track> = ViewState(ObservableSortedList<Track>(Track::class.java, IdentifiableObservableListItem.unsortedCallback()))
+    override val viewState: ViewState<Track> = ViewState(
+            ObservableSortedList<Track>(Track::class.java, IdentifiableObservableListItem.unsortedCallback())
+    )
 
     override val listItemView: ListItemView<Track>
         get() = object : ListItemView<Track>(viewState.items) {
@@ -24,5 +26,5 @@ class SpotifyTracksFragment : BaseListFragment<Track>() {
                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_grid_list_item)
         }
 
-    override fun fragmentToShowOnItemClick(item: Track): Fragment = TrackVideosFragment.newInstance(item)
+    override fun fragmentToShowOnItemClick(item: Track): Fragment = fragmentFactory.newSpotifyTrackVideosFragment(item)
 }

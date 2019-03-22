@@ -11,8 +11,8 @@ val PlaylistDbModel.domain: PlaylistEntity
     get() = PlaylistEntity(
             id = id,
             name = name,
-            iconUrl = icons.firstIconUrlOrDefault,
-            userId = owner.id,
+            iconUrl = icons.map { StringUrlModel(it) }.firstIconUrlOrDefault,
+            userId = owner,
             uri = uri
     )
 
@@ -20,8 +20,8 @@ val PlaylistEntity.db: PlaylistDbModel
     get() = PlaylistDbModel(
             id = id,
             name = name,
-            owner = StringIdModel(userId),
-            icons = listOf(StringUrlModel(url = iconUrl)),
+            owner = userId,
+            icons = listOf(iconUrl),
             uri = uri
     )
 

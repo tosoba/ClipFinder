@@ -5,7 +5,8 @@ import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.there.findclips.R
+import com.example.coreandroid.R
+import com.example.coreandroid.view.imageview.ImageViewSrc
 
 @BindingAdapter("imageUrl")
 fun bindImageUrl(view: ImageView, url: String?) {
@@ -22,7 +23,7 @@ fun bindImageUrl(view: ImageView, url: String?) {
 }
 
 @BindingAdapter("imageSrc")
-fun bindImageSrc(view: ImageView, src: com.example.coreandroid.view.imageview.ImageViewSrc?) = src?.let {
+fun bindImageSrc(view: ImageView, src: ImageViewSrc?) = src?.let {
     if (it.iconUrl != null) {
         Glide.with(view.context)
                 .load(it.iconUrl)

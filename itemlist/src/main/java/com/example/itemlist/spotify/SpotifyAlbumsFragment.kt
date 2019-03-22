@@ -9,13 +9,16 @@ import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.ListItemView
+import com.example.coreandroid.BR
 
 
 class SpotifyAlbumsFragment : BaseListFragment<Album>() {
 
     override val defaultHeaderText: String = "Albums"
 
-    override val viewState: ViewState<Album> = ViewState(ObservableSortedList<Album>(Album::class.java, IdentifiableObservableListItem.unsortedCallback()))
+    override val viewState: ViewState<Album> = ViewState(
+            ObservableSortedList<Album>(Album::class.java, IdentifiableObservableListItem.unsortedCallback())
+    )
 
     override val listItemView: ListItemView<Album>
         get() = object : ListItemView<Album>(viewState.items) {

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="videoView"
+            type="com.example.coreandroid.view.recyclerview.item.VideoItemView" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_margin="10dp"
+        android:foreground="@drawable/spotify_foreground_ripple">
+
+        <ImageView
+            android:id="@+id/video_thumbnail_imageview"
+            imageSrc="@{videoView.video.imageViewSrc}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bottom_dark_gradient"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/video_channel_thumbnail_imageview"
+            imageUrl="@{videoView.video.channelThumbnailUrl}"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
+            app:layout_constraintLeft_toLeftOf="@id/video_thumbnail_imageview"
+            app:layout_constraintTop_toTopOf="@id/video_title_txt" />
+
+        <TextView
+            android:id="@+id/video_title_txt"
+            style="@style/VideoItemTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="@{videoView.video.title}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/video_description_txt"
+            app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
+            app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
+
+        <TextView
+            android:id="@+id/video_description_txt"
+            style="@style/VideoItemTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@{videoView.video.details}"
+            app:layout_constraintBottom_toBottomOf="@id/video_thumbnail_imageview"
+            app:layout_constraintLeft_toRightOf="@id/video_channel_thumbnail_imageview"
+            app:layout_constraintRight_toRightOf="@id/video_thumbnail_imageview" />
+
+        <TextView
+            style="@style/ShadowText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@{videoView.video.duration}"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="@{videoView.onRemoveBtnClickListener}"
+            android:src="@drawable/delete"
+            android:visibility="@{videoView.onRemoveBtnClickListener == null ? View.GONE : View.VISIBLE}"
+            app:fabSize="mini"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

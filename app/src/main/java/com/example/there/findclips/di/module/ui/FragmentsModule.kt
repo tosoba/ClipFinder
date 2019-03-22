@@ -2,6 +2,7 @@ package com.example.there.findclips.di.module.ui
 
 import com.example.soundclouddashboard.SoundCloudDashboardFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
+import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.AccountTopFragment
@@ -81,4 +82,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun soundCloudPlaylistFragment(): SoundCloudPlaylistFragment
+
+    @ContributesAndroidInjector
+    abstract fun soundCloudTrackVideosFragment(): SoundCloudTrackVideosFragment
 }

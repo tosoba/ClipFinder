@@ -35,7 +35,7 @@
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                 app:title="@{view.playlist.title}"
-                app:toolbarId="@+id/playlist_toolbar">
+                app:toolbarId="@+id/sound_cloud_playlist_toolbar">
 
                 <View
                     android:id="@+id/sound_cloud_playlist_toolbar_gradient_background_view"

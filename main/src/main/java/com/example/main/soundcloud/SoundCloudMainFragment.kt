@@ -7,26 +7,30 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.coreandroid.base.fragment.IMainContentFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.checkItem
 import com.example.coreandroid.util.ext.toolbarController
 import com.example.coreandroid.view.OnPageChangeListener
-import com.example.main.R
-import com.example.there.findclips.R
-import com.example.there.findclips.soundcloud.dashboard.SoundCloudDashboardNavHostFragment
-import com.example.there.findclips.soundcloud.favourites.SoundCloudFavouritesNavHostFragment
-import com.example.there.findclips.view.OnPageChangeListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.main.R
+import com.example.main.databinding.FragmentSoundcloudMainBinding
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
+import javax.inject.Inject
 
 
-class SoundCloudMainFragment : Fragment(), com.example.coreandroid.base.fragment.IMainContentFragment {
+class SoundCloudMainFragment : Fragment(), IMainContentFragment, Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard, R.id.sound_cloud_action_favorites)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId) {
+        if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId)
             return@OnNavigationItemSelectedListener false
-        }
 
         sound_cloud_view_pager.currentItem = itemIds.indexOf(item.itemId)
         toolbarController?.toggleToolbar()
@@ -37,7 +41,7 @@ class SoundCloudMainFragment : Fragment(), com.example.coreandroid.base.fragment
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
                 childFragmentManager,
-                arrayOf(SoundCloudDashboardNavHostFragment(), SoundCloudFavouritesNavHostFragment())
+                arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment, fragmentFactory.newSoundCloudFavouritesNavHostFragment)
         )
     }
 
@@ -51,11 +55,11 @@ class SoundCloudMainFragment : Fragment(), com.example.coreandroid.base.fragment
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
+    override val currentNavHostFragment: BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
-    private val view: com.example.main.soundcloud.SoundCloudMainView by lazy {
-        com.example.main.soundcloud.SoundCloudMainView(
+    private val view: SoundCloudMainView by lazy {
+        SoundCloudMainView(
                 onNavigationItemSelectedListener = onNavigationItemSelectedListener,
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
@@ -67,7 +71,7 @@ class SoundCloudMainFragment : Fragment(), com.example.coreandroid.base.fragment
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.there.findclips.databinding.FragmentSoundcloudMainBinding>(
+    ): View? = DataBindingUtil.inflate<FragmentSoundcloudMainBinding>(
             inflater,
             R.layout.fragment_soundcloud_main,
             container,

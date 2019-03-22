@@ -20,7 +20,6 @@ import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class SpotifyRemoteDataStore @Inject constructor(
         private val api: SpotifyApi,
         private val accountsApi: SpotifyAccountsApi,

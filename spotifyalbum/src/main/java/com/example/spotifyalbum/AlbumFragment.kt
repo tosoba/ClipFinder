@@ -27,6 +27,10 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
+import com.example.coreandroid.R
+import com.example.coreandroid.BR
+import com.example.spotifyalbum.databinding.FragmentAlbumBinding
+
 
 class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
 
@@ -103,7 +107,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, R.layout.fragment_album, container, false)
+        val binding = DataBindingUtil.inflate<com.example.spotifyalbum.databinding.FragmentAlbumBinding>(inflater, com.example.spotifyalbum.R.layout.fragment_album, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.albumFavouriteFab.hideAndShow()
         })

@@ -10,10 +10,7 @@ import android.view.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.di.Injectable
-import com.example.coreandroid.util.ext.appCompatActivity
-import com.example.coreandroid.util.ext.dpToPx
-import com.example.coreandroid.util.ext.navigationDrawerController
-import com.example.coreandroid.util.ext.showDrawerHamburger
+import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesMainBinding
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesFragment

@@ -2,7 +2,7 @@ package com.example.coreandroid.view.binding
 
 import android.databinding.BindingAdapter
 import android.graphics.Color
-import com.example.there.findclips.R
+import com.example.coreandroid.R
 import com.lopei.collageview.CollageView
 
 class CollageViewState(

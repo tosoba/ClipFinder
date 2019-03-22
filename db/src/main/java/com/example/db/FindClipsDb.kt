@@ -27,8 +27,7 @@ import com.example.db.model.videos.VideoSearchDbModel
 @TypeConverters(
         SimplifiedAlbumConverter::class,
         SimplifiedArtistConverter::class,
-        StringUrlModelConverter::class,
-        StringIdModelConverter::class
+        StringListConverter::class
 )
 abstract class FindClipsDb : RoomDatabase() {
     abstract fun albumDao(): AlbumDao

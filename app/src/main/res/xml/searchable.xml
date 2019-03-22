@@ -1,5 +1,0 @@
-<searchable xmlns:android="http://schemas.android.com/apk/res/android"
-    android:hint="@string/search_hint"
-    android:label="@string/app_name"
-    android:searchSuggestAuthority="com.example.there.findclips.fragment.search.SearchSuggestionProvider"
-    android:searchSuggestSelection=" ?" />

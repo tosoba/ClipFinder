@@ -3,6 +3,7 @@ package com.example.spotifyplaylist
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.spotify.Playlist
@@ -20,7 +21,7 @@ class PlaylistViewModel @Inject constructor(
         private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
         private val deleteSpotifyPlaylist: DeleteSpotifyPlaylist,
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState: PlaylistViewState = PlaylistViewState()
 

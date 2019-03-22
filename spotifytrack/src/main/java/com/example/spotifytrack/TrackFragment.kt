@@ -26,6 +26,8 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import javax.inject.Inject
+import com.example.coreandroid.BR
+import com.example.spotifytrack.databinding.FragmentTrackBinding
 
 class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
 
@@ -121,7 +123,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentTrackBinding>(
+    ): View? = DataBindingUtil.inflate<com.example.spotifytrack.databinding.FragmentTrackBinding>(
             inflater,
             R.layout.fragment_track,
             container,

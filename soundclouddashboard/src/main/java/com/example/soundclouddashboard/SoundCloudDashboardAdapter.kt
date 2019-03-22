@@ -11,7 +11,7 @@ import com.example.coreandroid.util.ext.makeItemBinding
 import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.there.findclips.R
+import com.example.coreandroid.R
 
 class SoundCloudDashboardAdapter(
         private val playlistsRecyclerItemView: RecyclerViewItemView<SoundCloudPlaylist>,

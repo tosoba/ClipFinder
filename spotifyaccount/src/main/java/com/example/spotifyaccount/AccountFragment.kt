@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.navigationDrawerController
 import com.example.coreandroid.util.ext.showDrawerHamburger
@@ -17,7 +18,7 @@ import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.AccountTopFragment
 import kotlinx.android.synthetic.main.fragment_account.*
 
-class AccountFragment : Fragment(), com.example.coreandroid.base.fragment.HasMainToolbar {
+class AccountFragment : Fragment(), HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = account_toolbar

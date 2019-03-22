@@ -7,13 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.appCompatActivity
+import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import javax.inject.Inject
 
 
-class VideoPlaylistFragment : Fragment() {
+class VideoPlaylistFragment : Fragment(), Injectable {
+
+    @Inject
+    lateinit var fragmentFactory: IFragmentFactory
 
     private val playlist: VideoPlaylist by lazy {
         arguments!!.getParcelable<VideoPlaylist>(ARG_PLAYLIST)
@@ -23,14 +31,14 @@ class VideoPlaylistFragment : Fragment() {
         arguments!!.getStringArray(ARG_THUMBNAIL_URLS)
     }
 
-    private val videoFragment: VideosSearchFragment?
-        get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? VideosSearchFragment
+    private val videoFragment: IYoutubeSearchFragment?
+        get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? IYoutubeSearchFragment
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentVideoPlaylistBinding>(
+    ): View? = DataBindingUtil.inflate<com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding>(
             inflater,
             R.layout.fragment_video_playlist,
             container,
@@ -55,7 +63,7 @@ class VideoPlaylistFragment : Fragment() {
     }
 
     private fun showVideosFragment() = childFragmentManager.beginTransaction()
-            .replace(R.id.videos_fragment_container_layout, VideosSearchFragment.newInstanceWithVideoPlaylist(playlist))
+            .replace(R.id.videos_fragment_container_layout, fragmentFactory.newVideosSearchFragment(playlist))
             .commit()
 
     companion object {

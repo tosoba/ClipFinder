@@ -101,7 +101,7 @@
 
                 <fragment
                     android:id="@+id/spotify_player_fragment"
-                    android:name="com.example.there.findclips.spotify.player.SpotifyPlayerFragment"
+                    android:name="com.example.spotifyplayer.SpotifyPlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"

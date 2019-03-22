@@ -11,14 +11,14 @@ val CategoryDbModel.domain: CategoryEntity
     get() = CategoryEntity(
             id = id,
             name = name,
-            iconUrl = icons.firstIconUrlOrDefault
+            iconUrl = icons.map { StringUrlModel(it) }.firstIconUrlOrDefault
     )
 
 val CategoryEntity.db: CategoryDbModel
     get() = CategoryDbModel(
             id = id,
             name = name,
-            icons = listOf(StringUrlModel(url = iconUrl))
+            icons = listOf(iconUrl)
     )
 
 val CategoryApiModel.domain: CategoryEntity

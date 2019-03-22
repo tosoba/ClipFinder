@@ -15,8 +15,8 @@ class SettingsFragment : PreferenceFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState).apply {
-            this?.background = ContextCompat.getDrawable(activity, R.drawable.spotify_main_background_gradient)
+        return super.onCreateView(inflater, container, savedInstanceState)?.apply {
+            background = ContextCompat.getDrawable(activity, R.drawable.spotify_main_background_gradient)
         }
     }
 }

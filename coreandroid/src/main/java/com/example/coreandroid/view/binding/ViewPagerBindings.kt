@@ -2,7 +2,7 @@ package com.example.coreandroid.view.binding
 
 import android.databinding.BindingAdapter
 import android.support.v4.view.ViewPager
-import com.example.there.findclips.view.viewpager.LockableViewPager
+import com.example.coreandroid.view.viewpager.LockableViewPager
 
 @BindingAdapter("onPageChangeListener")
 fun bindOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener) {

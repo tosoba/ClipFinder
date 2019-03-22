@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.handler.*
 import com.spotify.sdk.android.player.ConnectionStateCallback
@@ -44,6 +45,9 @@ val Fragment.navigationDrawerController: NavigationDrawerController?
 
 val Fragment.toolbarController: ToolbarController?
     get() = activity as? ToolbarController
+
+val Fragment.intentProvider: IntentProvider?
+    get() = activity as? IntentProvider
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
         mainHintText: String,

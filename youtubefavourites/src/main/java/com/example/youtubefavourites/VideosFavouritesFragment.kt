@@ -21,14 +21,12 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
-import com.example.there.findclips.R
-import com.example.there.findclips.videos.videoplaylist.VideoPlaylistFragment
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
+import com.example.coreandroid.BR
 
-
-class VideosFavouritesFragment : BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java),
+class VideosFavouritesFragment :
+        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java),
         Injectable {
 
     @Inject

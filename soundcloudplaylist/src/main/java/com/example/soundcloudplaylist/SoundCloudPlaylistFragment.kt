@@ -12,12 +12,8 @@ import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.soundcloud.ISoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
-import com.example.coreandroid.util.ext.appCompatActivity
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
-import com.example.there.findclips.R
-import com.example.there.findclips.soundcloud.list.SoundCloudTracksFragment
-import com.example.coreandroid.util.ext.generateColorGradient
-import com.example.coreandroid.util.ext.getBitmapSingle
+import com.example.coreandroid.util.ext.*
+import com.example.itemlist.soundcloud.SoundCloudTracksFragment
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
 import com.squareup.picasso.Picasso
 
@@ -64,7 +60,7 @@ class SoundCloudPlaylistFragment : com.example.coreandroid.base.fragment.BaseVMF
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_playlist, container, false)
+        val binding: FragmentSoundCloudPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_playlist, container, false)
         return binding.apply {
             view = this@SoundCloudPlaylistFragment.view
             playlist.artworkUrl?.let { url ->

@@ -1,5 +1,6 @@
 package com.example.spotifyplayer
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -23,11 +24,11 @@ import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.util.Constants
 import com.example.coreandroid.util.ext.*
-import com.example.there.findclips.FindClipsApp
-import com.example.there.findclips.R
 import com.example.coreandroid.view.OnSeekBarProgressChangeListener
 import com.example.spotifyapi.SpotifyAuth
+import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
@@ -149,7 +150,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSpotifyPlayerBinding>(
+    ): View? = DataBindingUtil.inflate<com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding>(
             inflater,
             R.layout.fragment_spotify_player,
             container,
@@ -357,6 +358,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
     }
 
+    @SuppressLint("MissingPermission")
     private fun getNetworkConnectivity(context: Context): Connectivity {
         val connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetworkInfo
@@ -364,14 +366,13 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         else Connectivity.OFFLINE
     }
 
-    //TODO: move this?
-    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(context!!, FindClipsApp.CHANNEL_ID)
+    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(context!!, Constants.NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.play)
             .apply {
                 val bigText = viewModel.playerState.playerMetadata?.currentTrack?.name
                         ?: viewModel.playerState.lastPlayedTrack?.name ?: "Unknown track"
                 if (largeIcon != null) setLargeIcon(largeIcon).setStyle(NotificationCompat.BigPictureStyle()
-                        .bigLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
+                        .bigLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
                         .bigPicture(largeIcon)
                         .setBigContentTitle(bigText)
                         .setSummaryText("${viewModel.playerState.playerMetadata?.currentTrack?.artistName
@@ -385,7 +386,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                     PendingIntent.getActivity(
                             context,
                             0,
-                            Intent(context, MainActivity::class.java),
+                            intentProvider?.providedIntent,
                             0
                     )
             )

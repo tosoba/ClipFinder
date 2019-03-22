@@ -25,10 +25,11 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountSavedBinding
+import com.example.coreandroid.BR
 import javax.inject.Inject
 
 class AccountSavedFragment :
-        BaseVMFragment<AccountSavedViewModel>(com.example.spotifyaccount.saved.AccountSavedViewModel::class.java),
+        BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
         Injectable,
         TracksDataLoaded {
 

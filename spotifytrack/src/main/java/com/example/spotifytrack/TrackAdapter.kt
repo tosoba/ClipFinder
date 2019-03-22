@@ -4,7 +4,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.example.coreandroid.databinding.AlbumInfoItemBinding
 import com.example.coreandroid.databinding.HeaderItemBinding
+import com.example.coreandroid.databinding.RadarChartBinding
 import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track

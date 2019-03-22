@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
@@ -19,7 +20,6 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
-import com.example.there.findclips.R
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
 import javax.inject.Inject
 
@@ -58,7 +58,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                         ),
                         object : ListItemView<SoundCloudPlaylist>(viewModel.viewState.playlists) {
                             override val itemViewBinder: ItemBinder<SoundCloudPlaylist>
-                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
+                                get() = ItemBinderBase(BR.imageListItem, com.example.coreandroid.R.layout.named_image_list_item)
                         },
                         ClickHandler { navHostFragment?.showFragment(fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(it), true) },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadPlaylists() }
@@ -71,7 +71,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
                         ),
                         object : ListItemView<SoundCloudSystemPlaylist>(viewModel.viewState.systemPlaylists) {
                             override val itemViewBinder: ItemBinder<SoundCloudSystemPlaylist>
-                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
+                                get() = ItemBinderBase(BR.imageListItem, com.example.coreandroid.R.layout.named_image_list_item)
                         },
                         ClickHandler { navHostFragment?.showFragment(fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(it), true) },
                         onReloadBtnClickListener = View.OnClickListener { viewModel.loadPlaylists() }
@@ -96,8 +96,11 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.there.findclips.databinding.FragmentSoundCloudDashboardBinding>(
-            inflater, R.layout.fragment_sound_cloud_dashboard, container, false
+    ): View? = DataBindingUtil.inflate<com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding>(
+            inflater,
+            com.example.soundclouddashboard.R.layout.fragment_sound_cloud_dashboard,
+            container,
+            false
     ).apply {
         dashboardView = view
         appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
@@ -112,7 +115,8 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
 
     override fun onOptionsItemSelected(
             item: MenuItem?
-    ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+    ): Boolean = if (item?.itemId == android.R.id.home
+            && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
         navigationDrawerController?.openDrawer()
         true
     } else false

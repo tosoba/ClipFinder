@@ -27,6 +27,8 @@ import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
 import javax.inject.Inject
+import com.example.coreandroid.BR
+
 
 class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class.java),
         Injectable,

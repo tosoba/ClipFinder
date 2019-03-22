@@ -1,6 +1,7 @@
 package com.example.youtubesearch
 
 import android.view.View
+import com.example.coreandroid.base.vm.BaseVideosViewModel
 import com.example.coreandroid.mapper.videos.domain
 import com.example.coreandroid.mapper.videos.ui
 import com.example.coreandroid.model.videos.VideoPlaylist
@@ -17,7 +18,7 @@ class VideosSearchViewModel @Inject constructor(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist,
         private val deleteVideo: DeleteVideo
-) : com.example.coreandroid.base.vm.BaseVideosViewModel(getChannelsThumbnailUrls) {
+) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
 

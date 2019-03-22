@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
@@ -25,6 +26,7 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.spotifyartist.databinding.FragmentArtistBinding
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
@@ -61,7 +63,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            navHostFragment?.showFragment(TrackVideosFragment.newInstance(track = it), true)
+                            navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                         },
                         onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadTopTracksFromArtist(artistToLoad.id)
@@ -126,7 +128,7 @@ class ArtistFragment :
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
+        val binding: com.example.spotifyartist.databinding.FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.artistFavouriteFab.hideAndShow()
         })

@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.coreandroid.R
 import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.databinding.FragmentListBinding
 import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
@@ -88,7 +89,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): android.view.View? {
-        val binding: com.example.there.findclips.databinding.FragmentListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
+        val binding: FragmentListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
         return binding.apply {
             @Suppress("UNCHECKED_CAST")
             view = this@BaseListFragment.view as View<Parcelable>

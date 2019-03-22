@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".videos.videoplaylist.VideoPlaylistFragment">
+        tools:context="VideoPlaylistFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/video_playlist_app_bar"

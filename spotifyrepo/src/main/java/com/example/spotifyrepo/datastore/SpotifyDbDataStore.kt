@@ -13,7 +13,6 @@ import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class SpotifyDbDataStore @Inject constructor(
         private val albumDao: AlbumDao,
         private val artistDao: ArtistDao,

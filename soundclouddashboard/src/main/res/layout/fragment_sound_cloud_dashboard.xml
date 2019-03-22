@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".soundcloud.dashboard.SoundCloudDashboardFragment">
+        tools:context="SoundCloudDashboardFragment">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/sound_cloud_dashboard_app_bar_layout"
@@ -35,15 +35,13 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/sound_cloud_dashboard_recycler_view"
             hasFixedSize="@{true}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adapter="@{dashboardView.dashboardAdapter}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".soundcloud.dashboard.SoundCloudDashboardFragment" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

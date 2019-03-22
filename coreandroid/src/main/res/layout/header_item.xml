@@ -5,7 +5,7 @@
 
         <variable
             name="viewState"
-            type="com.example.there.findclips.view.list.item.HeaderItemViewState" />
+            type="com.example.coreandroid.view.recyclerview.item.HeaderItemViewState" />
     </data>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"

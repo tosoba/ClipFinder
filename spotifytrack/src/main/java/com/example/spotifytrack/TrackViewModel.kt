@@ -1,6 +1,9 @@
 package com.example.spotifytrack
 
 import android.graphics.Color
+import com.example.coreandroid.mapper.spotify.domain
+import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.model.spotify.Track
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetAlbum

@@ -9,6 +9,7 @@ import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.ListItemView
+import com.example.coreandroid.BR
 
 
 class SpotifyArtistsFragment : BaseListFragment<Artist>() {

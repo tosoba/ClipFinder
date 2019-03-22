@@ -2,6 +2,8 @@ package com.example.spotifytrackvideos
 
 import android.databinding.ObservableField
 import android.util.Log
+import com.example.coreandroid.mapper.spotify.domain
+import com.example.coreandroid.model.spotify.Track
 import com.example.there.domain.usecase.spotify.DeleteTrack
 import com.example.there.domain.usecase.spotify.InsertTrack
 import com.example.there.domain.usecase.spotify.IsTrackSaved

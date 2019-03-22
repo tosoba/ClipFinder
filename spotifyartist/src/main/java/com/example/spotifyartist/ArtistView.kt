@@ -3,6 +3,12 @@ package com.example.spotifyartist
 import android.databinding.ObservableField
 import android.databinding.ObservableList
 import android.view.View
+import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.spotify.Artist
+import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
+import com.example.coreandroid.util.list.IdentifiableObservableListItem
+import com.example.coreandroid.util.list.ObservableSortedList
 
 class ArtistView(
         val state: ArtistViewState,

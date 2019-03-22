@@ -8,21 +8,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Category
-import com.example.coreandroid.util.ext.appCompatActivity
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
-import com.example.coreandroid.util.ext.generateColorGradient
-import com.example.coreandroid.util.ext.getBitmapSingle
+import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class CategoryFragment : com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifycategory.CategoryViewModel>(com.example.spotifycategory.CategoryViewModel::class.java), com.example.coreandroid.di.Injectable {
+class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class.java), Injectable {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 

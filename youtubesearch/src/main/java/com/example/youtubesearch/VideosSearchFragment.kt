@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
@@ -25,12 +27,14 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.item.VideoItemView
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
-import com.example.there.findclips.R
-import com.example.there.findclips.view.recycler.SeparatorDecoration
 import kotlinx.android.synthetic.main.fragment_videos_search.*
+import com.example.coreandroid.BR
+import com.example.youtubesearch.databinding.FragmentVideosSearchBinding
 
 
-class VideosSearchFragment : com.example.coreandroid.base.fragment.BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java), com.example.coreandroid.base.fragment.ISearchFragment {
+class VideosSearchFragment :
+        BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java),
+        IYoutubeSearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -40,13 +44,13 @@ class VideosSearchFragment : com.example.coreandroid.base.fragment.BaseVMFragmen
             viewModel.viewState.videos.clear()
         }
 
-    val videosLoaded: Boolean
+    override val videosLoaded: Boolean
         get() {
             if (!viewModelInitialized) return false
             return viewModel.viewState.videos.isNotEmpty()
         }
 
-    val videos: List<Video>
+    override val videos: List<Video>
         get() = viewModel.viewState.videos.map { it.video }
 
     private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {

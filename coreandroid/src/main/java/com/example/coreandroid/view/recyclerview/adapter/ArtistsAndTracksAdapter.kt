@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.coreandroid.R
+import com.example.coreandroid.databinding.HeaderItemBinding
+import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.makeItemBinding
@@ -24,10 +26,10 @@ class ArtistsAndTracksAdapter(
             parent: ViewGroup,
             viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
-        ARTISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<com.example.coreandroid.databinding.HeaderItemBinding>(R.layout.header_item).apply {
+        ARTISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             viewState = HeaderItemViewState("Artists")
         })
-        ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<com.example.coreandroid.databinding.RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = artistsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
         })

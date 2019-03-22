@@ -2,6 +2,10 @@ package com.example.coreandroid.view.binding
 
 import android.databinding.BindingAdapter
 import android.support.v7.widget.RecyclerView
+import com.example.coreandroid.view.recyclerview.BindingRecyclerViewAdapter
+import com.example.coreandroid.view.recyclerview.binder.ItemBinder
+import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.coreandroid.view.recyclerview.listener.LongClickHandler
 
 
 @BindingAdapter("itemDecoration")

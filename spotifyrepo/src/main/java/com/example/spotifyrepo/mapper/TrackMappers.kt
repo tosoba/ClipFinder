@@ -14,7 +14,7 @@ val TrackDbModel.domain: TrackEntity
     get() = TrackEntity(
             id = id,
             name = name,
-            iconUrl = album.icons.secondIconUrlOrDefault,
+            iconUrl = album.icons.map { StringUrlModel(it) }.secondIconUrlOrDefault,
             albumId = album.id,
             albumName = album.name,
             artists = artists.map { SimpleArtistEntity(it.id, it.name) },
@@ -31,7 +31,7 @@ val TrackEntity.db: TrackDbModel
             album = SimplifiedAlbumDbModel(
                     id = albumId,
                     name = albumName,
-                    icons = listOf(StringUrlModel(url = iconUrl))
+                    icons = listOf(iconUrl)
             ),
             artists = artists.map { SimplifiedArtistDbModel(it.id, it.name) },
             popularity = popularity,

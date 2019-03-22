@@ -1,9 +1,10 @@
 package com.example.soundcloudtrackvideos
 
+import com.example.coreandroid.base.vm.BaseViewModel
 import javax.inject.Inject
 
 class SoundCloudTrackVideosViewModel @Inject constructor(
 
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
     val viewState = SoundCloudTrackVideosViewState()
 }

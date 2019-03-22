@@ -11,7 +11,7 @@ val ArtistDbModel.domain: ArtistEntity
     get() = ArtistEntity(
             id = id,
             name = name,
-            iconUrl = icons.secondIconUrlOrDefault,
+            iconUrl = icons.map { StringUrlModel(it) }.secondIconUrlOrDefault,
             popularity = popularity
     )
 
@@ -20,7 +20,7 @@ val ArtistEntity.db: ArtistDbModel
             id = id,
             name = name,
             popularity = popularity,
-            icons = listOf(StringUrlModel(url = iconUrl))
+            icons = listOf(iconUrl)
     )
 
 val ArtistApiModel.domain: ArtistEntity

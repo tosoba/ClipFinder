@@ -7,7 +7,11 @@ import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
+import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.ISearchFragment
+import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
@@ -19,12 +23,13 @@ import com.example.itemlist.spotify.SpotifyAlbumsFragment
 import com.example.itemlist.spotify.SpotifyArtistsFragment
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.itemlist.spotify.SpotifyTracksFragment
+import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 class SpotifySearchFragment :
-        com.example.coreandroid.base.fragment.BaseVMFragment<com.example.spotifysearch.spotify.SpotifySearchViewModel>(com.example.spotifysearch.spotify.SpotifySearchViewModel::class.java),
-        com.example.coreandroid.base.fragment.ISearchFragment,
-        com.example.coreandroid.di.Injectable {
+        BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
+        ISearchFragment,
+        Injectable {
 
     override var query: String = ""
         set(value) {
@@ -118,22 +123,28 @@ class SpotifySearchFragment :
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifySearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search, container, false)
-        binding.spotifySearchView = view
-        binding.spotifyTabViewPager.offscreenPageLimit = 3
-        return binding.root
-    }
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? = DataBindingUtil.inflate<FragmentSpotifySearchBinding>(
+            inflater,
+            com.example.spotifysearch.R.layout.fragment_spotify_search,
+            container,
+            false
+    ).apply {
+        spotifySearchView = view
+        spotifyTabViewPager.offscreenPageLimit = 3
+    }.root
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         ConnectivityComponent(
                 activity!!,
                 {
-                    query == "" ||
-                            (viewModel.viewState.albums.isNotEmpty() &&
-                                    viewModel.viewState.artists.isNotEmpty() &&
-                                    viewModel.viewState.playlists.isNotEmpty() &&
-                                    viewModel.viewState.tracks.isNotEmpty())
+                    query == "" || (viewModel.viewState.albums.isNotEmpty() &&
+                            viewModel.viewState.artists.isNotEmpty() &&
+                            viewModel.viewState.playlists.isNotEmpty() &&
+                            viewModel.viewState.tracks.isNotEmpty())
                 },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 ::loadData,
