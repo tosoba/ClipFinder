@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.di.Injectable
@@ -23,7 +24,6 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
-import com.example.coreandroid.BR
 
 class VideosFavouritesFragment :
         BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java),

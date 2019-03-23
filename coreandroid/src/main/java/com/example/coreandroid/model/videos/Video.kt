@@ -5,7 +5,9 @@ import android.os.Parcelable
 import com.example.core.util.ext.formattedString
 import com.example.core.util.ext.getPublishedAgoString
 import com.example.coreandroid.R
-import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.util.ext.standardMonths
+import com.example.coreandroid.util.ext.standardWeeks
+import com.example.coreandroid.util.ext.standardYears
 import com.example.coreandroid.view.imageview.ImageViewSrc
 import kotlinx.android.parcel.Parcelize
 import org.joda.time.Duration

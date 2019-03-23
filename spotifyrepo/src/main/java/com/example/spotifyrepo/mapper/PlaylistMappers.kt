@@ -1,6 +1,5 @@
 package com.example.spotifyrepo.mapper
 
-import com.example.core.model.StringIdModel
 import com.example.core.model.StringUrlModel
 import com.example.db.model.spotify.PlaylistDbModel
 import com.example.spotifyapi.model.PlaylistApiModel

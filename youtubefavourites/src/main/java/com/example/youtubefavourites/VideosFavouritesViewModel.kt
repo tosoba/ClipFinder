@@ -4,11 +4,11 @@ import android.util.Log
 import android.view.View
 import com.example.coreandroid.mapper.videos.domain
 import com.example.coreandroid.mapper.videos.ui
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.videos.DeleteVideoPlaylist
 import com.example.there.domain.usecase.videos.GetVideoPlaylistsWithThumbnails
-import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
-import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import javax.inject.Inject
 
 class VideosFavouritesViewModel @Inject constructor(

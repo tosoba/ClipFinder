@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.soundcloudfavourites" />
+<manifest package="com.example.soundcloudfavourites" />

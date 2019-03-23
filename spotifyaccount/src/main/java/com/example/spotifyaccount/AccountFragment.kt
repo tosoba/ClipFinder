@@ -11,6 +11,7 @@ import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.navigationDrawerController
 import com.example.coreandroid.util.ext.showDrawerHamburger
+import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
@@ -24,7 +25,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
         get() = account_toolbar
 
     private val onTabSelectedListener: TabLayout.OnTabSelectedListener by lazy {
-        object : com.example.coreandroid.view.OnTabSelectedListener {
+        object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 account_view_pager?.currentItem = tab.position
             }
@@ -39,8 +40,8 @@ class AccountFragment : Fragment(), HasMainToolbar {
         ))
     }
 
-    private val view: com.example.spotifyaccount.AccountView by lazy(LazyThreadSafetyMode.NONE) {
-        com.example.spotifyaccount.AccountView(onTabSelectedListener, viewPagerAdapter, 2)
+    private val view: AccountView by lazy(LazyThreadSafetyMode.NONE) {
+        AccountView(onTabSelectedListener, viewPagerAdapter, 2)
     }
 
     override fun onCreateView(
@@ -48,7 +49,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val binding: com.example.spotifyaccount.databinding.FragmentAccountBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false)
+        val binding: FragmentAccountBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false)
         return binding.apply {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)

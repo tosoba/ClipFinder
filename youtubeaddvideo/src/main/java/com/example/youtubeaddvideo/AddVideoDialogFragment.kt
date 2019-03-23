@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.BR
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.videoPlaylistController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
@@ -18,7 +19,6 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
-import com.example.coreandroid.BR
 import com.example.youtubeaddvideo.databinding.DialogAddVideoBinding
 
 

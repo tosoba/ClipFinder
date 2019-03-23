@@ -16,7 +16,6 @@ import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyTracksFragment
-import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
 import com.squareup.picasso.Picasso
 
 class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {

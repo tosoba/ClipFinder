@@ -16,7 +16,6 @@ import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
-import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.squareup.picasso.Picasso
 import javax.inject.Inject

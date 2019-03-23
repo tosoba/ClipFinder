@@ -3,6 +3,7 @@ package com.example.soundclouddashboard
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.example.coreandroid.R
 import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
@@ -11,7 +12,6 @@ import com.example.coreandroid.util.ext.makeItemBinding
 import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.R
 
 class SoundCloudDashboardAdapter(
         private val playlistsRecyclerItemView: RecyclerViewItemView<SoundCloudPlaylist>,

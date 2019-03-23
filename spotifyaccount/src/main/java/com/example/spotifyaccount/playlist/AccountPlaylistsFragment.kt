@@ -14,7 +14,6 @@ import com.example.coreandroid.util.ext.spotifyLoginController
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
-import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
 class AccountPlaylistsFragment :
         BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),

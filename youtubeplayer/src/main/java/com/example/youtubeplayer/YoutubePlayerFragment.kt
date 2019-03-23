@@ -12,14 +12,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.base.fragment.IPlayerFragment
 import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.slidingPanelController
-import com.example.youtubeplayer.databinding.FragmentYoutubePlayerBinding
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import kotlinx.android.synthetic.main.fragment_youtube_player.*

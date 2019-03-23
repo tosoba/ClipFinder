@@ -1,9 +1,9 @@
 package com.example.coreandroid.mapper.soundcloud
 
-import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
-import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
+import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 
 val SoundCloudPlaylistEntity.ui: SoundCloudPlaylist
     get() = SoundCloudPlaylist(

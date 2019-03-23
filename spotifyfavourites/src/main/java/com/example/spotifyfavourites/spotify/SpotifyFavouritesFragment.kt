@@ -14,7 +14,6 @@ import com.example.coreandroid.model.spotify.*
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.*
 import com.example.spotifyfavourites.R
-import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {

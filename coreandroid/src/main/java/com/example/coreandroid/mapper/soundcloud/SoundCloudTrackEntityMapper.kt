@@ -1,7 +1,7 @@
 package com.example.coreandroid.mapper.soundcloud
 
-import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
+import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 
 val SoundCloudTrackEntity.ui: SoundCloudTrack
     get() = SoundCloudTrack(

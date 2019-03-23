@@ -3,7 +3,6 @@ package com.example.soundcloudtrackvideos
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.generateColorGradient
 import com.example.coreandroid.util.ext.getBitmapSingle
 import com.example.coreandroid.util.ext.hideAndShow

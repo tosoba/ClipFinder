@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import com.example.coreandroid.R
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.databinding.FragmentListBinding
-import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.util.ext.putArguments

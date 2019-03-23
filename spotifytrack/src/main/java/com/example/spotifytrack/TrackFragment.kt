@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.handler.OnTrackChangeListener
@@ -26,8 +27,6 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import javax.inject.Inject
-import com.example.coreandroid.BR
-import com.example.spotifytrack.databinding.FragmentTrackBinding
 
 class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
 

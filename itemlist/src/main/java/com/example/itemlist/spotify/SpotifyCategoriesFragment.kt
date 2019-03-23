@@ -1,6 +1,7 @@
 package com.example.itemlist.spotify
 
 import android.support.v4.app.Fragment
+import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.model.spotify.Category
@@ -9,7 +10,6 @@ import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.ListItemView
-import com.example.coreandroid.BR
 
 
 class SpotifyCategoriesFragment : BaseListFragment<Category>() {

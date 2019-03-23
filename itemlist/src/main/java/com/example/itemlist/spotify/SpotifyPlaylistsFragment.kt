@@ -1,15 +1,15 @@
 package com.example.itemlist.spotify
 
 import android.support.v4.app.Fragment
+import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.util.list.IdentifiableObservableListItem
 import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.BR
+import com.example.coreandroid.view.recyclerview.item.ListItemView
 
 
 class SpotifyPlaylistsFragment : BaseListFragment<Playlist>() {
