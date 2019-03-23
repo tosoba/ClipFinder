@@ -1,6 +1,5 @@
 package com.example.there.findclips.di.module.ui
 
-import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.itemlist.soundcloud.SoundCloudTracksFragment
 import com.example.itemlist.spotify.*
 import com.example.main.soundcloud.SoundCloudMainFragment
