@@ -56,7 +56,7 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar, Injectable {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites_main, container, false)
+        val binding: FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites_main, container, false)
         return binding.apply {
             favouritesFragmentView = view
             appCompatActivity?.setSupportActionBar(favouritesToolbar)

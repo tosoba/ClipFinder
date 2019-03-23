@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import com.example.coreandroid.di.Injectable
 import com.example.there.findclips.FindClipsApp
 import com.example.there.findclips.util.ext.registerFragmentLifecycleCallbacks
 import dagger.android.AndroidInjection
@@ -45,7 +46,7 @@ object AppInjector {
 
         activity.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
-                if (f is com.example.coreandroid.di.Injectable) AndroidSupportInjection.inject(f)
+                if (f is Injectable) AndroidSupportInjection.inject(f)
             }
         }, true)
     }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.checkItem
@@ -59,7 +60,7 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment, Injectable {
     val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
+    override val currentNavHostFragment: BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
 
     private val view: SpotifyMainView by lazy {

@@ -34,6 +34,9 @@ android {
     androidExtensions {
         experimental = true
     }
+    dataBinding {
+        enabled = true
+    }
     android {
         compileOptions {
             sourceCompatibility 1.8
@@ -61,6 +64,7 @@ dependencies {
     implementation project(':coreandroid')
     implementation project(':db')
     implementation project(':domain')
+    implementation project(':itemlist')
     implementation project(':main')
     implementation project(':soundcloudapi')
     implementation project(':soundclouddashboard')
