@@ -25,6 +25,7 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
+import com.example.spotifyaccount.databinding.FragmentAccountSavedBinding
 import javax.inject.Inject
 
 class AccountSavedFragment :
@@ -91,7 +92,7 @@ class AccountSavedFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyaccount.databinding.FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
+        val binding: FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
         return binding.apply {
             view = this@AccountSavedFragment.view
             accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)

@@ -2,6 +2,7 @@ package com.example.spotifyartist
 
 import android.databinding.ObservableField
 import android.util.Log
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.spotify.Artist
@@ -19,7 +20,7 @@ class ArtistViewModel @Inject constructor(
         private val insertArtist: InsertArtist,
         private val deleteArtist: DeleteArtist,
         private val isArtistSaved: IsArtistSaved
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     private val viewStates: Stack<ArtistViewState> = Stack()
 

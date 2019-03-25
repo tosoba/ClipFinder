@@ -11,20 +11,23 @@ import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.*
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.*
 import com.example.spotifyfavourites.R
+import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
 class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {
 
-    private val onSpotifyTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
+    private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { spotify_favourites_tab_view_pager?.currentItem = it.position }
         }
     }
 
-    private val onSpotifyPageChangedListener = object : com.example.coreandroid.view.OnPageChangeListener {
+    private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_favourites_tab_layout?.getTabAt(position)?.select()
         }
@@ -90,8 +93,8 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
         ))
     }
 
-    private val view: com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentView by lazy {
-        com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentView(
+    private val view: SpotifyFavouritesFragmentView by lazy {
+        SpotifyFavouritesFragmentView(
                 pagerAdapter = pagerAdapter,
                 onTabSelectedListener = onSpotifyTabSelectedListener,
                 onPageChangeListener = onSpotifyPageChangedListener
@@ -99,7 +102,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites, container, false)
+        val binding: FragmentSpotifyFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites, container, false)
         return binding.apply {
             this.view = this@SpotifyFavouritesFragment.view
         }.root

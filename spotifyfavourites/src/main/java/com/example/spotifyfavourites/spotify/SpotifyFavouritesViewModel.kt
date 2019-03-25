@@ -1,6 +1,7 @@
 package com.example.spotifyfavourites.spotify
 
 import android.arch.lifecycle.MutableLiveData
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
@@ -14,9 +15,9 @@ class SpotifyFavouritesViewModel @Inject constructor(
         private val getFavouriteCategories: GetFavouriteCategories,
         private val getFavouriteSpotifyPlaylists: GetFavouriteSpotifyPlaylists,
         private val getFavouriteTracks: GetFavouriteTracks
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
-    val viewState: MutableLiveData<com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentViewState> = MutableLiveData()
+    val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 
     fun loadFavourites() {
         Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentViewState>(
@@ -26,7 +27,7 @@ class SpotifyFavouritesViewModel @Inject constructor(
                 getFavouriteSpotifyPlaylists.execute(),
                 getFavouriteTracks.execute(),
                 Function5 { albums, artists, categories, playlists, tracks ->
-                    com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentViewState(
+                    SpotifyFavouritesFragmentViewState(
                             ArrayList(albums.map(AlbumEntity::ui)),
                             ArrayList(artists.map(ArtistEntity::ui)),
                             ArrayList(categories.map(CategoryEntity::ui)),

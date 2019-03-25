@@ -135,7 +135,7 @@ class MainActivity :
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 
-    private val drawerHeaderBinding: com.example.main.databinding.DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
+    private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.inflate<DrawerHeaderBinding>(LayoutInflater.from(this), R.layout.drawer_header, binding.drawerNavigationView, false)
     }
 

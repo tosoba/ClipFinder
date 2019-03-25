@@ -1,8 +1,9 @@
 package com.example.spotifyfavourites
 
 import android.support.v4.app.Fragment
+import com.example.coreandroid.base.fragment.BaseNavHostFragment
 
-class SpotifyFavouritesMainNavHostFragment : com.example.coreandroid.base.fragment.BaseNavHostFragment() {
+class SpotifyFavouritesMainNavHostFragment : BaseNavHostFragment() {
 
     override val layoutId: Int = R.layout.fragment_spotify_favourites_main_host
 

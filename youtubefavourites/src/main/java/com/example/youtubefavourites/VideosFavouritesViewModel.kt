@@ -2,6 +2,7 @@ package com.example.youtubefavourites
 
 import android.util.Log
 import android.view.View
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.videos.domain
 import com.example.coreandroid.mapper.videos.ui
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class VideosFavouritesViewModel @Inject constructor(
         private val getVideoPlaylistsWithThumbnails: GetVideoPlaylistsWithThumbnails,
         private val deleteVideoPlaylist: DeleteVideoPlaylist
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 

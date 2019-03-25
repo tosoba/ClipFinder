@@ -1,5 +1,6 @@
 package com.example.spotifydashboard
 
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.spotifyapi.SpotifyApi
@@ -17,7 +18,7 @@ class SpotifyDashboardViewModel @Inject constructor(
         private val getCategories: GetCategories,
         private val getDailyViralTracks: GetDailyViralTracks,
         private val getNewReleases: GetNewReleases
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState: SpotifyDashboardViewState = SpotifyDashboardViewState()
 

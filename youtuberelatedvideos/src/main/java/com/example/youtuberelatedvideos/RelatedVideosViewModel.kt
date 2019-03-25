@@ -1,5 +1,6 @@
 package com.example.youtuberelatedvideos
 
+import com.example.coreandroid.base.vm.BaseVideosViewModel
 import com.example.coreandroid.mapper.videos.ui
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.view.recyclerview.item.VideoItemView
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class RelatedVideosViewModel @Inject constructor(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val searchRelatedVideos: SearchRelatedVideos
-) : com.example.coreandroid.base.vm.BaseVideosViewModel(getChannelsThumbnailUrls) {
+) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState = RelatedVideosViewState()
 

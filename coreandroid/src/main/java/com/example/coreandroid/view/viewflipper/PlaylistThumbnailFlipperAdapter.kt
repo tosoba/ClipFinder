@@ -15,7 +15,7 @@ class PlaylistThumbnailFlipperAdapter(val thumbnailUrls: List<String>) : BaseAda
         val inflater = LayoutInflater.from(parent?.context)
         val src = ImageViewSrc.with(thumbnailUrls[position], R.drawable.playlist_placeholder, R.drawable.error_placeholder)
         val holder: ViewHolder = if (view == null) {
-            val binding: com.example.coreandroid.databinding.ImageViewListItemBinding = DataBindingUtil.inflate(inflater, R.layout.image_view_list_item, parent, false)
+            val binding: ImageViewListItemBinding = DataBindingUtil.inflate(inflater, R.layout.image_view_list_item, parent, false)
             ViewHolder(binding.apply { this.src = src })
             return binding.root
         } else {

@@ -18,6 +18,8 @@ import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.connectivitySnackbarHost
+import com.example.coreandroid.view.OnPageChangeListener
+import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.SpotifyAlbumsFragment
 import com.example.itemlist.spotify.SpotifyArtistsFragment
@@ -39,13 +41,13 @@ class SpotifySearchFragment :
             viewModel.viewState.clearAll()
         }
 
-    private val onSpotifyTabSelectedListener = object : com.example.coreandroid.view.OnTabSelectedListener {
+    private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { spotify_tab_view_pager?.currentItem = it.position }
         }
     }
 
-    private val onSpotifyPageChangedListener = object : com.example.coreandroid.view.OnPageChangeListener {
+    private val onSpotifyPageChangedListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             spotify_tab_layout?.getTabAt(position)?.select()
         }
@@ -114,8 +116,8 @@ class SpotifySearchFragment :
         ))
     }
 
-    private val view: com.example.spotifysearch.spotify.SpotifySearchView by lazy {
-        com.example.spotifysearch.spotify.SpotifySearchView(
+    private val view: SpotifySearchView by lazy {
+        SpotifySearchView(
                 state = viewModel.viewState,
                 pagerAdapter = pagerAdapter,
                 onTabSelectedListener = onSpotifyTabSelectedListener,

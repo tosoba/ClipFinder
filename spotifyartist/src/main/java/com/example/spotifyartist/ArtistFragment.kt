@@ -26,6 +26,7 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.spotifyartist.databinding.FragmentArtistBinding
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
 import javax.inject.Inject
@@ -85,8 +86,8 @@ class ArtistFragment :
         )
     }
 
-    private val view: com.example.spotifyartist.ArtistView by lazy {
-        com.example.spotifyartist.ArtistView(
+    private val view: ArtistView by lazy {
+        ArtistView(
                 state = viewModel.viewState,
                 onFavouriteBtnClickListener = View.OnClickListener {
                     viewModel.lastArtist?.let {
@@ -127,7 +128,7 @@ class ArtistFragment :
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyartist.databinding.FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
+        val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.artistFavouriteFab.hideAndShow()
         })

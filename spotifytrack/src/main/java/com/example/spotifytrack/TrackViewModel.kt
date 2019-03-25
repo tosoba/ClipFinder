@@ -1,6 +1,7 @@
 package com.example.spotifytrack
 
 import android.graphics.Color
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.spotify.Track
@@ -20,7 +21,7 @@ class TrackViewModel @Inject constructor(
         private val getArtists: GetArtists,
         private val getSimilarTracks: GetSimilarTracks,
         private val getAudioFeatures: GetAudioFeatures
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState: TrackViewState = TrackViewState()
 

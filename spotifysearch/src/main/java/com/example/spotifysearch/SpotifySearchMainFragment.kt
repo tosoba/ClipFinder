@@ -43,8 +43,8 @@ class SpotifySearchMainFragment : Fragment(), Injectable {
         return@OnNavigationItemSelectedListener true
     }
 
-    private val view: com.example.spotifysearch.SpotifySearchMainView by lazy {
-        com.example.spotifysearch.SpotifySearchMainView(query, pagerAdapter, onNavigationItemSelectedListener, 1)
+    private val view: SpotifySearchMainView by lazy {
+        SpotifySearchMainView(query, pagerAdapter, onNavigationItemSelectedListener, 1)
     }
 
     private val query: String by lazy { arguments!!.getString(ARG_QUERY) }

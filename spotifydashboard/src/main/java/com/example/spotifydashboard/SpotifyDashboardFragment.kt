@@ -25,6 +25,7 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import javax.inject.Inject
@@ -117,8 +118,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
         )
     }
 
-    private val view: com.example.spotifydashboard.SpotifyDashboardView by lazy {
-        com.example.spotifydashboard.SpotifyDashboardView(
+    private val view: SpotifyDashboardView by lazy {
+        SpotifyDashboardView(
                 state = viewModel.viewState,
                 dashboardAdapter = dashboardAdapter
         )
@@ -153,7 +154,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_dashboard, container, false)
+        val binding: FragmentSpotifyDashboardBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_dashboard, container, false)
         return binding.apply {
             dashboardView = view
             appCompatActivity?.setSupportActionBar(dashboardToolbar)

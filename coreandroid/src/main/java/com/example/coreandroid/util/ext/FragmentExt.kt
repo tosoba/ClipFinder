@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseListFragment
+import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.handler.*
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
@@ -64,11 +65,11 @@ fun <I : Parcelable> BaseListFragment<I>.putArguments(
     arguments = args
 }
 
-val Fragment.navHostFragment: com.example.coreandroid.base.fragment.BaseNavHostFragment?
+val Fragment.navHostFragment: BaseNavHostFragment?
     get() {
         var fragment: Fragment? = this
         while (fragment?.parentFragment?.parentFragment != null) {
             fragment = fragment.parentFragment
         }
-        return if (fragment != null && fragment is com.example.coreandroid.base.fragment.BaseNavHostFragment) fragment else null
+        return if (fragment != null && fragment is BaseNavHostFragment) fragment else null
     }

@@ -67,8 +67,8 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
         )
     }
 
-    private val view: com.example.spotifyalbum.AlbumView by lazy {
-        com.example.spotifyalbum.AlbumView(
+    private val view: AlbumView by lazy {
+        AlbumView(
                 state = viewModel.viewState,
                 album = album,
                 onFavouriteBtnClickListener = View.OnClickListener {

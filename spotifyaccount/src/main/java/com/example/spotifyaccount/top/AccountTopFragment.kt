@@ -26,6 +26,7 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
+import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
 import javax.inject.Inject
 
 
@@ -41,8 +42,8 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
                 && viewModel.viewState.artists.isNotEmpty()
                 && viewModel.viewState.topTracks.isNotEmpty()
 
-    private val view: com.example.spotifyaccount.top.AccountTopView by lazy {
-        com.example.spotifyaccount.top.AccountTopView(
+    private val view: AccountTopView by lazy {
+        AccountTopView(
                 viewModel.viewState,
                 ArtistsAndTracksAdapter(
                         RecyclerViewItemView(
@@ -85,7 +86,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyaccount.databinding.FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
+        val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
         return binding.apply {
             view = this@AccountTopFragment.view
             accountTopRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -97,8 +98,8 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
     }
 
-    override fun com.example.spotifyaccount.top.AccountTopViewModel.onInitialized() {
-        viewState = com.example.spotifyaccount.top.AccountTopViewState(spotifyLoginController!!.loggedInObservable)
+    override fun AccountTopViewModel.onInitialized() {
+        viewState = AccountTopViewState(spotifyLoginController!!.loggedInObservable)
     }
 
     private fun loadData() {

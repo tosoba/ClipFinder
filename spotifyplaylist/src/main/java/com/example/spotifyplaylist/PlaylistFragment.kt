@@ -16,14 +16,15 @@ import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyTracksFragment
+import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
 import com.squareup.picasso.Picasso
 
 class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 
-    private val view: com.example.spotifyplaylist.PlaylistView by lazy {
-        com.example.spotifyplaylist.PlaylistView(
+    private val view: PlaylistView by lazy {
+        PlaylistView(
                 state = viewModel.viewState,
                 playlist = playlist,
                 onFavouriteBtnClickListener = View.OnClickListener {
@@ -70,7 +71,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyplaylist.databinding.FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
+        val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.playPlaylistFab.hideAndShow()
         })

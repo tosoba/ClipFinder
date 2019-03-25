@@ -2,6 +2,7 @@ package com.example.spotifytrackvideos
 
 import android.databinding.ObservableField
 import android.util.Log
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.model.spotify.Track
 import com.example.there.domain.usecase.spotify.DeleteTrack
@@ -14,7 +15,7 @@ class TrackVideosViewModel @Inject constructor(
         private val insertTrack: InsertTrack,
         private val deleteTrack: DeleteTrack,
         private val isTrackSaved: IsTrackSaved
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState = TrackVideosViewState()
 

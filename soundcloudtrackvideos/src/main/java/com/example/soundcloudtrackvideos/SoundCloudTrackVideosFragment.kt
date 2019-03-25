@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -17,6 +18,8 @@ import com.example.coreandroid.util.ext.hideAndShow
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.itemlist.soundcloud.SoundCloudTracksFragment
+import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
@@ -43,8 +46,14 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
         CustomCurrentStatePagerAdapter(
                 fragmentManager = childFragmentManager,
                 fragments = arrayOf(
-                        VideosSearchFragment.newInstanceWithQuery(argTrack.title)
-                //TODO: related soundcloud tracks fragment
+                        VideosSearchFragment.newInstanceWithQuery(argTrack.title),
+                        BaseListFragment.newInstance<SoundCloudTracksFragment, SoundCloudTrack>(
+                                "",
+                                "",
+                                items = ArrayList(),
+                                shouldShowHeader = true
+                        )
+
                 )
         )
     }
@@ -55,15 +64,15 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = View.OnClickListener {  },
-                onPlayBtnClickListener = View.OnClickListener {  }
+                onFavouriteBtnClickListener = View.OnClickListener { },
+                onPlayBtnClickListener = View.OnClickListener { }
         )
     }
 
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_track_videos, container, false)
+        val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_track_videos, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.soundCloudTrackFavouriteFab.hideAndShow()
         })

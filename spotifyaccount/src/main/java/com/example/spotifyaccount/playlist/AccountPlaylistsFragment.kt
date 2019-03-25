@@ -14,6 +14,7 @@ import com.example.coreandroid.util.ext.spotifyLoginController
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
+import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
 class AccountPlaylistsFragment :
         BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
@@ -41,7 +42,7 @@ class AccountPlaylistsFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_playlists, container, false)
+        val binding: FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_playlists, container, false)
         return binding.apply { viewState = viewModel.viewState }.root
     }
 

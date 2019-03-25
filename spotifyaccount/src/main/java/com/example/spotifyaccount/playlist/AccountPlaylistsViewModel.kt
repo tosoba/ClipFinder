@@ -1,6 +1,7 @@
 package com.example.spotifyaccount.playlist
 
 import android.arch.lifecycle.MutableLiveData
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.PlaylistEntity
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 class AccountPlaylistsViewModel @Inject constructor(
         private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     lateinit var viewState: AccountPlaylistViewState
 

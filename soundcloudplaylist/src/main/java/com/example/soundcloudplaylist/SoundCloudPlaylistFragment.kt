@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.soundcloud.ISoundCloudPlaylist
@@ -18,7 +19,7 @@ import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBind
 import com.squareup.picasso.Picasso
 
 
-class SoundCloudPlaylistFragment : com.example.coreandroid.base.fragment.BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class.java) {
+class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class.java) {
 
     private val tracksFragment: SoundCloudTracksFragment
         get() = childFragmentManager.findFragmentById(R.id.sound_cloud_playlist_tracks_fragment) as SoundCloudTracksFragment

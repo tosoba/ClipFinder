@@ -1,6 +1,7 @@
 package com.example.main
 
 import android.util.Log
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.mapper.videos.domain
@@ -39,7 +40,7 @@ class MainViewModel @Inject constructor(
         private val insertVideoPlaylist: InsertVideoPlaylist,
         private val addVideoToPlaylist: AddVideoToPlaylist,
         private val getFavouriteVideoPlaylists: GetFavouriteVideoPlaylists
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState = MainViewState()
 

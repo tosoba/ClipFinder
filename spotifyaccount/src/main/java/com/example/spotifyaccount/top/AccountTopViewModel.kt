@@ -1,5 +1,6 @@
 package com.example.spotifyaccount.top
 
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.ArtistEntity
@@ -11,7 +12,7 @@ import javax.inject.Inject
 class AccountTopViewModel @Inject constructor(
         private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
         private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     lateinit var viewState: AccountTopViewState
 

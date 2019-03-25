@@ -23,6 +23,7 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
+import com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding
 import javax.inject.Inject
 
 class VideosFavouritesFragment :
@@ -58,7 +59,7 @@ class VideosFavouritesFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
+        val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
             view = this@VideosFavouritesFragment.view
             videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)

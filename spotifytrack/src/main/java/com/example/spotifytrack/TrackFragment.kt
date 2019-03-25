@@ -114,8 +114,8 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
         )
     }
 
-    private val view: com.example.spotifytrack.TrackView by lazy {
-        com.example.spotifytrack.TrackView(viewModel.viewState, trackAdapter)
+    private val view: TrackView by lazy {
+        TrackView(viewModel.viewState, trackAdapter)
     }
 
     override fun onCreateView(

@@ -1,6 +1,7 @@
 package com.example.spotifysearch.spotify
 
 import android.arch.lifecycle.MutableLiveData
+import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.AlbumEntity
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 class SpotifySearchViewModel @Inject constructor(
         private val searchSpotify: SearchSpotify
-) : com.example.coreandroid.base.vm.BaseViewModel() {
+) : BaseViewModel() {
 
     val viewState: SpotifySearchViewState = SpotifySearchViewState()
 

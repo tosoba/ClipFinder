@@ -16,6 +16,7 @@ import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
+import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -24,8 +25,8 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 
-    private val view: com.example.spotifycategory.CategoryView by lazy {
-        com.example.spotifycategory.CategoryView(
+    private val view: CategoryView by lazy {
+        CategoryView(
                 state = viewModel.viewState,
                 category = category,
                 onFavouriteBtnClickListener = View.OnClickListener {
@@ -71,7 +72,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: com.example.spotifycategory.databinding.FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
+        val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.categoryFavouriteFab.hideAndShow()
         })
