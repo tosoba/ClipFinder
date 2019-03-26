@@ -90,7 +90,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            (parentFragment as? OnTrackChangeListener)?.onTrackChanged(newTrack = it)
+                            (parentFragment as? OnTrackChangeListener<Track>)?.onTrackChanged(newTrack = it)
                         },
                         onReloadBtnClickListener = View.OnClickListener { _ ->
                             track?.let { viewModel.loadSimilarTracks(it) }

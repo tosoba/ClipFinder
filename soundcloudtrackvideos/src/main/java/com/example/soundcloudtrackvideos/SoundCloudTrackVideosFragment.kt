@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.util.ext.generateColorGradient
-import com.example.coreandroid.util.ext.getBitmapSingle
-import com.example.coreandroid.util.ext.hideAndShow
-import com.example.coreandroid.util.ext.observeIgnoringNulls
+import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -26,14 +25,18 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
-class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class.java), Injectable {
+class SoundCloudTrackVideosFragment :
+        BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class.java),
+        Injectable,
+        OnTrackChangeListener<SoundCloudTrack>,
+        GoesToPreviousStateOnBackPressed {
 
     private val argTrack: SoundCloudTrack by lazy { arguments!!.getParcelable<SoundCloudTrack>(ARG_TRACK) }
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             sound_cloud_track_videos_tab_layout?.getTabAt(position)?.select()
-//            updateCurrentFragment(viewModel.viewState.track.get()!!)
+            updateCurrentFragment(viewModel.viewState.track.get()!!)
         }
     }
 
@@ -60,7 +63,7 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
                             }
 
                             onItemClick = {
-                                //TODO: updateTrack -> switch to trackvideos
+                                (parentFragment as? OnTrackChangeListener<SoundCloudTrack>)?.onTrackChanged(newTrack = it)
                             }
                         }
                 )
@@ -83,6 +86,8 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.loadSimilarTracks(argTrack.id)
+        lifecycle.addObserver(disposablesComponent)
+        viewModel.updateState(argTrack)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -94,9 +99,17 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
             view = this@SoundCloudTrackVideosFragment.view
             argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
             soundCloudTrackVideosViewpager.offscreenPageLimit = 1
-            //TODO: back navigation with previous states
-//            soundCloudTrackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
+            soundCloudTrackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
+    }
+
+    override fun onBackPressed() {
+        if (!viewModel.onBackPressed()) {
+            backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+        } else {
+            updateCurrentFragment(viewModel.viewState.track.get()!!)
+            argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
+        }
     }
 
     override fun setupObservers() {
@@ -106,6 +119,20 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
             if (currentFragment is SoundCloudTracksFragment) {
                 currentFragment.updateItems(it)
             }
+        }
+    }
+
+    override fun onTrackChanged(newTrack: SoundCloudTrack) = with(newTrack) {
+        viewModel.updateState(this)
+        artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
+        updateCurrentFragment(this)
+    }
+
+    private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
+        val currentFragment = pagerAdapter.currentFragment
+        when (currentFragment) {
+            is VideosSearchFragment -> currentFragment.query = newTrack.title
+            is SoundCloudTracksFragment -> viewModel.loadSimilarTracks(newTrack.id)
         }
     }
 

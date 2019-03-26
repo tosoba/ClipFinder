@@ -22,9 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.BaseVMActivity
 import com.example.coreandroid.base.activity.IntentProvider
-import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
-import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
-import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
+import com.example.coreandroid.base.fragment.*
 import com.example.coreandroid.base.handler.*
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Album
@@ -83,6 +81,9 @@ class MainActivity :
 
     private val soundCloudMainFragment: SoundCloudMainFragment?
         get() = mainContentViewPagerAdapter.currentFragment as? SoundCloudMainFragment
+
+    private val mainContentFragment: IMainContentFragment?
+        get() = mainContentViewPagerAdapter.currentFragment as? IMainContentFragment
 
     private val youtubePlayerFragment: IYoutubePlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
@@ -307,7 +308,7 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        (mainContentViewPagerAdapter.currentFragment as? com.example.coreandroid.base.fragment.IMainContentFragment)?.let {
+        (mainContentViewPagerAdapter.currentFragment as? IMainContentFragment)?.let {
             val currentFragment = it.currentNavHostFragment
 
             if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
@@ -317,7 +318,7 @@ class MainActivity :
 
             if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
                 currentFragment.topFragment?.let { topFragment ->
-                    if (topFragment is com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed) {
+                    if (topFragment is GoesToPreviousStateOnBackPressed) {
                         topFragment.onBackPressed()
                         return
                     }
@@ -334,7 +335,7 @@ class MainActivity :
     }
 
     override fun onBackPressedWithNoPreviousState() {
-        spotifyMainFragment?.let {
+        mainContentFragment?.let {
             val currentFragment = it.currentFragment
             if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
                 showMainToolbarOnBackPressed(currentFragment)

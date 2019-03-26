@@ -1,7 +1,5 @@
 package com.example.coreandroid.base.handler
 
-import com.example.coreandroid.model.spotify.Track
-
-interface OnTrackChangeListener {
+interface OnTrackChangeListener<Track> {
     fun onTrackChanged(newTrack: Track)
 }

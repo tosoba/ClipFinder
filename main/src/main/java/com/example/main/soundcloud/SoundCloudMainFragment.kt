@@ -52,7 +52,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment, Injectable {
         }
     }
 
-    val currentFragment: Fragment?
+    override val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
     override val currentNavHostFragment: BaseNavHostFragment?
