@@ -19,4 +19,6 @@ class SoundCloudRepository @Inject constructor(
     override fun getTracksFromPlaylist(id: String): Single<List<SoundCloudTrackEntity>> = remote.getTracksFromPlaylist(id)
 
     override fun getTracks(ids: List<String>): Single<List<SoundCloudTrackEntity>> = remote.getTracks(ids)
+
+    override fun getSimilarTracks(id: String): Single<List<SoundCloudTrackEntity>> = remote.getSimilarTracks(id)
 }

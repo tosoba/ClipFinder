@@ -1,6 +1,7 @@
 package com.example.api
 
 import com.example.api.model.DiscoverResponse
+import com.example.api.model.SoundCloudRelatedTracksResponse
 import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -25,5 +26,5 @@ interface SoundCloudApi {
     fun getRelatedTracks(
             @Path("id") id: String,
             @Query("client_id") clientId: String = SoundCloudAuth.key
-    ): Single<List<TrackEntity>>
+    ): Single<SoundCloudRelatedTracksResponse>
 }

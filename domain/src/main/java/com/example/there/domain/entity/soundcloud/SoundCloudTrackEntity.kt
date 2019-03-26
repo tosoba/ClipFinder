@@ -2,7 +2,6 @@ package com.example.there.domain.entity.soundcloud
 
 data class SoundCloudTrackEntity(
         val id: String,
-        val createdAt: String,
         val title: String,
         val artworkUrl: String?,
         val description: String?,

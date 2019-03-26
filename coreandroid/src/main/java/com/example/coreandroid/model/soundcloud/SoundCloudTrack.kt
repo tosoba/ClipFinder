@@ -10,7 +10,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class SoundCloudTrack(
         override val id: String,
-        val createdAt: String,
         val title: String,
         val artworkUrl: String?,
         val description: String?,

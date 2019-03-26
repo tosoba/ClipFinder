@@ -15,6 +15,7 @@ import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.util.ext.generateColorGradient
 import com.example.coreandroid.util.ext.getBitmapSingle
 import com.example.coreandroid.util.ext.hideAndShow
+import com.example.coreandroid.util.ext.observeIgnoringNulls
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -50,10 +51,18 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
                         BaseListFragment.newInstance<SoundCloudTracksFragment, SoundCloudTrack>(
                                 "",
                                 "",
-                                items = ArrayList(),
-                                shouldShowHeader = true
-                        )
+                                items = null
+                        ).apply {
+                            refreshData = { fragment ->
+                                viewModel.similarTracks.value?.let {
+                                    fragment.updateItems(it)
+                                }
+                            }
 
+                            onItemClick = {
+                                //TODO: updateTrack -> switch to trackvideos
+                            }
+                        }
                 )
         )
     }
@@ -71,6 +80,11 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
 
     private val disposablesComponent = DisposablesComponent()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.loadSimilarTracks(argTrack.id)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_track_videos, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
@@ -80,8 +94,19 @@ class SoundCloudTrackVideosFragment : BaseVMFragment<SoundCloudTrackVideosViewMo
             view = this@SoundCloudTrackVideosFragment.view
             argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
             soundCloudTrackVideosViewpager.offscreenPageLimit = 1
+            //TODO: back navigation with previous states
 //            soundCloudTrackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+        viewModel.similarTracks.observeIgnoringNulls(this) {
+            val currentFragment = pagerAdapter.currentFragment
+            if (currentFragment is SoundCloudTracksFragment) {
+                currentFragment.updateItems(it)
+            }
+        }
     }
 
     private fun loadCollapsingToolbarBackgroundGradient(

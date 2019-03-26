@@ -3,6 +3,7 @@ package com.example.soundcloudrepo.datastore
 import com.example.api.SoundCloudApi
 import com.example.api.model.SoundCloudPlaylistApiModel
 import com.example.api.model.SoundCloudSystemPlaylistApiModel
+import com.example.api.model.SoundCloudTrackApiModel
 import com.example.soundcloudrepo.mapper.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -39,4 +40,15 @@ class SoundCloudRemoteDataStore @Inject constructor(
             ids: List<String>
     ): Single<List<SoundCloudTrackEntity>> = api.getTracks(ids.joinToString(separator = ","))
             .map { it.map(TrackEntity::domain) }
+
+    override fun getSimilarTracks(
+            id: String
+    ): Single<List<SoundCloudTrackEntity>> = api.getRelatedTracks(id)
+            .map {
+                it.collection?.run {
+                    map(SoundCloudTrackApiModel::domain)
+                } ?: run {
+                    emptyList<SoundCloudTrackEntity>()
+                }
+            }
 }

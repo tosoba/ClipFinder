@@ -6,7 +6,6 @@ import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 val SoundCloudTrackEntity.ui: SoundCloudTrack
     get() = SoundCloudTrack(
             id = id,
-            createdAt = createdAt,
             title = title,
             artworkUrl = artworkUrl,
             description = description,
@@ -21,7 +20,6 @@ val SoundCloudTrackEntity.ui: SoundCloudTrack
 val SoundCloudTrack.domain: SoundCloudTrackEntity
     get() = SoundCloudTrackEntity(
             id = id,
-            createdAt = createdAt,
             title = title,
             artworkUrl = artworkUrl,
             description = description,

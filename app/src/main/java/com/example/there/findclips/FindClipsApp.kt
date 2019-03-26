@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.example.coreandroid.util.Constants
+import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.di.AppInjector
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
@@ -27,7 +28,7 @@ class FindClipsApp : Application(), HasActivityInjector {
 
 //        initLeakCanary()
 
-        startService(Intent(this, com.example.spotifyplayer.SpotifyPlayerCancelNotificationService::class.java))
+        startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
 
         createNotificationChannel()
 
@@ -35,7 +36,7 @@ class FindClipsApp : Application(), HasActivityInjector {
     }
 
     override fun onTerminate() {
-        stopService(Intent(this, com.example.spotifyplayer.SpotifyPlayerCancelNotificationService::class.java))
+        stopService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
         super.onTerminate()
     }
 
