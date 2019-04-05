@@ -3,6 +3,7 @@ package com.example.coreandroid.base.handler
 import android.view.View
 import com.example.coreandroid.util.ext.expandIfHidden
 import com.example.coreandroid.util.ext.hideIfVisible
+import com.example.coreandroid.util.ext.showCollapsedIfHidden
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 interface SlidingPanelController {
@@ -14,6 +15,10 @@ interface SlidingPanelController {
 
     fun expandIfHidden() {
         slidingPanel?.expandIfHidden()
+    }
+
+    fun showCollapsedIfHidden() {
+        slidingPanel?.showCollapsedIfHidden()
     }
 }
 

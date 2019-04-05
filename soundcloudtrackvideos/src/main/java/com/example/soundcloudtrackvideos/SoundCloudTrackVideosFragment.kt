@@ -77,7 +77,11 @@ class SoundCloudTrackVideosFragment :
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
                 onFavouriteBtnClickListener = View.OnClickListener { },
-                onPlayBtnClickListener = View.OnClickListener { }
+                onPlayBtnClickListener = View.OnClickListener {
+                    viewModel.viewState.track.get()?.let {
+                        soundCloudPlayerController?.loadTrack(it)
+                    }
+                }
         )
     }
 

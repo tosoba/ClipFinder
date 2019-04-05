@@ -2,7 +2,7 @@ package com.example.there.domain.entity.soundcloud
 
 data class SoundCloudSystemPlaylistEntity(
         val artworkUrl: String?,
-        val calculatedArtworkUrl: String,
+        val calculatedArtworkUrl: String?,
         val description: String,
         val id: String,
         val kind: String,

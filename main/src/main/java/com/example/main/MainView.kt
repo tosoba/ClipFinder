@@ -37,7 +37,7 @@ class DrawerHeaderViewState(
 )
 
 enum class PlayerState {
-    VIDEO, TRACK, ALBUM, PLAYLIST, VIDEO_PLAYLIST
+    VIDEO, TRACK, ALBUM, PLAYLIST, VIDEO_PLAYLIST, SOUND_CLOUD_TRACK
 }
 
 enum class MainContent {

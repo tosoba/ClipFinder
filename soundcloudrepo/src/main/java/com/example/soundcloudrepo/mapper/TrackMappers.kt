@@ -1,5 +1,6 @@
 package com.example.soundcloudrepo.mapper
 
+import com.example.api.SoundCloudAuth
 import com.example.api.model.SoundCloudTrackApiModel
 import com.example.api.model.SoundCloudTrackIdApiModel
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -21,7 +22,7 @@ val TrackEntity.domain: SoundCloudTrackEntity
             duration,
             genre,
             tags_list,
-            stream_url,
+            if (stream_url != null) "$stream_url/?client_id=${SoundCloudAuth.key}" else null,
             download_url,
             waveform_url
     )
@@ -35,7 +36,7 @@ val SoundCloudTrackApiModel.domain: SoundCloudTrackEntity
             duration = duration.toString(),
             genre = genre,
             tags = tagList,
-            streamUrl = media.transcodings?.getOrNull(0)?.url, //TODO: check if it works when player is implemented
+            streamUrl = "$uri/stream?client_id=${SoundCloudAuth.key}", //TODO: check if it works when player is implemented
             downloadUrl = null,
             waveformUrl = waveformUrl
     )

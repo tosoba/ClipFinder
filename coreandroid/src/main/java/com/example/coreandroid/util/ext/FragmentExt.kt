@@ -26,6 +26,9 @@ val Fragment.spotifyPlayerController: SpotifyPlayerController?
 val Fragment.youtubePlayerController: YoutubePlayerController?
     get() = activity as? YoutubePlayerController
 
+val Fragment.soundCloudPlayerController: SoundCloudPlayerController?
+    get() = activity as? SoundCloudPlayerController
+
 val Fragment.spotifyTrackChangeHandler: SpotifyTrackChangeHandler?
     get() = activity as? SpotifyTrackChangeHandler
 

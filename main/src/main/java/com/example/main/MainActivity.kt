@@ -25,6 +25,7 @@ import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.*
 import com.example.coreandroid.base.handler.*
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
@@ -61,6 +62,7 @@ class MainActivity :
         SlidingPanelController,
         VideoPlaylistController,
         SpotifyPlayerController,
+        SoundCloudPlayerController,
         YoutubePlayerController,
         SpotifyTrackChangeHandler,
         BackPressedWithNoPreviousStateController,
@@ -92,6 +94,10 @@ class MainActivity :
     private val spotifyPlayerFragment: ISpotifyPlayerFragment?
         get() = supportFragmentManager.findFragmentById(R.id.spotify_player_fragment)
                 as? ISpotifyPlayerFragment
+
+    private val soundCloudPlayerFragment: ISoundCloudPlayerFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment)
+                as? ISoundCloudPlayerFragment
 
     private val similarTracksFragment: SpotifyTracksFragment?
         get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
@@ -397,29 +403,59 @@ class MainActivity :
     override fun toggleToolbar() {
         spotifyMainFragment?.let {
             val currentTopFragment = it.currentNavHostFragment?.topFragment
-            val mainToolbar = (currentTopFragment as? com.example.coreandroid.base.fragment.HasMainToolbar)?.toolbar
+            val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
             if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
         }
     }
 
+    override fun loadTrack(track: SoundCloudTrack) {
+        //TODO: use databinding to make play button invisible in SoundCloudTrackVideosFragment if track's streamUrl == null
+        if (track.streamUrl == null) {
+            Toast.makeText(this, "Track is not streamable.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        sliding_layout?.setDragView(soundCloudPlayerFragment?.playerView)
+        showCollapsedIfHidden()
+        soundCloudPlayerFragment?.loadTrack(track)
+        viewModel.viewState.playerState.set(PlayerState.SOUND_CLOUD_TRACK)
+    }
+
     override fun loadTrack(track: Track) {
-        //TODO: check if player is actually in the middle of playing the track (maybe) same with album and playlist
-        if (viewModel.viewState.isLoggedIn.get() == false) return //TODO: maybe show a toast with you need to be logged in msg
+        if (viewModel.viewState.isLoggedIn.get() == false) {
+            Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
+        showCollapsedIfHidden()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadTrack(track)
         viewModel.viewState.playerState.set(PlayerState.TRACK)
     }
 
     override fun loadAlbum(album: Album) {
-        if (viewModel.viewState.isLoggedIn.get() == false) return
+        if (viewModel.viewState.isLoggedIn.get() == false) {
+            Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
+        showCollapsedIfHidden()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadAlbum(album)
         viewModel.viewState.playerState.set(PlayerState.ALBUM)
     }
 
     override fun loadPlaylist(playlist: Playlist) {
-        if (viewModel.viewState.isLoggedIn.get() == false) return
+        if (viewModel.viewState.isLoggedIn.get() == false) {
+            Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
+        showCollapsedIfHidden()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadPlaylist(playlist)
         viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
@@ -427,7 +463,6 @@ class MainActivity :
 
     override fun onTrackChanged(trackId: String) {
         viewModel.getSimilarTracks(trackId)
-        sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
     }
 
     override fun loadVideo(video: Video) {

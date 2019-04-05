@@ -7,7 +7,7 @@ class SoundCloudSystemPlaylistApiModel(
         val artworkUrl: String?,
 
         @SerializedName("calculated_artwork_url")
-        val calculatedArtworkUrl: String,
+        val calculatedArtworkUrl: String?,
 
         val description: String,
 

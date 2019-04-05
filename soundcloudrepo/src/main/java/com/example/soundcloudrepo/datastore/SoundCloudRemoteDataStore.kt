@@ -1,6 +1,7 @@
 package com.example.soundcloudrepo.datastore
 
 import com.example.api.SoundCloudApi
+import com.example.api.SoundCloudApiV2
 import com.example.api.model.SoundCloudPlaylistApiModel
 import com.example.api.model.SoundCloudSystemPlaylistApiModel
 import com.example.api.model.SoundCloudTrackApiModel
@@ -14,12 +15,13 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class SoundCloudRemoteDataStore @Inject constructor(
+        private val apiV2: SoundCloudApiV2,
         private val api: SoundCloudApi,
         private val service: SoundCloudService
 ) : ISoundCloudRemoteDataStore {
 
     override val discover: Single<SoundCloudDiscoverEntity>
-        get() = api.discover().map { response ->
+        get() = apiV2.discover().map { response ->
             SoundCloudDiscoverEntity(
                     playlists = response.collection.map {
                         it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
@@ -33,17 +35,17 @@ class SoundCloudRemoteDataStore @Inject constructor(
 
     override fun getTracksFromPlaylist(
             id: String
-    ): Single<List<SoundCloudTrackEntity>> = service.fetchPlaylistTracks(id)
-            .map { it.map(TrackEntity::domain) }
+    ): Single<List<SoundCloudTrackEntity>> = api.getTracksFromPlaylist(id)
+            .map { it.map(SoundCloudTrackApiModel::domain) }
 
     override fun getTracks(
             ids: List<String>
-    ): Single<List<SoundCloudTrackEntity>> = api.getTracks(ids.joinToString(separator = ","))
+    ): Single<List<SoundCloudTrackEntity>> = apiV2.getTracks(ids.joinToString(separator = ","))
             .map { it.map(TrackEntity::domain) }
 
     override fun getSimilarTracks(
             id: String
-    ): Single<List<SoundCloudTrackEntity>> = api.getRelatedTracks(id)
+    ): Single<List<SoundCloudTrackEntity>> = apiV2.getRelatedTracks(id)
             .map {
                 it.collection?.run {
                     map(SoundCloudTrackApiModel::domain)

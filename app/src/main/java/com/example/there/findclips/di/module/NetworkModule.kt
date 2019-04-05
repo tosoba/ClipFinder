@@ -2,6 +2,7 @@ package com.example.there.findclips.di.module
 
 import android.content.Context
 import com.example.api.SoundCloudApi
+import com.example.api.SoundCloudApiV2
 import com.example.api.SoundCloudAuth
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
@@ -69,6 +70,10 @@ class NetworkModule {
     fun soundCloudApiRetrofit(): Retrofit = buildDefaultRetrofitWithUrl(soundCloudBaseUrl)
 
     @Provides
+    @Named(Dependencies.SOUNDCLOUD_API_V2_RETROFIT)
+    fun soundCloudApiV2Retrofit(): Retrofit = buildDefaultRetrofitWithUrl(soundCloudBaseUrlV2)
+
+    @Provides
     fun spotifyApi(
             @Named(Dependencies.SPOTIFY_API_RETROFIT) retrofit: Retrofit
     ): SpotifyApi = retrofit.create(SpotifyApi::class.java)
@@ -94,6 +99,11 @@ class NetworkModule {
     ): SoundCloudApi = retrofit.create(SoundCloudApi::class.java)
 
     @Provides
+    fun soundCloudApiV2(
+            @Named(Dependencies.SOUNDCLOUD_API_V2_RETROFIT) retrofit: Retrofit
+    ): SoundCloudApiV2 = retrofit.create(SoundCloudApiV2::class.java)
+
+    @Provides
     fun soundCloudService(
             applicationContext: Context
     ): SoundCloudService = SoundCloud.create(SoundCloudAuth.key).createService(applicationContext)
@@ -110,6 +120,7 @@ class NetworkModule {
         private const val accessTokenBaseUrl: String = "https://accounts.spotify.com/api/"
         private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"
         private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
-        private const val soundCloudBaseUrl: String = "https://api-v2.soundcloud.com/"
+        private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
+        private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"
     }
 }
