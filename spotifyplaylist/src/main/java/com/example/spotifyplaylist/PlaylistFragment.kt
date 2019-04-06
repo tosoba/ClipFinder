@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -23,7 +24,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 
-    private val view: PlaylistView by lazy {
+    private val view: PlaylistView<Playlist> by lazy {
         PlaylistView(
                 state = viewModel.viewState,
                 playlist = playlist,

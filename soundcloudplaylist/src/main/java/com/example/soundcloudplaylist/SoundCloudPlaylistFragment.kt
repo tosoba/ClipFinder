@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.soundcloud.ISoundCloudPlaylist
@@ -42,8 +43,8 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
         }
     }
 
-    private val view: SoundCloudPlaylistView by lazy {
-        SoundCloudPlaylistView(
+    private val view: PlaylistView<ISoundCloudPlaylist> by lazy {
+        PlaylistView(
                 state = viewModel.viewState,
                 playlist = playlist,
                 onFavouriteBtnClickListener = View.OnClickListener {},

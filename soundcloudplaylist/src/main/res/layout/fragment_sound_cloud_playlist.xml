@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.soundcloudplaylist.SoundCloudPlaylistView" />
+            type="com.example.coreandroid.base.playlist.PlaylistView&lt;com.example.coreandroid.model.soundcloud.ISoundCloudPlaylist&gt;" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"

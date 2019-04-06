@@ -4,9 +4,9 @@ import android.databinding.ObservableField
 import android.util.Log
 import com.example.coreandroid.base.model.BaseTrackUiModel
 import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.there.domain.usecase.spotify.DeleteTrackUseCase
-import com.example.there.domain.usecase.spotify.InsertTrackUseCase
-import com.example.there.domain.usecase.spotify.IsTrackSavedUseCase
+import com.example.there.domain.usecase.base.DeleteTrackUseCase
+import com.example.there.domain.usecase.base.InsertTrackUseCase
+import com.example.there.domain.usecase.base.IsTrackSavedUseCase
 import java.util.*
 
 abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, TrackEntity>(

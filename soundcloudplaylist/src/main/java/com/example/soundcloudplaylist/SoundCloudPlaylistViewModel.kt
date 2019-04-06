@@ -1,8 +1,6 @@
 package com.example.soundcloudplaylist
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.example.coreandroid.base.playlist.BasePlaylistViewModel
 import com.example.coreandroid.mapper.soundcloud.ui
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -13,13 +11,7 @@ import javax.inject.Inject
 class SoundCloudPlaylistViewModel @Inject constructor(
         private val getTracksFromPlaylist: GetTracksFromPlaylist,
         private val getTracks: GetTracks
-) : BaseViewModel() {
-
-    val viewState = SoundCloudPlaylistViewState()
-
-    private val mutableTracks: MutableLiveData<List<SoundCloudTrack>> = MutableLiveData()
-    val tracks: LiveData<List<SoundCloudTrack>>
-        get() = mutableTracks
+) : BasePlaylistViewModel<SoundCloudTrack>() {
 
     fun loadTracksWithIds(ids: List<String>) {
         viewState.loadingInProgress.set(true)

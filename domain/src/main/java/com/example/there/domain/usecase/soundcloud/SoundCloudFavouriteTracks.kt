@@ -3,10 +3,10 @@ package com.example.there.domain.usecase.soundcloud
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
-import com.example.there.domain.usecase.spotify.DeleteTrackUseCase
-import com.example.there.domain.usecase.spotify.GetFavouriteTracksUseCase
-import com.example.there.domain.usecase.spotify.InsertTrackUseCase
-import com.example.there.domain.usecase.spotify.IsTrackSavedUseCase
+import com.example.there.domain.usecase.base.DeleteTrackUseCase
+import com.example.there.domain.usecase.base.GetFavouriteTracksUseCase
+import com.example.there.domain.usecase.base.InsertTrackUseCase
+import com.example.there.domain.usecase.base.IsTrackSavedUseCase
 import javax.inject.Inject
 
 class GetFavouriteSoundCloudTracks @Inject constructor(
