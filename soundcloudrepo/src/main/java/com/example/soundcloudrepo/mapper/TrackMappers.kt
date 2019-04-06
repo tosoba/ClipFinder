@@ -15,16 +15,20 @@ val SoundCloudTrackIdEntity.data: SoundCloudTrackIdApiModel
 
 val TrackEntity.domain: SoundCloudTrackEntity
     get() = SoundCloudTrackEntity(
-            id,
-            title,
-            artwork_url,
-            description,
-            duration,
-            genre,
-            tags_list,
-            if (stream_url != null) "$stream_url/?client_id=${SoundCloudAuth.key}" else null,
-            download_url,
-            waveform_url
+            id = id,
+            title = title,
+            artworkUrl = artwork_url,
+            description = description,
+            duration = duration,
+            genre = genre,
+            tags = tags_list,
+            streamUrl = when {
+                stream_url == null -> null
+                stream_url.endsWith("stream") -> "$stream_url/?client_id=${SoundCloudAuth.key}"
+                else -> "$stream_url/stream?client_id=${SoundCloudAuth.key}"
+            },
+            downloadUrl = download_url,
+            waveformUrl = waveform_url
     )
 
 val SoundCloudTrackApiModel.domain: SoundCloudTrackEntity
@@ -36,7 +40,8 @@ val SoundCloudTrackApiModel.domain: SoundCloudTrackEntity
             duration = duration.toString(),
             genre = genre,
             tags = tagList,
-            streamUrl = "$uri/stream?client_id=${SoundCloudAuth.key}", //TODO: check if it works when player is implemented
+            streamUrl = if (uri.endsWith("stream")) "$uri?client_id=${SoundCloudAuth.key}"
+            else "$uri/stream?client_id=${SoundCloudAuth.key}",
             downloadUrl = null,
             waveformUrl = waveformUrl
     )

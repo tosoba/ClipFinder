@@ -262,6 +262,7 @@ class MainActivity :
                 SlidingUpPanelLayout.PanelState.HIDDEN -> {
                     youtubePlayerFragment?.onHidden()
                     spotifyPlayerFragment?.onHidden()
+                    soundCloudPlayerFragment?.onHidden()
                 }
                 else -> return
             }
