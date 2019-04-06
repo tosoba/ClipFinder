@@ -87,8 +87,7 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
         }
     }
 
-    override fun onHidden() {
-        exoPlayer.stop()
-    }
+    override fun onHidden() = exoPlayer.stop()
 
+    override fun stopPlayback() = exoPlayer.stop()
 }

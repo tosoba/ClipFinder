@@ -249,6 +249,7 @@ class MainActivity :
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?
         ) {
+            if (previousState == newState) return
             when (newState) {
                 SlidingUpPanelLayout.PanelState.DRAGGING -> {
                     youtubePlayerFragment?.onDragging()
@@ -419,6 +420,8 @@ class MainActivity :
 
         sliding_layout?.setDragView(soundCloudPlayerFragment?.playerView)
         showCollapsedIfHidden()
+        spotifyPlayerFragment?.stopPlayback()
+        youtubePlayerFragment?.stopPlayback()
         soundCloudPlayerFragment?.loadTrack(track)
         viewModel.viewState.playerState.set(PlayerState.SOUND_CLOUD_TRACK)
     }
@@ -431,6 +434,7 @@ class MainActivity :
 
         sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
         showCollapsedIfHidden()
+        soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadTrack(track)
         viewModel.viewState.playerState.set(PlayerState.TRACK)
@@ -444,6 +448,7 @@ class MainActivity :
 
         sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
         showCollapsedIfHidden()
+        soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadAlbum(album)
         viewModel.viewState.playerState.set(PlayerState.ALBUM)
@@ -457,6 +462,7 @@ class MainActivity :
 
         sliding_layout?.setDragView(spotifyPlayerFragment?.playerView)
         showCollapsedIfHidden()
+        soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadPlaylist(playlist)
         viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
@@ -468,6 +474,7 @@ class MainActivity :
 
     override fun loadVideo(video: Video) {
         spotifyPlayerFragment?.stopPlayback()
+        soundCloudPlayerFragment?.stopPlayback()
         viewModel.viewState.playerState.set(PlayerState.VIDEO)
         youtubePlayerFragment?.loadVideo(video)
         sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
@@ -483,6 +490,7 @@ class MainActivity :
 
         viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
         spotifyPlayerFragment?.stopPlayback()
+        soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
         sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()

@@ -28,6 +28,7 @@ import com.example.coreandroid.util.Constants
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnSeekBarProgressChangeListener
 import com.example.spotifyapi.SpotifyAuth
+import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
@@ -149,7 +150,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding>(
+    ): View? = DataBindingUtil.inflate<FragmentSpotifyPlayerBinding>(
             inflater,
             R.layout.fragment_spotify_player,
             container,
@@ -268,9 +269,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     override fun stopPlayback() {
         spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
-        viewModel.playerState.lastPlayedTrack = null
-        viewModel.playerState.lastPlayedPlaylist = null
-        viewModel.playerState.lastPlayedAlbum = null
     }
 
     override fun onAuthenticationComplete(accessToken: String) {
@@ -460,23 +458,27 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     }
 
     inner class PausePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
-                ?: Unit
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
+        }
     }
 
     inner class ResumePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
-                ?: Unit
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
+        }
     }
 
     inner class NextTrackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
-                ?: Unit
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
+        }
     }
 
     inner class PreviousTrackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
-                ?: Unit
+        override fun onReceive(context: Context?, intent: Intent?) {
+            spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
+        }
     }
 
     companion object {
