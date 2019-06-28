@@ -61,7 +61,7 @@ class ArtistViewModel @Inject constructor(
 
     fun loadAlbumsFromArtist(artistId: String) {
         viewState.albumsLoadingInProgress.set(true)
-        getAlbumsFromArtist.execute(artistId)
+        getAlbumsFromArtist(artistId)
                 .doFinally { viewState.albumsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(AlbumEntity::ui)
@@ -75,7 +75,7 @@ class ArtistViewModel @Inject constructor(
 
     fun loadTopTracksFromArtist(artistId: String) {
         viewState.topTracksLoadingInProgress.set(true)
-        getTopTracksFromArtist.execute(artistId)
+        getTopTracksFromArtist(artistId)
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(TrackEntity::ui)
@@ -89,7 +89,7 @@ class ArtistViewModel @Inject constructor(
 
     fun loadRelatedArtists(artistId: String) {
         viewState.relatedArtistsLoadingInProgress.set(true)
-        getRelatedArtists.execute(artistId)
+        getRelatedArtists(artistId)
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(ArtistEntity::ui)
@@ -102,7 +102,7 @@ class ArtistViewModel @Inject constructor(
     }
 
     fun addFavouriteArtist() = lastArtist?.let { artist ->
-        insertArtist.execute(artist.domain)
+        insertArtist(artist.domain)
                 .subscribeAndDisposeOnCleared({
                     viewStates.peek().isSavedAsFavourite.set(true)
                     viewState.isSavedAsFavourite.set(true)
@@ -110,7 +110,7 @@ class ArtistViewModel @Inject constructor(
     }
 
     fun deleteFavouriteArtist() = lastArtist?.let { artist ->
-        deleteArtist.execute(artist.domain)
+        deleteArtist(artist.domain)
                 .subscribeAndDisposeOnCleared({
                     viewStates.peek().isSavedAsFavourite.set(false)
                     viewState.isSavedAsFavourite.set(false)
@@ -118,7 +118,7 @@ class ArtistViewModel @Inject constructor(
     }
 
     private fun loadArtistFavouriteState() = lastArtist?.let { artist ->
-        isArtistSaved.execute(artist.domain)
+        isArtistSaved(artist.domain)
                 .subscribeAndDisposeOnCleared {
                     viewStates.peek().isSavedAsFavourite.set(it)
                     viewState.isSavedAsFavourite.set(it)

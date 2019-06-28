@@ -3,38 +3,37 @@ package com.example.there.domain.usecase.videos
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
-import com.example.there.domain.repo.videos.IVideosRepository
-import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
-import com.example.there.domain.usecase.base.FlowableUseCaseWithInput
+import com.example.there.domain.repo.videos.IVideosDbDataStore
+import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
+import com.example.there.domain.usecase.base.FlowableUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import javax.inject.Inject
 
 class GetFavouriteVideosFromPlaylist @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: IVideosRepository
-) : FlowableUseCaseWithInput<Long, List<VideoEntity>>(schedulersProvider) {
-
-    override fun createFlowable(input: Long): Flowable<List<VideoEntity>> = repository.getVideosFromPlaylist(input)
+        private val local: IVideosDbDataStore
+) : FlowableUseCaseWithArgs<Long, List<VideoEntity>>(schedulersProvider) {
+    override fun createFlowable(args: Long): Flowable<List<VideoEntity>> = local.getVideosFromPlaylist(args)
 }
 
 class AddVideoToPlaylist @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: IVideosRepository
-) : CompletableUseCaseWithInput<AddVideoToPlaylist.Input>(schedulersProvider) {
+        private val repository: IVideosDbDataStore
+) : CompletableUseCaseWithArgs<AddVideoToPlaylist.Args>(schedulersProvider) {
 
-    class Input(
+    class Args(
             val playlistEntity: VideoPlaylistEntity,
             val videoEntity: VideoEntity
     )
 
-    override fun createCompletable(input: Input): Completable = repository.addVideoToPlaylist(input.videoEntity, input.playlistEntity)
+    override fun createCompletable(args: Args): Completable = repository.addVideoToPlaylist(args.videoEntity, args.playlistEntity)
 }
 
 class DeleteVideo @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: IVideosRepository
-) : CompletableUseCaseWithInput<VideoEntity>(schedulersProvider) {
+        private val repository: IVideosDbDataStore
+) : CompletableUseCaseWithArgs<VideoEntity>(schedulersProvider) {
 
-    override fun createCompletable(input: VideoEntity): Completable = repository.deleteVideo(input)
+    override fun createCompletable(args: VideoEntity): Completable = repository.deleteVideo(args)
 }

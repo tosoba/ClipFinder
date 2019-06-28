@@ -38,7 +38,7 @@ class VideosSearchViewModel @Inject constructor(
     }
 
     private fun addSearchVideosDisposable(query: String, loadMore: Boolean) {
-        searchVideos.execute(SearchVideos.Input(query, loadMore))
+        searchVideos(SearchVideos.Args(query, loadMore))
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ videos ->
                     updateVideos(videos)
@@ -49,7 +49,7 @@ class VideosSearchViewModel @Inject constructor(
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {
         //TODO: check if it isn't broken after usecase changes
         videoPlaylist.domain.id?.let { id ->
-            getFavouriteVideosFromPlaylist.execute(id)
+            getFavouriteVideosFromPlaylist(id)
                     .subscribeAndDisposeOnCleared({ updateVideos(it, true) }, ::onError)
         }
     }
@@ -71,6 +71,6 @@ class VideosSearchViewModel @Inject constructor(
         })
     }
 
-    private fun deleteVideo(video: VideoEntity) = deleteVideo.execute(video)
+    private fun deleteVideo(video: VideoEntity) = deleteVideo.invoke(video)
             .subscribeAndDisposeOnCleared()
 }

@@ -88,7 +88,7 @@ class ConnectivityComponent(
                 }
                 .setCallback(object : Snackbar.Callback() {
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                        if (event == Snackbar.Callback.DISMISS_EVENT_SWIPE) {
+                        if (event == DISMISS_EVENT_SWIPE) {
                             showNoConnectionSnackbar()
                         }
                     }

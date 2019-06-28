@@ -128,11 +128,11 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentFragments: Array<Fragment> by lazy {
+    private val mainContentFragments: Array<Fragment> by lazy(LazyThreadSafetyMode.NONE) {
         arrayOf<Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
     }
 
-    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CustomCurrentStatePagerAdapter(supportFragmentManager, mainContentFragments)
     }
 
@@ -211,7 +211,7 @@ class MainActivity :
             }
 
             R.id.drawer_action_remove_video_search_data -> {
-                viewModel.deleteAllVideoSearchData()
+                viewModel.clearAllVideoSearchData()
                 Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
             }
 
@@ -295,7 +295,7 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.deleteAllVideoSearchData()
+        viewModel.clearAllVideoSearchData()
 
         initViewBindings()
         setupNavigationFromSimilarTracks()
@@ -469,7 +469,7 @@ class MainActivity :
     }
 
     override fun onTrackChanged(trackId: String) {
-        viewModel.getSimilarTracks(trackId)
+        viewModel.loadSimilarTracks(trackId)
     }
 
     override fun loadVideo(video: Video) {
@@ -591,7 +591,7 @@ class MainActivity :
 
     private fun addVideoToFavourites() {
         youtubePlayerFragment?.lastPlayedVideo?.let {
-            viewModel.getFavouriteVideoPlaylists()
+            viewModel.loadFavouriteVideoPlaylists()
             addVideoDialogFragment = AddVideoDialogFragment().apply {
                 state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
                 show(childFragmentManager, TAG_ADD_VIDEO)
@@ -626,7 +626,7 @@ class MainActivity :
 
     private fun onSpotifyAuthenticationComplete(accessToken: String) {
         appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
-        viewModel.getCurrentUser()
+        viewModel.loadCurrentUser()
 
         spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
     }

@@ -8,6 +8,6 @@ open class BaseVideosViewModel(
 ) : BaseViewModel() {
 
     protected fun getChannelThumbnails(videos: List<VideoEntity>, onSuccess: (List<Pair<Int, String>>) -> Unit) {
-        getChannelsThumbnailUrls.execute(videos).subscribeAndDisposeOnCleared(onSuccess, ::onError)
+        getChannelsThumbnailUrls(videos).subscribeAndDisposeOnCleared(onSuccess, ::onError)
     }
 }

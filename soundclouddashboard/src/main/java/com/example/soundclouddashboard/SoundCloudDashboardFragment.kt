@@ -98,7 +98,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
             savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding>(
             inflater,
-            com.example.soundclouddashboard.R.layout.fragment_sound_cloud_dashboard,
+            R.layout.fragment_sound_cloud_dashboard,
             container,
             false
     ).apply {

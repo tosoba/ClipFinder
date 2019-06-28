@@ -10,9 +10,8 @@ abstract class BaseCompletableUseCase(
     protected fun Completable.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Completable = run {
-        if (applySchedulers)
-            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                    .observeOn(schedulersProvider.observeOnScheduler)
+        if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
@@ -23,19 +22,18 @@ abstract class CompletableUseCase(
 
     protected abstract val completable: Completable
 
-    fun execute(
+    operator fun invoke(
             applySchedulers: Boolean = true
     ): Completable = completable.applySchedulersIfRequested(applySchedulers)
 }
 
-abstract class CompletableUseCaseWithInput<Input>(
+abstract class CompletableUseCaseWithArgs<Args>(
         schedulersProvider: UseCaseSchedulersProvider
 ) : BaseCompletableUseCase(schedulersProvider) {
 
-    protected abstract fun createCompletable(input: Input): Completable
+    protected abstract fun createCompletable(args: Args): Completable
 
-    fun execute(
-            input: Input,
-            applySchedulers: Boolean = true
-    ): Completable = createCompletable(input).applySchedulersIfRequested(applySchedulers)
+    operator fun invoke(
+            args: Args, applySchedulers: Boolean = true
+    ): Completable = createCompletable(args).applySchedulersIfRequested(applySchedulers)
 }

@@ -1,4 +1,4 @@
-package com.example.there.domain.repo.videos.datastore
+package com.example.there.domain.repo.videos
 
 import com.example.there.domain.entity.videos.VideoEntity
 import io.reactivex.Single

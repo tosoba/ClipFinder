@@ -2,22 +2,45 @@ package com.example.there.domain.usecase.videos
 
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.videos.VideoEntity
-import com.example.there.domain.repo.videos.IVideosRepository
-import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import com.example.there.domain.repo.videos.IVideosDbDataStore
+import com.example.there.domain.repo.videos.IVideosRemoteDataStore
+import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 import javax.inject.Inject
 
 class SearchVideos @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: IVideosRepository
-) : SingleUseCaseWithInput<SearchVideos.Input, List<VideoEntity>>(schedulersProvider) {
+        private val remote: IVideosRemoteDataStore,
+        private val local: IVideosDbDataStore
+) : SingleUseCaseWithArgs<SearchVideos.Args, List<VideoEntity>>(schedulersProvider) {
 
-    class Input(
-            val query: String,
-            val loadMore: Boolean
-    )
+    class Args(val query: String, val loadMore: Boolean)
 
-    override fun createSingle(input: Input): Single<List<VideoEntity>> = if (input.loadMore)
-        repository.getMoreVideos(input.query)
-    else repository.getVideos(input.query)
+    override fun createSingle(args: Args): Single<List<VideoEntity>> = if (args.loadMore)
+        getMoreVideos(args.query)
+    else getVideos(args.query)
+
+    private fun getVideos(
+            query: String
+    ): Single<List<VideoEntity>> = local.getSavedVideosForQuery(query)
+            .flatMap {
+                if (it.isEmpty()) {
+                    remote.getVideos(query)
+                            .flatMap { (nextPageToken, videos) ->
+                                local.insertVideosForNewQuery(query, videos, nextPageToken)
+                                        .andThen(Single.just(videos))
+                            }
+                } else {
+                    Single.just(it)
+                }
+            }
+
+    private fun getMoreVideos(
+            query: String
+    ): Single<List<VideoEntity>> = local.getNextPageTokenForQuery(query)
+            .flatMapSingle { remote.getVideos(query, it) }
+            .flatMap { (nextPageToken, videos) ->
+                local.insertVideosForQuery(query, videos, nextPageToken)
+                        .andThen(Single.just(videos))
+            }
 }

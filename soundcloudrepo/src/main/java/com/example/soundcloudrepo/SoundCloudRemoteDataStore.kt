@@ -1,4 +1,4 @@
-package com.example.soundcloudrepo.datastore
+package com.example.soundcloudrepo
 
 import com.example.api.SoundCloudApi
 import com.example.api.SoundCloudApiV2
@@ -8,7 +8,7 @@ import com.example.api.model.SoundCloudTrackApiModel
 import com.example.soundcloudrepo.mapper.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
-import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudRemoteDataStore
+import com.example.there.domain.repo.soundcloud.ISoundCloudRemoteDataStore
 import com.vpaliy.soundcloud.SoundCloudService
 import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single

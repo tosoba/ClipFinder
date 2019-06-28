@@ -2,7 +2,7 @@ package com.example.there.domain.usecase.soundcloud
 
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
-import com.example.there.domain.repo.soundcloud.datastore.ISoundCloudDbDataStore
+import com.example.there.domain.repo.soundcloud.ISoundCloudDbDataStore
 import com.example.there.domain.usecase.base.DeleteTrackUseCase
 import com.example.there.domain.usecase.base.GetFavouriteTracksUseCase
 import com.example.there.domain.usecase.base.InsertTrackUseCase

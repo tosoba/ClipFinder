@@ -14,8 +14,8 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
-import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
-import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
+import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import com.example.there.domain.usecase.spotify.*
 import com.example.there.domain.usecase.videos.AddVideoToPlaylist
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
@@ -47,14 +47,14 @@ class MainViewModel @Inject constructor(
     val drawerViewState = DrawerHeaderViewState()
 
     fun addVideoToPlaylist(video: Video, videoPlaylist: VideoPlaylist, onSuccess: () -> Unit) {
-        addVideoToPlaylist.execute(AddVideoToPlaylist.Input(
+        addVideoToPlaylist(AddVideoToPlaylist.Args(
                 playlistEntity = videoPlaylist.domain,
                 videoEntity = video.domain)
         ).subscribeAndDisposeOnCleared(onSuccess, ::onError)
     }
 
-    fun getFavouriteVideoPlaylists() {
-        getFavouriteVideoPlaylists.execute()
+    fun loadFavouriteVideoPlaylists() {
+        getFavouriteVideoPlaylists()
                 .subscribeAndDisposeOnCleared({
                     viewState.favouriteVideoPlaylists.clear()
                     viewState.favouriteVideoPlaylists.addAll(it.map(VideoPlaylistEntity::ui))
@@ -62,41 +62,40 @@ class MainViewModel @Inject constructor(
     }
 
     fun addVideoPlaylistWithVideo(playlist: VideoPlaylist, video: Video, onSuccess: () -> Unit) {
-        insertVideoPlaylist.execute(playlist.domain)
+        insertVideoPlaylist(playlist.domain)
                 .subscribeAndDisposeOnCleared({ playlistId ->
                     addVideoToPlaylist(video, VideoPlaylist(playlistId, playlist.name), onSuccess)
                 }, ::onError)
     }
 
-    fun getSimilarTracks(trackId: String) {
-        getSimilarTracks.execute(trackId)
+    fun loadSimilarTracks(trackId: String) {
+        getSimilarTracks(trackId)
                 .subscribe({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
                 .disposeOnCleared()
     }
 
-    fun getCurrentUser() {
-        getCurrentUser.execute()
+    fun loadCurrentUser() {
+        getCurrentUser()
                 .subscribeAndDisposeOnCleared({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError)
     }
 
     fun updateTrackFavouriteState(track: Track) {
-        isTrackSaved.execute(track.domain)
+        isTrackSaved(track.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updatePlaylistFavouriteState(playlist: Playlist) {
-        isSpotifyPlaylistSaved.execute(playlist.domain)
+        isSpotifyPlaylistSaved(playlist.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updateAlbumFavouriteState(album: Album) {
-        isAlbumSaved.execute(album.domain)
+        isAlbumSaved(album.domain)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
-    fun deleteAllVideoSearchData() {
-        deleteAllVideoSearchData.execute()
-                .subscribeAndDisposeOnCleared()
+    fun clearAllVideoSearchData() {
+        deleteAllVideoSearchData().subscribeAndDisposeOnCleared()
     }
 
     fun togglePlaylistFavouriteState(
@@ -146,17 +145,17 @@ class MainViewModel @Inject constructor(
 
     private fun <T> toggleItemFavouriteState(
             item: T,
-            isSavedUseCase: SingleUseCaseWithInput<T, Boolean>,
-            insertUseCase: CompletableUseCaseWithInput<T>,
-            deleteUseCase: CompletableUseCaseWithInput<T>,
+            isSavedUseCase: SingleUseCaseWithArgs<T, Boolean>,
+            insertUseCase: CompletableUseCaseWithArgs<T>,
+            deleteUseCase: CompletableUseCaseWithArgs<T>,
             onInserted: () -> Unit,
             onDeleted: () -> Unit
     ) {
-        isSavedUseCase.execute(item)
+        isSavedUseCase(item)
                 .flatMap { isSaved ->
-                    if (isSaved) deleteUseCase.execute(item)
+                    if (isSaved) deleteUseCase(item)
                             .toSingle { ItemInsertDeleteResult.Deleted }
-                    else insertUseCase.execute(item)
+                    else insertUseCase(item)
                             .toSingle { ItemInsertDeleteResult.Inserted }
                 }
                 .subscribeAndDisposeOnCleared({

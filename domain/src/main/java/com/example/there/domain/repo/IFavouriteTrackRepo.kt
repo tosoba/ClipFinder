@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-interface IFavouriteTrackRepository<Track> {
+interface IFavouriteTrackRepo<Track> {
     val favouriteTracks: Flowable<List<Track>>
     fun isTrackSaved(track: Track): Single<Boolean>
     fun insertTrack(track: Track): Completable

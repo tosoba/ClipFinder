@@ -32,7 +32,7 @@ class PlaylistViewModel @Inject constructor(
     private fun loadData(playlist: Playlist) {
         if (currentOffset == 0 || (currentOffset < totalItems)) {
             viewState.loadingInProgress.set(true)
-            getPlaylistTracks.execute(GetPlaylistTracks.Input(playlist.id, playlist.userId, currentOffset))
+            getPlaylistTracks(GetPlaylistTracks.Args(playlist.id, playlist.userId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT
@@ -44,16 +44,16 @@ class PlaylistViewModel @Inject constructor(
 
     fun addFavouritePlaylist(
             playlist: Playlist
-    ) = insertSpotifyPlaylist.execute(playlist.domain)
+    ) = insertSpotifyPlaylist(playlist.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouritePlaylist(
             playlist: Playlist
-    ) = deleteSpotifyPlaylist.execute(playlist.domain)
+    ) = deleteSpotifyPlaylist(playlist.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadPlaylistFavouriteState(
             playlist: Playlist
-    ) = isSpotifyPlaylistSaved.execute(playlist.domain)
+    ) = isSpotifyPlaylistSaved(playlist.domain)
             .subscribeAndDisposeOnCleared(viewState.isSavedAsFavourite::set)
 }

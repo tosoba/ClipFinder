@@ -34,7 +34,7 @@ class RelatedVideosViewModel @Inject constructor(
         if (loadMore) viewState.loadingMoreVideosInProgress.set(true)
         else viewState.initialVideosLoadingInProgress.set(true)
 
-        searchRelatedVideos.execute(SearchRelatedVideos.Input(video.id, loadMore))
+        searchRelatedVideos(SearchRelatedVideos.Args(video.id, loadMore))
                 .doFinally {
                     if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
                     else viewState.initialVideosLoadingInProgress.set(false)

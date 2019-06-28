@@ -20,12 +20,12 @@ class SpotifyFavouritesViewModel @Inject constructor(
     val viewState: MutableLiveData<SpotifyFavouritesFragmentViewState> = MutableLiveData()
 
     fun loadFavourites() {
-        Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, com.example.spotifyfavourites.spotify.SpotifyFavouritesFragmentViewState>(
-                getFavouriteAlbums.execute(),
-                getFavouriteArtists.execute(),
-                getFavouriteCategories.execute(),
-                getFavouriteSpotifyPlaylists.execute(),
-                getFavouriteTracks.execute(),
+        Flowable.combineLatest<List<AlbumEntity>, List<ArtistEntity>, List<CategoryEntity>, List<PlaylistEntity>, List<TrackEntity>, SpotifyFavouritesFragmentViewState>(
+                getFavouriteAlbums(),
+                getFavouriteArtists(),
+                getFavouriteCategories(),
+                getFavouriteSpotifyPlaylists(),
+                getFavouriteTracks(),
                 Function5 { albums, artists, categories, playlists, tracks ->
                     SpotifyFavouritesFragmentViewState(
                             ArrayList(albums.map(AlbumEntity::ui)),

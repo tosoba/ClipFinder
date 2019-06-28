@@ -10,9 +10,8 @@ abstract class BaseFlowableUseCase<Result>(
     protected fun Flowable<Result>.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Flowable<Result> = run {
-        if (applySchedulers)
-            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                    .observeOn(schedulersProvider.observeOnScheduler)
+        if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
@@ -23,19 +22,18 @@ abstract class FlowableUseCase<Result>(
 
     protected abstract val flowable: Flowable<Result>
 
-    fun execute(
+    operator fun invoke(
             applySchedulers: Boolean = true
     ): Flowable<Result> = flowable.applySchedulersIfRequested(applySchedulers)
 }
 
-abstract class FlowableUseCaseWithInput<Input, Result>(
+abstract class FlowableUseCaseWithArgs<Args, Result>(
         schedulersProvider: UseCaseSchedulersProvider
 ) : BaseFlowableUseCase<Result>(schedulersProvider) {
 
-    protected abstract fun createFlowable(input: Input): Flowable<Result>
+    protected abstract fun createFlowable(args: Args): Flowable<Result>
 
-    fun execute(
-            input: Input,
-            applySchedulers: Boolean = true
-    ): Flowable<Result> = createFlowable(input).applySchedulersIfRequested(applySchedulers)
+    operator fun invoke(
+            args: Args, applySchedulers: Boolean = true
+    ): Flowable<Result> = createFlowable(args).applySchedulersIfRequested(applySchedulers)
 }

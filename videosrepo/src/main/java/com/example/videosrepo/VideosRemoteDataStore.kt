@@ -1,7 +1,7 @@
-package com.example.videosrepo.datastore
+package com.example.videosrepo
 
 import com.example.there.domain.entity.videos.VideoEntity
-import com.example.there.domain.repo.videos.datastore.IVideosRemoteDataStore
+import com.example.there.domain.repo.videos.IVideosRemoteDataStore
 import com.example.videosrepo.mapper.domain
 import com.example.videosrepo.util.urlMedium
 import com.example.youtubeapi.YoutubeApi

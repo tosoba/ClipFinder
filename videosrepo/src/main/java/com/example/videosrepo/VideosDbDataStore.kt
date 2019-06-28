@@ -1,4 +1,4 @@
-package com.example.videosrepo.datastore
+package com.example.videosrepo
 
 import com.example.db.RelatedVideoSearchDao
 import com.example.db.VideoDao
@@ -11,7 +11,7 @@ import com.example.db.model.videos.VideoSearchDbModel
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.entity.videos.VideoPlaylistThumbnailsEntity
-import com.example.there.domain.repo.videos.datastore.IVideosDbDataStore
+import com.example.there.domain.repo.videos.IVideosDbDataStore
 import com.example.videosrepo.mapper.data
 import com.example.videosrepo.mapper.db
 import com.example.videosrepo.mapper.domain
@@ -94,8 +94,8 @@ class VideosDbDataStore @Inject constructor(
     ): Single<List<VideoEntity>> = videoDao.findAllWithQuery(query)
             .map { it.map(VideoDbModel::domain) }
 
-    override fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>> = videoPlaylistDao.findAll()
-            .map { it.map(VideoPlaylistDbModel::domain) }
+    override val favouritePlaylists: Flowable<List<VideoPlaylistEntity>>
+        get() = videoPlaylistDao.findAll().map { it.map(VideoPlaylistDbModel::domain) }
 
     override fun getVideosFromPlaylist(
             playlistId: Long
@@ -106,7 +106,9 @@ class VideosDbDataStore @Inject constructor(
         videoPlaylistDao.insert(playlistEntity.data)
     }
 
-    override fun addVideoToPlaylist(videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity): Completable = Completable.fromCallable {
+    override fun addVideoToPlaylist(
+            videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity
+    ): Completable = Completable.fromCallable {
         videoEntity.playlistId = playlistEntity.id
         videoDao.insert(videoEntity.db)
     }

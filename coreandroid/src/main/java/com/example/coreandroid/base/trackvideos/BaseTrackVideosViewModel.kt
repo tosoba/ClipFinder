@@ -39,7 +39,7 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
 
     fun addFavouriteTrack(
             track: Track
-    ) = insertTrack.execute(track.domainEntity)
+    ) = insertTrack(track.domainEntity)
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(true)
                 viewState.isSavedAsFavourite.set(true)
@@ -47,7 +47,7 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
 
     fun deleteFavouriteTrack(
             track: Track
-    ) = deleteTrack.execute(track.domainEntity)
+    ) = deleteTrack(track.domainEntity)
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(false)
                 viewState.isSavedAsFavourite.set(false)
@@ -55,7 +55,7 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
 
     private fun loadTrackFavouriteState(
             track: Track
-    ) = isTrackSaved.execute(track.domainEntity)
+    ) = isTrackSaved(track.domainEntity)
             .subscribeAndDisposeOnCleared {
                 viewStates.peek().isSavedAsFavourite.set(it)
                 viewState.isSavedAsFavourite.set(it)

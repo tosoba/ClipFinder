@@ -20,11 +20,10 @@ class SoundCloudTrackVideosViewModel @Inject constructor(
 ) : BaseTrackVideosViewModel<SoundCloudTrack, SoundCloudTrackEntity>(insertSoundCloudTrack, deleteSoundCloudTrack, isSoundCloudTrackSaved) {
 
     private val _similarTracks: MutableLiveData<List<SoundCloudTrack>> = MutableLiveData()
-
     val similarTracks: LiveData<List<SoundCloudTrack>> = _similarTracks
 
     fun loadSimilarTracks(id: String) {
-        getSimilarTracks.execute(id).subscribeAndDisposeOnCleared({
+        getSimilarTracks(id).subscribeAndDisposeOnCleared({
             _similarTracks.value = it.map(SoundCloudTrackEntity::ui)
         }, ::onError)
     }

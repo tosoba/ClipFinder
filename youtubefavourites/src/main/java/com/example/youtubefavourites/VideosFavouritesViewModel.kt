@@ -20,7 +20,7 @@ class VideosFavouritesViewModel @Inject constructor(
     val state: VideosFavouritesFragmentViewState = VideosFavouritesFragmentViewState()
 
     fun loadVideoPlaylists() {
-        getVideoPlaylistsWithThumbnails.execute()
+        getVideoPlaylistsWithThumbnails()
                 .subscribeAndDisposeOnCleared({ playlistWithThumbnails ->
                     val playlist = playlistWithThumbnails.playlist.ui
                     state.playlists.add(PlaylistThumbnailView(
@@ -35,7 +35,7 @@ class VideosFavouritesViewModel @Inject constructor(
     }
 
     private fun deleteVideoPlaylist(videoPlaylist: VideoPlaylistEntity) {
-        deleteVideoPlaylist.execute(videoPlaylist)
+        deleteVideoPlaylist.invoke(videoPlaylist)
                 .subscribeAndDisposeOnCleared()
     }
 }

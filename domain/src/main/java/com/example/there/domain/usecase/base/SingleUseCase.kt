@@ -10,9 +10,8 @@ abstract class BaseSingleUseCase<Result>(
     protected fun Single<Result>.applySchedulersIfRequested(
             applySchedulers: Boolean
     ): Single<Result> = run {
-        if (applySchedulers)
-            this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                    .observeOn(schedulersProvider.observeOnScheduler)
+        if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
+                .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 }
@@ -23,19 +22,18 @@ abstract class SingleUseCase<Result>(
 
     protected abstract val single: Single<Result>
 
-    fun execute(
+    operator fun invoke(
             applySchedulers: Boolean = true
     ): Single<Result> = single.applySchedulersIfRequested(applySchedulers)
 }
 
-abstract class SingleUseCaseWithInput<Input, Result>(
+abstract class SingleUseCaseWithArgs<Args, Result>(
         schedulersProvider: UseCaseSchedulersProvider
 ) : BaseSingleUseCase<Result>(schedulersProvider) {
 
-    protected abstract fun createSingle(input: Input): Single<Result>
+    protected abstract fun createSingle(args: Args): Single<Result>
 
-    fun execute(
-            input: Input,
-            applySchedulers: Boolean = true
-    ): Single<Result> = createSingle(input).applySchedulersIfRequested(applySchedulers)
+    operator fun invoke(
+            args: Args, applySchedulers: Boolean = true
+    ): Single<Result> = createSingle(args).applySchedulersIfRequested(applySchedulers)
 }

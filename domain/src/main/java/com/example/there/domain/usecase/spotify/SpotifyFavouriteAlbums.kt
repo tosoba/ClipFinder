@@ -2,10 +2,10 @@ package com.example.there.domain.usecase.spotify
 
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.base.CompletableUseCaseWithInput
+import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
+import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
 import com.example.there.domain.usecase.base.FlowableUseCase
-import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class GetFavouriteAlbums @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
+        private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<AlbumEntity>>(schedulersProvider) {
 
     override val flowable: Flowable<List<AlbumEntity>>
@@ -23,24 +23,24 @@ class GetFavouriteAlbums @Inject constructor(
 
 class InsertAlbum @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
-) : CompletableUseCaseWithInput<AlbumEntity>(schedulersProvider) {
+        private val repository: ISpotifyLocalRepo
+) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
 
-    override fun createCompletable(input: AlbumEntity): Completable = repository.insertAlbum(input)
+    override fun createCompletable(args: AlbumEntity): Completable = repository.insertAlbum(args)
 }
 
 class IsAlbumSaved @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
-) : SingleUseCaseWithInput<AlbumEntity, Boolean>(schedulersProvider) {
+        private val repository: ISpotifyLocalRepo
+) : SingleUseCaseWithArgs<AlbumEntity, Boolean>(schedulersProvider) {
 
-    override fun createSingle(input: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(input)
+    override fun createSingle(args: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(args)
 }
 
 class DeleteAlbum @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
-) : CompletableUseCaseWithInput<AlbumEntity>(schedulersProvider) {
+        private val repository: ISpotifyLocalRepo
+) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
 
-    override fun createCompletable(input: AlbumEntity): Completable = repository.deleteAlbum(input)
+    override fun createCompletable(args: AlbumEntity): Completable = repository.deleteAlbum(args)
 }

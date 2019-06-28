@@ -3,15 +3,15 @@ package com.example.there.domain.usecase.spotify
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
+import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 import javax.inject.Inject
 
 class GetNewReleases @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
-) : SingleUseCaseWithInput<Int, EntityPage<AlbumEntity>>(schedulersProvider) {
+        private val remote: ISpotifyRemoteDataStore
+) : SingleUseCaseWithArgs<Int, EntityPage<AlbumEntity>>(schedulersProvider) {
 
-    override fun createSingle(input: Int): Single<EntityPage<AlbumEntity>> = repository.getNewReleases(offset = input)
+    override fun createSingle(args: Int): Single<EntityPage<AlbumEntity>> = remote.getNewReleases(offset = args)
 }

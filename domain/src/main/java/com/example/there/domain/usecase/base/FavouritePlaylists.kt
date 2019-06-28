@@ -9,22 +9,22 @@ import io.reactivex.Single
 abstract class InsertPlaylistUseCase<Playlist>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IFavouritePlaylistRepository<Playlist>
-) : CompletableUseCaseWithInput<Playlist>(schedulersProvider) {
-    override fun createCompletable(input: Playlist): Completable = repository.insertPlaylist(input)
+) : CompletableUseCaseWithArgs<Playlist>(schedulersProvider) {
+    override fun createCompletable(args: Playlist): Completable = repository.insertPlaylist(args)
 }
 
 abstract class IsPlaylistSavedUseCase<Playlist>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IFavouritePlaylistRepository<Playlist>
-) : SingleUseCaseWithInput<Playlist, Boolean>(schedulersProvider) {
-    override fun createSingle(input: Playlist): Single<Boolean> = repository.isPlaylistSaved(input)
+) : SingleUseCaseWithArgs<Playlist, Boolean>(schedulersProvider) {
+    override fun createSingle(args: Playlist): Single<Boolean> = repository.isPlaylistSaved(args)
 }
 
 abstract class DeletePlaylistUseCase<Playlist>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IFavouritePlaylistRepository<Playlist>
-) : CompletableUseCaseWithInput<Playlist>(schedulersProvider) {
-    override fun createCompletable(input: Playlist): Completable = repository.deletePlaylist(input)
+) : CompletableUseCaseWithArgs<Playlist>(schedulersProvider) {
+    override fun createCompletable(args: Playlist): Completable = repository.deletePlaylist(args)
 }
 
 abstract class GetFavouritePlaylistsUseCase<Playlist>(

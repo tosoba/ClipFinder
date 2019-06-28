@@ -35,7 +35,7 @@ class AlbumViewModel @Inject constructor(
 
     fun loadAlbumsArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
-        getArtists.execute(artistIds)
+        getArtists(artistIds)
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     viewState.artists.addAll(it.map(ArtistEntity::ui))
@@ -47,23 +47,23 @@ class AlbumViewModel @Inject constructor(
 
     fun loadTracksFromAlbum(albumId: String) {
         viewState.tracksLoadingInProgress.set(true)
-        getTracksFromAlbum.execute(albumId)
+        getTracksFromAlbum(albumId)
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ viewState.tracks.addAll(it.items.map(TrackEntity::ui)) }, ::onError)
     }
 
     fun addFavouriteAlbum(
             album: Album
-    ) = insertAlbum.execute(album.domain)
+    ) = insertAlbum(album.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
     fun deleteFavouriteAlbum(
             album: Album
-    ) = deleteAlbum.execute(album.domain)
+    ) = deleteAlbum(album.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadAlbumFavouriteState(
             album: Album
-    ) = isAlbumSaved.execute(album.domain)
+    ) = isAlbumSaved(album.domain)
             .subscribeAndDisposeOnCleared { viewState.isSavedAsFavourite.set(it) }
 }

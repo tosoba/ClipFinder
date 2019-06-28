@@ -26,7 +26,7 @@ class SpotifySearchViewModel @Inject constructor(
     fun searchAll(query: String) {
         if (currentOffset == 0 || (currentOffset < totalItems)) {
             viewState.loadingInProgress.set(true)
-            searchSpotify.execute(SearchSpotify.Input(query, currentOffset))
+            searchSpotify(SearchSpotify.Args(query, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         currentOffset += SpotifyApi.DEFAULT_LIMIT

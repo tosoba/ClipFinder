@@ -27,7 +27,7 @@ class AccountSavedViewModel @Inject constructor(
     fun loadTracks() {
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
-            getCurrentUsersSavedTracks.execute(currentTracksOffset)
+            getCurrentUsersSavedTracks(currentTracksOffset)
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.tracks.addAll(it.items.map(TrackEntity::ui))
@@ -51,7 +51,7 @@ class AccountSavedViewModel @Inject constructor(
     fun loadAlbums() {
         if (canLoadAlbums) {
             viewState.albumsLoadingInProgress.set(true)
-            getCurrentUsersSavedAlbums.execute(currentAlbumsOffset)
+            getCurrentUsersSavedAlbums(currentAlbumsOffset)
                     .doFinally { viewState.albumsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.albums.addAll(it.items.map(AlbumEntity::ui))

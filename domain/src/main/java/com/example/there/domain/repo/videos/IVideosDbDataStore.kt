@@ -1,4 +1,4 @@
-package com.example.there.domain.repo.videos.datastore
+package com.example.there.domain.repo.videos
 
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
@@ -9,7 +9,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 
 interface IVideosDbDataStore {
-    fun getFavouritePlaylists(): Flowable<List<VideoPlaylistEntity>>
+    val favouritePlaylists: Flowable<List<VideoPlaylistEntity>>
     fun getVideosFromPlaylist(playlistId: Long): Flowable<List<VideoEntity>>
 
     fun getSavedVideosForQuery(query: String): Single<List<VideoEntity>>

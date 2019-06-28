@@ -15,7 +15,7 @@ class SoundCloudPlaylistViewModel @Inject constructor(
 
     fun loadTracksWithIds(ids: List<String>) {
         viewState.loadingInProgress.set(true)
-        getTracks.execute(ids)
+        getTracks(ids)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     mutableTracks.value = it.map(SoundCloudTrackEntity::ui)
@@ -24,7 +24,7 @@ class SoundCloudPlaylistViewModel @Inject constructor(
 
     fun loadTracksFromPlaylist(id: String) {
         viewState.loadingInProgress.set(true)
-        getTracksFromPlaylist.execute(id)
+        getTracksFromPlaylist(id)
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     mutableTracks.value = it.map(SoundCloudTrackEntity::ui)

@@ -43,7 +43,7 @@ class CategoryViewModel @Inject constructor(
             }
 
             viewState.loadingInProgress.set(true)
-            getPlaylistsForCategory.execute(GetPlaylistsForCategory.Input(categoryId, currentOffset))
+            getPlaylistsForCategory(GetPlaylistsForCategory.Args(categoryId, currentOffset))
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
@@ -55,17 +55,17 @@ class CategoryViewModel @Inject constructor(
 
     fun addFavouriteCategory(
             category: Category
-    ) = insertCategory.execute(category.domain)
+    ) = insertCategory(category.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
 
 
     fun deleteFavouriteCategory(
             category: Category
-    ) = deleteCategory.execute(category.domain)
+    ) = deleteCategory(category.domain)
             .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
 
     private fun loadCategoryFavouriteState(
             category: Category
-    ) = isCategorySaved.execute(category.domain)
+    ) = isCategorySaved(category.domain)
             .subscribe(viewState.isSavedAsFavourite::set)
 }

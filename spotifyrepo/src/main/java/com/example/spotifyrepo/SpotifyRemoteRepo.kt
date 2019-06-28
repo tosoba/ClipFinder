@@ -1,4 +1,4 @@
-package com.example.spotifyrepo.datastore
+package com.example.spotifyrepo
 
 import android.util.Base64
 import com.example.spotifyapi.SpotifyAccountsApi
@@ -12,14 +12,14 @@ import com.example.spotifyrepo.util.observable
 import com.example.spotifyrepo.util.single
 import com.example.there.domain.entity.EntityPage
 import com.example.there.domain.entity.spotify.*
-import com.example.there.domain.repo.spotify.datastore.ISpotifyRemoteDataStore
+import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
-class SpotifyRemoteDataStore @Inject constructor(
+class SpotifyRemoteRepo @Inject constructor(
         private val api: SpotifyApi,
         private val accountsApi: SpotifyAccountsApi,
         private val chartsApi: SpotifyChartsApi,

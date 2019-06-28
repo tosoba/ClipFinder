@@ -2,15 +2,15 @@ package com.example.there.domain.usecase.spotify
 
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.repo.spotify.ISpotifyRepository
-import com.example.there.domain.usecase.base.SingleUseCaseWithInput
+import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
+import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 import javax.inject.Inject
 
 class GetArtists @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyRepository
-) : SingleUseCaseWithInput<List<String>, List<ArtistEntity>>(schedulersProvider) {
+        private val remote: ISpotifyRemoteDataStore
+) : SingleUseCaseWithArgs<List<String>, List<ArtistEntity>>(schedulersProvider) {
 
-    override fun createSingle(input: List<String>): Single<List<ArtistEntity>> = repository.getArtists(artistIds = input)
+    override fun createSingle(args: List<String>): Single<List<ArtistEntity>> = remote.getArtists(artistIds = args)
 }

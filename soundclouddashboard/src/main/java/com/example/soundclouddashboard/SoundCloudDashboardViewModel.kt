@@ -13,7 +13,7 @@ class SoundCloudDashboardViewModel @Inject constructor(
 
     fun loadPlaylists() {
         viewState.loadingInProgress.set(true)
-        discoverSoundCloud.execute()
+        discoverSoundCloud()
                 .doFinally { viewState.loadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ discoverEntity ->
                     viewState.playlists.addAll(discoverEntity.playlists.map { it.ui })
