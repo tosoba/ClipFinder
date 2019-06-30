@@ -10,7 +10,7 @@ import com.example.coreandroid.view.imageview.ImageViewSrc
 
 @BindingAdapter("imageUrl")
 fun bindImageUrl(view: ImageView, url: String?) {
-    if (url != null && !url.isEmpty()) {
+    if (url != null && url.isNotEmpty()) {
         Glide.with(view.context)
                 .load(url)
                 .apply(RequestOptions()

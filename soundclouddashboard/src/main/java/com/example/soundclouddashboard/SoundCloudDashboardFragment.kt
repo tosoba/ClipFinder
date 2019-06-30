@@ -20,6 +20,7 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
 import javax.inject.Inject
 
@@ -96,11 +97,8 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding>(
-            inflater,
-            R.layout.fragment_sound_cloud_dashboard,
-            container,
-            false
+    ): View? = DataBindingUtil.inflate<FragmentSoundCloudDashboardBinding>(
+            inflater, R.layout.fragment_sound_cloud_dashboard, container, false
     ).apply {
         dashboardView = view
         appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)

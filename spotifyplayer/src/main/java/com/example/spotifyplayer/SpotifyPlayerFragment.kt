@@ -1,7 +1,5 @@
 package com.example.spotifyplayer
 
-import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -25,8 +23,9 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.Constants
+import com.example.coreandroid.util.PendingIntents
 import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.view.OnSeekBarProgressChangeListener
+import com.example.coreandroid.view.onSeekBarProgressChangeListener
 import com.example.spotifyapi.SpotifyAuth
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
@@ -39,6 +38,8 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         Player.NotificationCallback,
         Player.OperationCallback,
         Injectable {
+
+    private val receivers: ArrayList<BroadcastReceiver> = ArrayList(6)
 
     private val spotifyPlayerView: SpotifyPlayerView by lazy(LazyThreadSafetyMode.NONE) {
         SpotifyPlayerView(
@@ -99,31 +100,26 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         get() = spotifyPlayer != null &&
                 spotifyPlayer?.isInitialized == true &&
                 viewModel.playerState.playerMetadata?.currentTrack != null &&
-                (viewModel.playerState.lastPlayedAlbum != null || viewModel.playerState.lastPlayedTrack != null || viewModel.playerState.lastPlayedPlaylist != null)
-
-    private val deleteNotificationIntentReceiver: DeleteNotificationIntentReceiver by lazy { DeleteNotificationIntentReceiver() }
-    private val pausePlaybackIntentReceiver: PausePlaybackIntentReceiver by lazy { PausePlaybackIntentReceiver() }
-    private val resumePlaybackIntentReceiver: ResumePlaybackIntentReceiver by lazy { ResumePlaybackIntentReceiver() }
-    private val nextTrackIntentReceiver: NextTrackIntentReceiver by lazy { NextTrackIntentReceiver() }
-    private val prevTrackIntentReceiver: PreviousTrackIntentReceiver by lazy { PreviousTrackIntentReceiver() }
+                (viewModel.playerState.lastPlayedAlbum != null
+                        || viewModel.playerState.lastPlayedTrack != null
+                        || viewModel.playerState.lastPlayedPlaylist != null)
 
     private var spotifyPlaybackTimer: CountDownTimer? = null
 
     private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy {
-        object : OnSeekBarProgressChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val positionInMs = progress * 1000
-                    spotifyPlaybackTimer?.cancel()
-                    spotifyPlayer?.seekToPosition(loggerSpotifyPlayerOperationCallback, positionInMs)
-                    spotifyPlaybackTimer = playbackTimer(
-                            trackDuration = viewModel.playerState.playerMetadata!!.currentTrack.durationMs,
-                            positionMs = positionInMs.toLong()
-                    ).apply { start() }
-                }
+        onSeekBarProgressChangeListener { _: SeekBar?, progress: Int, fromUser: Boolean ->
+            if (fromUser) {
+                val positionInMs = progress * 1000
+                spotifyPlaybackTimer?.cancel()
+                spotifyPlayer?.seekToPosition(loggerSpotifyPlayerOperationCallback, positionInMs)
+                spotifyPlaybackTimer = playbackTimer(
+                        trackDuration = viewModel.playerState.playerMetadata!!.currentTrack.durationMs,
+                        positionMs = positionInMs.toLong()
+                ).apply { start() }
             }
         }
     }
+
 
     private val loggerSpotifyPlayerOperationCallback = object : Player.OperationCallback {
         override fun onSuccess() {
@@ -135,26 +131,10 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
     }
 
-    private val networkStateReceiver: BroadcastReceiver by lazy {
-        object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (spotifyPlayer != null) {
-                    val connectivity = getNetworkConnectivity(applicationContext)
-                    spotifyPlayer?.setConnectivityStatus(this@SpotifyPlayerFragment, connectivity)
-                }
-            }
-        }
-    }
-
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyPlayerBinding>(
-            inflater,
-            R.layout.fragment_spotify_player,
-            container,
-            false
+            inflater, R.layout.fragment_spotify_player, container, false
     ).apply {
         fragmentView = spotifyPlayerView
     }.root
@@ -183,13 +163,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     override fun onDestroy() {
         with(applicationContext) {
             notificationManager.cancelAll()
-
-            unregisterReceiver(networkStateReceiver)
-            unregisterReceiver(pausePlaybackIntentReceiver)
-            unregisterReceiver(resumePlaybackIntentReceiver)
-            unregisterReceiver(deleteNotificationIntentReceiver)
-            unregisterReceiver(prevTrackIntentReceiver)
-            unregisterReceiver(nextTrackIntentReceiver)
+            receivers.forEach(this::unregisterReceiver)
         }
 
         spotifyPlayer?.removeNotificationCallback(this)
@@ -277,7 +251,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
             spotifyPlayer = Spotify.getPlayer(playerConfig, this, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
-                    spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, getNetworkConnectivity(applicationContext))
+                    spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, applicationContext.networkConnectivity)
                     spotifyPlayer?.addNotificationCallback(this@SpotifyPlayerFragment)
                     spotifyPlayer?.addConnectionStateCallback(connectionStateCallback)
                 }
@@ -298,7 +272,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     override fun loadTrack(track: Track) {
         viewModel.playerState.lastPlayedAlbum = null
         viewModel.playerState.lastPlayedPlaylist = null
-
         viewModel.playerState.lastPlayedTrack = track
         resetProgressAndPlay(track.uri)
     }
@@ -306,7 +279,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     override fun loadAlbum(album: Album) {
         viewModel.playerState.lastPlayedTrack = null
         viewModel.playerState.lastPlayedPlaylist = null
-
         viewModel.playerState.lastPlayedAlbum = album
         resetProgressAndPlay(album.uri)
     }
@@ -314,31 +286,40 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     override fun loadPlaylist(playlist: Playlist) {
         viewModel.playerState.lastPlayedTrack = null
         viewModel.playerState.lastPlayedAlbum = null
-
         viewModel.playerState.lastPlayedPlaylist = playlist
         resetProgressAndPlay(playlist.uri)
     }
 
-    private fun playbackTimer(trackDuration: Long, positionMs: Long): CountDownTimer = object : CountDownTimer(
-            trackDuration - positionMs,
-            1000
-    ) {
-        override fun onFinish() = Unit
-
-        override fun onTick(millisUntilFinished: Long) {
-            val seconds = (trackDuration - millisUntilFinished) / 1000
-            playback_seek_bar?.progress = seconds.toInt()
-        }
+    private fun playbackTimer(
+            trackDuration: Long, positionMs: Long
+    ): CountDownTimer = tickingTimer(trackDuration - positionMs, 1000) { millisUntilFinished ->
+        val seconds = (trackDuration - millisUntilFinished) / 1000
+        playback_seek_bar?.progress = seconds.toInt()
     }
 
     private fun initSpotifyPlayer() {
         with(applicationContext) {
-            registerReceiver(networkStateReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-            registerReceiver(deleteNotificationIntentReceiver, IntentFilter(ACTION_DELETE_NOTIFICATION))
-            registerReceiver(pausePlaybackIntentReceiver, IntentFilter(ACTION_PAUSE_PLAYBACK))
-            registerReceiver(resumePlaybackIntentReceiver, IntentFilter(ACTION_RESUME_PLAYBACK))
-            registerReceiver(prevTrackIntentReceiver, IntentFilter(ACTION_PREV_TRACK))
-            registerReceiver(nextTrackIntentReceiver, IntentFilter(ACTION_NEXT_TRACK))
+            receivers.addAll(
+                    registerReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
+                        spotifyPlayer?.setConnectivityStatus(this@SpotifyPlayerFragment, applicationContext.networkConnectivity)
+                    },
+                    registerReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
+                        viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
+                        stopPlayback()
+                    },
+                    registerReceiverFor(IntentFilter(ACTION_PAUSE_PLAYBACK)) { _, _ ->
+                        spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
+                    },
+                    registerReceiverFor(IntentFilter(ACTION_RESUME_PLAYBACK)) { _, _ ->
+                        spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
+                    },
+                    registerReceiverFor(IntentFilter(ACTION_PREV_TRACK)) { _, _ ->
+                        spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
+                    },
+                    registerReceiverFor(IntentFilter(ACTION_NEXT_TRACK)) { _, _ ->
+                        spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
+                    }
+            )
         }
 
         spotifyPlayer?.addNotificationCallback(this)
@@ -355,15 +336,9 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getNetworkConnectivity(context: Context): Connectivity {
-        val connectivityManager: ConnectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetworkInfo
-        return if (activeNetwork != null && activeNetwork.isConnected) Connectivity.fromNetworkType(activeNetwork.type)
-        else Connectivity.OFFLINE
-    }
-
-    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat.Builder(context!!, Constants.NOTIFICATION_CHANNEL_ID)
+    private fun notificationBuilder(
+            largeIcon: Bitmap?
+    ): NotificationCompat.Builder = NotificationCompat.Builder(context!!, Constants.NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.play)
             .apply {
                 val bigText = viewModel.playerState.playerMetadata?.currentTrack?.name
@@ -379,58 +354,24 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             }
             .setContentTitle("ClipFinder")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(
-                    PendingIntent.getActivity(
-                            context,
-                            0,
-                            intentProvider?.providedIntent,
-                            0
-                    )
-            )
-            .setDeleteIntent(
-                    PendingIntent.getBroadcast(
-                            context,
-                            0,
-                            Intent(ACTION_DELETE_NOTIFICATION),
-                            0
-                    )
-            )
+            .setContentIntent(PendingIntents.getActivity(context, intentProvider?.providedIntent))
+            .setDeleteIntent(PendingIntents.getBroadcast(context, Intent(ACTION_DELETE_NOTIFICATION)))
             .apply {
                 if (viewModel.playerState.playerMetadata?.prevTrack != null) {
-                    val prevTrackIntent = PendingIntent.getBroadcast(
-                            context,
-                            0,
-                            Intent(ACTION_PREV_TRACK),
-                            0
-                    )
+                    val prevTrackIntent = PendingIntents.getBroadcast(context, Intent(ACTION_PREV_TRACK))
                     addAction(R.drawable.previous_track, getString(R.string.previous_track), prevTrackIntent)
                 }
 
                 if (viewModel.playerState.currentPlaybackState?.isPlaying == true) {
-                    val pauseIntent = PendingIntent.getBroadcast(
-                            context,
-                            0,
-                            Intent(ACTION_PAUSE_PLAYBACK),
-                            0
-                    )
+                    val pauseIntent = PendingIntents.getBroadcast(context, Intent(ACTION_PAUSE_PLAYBACK))
                     addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
                 } else {
-                    val resumeIntent = PendingIntent.getBroadcast(
-                            context,
-                            0,
-                            Intent(ACTION_RESUME_PLAYBACK),
-                            0
-                    )
+                    val resumeIntent = PendingIntents.getBroadcast(context, Intent(ACTION_RESUME_PLAYBACK))
                     addAction(R.drawable.play, getString(R.string.play), resumeIntent)
                 }
 
                 if (viewModel.playerState.playerMetadata?.nextTrack != null) {
-                    val nextTrackIntent = PendingIntent.getBroadcast(
-                            context,
-                            0,
-                            Intent(ACTION_NEXT_TRACK),
-                            0
-                    )
+                    val nextTrackIntent = PendingIntents.getBroadcast(context, Intent(ACTION_NEXT_TRACK))
                     addAction(R.drawable.next_track, getString(R.string.next_track), nextTrackIntent)
                 }
             }
@@ -448,37 +389,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     private fun refreshPlaybackNotification() {
         applicationContext.notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
         showPlaybackNotification()
-    }
-
-    inner class DeleteNotificationIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
-            stopPlayback()
-        }
-    }
-
-    inner class PausePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
-        }
-    }
-
-    inner class ResumePlaybackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
-        }
-    }
-
-    inner class NextTrackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
-        }
-    }
-
-    inner class PreviousTrackIntentReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
-        }
     }
 
     companion object {

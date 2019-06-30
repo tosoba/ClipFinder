@@ -77,7 +77,7 @@ open class BaseViewModel : ViewModel() {
         subscribe(onSuccess, onError).disposeOnCleared()
     }
 
-    protected fun Disposable.disposeOnCleared() {
+    fun Disposable.disposeOnCleared() {
         compositeDisposable.add(this)
     }
 }

@@ -603,8 +603,7 @@ class MainActivity :
     private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
-            val newState = (observable as ObservableField<PlayerState>).get()!!
-            when (newState) {
+            when ((observable as ObservableField<PlayerState>).get()!!) {
                 PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let { viewModel.updateTrackFavouriteState(it) }
                 PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let { viewModel.updatePlaylistFavouriteState(it) }
                 PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let { viewModel.updateAlbumFavouriteState(it) }
@@ -651,7 +650,7 @@ class MainActivity :
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
-            val mainToolbar = (currentFragment as? com.example.coreandroid.base.fragment.HasMainToolbar)?.toolbar
+            val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
             showDrawerHamburger()
         }

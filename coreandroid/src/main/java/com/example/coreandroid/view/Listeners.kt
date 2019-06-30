@@ -21,6 +21,14 @@ interface OnSeekBarProgressChangeListener : SeekBar.OnSeekBarChangeListener {
     override fun onStopTrackingTouch(p0: SeekBar?) = Unit
 }
 
+fun onSeekBarProgressChangeListener(
+        callback: (seekBar: SeekBar?, progress: Int, fromUser: Boolean) -> Unit
+) = object : OnSeekBarProgressChangeListener {
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        callback(seekBar, progress, fromUser)
+    }
+}
+
 interface OnNavigationDrawerClosedListerner : DrawerLayout.DrawerListener {
     override fun onDrawerOpened(p0: View) = Unit
     override fun onDrawerSlide(p0: View, p1: Float) = Unit

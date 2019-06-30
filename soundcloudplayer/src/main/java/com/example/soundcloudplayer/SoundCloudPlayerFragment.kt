@@ -38,9 +38,7 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
         get() = this.view
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_sound_cloud_player, container, false).apply {
         close_sound_cloud_player_image_button.setOnClickListener {
             slidingPanelController?.hideIfVisible()
@@ -79,7 +77,6 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
         context?.let {
             val componentName = ComponentName(it, "Exo")
             val mediaSession = MediaSessionCompat(it, "ExoPlayer", componentName, null)
-
             val playbackStateBuilder = PlaybackStateCompat.Builder()
             playbackStateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE)
             mediaSession.setPlaybackState(playbackStateBuilder.build())

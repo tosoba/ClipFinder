@@ -11,14 +11,10 @@ private val suffixes = TreeMap<Long, String>().apply {
 
 val BigInteger.formattedString: String
     get() {
-        val value = this.toLong()
+        val value = toLong()
         if (value < 0) return "0"
         if (value < 1000) return value.toString()
-
-        val e = suffixes.floorEntry(value)
-        val divideBy = e.key
-        val suffix = e.value
-
+        val (divideBy, suffix) = suffixes.floorEntry(value)
         val truncated = value / (divideBy / 10)
         val hasDecimal = truncated < 100 && truncated / 10.0 != (truncated / 10).toDouble()
         return if (hasDecimal) "${truncated / 10.0}$suffix" else "${truncated / 10}$suffix"

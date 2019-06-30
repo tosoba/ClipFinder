@@ -40,10 +40,7 @@ class ConnectivityComponent(
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { isConnectedToInternet ->
-                    lastConnectionStatus = isConnectedToInternet
-                    handleConnectionStatus(isConnectedToInternet)
-                }
+                .subscribe(::handleConnectionStatus)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -54,19 +51,15 @@ class ConnectivityComponent(
     }
 
     private fun handleConnectionStatus(isConnectedToInternet: Boolean) {
+        lastConnectionStatus = isConnectedToInternet
         if (!isConnectedToInternet) {
             connectionInterrupted = true
-            if (!isSnackbarShowing) {
-                showNoConnectionSnackbar()
-            }
+            if (!isSnackbarShowing) showNoConnectionSnackbar()
         } else {
             if (connectionInterrupted) {
                 connectionInterrupted = false
-                if (!isDataLoaded() && reloadData != null) {
-                    reloadData.invoke()
-                }
+                if (!isDataLoaded() && reloadData != null) reloadData.invoke()
             }
-
             isSnackbarShowing = false
             snackbar?.dismiss()
         }
@@ -99,11 +92,8 @@ class ConnectivityComponent(
         textView?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
         snackbar?.duration = Snackbar.LENGTH_INDEFINITE
 
-        if (!shouldShowSnackbarWithBottomMargin) {
-            snackbar?.show()
-        } else {
-            snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
-        }
+        if (!shouldShowSnackbarWithBottomMargin) snackbar?.show()
+        else snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
     }
 }
 

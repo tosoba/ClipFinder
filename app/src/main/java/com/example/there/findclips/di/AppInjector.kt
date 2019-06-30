@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.example.coreandroid.di.Injectable
+import com.example.coreandroid.util.ext.registerFragmentLifecycleCallbacks
 import com.example.there.findclips.FindClipsApp
-import com.example.there.findclips.util.ext.registerFragmentLifecycleCallbacks
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
