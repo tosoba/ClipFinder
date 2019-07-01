@@ -12,7 +12,7 @@
             type="com.example.spotifytrackvideos.TrackVideosView" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
@@ -125,7 +125,7 @@
             app:layout_anchor="@id/track_videos_viewpager"
             app:layout_anchorGravity="bottom|end" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
 

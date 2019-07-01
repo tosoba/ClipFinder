@@ -8,13 +8,11 @@
             type="com.example.main.spotify.SpotifyMainView" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1"
         tools:context=".spotify.SpotifyMainFragment">
 
         <android.support.v4.view.ViewPager
@@ -22,8 +20,7 @@
             offScreenPageLimit="@{fragmentView.offScreenPageLimit}"
             onPageChangeListener="@{fragmentView.onPageChangeListener}"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:adapter="@{fragmentView.pagerAdapter}"
             android:background="@drawable/spotify_main_background_gradient" />
 
@@ -32,15 +29,13 @@
             onNavigationItemSelectedListener="@{fragmentView.onNavigationItemSelectedListener}"
             android:layout_width="match_parent"
             android:layout_height="52dp"
+            android:layout_gravity="bottom"
             android:background="@color/colorPrimaryDark"
             app:itemIconTint="@color/spotify_bottom_navigation_color"
             app:itemTextColor="@color/spotify_bottom_navigation_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/main_view_pager"
+            app:layout_behavior="com.example.coreandroid.view.behavior.BottomNavLayoutBehavior"
             app:menu="@menu/spotify_bottom_navigation" />
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
 

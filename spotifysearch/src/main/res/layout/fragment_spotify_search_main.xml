@@ -7,7 +7,7 @@
             type="com.example.spotifysearch.SpotifySearchMainView" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:menu="@menu/spotify_videos_bottom_navigation" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
 

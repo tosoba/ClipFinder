@@ -9,7 +9,7 @@
             type="com.example.spotifydashboard.SpotifyDashboardView" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,6 +45,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context=".spotify.dashboard.SpotifyDashboardFragment" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 
 </layout>

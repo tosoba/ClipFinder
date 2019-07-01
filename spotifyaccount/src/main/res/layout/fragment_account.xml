@@ -7,7 +7,7 @@
             type="com.example.spotifyaccount.AccountView" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -53,7 +53,7 @@
             android:adapter="@{view.pagerAdapter}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 </layout>
 
 
