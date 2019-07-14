@@ -10,27 +10,27 @@ abstract class InsertTrackUseCase<Track>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repo: IFavouriteTrackRepo<Track>
 ) : CompletableUseCaseWithArgs<Track>(schedulersProvider) {
-    override fun createCompletable(args: Track): Completable = repo.insertTrack(args)
+    override fun run(args: Track): Completable = repo.insertTrack(args)
 }
 
 abstract class IsTrackSavedUseCase<Track>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repo: IFavouriteTrackRepo<Track>
 ) : SingleUseCaseWithArgs<Track, Boolean>(schedulersProvider) {
-    override fun createSingle(args: Track): Single<Boolean> = repo.isTrackSaved(args)
+    override fun run(args: Track): Single<Boolean> = repo.isTrackSaved(args)
 }
 
 abstract class DeleteTrackUseCase<Track>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repo: IFavouriteTrackRepo<Track>
 ) : CompletableUseCaseWithArgs<Track>(schedulersProvider) {
-    override fun createCompletable(args: Track): Completable = repo.deleteTrack(args)
+    override fun run(args: Track): Completable = repo.deleteTrack(args)
 }
 
 abstract class GetFavouriteTracksUseCase<Track>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repo: IFavouriteTrackRepo<Track>
 ) : FlowableUseCase<List<Track>>(schedulersProvider) {
-    override val flowable: Flowable<List<Track>>
+    override val result: Flowable<List<Track>>
         get() = repo.favouriteTracks
 }

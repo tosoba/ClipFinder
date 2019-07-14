@@ -1,5 +1,6 @@
 package com.example.spotifyapi
 
+import com.example.core.retrofit.NetworkResponse
 import com.example.spotifyapi.model.*
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -16,7 +17,7 @@ interface SpotifyApi {
             @Query("locale") locale: String = DEFAULT_LOCALE,
             @Query("offset") offset: Int = DEFAULT_OFFSET,
             @Query("limit") limit: Int = DEFAULT_LIMIT
-    ): Single<CategoriesResponse>
+    ): Single<NetworkResponse<CategoriesResponse, SpotifyErrorResponse>>
 
     @GET("browse/featured-playlists")
     fun getFeaturedPlaylists(
@@ -25,13 +26,13 @@ interface SpotifyApi {
             @Query("offset") offset: Int = DEFAULT_OFFSET,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("locale") locale: String = DEFAULT_LOCALE
-    ): Single<PlaylistsResponse>
+    ): Single<NetworkResponse<PlaylistsResponse, SpotifyErrorResponse>>
 
     @GET("tracks")
     fun getTracks(
             @Header("Authorization") authorization: String,
             @Query("ids") ids: String
-    ): Single<TracksOnlyResponse>
+    ): Single<NetworkResponse<TracksOnlyResponse, SpotifyErrorResponse>>
 
     @GET("search")
     fun searchAll(
@@ -40,7 +41,7 @@ interface SpotifyApi {
             @Query("type") type: String = ALL_SEARCH_TYPES,
             @Query("offset") offset: Int = DEFAULT_OFFSET,
             @Query("limit") limit: Int = DEFAULT_LIMIT
-    ): Single<SearchAllResponse>
+    ): Single<NetworkResponse<SearchAllResponse, SpotifyErrorResponse>>
 
     @GET("browse/categories/{category_id}/playlists")
     fun getPlaylistsForCategory(
@@ -49,7 +50,7 @@ interface SpotifyApi {
             @Query("offset") offset: Int,
             @Query("country") country: String = DEFAULT_COUNTRY,
             @Query("limit") limit: Int = DEFAULT_LIMIT
-    ): Single<PlaylistsResponse>
+    ): Single<NetworkResponse<PlaylistsResponse, SpotifyErrorResponse>>
 
     @GET("users/{user_id}/playlists/{playlist_id}/tracks")
     fun getPlaylistTracks(
@@ -57,26 +58,26 @@ interface SpotifyApi {
             @Path("user_id") userId: String,
             @Path("playlist_id") playlistId: String,
             @Query("offset") offset: Int
-    ): Single<PlaylistTracksResponse>
+    ): Single<NetworkResponse<PlaylistTracksResponse, SpotifyErrorResponse>>
 
     @GET("artists")
     fun getArtists(
             @Header("Authorization") authorization: String,
             @Query("ids") artistIds: String
-    ): Single<ArtistsOnlyResponse>
+    ): Single<NetworkResponse<ArtistsOnlyResponse, SpotifyErrorResponse>>
 
     @GET("albums/{id}")
     fun getAlbum(
             @Header("Authorization") authorization: String,
             @Path("id") albumId: String
-    ): Single<AlbumApiModel>
+    ): Single<NetworkResponse<AlbumApiModel, SpotifyErrorResponse>>
 
     @GET("recommendations")
     fun getSimilarTracks(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_TRACKS_LIMIT,
             @Query("seed_tracks") trackId: String
-    ): Single<SimilarTracksResponse>
+    ): Single<NetworkResponse<SimilarTracksResponse, SpotifyErrorResponse>>
 
     @GET("artists/{id}/albums")
     fun getAlbumsFromArtist(
@@ -84,20 +85,20 @@ interface SpotifyApi {
             @Path("id") artistId: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<AlbumsResult>
+    ): Single<NetworkResponse<AlbumsResult, SpotifyErrorResponse>>
 
     @GET("artists/{id}/top-tracks")
     fun getTopTracksFromArtist(
             @Header("Authorization") authorization: String,
             @Path("id") artistId: String,
             @Query("country") country: String = DEFAULT_COUNTRY
-    ): Single<TracksOnlyResponse>
+    ): Single<NetworkResponse<TracksOnlyResponse, SpotifyErrorResponse>>
 
     @GET("artists/{id}/related-artists")
     fun getRelatedArtists(
             @Header("Authorization") authorization: String,
             @Path("id") artistId: String
-    ): Single<ArtistsOnlyResponse>
+    ): Single<NetworkResponse<ArtistsOnlyResponse, SpotifyErrorResponse>>
 
     @GET("albums/{id}/tracks")
     fun getTracksFromAlbum(
@@ -105,58 +106,58 @@ interface SpotifyApi {
             @Path("id") albumId: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<TracksResult>
+    ): Single<NetworkResponse<TracksResult, SpotifyErrorResponse>>
 
     @GET("browse/new-releases")
     fun getNewReleases(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<NewReleasesResponse>
+    ): Single<NetworkResponse<NewReleasesResponse, SpotifyErrorResponse>>
 
     @GET("me/playlists")
     fun getCurrentUsersPlaylists(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<PlaylistsResult>
+    ): Single<NetworkResponse<PlaylistsResult, SpotifyErrorResponse>>
 
     @GET("me/top/tracks")
     fun getCurrentUsersTopTracks(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<TracksResult>
+    ): Single<NetworkResponse<TracksResult, SpotifyErrorResponse>>
 
     @GET("me/top/artists")
     fun getCurrentUsersTopArtists(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<ArtistsResult>
+    ): Single<NetworkResponse<ArtistsResult, SpotifyErrorResponse>>
 
     @GET("me/tracks")
     fun getCurrentUsersSavedTracks(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<SavedTracksResult>
+    ): Single<NetworkResponse<SavedTracksResult, SpotifyErrorResponse>>
 
     @GET("me/albums")
     fun getCurrentUsersSavedAlbums(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = DEFAULT_LIMIT,
             @Query("offset") offset: Int = DEFAULT_OFFSET
-    ): Single<SavedAlbumsResult>
+    ): Single<NetworkResponse<SavedAlbumsResult, SpotifyErrorResponse>>
 
     @GET("me")
-    fun getCurrentUser(@Header("Authorization") authorization: String): Single<UserApiModel>
+    fun getCurrentUser(@Header("Authorization") authorization: String): Single<NetworkResponse<UserApiModel, SpotifyErrorResponse>>
 
     @GET("audio-features/{id}")
     fun getAudioFeatures(
             @Header("Authorization") authorization: String,
             @Path("id") trackId: String
-    ): Single<AudioFeaturesApiModel>
+    ): Single<NetworkResponse<AudioFeaturesApiModel, SpotifyErrorResponse>>
 
     companion object {
         const val DEFAULT_LIMIT = 50

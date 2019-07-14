@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.TopTrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
@@ -10,8 +11,7 @@ import javax.inject.Inject
 class GetDailyViralTracks @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
-) : ObservableUseCase<List<TopTrackEntity>>(schedulersProvider) {
-
-    override val observable: Observable<List<TopTrackEntity>>
+) : ObservableUseCase<Resource<List<TopTrackEntity>>>(schedulersProvider) {
+    override val result: Observable<Resource<List<TopTrackEntity>>>
         get() = remote.dailyViralTracks
 }

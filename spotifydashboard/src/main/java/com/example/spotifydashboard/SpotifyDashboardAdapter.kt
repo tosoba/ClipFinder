@@ -12,8 +12,7 @@ import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.coreandroid.util.ext.makeItemBinding
-import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
+import com.example.coreandroid.view.recyclerview.BindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 
 class SpotifyDashboardAdapter(
@@ -31,38 +30,38 @@ class SpotifyDashboardAdapter(
             viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
         CATEGORIES_HEADER_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-                viewState = HeaderItemViewState("Genres")
+            BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+                text = "Genres"
             })
         CATEGORIES_LIST_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+            BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = categoriesRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         PLAYLISTS_HEADER_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-                viewState = HeaderItemViewState("Playlists")
+            BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+                text = "Playlists"
             })
         PLAYLISTS_LIST_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+            BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = playlistsRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         ALBUMS_HEADER_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-                viewState = HeaderItemViewState("New releases")
+            BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+                text = "New releases"
             })
         ALBUMS_LIST_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+            BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = albumsRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
             })
         TRACKS_HEADER_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-                viewState = HeaderItemViewState("Top tracks")
+            BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+                text = "Top tracks"
             })
         TRACKS_LIST_VIEW_TYPE ->
-            BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+            BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
                 itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
             })

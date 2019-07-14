@@ -1,6 +1,6 @@
 package com.example.spotifyrepo
 
-import com.example.core.util.ext.mapToSingleBoolean
+import com.example.core.ext.isPresent
 import com.example.db.*
 import com.example.db.model.spotify.*
 import com.example.spotifyrepo.mapper.db
@@ -57,23 +57,23 @@ class SpotifyLocalRepo @Inject constructor(
 
     override fun isAlbumSaved(
             album: AlbumEntity
-    ): Single<Boolean> = albumDao.findById(album.id).mapToSingleBoolean()
+    ): Single<Boolean> = albumDao.findById(album.id).isPresent()
 
     override fun isArtistSaved(
             artist: ArtistEntity
-    ): Single<Boolean> = artistDao.findById(artist.id).mapToSingleBoolean()
+    ): Single<Boolean> = artistDao.findById(artist.id).isPresent()
 
     override fun isCategorySaved(
             category: CategoryEntity
-    ): Single<Boolean> = artistDao.findById(category.id).mapToSingleBoolean()
+    ): Single<Boolean> = artistDao.findById(category.id).isPresent()
 
     override fun isPlaylistSaved(
             playlist: PlaylistEntity
-    ): Single<Boolean> = spotifyPlaylistDao.findById(playlist.id).mapToSingleBoolean()
+    ): Single<Boolean> = spotifyPlaylistDao.findById(playlist.id).isPresent()
 
     override fun isTrackSaved(
             track: TrackEntity
-    ): Single<Boolean> = trackDao.findById(track.id).mapToSingleBoolean()
+    ): Single<Boolean> = trackDao.findById(track.id).isPresent()
 
     override fun deleteAlbum(album: AlbumEntity): Completable = Completable.fromCallable {
         albumDao.delete(album.db)

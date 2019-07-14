@@ -1,39 +1,48 @@
 package com.example.there.domain.usecase.base
 
+import com.example.core.model.Resource
+import com.example.core.retrofit.ThrowableServerError
 import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Single
 
-abstract class BaseSingleUseCase<Result>(
-        schedulersProvider: UseCaseSchedulersProvider
-) : BaseRxUseCase(schedulersProvider) {
-
-    protected fun Single<Result>.applySchedulersIfRequested(
-            applySchedulers: Boolean
-    ): Single<Result> = run {
-        if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                .observeOn(schedulersProvider.observeOnScheduler)
-        else this
-    }
-}
 
 abstract class SingleUseCase<Result>(
         schedulersProvider: UseCaseSchedulersProvider
-) : BaseSingleUseCase<Result>(schedulersProvider) {
+) : BaseRxUseCase(schedulersProvider) {
 
-    protected abstract val single: Single<Result>
+    protected abstract val result: Single<Result>
 
     operator fun invoke(
             applySchedulers: Boolean = true
-    ): Single<Result> = single.applySchedulersIfRequested(applySchedulers)
+    ): Single<Result> = result.applySchedulersIfRequested(applySchedulers)
 }
 
-abstract class SingleUseCaseWithArgs<Args, Result>(
+abstract class SingleUseCaseWithArgs<Args, Res>(
         schedulersProvider: UseCaseSchedulersProvider
-) : BaseSingleUseCase<Result>(schedulersProvider) {
+) : BaseRxUseCase(schedulersProvider) {
 
-    protected abstract fun createSingle(args: Args): Single<Result>
+    protected abstract fun run(args: Args): Single<Res>
 
     operator fun invoke(
             args: Args, applySchedulers: Boolean = true
-    ): Single<Result> = createSingle(args).applySchedulersIfRequested(applySchedulers)
+    ): Single<Res> = run(args).applySchedulersIfRequested(applySchedulers)
+}
+
+operator fun <Res> SingleUseCase<Resource<Res>>.invoke(
+        applySchedulers: Boolean = true,
+        wrapErrors: Boolean = true
+): Single<Resource<Res>> = invoke(applySchedulers).run {
+    if (wrapErrors) {
+        onErrorResumeNext { throwable: Throwable ->
+            when (throwable) {
+                is ThrowableServerError -> Single.just(Resource.Error(throwable.error))
+                else -> Single.just(Resource.Error(throwable))
+            }
+        }
+    } else this
+}
+
+sealed class ErrorHandling {
+    object Wrap : ErrorHandling()
+    object Throw : ErrorHandling()
 }

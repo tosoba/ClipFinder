@@ -28,6 +28,7 @@ class AccountPlaylistsViewModel @Inject constructor(
         if (canLoadPlaylists) {
             viewState.playlistsLoadingInProgress.set(true)
             getCurrentUsersPlaylists(currentOffset)
+                    .takeSuccessOnly()
                     .doFinally { viewState.playlistsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.playlists.addAll(it.items.map(PlaylistEntity::ui))

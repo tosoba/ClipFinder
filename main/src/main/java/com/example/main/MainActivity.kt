@@ -244,11 +244,9 @@ class MainActivity :
     private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
 
-        override fun onPanelStateChanged(
-                panel: View?,
-                previousState: SlidingUpPanelLayout.PanelState?,
-                newState: SlidingUpPanelLayout.PanelState?
-        ) {
+        override fun onPanelStateChanged(panel: View?,
+                                         previousState: SlidingUpPanelLayout.PanelState?,
+                                         newState: SlidingUpPanelLayout.PanelState?) {
             if (previousState == newState) return
             when (newState) {
                 SlidingUpPanelLayout.PanelState.DRAGGING -> {

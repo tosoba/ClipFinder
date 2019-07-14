@@ -12,6 +12,6 @@ class DiscoverSoundCloud @Inject constructor(
         private val remote: ISoundCloudRemoteDataStore
 ) : SingleUseCase<SoundCloudDiscoverEntity>(schedulersProvider) {
 
-    override val single: Single<SoundCloudDiscoverEntity>
+    override val result: Single<SoundCloudDiscoverEntity>
         get() = remote.discover
 } 

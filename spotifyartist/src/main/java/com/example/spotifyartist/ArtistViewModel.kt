@@ -62,6 +62,7 @@ class ArtistViewModel @Inject constructor(
     fun loadAlbumsFromArtist(artistId: String) {
         viewState.albumsLoadingInProgress.set(true)
         getAlbumsFromArtist(artistId)
+                .takeSuccessOnly()
                 .doFinally { viewState.albumsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(AlbumEntity::ui)
@@ -76,6 +77,7 @@ class ArtistViewModel @Inject constructor(
     fun loadTopTracksFromArtist(artistId: String) {
         viewState.topTracksLoadingInProgress.set(true)
         getTopTracksFromArtist(artistId)
+                .takeSuccessOnly()
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(TrackEntity::ui)
@@ -90,6 +92,7 @@ class ArtistViewModel @Inject constructor(
     fun loadRelatedArtists(artistId: String) {
         viewState.relatedArtistsLoadingInProgress.set(true)
         getRelatedArtists(artistId)
+                .takeSuccessOnly()
                 .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     val toAdd = it.map(ArtistEntity::ui)

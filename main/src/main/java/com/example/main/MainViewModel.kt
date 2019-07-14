@@ -70,12 +70,13 @@ class MainViewModel @Inject constructor(
 
     fun loadSimilarTracks(trackId: String) {
         getSimilarTracks(trackId)
-                .subscribe({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
-                .disposeOnCleared()
+                .takeSuccessOnly()
+                .subscribeAndDisposeOnCleared({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
     }
 
     fun loadCurrentUser() {
         getCurrentUser()
+                .takeSuccessOnly()
                 .subscribeAndDisposeOnCleared({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError)
     }
 

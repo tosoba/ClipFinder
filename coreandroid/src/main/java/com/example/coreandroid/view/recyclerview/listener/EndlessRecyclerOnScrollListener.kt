@@ -6,16 +6,10 @@ import android.support.v7.widget.RecyclerView
 
 abstract class EndlessRecyclerOnScrollListener(
         private val visibleThreshold: Int = 5,
-        private val returnFromOnScrolledItemCount: Int = 0
+        private val minItemsBeforeLoadingMore: Int = 0
 ) : RecyclerView.OnScrollListener() {
-    /**
-     * The total number of items in the dataset after the last load
-     */
-    private var mPreviousTotal = 0
-    /**
-     * True if we are still waiting for the last set of db to load.
-     */
-    private var mLoading = true
+    private var previousItemCount = 0
+    private var loading = true
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
@@ -23,20 +17,19 @@ abstract class EndlessRecyclerOnScrollListener(
         val visibleItemCount = recyclerView.childCount
         val totalItemCount = recyclerView.layoutManager?.itemCount
 
-        if (totalItemCount == null || totalItemCount <= returnFromOnScrolledItemCount) return
+        if (totalItemCount == null || totalItemCount <= minItemsBeforeLoadingMore) return
 
-        val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-
-        if (mLoading) {
-            if (totalItemCount > mPreviousTotal) {
-                mLoading = false
-                mPreviousTotal = totalItemCount
+        if (loading) {
+            if (totalItemCount > previousItemCount) {
+                loading = false
+                previousItemCount = totalItemCount
             }
         }
 
-        if (!mLoading && totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold) {
+        val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        if (!loading && totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold) {
             onLoadMore()
-            mLoading = true
+            loading = true
         }
     }
 

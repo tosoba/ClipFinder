@@ -17,7 +17,7 @@ class GetFavouriteAlbums @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<AlbumEntity>>(schedulersProvider) {
 
-    override val flowable: Flowable<List<AlbumEntity>>
+    override val result: Flowable<List<AlbumEntity>>
         get() = repository.favouriteAlbums
 }
 
@@ -26,7 +26,7 @@ class InsertAlbum @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
 
-    override fun createCompletable(args: AlbumEntity): Completable = repository.insertAlbum(args)
+    override fun run(args: AlbumEntity): Completable = repository.insertAlbum(args)
 }
 
 class IsAlbumSaved @Inject constructor(
@@ -34,7 +34,7 @@ class IsAlbumSaved @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<AlbumEntity, Boolean>(schedulersProvider) {
 
-    override fun createSingle(args: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(args)
+    override fun run(args: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(args)
 }
 
 class DeleteAlbum @Inject constructor(
@@ -42,5 +42,5 @@ class DeleteAlbum @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
 
-    override fun createCompletable(args: AlbumEntity): Completable = repository.deleteAlbum(args)
+    override fun run(args: AlbumEntity): Completable = repository.deleteAlbum(args)
 }

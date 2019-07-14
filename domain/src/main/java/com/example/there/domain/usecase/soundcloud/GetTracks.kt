@@ -11,5 +11,5 @@ class GetTracks @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISoundCloudRemoteDataStore
 ) : SingleUseCaseWithArgs<List<String>, List<SoundCloudTrackEntity>>(schedulersProvider) {
-    override fun createSingle(args: List<String>): Single<List<SoundCloudTrackEntity>> = remote.getTracks(args)
+    override fun run(args: List<String>): Single<List<SoundCloudTrackEntity>> = remote.getTracks(args)
 }

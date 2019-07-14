@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.api.SoundCloudApi
 import com.example.api.SoundCloudApiV2
 import com.example.api.SoundCloudAuth
+import com.example.core.retrofit.RxSealedCallAdapterFactory
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.SpotifyChartsApi
@@ -13,7 +14,10 @@ import com.vpaliy.soundcloud.SoundCloud
 import com.vpaliy.soundcloud.SoundCloudService
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import retrofit2.CallAdapter
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,53 +29,48 @@ class NetworkModule {
 
     @Provides
     @Named(Dependencies.SPOTIFY_API_RETROFIT)
-    fun spotifyApiRetrofit(): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient().newBuilder().addInterceptor { chain ->
-                chain.proceed(chain.request()
-                        .newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .addHeader("Content-Type", "application/json")
-                        .build())
-            }.build())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(spotifyApiBaseUrl)
-            .build()
+    fun spotifyApiRetrofit(): Retrofit = retrofitWith(
+            url = spotifyApiBaseUrl,
+            client = clientWithInterceptors(interceptorWithHeaders(
+                    "Accept" to "application/json",
+                    "Content-Type" to "application/json")))
 
     @Provides
     @Named(Dependencies.SPOTIFY_ACCOUNTS_API_RETROFIT)
-    fun spotifyAccountsApiRetrofit(): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient().newBuilder().addInterceptor { chain ->
-                chain.proceed(chain.request()
-                        .newBuilder()
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .build())
-            }.build())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(accessTokenBaseUrl)
-            .build()
+    fun spotifyAccountsApiRetrofit(): Retrofit = retrofitWith(
+            url = accessTokenBaseUrl,
+            client = clientWithInterceptors(interceptorWithHeaders(
+                    "Content-Type" to "application/x-www-form-urlencoded"))
+    )
 
     @Provides
     @Named(Dependencies.SPOTIFY_CHARTS_RETROFIT)
-    fun spotifyChartsRetrofit(): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .baseUrl(spotifyChartsBaseUrl)
-            .build()
+    fun spotifyChartsRetrofit(): Retrofit = retrofitWith(
+            url = spotifyChartsBaseUrl,
+            converterFactory = ScalarsConverterFactory.create(),
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+    )
 
     @Provides
     @Named(Dependencies.YOUTUBE_API_RETROFIT)
-    fun youtubeApiRetrofit(): Retrofit = buildDefaultRetrofitWithUrl(youtubeBaseUrl)
+    fun youtubeApiRetrofit(): Retrofit = retrofitWith(
+            url = youtubeBaseUrl,
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+    )
 
     @Provides
     @Named(Dependencies.SOUNDCLOUD_API_RETROFIT)
-    fun soundCloudApiRetrofit(): Retrofit = buildDefaultRetrofitWithUrl(soundCloudBaseUrl)
+    fun soundCloudApiRetrofit(): Retrofit = retrofitWith(
+            url = soundCloudBaseUrl,
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+    )
 
     @Provides
     @Named(Dependencies.SOUNDCLOUD_API_V2_RETROFIT)
-    fun soundCloudApiV2Retrofit(): Retrofit = buildDefaultRetrofitWithUrl(soundCloudBaseUrlV2)
+    fun soundCloudApiV2Retrofit(): Retrofit = retrofitWith(
+            url = soundCloudBaseUrlV2,
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+    )
 
     @Provides
     fun spotifyApi(
@@ -108,12 +107,41 @@ class NetworkModule {
             applicationContext: Context
     ): SoundCloudService = SoundCloud.create(SoundCloudAuth.key).createService(applicationContext)
 
-    private fun buildDefaultRetrofitWithUrl(url: String): Retrofit = Retrofit.Builder()
-            .client(OkHttpClient())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+    private fun retrofitWith(
+            url: String,
+            client: OkHttpClient = OkHttpClient(),
+            converterFactory: Converter.Factory = GsonConverterFactory.create(),
+            callAdapterFactories: Array<CallAdapter.Factory> = arrayOf(RxSealedCallAdapterFactory.create(), RxJava2CallAdapterFactory.create())
+    ): Retrofit = Retrofit.Builder()
+            .client(client)
+            .run {
+                callAdapterFactories.forEach {
+                    addCallAdapterFactory(it)
+                }
+                this
+            }
+            .addConverterFactory(converterFactory)
             .baseUrl(url)
             .build()
+
+    private fun clientWithInterceptors(
+            vararg interceptors: Interceptor
+    ): OkHttpClient = OkHttpClient().newBuilder().apply {
+        interceptors.forEach { addInterceptor(it) }
+    }.build()
+
+    private fun interceptorWithHeaders(
+            vararg headers: Pair<String, String>
+    ): Interceptor = Interceptor { chain ->
+        chain.proceed(chain.request()
+                .newBuilder()
+                .apply {
+                    headers.forEach { (name, value) ->
+                        addHeader(name, value)
+                    }
+                }
+                .build())
+    }
 
     companion object {
         private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"

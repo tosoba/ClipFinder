@@ -14,7 +14,7 @@ class GetFavouriteVideosFromPlaylist @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val local: IVideosDbDataStore
 ) : FlowableUseCaseWithArgs<Long, List<VideoEntity>>(schedulersProvider) {
-    override fun createFlowable(args: Long): Flowable<List<VideoEntity>> = local.getVideosFromPlaylist(args)
+    override fun run(args: Long): Flowable<List<VideoEntity>> = local.getVideosFromPlaylist(args)
 }
 
 class AddVideoToPlaylist @Inject constructor(
@@ -27,7 +27,7 @@ class AddVideoToPlaylist @Inject constructor(
             val videoEntity: VideoEntity
     )
 
-    override fun createCompletable(args: Args): Completable = repository.addVideoToPlaylist(args.videoEntity, args.playlistEntity)
+    override fun run(args: Args): Completable = repository.addVideoToPlaylist(args.videoEntity, args.playlistEntity)
 }
 
 class DeleteVideo @Inject constructor(
@@ -35,5 +35,5 @@ class DeleteVideo @Inject constructor(
         private val repository: IVideosDbDataStore
 ) : CompletableUseCaseWithArgs<VideoEntity>(schedulersProvider) {
 
-    override fun createCompletable(args: VideoEntity): Completable = repository.deleteVideo(args)
+    override fun run(args: VideoEntity): Completable = repository.deleteVideo(args)
 }

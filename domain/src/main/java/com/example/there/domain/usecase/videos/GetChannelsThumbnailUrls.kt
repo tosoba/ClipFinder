@@ -12,5 +12,5 @@ class GetChannelsThumbnailUrls @Inject constructor(
         private val remote: IVideosRemoteDataStore
 ) : SingleUseCaseWithArgs<List<VideoEntity>, List<Pair<Int, String>>>(schedulersProvider) {
 
-    override fun createSingle(args: List<VideoEntity>): Single<List<Pair<Int, String>>> = remote.getChannelsThumbnailUrls(args)
+    override fun run(args: List<VideoEntity>): Single<List<Pair<Int, String>>> = remote.getChannelsThumbnailUrls(args)
 }

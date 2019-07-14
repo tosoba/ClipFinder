@@ -16,7 +16,7 @@ class SearchVideos @Inject constructor(
 
     class Args(val query: String, val loadMore: Boolean)
 
-    override fun createSingle(args: Args): Single<List<VideoEntity>> = if (args.loadMore)
+    override fun run(args: Args): Single<List<VideoEntity>> = if (args.loadMore)
         getMoreVideos(args.query)
     else getVideos(args.query)
 

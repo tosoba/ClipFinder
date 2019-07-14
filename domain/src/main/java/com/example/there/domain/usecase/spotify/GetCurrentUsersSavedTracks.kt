@@ -1,7 +1,8 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
-import com.example.there.domain.entity.EntityPage
+import com.example.there.domain.entity.ListPage
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
@@ -11,7 +12,6 @@ import javax.inject.Inject
 class GetCurrentUsersSavedTracks @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
-) : SingleUseCaseWithArgs<Int, EntityPage<TrackEntity>>(schedulersProvider) {
-
-    override fun createSingle(args: Int): Single<EntityPage<TrackEntity>> = remote.getCurrentUsersSavedTracks(offset = args)
+) : SingleUseCaseWithArgs<Int, Resource<ListPage<TrackEntity>>>(schedulersProvider) {
+    override fun run(args: Int): Single<Resource<ListPage<TrackEntity>>> = remote.getCurrentUsersSavedTracks(offset = args)
 }

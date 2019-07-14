@@ -114,3 +114,4 @@ class SavedAlbumsResult(
         val totalItems: Int
 )
 
+class SpotifyErrorResponse(val error: SpotifyErrorApiModel)

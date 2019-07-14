@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.example.core.util.ext.messageOrDefault
+import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.di.vm.ViewModelFactory
 import dagger.android.AndroidInjector

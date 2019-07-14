@@ -41,7 +41,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
         get() = dashboard_toolbar
 
     private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
-        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
+        object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
             override fun onLoadMore() = viewModel.loadNewReleases(true)
         }
     }

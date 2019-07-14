@@ -28,6 +28,7 @@ class AccountTopViewModel @Inject constructor(
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
             getCurrentUsersTopTracks(currentTracksOffset)
+                    .takeSuccessOnly()
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.topTracks.addAll(it.items.map(TrackEntity::ui))
@@ -52,6 +53,7 @@ class AccountTopViewModel @Inject constructor(
         if (canLoadArtists) {
             viewState.artistsLoadingInProgress.set(true)
             getCurrentUsersTopArtists(currentArtistsOffset)
+                    .takeSuccessOnly()
                     .doFinally { viewState.artistsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.artists.addAll(it.items.map(ArtistEntity::ui))

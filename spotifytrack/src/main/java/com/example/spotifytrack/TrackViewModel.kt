@@ -35,6 +35,7 @@ class TrackViewModel @Inject constructor(
     private fun loadAlbum(albumId: String) {
         viewState.albumLoadingInProgress.set(true)
         getAlbum(albumId)
+                .takeSuccessOnly()
                 .doFinally { viewState.albumLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ viewState.album.set(it.ui) }, ::onError)
     }
@@ -42,6 +43,7 @@ class TrackViewModel @Inject constructor(
     fun loadArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
         getArtists(artistIds)
+                .takeSuccessOnly()
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ artists ->
                     viewState.artists.addAll(artists.map(ArtistEntity::ui).sortedBy { it.name })
@@ -54,6 +56,7 @@ class TrackViewModel @Inject constructor(
     fun loadSimilarTracks(track: Track) {
         viewState.similarTracksLoadingInProgress.set(true)
         getSimilarTracks(track.id)
+                .takeSuccessOnly()
                 .doFinally { viewState.similarTracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ tracks ->
                     viewState.similarTracks.addAll(tracks.map(TrackEntity::ui).sortedBy { it.name })
@@ -65,6 +68,7 @@ class TrackViewModel @Inject constructor(
 
     private fun loadAudioFeatures(track: Track) {
         getAudioFeatures(track.domain)
+                .takeSuccessOnly()
                 .subscribeAndDisposeOnCleared({
                     val entries = ArrayList<RadarEntry>().apply {
                         add(RadarEntry(it.acousticness))

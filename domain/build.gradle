@@ -9,6 +9,9 @@ dependencies {
     implementation rootProject.ext.rxJava
     implementation rootProject.ext.dagger
     implementation rootProject.ext.daggerSupport
+
+    implementation project(':core')
+
     annotationProcessor rootProject.ext.daggerCompiler
     testImplementation rootProject.ext.junit
     testImplementation rootProject.ext.mockito

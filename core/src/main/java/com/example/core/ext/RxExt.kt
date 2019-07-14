@@ -1,8 +1,8 @@
-package com.example.core.util.ext
+package com.example.core.ext
 
 import io.reactivex.Maybe
 import io.reactivex.Single
 
-fun <T> Maybe<T>.mapToSingleBoolean(): Single<Boolean> = map { true }
+fun <T> Maybe<T>.isPresent(): Single<Boolean> = map { true }
         .defaultIfEmpty(false)
         .toSingle()

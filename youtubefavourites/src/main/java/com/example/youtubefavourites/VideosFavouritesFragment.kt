@@ -17,7 +17,6 @@ import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.decoration.HeaderDecoration
 import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
@@ -70,7 +69,7 @@ class VideosFavouritesFragment :
                     null,
                     false
             ).apply {
-                viewState = HeaderItemViewState("Playlists")
+                text = "Playlists"
                 executePendingBindings()
             }
 

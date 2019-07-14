@@ -11,6 +11,6 @@ class DeleteAllVideoSearchData @Inject constructor(
         private val local: IVideosDbDataStore
 ) : CompletableUseCase(schedulersProvider) {
 
-    override val completable: Completable
+    override val result: Completable
         get() = local.deleteAllVideoSearchData()
 }

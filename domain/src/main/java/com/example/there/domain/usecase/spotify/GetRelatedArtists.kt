@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
@@ -10,7 +11,6 @@ import javax.inject.Inject
 class GetRelatedArtists @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
-) : SingleUseCaseWithArgs<String, List<ArtistEntity>>(schedulersProvider) {
-
-    override fun createSingle(args: String): Single<List<ArtistEntity>> = remote.getRelatedArtists(args)
+) : SingleUseCaseWithArgs<String, Resource<List<ArtistEntity>>>(schedulersProvider) {
+    override fun run(args: String): Single<Resource<List<ArtistEntity>>> = remote.getRelatedArtists(args)
 }

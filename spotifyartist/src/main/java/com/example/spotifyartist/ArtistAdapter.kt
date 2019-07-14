@@ -9,8 +9,7 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.makeItemBinding
-import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
+import com.example.coreandroid.view.recyclerview.BindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 
 class ArtistAdapter(
@@ -26,24 +25,24 @@ class ArtistAdapter(
             parent: ViewGroup,
             viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
-        ALBUMS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Albums")
+        ALBUMS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Albums"
         })
-        ALBUMS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        ALBUMS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = albumsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
-        RELATED_ARTISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Related artists")
+        RELATED_ARTISTS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Related artists"
         })
-        RELATED_ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        RELATED_ARTISTS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = relatedArtitstsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
-        TOP_TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Top tracks")
+        TOP_TRACKS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Top tracks"
         })
-        TOP_TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        TOP_TRACKS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = topTracksRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })

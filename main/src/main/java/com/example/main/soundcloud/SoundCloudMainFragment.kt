@@ -68,15 +68,8 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment, Injectable {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSoundcloudMainBinding>(
-            inflater,
-            R.layout.fragment_soundcloud_main,
-            container,
-            false
-    ).apply {
-        fragmentView = view
-    }.root
+            inflater, R.layout.fragment_soundcloud_main, container, false
+    ).apply { fragmentView = view }.root
 }

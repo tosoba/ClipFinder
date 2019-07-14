@@ -12,6 +12,6 @@ class GetVideoPlaylistsWithThumbnails @Inject constructor(
         private val local: IVideosDbDataStore
 ) : FlowableUseCase<VideoPlaylistThumbnailsEntity>(schedulersProvider) {
 
-    override val flowable: Flowable<VideoPlaylistThumbnailsEntity>
+    override val result: Flowable<VideoPlaylistThumbnailsEntity>
         get() = local.videoPlaylistsWithThumbnails
 }

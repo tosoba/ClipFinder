@@ -44,6 +44,7 @@ class CategoryViewModel @Inject constructor(
 
             viewState.loadingInProgress.set(true)
             getPlaylistsForCategory(GetPlaylistsForCategory.Args(categoryId, currentOffset))
+                    .takeSuccessOnly()
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT

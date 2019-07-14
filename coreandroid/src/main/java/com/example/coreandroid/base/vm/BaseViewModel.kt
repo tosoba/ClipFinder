@@ -2,10 +2,9 @@ package com.example.coreandroid.base.vm
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
+import android.util.Log
+import com.example.core.model.Resource
+import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -27,6 +26,18 @@ open class BaseViewModel : ViewModel() {
     protected inline fun getOnErrorWith(crossinline block: () -> Unit): (Throwable) -> Unit = {
         block()
         onError(it)
+    }
+
+    protected fun <T> Maybe<T>.subscribeAndDisposeOnCleared() {
+        subscribe().disposeOnCleared()
+    }
+
+    protected fun <T> Maybe<T>.subscribeAndDisposeOnCleared(onNext: (T) -> Unit) {
+        subscribe(onNext).disposeOnCleared()
+    }
+
+    protected fun <T> Maybe<T>.subscribeAndDisposeOnCleared(onNext: (T) -> Unit, onError: (Throwable) -> Unit) {
+        subscribe(onNext, onError).disposeOnCleared()
     }
 
     protected fun <T> Single<T>.subscribeAndDisposeOnCleared() {
@@ -80,4 +91,40 @@ open class BaseViewModel : ViewModel() {
     fun Disposable.disposeOnCleared() {
         compositeDisposable.add(this)
     }
+
+    fun <T> Observable<Resource<T>>.takeSuccessOnly(
+            onError: ((Resource.Error<T, *>) -> Unit)? = {
+                Log.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
+            }
+    ): Observable<T> = run {
+        if (onError != null) {
+            this.doOnNext {
+                if (it is Resource.Error<T, *>) onError(it)
+            }
+        } else this
+    }.filter { it is Resource.Success<T> }.map { (it as Resource.Success<T>).data }
+
+    fun <T> Flowable<Resource<T>>.takeSuccessOnly(
+            onError: ((Resource.Error<T, *>) -> Unit)? = {
+                Log.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
+            }
+    ): Flowable<T> = run {
+        if (onError != null) {
+            this.doOnNext {
+                if (it is Resource.Error<T, *>) onError(it)
+            }
+        } else this
+    }.filter { it is Resource.Success<T> }.map { (it as Resource.Success<T>).data }
+
+    fun <T> Single<Resource<T>>.takeSuccessOnly(
+            onError: ((Resource.Error<T, *>) -> Unit)? = {
+                Log.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
+            }
+    ): Maybe<T> = run {
+        if (onError != null) {
+            this.doOnSuccess {
+                if (it is Resource.Error<T, *>) onError(it)
+            }
+        } else this
+    }.filter { it is Resource.Success<T> }.map { (it as Resource.Success<T>).data }
 }

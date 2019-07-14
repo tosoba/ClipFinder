@@ -32,6 +32,7 @@ class SpotifyDashboardViewModel @Inject constructor(
     fun loadCategories(shouldClear: Boolean = false) {
         viewState.categoriesLoadingInProgress.set(true)
         getCategories()
+                .takeSuccessOnly()
                 .doFinally { viewState.categoriesLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.categories.clear()
@@ -45,6 +46,7 @@ class SpotifyDashboardViewModel @Inject constructor(
     fun loadFeaturedPlaylists(shouldClear: Boolean = false) {
         viewState.featuredPlaylistsLoadingInProgress.set(true)
         getFeaturedPlaylists()
+                .takeSuccessOnly()
                 .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     if (shouldClear) viewState.featuredPlaylists.clear()
@@ -58,6 +60,7 @@ class SpotifyDashboardViewModel @Inject constructor(
     fun loadDailyViralTracks() {
         viewState.topTracksLoadingInProgress.set(true)
         getDailyViralTracks()
+                .takeSuccessOnly()
                 .doFinally { viewState.topTracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ result ->
                     viewState.topTracks.addAll(result.map { TopTrack(it.position, it.track.ui) })
@@ -75,6 +78,7 @@ class SpotifyDashboardViewModel @Inject constructor(
                 && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
             if (!loadMore) viewState.newReleasesLoadingInProgress.set(true)
             getNewReleases(currentNewReleasesOffset)
+                    .takeSuccessOnly()
                     .doFinally {
                         if (!loadMore) viewState.newReleasesLoadingInProgress.set(false)
                     }

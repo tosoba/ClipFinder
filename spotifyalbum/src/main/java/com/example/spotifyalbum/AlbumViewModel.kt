@@ -36,6 +36,7 @@ class AlbumViewModel @Inject constructor(
     fun loadAlbumsArtists(artistIds: List<String>) {
         viewState.artistsLoadingInProgress.set(true)
         getArtists(artistIds)
+                .takeSuccessOnly()
                 .doFinally { viewState.artistsLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({
                     viewState.artists.addAll(it.map(ArtistEntity::ui))
@@ -48,6 +49,7 @@ class AlbumViewModel @Inject constructor(
     fun loadTracksFromAlbum(albumId: String) {
         viewState.tracksLoadingInProgress.set(true)
         getTracksFromAlbum(albumId)
+                .takeSuccessOnly()
                 .doFinally { viewState.tracksLoadingInProgress.set(false) }
                 .subscribeAndDisposeOnCleared({ viewState.tracks.addAll(it.items.map(TrackEntity::ui)) }, ::onError)
     }

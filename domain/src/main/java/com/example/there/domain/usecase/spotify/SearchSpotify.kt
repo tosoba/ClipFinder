@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.SearchAllEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
@@ -10,9 +11,9 @@ import javax.inject.Inject
 class SearchSpotify @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
-) : SingleUseCaseWithArgs<SearchSpotify.Args, SearchAllEntity>(schedulersProvider) {
+) : SingleUseCaseWithArgs<SearchSpotify.Args, Resource<SearchAllEntity>>(schedulersProvider) {
 
     class Args(val query: String, val offset: Int)
 
-    override fun createSingle(args: Args): Single<SearchAllEntity> = remote.searchAll(args.query, args.offset)
+    override fun run(args: Args): Single<Resource<SearchAllEntity>> = remote.searchAll(args.query, args.offset)
 }

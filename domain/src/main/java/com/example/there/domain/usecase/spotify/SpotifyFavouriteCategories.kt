@@ -16,7 +16,7 @@ class GetFavouriteCategories @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<CategoryEntity>>(schedulersProvider) {
 
-    override val flowable: Flowable<List<CategoryEntity>>
+    override val result: Flowable<List<CategoryEntity>>
         get() = repository.favouriteCategories
 }
 
@@ -25,7 +25,7 @@ class InsertCategory @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {
 
-    override fun createCompletable(args: CategoryEntity): Completable = repository.insertCategory(args)
+    override fun run(args: CategoryEntity): Completable = repository.insertCategory(args)
 }
 
 class IsCategorySaved @Inject constructor(
@@ -33,7 +33,7 @@ class IsCategorySaved @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<CategoryEntity, Boolean>(schedulersProvider) {
 
-    override fun createSingle(args: CategoryEntity): Single<Boolean> = repository.isCategorySaved(args)
+    override fun run(args: CategoryEntity): Single<Boolean> = repository.isCategorySaved(args)
 }
 
 class DeleteCategory @Inject constructor(
@@ -41,5 +41,5 @@ class DeleteCategory @Inject constructor(
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {
 
-    override fun createCompletable(args: CategoryEntity): Completable = repository.deleteCategory(args)
+    override fun run(args: CategoryEntity): Completable = repository.deleteCategory(args)
 }

@@ -4,15 +4,15 @@
     <data>
 
         <variable
-            name="viewState"
-            type="com.example.coreandroid.view.recyclerview.item.HeaderItemViewState" />
+            name="text"
+            type="String" />
     </data>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/LargeLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@{viewState.text}" />
+        android:text="@{text}" />
 
 </layout>
 

@@ -21,7 +21,6 @@ import com.example.coreandroid.util.ext.putArguments
 import com.example.coreandroid.util.ext.screenOrientation
 import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.decoration.HeaderDecoration
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
 import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
@@ -148,7 +147,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
                 null,
                 false
         ).apply {
-            viewState = HeaderItemViewState(xmlHeaderText ?: defaultHeaderText)
+            text = xmlHeaderText ?: defaultHeaderText
             executePendingBindings()
         }
 

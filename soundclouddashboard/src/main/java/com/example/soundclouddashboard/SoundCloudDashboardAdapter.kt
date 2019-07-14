@@ -9,8 +9,7 @@ import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.coreandroid.util.ext.makeItemBinding
-import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
+import com.example.coreandroid.view.recyclerview.BindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 
 class SoundCloudDashboardAdapter(
@@ -25,17 +24,17 @@ class SoundCloudDashboardAdapter(
             parent: ViewGroup,
             viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
-        PLAYLISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Discover")
+        PLAYLISTS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Discover"
         })
-        PLAYLISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        PLAYLISTS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = playlistsRecyclerItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })
-        SYSTEM_PLAYLIST_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Top & Trending")
+        SYSTEM_PLAYLIST_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Top & Trending"
         })
-        SYSTEM_PLAYLIST_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        SYSTEM_PLAYLIST_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = systemPlaylistsRecyclerItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })

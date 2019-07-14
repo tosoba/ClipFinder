@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.example.there.domain.entity.spotify.TrackEntity
@@ -11,7 +12,6 @@ import javax.inject.Inject
 class GetAudioFeatures @Inject constructor(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
-) : SingleUseCaseWithArgs<TrackEntity, AudioFeaturesEntity>(schedulersProvider) {
-
-    override fun createSingle(args: TrackEntity): Single<AudioFeaturesEntity> = remote.getAudioFeatures(args)
+) : SingleUseCaseWithArgs<TrackEntity, Resource<AudioFeaturesEntity>>(schedulersProvider) {
+    override fun run(args: TrackEntity): Single<Resource<AudioFeaturesEntity>> = remote.getAudioFeatures(args)
 }

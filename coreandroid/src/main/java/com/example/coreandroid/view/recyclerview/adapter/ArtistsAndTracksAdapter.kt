@@ -10,9 +10,9 @@ import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.makeItemBinding
-import com.example.coreandroid.view.recyclerview.BaseBindingViewHolder
-import com.example.coreandroid.view.recyclerview.item.HeaderItemViewState
+import com.example.coreandroid.view.recyclerview.BindingViewHolder
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
+
 
 class ArtistsAndTracksAdapter(
         private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
@@ -23,20 +23,19 @@ class ArtistsAndTracksAdapter(
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
+            parent: ViewGroup, viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
-        ARTISTS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Artists")
+        ARTISTS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Artists"
         })
-        ARTISTS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        ARTISTS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = artistsRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
         })
-        TRACKS_HEADER_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
-            viewState = HeaderItemViewState("Tracks")
+        TRACKS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
+            text = "Tracks"
         })
-        TRACKS_LIST_VIEW_TYPE -> BaseBindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
+        TRACKS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
             itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
         })

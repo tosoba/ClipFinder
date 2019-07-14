@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
-import com.example.core.util.ext.messageOrDefault
+import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.di.vm.ViewModelFactory

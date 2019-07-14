@@ -44,7 +44,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        object : EndlessRecyclerOnScrollListener(returnFromOnScrolledItemCount = 1) {
+        object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
             override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
         }
     }
