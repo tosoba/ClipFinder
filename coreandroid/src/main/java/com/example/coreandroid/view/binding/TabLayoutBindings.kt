@@ -1,7 +1,7 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
-import android.support.design.widget.TabLayout
+import androidx.databinding.BindingAdapter
+import com.google.android.material.tabs.TabLayout
 
 @BindingAdapter("tabs")
 fun bindTabs(tabLayout: TabLayout, tabs: Array<String>) {

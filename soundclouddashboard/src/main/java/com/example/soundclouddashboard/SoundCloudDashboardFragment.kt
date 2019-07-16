@@ -1,15 +1,14 @@
 package com.example.soundclouddashboard
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
@@ -27,7 +26,7 @@ import javax.inject.Inject
 
 class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>(
         SoundCloudDashboardViewModel::class.java
-), Injectable, HasMainToolbar {
+), HasMainToolbar {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -103,7 +102,7 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
         dashboardView = view
         appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
         appCompatActivity?.showDrawerHamburger()
-        soundCloudDashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        soundCloudDashboardRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
     }.root
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

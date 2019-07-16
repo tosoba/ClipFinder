@@ -1,17 +1,15 @@
 package com.example.spotifysearch.spotify
 
-import android.arch.lifecycle.Observer
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.ISearchFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
@@ -26,12 +24,12 @@ import com.example.itemlist.spotify.SpotifyArtistsFragment
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 class SpotifySearchFragment :
         BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
-        ISearchFragment,
-        Injectable {
+        ISearchFragment {
 
     override var query: String = ""
         set(value) {

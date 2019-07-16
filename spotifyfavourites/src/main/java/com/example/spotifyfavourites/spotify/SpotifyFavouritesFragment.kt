@@ -1,15 +1,13 @@
 package com.example.spotifyfavourites.spotify
 
-import android.arch.lifecycle.Observer
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
@@ -17,9 +15,10 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.itemlist.spotify.*
 import com.example.spotifyfavourites.R
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
-class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java), Injectable {
+class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java) {
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {

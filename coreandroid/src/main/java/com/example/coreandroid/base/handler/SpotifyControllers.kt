@@ -1,6 +1,6 @@
 package com.example.coreandroid.base.handler
 
-import android.databinding.ObservableField
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track

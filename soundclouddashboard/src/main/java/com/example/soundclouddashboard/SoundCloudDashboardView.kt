@@ -1,7 +1,7 @@
 package com.example.soundclouddashboard
 
-import android.databinding.ObservableField
-import android.databinding.ObservableList
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem

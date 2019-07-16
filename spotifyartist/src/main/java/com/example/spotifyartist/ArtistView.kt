@@ -1,8 +1,8 @@
 package com.example.spotifyartist
 
-import android.databinding.ObservableField
-import android.databinding.ObservableList
 import android.view.View
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track

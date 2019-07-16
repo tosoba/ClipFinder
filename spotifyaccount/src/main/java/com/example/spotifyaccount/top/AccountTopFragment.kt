@@ -1,16 +1,15 @@
 package com.example.spotifyaccount.top
 
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
@@ -31,7 +30,6 @@ import javax.inject.Inject
 
 
 class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class.java),
-        Injectable,
         TracksDataLoaded {
 
     @Inject
@@ -89,7 +87,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
         val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
         return binding.apply {
             view = this@AccountTopFragment.view
-            accountTopRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            accountTopRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         }.root
     }
 

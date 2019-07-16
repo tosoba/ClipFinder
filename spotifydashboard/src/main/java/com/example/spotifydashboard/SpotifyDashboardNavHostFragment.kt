@@ -1,6 +1,5 @@
 package com.example.spotifydashboard
 
-import android.support.v4.app.Fragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 
 class SpotifyDashboardNavHostFragment : BaseNavHostFragment() {
@@ -9,6 +8,6 @@ class SpotifyDashboardNavHostFragment : BaseNavHostFragment() {
 
     override val backStackLayoutId: Int = R.id.dashboard_back_stack_layout
 
-    override val mainFragment: Fragment
+    override val mainFragment: androidx.fragment.app.Fragment
         get() = SpotifyDashboardFragment()
 }

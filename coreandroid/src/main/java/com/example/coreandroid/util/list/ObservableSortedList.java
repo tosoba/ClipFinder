@@ -1,29 +1,29 @@
 package com.example.coreandroid.util.list;
 
-import android.databinding.ListChangeRegistry;
-import android.databinding.ObservableList;
-import android.support.annotation.Nullable;
-import android.support.v7.util.SortedList;
+import androidx.annotation.Nullable;
+import androidx.databinding.ListChangeRegistry;
+import androidx.databinding.ObservableList;
+import androidx.recyclerview.widget.SortedList;
 
 import java.util.AbstractList;
 
 public class ObservableSortedList<T> extends AbstractList<T> implements ObservableList<T> {
     /**
-     * @see android.support.v7.util.SortedList.Callback
+     * @see androidx.recyclerview.widget.SortedList.Callback
      */
     public interface Callback<T2> {
         /**
-         * @see android.support.v7.util.SortedList.Callback#compare(Object, Object)
+         * @see androidx.recyclerview.widget.SortedList.Callback#compare(Object, Object)
          */
         int compare(T2 o1, T2 o2);
 
         /**
-         * @see android.support.v7.util.SortedList.Callback#areItemsTheSame(Object, Object)
+         * @see androidx.recyclerview.widget.SortedList.Callback#areItemsTheSame(Object, Object)
          */
         boolean areItemsTheSame(T2 item1, T2 item2);
 
         /**
-         * @see android.support.v7.util.SortedList.Callback#areContentsTheSame(Object, Object)
+         * @see androidx.recyclerview.widget.SortedList.Callback#areContentsTheSame(Object, Object)
          */
         boolean areContentsTheSame(T2 oldItem, T2 newItem);
     }

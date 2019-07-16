@@ -1,12 +1,12 @@
 package com.example.soundcloudplaylist
 
-import android.arch.lifecycle.Observer
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.lifecycle.ConnectivityComponent

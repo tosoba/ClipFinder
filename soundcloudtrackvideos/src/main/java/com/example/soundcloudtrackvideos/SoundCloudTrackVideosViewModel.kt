@@ -1,7 +1,7 @@
 package com.example.soundcloudtrackvideos
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.coreandroid.base.trackvideos.BaseTrackVideosViewModel
 import com.example.coreandroid.mapper.soundcloud.ui
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack

@@ -1,10 +1,9 @@
 package com.example.spotifyaccount
 
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentStatePagerAdapter
+import com.google.android.material.tabs.TabLayout
 
 class AccountView(
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val offScreenPageLimit: Int
 )

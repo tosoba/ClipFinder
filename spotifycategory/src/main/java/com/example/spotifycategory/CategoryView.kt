@@ -1,7 +1,7 @@
 package com.example.spotifycategory
 
-import android.databinding.ObservableField
 import android.view.View
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Category
 
 class CategoryView(

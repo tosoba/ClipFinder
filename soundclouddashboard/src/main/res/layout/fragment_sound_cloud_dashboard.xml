@@ -16,13 +16,13 @@
         android:fitsSystemWindows="false"
         tools:context="SoundCloudDashboardFragment">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/sound_cloud_dashboard_app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/sound_cloud_dashboard_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -33,9 +33,9 @@
                 app:title="@string/dashboard"
                 app:titleTextColor="#fff" />
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/sound_cloud_dashboard_recycler_view"
             hasFixedSize="@{true}"
             android:layout_width="match_parent"

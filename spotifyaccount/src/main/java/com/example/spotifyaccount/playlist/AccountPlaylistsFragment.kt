@@ -1,14 +1,13 @@
 package com.example.spotifyaccount.playlist
 
-import android.arch.lifecycle.Observer
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.lifecycle.Observer
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.util.ext.spotifyLoginController
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
@@ -18,7 +17,6 @@ import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
 class AccountPlaylistsFragment :
         BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
-        Injectable,
         TracksDataLoaded {
 
     override val isDataLoaded: Boolean

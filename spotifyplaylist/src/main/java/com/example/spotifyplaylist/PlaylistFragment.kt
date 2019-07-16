@@ -1,16 +1,15 @@
 package com.example.spotifyplaylist
 
-import android.arch.lifecycle.Observer
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.playlist.PlaylistView
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
@@ -20,7 +19,7 @@ import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
 import com.squareup.picasso.Picasso
 
-class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java), Injectable {
+class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java) {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 

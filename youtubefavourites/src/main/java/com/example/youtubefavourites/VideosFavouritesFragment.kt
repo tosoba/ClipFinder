@@ -1,17 +1,16 @@
 package com.example.youtubefavourites
 
-import android.databinding.DataBindingUtil
-import android.databinding.ObservableField
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
@@ -26,8 +25,7 @@ import com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding
 import javax.inject.Inject
 
 class VideosFavouritesFragment :
-        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java),
-        Injectable {
+        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java) {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -61,7 +59,7 @@ class VideosFavouritesFragment :
         val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
             view = this@VideosFavouritesFragment.view
-            videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            videosFavouritesPlaylistsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
 
             val headerBinding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
                     LayoutInflater.from(context),

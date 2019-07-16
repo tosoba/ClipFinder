@@ -1,8 +1,8 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
 import android.view.View
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.coreandroid.R

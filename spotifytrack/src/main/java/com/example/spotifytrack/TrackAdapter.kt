@@ -1,9 +1,8 @@
 package com.example.spotifytrack
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.databinding.AlbumInfoItemBinding
 import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.databinding.RadarChartBinding
@@ -21,7 +20,7 @@ class TrackAdapter(
         private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
         private val similarTracksRecyclerViewItemView: RecyclerViewItemView<Track>,
         private val audioFeaturesChartView: RadarChartView
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
@@ -29,7 +28,7 @@ class TrackAdapter(
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-    ): RecyclerView.ViewHolder = when (viewType) {
+    ): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
         ALBUM_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Album"
         })
@@ -41,14 +40,14 @@ class TrackAdapter(
         })
         ARTISTS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = artistsRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(parent.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         })
         SIMILAR_TRACKS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Similar tracks"
         })
         SIMILAR_TRACKS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = similarTracksRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         })
         AUDIO_FEATURES_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Audio features"
@@ -61,7 +60,7 @@ class TrackAdapter(
 
     override fun getItemCount(): Int = viewTypes.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = Unit
 
     companion object {
         private const val ALBUM_HEADER_VIEW_TYPE = 0

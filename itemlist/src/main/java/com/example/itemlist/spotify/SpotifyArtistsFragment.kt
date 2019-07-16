@@ -1,6 +1,5 @@
 package com.example.itemlist.spotify
 
-import android.support.v4.app.Fragment
 import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
@@ -26,5 +25,5 @@ class SpotifyArtistsFragment : BaseListFragment<Artist>() {
 
     override fun fragmentToShowOnItemClick(
             item: Artist
-    ): Fragment = fragmentFactory.newSpotifyArtistFragment(artist = item)
+    ): androidx.fragment.app.Fragment = fragmentFactory.newSpotifyArtistFragment(artist = item)
 }

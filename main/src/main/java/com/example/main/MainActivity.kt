@@ -1,23 +1,21 @@
 package com.example.main
 
 import android.app.SearchManager
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
-import android.databinding.ObservableField
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v7.widget.SearchView
 import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
+import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.BaseVMActivity
@@ -45,6 +43,7 @@ import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.example.youtubeaddvideo.AddVideoViewState
+import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
@@ -128,8 +127,8 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentFragments: Array<Fragment> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf<Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
+    private val mainContentFragments: Array<androidx.fragment.app.Fragment> by lazy(LazyThreadSafetyMode.NONE) {
+        arrayOf<androidx.fragment.app.Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
     }
 
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -646,7 +645,7 @@ class MainActivity :
         //TODO: handle soundcloud search here
     }
 
-    private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
+    private fun showMainToolbarOnBackPressed(currentFragment: androidx.fragment.app.Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
             val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)

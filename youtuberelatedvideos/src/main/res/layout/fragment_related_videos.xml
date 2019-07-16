@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         tools:context=".videos.relatedvideos.RelatedVideosFragment">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/related_videos_recycler_view"
             clickHandler="@{fragmentView.relatedVideosRecyclerViewItemView.onItemClickListener}"
             itemDecoration="@{fragmentView.relatedVideosRecyclerViewItemView.itemDecoration}"

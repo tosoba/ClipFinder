@@ -1,7 +1,7 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
 import android.view.View
+import androidx.databinding.BindingAdapter
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 @BindingAdapter("panelSlideListener")

@@ -1,19 +1,17 @@
 package com.example.spotifysearch.spotify
 
-import android.databinding.ObservableField
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
+import com.google.android.material.tabs.TabLayout
 
 class SpotifySearchView(
         val state: SpotifySearchViewState,
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        val onPageChangeListener: ViewPager.OnPageChangeListener
+        val onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener
 ) {
     val fragmentTabs = arrayOf("Albums", "Artists", "Playlists", "Tracks")
 }

@@ -1,8 +1,8 @@
 package com.example.coreandroid.util.ext
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 fun <T : Any> LiveData<T>.observeIgnoringNulls(
         owner: LifecycleOwner,

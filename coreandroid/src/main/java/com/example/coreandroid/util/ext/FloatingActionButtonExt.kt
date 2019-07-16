@@ -1,6 +1,6 @@
 package com.example.coreandroid.util.ext
 
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 fun FloatingActionButton.hideAndShow() = hide(object : FloatingActionButton.OnVisibilityChangedListener() {
     override fun onHidden(fab: FloatingActionButton?) {

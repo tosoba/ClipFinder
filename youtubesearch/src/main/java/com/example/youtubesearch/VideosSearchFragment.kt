@@ -1,15 +1,14 @@
 package com.example.youtubesearch
 
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
@@ -53,7 +52,7 @@ class VideosSearchFragment :
     override val videos: List<Video>
         get() = viewModel.viewState.videos.map { it.video }
 
-    private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
+    private val onScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
@@ -89,11 +88,11 @@ class VideosSearchFragment :
         )
     }
 
-    private val videosLayoutManager: RecyclerView.LayoutManager
+    private val videosLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
         get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+            androidx.recyclerview.widget.GridLayoutManager(context, 2, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
         } else {
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

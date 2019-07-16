@@ -1,16 +1,15 @@
 package com.example.spotifyaccount.saved
 
-import android.databinding.DataBindingUtil
-import android.databinding.Observable
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Track
@@ -30,7 +29,6 @@ import javax.inject.Inject
 
 class AccountSavedFragment :
         BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
-        Injectable,
         TracksDataLoaded {
 
     @Inject
@@ -95,7 +93,7 @@ class AccountSavedFragment :
         val binding: FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
         return binding.apply {
             view = this@AccountSavedFragment.view
-            accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            accountSavedRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         }.root
     }
 

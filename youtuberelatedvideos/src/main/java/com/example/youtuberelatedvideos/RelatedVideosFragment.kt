@@ -1,17 +1,15 @@
 package com.example.youtuberelatedvideos
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
@@ -27,7 +25,6 @@ import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
 
 
 class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class.java),
-        Injectable,
         IRelatedVideosSearchFragment {
 
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
@@ -43,13 +40,13 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
         )
     }
 
-    private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
+    private val onRelatedVideosScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
         object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
             override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
         }
     }
 
-    private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
+    private val relatedVideosItemDecoration: androidx.recyclerview.widget.RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
         SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
     }
 
@@ -65,7 +62,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
             inflater, R.layout.fragment_related_videos, container, false
     ).apply {
         fragmentView = this@RelatedVideosFragment.view
-        relatedVideosRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        relatedVideosRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
     }.root
 
     override fun searchRelatedVideos(video: Video) {

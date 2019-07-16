@@ -2,20 +2,17 @@ package com.example.coreandroid.base.fragment
 
 import android.content.Context
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
-import android.databinding.ObservableField
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.coreandroid.R
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.databinding.FragmentListBinding
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.util.ext.putArguments
 import com.example.coreandroid.util.ext.screenOrientation
@@ -26,11 +23,12 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_list.*
 import javax.inject.Inject
 
 
-abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
+abstract class BaseListFragment<T : Parcelable> : DaggerFragment() {
 
     var refreshData: ((BaseListFragment<T>) -> Unit)? = null
     var loadMore: (() -> Unit)? = null
@@ -41,7 +39,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
 
-    private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
+    private var currentHeaderDecoration: androidx.recyclerview.widget.RecyclerView.ItemDecoration? = null
 
     private var xmlHeaderText: String? = null
 
@@ -71,7 +69,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
     private val listColumnCount: Int
         get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
-    private val onScrollListener: RecyclerView.OnScrollListener by lazy {
+    private val onScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener() {
             override fun onLoadMore() {
                 loadMore?.invoke()
@@ -79,7 +77,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
         }
     }
 
-    protected abstract fun fragmentToShowOnItemClick(item: T): Fragment
+    protected abstract fun fragmentToShowOnItemClick(item: T): androidx.fragment.app.Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +89,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
         return binding.apply {
             @Suppress("UNCHECKED_CAST")
             view = this@BaseListFragment.view as View<Parcelable>
-            listFragmentRecyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+            listFragmentRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, listColumnCount, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
             if (viewState.shouldShowHeader) listFragmentRecyclerView.addItemDecoration(headerItemDecoration())
         }.root
     }
@@ -140,7 +138,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
         viewState.items.addAll(items)
     }
 
-    private fun headerItemDecoration(): RecyclerView.ItemDecoration {
+    private fun headerItemDecoration(): androidx.recyclerview.widget.RecyclerView.ItemDecoration {
         val binding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
                 LayoutInflater.from(context),
                 R.layout.header_item,
@@ -170,7 +168,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment(), Injectable {
                 currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
                 recyclerView.addItemDecoration(headerItemDecoration())
             }
-            recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, GridLayoutManager.VERTICAL, false)
+            recyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(context, listColumnCount, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
         }
     }
 

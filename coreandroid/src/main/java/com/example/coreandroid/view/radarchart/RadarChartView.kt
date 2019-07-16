@@ -1,8 +1,8 @@
 package com.example.coreandroid.view.radarchart
 
-import android.databinding.ObservableField
 import android.graphics.Color
 import android.graphics.Typeface
+import androidx.databinding.ObservableField
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 

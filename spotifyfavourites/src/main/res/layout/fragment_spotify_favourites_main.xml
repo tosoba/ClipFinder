@@ -13,14 +13,14 @@
         android:layout_height="match_parent"
         tools:context="com.example.spotifyfavourites.SpotifyFavouritesMainFragment">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/favourites_app_bar_layout"
             onOffsetChangedListener="@{favouritesFragmentView.onAppBarOffsetChangedListener}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/favourites_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -31,7 +31,7 @@
                 app:title="@string/favourites"
                 app:titleTextColor="#fff" />
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <com.example.coreandroid.view.viewpager.LockableViewPager
             android:id="@+id/favourites_fragment_view_pager"
@@ -42,7 +42,7 @@
             android:adapter="@{favouritesFragmentView.pagerAdapter}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <android.support.design.widget.BottomNavigationView
+        <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/favourites_bottom_navigation_view"
             onNavigationItemSelectedListener="@{favouritesFragmentView.onNavigationItemSelectedListener}"
             android:layout_width="match_parent"

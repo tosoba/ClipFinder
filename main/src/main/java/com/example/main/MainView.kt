@@ -1,15 +1,14 @@
 package com.example.main
 
-import android.arch.lifecycle.MutableLiveData
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableField
-import android.databinding.ObservableList
-import android.support.design.widget.NavigationView
-import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.View
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
+import androidx.lifecycle.MutableLiveData
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.User
 import com.example.coreandroid.model.videos.VideoPlaylist
+import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(
@@ -19,7 +18,7 @@ class MainView(
         val slideListener: SlidingUpPanelLayout.PanelSlideListener,
         val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
         val onFavouriteBtnClickListener: View.OnClickListener,
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val offScreenPageLimit: Int
 )
 

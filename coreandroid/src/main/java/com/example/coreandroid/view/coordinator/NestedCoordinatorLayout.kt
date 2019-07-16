@@ -1,13 +1,12 @@
 package com.example.coreandroid.view.coordinator
 
 import android.content.Context
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.view.NestedScrollingChild
-import android.support.v4.view.NestedScrollingChildHelper
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.view.NestedScrollingChild
+import androidx.core.view.NestedScrollingChildHelper
 
-class NestedCoordinatorLayout : CoordinatorLayout, NestedScrollingChild {
+class NestedCoordinatorLayout : androidx.coordinatorlayout.widget.CoordinatorLayout, NestedScrollingChild {
 
     private val mChildHelper = NestedScrollingChildHelper(this)
 

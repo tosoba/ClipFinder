@@ -1,16 +1,14 @@
 package com.example.spotifydashboard
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.spotify.Album
@@ -32,7 +30,7 @@ import javax.inject.Inject
 
 class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
        SpotifyDashboardViewModel::class.java
-), Injectable, HasMainToolbar {
+), HasMainToolbar {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -40,7 +38,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
-    private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
+    private val onNewReleasesScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
             override fun onLoadMore() = viewModel.loadNewReleases(true)
         }
@@ -159,7 +157,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
             dashboardView = view
             appCompatActivity?.setSupportActionBar(dashboardToolbar)
             appCompatActivity?.showDrawerHamburger()
-            dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            dashboardRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         }.root
     }
 

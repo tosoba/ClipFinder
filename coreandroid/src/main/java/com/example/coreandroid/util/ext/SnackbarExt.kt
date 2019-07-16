@@ -1,7 +1,7 @@
 package com.example.coreandroid.util.ext
 
-import android.support.design.widget.Snackbar
 import android.view.ViewGroup
+import com.google.android.material.snackbar.Snackbar
 
 fun Snackbar.showSnackbarWithBottomMargin(marginBottom: Int) {
     val params = view.layoutParams as ViewGroup.MarginLayoutParams

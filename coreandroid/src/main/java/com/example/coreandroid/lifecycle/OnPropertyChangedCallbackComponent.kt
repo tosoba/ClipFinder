@@ -1,10 +1,10 @@
 package com.example.coreandroid.lifecycle
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import android.databinding.BaseObservable
-import android.databinding.Observable
+import androidx.databinding.BaseObservable
+import androidx.databinding.Observable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 
 class OnPropertyChangedCallbackComponent(
         private val observable: BaseObservable,

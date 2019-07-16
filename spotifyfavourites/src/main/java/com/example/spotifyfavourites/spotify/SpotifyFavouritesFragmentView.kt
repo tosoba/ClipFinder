@@ -1,14 +1,12 @@
 package com.example.spotifyfavourites.spotify
 
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import com.example.coreandroid.model.spotify.*
+import com.google.android.material.tabs.TabLayout
 
 class SpotifyFavouritesFragmentView(
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        val onPageChangeListener: ViewPager.OnPageChangeListener
+        val onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener
 ) {
     val fragmentTabs = arrayOf("Albums", "Artists", "Categories", "Playlists", "Tracks")
 }

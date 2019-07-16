@@ -1,7 +1,7 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
 import android.os.Build
+import androidx.databinding.BindingAdapter
 import com.example.coreandroid.view.radarchart.RadarChartView
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.data.RadarData

@@ -1,17 +1,15 @@
 package com.example.spotifytrackvideos
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.OnTrackChangeListener
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Track
@@ -21,13 +19,13 @@ import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.spotifytrack.TrackFragment
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
+import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment :
         BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
         OnTrackChangeListener<Track>,
-        Injectable,
         GoesToPreviousStateOnBackPressed {
 
     private val onPageChangeListener = object : OnPageChangeListener {

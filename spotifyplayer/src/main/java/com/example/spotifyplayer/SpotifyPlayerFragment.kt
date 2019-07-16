@@ -4,21 +4,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.core.app.NotificationCompat
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
@@ -36,8 +35,7 @@ import javax.inject.Inject
 class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class.java),
         ISpotifyPlayerFragment,
         Player.NotificationCallback,
-        Player.OperationCallback,
-        Injectable {
+        Player.OperationCallback {
 
     private val receivers: ArrayList<BroadcastReceiver> = ArrayList(6)
 

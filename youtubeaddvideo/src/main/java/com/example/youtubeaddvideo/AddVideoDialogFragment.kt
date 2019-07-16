@@ -1,14 +1,13 @@
 package com.example.youtubeaddvideo
 
-import android.databinding.DataBindingUtil
-import android.databinding.ObservableField
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableField
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.videoPlaylistController
@@ -22,7 +21,7 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.youtubeaddvideo.databinding.DialogAddVideoBinding
 
 
-class AddVideoDialogFragment : DialogFragment() {
+class AddVideoDialogFragment : androidx.fragment.app.DialogFragment() {
 
     lateinit var state: AddVideoViewState
 
@@ -61,7 +60,7 @@ class AddVideoDialogFragment : DialogFragment() {
     ): View {
         val binding: DialogAddVideoBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_video, container, false)
         binding.view = view
-        binding.addVideoPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.addVideoPlaylistsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         return binding.root
     }
 

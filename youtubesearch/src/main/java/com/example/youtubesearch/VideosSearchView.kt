@@ -1,7 +1,7 @@
 package com.example.youtubesearch
 
-import android.databinding.ObservableField
-import android.databinding.ObservableList
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
 import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.VideoItemView

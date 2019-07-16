@@ -1,7 +1,7 @@
 package com.example.spotifydashboard
 
-import android.databinding.ObservableField
-import android.databinding.ObservableList
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.Playlist

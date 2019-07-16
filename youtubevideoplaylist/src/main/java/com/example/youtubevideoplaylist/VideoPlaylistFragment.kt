@@ -1,24 +1,23 @@
 package com.example.youtubevideoplaylist
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 
-class VideoPlaylistFragment : Fragment(), Injectable {
+class VideoPlaylistFragment : DaggerFragment() {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory

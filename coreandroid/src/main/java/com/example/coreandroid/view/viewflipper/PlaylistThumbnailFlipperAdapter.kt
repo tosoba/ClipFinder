@@ -1,10 +1,10 @@
 package com.example.coreandroid.view.viewflipper
 
-import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.R
 import com.example.coreandroid.databinding.ImageViewListItemBinding
 import com.example.coreandroid.view.imageview.ImageViewSrc

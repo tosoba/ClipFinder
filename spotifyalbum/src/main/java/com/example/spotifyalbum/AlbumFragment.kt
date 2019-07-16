@@ -1,18 +1,17 @@
 package com.example.spotifyalbum
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
@@ -31,7 +30,7 @@ import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 
-class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java), Injectable {
+class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java) {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -118,7 +117,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                     albumToolbarGradientBackgroundView.invalidate()
                 }
             }))
-            albumRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            albumRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
             albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }

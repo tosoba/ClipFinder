@@ -1,6 +1,6 @@
 package com.example.db.model.videos
 
-import android.arch.persistence.room.*
+import androidx.room.*
 
 @Entity(
         tableName = "videos",

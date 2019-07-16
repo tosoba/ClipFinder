@@ -1,8 +1,8 @@
 package com.example.spotifyplayer
 
-import android.databinding.ObservableField
 import android.view.View
 import android.widget.SeekBar
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track

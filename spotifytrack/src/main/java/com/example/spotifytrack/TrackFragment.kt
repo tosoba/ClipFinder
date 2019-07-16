@@ -1,17 +1,16 @@
 package com.example.spotifytrack
 
-import android.databinding.DataBindingUtil
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.handler.OnTrackChangeListener
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
@@ -28,7 +27,7 @@ import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import javax.inject.Inject
 
-class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java), Injectable {
+class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java) {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory
@@ -129,7 +128,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
             false
     ).apply {
         view = this@TrackFragment.view
-        trackRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        trackRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
     }.root
 
     override fun onCreate(savedInstanceState: Bundle?) {

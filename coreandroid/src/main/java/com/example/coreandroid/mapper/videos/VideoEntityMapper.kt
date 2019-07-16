@@ -1,6 +1,6 @@
 package com.example.coreandroid.mapper.videos
 
-import android.databinding.ObservableField
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.videos.Video
 import com.example.there.domain.entity.videos.VideoEntity
 

@@ -1,6 +1,6 @@
 package com.example.spotifyfavourites.spotify
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.there.domain.entity.spotify.*

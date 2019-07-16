@@ -1,6 +1,6 @@
 package com.example.coreandroid.util.ext
 
-import android.support.design.widget.BottomNavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 fun BottomNavigationView.checkItem(id: Int) {
     menu.findItem(id)?.isChecked = true

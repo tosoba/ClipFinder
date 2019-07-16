@@ -1,25 +1,24 @@
 package com.example.coreandroid.base.activity
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.di.vm.ViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
 abstract class BaseVMActivity<T : BaseViewModel> constructor(
         private val vmClass: Class<T>
-) : AppCompatActivity(), HasSupportFragmentInjector {
+) : DaggerAppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
-    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
 
     @Inject
     lateinit var factory: ViewModelFactory
@@ -35,7 +34,7 @@ abstract class BaseVMActivity<T : BaseViewModel> constructor(
         setupObservers()
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentDispatchingAndroidInjector
+    override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> = fragmentDispatchingAndroidInjector
 
     protected open fun T.onInitialized() = Unit
 

@@ -1,16 +1,14 @@
 package com.example.coreandroid.base.trackvideos
 
-import android.databinding.ObservableField
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.View
+import androidx.databinding.ObservableField
+import com.google.android.material.tabs.TabLayout
 
 abstract class BaseTrackVideosView<Track>(
         val state: TrackVideosViewState<Track>,
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        val onPageChangeListener: ViewPager.OnPageChangeListener,
+        val onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener,
         val onFavouriteBtnClickListener: View.OnClickListener,
         val onPlayBtnClickListener: View.OnClickListener
 )

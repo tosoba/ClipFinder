@@ -1,19 +1,17 @@
 package com.example.soundcloudtrackvideos
 
-import android.support.design.widget.TabLayout
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import android.view.View
 import com.example.coreandroid.base.trackvideos.BaseTrackVideosView
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
+import com.google.android.material.tabs.TabLayout
 
 
 class SoundCloudTrackVideosView(
         state: TrackVideosViewState<SoundCloudTrack>,
-        pagerAdapter: FragmentStatePagerAdapter,
+        pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        onPageChangeListener: ViewPager.OnPageChangeListener,
+        onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener,
         onFavouriteBtnClickListener: View.OnClickListener,
         onPlayBtnClickListener: View.OnClickListener
 ) : BaseTrackVideosView<SoundCloudTrack>(

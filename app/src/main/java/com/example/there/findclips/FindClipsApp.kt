@@ -1,7 +1,5 @@
 package com.example.there.findclips
 
-import android.app.Activity
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
@@ -9,19 +7,18 @@ import android.os.Build
 import com.example.coreandroid.util.Constants
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.di.AppInjector
+import com.example.there.findclips.di.DaggerAppComponent
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
+import dagger.android.support.DaggerApplication
 
 
-class FindClipsApp : Application(), HasActivityInjector {
+class FindClipsApp : DaggerApplication() {
 
-    @Inject
-    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
-
-    override fun activityInjector(): AndroidInjector<Activity> = activityDispatchingAndroidInjector
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> = DaggerAppComponent
+            .builder()
+            .application(this)
+            .create(this)
 
     override fun onCreate() {
         super.onCreate()

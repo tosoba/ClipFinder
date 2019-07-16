@@ -1,9 +1,8 @@
 package com.example.spotifydashboard
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coreandroid.R
 import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.databinding.RecyclerViewListItemBinding
@@ -20,7 +19,7 @@ class SpotifyDashboardAdapter(
         private val playlistsRecyclerViewItemView: RecyclerViewItemView<Playlist>,
         private val tracksRecyclerViewItemView: RecyclerViewItemView<TopTrack>,
         private val albumsRecyclerViewItemView: RecyclerViewItemView<Album>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
@@ -28,7 +27,7 @@ class SpotifyDashboardAdapter(
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-    ): RecyclerView.ViewHolder = when (viewType) {
+    ): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
         CATEGORIES_HEADER_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
                 text = "Genres"
@@ -36,7 +35,7 @@ class SpotifyDashboardAdapter(
         CATEGORIES_LIST_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = categoriesRecyclerViewItemView as RecyclerViewItemView<Any>
-                itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+                itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
             })
         PLAYLISTS_HEADER_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
@@ -45,7 +44,7 @@ class SpotifyDashboardAdapter(
         PLAYLISTS_LIST_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = playlistsRecyclerViewItemView as RecyclerViewItemView<Any>
-                itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+                itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
             })
         ALBUMS_HEADER_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
@@ -54,7 +53,7 @@ class SpotifyDashboardAdapter(
         ALBUMS_LIST_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = albumsRecyclerViewItemView as RecyclerViewItemView<Any>
-                itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+                itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
             })
         TRACKS_HEADER_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
@@ -63,14 +62,14 @@ class SpotifyDashboardAdapter(
         TRACKS_LIST_VIEW_TYPE ->
             BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
                 view = tracksRecyclerViewItemView as RecyclerViewItemView<Any>
-                itemRecyclerView.layoutManager = LinearLayoutManager(parent.context, LinearLayoutManager.HORIZONTAL, false)
+                itemRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(parent.context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
             })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
 
     override fun getItemCount(): Int = viewTypes.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = Unit
 
     companion object {
         private const val CATEGORIES_HEADER_VIEW_TYPE = 0

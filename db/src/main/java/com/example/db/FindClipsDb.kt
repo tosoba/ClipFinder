@@ -1,8 +1,8 @@
 package com.example.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.db.model.spotify.*
 import com.example.db.model.videos.RelatedVideoSearchDbModel
 import com.example.db.model.videos.VideoDbModel

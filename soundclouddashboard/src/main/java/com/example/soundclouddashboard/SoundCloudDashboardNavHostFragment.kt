@@ -1,6 +1,5 @@
 package com.example.soundclouddashboard
 
-import android.support.v4.app.Fragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 
 class SoundCloudDashboardNavHostFragment : BaseNavHostFragment() {
@@ -9,6 +8,6 @@ class SoundCloudDashboardNavHostFragment : BaseNavHostFragment() {
 
     override val layoutId: Int = R.layout.fragment_sound_cloud_dashboard_nav_host
 
-    override val mainFragment: Fragment
+    override val mainFragment: androidx.fragment.app.Fragment
         get() = SoundCloudDashboardFragment()
 }

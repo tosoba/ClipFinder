@@ -1,12 +1,9 @@
 package com.example.spotifyaccount
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.navigationDrawerController
@@ -17,9 +14,10 @@ import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.AccountTopFragment
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_account.*
 
-class AccountFragment : Fragment(), HasMainToolbar {
+class AccountFragment : androidx.fragment.app.Fragment(), HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = account_toolbar
@@ -32,7 +30,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
         }
     }
 
-    private val viewPagerAdapter: FragmentStatePagerAdapter by lazy {
+    private val viewPagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter by lazy {
         TitledCustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
                 "Playlists" to AccountPlaylistsFragment(),
                 "Saved" to AccountSavedFragment(),

@@ -3,7 +3,6 @@ package com.example.soundcloudplayer
 import android.content.ComponentName
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.LayoutInflater
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_sound_cloud_player.*
 import kotlinx.android.synthetic.main.fragment_sound_cloud_player.view.*
 
 
-class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
+class SoundCloudPlayerFragment : androidx.fragment.app.Fragment(), ISoundCloudPlayerFragment {
 
     private val exoPlayer: SimpleExoPlayer by lazy(LazyThreadSafetyMode.NONE) {
         ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector()).apply {

@@ -1,25 +1,24 @@
 package com.example.spotifysearch
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.setHeight
 import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*
 import javax.inject.Inject
 
-class SpotifySearchMainFragment : Fragment(), Injectable {
+class SpotifySearchMainFragment : DaggerFragment() {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory

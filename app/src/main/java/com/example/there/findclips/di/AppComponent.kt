@@ -11,6 +11,8 @@ import com.example.there.findclips.di.module.ui.FragmentsModule
 import com.example.there.findclips.di.module.ui.ViewModelsModule
 import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjector
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
@@ -21,16 +23,13 @@ import javax.inject.Singleton
     ActivitiesModule::class,
     FragmentsModule::class,
     ViewModelsModule::class,
-    SchedulersModule::class
+    SchedulersModule::class,
+    AndroidSupportInjectionModule::class
 ])
-interface AppComponent {
+interface AppComponent : AndroidInjector<FindClipsApp> {
     @Component.Builder
-    interface Builder {
+    abstract class Builder : AndroidInjector.Builder<FindClipsApp>() {
         @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): AppComponent
+        abstract fun application(application: Application): Builder
     }
-
-    fun inject(app: FindClipsApp)
 }

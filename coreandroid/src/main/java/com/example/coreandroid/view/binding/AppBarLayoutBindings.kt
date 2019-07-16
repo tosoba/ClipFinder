@@ -1,7 +1,7 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
-import android.support.design.widget.AppBarLayout
+import androidx.databinding.BindingAdapter
+import com.google.android.material.appbar.AppBarLayout
 
 @BindingAdapter("onOffsetChangedListener")
 fun bindOnOffsetChangedListener(

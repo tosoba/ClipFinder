@@ -1,16 +1,14 @@
 package com.example.coreandroid.util.ext
 
 import android.app.Activity
-import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.coreandroid.R
 
 
 fun Activity.registerFragmentLifecycleCallbacks(
-        callbacks: FragmentManager.FragmentLifecycleCallbacks,
+        callbacks: androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks,
         recursive: Boolean
-) = (this as? FragmentActivity)
+) = (this as? androidx.fragment.app.FragmentActivity)
         ?.supportFragmentManager
         ?.registerFragmentLifecycleCallbacks(callbacks, recursive)
 

@@ -1,7 +1,7 @@
 package com.example.coreandroid.base.playlist
 
-import android.databinding.ObservableField
 import android.view.View
+import androidx.databinding.ObservableField
 
 class PlaylistView<Playlist>(
         val state: PlaylistViewState,

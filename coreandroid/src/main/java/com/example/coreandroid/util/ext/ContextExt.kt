@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
-import android.support.v4.app.NotificationManagerCompat
 import android.util.DisplayMetrics
+import androidx.core.app.NotificationManagerCompat
 import com.spotify.sdk.android.player.Connectivity
 
 fun Context.dpToPx(dp: Float): Float = dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)

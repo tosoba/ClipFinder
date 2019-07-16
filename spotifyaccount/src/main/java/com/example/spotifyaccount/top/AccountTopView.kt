@@ -1,8 +1,8 @@
 package com.example.spotifyaccount.top
 
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableField
-import android.databinding.ObservableList
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableList
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.view.recyclerview.adapter.ArtistsAndTracksAdapter

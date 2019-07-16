@@ -1,7 +1,7 @@
 package com.example.spotifyartist
 
-import android.databinding.ObservableField
 import android.util.Log
+import androidx.databinding.ObservableField
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui

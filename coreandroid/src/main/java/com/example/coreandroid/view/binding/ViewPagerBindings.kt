@@ -1,11 +1,10 @@
 package com.example.coreandroid.view.binding
 
-import android.databinding.BindingAdapter
-import android.support.v4.view.ViewPager
+import androidx.databinding.BindingAdapter
 import com.example.coreandroid.view.viewpager.LockableViewPager
 
 @BindingAdapter("onPageChangeListener")
-fun bindOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener) {
+fun bindOnPageChangeListener(viewPager: androidx.viewpager.widget.ViewPager, listener: androidx.viewpager.widget.ViewPager.OnPageChangeListener) {
     viewPager.addOnPageChangeListener(listener)
 }
 
@@ -15,6 +14,6 @@ fun bindSwipeLocked(viewPager: LockableViewPager, swipeLocked: Boolean) {
 }
 
 @BindingAdapter("offScreenPageLimit")
-fun bindOffScreenPageLimit(viewPager: ViewPager, limit: Int) {
+fun bindOffScreenPageLimit(viewPager: androidx.viewpager.widget.ViewPager, limit: Int) {
     viewPager.offscreenPageLimit = limit
 }

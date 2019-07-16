@@ -1,7 +1,5 @@
 package com.example.youtubeplayer
 
-import android.arch.lifecycle.Lifecycle
-import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +9,10 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IYoutubePlayerFragment
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.dpToPx
@@ -25,8 +24,7 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 class YoutubePlayerFragment :
         BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
-        IYoutubePlayerFragment,
-        Injectable {
+        IYoutubePlayerFragment {
 
     override val playerView: View?
         get() = view

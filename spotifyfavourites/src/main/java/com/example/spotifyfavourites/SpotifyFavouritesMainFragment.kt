@@ -1,23 +1,22 @@
 package com.example.spotifyfavourites
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesMainBinding
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesFragment
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
 import javax.inject.Inject
 
-class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar, Injectable {
+class SpotifyFavouritesMainFragment : DaggerFragment(), HasMainToolbar {
 
     @Inject
     lateinit var fragmentFactory: IFragmentFactory

@@ -4,24 +4,16 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.util.ext.registerFragmentLifecycleCallbacks
 import com.example.there.findclips.FindClipsApp
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.support.DaggerFragment
 
 object AppInjector {
 
     fun init(app: FindClipsApp) {
-        DaggerAppComponent
-                .builder()
-                .application(app)
-                .build()
-                .inject(app)
-
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = handleActivityCreated(activity)
 
@@ -40,13 +32,13 @@ object AppInjector {
     }
 
     private fun handleActivityCreated(activity: Activity) {
-        if (activity is HasSupportFragmentInjector) {
+        if (activity is DaggerAppCompatActivity) {
             AndroidInjection.inject(activity)
         }
 
-        activity.registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
-            override fun onFragmentAttached(fm: FragmentManager, f: Fragment, context: Context) {
-                if (f is Injectable) AndroidSupportInjection.inject(f)
+        activity.registerFragmentLifecycleCallbacks(object : androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentAttached(fm: androidx.fragment.app.FragmentManager, f: androidx.fragment.app.Fragment, context: Context) {
+                if (f is DaggerFragment) AndroidSupportInjection.inject(f)
             }
         }, true)
     }

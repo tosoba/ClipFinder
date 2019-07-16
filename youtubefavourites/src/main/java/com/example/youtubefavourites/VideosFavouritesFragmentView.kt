@@ -1,6 +1,6 @@
 package com.example.youtubefavourites
 
-import android.databinding.ObservableList
+import androidx.databinding.ObservableList
 import com.example.coreandroid.util.list.ObservableSortedList
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView

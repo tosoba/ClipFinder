@@ -1,8 +1,8 @@
 package com.example.youtubeaddvideo
 
-import android.databinding.ObservableArrayList
-import android.databinding.ObservableList
 import android.view.View
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableList
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 

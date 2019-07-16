@@ -1,6 +1,6 @@
 package com.example.spotifyaccount.playlist
 
-import android.databinding.ObservableField
+import androidx.databinding.ObservableField
 import com.example.coreandroid.model.spotify.Playlist
 
 class AccountPlaylistViewState(

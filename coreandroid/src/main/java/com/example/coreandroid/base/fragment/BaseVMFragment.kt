@@ -1,19 +1,18 @@
 package com.example.coreandroid.base.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.di.vm.ViewModelFactory
+import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 abstract class BaseVMFragment<T : BaseViewModel> constructor(
         private val vmClass: Class<T>
-) : Fragment(), Injectable {
+) : DaggerFragment() {
 
     @Inject
     lateinit var factory: ViewModelFactory

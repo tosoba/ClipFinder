@@ -1,6 +1,5 @@
 package com.example.itemlist.soundcloud
 
-import android.support.v4.app.Fragment
 import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
@@ -26,5 +25,5 @@ class SoundCloudTracksFragment : BaseListFragment<SoundCloudTrack>() {
                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_grid_list_item)
         }
 
-    override fun fragmentToShowOnItemClick(item: SoundCloudTrack): Fragment = fragmentFactory.newSoundCloudTrackVideosFragment(track = item)
+    override fun fragmentToShowOnItemClick(item: SoundCloudTrack): androidx.fragment.app.Fragment = fragmentFactory.newSoundCloudTrackVideosFragment(track = item)
 }

@@ -1,8 +1,8 @@
 package com.example.coreandroid.base.vm
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.core.model.Resource
 import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable

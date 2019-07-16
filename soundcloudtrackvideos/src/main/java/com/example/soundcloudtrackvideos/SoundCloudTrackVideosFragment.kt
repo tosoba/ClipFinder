@@ -1,16 +1,14 @@
 package com.example.soundcloudtrackvideos
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.OnTrackChangeListener
-import com.example.coreandroid.di.Injectable
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
@@ -21,13 +19,13 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.itemlist.soundcloud.SoundCloudTracksFragment
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
+import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
 class SoundCloudTrackVideosFragment :
         BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class.java),
-        Injectable,
         OnTrackChangeListener<SoundCloudTrack>,
         GoesToPreviousStateOnBackPressed {
 

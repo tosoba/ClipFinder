@@ -1,11 +1,10 @@
 package com.example.spotifysearch
 
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.FragmentStatePagerAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SpotifySearchMainView(
         val query: String,
-        val pagerAdapter: FragmentStatePagerAdapter,
+        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener,
         val offScreenPageLimit: Int
 )

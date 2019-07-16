@@ -1,8 +1,8 @@
 package com.example.coreandroid.util.ext
 
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
 import com.example.coreandroid.R
 
 fun Toolbar.setupWithBackNavigation(

@@ -2,10 +2,10 @@ package com.example.settings
 
 import android.os.Bundle
 import android.preference.PreferenceFragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 
 class SettingsFragment : PreferenceFragment() {
 

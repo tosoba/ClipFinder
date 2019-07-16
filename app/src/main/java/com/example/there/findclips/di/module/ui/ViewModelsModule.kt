@@ -1,7 +1,7 @@
 package com.example.there.findclips.di.module.ui
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.coreandroid.di.vm.ViewModelFactory
 import com.example.coreandroid.di.vm.ViewModelKey
 import com.example.main.MainViewModel

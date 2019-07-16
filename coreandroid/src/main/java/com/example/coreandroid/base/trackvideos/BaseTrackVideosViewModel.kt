@@ -1,7 +1,7 @@
 package com.example.coreandroid.base.trackvideos
 
-import android.databinding.ObservableField
 import android.util.Log
+import androidx.databinding.ObservableField
 import com.example.coreandroid.base.model.BaseTrackUiModel
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.there.domain.usecase.base.DeleteTrackUseCase

@@ -16,13 +16,13 @@
         android:fitsSystemWindows="false"
         tools:context=".spotify.dashboard.SpotifyDashboardFragment">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/dashboard_app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/dashboard_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -33,9 +33,9 @@
                 app:title="@string/dashboard"
                 app:titleTextColor="#fff" />
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/dashboard_recycler_view"
             hasFixedSize="@{true}"

@@ -1,8 +1,7 @@
 package com.example.spotifyartist
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.databinding.RecyclerViewListItemBinding
 import com.example.coreandroid.model.spotify.Album
@@ -16,7 +15,7 @@ class ArtistAdapter(
         private val albumsRecyclerViewItemView: RecyclerViewItemView<Album>,
         private val topTracksRecyclerViewItemView: RecyclerViewItemView<Track>,
         private val relatedArtitstsRecyclerViewItemView: RecyclerViewItemView<Artist>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]
 
@@ -24,34 +23,34 @@ class ArtistAdapter(
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-    ): RecyclerView.ViewHolder = when (viewType) {
+    ): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
         ALBUMS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Albums"
         })
         ALBUMS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = albumsRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         })
         RELATED_ARTISTS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Related artists"
         })
         RELATED_ARTISTS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = relatedArtitstsRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         })
         TOP_TRACKS_HEADER_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<HeaderItemBinding>(R.layout.header_item).apply {
             text = "Top tracks"
         })
         TOP_TRACKS_LIST_VIEW_TYPE -> BindingViewHolder(parent.makeItemBinding<RecyclerViewListItemBinding>(R.layout.recycler_view_list_item).apply {
             view = topTracksRecyclerViewItemView as RecyclerViewItemView<Any>
-            itemRecyclerView.layoutManager = GridLayoutManager(parent.context, 2, GridLayoutManager.HORIZONTAL, false)
+            itemRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(parent.context, 2, androidx.recyclerview.widget.GridLayoutManager.HORIZONTAL, false)
         })
         else -> throw IllegalStateException("${javaClass.name}: Unknown viewType: $viewType")
     }
 
     override fun getItemCount(): Int = viewTypes.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) = Unit
 
     companion object {
         private const val ALBUMS_HEADER_VIEW_TYPE = 0

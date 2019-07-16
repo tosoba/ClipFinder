@@ -2,19 +2,19 @@ package com.example.coreandroid.lifecycle
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Intent
 import android.provider.Settings
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
 import android.view.View
-import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.example.coreandroid.R
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.showSnackbarWithBottomMargin
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -88,9 +88,10 @@ class ConnectivityComponent(
                 })
                 .setActionTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
 
-        val textView = snackbar?.view?.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-        textView?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
-        snackbar?.duration = Snackbar.LENGTH_INDEFINITE
+        //TODO: fix this
+//        val textView = snackbar?.view?.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+//        textView?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
+        snackbar?.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
 
         if (!shouldShowSnackbarWithBottomMargin) snackbar?.show()
         else snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
