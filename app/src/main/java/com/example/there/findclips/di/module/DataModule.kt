@@ -18,7 +18,33 @@ import com.example.videosrepo.VideosRemoteDataStore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import javax.inject.Singleton
+
+val databaseModule = module {
+    single {
+        Room.databaseBuilder(get(), FindClipsDb::class.java, "FindClipsDb.db").build()
+    }
+    factory { get<FindClipsDb>().albumDao() }
+    factory { get<FindClipsDb>().artistDao() }
+    factory { get<FindClipsDb>().categoryDao() }
+    factory { get<FindClipsDb>().spotifyPlaylistDao() }
+    factory { get<FindClipsDb>().trackDao() }
+    factory { get<FindClipsDb>().videoDao() }
+    factory { get<FindClipsDb>().videoPlaylistDao() }
+    factory { get<FindClipsDb>().videoSearchDao() }
+    factory { get<FindClipsDb>().relatedVideoSearchDao() }
+}
+
+val repoModule = module {
+    single { SpotifyRemoteRepo(get(), get(), get(), get()) } bind ISpotifyRemoteDataStore::class
+    single { SpotifyLocalRepo(get(), get(), get(), get(), get()) } bind ISpotifyLocalRepo::class
+    single { VideosRemoteDataStore(get()) } bind IVideosRemoteDataStore::class
+    single { VideosDbDataStore(get(), get(), get(), get()) } bind IVideosDbDataStore::class
+    single { SoundCloudDbDataStore() } bind ISoundCloudDbDataStore::class
+    single { SoundCloudRemoteDataStore(get(), get(), get()) } bind ISoundCloudRemoteDataStore::class
+}
 
 @Module
 abstract class DataModule {

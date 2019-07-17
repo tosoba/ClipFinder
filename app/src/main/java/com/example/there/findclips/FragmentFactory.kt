@@ -1,5 +1,6 @@
 package com.example.there.findclips
 
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
@@ -24,37 +25,36 @@ import com.example.spotifytrackvideos.TrackVideosFragment
 import com.example.youtubefavourites.VideosFavouritesFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.example.youtubevideoplaylist.VideoPlaylistFragment
-import javax.inject.Inject
 
-class FragmentFactory @Inject constructor() : IFragmentFactory {
-    override val newSpotifyDashboardNavHostFragment: androidx.fragment.app.Fragment
+object FragmentFactory : IFragmentFactory {
+    override val newSpotifyDashboardNavHostFragment: Fragment
         get() = SpotifyDashboardNavHostFragment()
-    override val newSpotifyAccountNavHostFragment: androidx.fragment.app.Fragment
+    override val newSpotifyAccountNavHostFragment: Fragment
         get() = AccountNavHostFragment()
-    override val newSpotifyFavouritesMainNavHostFragment: androidx.fragment.app.Fragment
+    override val newSpotifyFavouritesMainNavHostFragment: Fragment
         get() = SpotifyFavouritesMainNavHostFragment()
 
-    override fun newSpotifyAlbumFragment(album: Album): androidx.fragment.app.Fragment = AlbumFragment.newInstance(album)
-    override fun newSpotifyArtistFragment(artist: Artist): androidx.fragment.app.Fragment = ArtistFragment.newInstance(artist)
-    override fun newSpotifyCategoryFragment(category: Category): androidx.fragment.app.Fragment = CategoryFragment.newInstance(category)
-    override fun newSpotifyPlaylistFragment(playlist: Playlist): androidx.fragment.app.Fragment = PlaylistFragment.newInstance(playlist)
-    override fun newSpotifyTrackFragment(track: Track): androidx.fragment.app.Fragment = TrackFragment.newInstanceWithTrack(track)
-    override fun newSpotifyTrackVideosFragment(track: Track): androidx.fragment.app.Fragment = TrackVideosFragment.newInstance(track)
-    override fun newSpotifySearchMainFragment(query: String): androidx.fragment.app.Fragment = SpotifySearchMainFragment.newInstance(query)
-    override fun newSpotifySearchFragment(query: String): androidx.fragment.app.Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
+    override fun newSpotifyAlbumFragment(album: Album): Fragment = AlbumFragment.newInstance(album)
+    override fun newSpotifyArtistFragment(artist: Artist): Fragment = ArtistFragment.newInstance(artist)
+    override fun newSpotifyCategoryFragment(category: Category): Fragment = CategoryFragment.newInstance(category)
+    override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = PlaylistFragment.newInstance(playlist)
+    override fun newSpotifyTrackFragment(track: Track): Fragment = TrackFragment.newInstanceWithTrack(track)
+    override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.newInstance(track)
+    override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)
+    override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
 
-    override fun newVideosSearchFragment(query: String): androidx.fragment.app.Fragment = VideosSearchFragment.newInstanceWithQuery(query)
-    override fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): androidx.fragment.app.Fragment = VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist)
-    override fun newVideoPlaylistFragment(videoPlaylist: VideoPlaylist, thumbnailUrls: Array<String>): androidx.fragment.app.Fragment = VideoPlaylistFragment.newInstance(videoPlaylist, thumbnailUrls)
-    override val newVideosFavouritesFragment: androidx.fragment.app.Fragment
+    override fun newVideosSearchFragment(query: String): Fragment = VideosSearchFragment.newInstanceWithQuery(query)
+    override fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): Fragment = VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist)
+    override fun newVideoPlaylistFragment(videoPlaylist: VideoPlaylist, thumbnailUrls: Array<String>): Fragment = VideoPlaylistFragment.newInstance(videoPlaylist, thumbnailUrls)
+    override val newVideosFavouritesFragment: Fragment
         get() = VideosFavouritesFragment()
 
-    override val newSoundCloudDashboardNavHostFragment: androidx.fragment.app.Fragment
+    override val newSoundCloudDashboardNavHostFragment: Fragment
         get() = SoundCloudDashboardNavHostFragment()
-    override val newSoundCloudFavouritesNavHostFragment: androidx.fragment.app.Fragment
+    override val newSoundCloudFavouritesNavHostFragment: Fragment
         get() = SoundCloudFavouritesNavHostFragment()
 
-    override fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): androidx.fragment.app.Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
-    override fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): androidx.fragment.app.Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
-    override fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): androidx.fragment.app.Fragment = SoundCloudTrackVideosFragment.newInstance(track)
+    override fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
+    override fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
+    override fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): Fragment = SoundCloudTrackVideosFragment.newInstance(track)
 }

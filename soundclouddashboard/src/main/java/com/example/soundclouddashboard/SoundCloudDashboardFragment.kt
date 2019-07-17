@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -93,16 +94,14 @@ class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSoundCloudDashboardBinding>(
             inflater, R.layout.fragment_sound_cloud_dashboard, container, false
     ).apply {
         dashboardView = view
         appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
         appCompatActivity?.showDrawerHamburger()
-        soundCloudDashboardRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        soundCloudDashboardRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
     }.root
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

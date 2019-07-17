@@ -8,9 +8,13 @@ import com.example.coreandroid.util.Constants
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.di.AppInjector
 import com.example.there.findclips.di.DaggerAppComponent
+import com.example.there.findclips.di.module.*
+import com.example.there.findclips.di.module.ui.viewModelsModule
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
 class FindClipsApp : DaggerApplication() {
@@ -30,6 +34,15 @@ class FindClipsApp : DaggerApplication() {
         createNotificationChannel()
 
         AppInjector.init(this)
+
+        startKoin {
+            androidContext(this@FindClipsApp)
+            modules(listOf(
+                    appModule, databaseModule, apiModule,
+                    soundCloudModule, spotifyModule, videosModule,
+                    viewModelsModule
+            ))
+        }
     }
 
     override fun onTerminate() {
@@ -46,9 +59,10 @@ class FindClipsApp : DaggerApplication() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_DEFAULT).apply {
-                description = getString(R.string.channel_description)
-            }
+            val channel = NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
+                    getString(R.string.channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { description = getString(R.string.channel_description) }
             getSystemService(NotificationManager::class.java).run {
                 createNotificationChannel(channel)
             }

@@ -72,14 +72,9 @@ class SpotifyMainFragment : DaggerFragment(), IMainContentFragment {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyMainBinding>(
-            inflater,
-            R.layout.fragment_spotify_main,
-            container,
-            false
+            inflater, R.layout.fragment_spotify_main, container, false
     ).apply {
         fragmentView = view
     }.root

@@ -28,6 +28,32 @@ import com.example.youtubesearch.VideosSearchViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
+
+val viewModelsModule = module {
+    viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { AlbumViewModel(get(), get(), get(), get(), get()) }
+    viewModel { ArtistViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { CategoryViewModel(get(), get(), get(), get()) }
+    viewModel { PlaylistViewModel(get(), get(), get(), get()) }
+    viewModel { TrackVideosViewModel(get(), get(), get()) }
+    viewModel { SpotifyDashboardViewModel(get(), get(), get(), get()) }
+    viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { VideosFavouritesViewModel(get(), get()) }
+    viewModel { SpotifySearchViewModel(get()) }
+    viewModel { VideosSearchViewModel(get(), get(), get(), get()) }
+    viewModel { TrackViewModel(get(), get(), get(), get()) }
+    viewModel { AccountPlaylistsViewModel(get()) }
+    viewModel { AccountTopViewModel(get(), get()) }
+    viewModel { AccountSavedViewModel(get(), get()) }
+    viewModel { SpotifyPlayerViewModel() }
+    viewModel { RelatedVideosViewModel(get(), get()) }
+    viewModel { YoutubePlayerViewModel() }
+    viewModel { SoundCloudDashboardViewModel(get()) }
+    viewModel { SoundCloudPlaylistViewModel(get(), get()) }
+    viewModel { SoundCloudTrackVideosViewModel(get(), get(), get(), get()) }
+}
 
 @Module
 abstract class ViewModelsModule {

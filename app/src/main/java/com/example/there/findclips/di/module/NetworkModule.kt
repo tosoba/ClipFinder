@@ -4,7 +4,9 @@ import android.content.Context
 import com.example.api.SoundCloudApi
 import com.example.api.SoundCloudApiV2
 import com.example.api.SoundCloudAuth
-import com.example.core.retrofit.RxSealedCallAdapterFactory
+import com.example.core.retrofit.clientWithInterceptors
+import com.example.core.retrofit.interceptorWithHeaders
+import com.example.core.retrofit.retrofitWith
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.SpotifyChartsApi
@@ -14,15 +16,62 @@ import com.vpaliy.soundcloud.SoundCloud
 import com.vpaliy.soundcloud.SoundCloudService
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import retrofit2.CallAdapter
-import retrofit2.Converter
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
+
+val apiModule = module {
+    single {
+        retrofitWith(
+                url = spotifyApiBaseUrl,
+                client = clientWithInterceptors(interceptorWithHeaders(
+                        "Accept" to "application/json",
+                        "Content-Type" to "application/json"))
+        ).create(SpotifyApi::class.java)
+    }
+    single {
+        retrofitWith(
+                url = accessTokenBaseUrl,
+                client = clientWithInterceptors(interceptorWithHeaders(
+                        "Content-Type" to "application/x-www-form-urlencoded"))
+        ).create(SpotifyAccountsApi::class.java)
+    }
+    single {
+        retrofitWith(
+                url = spotifyChartsBaseUrl,
+                converterFactory = ScalarsConverterFactory.create(),
+                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+        ).create(SpotifyChartsApi::class.java)
+    }
+    single {
+        retrofitWith(
+                url = youtubeBaseUrl,
+                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+        ).create(YoutubeApi::class.java)
+    }
+    single {
+        retrofitWith(
+                url = soundCloudBaseUrl,
+                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+        ).create(SoundCloudApi::class.java)
+    }
+    single {
+        retrofitWith(
+                url = soundCloudBaseUrlV2,
+                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+        ).create(SoundCloudApiV2::class.java)
+    }
+    single { SoundCloud.create(SoundCloudAuth.key).createService(get()) }
+}
+
+private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
+private const val accessTokenBaseUrl: String = "https://accounts.spotify.com/api/"
+private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"
+private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
+private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
+private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"
 
 @Module
 class NetworkModule {
@@ -106,49 +155,4 @@ class NetworkModule {
     fun soundCloudService(
             applicationContext: Context
     ): SoundCloudService = SoundCloud.create(SoundCloudAuth.key).createService(applicationContext)
-
-    private fun retrofitWith(
-            url: String,
-            client: OkHttpClient = OkHttpClient(),
-            converterFactory: Converter.Factory = GsonConverterFactory.create(),
-            callAdapterFactories: Array<CallAdapter.Factory> = arrayOf(RxSealedCallAdapterFactory.create(), RxJava2CallAdapterFactory.create())
-    ): Retrofit = Retrofit.Builder()
-            .client(client)
-            .run {
-                callAdapterFactories.forEach {
-                    addCallAdapterFactory(it)
-                }
-                this
-            }
-            .addConverterFactory(converterFactory)
-            .baseUrl(url)
-            .build()
-
-    private fun clientWithInterceptors(
-            vararg interceptors: Interceptor
-    ): OkHttpClient = OkHttpClient().newBuilder().apply {
-        interceptors.forEach { addInterceptor(it) }
-    }.build()
-
-    private fun interceptorWithHeaders(
-            vararg headers: Pair<String, String>
-    ): Interceptor = Interceptor { chain ->
-        chain.proceed(chain.request()
-                .newBuilder()
-                .apply {
-                    headers.forEach { (name, value) ->
-                        addHeader(name, value)
-                    }
-                }
-                .build())
-    }
-
-    companion object {
-        private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
-        private const val accessTokenBaseUrl: String = "https://accounts.spotify.com/api/"
-        private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"
-        private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
-        private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
-        private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"
-    }
 }

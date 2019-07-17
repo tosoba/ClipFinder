@@ -4,8 +4,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation rootProject.ext.retrofit
     implementation rootProject.ext.rxJava
+    implementation rootProject.ext.retrofit
+    implementation rootProject.ext.retrofitGsonConverter
+    implementation rootProject.ext.retrofitScalarsConverter
+    implementation rootProject.ext.retrofitRxJava2Adapter
 
     implementation 'com.google.code.gson:gson:2.8.5'
 }

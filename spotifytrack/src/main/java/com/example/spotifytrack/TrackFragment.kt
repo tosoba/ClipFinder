@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -118,17 +119,12 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<com.example.spotifytrack.databinding.FragmentTrackBinding>(
-            inflater,
-            R.layout.fragment_track,
-            container,
-            false
+            inflater, R.layout.fragment_track, container, false
     ).apply {
         view = this@TrackFragment.view
-        trackRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        trackRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }.root
 
     override fun onCreate(savedInstanceState: Bundle?) {
