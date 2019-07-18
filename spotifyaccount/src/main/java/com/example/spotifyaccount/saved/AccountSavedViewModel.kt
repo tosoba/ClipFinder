@@ -7,9 +7,8 @@ import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedAlbums
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedTracks
-import javax.inject.Inject
 
-class AccountSavedViewModel @Inject constructor(
+class AccountSavedViewModel(
         private val getCurrentUsersSavedTracks: GetCurrentUsersSavedTracks,
         private val getCurrentUsersSavedAlbums: GetCurrentUsersSavedAlbums
 ) : BaseViewModel() {

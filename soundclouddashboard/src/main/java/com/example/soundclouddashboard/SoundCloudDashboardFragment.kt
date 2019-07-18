@@ -22,15 +22,14 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
 class SoundCloudDashboardFragment : BaseVMFragment<SoundCloudDashboardViewModel>(
-        SoundCloudDashboardViewModel::class.java
+        SoundCloudDashboardViewModel::class
 ), HasMainToolbar {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val toolbar: Toolbar
         get() = sound_cloud_dashboard_toolbar

@@ -8,6 +8,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.videoPlaylistController
@@ -54,13 +55,11 @@ class AddVideoDialogFragment : androidx.fragment.app.DialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val binding: DialogAddVideoBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_video, container, false)
         binding.view = view
-        binding.addVideoPlaylistsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        binding.addVideoPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         return binding.root
     }
 

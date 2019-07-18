@@ -8,9 +8,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.example.coreandroid.databinding.HeaderItemBinding
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
@@ -22,21 +24,17 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class VideosFavouritesFragment :
-        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class.java) {
+        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class) {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView> by lazy {
         RecyclerViewItemView(
                 RecyclerViewItemViewState(
-                        ObservableField(false),
-                        viewModel.state.playlists,
-                        ObservableField(false)
-                ),
+                        ObservableField(false), viewModel.state.playlists, ObservableField(false)),
                 object : ListItemView<PlaylistThumbnailView>(viewModel.state.playlists) {
                     override val itemViewBinder: ItemBinder<PlaylistThumbnailView>
                         get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
@@ -55,13 +53,15 @@ class VideosFavouritesFragment :
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
             view = this@VideosFavouritesFragment.view
-            videosFavouritesPlaylistsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-            val headerBinding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
+            val headerBinding = DataBindingUtil.inflate<HeaderItemBinding>(
                     LayoutInflater.from(context),
                     R.layout.header_item,
                     null,

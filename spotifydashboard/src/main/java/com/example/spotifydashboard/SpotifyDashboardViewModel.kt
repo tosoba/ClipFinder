@@ -11,9 +11,8 @@ import com.example.there.domain.usecase.spotify.GetCategories
 import com.example.there.domain.usecase.spotify.GetDailyViralTracks
 import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
-import javax.inject.Inject
 
-class SpotifyDashboardViewModel @Inject constructor(
+class SpotifyDashboardViewModel(
         private val getFeaturedPlaylists: GetFeaturedPlaylists,
         private val getCategories: GetCategories,
         private val getDailyViralTracks: GetDailyViralTracks,

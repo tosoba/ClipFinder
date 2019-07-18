@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -26,19 +27,18 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
-       SpotifyDashboardViewModel::class.java
+        SpotifyDashboardViewModel::class
 ), HasMainToolbar {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
-    private val onNewReleasesScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener by lazy {
+    private val onNewReleasesScrollListener: RecyclerView.OnScrollListener by lazy {
         object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
             override fun onLoadMore() = viewModel.loadNewReleases(true)
         }
@@ -140,8 +140,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
 
     private val disposablesComponent = DisposablesComponent()
 
-    @Inject
-    lateinit var appPreferences: SpotifyPreferences
+    private val appPreferences: SpotifyPreferences by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,7 +156,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
             dashboardView = view
             appCompatActivity?.setSupportActionBar(dashboardToolbar)
             appCompatActivity?.showDrawerHamburger()
-            dashboardRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            dashboardRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         }.root
     }
 

@@ -108,10 +108,6 @@ dependencies {
     implementation project(':youtubesearch')
     implementation project(':youtubevideoplaylist')
 
-    kapt rootProject.ext.daggerCompiler
-    implementation rootProject.ext.dagger
-    implementation rootProject.ext.daggerSupport
-    kapt rootProject.ext.daggerProcessor
     implementation rootProject.ext.rxJava
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter

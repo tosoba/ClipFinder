@@ -1,4 +1,4 @@
-package com.example.there.findclips.di.module
+package com.example.there.findclips.module
 
 import com.example.there.domain.usecase.soundcloud.*
 import org.koin.dsl.module

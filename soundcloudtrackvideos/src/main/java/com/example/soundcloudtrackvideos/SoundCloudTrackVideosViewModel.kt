@@ -10,9 +10,8 @@ import com.example.there.domain.usecase.soundcloud.DeleteSoundCloudTrack
 import com.example.there.domain.usecase.soundcloud.GetSimilarTracks
 import com.example.there.domain.usecase.soundcloud.InsertSoundCloudTrack
 import com.example.there.domain.usecase.soundcloud.IsSoundCloudTrackSaved
-import javax.inject.Inject
 
-class SoundCloudTrackVideosViewModel @Inject constructor(
+class SoundCloudTrackVideosViewModel(
         insertSoundCloudTrack: InsertSoundCloudTrack,
         isSoundCloudTrackSaved: IsSoundCloudTrackSaved,
         deleteSoundCloudTrack: DeleteSoundCloudTrack,

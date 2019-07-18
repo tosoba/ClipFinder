@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
 import com.example.coreandroid.model.videos.VideoPlaylist
@@ -13,14 +14,13 @@ import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding
+import org.koin.android.ext.android.inject
 
 
-class VideoPlaylistFragment : DaggerFragment() {
+class VideoPlaylistFragment : Fragment() {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val playlist: VideoPlaylist by lazy {
         arguments!!.getParcelable<VideoPlaylist>(ARG_PLAYLIST)
@@ -34,14 +34,9 @@ class VideoPlaylistFragment : DaggerFragment() {
         get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? IYoutubeSearchFragment
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding>(
-            inflater,
-            R.layout.fragment_video_playlist,
-            container,
-            false
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = DataBindingUtil.inflate<FragmentVideoPlaylistBinding>(
+            inflater, R.layout.fragment_video_playlist, container, false
     ).apply {
         view = VideoPlaylistView(
                 VideoPlaylistViewState(playlist),
@@ -70,8 +65,7 @@ class VideoPlaylistFragment : DaggerFragment() {
         private const val ARG_THUMBNAIL_URLS = "ARG_THUMBNAIL_URLS"
 
         fun newInstance(
-                playlist: VideoPlaylist,
-                thumbnailUrls: Array<String>
+                playlist: VideoPlaylist, thumbnailUrls: Array<String>
         ) = VideoPlaylistFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_PLAYLIST, playlist)

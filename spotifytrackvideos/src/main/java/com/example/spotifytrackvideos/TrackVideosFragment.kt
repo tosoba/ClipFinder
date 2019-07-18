@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment :
-        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class.java),
+        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class),
         OnTrackChangeListener<Track>,
         GoesToPreviousStateOnBackPressed {
 

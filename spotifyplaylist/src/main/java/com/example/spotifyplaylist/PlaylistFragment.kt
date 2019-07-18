@@ -19,7 +19,7 @@ import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
 import com.squareup.picasso.Picasso
 
-class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class.java) {
+class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class) {
 
     private val playlist: Playlist by lazy { arguments!!.getParcelable<Playlist>(ARG_PLAYLIST) }
 

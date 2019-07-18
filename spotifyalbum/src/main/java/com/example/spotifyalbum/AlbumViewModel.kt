@@ -8,9 +8,8 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
-import javax.inject.Inject
 
-class AlbumViewModel @Inject constructor(
+class AlbumViewModel(
         private val getArtists: GetArtists,
         private val getTracksFromAlbum: GetTracksFromAlbum,
         private val insertAlbum: InsertAlbum,

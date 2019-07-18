@@ -16,11 +16,11 @@ import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
 class AccountPlaylistsFragment :
-        BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class.java),
+        BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class),
         TracksDataLoaded {
 
     override val isDataLoaded: Boolean
-        get() = viewModelInitialized && viewModel.viewState.playlists.isNotEmpty()
+        get() = viewModel.viewState.playlists.isNotEmpty()
 
     private val playlistsFragment: SpotifyPlaylistsFragment
         get() = childFragmentManager.findFragmentById(R.id.account_spotify_playlists_fragment) as SpotifyPlaylistsFragment
@@ -28,8 +28,7 @@ class AccountPlaylistsFragment :
     private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded)
-                    loadData()
+                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded) loadData()
             }
         }
     }
@@ -39,8 +38,11 @@ class AccountPlaylistsFragment :
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_playlists, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val binding: FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_account_playlists, container, false)
         return binding.apply { viewState = viewModel.viewState }.root
     }
 
@@ -52,8 +54,8 @@ class AccountPlaylistsFragment :
         })
     }
 
-    override fun com.example.spotifyaccount.playlist.AccountPlaylistsViewModel.onInitialized() {
-        viewState = com.example.spotifyaccount.playlist.AccountPlaylistViewState(spotifyLoginController!!.loggedInObservable)
+    override fun AccountPlaylistsViewModel.onInitialized() {
+        viewState = AccountPlaylistViewState(spotifyLoginController!!.loggedInObservable)
     }
 
     private fun loadData() = viewModel.loadPlaylists()

@@ -9,10 +9,9 @@ import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.SearchSpotify
-import javax.inject.Inject
 
 
-class SpotifySearchViewModel @Inject constructor(
+class SpotifySearchViewModel(
         private val searchSpotify: SearchSpotify
 ) : BaseViewModel() {
 

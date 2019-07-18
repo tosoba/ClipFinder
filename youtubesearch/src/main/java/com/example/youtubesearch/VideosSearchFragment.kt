@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_videos_search.*
 
 
 class VideosSearchFragment :
-        BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class.java),
+        BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class),
         IYoutubeSearchFragment {
 
     override var query: String = ""
@@ -44,15 +45,12 @@ class VideosSearchFragment :
         }
 
     override val videosLoaded: Boolean
-        get() {
-            if (!viewModelInitialized) return false
-            return viewModel.viewState.videos.isNotEmpty()
-        }
+        get() = viewModel.viewState.videos.isNotEmpty()
 
     override val videos: List<Video>
         get() = viewModel.viewState.videos.map { it.video }
 
-    private val onScrollListener: androidx.recyclerview.widget.RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
+    private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
         override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
     }
 
@@ -88,11 +86,11 @@ class VideosSearchFragment :
         )
     }
 
-    private val videosLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
+    private val videosLayoutManager: RecyclerView.LayoutManager
         get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            androidx.recyclerview.widget.GridLayoutManager(context, 2, androidx.recyclerview.widget.GridLayoutManager.VERTICAL, false)
+            GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
         } else {
-            androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

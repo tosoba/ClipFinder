@@ -11,9 +11,8 @@ import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
 import java.util.*
-import javax.inject.Inject
 
-class ArtistViewModel @Inject constructor(
+class ArtistViewModel(
         private val getAlbumsFromArtist: GetAlbumsFromArtist,
         private val getTopTracksFromArtist: GetTopTracksFromArtist,
         private val getRelatedArtists: GetRelatedArtists,

@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
 class SoundCloudTrackVideosFragment :
-        BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class.java),
+        BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class),
         OnTrackChangeListener<SoundCloudTrack>,
         GoesToPreviousStateOnBackPressed {
 
@@ -131,8 +131,7 @@ class SoundCloudTrackVideosFragment :
     }
 
     private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
-        val currentFragment = pagerAdapter.currentFragment
-        when (currentFragment) {
+        when (val currentFragment = pagerAdapter.currentFragment) {
             is VideosSearchFragment -> currentFragment.query = newTrack.title
             is SoundCloudTracksFragment -> viewModel.loadSimilarTracks(newTrack.id)
         }

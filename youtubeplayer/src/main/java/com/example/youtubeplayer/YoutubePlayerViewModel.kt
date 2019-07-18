@@ -3,10 +3,9 @@ package com.example.youtubeplayer
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
-import javax.inject.Inject
 
 
-class YoutubePlayerViewModel @Inject constructor() : BaseViewModel() {
+class YoutubePlayerViewModel() : BaseViewModel() {
 
     val playerState = YoutubePlayerState()
 

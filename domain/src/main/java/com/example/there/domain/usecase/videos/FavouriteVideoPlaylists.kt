@@ -9,9 +9,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import javax.inject.Inject
 
-class GetFavouriteVideoPlaylists @Inject constructor(
+class GetFavouriteVideoPlaylists(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IVideosDbDataStore
 ) : FlowableUseCase<List<VideoPlaylistEntity>>(schedulersProvider) {
@@ -20,7 +19,7 @@ class GetFavouriteVideoPlaylists @Inject constructor(
         get() = repository.favouritePlaylists
 }
 
-class InsertVideoPlaylist @Inject constructor(
+class InsertVideoPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IVideosDbDataStore
 ) : SingleUseCaseWithArgs<VideoPlaylistEntity, Long>(schedulersProvider) {
@@ -28,7 +27,7 @@ class InsertVideoPlaylist @Inject constructor(
     override fun run(args: VideoPlaylistEntity): Single<Long> = repository.insertPlaylist(args)
 }
 
-class DeleteVideoPlaylist @Inject constructor(
+class DeleteVideoPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IVideosDbDataStore
 ) : CompletableUseCaseWithArgs<VideoPlaylistEntity>(schedulersProvider) {

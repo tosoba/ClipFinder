@@ -10,9 +10,8 @@ import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.videos.DeleteVideoPlaylist
 import com.example.there.domain.usecase.videos.GetVideoPlaylistsWithThumbnails
-import javax.inject.Inject
 
-class VideosFavouritesViewModel @Inject constructor(
+class VideosFavouritesViewModel(
         private val getVideoPlaylistsWithThumbnails: GetVideoPlaylistsWithThumbnails,
         private val deleteVideoPlaylist: DeleteVideoPlaylist
 ) : BaseViewModel() {

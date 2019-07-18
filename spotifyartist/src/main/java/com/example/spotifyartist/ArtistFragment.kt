@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -28,14 +29,13 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.spotifyartist.databinding.FragmentArtistBinding
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class ArtistFragment :
-        BaseVMFragment<ArtistViewModel>(ArtistViewModel::class.java),
+        BaseVMFragment<ArtistViewModel>(ArtistViewModel::class),
         GoesToPreviousStateOnBackPressed {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val argArtist: Artist by lazy { arguments!!.getParcelable<Artist>(ARG_ARTIST) }
 
@@ -120,7 +120,7 @@ class ArtistFragment :
     }
 
     private val artistToLoad: Artist
-        get() = if (viewModelInitialized && viewModel.viewState.artist.get() != null) viewModel.viewState.artist.get()!!
+        get() = if (viewModel.viewState.artist.get() != null) viewModel.viewState.artist.get()!!
         else argArtist
 
     private val disposablesComponent = DisposablesComponent()
@@ -133,7 +133,7 @@ class ArtistFragment :
         return binding.apply {
             view = this@ArtistFragment.view
             loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)
-            artistRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            artistRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             artistToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }

@@ -8,16 +8,15 @@ import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
 import com.example.there.domain.usecase.base.FlowableUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import javax.inject.Inject
 
-class GetFavouriteVideosFromPlaylist @Inject constructor(
+class GetFavouriteVideosFromPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         private val local: IVideosDbDataStore
 ) : FlowableUseCaseWithArgs<Long, List<VideoEntity>>(schedulersProvider) {
     override fun run(args: Long): Flowable<List<VideoEntity>> = local.getVideosFromPlaylist(args)
 }
 
-class AddVideoToPlaylist @Inject constructor(
+class AddVideoToPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IVideosDbDataStore
 ) : CompletableUseCaseWithArgs<AddVideoToPlaylist.Args>(schedulersProvider) {
@@ -30,7 +29,7 @@ class AddVideoToPlaylist @Inject constructor(
     override fun run(args: Args): Completable = repository.addVideoToPlaylist(args.videoEntity, args.playlistEntity)
 }
 
-class DeleteVideo @Inject constructor(
+class DeleteVideo(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IVideosDbDataStore
 ) : CompletableUseCaseWithArgs<VideoEntity>(schedulersProvider) {

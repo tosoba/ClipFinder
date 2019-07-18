@@ -18,7 +18,7 @@ import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBindin
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_favourites.*
 
-class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class.java) {
+class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(SpotifyFavouritesViewModel::class) {
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {

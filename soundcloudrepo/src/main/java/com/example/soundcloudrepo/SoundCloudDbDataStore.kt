@@ -6,9 +6,8 @@ import com.example.there.domain.repo.soundcloud.ISoundCloudDbDataStore
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import javax.inject.Inject
 
-class SoundCloudDbDataStore @Inject constructor() : ISoundCloudDbDataStore {
+class SoundCloudDbDataStore() : ISoundCloudDbDataStore {
     override val favouritePlaylists: Flowable<List<SoundCloudPlaylistEntity>>
         get() = Flowable.just(emptyList())
 

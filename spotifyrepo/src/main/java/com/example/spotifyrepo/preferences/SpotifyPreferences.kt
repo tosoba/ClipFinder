@@ -8,11 +8,8 @@ import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-open class SpotifyPreferences @Inject constructor(context: Context) {
+open class SpotifyPreferences(context: Context) {
 
     private val preferences: SharedPreferences
     private val rxPreferences: RxSharedPreferences

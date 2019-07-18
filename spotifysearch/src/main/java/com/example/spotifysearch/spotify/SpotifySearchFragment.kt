@@ -28,7 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 
 class SpotifySearchFragment :
-        BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class.java),
+        BaseVMFragment<SpotifySearchViewModel>(SpotifySearchViewModel::class),
         ISearchFragment {
 
     override var query: String = ""
@@ -124,9 +124,7 @@ class SpotifySearchFragment :
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifySearchBinding>(
             inflater,
             com.example.spotifysearch.R.layout.fragment_spotify_search,

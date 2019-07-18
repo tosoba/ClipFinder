@@ -7,24 +7,23 @@ import com.example.there.domain.usecase.base.DeleteTrackUseCase
 import com.example.there.domain.usecase.base.GetFavouriteTracksUseCase
 import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
-import javax.inject.Inject
 
-class GetFavouriteSoundCloudTracks @Inject constructor(
+class GetFavouriteSoundCloudTracks(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISoundCloudDbDataStore
 ) : GetFavouriteTracksUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
 
-class InsertSoundCloudTrack @Inject constructor(
+class InsertSoundCloudTrack(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISoundCloudDbDataStore
 ) : InsertTrackUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
 
-class IsSoundCloudTrackSaved @Inject constructor(
+class IsSoundCloudTrackSaved(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISoundCloudDbDataStore
 ) : IsTrackSavedUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
 
-class DeleteSoundCloudTrack @Inject constructor(
+class DeleteSoundCloudTrack(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISoundCloudDbDataStore
 ) : DeleteTrackUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)

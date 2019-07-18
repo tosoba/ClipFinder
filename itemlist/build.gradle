@@ -41,10 +41,6 @@ dependencies {
     implementation project(':coreandroid')
 
     implementation rootProject.ext.rxJava
-    kapt rootProject.ext.daggerCompiler
-    implementation rootProject.ext.dagger
-    implementation rootProject.ext.daggerSupport
-    kapt rootProject.ext.daggerProcessor
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 

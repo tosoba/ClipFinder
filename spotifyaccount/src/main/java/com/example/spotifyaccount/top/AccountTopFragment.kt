@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -26,18 +27,16 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
-class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class.java),
+class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class),
         TracksDataLoaded {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val isDataLoaded: Boolean
-        get() = viewModelInitialized
-                && viewModel.viewState.artists.isNotEmpty()
+        get() = viewModel.viewState.artists.isNotEmpty()
                 && viewModel.viewState.topTracks.isNotEmpty()
 
     private val view: AccountTopView by lazy {
@@ -77,17 +76,18 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
     private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
         object : Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded)
-                    loadData()
+                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded) loadData()
             }
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
         return binding.apply {
             view = this@AccountTopFragment.view
-            accountTopRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            accountTopRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         }.root
     }
 

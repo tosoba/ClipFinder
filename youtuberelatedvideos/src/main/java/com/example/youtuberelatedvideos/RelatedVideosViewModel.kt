@@ -7,9 +7,8 @@ import com.example.coreandroid.view.recyclerview.item.VideoItemView
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.SearchRelatedVideos
-import javax.inject.Inject
 
-class RelatedVideosViewModel @Inject constructor(
+class RelatedVideosViewModel(
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val searchRelatedVideos: SearchRelatedVideos
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {

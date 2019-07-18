@@ -6,9 +6,8 @@ import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteTrack
 import com.example.there.domain.usecase.spotify.InsertTrack
 import com.example.there.domain.usecase.spotify.IsTrackSaved
-import javax.inject.Inject
 
-class TrackVideosViewModel @Inject constructor(
+class TrackVideosViewModel(
         insertTrack: InsertTrack,
         deleteTrack: DeleteTrack,
         isTrackSaved: IsTrackSaved

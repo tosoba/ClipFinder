@@ -2,29 +2,20 @@ package com.example.coreandroid.base.fragment
 
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.coreandroid.di.vm.ViewModelFactory
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.reflect.KClass
 
-abstract class BaseVMFragment<T : BaseViewModel> constructor(
-        private val vmClass: Class<T>
-) : DaggerFragment() {
+abstract class BaseVMFragment<T : BaseViewModel>(vmClass: KClass<T>) : Fragment() {
 
-    @Inject
-    lateinit var factory: ViewModelFactory
-
-    protected lateinit var viewModel: T
-
-    protected val viewModelInitialized: Boolean
-        get() = ::viewModel.isInitialized
+    protected val viewModel: T by viewModel(vmClass)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModel()
+        viewModel.onInitialized()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -38,10 +29,5 @@ abstract class BaseVMFragment<T : BaseViewModel> constructor(
         viewModel.errorState.observe(this, Observer { error ->
             error?.let { Log.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault()) }
         })
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(vmClass)
-        viewModel.onInitialized()
     }
 }

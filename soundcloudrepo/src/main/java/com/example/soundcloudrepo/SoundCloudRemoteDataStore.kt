@@ -12,9 +12,8 @@ import com.example.there.domain.repo.soundcloud.ISoundCloudRemoteDataStore
 import com.vpaliy.soundcloud.SoundCloudService
 import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
-import javax.inject.Inject
 
-class SoundCloudRemoteDataStore @Inject constructor(
+class SoundCloudRemoteDataStore(
         private val apiV2: SoundCloudApiV2,
         private val api: SoundCloudApi,
         private val service: SoundCloudService

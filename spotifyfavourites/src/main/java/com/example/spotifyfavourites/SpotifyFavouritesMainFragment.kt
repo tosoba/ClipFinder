@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.*
@@ -12,14 +13,12 @@ import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesMainBi
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesFragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_spotify_favourites_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class SpotifyFavouritesMainFragment : DaggerFragment(), HasMainToolbar {
+class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val toolbar: Toolbar
         get() = favourites_toolbar

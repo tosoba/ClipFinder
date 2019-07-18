@@ -3,9 +3,8 @@ package com.example.soundclouddashboard
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.soundcloud.ui
 import com.example.there.domain.usecase.soundcloud.DiscoverSoundCloud
-import javax.inject.Inject
 
-class SoundCloudDashboardViewModel @Inject constructor(
+class SoundCloudDashboardViewModel(
         private val discoverSoundCloud: DiscoverSoundCloud
 ) : BaseViewModel() {
 

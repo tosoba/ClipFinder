@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -25,18 +26,16 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountSavedBinding
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class AccountSavedFragment :
-        BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class.java),
+        BaseVMFragment<AccountSavedViewModel>(AccountSavedViewModel::class),
         TracksDataLoaded {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val isDataLoaded: Boolean
-        get() = viewModelInitialized
-                && viewModel.viewState.albums.isNotEmpty()
+        get() = viewModel.viewState.albums.isNotEmpty()
                 && viewModel.viewState.tracks.isNotEmpty()
 
     private val view: AccountSavedView by lazy {
@@ -93,7 +92,7 @@ class AccountSavedFragment :
         val binding: FragmentAccountSavedBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_saved, container, false)
         return binding.apply {
             view = this@AccountSavedFragment.view
-            accountSavedRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         }.root
     }
 

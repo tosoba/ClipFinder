@@ -11,9 +11,8 @@ import com.example.there.domain.usecase.videos.DeleteVideo
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
-import javax.inject.Inject
 
-class VideosSearchViewModel @Inject constructor(
+class VideosSearchViewModel(
         private val searchVideos: SearchVideos,
         getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
         private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist,

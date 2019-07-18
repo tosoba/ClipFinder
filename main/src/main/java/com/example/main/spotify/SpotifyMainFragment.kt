@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
@@ -15,15 +16,12 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.main.R
 import com.example.main.databinding.FragmentSpotifyMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_spotify_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
+class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
-class SpotifyMainFragment : DaggerFragment(), IMainContentFragment {
-
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
 

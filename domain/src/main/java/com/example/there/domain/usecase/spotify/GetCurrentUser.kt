@@ -6,9 +6,8 @@ import com.example.there.domain.entity.spotify.UserEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import com.example.there.domain.usecase.base.SingleUseCase
 import io.reactivex.Single
-import javax.inject.Inject
 
-class GetCurrentUser @Inject constructor(
+class GetCurrentUser(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCase<Resource<UserEntity>>(schedulersProvider) {

@@ -24,14 +24,14 @@ import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.*
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.spotifytrack.databinding.FragmentTrackBinding
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java) {
+class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class) {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     var track: Track? = null
         set(value) {
@@ -120,7 +120,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class.java)
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.spotifytrack.databinding.FragmentTrackBinding>(
+    ): View? = DataBindingUtil.inflate<FragmentTrackBinding>(
             inflater, R.layout.fragment_track, container, false
     ).apply {
         view = this@TrackFragment.view

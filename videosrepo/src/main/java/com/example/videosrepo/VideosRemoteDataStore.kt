@@ -9,11 +9,8 @@ import com.example.youtubeapi.model.VideoApiModel
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class VideosRemoteDataStore @Inject constructor(
+class VideosRemoteDataStore(
         private val api: YoutubeApi
 ) : IVideosRemoteDataStore {
 

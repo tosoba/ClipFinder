@@ -6,9 +6,8 @@ import com.example.coreandroid.mapper.spotify.ui
 import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
-import javax.inject.Inject
 
-class AccountPlaylistsViewModel @Inject constructor(
+class AccountPlaylistsViewModel(
         private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists
 ) : BaseViewModel() {
 

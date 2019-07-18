@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.IFragmentFactory
@@ -26,14 +27,14 @@ import com.example.coreandroid.view.recyclerview.item.ListItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.spotifyalbum.databinding.FragmentAlbumBinding
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
-class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java) {
+class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
 
@@ -105,7 +106,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DataBindingUtil.inflate<com.example.spotifyalbum.databinding.FragmentAlbumBinding>(inflater, com.example.spotifyalbum.R.layout.fragment_album, container, false)
+        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, com.example.spotifyalbum.R.layout.fragment_album, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.albumFavouriteFab.hideAndShow()
         })
@@ -117,7 +118,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class.java)
                     albumToolbarGradientBackgroundView.invalidate()
                 }
             }))
-            albumRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+            albumRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }

@@ -14,9 +14,8 @@ import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
-import javax.inject.Inject
 
-class TrackViewModel @Inject constructor(
+class TrackViewModel(
         private val getAlbum: GetAlbum,
         private val getArtists: GetArtists,
         private val getSimilarTracks: GetSimilarTracks,

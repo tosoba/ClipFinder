@@ -6,9 +6,8 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import com.example.there.domain.usecase.base.ObservableUseCase
 import io.reactivex.Observable
-import javax.inject.Inject
 
-class GetFeaturedPlaylists @Inject constructor(
+class GetFeaturedPlaylists(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
 ) : ObservableUseCase<Resource<List<PlaylistEntity>>>(schedulersProvider) {

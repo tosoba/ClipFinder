@@ -17,13 +17,14 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.dpToPx
 import com.example.coreandroid.util.ext.slidingPanelController
+import com.example.youtubeplayer.databinding.FragmentYoutubePlayerBinding
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class.java),
+        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class),
         IYoutubePlayerFragment {
 
     override val playerView: View?
@@ -98,14 +99,9 @@ class YoutubePlayerFragment :
         get() = viewModel.playerState.lastPlayedVideo
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<com.example.youtubeplayer.databinding.FragmentYoutubePlayerBinding>(
-            inflater,
-            R.layout.fragment_youtube_player,
-            container,
-            false
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = DataBindingUtil.inflate<FragmentYoutubePlayerBinding>(
+            inflater, R.layout.fragment_youtube_player, container, false
     ).apply {
         fragmentView = this@YoutubePlayerFragment.fragmentView
     }.root

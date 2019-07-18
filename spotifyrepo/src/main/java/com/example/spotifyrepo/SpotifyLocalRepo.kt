@@ -10,9 +10,8 @@ import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import javax.inject.Inject
 
-class SpotifyLocalRepo @Inject constructor(
+class SpotifyLocalRepo(
         private val albumDao: AlbumDao,
         private val artistDao: ArtistDao,
         private val categoryDao: CategoryDao,

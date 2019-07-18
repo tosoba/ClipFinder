@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.dpToPx
@@ -14,14 +15,12 @@ import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class SpotifySearchMainFragment : DaggerFragment() {
+class SpotifySearchMainFragment : Fragment() {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(

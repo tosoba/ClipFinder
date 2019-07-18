@@ -21,10 +21,9 @@ import com.example.there.domain.usecase.videos.AddVideoToPlaylist
 import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
 import com.example.there.domain.usecase.videos.GetFavouriteVideoPlaylists
 import com.example.there.domain.usecase.videos.InsertVideoPlaylist
-import javax.inject.Inject
 
 
-class MainViewModel @Inject constructor(
+class MainViewModel(
         private val getSimilarTracks: GetSimilarTracks,
         private val getCurrentUser: GetCurrentUser,
         private val insertTrack: InsertTrack,

@@ -7,9 +7,8 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
-import javax.inject.Inject
 
-class GetPlaylistsForCategory @Inject constructor(
+class GetPlaylistsForCategory(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<GetPlaylistsForCategory.Args, Resource<ListPage<PlaylistEntity>>>(schedulersProvider) {

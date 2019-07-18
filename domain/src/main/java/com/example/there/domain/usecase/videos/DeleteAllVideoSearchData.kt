@@ -4,9 +4,8 @@ import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.repo.videos.IVideosDbDataStore
 import com.example.there.domain.usecase.base.CompletableUseCase
 import io.reactivex.Completable
-import javax.inject.Inject
 
-class DeleteAllVideoSearchData @Inject constructor(
+class DeleteAllVideoSearchData(
         schedulersProvider: UseCaseSchedulersProvider,
         private val local: IVideosDbDataStore
 ) : CompletableUseCase(schedulersProvider) {

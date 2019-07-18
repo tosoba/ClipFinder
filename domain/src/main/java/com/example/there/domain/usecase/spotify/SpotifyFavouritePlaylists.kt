@@ -7,24 +7,23 @@ import com.example.there.domain.usecase.base.DeletePlaylistUseCase
 import com.example.there.domain.usecase.base.GetFavouritePlaylistsUseCase
 import com.example.there.domain.usecase.base.InsertPlaylistUseCase
 import com.example.there.domain.usecase.base.IsPlaylistSavedUseCase
-import javax.inject.Inject
 
-class GetFavouriteSpotifyPlaylists @Inject constructor(
+class GetFavouriteSpotifyPlaylists(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISpotifyLocalRepo
 ) : GetFavouritePlaylistsUseCase<PlaylistEntity>(schedulersProvider, repository)
 
-class InsertSpotifyPlaylist @Inject constructor(
+class InsertSpotifyPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISpotifyLocalRepo
 ) : InsertPlaylistUseCase<PlaylistEntity>(schedulersProvider, repository)
 
-class IsSpotifyPlaylistSaved @Inject constructor(
+class IsSpotifyPlaylistSaved(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISpotifyLocalRepo
 ) : IsPlaylistSavedUseCase<PlaylistEntity>(schedulersProvider, repository)
 
-class DeleteSpotifyPlaylist @Inject constructor(
+class DeleteSpotifyPlaylist(
         schedulersProvider: UseCaseSchedulersProvider,
         repository: ISpotifyLocalRepo
 ) : DeletePlaylistUseCase<PlaylistEntity>(schedulersProvider, repository)

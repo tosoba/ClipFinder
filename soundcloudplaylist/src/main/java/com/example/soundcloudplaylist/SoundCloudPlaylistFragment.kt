@@ -20,7 +20,7 @@ import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBind
 import com.squareup.picasso.Picasso
 
 
-class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class.java) {
+class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class) {
 
     private val tracksFragment: SoundCloudTracksFragment
         get() = childFragmentManager.findFragmentById(R.id.sound_cloud_playlist_tracks_fragment) as SoundCloudTracksFragment

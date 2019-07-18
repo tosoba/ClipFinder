@@ -9,10 +9,9 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import javax.inject.Inject
 
 
-class GetFavouriteAlbums @Inject constructor(
+class GetFavouriteAlbums(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<AlbumEntity>>(schedulersProvider) {
@@ -21,7 +20,7 @@ class GetFavouriteAlbums @Inject constructor(
         get() = repository.favouriteAlbums
 }
 
-class InsertAlbum @Inject constructor(
+class InsertAlbum(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
@@ -29,7 +28,7 @@ class InsertAlbum @Inject constructor(
     override fun run(args: AlbumEntity): Completable = repository.insertAlbum(args)
 }
 
-class IsAlbumSaved @Inject constructor(
+class IsAlbumSaved(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<AlbumEntity, Boolean>(schedulersProvider) {
@@ -37,7 +36,7 @@ class IsAlbumSaved @Inject constructor(
     override fun run(args: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(args)
 }
 
-class DeleteAlbum @Inject constructor(
+class DeleteAlbum(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {

@@ -17,9 +17,7 @@ abstract class BaseNavHostFragment : androidx.fragment.app.Fragment() {
     protected abstract val mainFragment: androidx.fragment.app.Fragment
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(layoutId, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

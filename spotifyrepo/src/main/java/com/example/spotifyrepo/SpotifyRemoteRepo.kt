@@ -21,9 +21,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
-import javax.inject.Inject
 
-class SpotifyRemoteRepo @Inject constructor(
+class SpotifyRemoteRepo(
         private val api: SpotifyApi,
         private val accountsApi: SpotifyAccountsApi,
         private val chartsApi: SpotifyChartsApi,

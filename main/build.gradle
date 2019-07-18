@@ -65,11 +65,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    kapt rootProject.ext.daggerCompiler
-    implementation rootProject.ext.dagger
-    implementation rootProject.ext.daggerSupport
-    kapt rootProject.ext.daggerProcessor
-
     implementation rootProject.ext.rxJava
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
@@ -84,4 +79,11 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation "com.github.bumptech.glide:glide:4.7.1"
+
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    testImplementation "org.koin:koin-test:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "org.koin:koin-androidx-ext:$koin_version"
 }

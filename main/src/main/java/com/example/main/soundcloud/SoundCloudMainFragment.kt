@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
@@ -15,15 +16,13 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.main.R
 import com.example.main.databinding.FragmentSoundcloudMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 
-class SoundCloudMainFragment : DaggerFragment(), IMainContentFragment {
+class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard, R.id.sound_cloud_action_favorites)
 

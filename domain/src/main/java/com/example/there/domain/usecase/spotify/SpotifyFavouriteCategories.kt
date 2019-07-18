@@ -9,9 +9,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import javax.inject.Inject
 
-class GetFavouriteCategories @Inject constructor(
+class GetFavouriteCategories(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<CategoryEntity>>(schedulersProvider) {
@@ -20,7 +19,7 @@ class GetFavouriteCategories @Inject constructor(
         get() = repository.favouriteCategories
 }
 
-class InsertCategory @Inject constructor(
+class InsertCategory(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {
@@ -28,7 +27,7 @@ class InsertCategory @Inject constructor(
     override fun run(args: CategoryEntity): Completable = repository.insertCategory(args)
 }
 
-class IsCategorySaved @Inject constructor(
+class IsCategorySaved(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<CategoryEntity, Boolean>(schedulersProvider) {
@@ -36,7 +35,7 @@ class IsCategorySaved @Inject constructor(
     override fun run(args: CategoryEntity): Single<Boolean> = repository.isCategorySaved(args)
 }
 
-class DeleteCategory @Inject constructor(
+class DeleteCategory(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {

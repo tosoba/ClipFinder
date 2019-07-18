@@ -7,9 +7,8 @@ import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
 import io.reactivex.Flowable
 import io.reactivex.functions.Function5
-import javax.inject.Inject
 
-class SpotifyFavouritesViewModel @Inject constructor(
+class SpotifyFavouritesViewModel(
         private val getFavouriteAlbums: GetFavouriteAlbums,
         private val getFavouriteArtists: GetFavouriteArtists,
         private val getFavouriteCategories: GetFavouriteCategories,

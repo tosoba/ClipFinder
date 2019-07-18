@@ -50,13 +50,11 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import com.spotify.sdk.android.player.Error
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 class MainActivity :
-        BaseVMActivity<MainViewModel>(MainViewModel::class.java),
-        HasSupportFragmentInjector,
+        BaseVMActivity<MainViewModel>(MainViewModel::class),
         ConnectionStateCallback,
         SlidingPanelController,
         VideoPlaylistController,
@@ -71,8 +69,7 @@ class MainActivity :
         ToolbarController,
         IntentProvider {
 
-    @Inject
-    lateinit var fragmentFactory: IFragmentFactory
+    private val fragmentFactory: IFragmentFactory by inject()
 
     override val slidingPanel: SlidingUpPanelLayout?
         get() = sliding_layout
@@ -122,8 +119,7 @@ class MainActivity :
         )
     }
 
-    @Inject
-    lateinit var appPreferences: SpotifyPreferences
+    private val appPreferences: SpotifyPreferences by inject()
 
     private var searchViewMenuItem: MenuItem? = null
 
@@ -220,7 +216,7 @@ class MainActivity :
         }
 
         it.isChecked = false
-        main_drawer_layout?.closeDrawer(Gravity.START)
+        main_drawer_layout?.closeDrawer(Gravity.LEFT)
         true
     }
 

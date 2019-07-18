@@ -13,10 +13,9 @@ import com.example.there.domain.usecase.spotify.DeleteCategory
 import com.example.there.domain.usecase.spotify.GetPlaylistsForCategory
 import com.example.there.domain.usecase.spotify.InsertCategory
 import com.example.there.domain.usecase.spotify.IsCategorySaved
-import javax.inject.Inject
 
 
-class CategoryViewModel @Inject constructor(
+class CategoryViewModel(
         private val getPlaylistsForCategory: GetPlaylistsForCategory,
         private val insertCategory: InsertCategory,
         private val deleteCategory: DeleteCategory,

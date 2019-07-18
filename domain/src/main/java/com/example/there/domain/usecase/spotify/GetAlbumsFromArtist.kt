@@ -6,9 +6,8 @@ import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import com.example.there.domain.usecase.base.ObservableUseCaseWithArgs
 import io.reactivex.Observable
-import javax.inject.Inject
 
-class GetAlbumsFromArtist @Inject constructor(
+class GetAlbumsFromArtist(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: ISpotifyRemoteDataStore
 ) : ObservableUseCaseWithArgs<String, Resource<List<AlbumEntity>>>(schedulersProvider) {

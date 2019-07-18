@@ -1,4 +1,4 @@
-package com.example.there.findclips.di.module
+package com.example.there.findclips.module
 
 import com.example.there.domain.usecase.spotify.*
 import org.koin.dsl.module
@@ -24,11 +24,6 @@ val spotifyModule = module {
     factory { GetSimilarTracks(get(), get()) }
     factory { GetTopTracksFromArtist(get(), get()) }
     factory { GetTracksFromAlbum(get(), get()) }
-
-    factory { GetFavouriteAlbums(get(), get()) }
-    factory { InsertAlbum(get(), get()) }
-    factory { IsAlbumSaved(get(), get()) }
-    factory { DeleteAlbum(get(), get()) }
 
     factory { GetFavouriteAlbums(get(), get()) }
     factory { InsertAlbum(get(), get()) }

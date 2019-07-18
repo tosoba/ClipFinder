@@ -30,9 +30,9 @@ import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class.java),
+class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class),
         ISpotifyPlayerFragment,
         Player.NotificationCallback,
         Player.OperationCallback {
@@ -59,8 +59,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     override val isPlayerInitialized: Boolean
         get() = spotifyPlayer?.isInitialized == true
 
-    @Inject
-    lateinit var applicationContext: Context
+    private val applicationContext: Context by inject()
 
     private var spotifyPlayer: SpotifyPlayer? = null
 

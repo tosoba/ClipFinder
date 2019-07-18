@@ -6,9 +6,8 @@ import com.example.there.domain.repo.videos.IVideosDbDataStore
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
-import javax.inject.Inject
 
-class SearchVideos @Inject constructor(
+class SearchVideos(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: IVideosRemoteDataStore,
         private val local: IVideosDbDataStore

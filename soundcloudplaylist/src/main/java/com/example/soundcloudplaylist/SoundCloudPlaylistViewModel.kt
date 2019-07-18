@@ -6,9 +6,8 @@ import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.GetTracks
 import com.example.there.domain.usecase.soundcloud.GetTracksFromPlaylist
-import javax.inject.Inject
 
-class SoundCloudPlaylistViewModel @Inject constructor(
+class SoundCloudPlaylistViewModel(
         private val getTracksFromPlaylist: GetTracksFromPlaylist,
         private val getTracks: GetTracks
 ) : BasePlaylistViewModel<SoundCloudTrack>() {

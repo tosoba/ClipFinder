@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.navigationDrawerController
@@ -17,7 +18,7 @@ import com.example.spotifyaccount.top.AccountTopFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_account.*
 
-class AccountFragment : androidx.fragment.app.Fragment(), HasMainToolbar {
+class AccountFragment : Fragment(), HasMainToolbar {
 
     override val toolbar: Toolbar
         get() = account_toolbar
@@ -43,11 +44,10 @@ class AccountFragment : androidx.fragment.app.Fragment(), HasMainToolbar {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentAccountBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account, container, false)
+        val binding: FragmentAccountBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_account, container, false)
         return binding.apply {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)

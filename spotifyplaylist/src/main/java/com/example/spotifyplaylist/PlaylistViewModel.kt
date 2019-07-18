@@ -12,9 +12,8 @@ import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.GetPlaylistTracks
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
-import javax.inject.Inject
 
-class PlaylistViewModel @Inject constructor(
+class PlaylistViewModel(
         private val getPlaylistTracks: GetPlaylistTracks,
         private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
         private val deleteSpotifyPlaylist: DeleteSpotifyPlaylist,

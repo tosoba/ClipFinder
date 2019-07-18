@@ -7,9 +7,8 @@ import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopTracks
-import javax.inject.Inject
 
-class AccountTopViewModel @Inject constructor(
+class AccountTopViewModel(
         private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
         private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists
 ) : BaseViewModel() {

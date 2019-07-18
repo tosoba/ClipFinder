@@ -18,9 +18,9 @@ import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class.java) {
+class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class) {
 
     private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
 
@@ -52,8 +52,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
 
     private val disposablesComponent = DisposablesComponent()
 
-    @Inject
-    lateinit var appPreferences: SpotifyPreferences
+    private val appPreferences: SpotifyPreferences by inject()
 
     private val playlistsFragment: SpotifyPlaylistsFragment?
         get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as? SpotifyPlaylistsFragment
