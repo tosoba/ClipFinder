@@ -1,7 +1,6 @@
 package com.example.there.findclips.module
 
 import com.example.main.MainViewModel
-import com.example.soundclouddashboard.SoundCloudDashboardViewModel
 import com.example.soundcloudplaylist.SoundCloudPlaylistViewModel
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import com.example.spotifyaccount.playlist.AccountPlaylistsViewModel
@@ -43,7 +42,6 @@ val viewModelsModule = module {
     viewModel { SpotifyPlayerViewModel() }
     viewModel { RelatedVideosViewModel(get(), get()) }
     viewModel { YoutubePlayerViewModel() }
-    viewModel { SoundCloudDashboardViewModel(get()) }
     viewModel { SoundCloudPlaylistViewModel(get(), get()) }
     viewModel { SoundCloudTrackVideosViewModel(get(), get(), get(), get()) }
 }

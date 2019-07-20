@@ -7,13 +7,11 @@
             type="com.example.main.soundcloud.SoundCloudMainView" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1"
         tools:context=".soundcloud.SoundCloudMainFragment">
 
         <androidx.viewpager.widget.ViewPager
@@ -21,8 +19,7 @@
             offScreenPageLimit="@{fragmentView.offScreenPageLimit}"
             onPageChangeListener="@{fragmentView.onPageChangeListener}"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:adapter="@{fragmentView.pagerAdapter}"
             android:background="@drawable/sound_cloud_background_gradient" />
 
@@ -31,14 +28,12 @@
             onNavigationItemSelectedListener="@{fragmentView.onNavigationItemSelectedListener}"
             android:layout_width="match_parent"
             android:layout_height="52dp"
+            android:layout_gravity="bottom"
             android:background="@color/colorPrimaryDark"
             app:itemIconTint="@color/sound_cloud_bottom_navigation_color"
             app:itemTextColor="@color/sound_cloud_bottom_navigation_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sound_cloud_view_pager"
+            app:layout_behavior="com.example.coreandroid.view.behavior.BottomNavLayoutBehavior"
             app:menu="@menu/sound_cloud_bottom_navigation" />
 
-    </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

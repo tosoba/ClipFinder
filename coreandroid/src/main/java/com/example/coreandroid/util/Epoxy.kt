@@ -1,77 +1,83 @@
 package com.example.coreandroid.util
 
 import android.os.Handler
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import android.view.ViewGroup
 import com.airbnb.epoxy.*
-import com.airbnb.epoxy.EpoxyController
-import com.airbnb.epoxy.TypedEpoxyController
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.BaseMvRxViewModel
+import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.withState
+import com.example.coreandroid.base.vm.MvRxViewModel
 
-open class EpoxyController(
-        val buildModelsCallback: EpoxyController.() -> Unit = {}
-) : AsyncEpoxyController() {
-    override fun buildModels() = buildModelsCallback()
-}
 
-open class TypedEpoxyController<State>(
-        val buildModelsCallback: EpoxyController.(state: State) -> Unit = {}
-) : TypedEpoxyController<State>() {
-    override fun buildModels(data: State) = buildModelsCallback(data)
-}
-
-open class AsyncTypedEpoxyController<State>(
-        diffingHandler: Handler,
-        modelBuildingHandler: Handler,
-        val buildModelsCallback: EpoxyController.(state: State) -> Unit = {}
-) : TypedEpoxyController<State>(modelBuildingHandler, diffingHandler) {
-
-    override fun buildModels(data: State) {
-        buildModelsCallback(data)
+fun BaseMvRxFragment.simpleController(
+        build: EpoxyController.() -> Unit
+) = object : AsyncEpoxyController() {
+    override fun buildModels() {
+        if (view == null || isRemoving) return
+        build()
     }
 }
 
-fun <State> Fragment.typedEpoxyController(
-        liveState: LiveData<State>,
-        buildModels: EpoxyController.(State) -> Unit
-) = TypedEpoxyController<State> {
-    if (view == null || isRemoving) return@TypedEpoxyController
-    liveState.observe(this@typedEpoxyController, Observer { buildModels(it) })
+fun <S : MvRxState, A : MvRxViewModel<S>> BaseMvRxFragment.simpleController(
+        viewModel: A, buildModels: EpoxyController.(state: S) -> Unit
+) = object : AsyncEpoxyController() {
+    override fun buildModels() {
+        if (view == null || isRemoving) return
+        withState(viewModel) { state ->
+            buildModels(state)
+        }
+    }
 }
 
-fun Fragment.simpleController(
-        buildModels: EpoxyController.() -> Unit
-) = EpoxyController {
-    // Models are built asynchronously, so it is possible that this is called after the fragment
-    // is detached under certain race conditions.
-    if (view == null || isRemoving) return@EpoxyController
-    buildModels()
+fun <S : MvRxState, A : MvRxViewModel<S>> BaseMvRxFragment.asyncController(
+        modelBuildingHandler: Handler, diffingHandler: Handler,
+        viewModel: A, build: EpoxyController.(state: S) -> Unit
+) = object : TypedEpoxyController<S>(modelBuildingHandler, diffingHandler) {
+    override fun buildModels(data: S) {
+        if (view == null || isRemoving) return
+        withState(viewModel) { state ->
+            build(state)
+        }
+    }
 }
 
-fun <State> Fragment.asyncTypedEpoxyController(
-        modelBuildingHandler: Handler,
-        diffingHandler: Handler,
-        liveState: LiveData<State>,
-        buildModels: EpoxyController.(state: State) -> Unit
-) = AsyncTypedEpoxyController<State>(modelBuildingHandler, diffingHandler) {
-    if (view == null || isRemoving) return@AsyncTypedEpoxyController
-    liveState.observe(this@asyncTypedEpoxyController, Observer { buildModels(it) })
+fun <A : BaseMvRxViewModel<B>, B : MvRxState, C : BaseMvRxViewModel<D>, D : MvRxState> BaseMvRxFragment.simpleController(
+        viewModel1: A, viewModel2: C,
+        buildUsing: EpoxyController.(state1: B, state2: D) -> Unit
+) = object : AsyncEpoxyController() {
+    override fun buildModels() {
+        if (view == null || isRemoving) return
+        withState(viewModel1, viewModel2) { state1, state2 ->
+            buildUsing(state1, state2)
+        }
+    }
 }
 
-inline fun EpoxyController.carousel(modelInitializer: CarouselModelBuilder.() -> Unit) {
-    CarouselModel_().apply { modelInitializer() }.addTo(this)
+class NestedScrollingCarouselModel : CarouselModel_() {
+    override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
+        isNestedScrollingEnabled = false
+    }
+}
+
+inline fun EpoxyController.carousel(
+        modelInitializer: CarouselModelBuilder.() -> Unit
+) {
+    NestedScrollingCarouselModel()
+            .apply {
+                modelInitializer()
+            }
+            .addTo(this)
 }
 
 inline fun <T> CarouselModelBuilder.withModelsFrom(
-        items: List<T>,
-        modelBuilder: (T) -> EpoxyModel<*>
+        items: List<T>, modelBuilder: (T) -> EpoxyModel<*>
 ) {
     models(items.map { modelBuilder(it) })
 }
 
 inline fun <T, R> CarouselModelBuilder.withModelsFrom(
-        items: Map<T, R>,
-        modelBuilder: (T, R) -> EpoxyModel<*>
+        items: Map<T, R>, modelBuilder: (T, R) -> EpoxyModel<*>
 ) {
     models(items.map { (key, value) -> modelBuilder(key, value) })
 }
