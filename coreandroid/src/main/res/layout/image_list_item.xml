@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="foregroundDrawableId"
+            type="Integer" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
+
+        <variable
+            name="errorDrawableId"
+            type="Integer" />
+
+        <variable
+            name="fallbackDrawableId"
+            type="Integer" />
+
+        <variable
+            name="loadingDrawableId"
+            type="Integer" />
+
+        <variable
+            name="label"
+            type="String" />
+
+        <variable
+            name="itemClicked"
+            type="android.view.View.OnClickListener" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        foregroundDrawable="@{foregroundDrawableId}"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginBottom="6dp"
+        android:clickable="@{itemClicked != null}"
+        android:onClick="@{itemClicked}">
+
+        <ImageView
+            glideImage="@{imageUrl}"
+            glideImageError="@{errorDrawableId}"
+            glideImageFallback="@{fallbackDrawableId}"
+            glideImageLoading="@{loadingDrawableId}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_dark_gradient" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="5dp"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="8"
+            android:text="@{label}"
+            android:textAlignment="center"
+            android:textColor="@android:color/white" />
+
+    </FrameLayout>
+</layout>

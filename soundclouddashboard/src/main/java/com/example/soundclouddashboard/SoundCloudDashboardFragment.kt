@@ -7,20 +7,19 @@ import androidx.appcompat.widget.Toolbar
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.example.coreandroid.NamedImageListItemBindingModel_
+import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.headerItem
 import com.example.coreandroid.lifecycle.ConnectivityComponent
+import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
+import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
-import com.example.coreandroid.util.ext.appCompatActivity
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
-import com.example.coreandroid.util.ext.navigationDrawerController
-import com.example.coreandroid.util.ext.showDrawerHamburger
+import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
@@ -31,7 +30,6 @@ import org.koin.core.qualifier.named
 
 class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
-    //TODO: navigation
     private val fragmentFactory: IFragmentFactory by inject()
 
     private val viewModel: SoundCloudDashboardViewModel by fragmentViewModel()
@@ -58,7 +56,9 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         asyncController(builder, differ, viewModel) { state ->
             when (state.playlists.status) {
                 is Loading -> {
-                    //TODO loading indicator
+                    loadingIndicator {
+                        id("loading-indicator")
+                    }
                 }
 
                 is LoadedSuccessfully -> {
@@ -71,10 +71,20 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("playlists")
                         withModelsFrom(state.playlists.value.regular.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                // TODO: replace this with a better layout (maybe check MoonShot for a good example)
-                                NamedImageListItemBindingModel_()
+                                ImageListItemBindingModel_()
                                         .id(playlist.id)
-                                        .imageListItem(playlist)
+                                        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+                                        .imageUrl(playlist.artworkUrl)
+                                        .errorDrawableId(R.drawable.error_placeholder)
+                                        .fallbackDrawableId(R.drawable.playlist_placeholder)
+                                        .loadingDrawableId(R.drawable.playlist_placeholder)
+                                        .label(playlist.name)
+                                        .itemClicked(View.OnClickListener {
+                                            navHostFragment?.showFragment(
+                                                    fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
+                                                    true
+                                            )
+                                        })
                             })
                         }
                     }
@@ -88,16 +98,31 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("system-playlists")
                         withModelsFrom(state.playlists.value.system.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                NamedImageListItemBindingModel_()
+                                ImageListItemBindingModel_()
                                         .id(playlist.id)
-                                        .imageListItem(playlist)
+                                        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+                                        .imageUrl(playlist.artworkUrl)
+                                        .errorDrawableId(R.drawable.error_placeholder)
+                                        .fallbackDrawableId(R.drawable.playlist_placeholder)
+                                        .loadingDrawableId(R.drawable.playlist_placeholder)
+                                        .label(playlist.name)
+                                        .itemClicked(View.OnClickListener {
+                                            navHostFragment?.showFragment(
+                                                    fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
+                                                    true
+                                            )
+                                        })
                             })
                         }
                     }
                 }
 
                 is LoadingFailed<*> -> {
-                    //TODO (info about error and reload button - one for both system and regular playlists)
+                    reloadControl {
+                        id("reload-control")
+                        onReloadClicked(View.OnClickListener { viewModel.loadPlaylists() })
+                        message("Error occurred lmao") //TODO: better error msg
+                    }
                 }
             }
         }

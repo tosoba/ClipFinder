@@ -4,6 +4,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions
 import com.example.coreandroid.R
 import com.example.coreandroid.view.imageview.ImageViewSrc
@@ -51,3 +53,41 @@ fun bindOnClick(
         view: ImageView,
         onClickListener: View.OnClickListener?
 ) = onClickListener?.let { view.setOnClickListener(it) } ?: Unit
+
+@BindingAdapter(
+        "glideImage",
+        "glideImageError",
+        "glideImageFallback",
+        "glideImageLoading",
+        "glideCircleCrop",
+        requireAll = false
+)
+fun loadImage(
+        view: ImageView,
+        glideImage: String?,
+        glideImageError: Int?,
+        glideImageFallback: Int?,
+        glideImageLoading: Int?,
+        glideCircleCrop: Boolean?
+) {
+    Glide.with(view)
+            .load(glideImage)
+            .transition(withCrossFade())
+            .run {
+                glideImageError?.let { error(it) } ?: this
+            }
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .run {
+                glideImageFallback?.let { fallback(it) } ?: this
+            }
+            .apply(RequestOptions()
+                    .fitCenter()
+                    .run {
+                        glideImageLoading?.let { placeholder(it) } ?: this
+                    }
+            )
+            .apply {
+                if (glideCircleCrop == true) circleCrop()
+                into(view)
+            }
+}

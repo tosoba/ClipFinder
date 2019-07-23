@@ -60,13 +60,9 @@ class NestedScrollingCarouselModel : CarouselModel_() {
     }
 }
 
-inline fun EpoxyController.carousel(
-        modelInitializer: CarouselModelBuilder.() -> Unit
-) {
+inline fun EpoxyController.carousel(modelInitializer: CarouselModelBuilder.() -> Unit) {
     NestedScrollingCarouselModel()
-            .apply {
-                modelInitializer()
-            }
+            .apply(modelInitializer)
             .addTo(this)
 }
 

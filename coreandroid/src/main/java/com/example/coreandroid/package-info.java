@@ -13,7 +13,10 @@
                 R2.layout.track_popularity_item,
                 R2.layout.video_item,
                 R2.layout.video_playlist_item,
-                R2.layout.video_thumbnails_playlist_item
+                R2.layout.video_thumbnails_playlist_item,
+                R2.layout.loading_indicator,
+                R2.layout.reload_control,
+                R2.layout.image_list_item
         }
 )
 package com.example.coreandroid;
