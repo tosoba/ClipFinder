@@ -7,6 +7,7 @@ interface HoldsData<Value> {
         get() = status is LoadingFailed<*>
     val copyWithLoadingInProgress: HoldsData<Value>
     fun copyWithError(throwable: Throwable?): HoldsData<Value>
+    fun success(value: Value): HoldsData<Value>
 }
 
 inline fun <Holder : HoldsData<Value>, Value> Holder.ifNotLoading(block: (Holder) -> Unit) {
@@ -25,12 +26,15 @@ data class Data<Value>(
         override val value: Value,
         override val status: DataStatus = Initial
 ) : HoldsData<Value> {
+
     override val copyWithLoadingInProgress: Data<Value>
         get() = copy(status = Loading)
 
     override fun copyWithError(throwable: Throwable?): Data<Value> = copy(
             status = LoadingFailed(throwable)
     )
+
+    override fun success(value: Value): Data<Value> = Data(value, LoadedSuccessfully)
 
     fun copyWithNewValue(value: Value): Data<Value> = copy(
             value = value,
@@ -63,6 +67,8 @@ data class DataList<Value>(
             status = LoadingFailed(throwable)
     )
 
+    override fun success(value: List<Value>): DataList<Value> = DataList(value, LoadedSuccessfully)
+
     fun copyWithNewItems(newItems: List<Value>): DataList<Value> = copy(
             value = value + newItems,
             status = LoadedSuccessfully
@@ -82,6 +88,8 @@ data class PagedDataList<Value>(
     override fun copyWithError(throwable: Throwable?): PagedDataList<Value> = copy(
             status = LoadingFailed(throwable)
     )
+
+    override fun success(value: List<Value>): DataList<Value> = throw IllegalStateException("TODOLOL") //TODO
 
     fun copyWithNewItems(
             newItems: List<Value>, offset: Int

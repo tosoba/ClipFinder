@@ -2,8 +2,7 @@ package com.example.coreandroid.base.vm
 
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
-import com.example.coreandroid.model.Data
-import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.HoldsData
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import kotlin.reflect.KProperty
@@ -12,15 +11,16 @@ open class MvRxViewModel<S : MvRxState>(
         initialState: S, debugMode: Boolean = false
 ) : BaseMvRxViewModel<S>(initialState, debugMode) {
 
-    fun <T> Single<T>.update(
-            getter: KProperty<Data<T>>,
+    @Suppress("UNCHECKED_CAST")
+    protected fun <T, D : HoldsData<T>> Single<T>.update(
+            getter: KProperty<D>,
             onError: (Throwable) -> Unit = {},
-            stateReducer: S.(Data<T>) -> S
+            stateReducer: S.(D) -> S
     ): Disposable {
-        setState { stateReducer(getter.call().copyWithLoadingInProgress) }
-        return map { Data(it, LoadedSuccessfully) }
-                .doOnError { setState { stateReducer(getter.call().copyWithError(it)) } }
-                .subscribe({ data -> setState { stateReducer(data) } }, onError)
+        setState { stateReducer(getter.call().copyWithLoadingInProgress as D) }
+        return map { getter.call().success(it) }
+                .doOnError { setState { stateReducer(getter.call().copyWithError(it) as D) } }
+                .subscribe({ data -> setState { stateReducer(data as D) } }, onError)
                 .disposeOnClear()
     }
 }
