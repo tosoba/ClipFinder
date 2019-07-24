@@ -33,6 +33,9 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
         SpotifyDashboardViewModel::class
 ), HasMainToolbar {
 
+    //TODO: make the layout with carousels like in soundcloud dashboard
+    // try to add a loading item as a last item in withModelsFrom when list is not empty and loading is in progress
+
     private val fragmentFactory: IFragmentFactory by inject()
 
     override val toolbar: Toolbar
@@ -69,7 +72,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<Playlist>(viewModel.viewState.featuredPlaylists) {
                             override val itemViewBinder: ItemBinder<Playlist>
-                                get() = ItemBinderBase(BR.playlist,  com.example.coreandroid.R.layout.playlist_item)
+                                get() = ItemBinderBase(BR.playlist, com.example.coreandroid.R.layout.playlist_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(fragmentFactory.newSpotifyPlaylistFragment(playlist = it), true)
@@ -84,7 +87,7 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
                         ),
                         object : ListItemView<TopTrack>(viewModel.viewState.topTracks) {
                             override val itemViewBinder: ItemBinder<TopTrack>
-                                get() = ItemBinderBase(BR.track,  com.example.coreandroid.R.layout.top_track_item)
+                                get() = ItemBinderBase(BR.track, com.example.coreandroid.R.layout.top_track_item)
                         },
                         ClickHandler {
                             navHostFragment?.showFragment(

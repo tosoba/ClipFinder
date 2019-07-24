@@ -8,6 +8,7 @@ import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.example.coreandroid.base.vm.MvRxViewModel
+import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 
 
 fun BaseMvRxFragment.simpleController(
@@ -54,14 +55,36 @@ fun <A : BaseMvRxViewModel<B>, B : MvRxState, C : BaseMvRxViewModel<D>, D : MvRx
     }
 }
 
-class NestedScrollingCarouselModel : CarouselModel_() {
+open class NestedScrollingCarouselModel : CarouselModel_() {
     override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
         isNestedScrollingEnabled = false
     }
 }
 
+class InfiniteNestedScrollingCarouselModel(
+        private val visibleThreshold: Int = 5,
+        private val minItemsBeforeLoadingMore: Int = 0,
+        private val onLoadMore: () -> Unit
+) : NestedScrollingCarouselModel() {
+    override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
+        addOnScrollListener(object : EndlessRecyclerOnScrollListener(visibleThreshold, minItemsBeforeLoadingMore) {
+            override fun onLoadMore() = this@InfiniteNestedScrollingCarouselModel.onLoadMore()
+        })
+    }
+}
+
 inline fun EpoxyController.carousel(modelInitializer: CarouselModelBuilder.() -> Unit) {
     NestedScrollingCarouselModel()
+            .apply(modelInitializer)
+            .addTo(this)
+}
+
+inline fun EpoxyController.infiniteCarousel(
+        visibleThreshold: Int = 5,
+        minItemsBeforeLoadingMore: Int = 0,
+        noinline onLoadMore: () -> Unit,
+        modelInitializer: CarouselModelBuilder.() -> Unit) {
+    InfiniteNestedScrollingCarouselModel(visibleThreshold, minItemsBeforeLoadingMore, onLoadMore)
             .apply(modelInitializer)
             .addTo(this)
 }
