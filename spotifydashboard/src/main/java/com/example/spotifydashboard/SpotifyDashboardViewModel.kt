@@ -26,10 +26,6 @@ class SpotifyDashboardViewModel(
 ) : MvRxViewModel<SpotifyDashboardViewState>(initialState) {
 
     init {
-        loadData()
-    }
-
-    fun loadData() {
         loadCategories()
         loadFeaturedPlaylists()
         loadDailyViralTracks()
@@ -45,7 +41,7 @@ class SpotifyDashboardViewModel(
                     categories.map(CategoryEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(state::categories) { copy(categories = it) }
+                .updateWithResource(current { categories }) { copy(categories = it) }
     }
 
 
@@ -57,7 +53,7 @@ class SpotifyDashboardViewModel(
                     playlists.map(PlaylistEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(state::featuredPlaylists) { copy(featuredPlaylists = it) }
+                .updateWithResource(current { featuredPlaylists }) { copy(featuredPlaylists = it) }
     }
 
     //TODO: test if sorting works (probably not)
@@ -70,7 +66,7 @@ class SpotifyDashboardViewModel(
                             .sortedBy { it.position }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(state::topTracks) { copy(topTracks = it) }
+                .updateWithResource(current { topTracks }) { copy(topTracks = it) }
     }
 
     fun loadNewReleases() = withState { state ->
@@ -78,7 +74,7 @@ class SpotifyDashboardViewModel(
             getNewReleases(applySchedulers = false, args = state.newReleases.offset)
                     .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                     .subscribeOn(Schedulers.io())
-                    .updateWithPagedResource(state::newReleases) { copy(newReleases = it) }
+                    .updateWithPagedResource(current { newReleases }) { copy(newReleases = it) }
         }
     }
 

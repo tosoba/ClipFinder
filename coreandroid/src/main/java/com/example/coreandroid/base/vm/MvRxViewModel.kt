@@ -2,6 +2,7 @@ package com.example.coreandroid.base.vm
 
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.withState
 import com.example.core.model.Resource
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
@@ -10,57 +11,58 @@ import com.example.there.domain.entity.ListPage
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import kotlin.reflect.KProperty
 
 open class MvRxViewModel<S : MvRxState>(
         initialState: S, debugMode: Boolean = false
 ) : BaseMvRxViewModel<S>(initialState, debugMode) {
 
     protected fun <T> Single<T>.update(
-            getter: KProperty<Data<T>>,
+            current: () -> Data<T>,
             onError: (Throwable) -> Unit = {},
             stateReducer: S.(Data<T>) -> S
     ): Disposable {
-        setState { stateReducer(getter.call().copyWithLoadingInProgress) }
-        return map { getter.call().success(it) }
-                .doOnError { setState { stateReducer(getter.call().copyWithError(it)) } }
+        setState { stateReducer(current().copyWithLoadingInProgress) }
+        return map { current().copyWithNewValue(it) }
+                .doOnError { setState { stateReducer(current().copyWithError(it)) } }
                 .subscribe({ data -> setState { stateReducer(data) } }, onError)
                 .disposeOnClear()
     }
 
     protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
-            getter: KProperty<PagedDataList<T>>,
+            current: () -> PagedDataList<T>,
             onError: (Throwable) -> Unit = {},
             stateReducer: S.(PagedDataList<T>) -> S
     ): Disposable {
-        setState { stateReducer(getter.call().copyWithLoadingInProgress) }
+        setState { stateReducer(current().copyWithLoadingInProgress) }
         return map {
             when (it) {
-                is Resource.Success -> getter.call().copyWithNewItems(
+                is Resource.Success -> current().copyWithNewItems(
                         it.data.items, it.data.offset, it.data.totalItems
                 )
-                is Resource.Error<ListPage<T>, *> ->
-                    getter.call().copyWithError(it.error)
+                is Resource.Error<ListPage<T>, *> -> current().copyWithError(it.error)
             }
-        }.doOnError { setState { stateReducer(getter.call().copyWithError(it)) } }
+        }.doOnError { setState { stateReducer(current().copyWithError(it)) } }
                 .subscribe({ data -> setState { stateReducer(data) } }, onError)
                 .disposeOnClear()
     }
 
-    @Suppress("UNCHECKED_CAST")
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
-            getter: KProperty<DataList<T>>,
+            current: () -> DataList<T>,
             onError: (Throwable) -> Unit = {},
             stateReducer: S.(DataList<T>) -> S
     ): Disposable {
-        setState { stateReducer(getter.call().copyWithLoadingInProgress) }
+        setState { stateReducer(current().copyWithLoadingInProgress) }
         return map {
             when (it) {
-                is Resource.Success -> getter.call().copyWithNewItems(it.data)
-                is Resource.Error<List<T>, *> -> getter.call().copyWithError(it.error)
+                is Resource.Success -> current().copyWithNewItems(it.data)
+                is Resource.Error<List<T>, *> -> current().copyWithError(it.error)
             }
-        }.doOnError { setState { stateReducer(getter.call().copyWithError(it)) } }
+        }.doOnError { setState { stateReducer(current().copyWithError(it)) } }
                 .subscribe({ data -> setState { stateReducer(data) } }, onError)
                 .disposeOnClear()
+    }
+
+    protected inline fun <T> current(crossinline mapper: S.() -> T): () -> T = {
+        withState(this) { it.mapper() }
     }
 }

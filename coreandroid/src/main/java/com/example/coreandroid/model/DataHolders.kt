@@ -4,11 +4,11 @@ package com.example.coreandroid.model
 interface HoldsData<Value> {
     val value: Value
     val status: DataStatus
+    val copyWithLoadingInProgress: HoldsData<Value>
     val loadingFailed: Boolean
         get() = status is LoadingFailed<*>
-    val copyWithLoadingInProgress: HoldsData<Value>
+
     fun <E> copyWithError(error: E): HoldsData<Value>
-    fun success(value: Value): HoldsData<Value>
 }
 
 inline fun <Holder : HoldsData<Value>, Value> Holder.ifNotLoading(block: (Holder) -> Unit) {
@@ -35,31 +35,27 @@ data class Data<Value>(
             status = LoadingFailed(error)
     )
 
-    override fun success(value: Value): Data<Value> = Data(value, LoadedSuccessfully)
-
     fun copyWithNewValue(value: Value): Data<Value> = copy(
             value = value,
             status = LoadedSuccessfully
     )
 }
 
-interface HoldsDataList<Value> : HoldsData<List<Value>> {
-    val isEmptyAndLastLoadingFailed: Boolean
-        get() = loadingFailed && value.isEmpty()
-}
+fun <Data : HoldsData<Collection<Value>>, Value> Data.isEmptyAndLastLoadingFailed(): Boolean = loadingFailed && value.isEmpty()
 
-inline fun <Data : HoldsDataList<Value>, Value> Data.ifEmptyAndIsNotLoading(block: (Data) -> Unit) {
+
+inline fun <Data : HoldsData<Collection<Value>>, Value> Data.ifEmptyAndIsNotLoading(block: (Data) -> Unit) {
     if (status !is Loading && value.isEmpty()) block(this)
 }
 
-inline fun <Data : HoldsDataList<Item>, Item> Data.ifNotEmpty(block: (Data) -> Unit) {
+inline fun <Data : HoldsData<Collection<Item>>, Item> Data.ifNotEmpty(block: (Data) -> Unit) {
     if (value.isNotEmpty()) block(this)
 }
 
 data class DataList<Value>(
-        override val value: List<Value> = emptyList(),
+        override val value: Collection<Value> = emptyList(),
         override val status: DataStatus = Initial
-) : HoldsDataList<Value> {
+) : HoldsData<Collection<Value>> {
 
     override val copyWithLoadingInProgress: DataList<Value>
         get() = copy(status = Loading)
@@ -68,20 +64,18 @@ data class DataList<Value>(
             status = LoadingFailed(error)
     )
 
-    override fun success(value: List<Value>): DataList<Value> = DataList(value, LoadedSuccessfully)
-
-    fun copyWithNewItems(newItems: List<Value>): DataList<Value> = copy(
+    fun copyWithNewItems(newItems: Collection<Value>): DataList<Value> = copy(
             value = value + newItems,
             status = LoadedSuccessfully
     )
 }
 
 data class PagedDataList<Value>(
-        override val value: List<Value> = emptyList(),
+        override val value: Collection<Value> = emptyList(),
         override val status: DataStatus = Initial,
         val offset: Int = 0,
         val totalItems: Int = Integer.MAX_VALUE
-) : HoldsDataList<Value> {
+) : HoldsData<Collection<Value>> {
 
     override val copyWithLoadingInProgress: PagedDataList<Value>
         get() = copy(status = Loading)
@@ -90,14 +84,8 @@ data class PagedDataList<Value>(
             status = LoadingFailed(error)
     )
 
-    override fun success(value: List<Value>): PagedDataList<Value> = throw IllegalStateException("TODOLOL") //TODO
-
-    fun success(
-            value: List<Value>, offset: Int, totalItems: Int
-    ): PagedDataList<Value> = PagedDataList(value, LoadedSuccessfully, offset, totalItems)
-
     fun copyWithNewItems(
-            newItems: List<Value>, offset: Int
+            newItems: Collection<Value>, offset: Int
     ): PagedDataList<Value> = copy(
             value = value + newItems,
             offset = offset,
@@ -105,7 +93,7 @@ data class PagedDataList<Value>(
     )
 
     fun copyWithNewItems(
-            newItems: List<Value>, offset: Int, totalItems: Int
+            newItems: Collection<Value>, offset: Int, totalItems: Int
     ): PagedDataList<Value> = copy(
             value = value + newItems,
             offset = offset,

@@ -167,10 +167,11 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
                 is LoadedSuccessfully -> carousel {
                     id("tracks")
-                    withModelsFrom(state.topTracks.value) {
+                    //TODO: navigation
+                    withModelsFrom(state.topTracks.value) { topTrack ->
                         TopTrackItemBindingModel_()
-                                .id(it.track.id)
-                                .track(it)
+                                .id(topTrack.track.id)
+                                .track(topTrack)
                     }
                 }
 

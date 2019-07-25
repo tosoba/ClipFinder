@@ -90,7 +90,7 @@ inline fun EpoxyController.infiniteCarousel(
 }
 
 inline fun <T> CarouselModelBuilder.withModelsFrom(
-        items: List<T>, modelBuilder: (T) -> EpoxyModel<*>
+        items: Collection<T>, modelBuilder: (T) -> EpoxyModel<*>
 ) {
     models(items.map { modelBuilder(it) })
 }
