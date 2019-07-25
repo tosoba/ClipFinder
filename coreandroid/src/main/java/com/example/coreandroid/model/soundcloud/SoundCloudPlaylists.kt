@@ -1,6 +1,8 @@
 package com.example.coreandroid.model.soundcloud
 
 import android.os.Parcelable
+import android.view.View
+import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.R
 import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
 import com.example.coreandroid.view.imageview.ImageViewSrc
@@ -38,6 +40,18 @@ data class SoundCloudPlaylist(
         get() = super.name
 }
 
+fun SoundCloudPlaylist.listItem(
+        itemClicked: () -> Unit
+): ImageListItemBindingModel_ = ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+        .imageUrl(artworkUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.playlist_placeholder)
+        .loadingDrawableId(R.drawable.playlist_placeholder)
+        .label(name)
+        .itemClicked(View.OnClickListener { itemClicked() })
+
 @Parcelize
 data class SoundCloudSystemPlaylist(
         override val artworkUrl: String?,
@@ -51,4 +65,16 @@ data class SoundCloudSystemPlaylist(
     override val name: String
         get() = super.name
 }
+
+fun SoundCloudSystemPlaylist.listItem(
+        itemClicked: () -> Unit
+): ImageListItemBindingModel_ = ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+        .imageUrl(artworkUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.playlist_placeholder)
+        .loadingDrawableId(R.drawable.playlist_placeholder)
+        .label(name)
+        .itemClicked(View.OnClickListener { itemClicked() })
 

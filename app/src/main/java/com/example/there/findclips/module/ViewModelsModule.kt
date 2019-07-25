@@ -9,7 +9,6 @@ import com.example.spotifyaccount.top.AccountTopViewModel
 import com.example.spotifyalbum.AlbumViewModel
 import com.example.spotifyartist.ArtistViewModel
 import com.example.spotifycategory.CategoryViewModel
-import com.example.spotifydashboard.SpotifyDashboardViewModel
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
 import com.example.spotifyplayer.SpotifyPlayerViewModel
 import com.example.spotifyplaylist.PlaylistViewModel
@@ -30,7 +29,6 @@ val viewModelsModule = module {
     viewModel { CategoryViewModel(get(), get(), get(), get()) }
     viewModel { PlaylistViewModel(get(), get(), get(), get()) }
     viewModel { TrackVideosViewModel(get(), get(), get()) }
-    viewModel { SpotifyDashboardViewModel(get(), get(), get(), get()) }
     viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get(), get()) }
     viewModel { VideosFavouritesViewModel(get(), get()) }
     viewModel { SpotifySearchViewModel(get()) }

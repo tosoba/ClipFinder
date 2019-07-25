@@ -1,14 +1,5 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="dashboardView"
-            type="com.example.spotifydashboard.SpotifyDashboardView" />
-    </data>
-
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -35,15 +26,11 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <com.airbnb.epoxy.EpoxyRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/dashboard_recycler_view"
-            hasFixedSize="@{true}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adapter="@{dashboardView.dashboardAdapter}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".spotify.dashboard.SpotifyDashboardFragment" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 

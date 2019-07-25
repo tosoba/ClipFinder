@@ -90,7 +90,11 @@ data class PagedDataList<Value>(
             status = LoadingFailed(error)
     )
 
-    override fun success(value: List<Value>): DataList<Value> = throw IllegalStateException("TODOLOL") //TODO
+    override fun success(value: List<Value>): PagedDataList<Value> = throw IllegalStateException("TODOLOL") //TODO
+
+    fun success(
+            value: List<Value>, offset: Int, totalItems: Int
+    ): PagedDataList<Value> = PagedDataList(value, LoadedSuccessfully, offset, totalItems)
 
     fun copyWithNewItems(
             newItems: List<Value>, offset: Int

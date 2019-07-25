@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
+import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.util.Constants
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
@@ -12,7 +13,7 @@ import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-
+//TODO: rename this class lol
 class FindClipsApp : Application() {
 
     override fun onCreate() {
@@ -22,6 +23,8 @@ class FindClipsApp : Application() {
 
         startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
         createNotificationChannel()
+
+        ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caussed by Glide - maybe try to remove this later
 
         //TODO: maybe think about moving koin modules into their respective modules :D
         startKoin {

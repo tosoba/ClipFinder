@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.headerItem
@@ -16,6 +15,7 @@ import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
+import com.example.coreandroid.model.soundcloud.listItem
 import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
@@ -71,20 +71,12 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("playlists")
                         withModelsFrom(state.playlists.value.regular.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                ImageListItemBindingModel_()
-                                        .id(playlist.id)
-                                        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
-                                        .imageUrl(playlist.artworkUrl)
-                                        .errorDrawableId(R.drawable.error_placeholder)
-                                        .fallbackDrawableId(R.drawable.playlist_placeholder)
-                                        .loadingDrawableId(R.drawable.playlist_placeholder)
-                                        .label(playlist.name)
-                                        .itemClicked(View.OnClickListener {
-                                            navHostFragment?.showFragment(
-                                                    fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
-                                                    true
-                                            )
-                                        })
+                                playlist.listItem {
+                                    navHostFragment?.showFragment(
+                                            fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
+                                            true
+                                    )
+                                }
                             })
                         }
                     }
@@ -98,20 +90,12 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("system-playlists")
                         withModelsFrom(state.playlists.value.system.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                ImageListItemBindingModel_()
-                                        .id(playlist.id)
-                                        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
-                                        .imageUrl(playlist.artworkUrl)
-                                        .errorDrawableId(R.drawable.error_placeholder)
-                                        .fallbackDrawableId(R.drawable.playlist_placeholder)
-                                        .loadingDrawableId(R.drawable.playlist_placeholder)
-                                        .label(playlist.name)
-                                        .itemClicked(View.OnClickListener {
-                                            navHostFragment?.showFragment(
-                                                    fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
-                                                    true
-                                            )
-                                        })
+                                playlist.listItem {
+                                    navHostFragment?.showFragment(
+                                            fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
+                                            true
+                                    )
+                                }
                             })
                         }
                     }
