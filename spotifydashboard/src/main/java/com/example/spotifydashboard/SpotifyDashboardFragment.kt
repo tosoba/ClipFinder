@@ -1,14 +1,16 @@
 package com.example.spotifydashboard
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.fragmentViewModel
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -28,15 +30,22 @@ import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
-class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
-        SpotifyDashboardViewModel::class
-), HasMainToolbar {
+class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
+    override fun invalidate() {
+
+    }
 
     //TODO: make the layout with carousels like in soundcloud dashboard
     // try to add a loading item as a last item in withModelsFrom when list is not empty and loading is in progress
 
     private val fragmentFactory: IFragmentFactory by inject()
+
+    private val builder by inject<Handler>(named("builder"))
+    private val differ by inject<Handler>(named("differ"))
+
+    private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
     override val toolbar: Toolbar
         get() = dashboard_toolbar
@@ -184,8 +193,8 @@ class SpotifyDashboardFragment : BaseVMFragment<SpotifyDashboardViewModel>(
 
     private fun observePreferences() {
         fun reloadDataOnPreferencesChange() {
-            viewModel.loadCategories(true)
-            viewModel.loadFeaturedPlaylists(true)
+            viewModel.loadCategories()
+            viewModel.loadFeaturedPlaylists()
         }
 
         disposablesComponent.addAll(

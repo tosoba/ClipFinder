@@ -1,12 +1,13 @@
 package com.example.coreandroid.model
 
+
 interface HoldsData<Value> {
     val value: Value
     val status: DataStatus
     val loadingFailed: Boolean
         get() = status is LoadingFailed<*>
     val copyWithLoadingInProgress: HoldsData<Value>
-    fun copyWithError(throwable: Throwable?): HoldsData<Value>
+    fun <E> copyWithError(error: E): HoldsData<Value>
     fun success(value: Value): HoldsData<Value>
 }
 
@@ -30,8 +31,8 @@ data class Data<Value>(
     override val copyWithLoadingInProgress: Data<Value>
         get() = copy(status = Loading)
 
-    override fun copyWithError(throwable: Throwable?): Data<Value> = copy(
-            status = LoadingFailed(throwable)
+    override fun <E> copyWithError(error: E): Data<Value> = copy(
+            status = LoadingFailed(error)
     )
 
     override fun success(value: Value): Data<Value> = Data(value, LoadedSuccessfully)
@@ -63,8 +64,8 @@ data class DataList<Value>(
     override val copyWithLoadingInProgress: DataList<Value>
         get() = copy(status = Loading)
 
-    override fun copyWithError(throwable: Throwable?): DataList<Value> = copy(
-            status = LoadingFailed(throwable)
+    override fun <E> copyWithError(error: E): DataList<Value> = copy(
+            status = LoadingFailed(error)
     )
 
     override fun success(value: List<Value>): DataList<Value> = DataList(value, LoadedSuccessfully)
@@ -85,8 +86,8 @@ data class PagedDataList<Value>(
     override val copyWithLoadingInProgress: PagedDataList<Value>
         get() = copy(status = Loading)
 
-    override fun copyWithError(throwable: Throwable?): PagedDataList<Value> = copy(
-            status = LoadingFailed(throwable)
+    override fun <E> copyWithError(error: E): PagedDataList<Value> = copy(
+            status = LoadingFailed(error)
     )
 
     override fun success(value: List<Value>): DataList<Value> = throw IllegalStateException("TODOLOL") //TODO

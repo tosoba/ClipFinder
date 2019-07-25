@@ -1,7 +1,11 @@
 package com.example.spotifydashboard
 
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
+import com.example.core.model.mapData
+import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.AlbumEntity
@@ -11,15 +15,20 @@ import com.example.there.domain.usecase.spotify.GetCategories
 import com.example.there.domain.usecase.spotify.GetDailyViralTracks
 import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
+import io.reactivex.schedulers.Schedulers
+import org.koin.android.ext.android.inject
 
 class SpotifyDashboardViewModel(
-        private val getFeaturedPlaylists: GetFeaturedPlaylists,
+        initialState: SpotifyDashboardViewState,
         private val getCategories: GetCategories,
-        private val getDailyViralTracks: GetDailyViralTracks,
-        private val getNewReleases: GetNewReleases
-) : BaseViewModel() {
+        private val getFeaturedPlaylists: GetFeaturedPlaylists,
+        private val getNewReleases: GetNewReleases,
+        private val getDailyViralTracks: GetDailyViralTracks
+) : MvRxViewModel<SpotifyDashboardViewState>(initialState) {
 
-    val viewState: SpotifyDashboardViewState = SpotifyDashboardViewState()
+    init {
+        loadData()
+    }
 
     fun loadData() {
         loadCategories()
@@ -28,51 +37,61 @@ class SpotifyDashboardViewModel(
         loadNewReleases()
     }
 
-    fun loadCategories(shouldClear: Boolean = false) {
-        viewState.categoriesLoadingInProgress.set(true)
-        getCategories()
-                .takeSuccessOnly()
-                .doFinally { viewState.categoriesLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    if (shouldClear) viewState.categories.clear()
-                    viewState.categories.addAll(it.map(CategoryEntity::ui))
-                    viewState.categoriesLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.categoriesLoadingErrorOccurred.set(true)
-                })
+    //TODO: maybe use Timber for logging in onError
+    fun loadCategories() = withState { state ->
+        if (state.categories.status is Loading) return@withState
+
+        getCategories(applySchedulers = false)
+                .mapData { categories ->
+                    categories.map(CategoryEntity::ui).sortedBy { it.name }
+                }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(state::categories) { copy(categories = it) }
     }
 
-    fun loadFeaturedPlaylists(shouldClear: Boolean = false) {
-        viewState.featuredPlaylistsLoadingInProgress.set(true)
-        getFeaturedPlaylists()
-                .takeSuccessOnly()
-                .doFinally { viewState.featuredPlaylistsLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    if (shouldClear) viewState.featuredPlaylists.clear()
-                    viewState.featuredPlaylists.addAll(it.map(PlaylistEntity::ui))
-                    viewState.featuredPlaylistsLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.featuredPlaylistsLoadingErrorOccurred.set(true)
-                })
+
+    fun loadFeaturedPlaylists() = withState { state ->
+        if (state.featuredPlaylists.status is Loading) return@withState
+
+        getFeaturedPlaylists(applySchedulers = false)
+                .mapData { playlists ->
+                    playlists.map(PlaylistEntity::ui).sortedBy { it.name }
+                }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(state::featuredPlaylists) {
+                    copy(featuredPlaylists = it)
+                }
     }
 
-    fun loadDailyViralTracks() {
-        viewState.topTracksLoadingInProgress.set(true)
-        getDailyViralTracks()
-                .takeSuccessOnly()
-                .doFinally { viewState.topTracksLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({ result ->
-                    viewState.topTracks.addAll(result.map { TopTrack(it.position, it.track.ui) })
-                    viewState.topTracksLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.topTracksLoadingErrorOccurred.set(true)
-                })
+
+    fun loadDailyViralTracks() = withState { state ->
+        if (state.topTracks.status is Loading) return@withState
+
+        getDailyViralTracks(applySchedulers = false)
+                .mapData { tracks ->
+                    tracks.map { TopTrack(it.position, it.track.ui) }
+                            .sortedBy { it.position }
+                }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(state::topTracks) { copy(topTracks = it) }
     }
+
 
     private var currentNewReleasesOffset: Int = 0
     private var totalNewReleases = 0
 
     fun loadNewReleases(loadMore: Boolean = false) {
+        withState { state ->
+            state.newReleases.ifNotLoadingAndNotAllLoaded {
+                getNewReleases(applySchedulers = false, args = state.newReleases.offset)
+                        .mapData { listPage -> listPage.items.map(AlbumEntity::ui) }
+                        .subscribeOn(Schedulers.io())
+                        .updateWithResource(state::newReleases) {
+                            copy(newReleases = it)
+                        }
+            }
+        }
+
         if (viewState.newReleasesLoadingInProgress.get() != true
                 && (currentNewReleasesOffset == 0 || (currentNewReleasesOffset < totalNewReleases))) {
             if (!loadMore) viewState.newReleasesLoadingInProgress.set(true)
@@ -89,6 +108,18 @@ class SpotifyDashboardViewModel(
                     }, getOnErrorWith {
                         viewState.newReleasesLoadingErrorOccurred.set(true)
                     })
+        }
+    }
+
+    companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardViewState> {
+        override fun create(
+                viewModelContext: ViewModelContext, state: SpotifyDashboardViewState
+        ): SpotifyDashboardViewModel {
+            val getCategories: GetCategories by viewModelContext.activity.inject()
+            val getFeaturedPlaylists: GetFeaturedPlaylists by viewModelContext.activity.inject()
+            val getNewReleases: GetNewReleases by viewModelContext.activity.inject()
+            val getDailyViralTracks: GetDailyViralTracks by viewModelContext.activity.inject()
+            return SpotifyDashboardViewModel(state, getCategories, getFeaturedPlaylists, getNewReleases, getDailyViralTracks)
         }
     }
 }
