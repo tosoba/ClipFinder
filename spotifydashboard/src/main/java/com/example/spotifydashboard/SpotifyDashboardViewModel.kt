@@ -60,6 +60,7 @@ class SpotifyDashboardViewModel(
                 }
     }
 
+    //TODO: maybe add a timeout on this one so it errors out if it's exceeded
     fun loadDailyViralTracks() = withState { state ->
         if (state.topTracks.status is Loading) return@withState
 
@@ -76,7 +77,7 @@ class SpotifyDashboardViewModel(
 
     fun loadNewReleases() = withState { state ->
         state.newReleases.ifNotLoadingAndNotAllLoaded {
-            getNewReleases(applySchedulers = false, args = state.newReleases.offset)
+            getNewReleases(applySchedulers = false, args = current { newReleases.offset })
                     .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                     .subscribeOn(Schedulers.io())
                     .updateWithPagedResource(SpotifyDashboardViewState::newReleases) {

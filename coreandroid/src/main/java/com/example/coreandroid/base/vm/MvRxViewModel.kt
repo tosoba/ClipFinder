@@ -63,5 +63,7 @@ open class MvRxViewModel<S : MvRxState>(
                 .disposeOnClear()
     }
 
-    protected fun <T> currentValueOf(prop: KProperty1<S, T>): T = withState(this) { prop.get(it) }
+    protected fun <T> current(mapper: S.() -> T): T = withState(this) { it.mapper() }
+
+    private fun <T> currentValueOf(prop: KProperty1<S, T>): T = withState(this) { prop.get(it) }
 }

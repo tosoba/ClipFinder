@@ -18,10 +18,10 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.clickableListItem
+import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
-import com.example.coreandroid.util.simpleController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
@@ -32,9 +32,6 @@ import org.koin.core.qualifier.named
 
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
-    //TODO: try to add a loading item as a last item in withModelsFrom when list is not empty
-    // and loading is in progress
-
     private val fragmentFactory: IFragmentFactory by inject()
 
     private val builder by inject<Handler>(named("builder"))
@@ -46,7 +43,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         get() = dashboard_toolbar
 
     private val epoxyController by lazy {
-        simpleController(viewModel) { state ->
+        asyncController(builder, differ, viewModel) { state ->
             headerItem {
                 id("categories-header")
                 text("Categories")
@@ -67,7 +64,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     id("categories")
                     withModelsFrom(state.categories.value.chunked(2)) { chunk ->
                         Column(chunk.map { category ->
-                            //TODO: make ext methods for these things
                             category.clickableListItem {
                                 navHostFragment?.showFragment(
                                         fragmentFactory.newSpotifyCategoryFragment(category),
@@ -258,8 +254,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     override fun invalidate() {
-        epoxyController.requestModelBuild()
-//        withState(viewModel) { state -> epoxyController.setData(state) }
+        withState(viewModel) { state -> epoxyController.setData(state) }
     }
 
     private fun observePreferences() {

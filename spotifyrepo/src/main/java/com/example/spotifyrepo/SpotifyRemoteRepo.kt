@@ -178,7 +178,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = result.playlists.map(PlaylistApiModel::domain),
-                    offset = result.offset,
+                    offset = result.offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = result.totalItems
             )
         }
@@ -195,7 +195,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = playlistTracks.map { it.track.domain },
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }
@@ -340,7 +340,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = result.albums.map(AlbumApiModel::domain),
-                    offset = result.offset,
+                    offset = result.offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = result.totalItems
             )
         }
@@ -355,7 +355,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = playlists.map(PlaylistApiModel::domain),
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }
@@ -370,7 +370,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = tracks.map(TrackApiModel::domain),
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }
@@ -385,7 +385,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = artists.map(ArtistApiModel::domain),
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }
@@ -400,7 +400,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = savedTracks.map { it.track.domain },
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }
@@ -415,7 +415,7 @@ class SpotifyRemoteRepo(
         ).mapToResource {
             ListPage(
                     items = savedAlbums.map { it.album.domain },
-                    offset = offset,
+                    offset = offset + SpotifyApi.DEFAULT_LIMIT,
                     totalItems = totalItems
             )
         }

@@ -30,6 +30,7 @@
             android:id="@+id/dashboard_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
