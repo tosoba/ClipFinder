@@ -40,7 +40,7 @@ data class SoundCloudPlaylist(
         get() = super.name
 }
 
-fun SoundCloudPlaylist.listItem(
+fun SoundCloudPlaylist.clickableListItem(
         itemClicked: () -> Unit
 ): ImageListItemBindingModel_ = ImageListItemBindingModel_()
         .id(id)
@@ -66,7 +66,7 @@ data class SoundCloudSystemPlaylist(
         get() = super.name
 }
 
-fun SoundCloudSystemPlaylist.listItem(
+fun SoundCloudSystemPlaylist.clickableListItem(
         itemClicked: () -> Unit
 ): ImageListItemBindingModel_ = ImageListItemBindingModel_()
         .id(id)

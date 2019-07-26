@@ -15,7 +15,7 @@ import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
-import com.example.coreandroid.model.soundcloud.listItem
+import com.example.coreandroid.model.soundcloud.clickableListItem
 import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
@@ -71,7 +71,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("playlists")
                         withModelsFrom(state.playlists.value.regular.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                playlist.listItem {
+                                playlist.clickableListItem {
                                     navHostFragment?.showFragment(
                                             fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
                                             true
@@ -90,7 +90,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("system-playlists")
                         withModelsFrom(state.playlists.value.system.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
-                                playlist.listItem {
+                                playlist.clickableListItem {
                                     navHostFragment?.showFragment(
                                             fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
                                             true

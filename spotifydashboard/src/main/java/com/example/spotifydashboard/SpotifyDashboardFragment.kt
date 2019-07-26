@@ -5,6 +5,7 @@ import android.os.Handler
 import android.view.*
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -16,11 +17,11 @@ import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
-import com.example.coreandroid.model.spotify.listItem
-import com.example.coreandroid.util.asyncController
+import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
+import com.example.coreandroid.util.simpleController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
@@ -45,7 +46,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         get() = dashboard_toolbar
 
     private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+        simpleController(viewModel) { state ->
             headerItem {
                 id("categories-header")
                 text("Categories")
@@ -67,7 +68,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     withModelsFrom(state.categories.value.chunked(2)) { chunk ->
                         Column(chunk.map { category ->
                             //TODO: make ext methods for these things
-                            category.listItem {
+                            category.clickableListItem {
                                 navHostFragment?.showFragment(
                                         fragmentFactory.newSpotifyCategoryFragment(category),
                                         true
@@ -115,37 +116,49 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 text("New releases")
             }
 
-            when (state.newReleases.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-releases")
-                }
-
-                //TODO: think what should happen if new releases fails on loading more...
-                //maybe show a column with a reload control at the end?
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> infiniteCarousel(
-                        minItemsBeforeLoadingMore = 1,
-                        onLoadMore = viewModel::loadNewReleases
-                ) {
-                    id("releases")
-                    withModelsFrom(state.newReleases.value.chunked(2)) { chunk ->
-                        Column(chunk.map { album ->
-                            album.listItem {
-                                navHostFragment?.showFragment(
-                                        fragmentFactory.newSpotifyAlbumFragment(album),
-                                        true
-                                )
-                            }
-                        })
-                    }
-
+            fun newReleasesCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
+                    minItemsBeforeLoadingMore = 1,
+                    onLoadMore = viewModel::loadNewReleases
+            ) {
+                id("releases")
+                withModelsFrom(
+                        items = state.newReleases.value.chunked(2),
+                        extraModels = extraModels
+                ) { chunk ->
+                    Column(chunk.map { album ->
+                        album.clickableListItem {
+                            navHostFragment?.showFragment(
+                                    fragmentFactory.newSpotifyAlbumFragment(album),
+                                    true
+                            )
+                        }
+                    })
                 }
             }
+
+            if (state.newReleases.value.isEmpty()) {
+                when (state.newReleases.status) {
+                    is Loading -> loadingIndicator {
+                        id("loading-indicator-releases")
+                    }
+
+                    //TODO: think what should happen if new releases fails on loading more...
+                    //maybe show a column with a reload control at the end?
+                    is LoadingFailed<*> -> reloadControl {
+                        id("reload-control")
+                        onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
+                        message("Error occurred lmao") //TODO: error msg
+                    }
+                }
+            } else {
+                newReleasesCarousel(extraModels = when (state.newReleases.status) {
+                    is Loading -> listOf(LoadingIndicatorBindingModel_()
+                            .id("loading-more-releases"))
+                    is LoadingFailed<*> -> emptyList() //TODO
+                    else -> emptyList()
+                })
+            }
+
 
             headerItem {
                 id("tracks-header")
@@ -244,7 +257,10 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         lifecycle.addObserver(connectivityComponent)
     }
 
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+    override fun invalidate() {
+        epoxyController.requestModelBuild()
+//        withState(viewModel) { state -> epoxyController.setData(state) }
+    }
 
     private fun observePreferences() {
         fun reloadDataOnPreferencesChange() {

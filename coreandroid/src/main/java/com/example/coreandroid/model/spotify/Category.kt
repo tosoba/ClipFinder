@@ -23,7 +23,7 @@ data class Category(
         get() = R.drawable.spotify_foreground_ripple
 }
 
-fun Category.listItem(
+fun Category.clickableListItem(
         itemClicked: () -> Unit
 ): ImageListItemBindingModel_ = ImageListItemBindingModel_()
         .id(id)

@@ -26,7 +26,7 @@ data class Album(
         get() = R.drawable.spotify_foreground_ripple
 }
 
-fun Album.listItem(
+fun Album.clickableListItem(
         itemClicked: () -> Unit
 ): ImageListItemBindingModel_ = ImageListItemBindingModel_()
         .id(id)

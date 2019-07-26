@@ -66,6 +66,7 @@ class InfiniteNestedScrollingCarouselModel(
         private val minItemsBeforeLoadingMore: Int = 0,
         private val onLoadMore: () -> Unit
 ) : NestedScrollingCarouselModel() {
+
     override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
         addOnScrollListener(object : EndlessRecyclerOnScrollListener(visibleThreshold, minItemsBeforeLoadingMore) {
             override fun onLoadMore() = this@InfiniteNestedScrollingCarouselModel.onLoadMore()
@@ -93,6 +94,14 @@ inline fun <T> CarouselModelBuilder.withModelsFrom(
         items: Collection<T>, modelBuilder: (T) -> EpoxyModel<*>
 ) {
     models(items.map { modelBuilder(it) })
+}
+
+inline fun <T> CarouselModelBuilder.withModelsFrom(
+        items: Collection<T>,
+        extraModels: Collection<EpoxyModel<*>>,
+        modelBuilder: (T) -> EpoxyModel<*>
+) {
+    models(items.map { modelBuilder(it) } + extraModels)
 }
 
 inline fun <T, R> CarouselModelBuilder.withModelsFrom(

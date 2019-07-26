@@ -41,7 +41,9 @@ class SpotifyDashboardViewModel(
                     categories.map(CategoryEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(current { categories }) { copy(categories = it) }
+                .updateWithResource(SpotifyDashboardViewState::categories) {
+                    copy(categories = it)
+                }
     }
 
 
@@ -53,10 +55,11 @@ class SpotifyDashboardViewModel(
                     playlists.map(PlaylistEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(current { featuredPlaylists }) { copy(featuredPlaylists = it) }
+                .updateWithResource(SpotifyDashboardViewState::featuredPlaylists) {
+                    copy(featuredPlaylists = it)
+                }
     }
 
-    //TODO: test if sorting works (probably not)
     fun loadDailyViralTracks() = withState { state ->
         if (state.topTracks.status is Loading) return@withState
 
@@ -66,7 +69,9 @@ class SpotifyDashboardViewModel(
                             .sortedBy { it.position }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(current { topTracks }) { copy(topTracks = it) }
+                .updateWithResource(SpotifyDashboardViewState::topTracks) {
+                    copy(topTracks = it)
+                }
     }
 
     fun loadNewReleases() = withState { state ->
@@ -74,7 +79,9 @@ class SpotifyDashboardViewModel(
             getNewReleases(applySchedulers = false, args = state.newReleases.offset)
                     .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                     .subscribeOn(Schedulers.io())
-                    .updateWithPagedResource(current { newReleases }) { copy(newReleases = it) }
+                    .updateWithPagedResource(SpotifyDashboardViewState::newReleases) {
+                        copy(newReleases = it)
+                    }
         }
     }
 

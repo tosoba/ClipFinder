@@ -30,7 +30,7 @@ class SoundCloudDashboardViewModel(
                     )
                 }
                 .subscribeOn(Schedulers.io())
-                .update(current { playlists }) { copy(playlists = it) }
+                .update(SoundCloudDashboardViewState::playlists) { copy(playlists = it) }
     }
 
     companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardViewState> {
