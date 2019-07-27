@@ -16,6 +16,7 @@ import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
 import com.example.there.domain.usecase.spotify.GetNewReleases
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
+import java.util.concurrent.TimeUnit
 
 class SpotifyDashboardViewModel(
         initialState: SpotifyDashboardViewState,
@@ -60,11 +61,11 @@ class SpotifyDashboardViewModel(
                 }
     }
 
-    //TODO: maybe add a timeout on this one so it errors out if it's exceeded
     fun loadDailyViralTracks() = withState { state ->
         if (state.topTracks.status is Loading) return@withState
 
         getDailyViralTracks(applySchedulers = false)
+                .timeout(5, TimeUnit.SECONDS)
                 .mapData { tracks ->
                     tracks.map { TopTrack(it.position, it.track.ui) }
                             .sortedBy { it.position }

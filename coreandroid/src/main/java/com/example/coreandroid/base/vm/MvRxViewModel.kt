@@ -11,6 +11,7 @@ import com.example.there.domain.entity.ListPage
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 import kotlin.reflect.KProperty1
 
 open class MvRxViewModel<S : MvRxState>(
@@ -19,7 +20,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<T>.update(
             prop: KProperty1<S, Data<T>>,
-            onError: (Throwable) -> Unit = {},
+            onError: (Throwable) -> Unit = Timber::e,
             stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -31,7 +32,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
             prop: KProperty1<S, PagedDataList<T>>,
-            onError: (Throwable) -> Unit = {},
+            onError: (Throwable) -> Unit = Timber::e,
             stateReducer: S.(PagedDataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -49,7 +50,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
             prop: KProperty1<S, DataList<T>>,
-            onError: (Throwable) -> Unit = {},
+            onError: (Throwable) -> Unit = Timber::e,
             stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }

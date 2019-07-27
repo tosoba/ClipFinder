@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.base
 
+import com.example.core.ext.RetryStrategy
 import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Flowable
 
@@ -11,8 +12,9 @@ abstract class FlowableUseCase<Result>(
     protected abstract val result: Flowable<Result>
 
     operator fun invoke(
-            applySchedulers: Boolean = true
-    ): Flowable<Result> = result.applySchedulersIfRequested(applySchedulers)
+            applySchedulers: Boolean = true, retry: RetryStrategy? = null
+    ): Flowable<Result> = result.retryIfNeeded(retry)
+            .applySchedulersIfRequested(applySchedulers)
 }
 
 abstract class FlowableUseCaseWithArgs<Args, Result>(
@@ -22,6 +24,7 @@ abstract class FlowableUseCaseWithArgs<Args, Result>(
     protected abstract fun run(args: Args): Flowable<Result>
 
     operator fun invoke(
-            args: Args, applySchedulers: Boolean = true
-    ): Flowable<Result> = run(args).applySchedulersIfRequested(applySchedulers)
+            args: Args, applySchedulers: Boolean = true, retry: RetryStrategy? = null
+    ): Flowable<Result> = run(args).retryIfNeeded(retry)
+            .applySchedulersIfRequested(applySchedulers)
 }
