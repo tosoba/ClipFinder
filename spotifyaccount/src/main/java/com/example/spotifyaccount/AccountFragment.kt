@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.appCompatActivity
+import com.example.coreandroid.util.ext.mainContentFragment
 import com.example.coreandroid.util.ext.navigationDrawerController
 import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.view.OnTabSelectedListener
@@ -48,6 +49,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
     ): View? {
         val binding: FragmentAccountBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_account, container, false)
+        mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)

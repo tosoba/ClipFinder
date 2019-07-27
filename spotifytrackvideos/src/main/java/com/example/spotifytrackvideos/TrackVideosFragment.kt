@@ -63,18 +63,6 @@ class TrackVideosFragment :
         }
     }
 
-    private val onPlayBtnClickListener = View.OnClickListener { _ ->
-        viewModel.viewState.track.get()?.let {
-            val playTrack: () -> Unit = { spotifyPlayerController?.loadTrack(track = it) }
-            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                playTrack()
-            } else {
-                spotifyLoginController?.showLoginDialog()
-                spotifyLoginController?.onLoginSuccessful = playTrack
-            }
-        }
-    }
-
     private val argTrack: Track by lazy { arguments!!.getParcelable<Track>(ARG_TRACK) }
 
     private val view: TrackVideosView by lazy {
@@ -83,8 +71,7 @@ class TrackVideosFragment :
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener,
-                onPlayBtnClickListener = onPlayBtnClickListener
+                onFavouriteBtnClickListener = onFavouriteBtnClickListener
         )
     }
 
@@ -104,6 +91,17 @@ class TrackVideosFragment :
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.trackFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.enablePlayButton {
+            viewModel.viewState.track.get()?.let {
+                val playTrack: () -> Unit = { spotifyPlayerController?.loadTrack(track = it) }
+                if (spotifyPlayerController?.isPlayerLoggedIn == true) {
+                    playTrack()
+                } else {
+                    spotifyLoginController?.showLoginDialog()
+                    spotifyLoginController?.onLoginSuccessful = playTrack
+                }
+            }
+        }
         return binding.apply {
             view = this@TrackVideosFragment.view
             loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)

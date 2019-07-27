@@ -6,8 +6,7 @@ import androidx.databinding.ObservableField
 class PlaylistView<Playlist>(
         val state: PlaylistViewState,
         val playlist: Playlist,
-        val onFavouriteBtnClickListener: View.OnClickListener,
-        val onPlayBtnClickListener: View.OnClickListener
+        val onFavouriteBtnClickListener: View.OnClickListener
 )
 
 class PlaylistViewState(

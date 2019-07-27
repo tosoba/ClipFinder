@@ -80,15 +80,6 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
                         Toast.makeText(activity, "${album.name} added to favourite albums.", Toast.LENGTH_SHORT).show()
                     }
                 },
-                onPlayBtnClickListener = View.OnClickListener {
-                    val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
-                    if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                        playAlbum()
-                    } else {
-                        spotifyLoginController?.showLoginDialog()
-                        spotifyLoginController?.onLoginSuccessful = playAlbum
-                    }
-                },
                 artistsAndTracksAdapter = artistsAndTracksAdapter
         )
     }
@@ -98,8 +89,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
                 activity!!,
                 { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 
@@ -110,6 +100,15 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.albumFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.enablePlayButton {
+            val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
+            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
+                playAlbum()
+            } else {
+                spotifyLoginController?.showLoginDialog()
+                spotifyLoginController?.onLoginSuccessful = playAlbum
+            }
+        }
         return binding.apply {
             view = this@AlbumFragment.view
             disposablesComponent.add(Picasso.with(context).getBitmapSingle(album.iconUrl, {

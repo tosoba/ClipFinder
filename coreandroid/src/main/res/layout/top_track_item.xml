@@ -7,13 +7,19 @@
         <variable
             name="track"
             type="com.example.coreandroid.model.spotify.TopTrack" />
+
+        <variable
+            name="itemClicked"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_margin="3dp"
-        android:foreground="@drawable/spotify_foreground_ripple">
+        android:clickable="@{itemClicked != null}"
+        android:foreground="@drawable/spotify_foreground_ripple"
+        android:onClick="@{itemClicked}">
 
         <ImageView
             android:id="@+id/top_track_album_cover_imageview"

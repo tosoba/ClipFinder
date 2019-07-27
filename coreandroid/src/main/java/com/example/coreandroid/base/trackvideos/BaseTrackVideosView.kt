@@ -9,8 +9,7 @@ abstract class BaseTrackVideosView<Track>(
         val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,
         val onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener,
-        val onFavouriteBtnClickListener: View.OnClickListener,
-        val onPlayBtnClickListener: View.OnClickListener
+        val onFavouriteBtnClickListener: View.OnClickListener
 )
 
 class TrackVideosViewState<Track>(

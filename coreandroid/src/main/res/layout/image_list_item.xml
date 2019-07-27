@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="foregroundDrawableId"
             type="Integer" />
@@ -30,6 +32,10 @@
         <variable
             name="itemClicked"
             type="android.view.View.OnClickListener" />
+
+        <variable
+            name="showGradient"
+            type="Boolean" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -54,7 +60,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bottom_dark_gradient" />
+            android:background="@drawable/bottom_dark_gradient"
+            android:visibility="@{(showGradient ?? true) ? View.VISIBLE : View.GONE}" />
 
         <TextView
             android:layout_width="match_parent"
@@ -69,7 +76,8 @@
             android:shadowRadius="8"
             android:text="@{label}"
             android:textAlignment="center"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:visibility="@{label != null ? View.VISIBLE : View.GONE}" />
 
     </FrameLayout>
 </layout>

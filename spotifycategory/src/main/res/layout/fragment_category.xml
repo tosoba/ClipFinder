@@ -10,7 +10,7 @@
             type="com.example.spotifycategory.CategoryView" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/category_root_layout"
@@ -123,7 +123,7 @@
             app:layout_anchor="@id/category_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 </layout>
 
 

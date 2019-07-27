@@ -59,8 +59,7 @@ class VideosSearchFragment :
                 activity!!,
                 { query == "" || viewModel.viewState.videos.isNotEmpty() },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 

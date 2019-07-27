@@ -11,12 +11,13 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.math.max
 import kotlin.math.min
 
-class BottomNavLayoutBehavior(context: Context, attrs: AttributeSet) :
-        CoordinatorLayout.Behavior<BottomNavigationView>(context, attrs) {
+class BottomNavLayoutBehavior(
+        context: Context, attrs: AttributeSet
+) : CoordinatorLayout.Behavior<BottomNavigationView>(context, attrs) {
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: BottomNavigationView, dependency: View): Boolean {
         if (dependency is Snackbar.SnackbarLayout) {
-            this.updateSnackbar(child, (dependency as Snackbar.SnackbarLayout?)!!)
+            this.updateSnackbar(child, dependency)
         }
         return super.layoutDependsOn(parent, child, dependency)
     }

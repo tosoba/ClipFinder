@@ -145,8 +145,7 @@ class SpotifySearchFragment :
                             viewModel.viewState.tracks.isNotEmpty())
                 },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 

@@ -115,16 +115,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/play_playlist_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:onClick="@{view.onPlayBtnClickListener}"
-            android:src="@drawable/play"
-            app:layout_anchor="@id/playlist_main_content"
-            app:layout_anchorGravity="bottom|end" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/playlist_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -132,7 +122,7 @@
             android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
             app:layout_anchor="@id/playlist_app_bar"
-            app:layout_anchorGravity="bottom|end" />
+            app:layout_anchorGravity="bottom|right" />
 
     </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 

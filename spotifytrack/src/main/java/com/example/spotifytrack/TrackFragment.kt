@@ -51,8 +51,7 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class) {
                             viewModel.viewState.similarTracks.isNotEmpty()
                 },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 

@@ -5,7 +5,7 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 
 
-class YoutubePlayerViewModel() : BaseViewModel() {
+class YoutubePlayerViewModel : BaseViewModel() {
 
     val playerState = YoutubePlayerState()
 

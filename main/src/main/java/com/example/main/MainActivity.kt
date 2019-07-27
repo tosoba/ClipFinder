@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.databinding.ObservableField
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.coreandroid.base.IFragmentFactory
@@ -104,7 +105,11 @@ class MainActivity :
                 as? IRelatedVideosSearchFragment
 
     override val connectivitySnackbarParentView: View?
-        get() = findViewById(R.id.main_view_pager)
+        get() = when {
+            spotifyMainFragment != null -> findViewById(R.id.spotify_play_fab)
+            soundCloudMainFragment != null -> findViewById(R.id.sound_cloud_play_fab)
+            else -> null
+        }
 
     private val view: MainView by lazy {
         MainView(
@@ -123,8 +128,8 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentFragments: Array<androidx.fragment.app.Fragment> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf<androidx.fragment.app.Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
+    private val mainContentFragments: Array<Fragment> by lazy(LazyThreadSafetyMode.NONE) {
+        arrayOf<Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
     }
 
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {

@@ -58,8 +58,8 @@
                     android:id="@+id/youtube_player_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST? View.VISIBLE : View.GONE}"
-                    app:constraint_referenced_ids="youtube_player_fragment,related_videos_recycler_view" />
+                    android:visibility="@{mainActivityView.state.playerState == PlayerState.VIDEO || mainActivityView.state.playerState == PlayerState.VIDEO_PLAYLIST ? View.VISIBLE : View.GONE}"
+                    app:constraint_referenced_ids="youtube_player_fragment,related_videos_fragment" />
 
                 <fragment
                     android:id="@+id/youtube_player_fragment"
@@ -143,13 +143,13 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/drawer_navigation_view"
-            android:theme="@style/NavigationView"
             navigationItemSelectedListener="@{mainActivityView.onDrawerNavigationItemSelectedListener}"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@{mainActivityView.state.mainContent == MainContent.SPOTIFY ? @drawable/dark_background_gradient : @drawable/sound_cloud_dark_background_gradient}"
             android:fitsSystemWindows="false"
+            android:theme="@style/NavigationView"
             app:itemIconTint="@android:color/white"
             app:itemTextColor="@android:color/white"
             app:menu="@menu/spotify_drawer_menu" />

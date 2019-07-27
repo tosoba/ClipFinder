@@ -30,8 +30,7 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
                 activity!!,
                 { viewModel.tracks.value != null },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 
@@ -47,8 +46,7 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
         PlaylistView(
                 state = viewModel.viewState,
                 playlist = playlist,
-                onFavouriteBtnClickListener = View.OnClickListener {},
-                onPlayBtnClickListener = View.OnClickListener {}
+                onFavouriteBtnClickListener = View.OnClickListener {}
         )
     }
 
@@ -74,6 +72,7 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
                 }))
             }
             soundCloudPlaylistToolbar.setupWithBackNavigation(appCompatActivity)
+            mainContentFragment?.enablePlayButton { }
         }.root
     }
 

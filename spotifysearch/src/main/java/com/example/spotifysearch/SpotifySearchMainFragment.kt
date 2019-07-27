@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.util.ext.appCompatActivity
-import com.example.coreandroid.util.ext.dpToPx
-import com.example.coreandroid.util.ext.setHeight
-import com.example.coreandroid.util.ext.setupWithBackNavigation
+import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -56,6 +53,7 @@ class SpotifySearchMainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search_main, container, false)
+        mainContentFragment?.disablePlayButton()
         return binding.apply {
             searchFragmentView = view
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())

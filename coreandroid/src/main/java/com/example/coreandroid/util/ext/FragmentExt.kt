@@ -3,53 +3,56 @@ package com.example.coreandroid.util.ext
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.coreandroid.base.fragment.IMainContentFragment
 import com.example.coreandroid.base.handler.*
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
 
-val androidx.fragment.app.Fragment.appCompatActivity: AppCompatActivity?
+val Fragment.appCompatActivity: AppCompatActivity?
     get() = activity as? AppCompatActivity
 
-val androidx.fragment.app.Fragment.slidingPanelController: SlidingPanelController?
+val Fragment.slidingPanelController: SlidingPanelController?
     get() = activity as? SlidingPanelController
 
-val androidx.fragment.app.Fragment.videoPlaylistController: VideoPlaylistController?
+val Fragment.videoPlaylistController: VideoPlaylistController?
     get() = activity as? VideoPlaylistController
 
-val androidx.fragment.app.Fragment.spotifyPlayerController: SpotifyPlayerController?
+val Fragment.spotifyPlayerController: SpotifyPlayerController?
     get() = activity as? SpotifyPlayerController
 
-val androidx.fragment.app.Fragment.youtubePlayerController: YoutubePlayerController?
+val Fragment.youtubePlayerController: YoutubePlayerController?
     get() = activity as? YoutubePlayerController
 
-val androidx.fragment.app.Fragment.soundCloudPlayerController: SoundCloudPlayerController?
+val Fragment.soundCloudPlayerController: SoundCloudPlayerController?
     get() = activity as? SoundCloudPlayerController
 
-val androidx.fragment.app.Fragment.spotifyTrackChangeHandler: SpotifyTrackChangeHandler?
+val Fragment.spotifyTrackChangeHandler: SpotifyTrackChangeHandler?
     get() = activity as? SpotifyTrackChangeHandler
 
-val androidx.fragment.app.Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
+val Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
     get() = activity as? BackPressedWithNoPreviousStateController
 
-val androidx.fragment.app.Fragment.spotifyLoginController: SpotifyLoginController?
+val Fragment.spotifyLoginController: SpotifyLoginController?
     get() = activity as? SpotifyLoginController
 
-val androidx.fragment.app.Fragment.connectivitySnackbarHost: ConnectivitySnackbarHost?
+val Fragment.connectivitySnackbarHost: ConnectivitySnackbarHost?
     get() = activity as? ConnectivitySnackbarHost
 
-val androidx.fragment.app.Fragment.connectionStateCallback: ConnectionStateCallback?
+val Fragment.connectionStateCallback: ConnectionStateCallback?
     get() = activity as? ConnectionStateCallback
 
-val androidx.fragment.app.Fragment.navigationDrawerController: NavigationDrawerController?
+val Fragment.navigationDrawerController: NavigationDrawerController?
     get() = activity as? NavigationDrawerController
 
-val androidx.fragment.app.Fragment.toolbarController: ToolbarController?
+val Fragment.toolbarController: ToolbarController?
     get() = activity as? ToolbarController
 
-val androidx.fragment.app.Fragment.intentProvider: IntentProvider?
+val Fragment.intentProvider: IntentProvider?
     get() = activity as? IntentProvider
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
@@ -67,11 +70,28 @@ fun <I : Parcelable> BaseListFragment<I>.putArguments(
     arguments = args
 }
 
-val androidx.fragment.app.Fragment.navHostFragment: BaseNavHostFragment?
-    get() {
-        var fragment: androidx.fragment.app.Fragment? = this
-        while (fragment?.parentFragment?.parentFragment != null) {
-            fragment = fragment.parentFragment
-        }
-        return if (fragment != null && fragment is BaseNavHostFragment) fragment else null
+private inline fun <reified T> Fragment.findAncestorFragmentOfType(): T? {
+    var ancestorFragment = parentFragment
+    while (ancestorFragment != null) {
+        if (ancestorFragment is T) return ancestorFragment
+        ancestorFragment = ancestorFragment.parentFragment
     }
+    return null
+}
+
+val Fragment.navHostFragment: BaseNavHostFragment?
+    get() = findAncestorFragmentOfType()
+
+val Fragment.mainContentFragment: IMainContentFragment?
+    get() = findAncestorFragmentOfType()
+
+//TODO: use this for navigation
+interface NavigationCapable {
+    val factory: IFragmentFactory
+}
+
+inline fun <T> T.show(
+        addToBackStack: Boolean = true, getFragment: IFragmentFactory.() -> Fragment
+) where T : Fragment, T : NavigationCapable {
+    navHostFragment?.showFragment(factory.getFragment(), addToBackStack)
+}

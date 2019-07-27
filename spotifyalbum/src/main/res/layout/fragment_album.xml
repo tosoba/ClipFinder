@@ -90,16 +90,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/play_album_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:onClick="@{view.onPlayBtnClickListener}"
-            android:src="@drawable/play"
-            app:layout_anchor="@id/album_recycler_view"
-            app:layout_anchorGravity="bottom|end" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/album_favourite_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

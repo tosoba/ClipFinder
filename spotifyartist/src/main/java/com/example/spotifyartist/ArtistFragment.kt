@@ -114,8 +114,7 @@ class ArtistFragment :
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
                 {
                     viewModel.loadArtistData( artistToLoad)
-                },
-                true
+                }
         )
     }
 
@@ -130,6 +129,7 @@ class ArtistFragment :
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.artistFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@ArtistFragment.view
             loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)

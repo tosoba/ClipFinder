@@ -74,12 +74,7 @@ class SoundCloudTrackVideosFragment :
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = View.OnClickListener { },
-                onPlayBtnClickListener = View.OnClickListener {
-                    viewModel.viewState.track.get()?.let {
-                        soundCloudPlayerController?.loadTrack(it)
-                    }
-                }
+                onFavouriteBtnClickListener = View.OnClickListener { }
         )
     }
 
@@ -97,6 +92,11 @@ class SoundCloudTrackVideosFragment :
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.soundCloudTrackFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.enablePlayButton {
+            viewModel.viewState.track.get()?.let {
+                soundCloudPlayerController?.loadTrack(it)
+            }
+        }
         return binding.apply {
             view = this@SoundCloudTrackVideosFragment.view
             argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }

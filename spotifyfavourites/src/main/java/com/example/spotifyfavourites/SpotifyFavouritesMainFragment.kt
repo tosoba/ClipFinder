@@ -47,6 +47,7 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
                 pagerAdapter,
                 onNavigationItemSelectedListener,
                 1,
+                //TODO: fix this - it broke after change with hiding main bottom nav
                 AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                     favourites_bottom_navigation_view?.translationY = (-1 * verticalOffset).toFloat()
                 }
@@ -55,6 +56,7 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites_main, container, false)
+        mainContentFragment?.disablePlayButton()
         return binding.apply {
             favouritesFragmentView = view
             appCompatActivity?.setSupportActionBar(favouritesToolbar)

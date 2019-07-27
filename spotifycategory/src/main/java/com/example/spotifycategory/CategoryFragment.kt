@@ -45,8 +45,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
                 activity!!,
                 { viewModel.playlists.value != null },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 
@@ -74,6 +73,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.categoryFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@CategoryFragment.view
             disposablesComponent.add(Picasso.with(context).getBitmapSingle(category.iconUrl, {

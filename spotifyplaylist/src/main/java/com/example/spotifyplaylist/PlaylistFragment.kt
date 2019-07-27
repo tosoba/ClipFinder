@@ -35,15 +35,6 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
                         viewModel.addFavouritePlaylist(playlist)
                         Toast.makeText(activity, "${playlist.name} added to favourite playlists.", Toast.LENGTH_SHORT).show()
                     }
-                },
-                onPlayBtnClickListener = View.OnClickListener {
-                    val playPlaylist: () -> Unit = { spotifyPlayerController?.loadPlaylist(playlist) }
-                    if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                        playPlaylist()
-                    } else {
-                        spotifyLoginController?.showLoginDialog()
-                        spotifyLoginController?.onLoginSuccessful = playPlaylist
-                    }
                 }
         )
     }
@@ -53,8 +44,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
                 activity!!,
                 { viewModel.tracks.value != null },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData,
-                true
+                ::loadData
         )
     }
 
@@ -73,8 +63,17 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_playlist, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
-            binding.playPlaylistFab.hideAndShow()
+            binding.playlistFavouriteFab.hideAndShow()
         })
+        mainContentFragment?.enablePlayButton {
+            val playPlaylist: () -> Unit = { spotifyPlayerController?.loadPlaylist(playlist) }
+            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
+                playPlaylist()
+            } else {
+                spotifyLoginController?.showLoginDialog()
+                spotifyLoginController?.onLoginSuccessful = playPlaylist
+            }
+        }
         return binding.apply {
             view = this@PlaylistFragment.view
             disposablesComponent.add(Picasso.with(context).getBitmapSingle(playlist.iconUrl, { bitmap ->

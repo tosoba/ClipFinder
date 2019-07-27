@@ -4,17 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
-abstract class BaseNavHostFragment : androidx.fragment.app.Fragment() {
+abstract class BaseNavHostFragment : Fragment() {
 
-    val topFragment: androidx.fragment.app.Fragment?
+    val topFragment: Fragment?
         get() = childFragmentManager.findFragmentById(backStackLayoutId)
 
     protected abstract val backStackLayoutId: Int
 
     protected abstract val layoutId: Int
 
-    protected abstract val mainFragment: androidx.fragment.app.Fragment
+    protected abstract val mainFragment: Fragment
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -25,7 +26,7 @@ abstract class BaseNavHostFragment : androidx.fragment.app.Fragment() {
         showFragment(mainFragment, false)
     }
 
-    fun showFragment(fragment: androidx.fragment.app.Fragment, addToBackStack: Boolean) = with(childFragmentManager.beginTransaction()) {
+    fun showFragment(fragment: Fragment, addToBackStack: Boolean = true) = with(childFragmentManager.beginTransaction()) {
         setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
         replace(backStackLayoutId, fragment)
         if (addToBackStack) addToBackStack(null)

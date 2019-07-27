@@ -5,13 +5,12 @@ import android.app.Activity
 import android.content.Intent
 import android.provider.Settings
 import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.example.coreandroid.R
-import com.example.coreandroid.util.ext.dpToPx
-import com.example.coreandroid.util.ext.showSnackbarWithBottomMargin
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -23,8 +22,7 @@ class ConnectivityComponent(
         private val activity: Activity,
         private val isDataLoaded: () -> Boolean,
         private val parentView: View,
-        private val reloadData: (() -> Unit)? = null,
-        private val shouldShowSnackbarWithBottomMargin: Boolean = true
+        private val reloadData: (() -> Unit)? = null
 ) : LifecycleObserver {
 
     private var internetDisposable: Disposable? = null
@@ -71,30 +69,23 @@ class ConnectivityComponent(
         }
     }
 
-    //TODO: move this out of here
     private fun showNoConnectionSnackbar() {
         snackbar = Snackbar
                 .make(parentView, "No internet connection.", Snackbar.LENGTH_LONG)
                 .setAction("SETTINGS") {
-                    val settingsIntent = Intent(Settings.ACTION_SETTINGS)
-                    activity.startActivity(settingsIntent)
+                    activity.startActivity(Intent(Settings.ACTION_SETTINGS))
                 }
                 .setCallback(object : Snackbar.Callback() {
                     override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                        if (event == DISMISS_EVENT_SWIPE) {
-                            showNoConnectionSnackbar()
-                        }
+                        if (event == DISMISS_EVENT_SWIPE) showNoConnectionSnackbar()
                     }
                 })
                 .setActionTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
-
-        //TODO: fix this
-//        val textView = snackbar?.view?.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-//        textView?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
-        snackbar?.duration = BaseTransientBottomBar.LENGTH_INDEFINITE
-
-        if (!shouldShowSnackbarWithBottomMargin) snackbar?.show()
-        else snackbar?.showSnackbarWithBottomMargin(activity.dpToPx(50f).toInt())
+                .apply {
+                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
+                    view.findViewById<TextView>(R.id.snackbar_text)?.setTextColor(ContextCompat.getColor(activity, R.color.colorAccent))
+                    show()
+                }
     }
 }
 

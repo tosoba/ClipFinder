@@ -117,6 +117,7 @@ class YoutubePlayerFragment :
     }
 
     override fun onExpanded() {
+        youtube_player_collapsed_controls_group?.visibility = View.GONE
         youtube_player_view?.playerUIController?.showUI(true)
     }
 

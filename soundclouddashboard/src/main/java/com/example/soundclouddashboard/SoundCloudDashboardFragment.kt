@@ -47,8 +47,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 activity!!,
                 { withState(viewModel) { !it.playlists.loadingFailed } },
                 connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                viewModel::loadPlaylists,
-                true
+                viewModel::loadPlaylists
         )
     }
 
@@ -131,6 +130,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     setController(epoxyController)
                     //TODO: animation
                 }
+                mainContentFragment?.disablePlayButton()
                 binding = this
             }.root
 

@@ -4,12 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.coreandroid.util.ext.mainContentFragment
 
 
-class SoundCloudFavouritesFragment : androidx.fragment.app.Fragment() {
+class SoundCloudFavouritesFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_sound_cloud_favourites, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_sound_cloud_favourites, container, false).apply {
+            mainContentFragment?.disablePlayButton()
+        }
     }
 
 }

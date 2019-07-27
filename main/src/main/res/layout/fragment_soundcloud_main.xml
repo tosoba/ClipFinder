@@ -23,6 +23,18 @@
             android:adapter="@{fragmentView.pagerAdapter}"
             android:background="@drawable/sound_cloud_background_gradient" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sound_cloud_play_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:src="@drawable/play"
+            android:visibility="gone"
+            app:layout_anchor="@id/sound_cloud_bottom_navigation_view"
+            app:layout_anchorGravity="top|right"
+            app:layout_behavior="com.example.coreandroid.view.behavior.BottomFabLayoutBehavior"
+            app:useCompatPadding="true" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/sound_cloud_bottom_navigation_view"
             onNavigationItemSelectedListener="@{fragmentView.onNavigationItemSelectedListener}"

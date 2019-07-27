@@ -31,8 +31,9 @@ import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
 
-class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
-    private val fragmentFactory: IFragmentFactory by inject()
+class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationCapable {
+
+    override val factory: IFragmentFactory by inject()
 
     private val builder by inject<Handler>(named("builder"))
     private val differ by inject<Handler>(named("differ"))
@@ -42,6 +43,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
+    //TODO: test what happens on no connection
     private val epoxyController by lazy {
         asyncController(builder, differ, viewModel) { state ->
             headerItem {
@@ -65,10 +67,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     withModelsFrom(state.categories.value.chunked(2)) { chunk ->
                         Column(chunk.map { category ->
                             category.clickableListItem {
-                                navHostFragment?.showFragment(
-                                        fragmentFactory.newSpotifyCategoryFragment(category),
-                                        true
-                                )
+                                show { newSpotifyCategoryFragment(category) }
                             }
                         })
                     }
@@ -97,10 +96,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     id("playlists")
                     withModelsFrom(state.featuredPlaylists.value.chunked(2)) { chunk ->
                         Column(chunk.map { playlist ->
-                            //TODO: replace this + missing navigation
-                            PlaylistItemBindingModel_()
-                                    .id(playlist.id)
-                                    .playlist(playlist)
+                            playlist.clickableListItem {
+                                show { newSpotifyPlaylistFragment(playlist) }
+                            }
                         })
                     }
                 }
@@ -123,10 +121,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 ) { chunk ->
                     Column(chunk.map { album ->
                         album.clickableListItem {
-                            navHostFragment?.showFragment(
-                                    fragmentFactory.newSpotifyAlbumFragment(album),
-                                    true
-                            )
+                            show { newSpotifyAlbumFragment(album) }
                         }
                     })
                 }
@@ -138,8 +133,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         id("loading-indicator-releases")
                     }
 
-                    //TODO: think what should happen if new releases fails on loading more...
-                    //maybe show a column with a reload control at the end?
                     is LoadingFailed<*> -> reloadControl {
                         id("reload-control")
                         onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
@@ -150,7 +143,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 newReleasesCarousel(extraModels = when (state.newReleases.status) {
                     is Loading -> listOf(LoadingIndicatorBindingModel_()
                             .id("loading-more-releases"))
-                    is LoadingFailed<*> -> emptyList() //TODO
+                    is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
+                            .message("Error occurred")
+                            .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() }))
                     else -> emptyList()
                 })
             }
@@ -176,14 +171,15 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
                 is LoadedSuccessfully -> carousel {
                     id("tracks")
-                    //TODO: navigation
                     withModelsFrom(state.topTracks.value) { topTrack ->
                         TopTrackItemBindingModel_()
                                 .id(topTrack.track.id)
                                 .track(topTrack)
+                                .itemClicked(View.OnClickListener {
+                                    show { newSpotifyTrackVideosFragment(topTrack.track) }
+                                })
                     }
                 }
-
             }
         }
     }
@@ -208,8 +204,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                         if (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
                             viewModel.loadNewReleases()
                     }
-                },
-                true //TODO: fix snackbars...
+                }
         )
     }
 
@@ -231,6 +226,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     ).apply {
         appCompatActivity?.setSupportActionBar(dashboardToolbar)
         appCompatActivity?.showDrawerHamburger()
+        mainContentFragment?.disablePlayButton()
         dashboardRecyclerView.apply {
             setController(epoxyController)
             //TODO: animation

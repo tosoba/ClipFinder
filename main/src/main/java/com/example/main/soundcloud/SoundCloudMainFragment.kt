@@ -16,6 +16,7 @@ import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAda
 import com.example.main.R
 import com.example.main.databinding.FragmentSoundcloudMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
 import org.koin.android.ext.android.inject
 
@@ -50,11 +51,14 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
         }
     }
 
-    override val currentFragment: androidx.fragment.app.Fragment?
+    override val currentFragment: Fragment?
         get() = pagerAdapter.currentFragment
 
     override val currentNavHostFragment: BaseNavHostFragment?
         get() = pagerAdapter.currentNavHostFragment
+
+    override val playButton: FloatingActionButton
+        get() = sound_cloud_play_fab
 
     private val view: SoundCloudMainView by lazy {
         SoundCloudMainView(

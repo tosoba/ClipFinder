@@ -116,15 +116,6 @@
             android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:onClick="@{view.onPlayBtnClickListener}"
-            android:src="@drawable/play"
-            app:layout_anchor="@id/track_videos_viewpager"
-            app:layout_anchorGravity="bottom|end" />
-
     </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
