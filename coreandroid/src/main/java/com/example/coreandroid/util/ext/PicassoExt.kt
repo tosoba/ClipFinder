@@ -6,11 +6,12 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 fun Picasso.getBitmapSingle(
         url: String,
-        onSuccess: (Bitmap) -> Unit,
-        onError: (() -> Unit)? = null
+        onError: (Throwable) -> Unit = Timber::e,
+        onSuccess: (Bitmap) -> Unit
 ): Disposable = Single.create<Bitmap> {
     try {
         if (!it.isDisposed) {
@@ -22,4 +23,4 @@ fun Picasso.getBitmapSingle(
     }
 }.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(onSuccess, { onError?.invoke() })
+        .subscribe(onSuccess, onError)

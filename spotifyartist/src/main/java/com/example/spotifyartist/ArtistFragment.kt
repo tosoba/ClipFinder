@@ -27,7 +27,6 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.spotifyartist.databinding.FragmentArtistBinding
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_artist.*
 import org.koin.android.ext.android.inject
 
@@ -75,7 +74,7 @@ class ArtistFragment :
                         },
                         ClickHandler {
                             viewModel.loadArtistData(artist = it)
-                            loadCollapsingToolbarBackgroundGradient(it.iconUrl)
+                            artist_toolbar_gradient_background_view?.loadBackgroundGradient(it.iconUrl, disposablesComponent)
                         },
                         onReloadBtnClickListener = View.OnClickListener {
                             viewModel.loadRelatedArtists(artistToLoad.id)
@@ -125,7 +124,7 @@ class ArtistFragment :
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@ArtistFragment.view
-            loadCollapsingToolbarBackgroundGradient(argArtist.iconUrl)
+            artistToolbarGradientBackgroundView.loadBackgroundGradient(argArtist.iconUrl, disposablesComponent)
             artistRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             artistToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
@@ -146,21 +145,11 @@ class ArtistFragment :
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onBackPressed() {
-        if (!viewModel.onBackPressed()) {
-            backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
-        } else {
-            loadCollapsingToolbarBackgroundGradient(viewModel.viewState.artist.get()!!.iconUrl)
+        if (!viewModel.onBackPressed()) backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+        else viewModel.viewState.artist.get()?.iconUrl?.let {
+            artist_toolbar_gradient_background_view?.loadBackgroundGradient(it, disposablesComponent)
         }
     }
-
-    private fun loadCollapsingToolbarBackgroundGradient(
-            url: String
-    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, {
-        it.generateColorGradient {
-            artist_toolbar_gradient_background_view?.background = it
-            artist_toolbar_gradient_background_view?.invalidate()
-        }
-    }))
 
     private fun loadData() = viewModel.loadArtistData(argArtist)
 

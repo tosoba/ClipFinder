@@ -4,11 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.AsyncTask
+import androidx.palette.graphics.Palette
 
 
 fun Bitmap.generateColorGradient(
         onGenerated: (GradientDrawable) -> Unit
-): AsyncTask<Bitmap, Void, androidx.palette.graphics.Palette> = androidx.palette.graphics.Palette.from(this).generate { palette ->
+): AsyncTask<Bitmap, Void, Palette> = Palette.from(this).generate { palette ->
     palette?.let {
         onGenerated(GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,

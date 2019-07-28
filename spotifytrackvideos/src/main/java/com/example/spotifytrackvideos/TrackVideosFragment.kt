@@ -20,7 +20,6 @@ import com.example.spotifytrack.TrackFragment
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment :
@@ -87,60 +86,49 @@ class TrackVideosFragment :
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_track_videos, container, false)
+        val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_track_videos, container, false)
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.trackFavouriteFab.hideAndShow()
         })
         mainContentFragment?.enablePlayButton {
             viewModel.viewState.track.get()?.let {
                 val playTrack: () -> Unit = { spotifyPlayerController?.loadTrack(track = it) }
-                if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                    playTrack()
-                } else {
-                    spotifyLoginController?.showLoginDialog()
-                    spotifyLoginController?.onLoginSuccessful = playTrack
+                if (spotifyPlayerController?.isPlayerLoggedIn == true) playTrack()
+                else spotifyLoginController?.let {
+                    it.showLoginDialog()
+                    it.onLoginSuccessful = playTrack
                 }
             }
         }
         return binding.apply {
             view = this@TrackVideosFragment.view
-            loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
+            trackVideosToolbarGradientBackgroundView.loadBackgroundGradient(argTrack.iconUrl, disposablesComponent)
             trackVideosViewpager.offscreenPageLimit = 1
             trackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }
 
     override fun onBackPressed() {
-        if (!viewModel.onBackPressed()) {
-            backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
-        } else {
-            updateCurrentFragment(viewModel.viewState.track.get()!!)
-            loadCollapsingToolbarBackgroundGradient(argTrack.iconUrl)
+        if (!viewModel.onBackPressed()) backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+        else viewModel.viewState.track.get()?.let {
+            updateCurrentFragment(it)
+            track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(it.iconUrl, disposablesComponent)
         }
     }
 
     override fun onTrackChanged(newTrack: Track) = with(newTrack) {
         viewModel.updateState(this)
-        loadCollapsingToolbarBackgroundGradient(iconUrl)
+        track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(iconUrl, disposablesComponent)
         updateCurrentFragment(this)
     }
 
     private fun updateCurrentFragment(newTrack: Track) {
-        val currentFragment = pagerAdapter.currentFragment
-        when (currentFragment) {
+        when (val currentFragment = pagerAdapter.currentFragment) {
             is VideosSearchFragment -> currentFragment.query = newTrack.query
             is TrackFragment -> currentFragment.track = newTrack
         }
     }
-
-    private fun loadCollapsingToolbarBackgroundGradient(
-            url: String
-    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, { bitmap ->
-        bitmap.generateColorGradient {
-            track_videos_toolbar_gradient_background_view?.background = it
-            track_videos_toolbar_gradient_background_view?.invalidate()
-        }
-    }))
 
     companion object {
         private const val ARG_TRACK = "ARG_TRACK"

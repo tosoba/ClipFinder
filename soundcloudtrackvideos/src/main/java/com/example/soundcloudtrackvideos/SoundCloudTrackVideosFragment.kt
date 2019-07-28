@@ -20,7 +20,6 @@ import com.example.itemlist.soundcloud.SoundCloudTracksFragment
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
@@ -99,7 +98,9 @@ class SoundCloudTrackVideosFragment :
         }
         return binding.apply {
             view = this@SoundCloudTrackVideosFragment.view
-            argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
+            argTrack.artworkUrl?.let {
+                soundCloudTrackVideosToolbarGradientBackgroundView.loadBackgroundGradient(it, disposablesComponent)
+            }
             soundCloudTrackVideosViewpager.offscreenPageLimit = 1
             soundCloudTrackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
@@ -110,7 +111,9 @@ class SoundCloudTrackVideosFragment :
             backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
         } else {
             updateCurrentFragment(viewModel.viewState.track.get()!!)
-            argTrack.artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
+            argTrack.artworkUrl?.let {
+                sound_cloud_track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(it, disposablesComponent)
+            }
         }
     }
 
@@ -126,7 +129,9 @@ class SoundCloudTrackVideosFragment :
 
     override fun onTrackChanged(newTrack: SoundCloudTrack) = with(newTrack) {
         viewModel.updateState(this)
-        artworkUrl?.let { loadCollapsingToolbarBackgroundGradient(it) }
+        artworkUrl?.let {
+            sound_cloud_track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(it, disposablesComponent)
+        }
         updateCurrentFragment(this)
     }
 
@@ -136,15 +141,6 @@ class SoundCloudTrackVideosFragment :
             is SoundCloudTracksFragment -> viewModel.loadSimilarTracks(newTrack.id)
         }
     }
-
-    private fun loadCollapsingToolbarBackgroundGradient(
-            url: String
-    ) = disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, { bitmap ->
-        bitmap.generateColorGradient {
-            sound_cloud_track_videos_toolbar_gradient_background_view?.background = it
-            sound_cloud_track_videos_toolbar_gradient_background_view?.invalidate()
-        }
-    }))
 
     companion object {
         private const val ARG_TRACK = "ARG_TRACK"

@@ -17,7 +17,6 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
-import com.squareup.picasso.Picasso
 
 class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::class) {
 
@@ -71,12 +70,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         }
         return binding.apply {
             view = this@PlaylistFragment.view
-            disposablesComponent.add(Picasso.with(context).getBitmapSingle(playlist.iconUrl, { bitmap ->
-                bitmap.generateColorGradient {
-                    playlistToolbarGradientBackgroundView.background = it
-                    playlistToolbarGradientBackgroundView.invalidate()
-                }
-            }))
+            playlistToolbarGradientBackgroundView.loadBackgroundGradient(playlist.iconUrl, disposablesComponent)
             playlistToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }

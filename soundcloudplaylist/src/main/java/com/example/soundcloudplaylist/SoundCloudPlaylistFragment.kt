@@ -17,7 +17,6 @@ import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.coreandroid.util.ext.*
 import com.example.itemlist.soundcloud.SoundCloudTracksFragment
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
-import com.squareup.picasso.Picasso
 
 
 class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(SoundCloudPlaylistViewModel::class) {
@@ -54,22 +53,19 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
         loadData()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSoundCloudPlaylistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sound_cloud_playlist, container, false)
-        return binding.apply {
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = DataBindingUtil.inflate<FragmentSoundCloudPlaylistBinding>(
+            inflater, R.layout.fragment_sound_cloud_playlist, container, false
+    ).apply {
             view = this@SoundCloudPlaylistFragment.view
             playlist.artworkUrl?.let { url ->
-                disposablesComponent.add(Picasso.with(context).getBitmapSingle(url, { bitmap ->
-                    bitmap.generateColorGradient {
-                        soundCloudPlaylistToolbarGradientBackgroundView.background = it
-                        soundCloudPlaylistToolbarGradientBackgroundView.invalidate()
-                    }
-                }))
+                soundCloudPlaylistToolbarGradientBackgroundView.loadBackgroundGradient(url, disposablesComponent)
             }
             soundCloudPlaylistToolbar.setupWithBackNavigation(appCompatActivity)
             mainContentFragment?.enablePlayButton { }
         }.root
-    }
+
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 

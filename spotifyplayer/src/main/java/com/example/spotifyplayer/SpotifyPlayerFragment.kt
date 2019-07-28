@@ -378,8 +378,8 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         viewModel.getBitmapSingle(
                 Picasso.with(context),
                 viewModel.playerState.playerMetadata!!.currentTrack.albumCoverWebUrl,
-                { bitmap -> applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build()) },
-                { applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build()) }
+                { applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build()) },
+                { bitmap -> applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build()) }
         )
     }
 

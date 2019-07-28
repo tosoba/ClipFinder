@@ -28,7 +28,6 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
-import com.squareup.picasso.Picasso
 import org.koin.android.ext.android.inject
 
 
@@ -108,12 +107,7 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
         }
         return binding.apply {
             view = this@AlbumFragment.view
-            disposablesComponent.add(Picasso.with(context).getBitmapSingle(album.iconUrl, {
-                it.generateColorGradient {
-                    albumToolbarGradientBackgroundView.background = it
-                    albumToolbarGradientBackgroundView.invalidate()
-                }
-            }))
+            albumToolbarGradientBackgroundView.loadBackgroundGradient(album.iconUrl, disposablesComponent)
             albumRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
             albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root

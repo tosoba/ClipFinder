@@ -17,7 +17,6 @@ import com.example.coreandroid.util.ext.*
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
-import com.squareup.picasso.Picasso
 import org.koin.android.ext.android.inject
 
 class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class) {
@@ -71,12 +70,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@CategoryFragment.view
-            disposablesComponent.add(Picasso.with(context).getBitmapSingle(category.iconUrl, {
-                it.generateColorGradient {
-                    categoryToolbarGradientBackgroundView.background = it
-                    categoryToolbarGradientBackgroundView.invalidate()
-                }
-            }))
+            categoryToolbarGradientBackgroundView.loadBackgroundGradient(category.iconUrl, disposablesComponent)
             categoryToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
