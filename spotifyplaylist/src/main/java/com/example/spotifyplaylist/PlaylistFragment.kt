@@ -40,12 +40,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { viewModel.tracks.value != null },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) { viewModel.tracks.value == null }
     }
 
     private val tracksFragment: SpotifyTracksFragment

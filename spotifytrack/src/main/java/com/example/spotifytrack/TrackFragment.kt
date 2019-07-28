@@ -15,8 +15,8 @@ import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
 import com.example.coreandroid.util.ext.navHostFragment
+import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.view.radarchart.RadarChartAxisView
 import com.example.coreandroid.view.radarchart.RadarChartView
 import com.example.coreandroid.view.radarchart.RadarMarkerView
@@ -43,16 +43,11 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class) {
 
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                {
-                    viewModel.viewState.album.get() != null &&
-                            viewModel.viewState.artists.isNotEmpty() &&
-                            viewModel.viewState.similarTracks.isNotEmpty()
-                },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) {
+            viewModel.viewState.album.get() == null ||
+                    viewModel.viewState.artists.isEmpty() ||
+                    viewModel.viewState.similarTracks.isEmpty()
+        }
     }
 
     private val trackAdapter: TrackAdapter by lazy {
@@ -63,8 +58,8 @@ class TrackFragment : BaseVMFragment<TrackViewModel>(TrackViewModel::class) {
                             val album = viewModel.viewState.album.get()
                             album?.let {
                                 navHostFragment?.showFragment(
-                                    fragmentFactory.newSpotifyAlbumFragment(album = it),
-                                    true
+                                        fragmentFactory.newSpotifyAlbumFragment(album = it),
+                                        true
                                 )
                             }
                         }

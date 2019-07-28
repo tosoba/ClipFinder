@@ -27,7 +27,7 @@ interface NavigationDrawerController {
 }
 
 interface ConnectivitySnackbarHost {
-    val connectivitySnackbarParentView: View?
+    val snackbarParentView: View?
 }
 
 interface ToolbarController {

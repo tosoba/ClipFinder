@@ -185,27 +185,22 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                {
-                    withState(viewModel) {
-                        !it.categories.loadingFailed
-                                && !it.featuredPlaylists.loadingFailed
-                                && !it.topTracks.loadingFailed
-                                && (it.newReleases.value.isNotEmpty() || !it.newReleases.loadingFailed)
-                    }
-                },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                {
-                    withState(viewModel) {
-                        if (it.categories.loadingFailed) viewModel.loadCategories()
-                        if (it.featuredPlaylists.loadingFailed) viewModel.loadFeaturedPlaylists()
-                        if (it.topTracks.loadingFailed) viewModel.loadDailyViralTracks()
-                        if (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
-                            viewModel.loadNewReleases()
-                    }
-                }
-        )
+        reloadingConnectivityComponent({
+            withState(viewModel) {
+                if (it.categories.loadingFailed) viewModel.loadCategories()
+                if (it.featuredPlaylists.loadingFailed) viewModel.loadFeaturedPlaylists()
+                if (it.topTracks.loadingFailed) viewModel.loadDailyViralTracks()
+                if (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
+                    viewModel.loadNewReleases()
+            }
+        }) {
+            withState(viewModel) {
+                it.categories.loadingFailed
+                        || it.featuredPlaylists.loadingFailed
+                        || it.topTracks.loadingFailed
+                        || (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
+            }
+        }
     }
 
     private val disposablesComponent = DisposablesComponent()

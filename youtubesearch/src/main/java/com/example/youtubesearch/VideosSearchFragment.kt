@@ -16,7 +16,7 @@ import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
+import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.screenOrientation
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
@@ -55,12 +55,9 @@ class VideosSearchFragment :
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { query == "" || viewModel.viewState.videos.isNotEmpty() },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) {
+            query.isNotEmpty() && viewModel.viewState.videos.isEmpty()
+        }
     }
 
     private val view: VideosSearchView by lazy {

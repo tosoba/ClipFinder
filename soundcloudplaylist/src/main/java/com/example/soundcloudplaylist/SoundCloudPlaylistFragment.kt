@@ -26,12 +26,7 @@ class SoundCloudPlaylistFragment : BaseVMFragment<SoundCloudPlaylistViewModel>(S
         get() = childFragmentManager.findFragmentById(R.id.sound_cloud_playlist_tracks_fragment) as SoundCloudTracksFragment
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { viewModel.tracks.value != null },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) { viewModel.tracks.value == null }
     }
 
     private val playlist: ISoundCloudPlaylist by lazy {

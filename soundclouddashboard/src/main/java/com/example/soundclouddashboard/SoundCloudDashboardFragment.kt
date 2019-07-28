@@ -43,12 +43,9 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         get() = sound_cloud_dashboard_toolbar
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { withState(viewModel) { !it.playlists.loadingFailed } },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                viewModel::loadPlaylists
-        )
+        reloadingConnectivityComponent(viewModel::loadPlaylists) {
+            withState(viewModel) { it.playlists.loadingFailed }
+        }
     }
 
     private val epoxyController by lazy {

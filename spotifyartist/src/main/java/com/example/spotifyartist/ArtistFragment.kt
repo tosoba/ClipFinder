@@ -74,7 +74,7 @@ class ArtistFragment :
                                 get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
                         },
                         ClickHandler {
-                            viewModel.loadArtistData( artist = it)
+                            viewModel.loadArtistData(artist = it)
                             loadCollapsingToolbarBackgroundGradient(it.iconUrl)
                         },
                         onReloadBtnClickListener = View.OnClickListener {
@@ -103,19 +103,12 @@ class ArtistFragment :
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                {
-                    viewModel.viewState.albums.isNotEmpty() &&
-                            viewModel.viewState.artist.get() != null &&
-                            viewModel.viewState.topTracks.isNotEmpty() &&
-                            viewModel.viewState.topTracks.isNotEmpty()
-                },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                {
-                    viewModel.loadArtistData( artistToLoad)
-                }
-        )
+        reloadingConnectivityComponent({ viewModel.loadArtistData(artistToLoad) }) {
+            viewModel.viewState.albums.isEmpty() ||
+                    viewModel.viewState.artist.get() == null ||
+                    viewModel.viewState.topTracks.isEmpty() ||
+                    viewModel.viewState.topTracks.isEmpty()
+        }
     }
 
     private val artistToLoad: Artist

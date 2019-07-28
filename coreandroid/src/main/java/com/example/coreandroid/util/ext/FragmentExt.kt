@@ -1,7 +1,11 @@
 package com.example.coreandroid.util.ext
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.provider.Settings
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
@@ -10,6 +14,7 @@ import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
 import com.example.coreandroid.base.handler.*
+import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
 
@@ -95,3 +100,22 @@ inline fun <T> T.show(
 ) where T : Fragment, T : NavigationCapable {
     navHostFragment?.showFragment(factory.getFragment(), addToBackStack)
 }
+
+fun Fragment.reloadingConnectivityComponent(
+        reloadData: () -> Unit,
+        isReloadNeeded: () -> Boolean
+): ConnectivityComponent = ConnectivityComponent(object : ConnectivityComponent.Binder {
+    override val context: Context
+        get() = this@reloadingConnectivityComponent.requireContext()
+
+    override val snackbarParentView: View?
+        get() = connectivitySnackbarHost?.snackbarParentView
+
+    override fun shouldReload(): Boolean = isReloadNeeded()
+
+    override fun reload() = reloadData()
+
+    override fun openSettings() {
+        activity?.startActivity(Intent(Settings.ACTION_SETTINGS))
+    }
+})

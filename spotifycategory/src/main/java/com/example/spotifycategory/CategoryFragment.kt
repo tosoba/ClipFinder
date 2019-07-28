@@ -41,12 +41,7 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { viewModel.playlists.value != null },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) { viewModel.playlists.value == null }
     }
 
     private val disposablesComponent = DisposablesComponent()

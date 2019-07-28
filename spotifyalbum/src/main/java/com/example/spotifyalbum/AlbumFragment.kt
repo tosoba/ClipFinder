@@ -85,12 +85,9 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                { viewModel.viewState.tracks.isNotEmpty() && viewModel.viewState.artists.isNotEmpty() },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) {
+            viewModel.viewState.tracks.isEmpty() || viewModel.viewState.artists.isEmpty()
+        }
     }
 
     private val disposablesComponent = DisposablesComponent()

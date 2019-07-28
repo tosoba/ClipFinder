@@ -15,7 +15,7 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.ext.connectivitySnackbarHost
+import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -35,8 +35,8 @@ class SpotifySearchFragment :
         set(value) {
             if (field == value) return
             field = value
-            loadData()
             viewModel.viewState.clearAll()
+            loadData()
         }
 
     private val onSpotifyTabSelectedListener = object : OnTabSelectedListener {
@@ -136,17 +136,12 @@ class SpotifySearchFragment :
     }.root
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        ConnectivityComponent(
-                activity!!,
-                {
-                    query == "" || (viewModel.viewState.albums.isNotEmpty() &&
-                            viewModel.viewState.artists.isNotEmpty() &&
-                            viewModel.viewState.playlists.isNotEmpty() &&
-                            viewModel.viewState.tracks.isNotEmpty())
-                },
-                connectivitySnackbarHost!!.connectivitySnackbarParentView!!,
-                ::loadData
-        )
+        reloadingConnectivityComponent(::loadData) {
+            query.isNotEmpty() && (viewModel.viewState.albums.isEmpty() ||
+                    viewModel.viewState.artists.isEmpty() ||
+                    viewModel.viewState.playlists.isEmpty() ||
+                    viewModel.viewState.tracks.isEmpty())
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

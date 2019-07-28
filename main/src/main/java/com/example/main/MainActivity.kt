@@ -104,7 +104,7 @@ class MainActivity :
         get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
                 as? IRelatedVideosSearchFragment
 
-    override val connectivitySnackbarParentView: View?
+    override val snackbarParentView: View?
         get() = when {
             spotifyMainFragment != null -> findViewById(R.id.spotify_play_fab)
             soundCloudMainFragment != null -> findViewById(R.id.sound_cloud_play_fab)
