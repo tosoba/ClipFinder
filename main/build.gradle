@@ -80,6 +80,12 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation "com.github.bumptech.glide:glide:4.7.1"
 
+    implementation 'com.airbnb.android:mvrx:1.0.2'
+
+    implementation 'com.airbnb.android:epoxy:3.7.0'
+    implementation 'com.airbnb.android:epoxy-databinding:3.7.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.7.0'
+
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-core-ext:$koin_version"
     testImplementation "org.koin:koin-test:$koin_version"

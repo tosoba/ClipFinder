@@ -16,8 +16,8 @@ abstract class InsertTrackUseCase<Track>(
 abstract class IsTrackSavedUseCase<Track>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repo: IFavouriteTrackRepo<Track>
-) : SingleUseCaseWithArgs<Track, Boolean>(schedulersProvider) {
-    override fun run(args: Track): Single<Boolean> = repo.isTrackSaved(args)
+) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
+    override fun run(args: String): Single<Boolean> = repo.isTrackSaved(args)
 }
 
 abstract class DeleteTrackUseCase<Track>(

@@ -66,6 +66,6 @@ class CategoryViewModel(
 
     private fun loadCategoryFavouriteState(
             category: Category
-    ) = isCategorySaved(category.domain)
+    ) = isCategorySaved(category.id)
             .subscribe(viewState.isSavedAsFavourite::set)
 }

@@ -24,11 +24,11 @@ interface ISpotifyLocalRepo : IFavouriteTrackRepo<TrackEntity>,
     override fun insertPlaylist(playlist: PlaylistEntity): Completable
     override fun insertTrack(track: TrackEntity): Completable
 
-    override fun isAlbumSaved(album: AlbumEntity): Single<Boolean>
-    override fun isArtistSaved(artist: ArtistEntity): Single<Boolean>
-    override fun isCategorySaved(category: CategoryEntity): Single<Boolean>
-    override fun isPlaylistSaved(playlist: PlaylistEntity): Single<Boolean>
-    override fun isTrackSaved(track: TrackEntity): Single<Boolean>
+    override fun isAlbumSaved(albumId: String): Single<Boolean>
+    override fun isArtistSaved(artistId: String): Single<Boolean>
+    override fun isCategorySaved(categoryId: String): Single<Boolean>
+    override fun isPlaylistSaved(playlistId: String): Single<Boolean>
+    override fun isTrackSaved(trackId: String): Single<Boolean>
 
     override fun deleteAlbum(album: AlbumEntity): Completable
     override fun deleteArtist(artist: ArtistEntity): Completable

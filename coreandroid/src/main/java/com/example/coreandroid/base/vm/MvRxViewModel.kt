@@ -48,6 +48,22 @@ open class MvRxViewModel<S : MvRxState>(
                 .disposeOnClear()
     }
 
+    protected fun <T> Single<Resource<List<T>>>.updateWithResource(
+            prop: KProperty1<S, DataList<T>>,
+            onError: (Throwable) -> Unit = Timber::e,
+            stateReducer: S.(DataList<T>) -> S
+    ): Disposable {
+        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
+        return map {
+            when (it) {
+                is Resource.Success -> currentValueOf(prop).copyWithNewItems(it.data)
+                is Resource.Error<List<T>, *> -> currentValueOf(prop).copyWithError(it.error)
+            }
+        }.doOnError { setState { stateReducer(currentValueOf(prop).copyWithError(it)) } }
+                .subscribe({ data -> setState { stateReducer(data) } }, onError)
+                .disposeOnClear()
+    }
+
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
             prop: KProperty1<S, DataList<T>>,
             onError: (Throwable) -> Unit = Timber::e,

@@ -34,7 +34,7 @@ interface ISpotifyRemoteDataStore {
 
     fun getRelatedArtists(artistId: String): Single<Resource<List<ArtistEntity>>>
 
-    fun getTracksFromAlbum(albumId: String): Observable<Resource<ListPage<TrackEntity>>>
+    fun getTracksFromAlbum(albumId: String, offset: Int): Single<Resource<ListPage<TrackEntity>>>
 
     fun getNewReleases(offset: Int): Single<Resource<ListPage<AlbumEntity>>>
 

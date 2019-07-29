@@ -80,17 +80,17 @@ class MainViewModel(
     }
 
     fun updateTrackFavouriteState(track: Track) {
-        isTrackSaved(track.domain)
+        isTrackSaved(track.id)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updatePlaylistFavouriteState(playlist: Playlist) {
-        isSpotifyPlaylistSaved(playlist.domain)
+        isSpotifyPlaylistSaved(playlist.id)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
     fun updateAlbumFavouriteState(album: Album) {
-        isAlbumSaved(album.domain)
+        isAlbumSaved(album.id)
                 .subscribeAndDisposeOnCleared(viewState.itemFavouriteState::set)
     }
 
@@ -104,6 +104,7 @@ class MainViewModel(
             onPlaylistDeleted: () -> Unit
     ) = toggleItemFavouriteState(
             playlist.domain,
+            playlist.id,
             isSpotifyPlaylistSaved,
             insertSpotifyPlaylist,
             deleteSpotifyPlaylist,
@@ -117,6 +118,7 @@ class MainViewModel(
             onTrackDeleted: () -> Unit
     ) = toggleItemFavouriteState(
             track.domain,
+            track.id,
             isTrackSaved,
             insertTrack,
             deleteTrack,
@@ -130,6 +132,7 @@ class MainViewModel(
             onAlbumDeleted: () -> Unit
     ) = toggleItemFavouriteState(
             album.domain,
+            album.id,
             isAlbumSaved,
             insertAlbum,
             deleteAlbum,
@@ -145,13 +148,14 @@ class MainViewModel(
 
     private fun <T> toggleItemFavouriteState(
             item: T,
-            isSavedUseCase: SingleUseCaseWithArgs<T, Boolean>,
+            id: String,
+            isSavedUseCase: SingleUseCaseWithArgs<String, Boolean>,
             insertUseCase: CompletableUseCaseWithArgs<T>,
             deleteUseCase: CompletableUseCaseWithArgs<T>,
             onInserted: () -> Unit,
             onDeleted: () -> Unit
     ) {
-        isSavedUseCase(item)
+        isSavedUseCase(id)
                 .flatMap { isSaved ->
                     if (isSaved) deleteUseCase(item)
                             .toSingle { ItemInsertDeleteResult.Deleted }

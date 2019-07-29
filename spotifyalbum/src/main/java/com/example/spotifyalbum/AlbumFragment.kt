@@ -1,123 +1,175 @@
 package com.example.spotifyalbum
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.coreandroid.BR
-import com.example.coreandroid.R
+import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.mvrx.*
+import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.Loading
+import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Artist
-import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.model.spotify.clickableListItem
+import com.example.coreandroid.util.asyncController
+import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.view.recyclerview.adapter.ArtistsAndTracksAdapter
-import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.view.recyclerview.item.ListItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
-import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.coreandroid.util.infiniteCarousel
+import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
+import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 
-class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
+class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
-    private val fragmentFactory: IFragmentFactory by inject()
+    override val factory: IFragmentFactory by inject()
 
-    private val album: Album by lazy { arguments!!.getParcelable<Album>(ARG_ALBUM) }
+    private val builder by inject<Handler>(named("builder"))
+    private val differ by inject<Handler>(named("differ"))
 
-    private val artistsAndTracksAdapter: ArtistsAndTracksAdapter by lazy {
-        ArtistsAndTracksAdapter(
-                RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
-                        object : ListItemView<Artist>(viewModel.viewState.artists) {
-                            override val itemViewBinder: ItemBinder<Artist>
-                                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
-                        },
-                        ClickHandler {
-                            navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
-                        },
-                        onReloadBtnClickListener = View.OnClickListener {
-                            viewModel.loadAlbumsArtists(album.artists.map { it.id })
+    private val viewModel: AlbumViewModel by fragmentViewModel()
+
+    private val album: Album by args()
+
+    private val epoxyController by lazy {
+        asyncController(builder, differ, viewModel) { state ->
+            headerItem {
+                id("artists-header")
+                text("Artists")
+            }
+
+            when (state.artists.status) {
+                is Loading -> loadingIndicator {
+                    id("loading-indicator-artists")
+                }
+
+                is LoadingFailed<*> -> reloadControl {
+                    id("reload-control")
+                    onReloadClicked(View.OnClickListener {
+                        withState(viewModel) { state -> viewModel.loadAlbumsArtists(state.album.artists.map { it.id }) }
+                    })
+                    message("Error occurred lmao") //TODO: error msg
+                }
+
+                is LoadedSuccessfully -> carousel {
+                    id("artists")
+                    withModelsFrom(state.artists.value) { artist ->
+                        artist.clickableListItem {
+                            show { newSpotifyArtistFragment(artist) }
                         }
-                ),
-                RecyclerViewItemView(
-                        RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks, viewModel.viewState.tracksLoadingErrorOccurred),
-                        object : ListItemView<Track>(viewModel.viewState.tracks) {
-                            override val itemViewBinder: ItemBinder<Track>
-                                get() = ItemBinderBase(BR.track, R.layout.track_popularity_item)
-                        },
-                        ClickHandler {
-                            navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
-                        },
-                        onReloadBtnClickListener = View.OnClickListener { viewModel.loadTracksFromAlbum(album.id) }
-                )
-        )
+                    }
+                }
+            }
+
+            headerItem {
+                id("tracks-header")
+                text("Tracks")
+            }
+
+            val loadTracks: () -> Unit = { withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) } }
+
+            fun tracksCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
+                    minItemsBeforeLoadingMore = 1,
+                    onLoadMore = loadTracks
+            ) {
+                id("tracks")
+                withModelsFrom(
+                        items = state.tracks.value,
+                        extraModels = extraModels
+                ) { track ->
+                    TrackPopularityItemBindingModel_()
+                            .id(track.id)
+                            .track(track) //TODO: navigation + a nicer layout
+                }
+            }
+
+            if (state.tracks.value.isEmpty()) {
+                when (state.tracks.status) {
+                    is Loading -> loadingIndicator {
+                        id("loading-indicator-tracks")
+                    }
+
+                    is LoadingFailed<*> -> reloadControl {
+                        id("reload-control")
+                        onReloadClicked(View.OnClickListener { loadTracks() })
+                        message("Error occurred lmao") //TODO: error msg
+                    }
+                }
+            } else {
+                tracksCarousel(extraModels = when (state.tracks.status) {
+                    is Loading -> listOf(LoadingIndicatorBindingModel_()
+                            .id("loading-more-tracks"))
+                    is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
+                            .message("Error occurred")
+                            .onReloadClicked(View.OnClickListener { loadTracks() }))
+                    else -> emptyList()
+                })
+            }
+        }
     }
 
     private val view: AlbumView by lazy {
         AlbumView(
-                state = viewModel.viewState,
                 album = album,
-                onFavouriteBtnClickListener = View.OnClickListener {
-                    if (viewModel.viewState.isSavedAsFavourite.get() == true) {
-                        viewModel.deleteFavouriteAlbum(album)
-                        Toast.makeText(activity, "${album.name} deleted from favourite albums", Toast.LENGTH_SHORT).show()
-                    } else {
-                        viewModel.addFavouriteAlbum(album)
-                        Toast.makeText(activity, "${album.name} added to favourite albums.", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                artistsAndTracksAdapter = artistsAndTracksAdapter
+                onFavouriteBtnClickListener = View.OnClickListener { viewModel.toggleAlbumFavouriteState() } //TODO: test this
         )
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(::loadData) {
-            viewModel.viewState.tracks.isEmpty() || viewModel.viewState.artists.isEmpty()
+            withState(viewModel) {
+                (it.tracks.loadingFailed && it.tracks.value.isEmpty()) || it.artists.loadingFailed
+            }
         }
     }
 
     private val disposablesComponent = DisposablesComponent()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(inflater, com.example.spotifyalbum.R.layout.fragment_album, container, false)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
-            binding.albumFavouriteFab.hideAndShow()
-        })
+        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(
+                inflater, R.layout.fragment_album, container, false)
         mainContentFragment?.enablePlayButton {
             val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
-            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                playAlbum()
-            } else {
-                spotifyLoginController?.showLoginDialog()
-                spotifyLoginController?.onLoginSuccessful = playAlbum
+            if (spotifyPlayerController?.isPlayerLoggedIn == true) playAlbum()
+            else spotifyLoginController?.let {
+                it.showLoginDialog()
+                it.onLoginSuccessful = playAlbum
             }
         }
         return binding.apply {
             view = this@AlbumFragment.view
             albumToolbarGradientBackgroundView.loadBackgroundGradient(album.iconUrl, disposablesComponent)
-            albumRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            albumRecyclerView.apply {
+                setController(epoxyController)
+                //TODO: animation
+            }
             albumToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.selectSubscribe(this, AlbumViewState::isSavedAsFavourite) {
+            album_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
+                    if (it.value) R.drawable.delete else R.drawable.favourite))
+            album_favourite_fab?.hideAndShow()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         lifecycle.addObserver(disposablesComponent)
-        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -127,13 +179,13 @@ class AlbumFragment : BaseVMFragment<AlbumViewModel>(AlbumViewModel::class) {
         lifecycle.addObserver(connectivityComponent)
     }
 
+    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+
     private fun loadData() = viewModel.loadAlbumData(album)
 
     companion object {
-        private const val ARG_ALBUM = "ARG_ALBUM"
-
         fun newInstance(album: Album) = AlbumFragment().apply {
-            arguments = Bundle().apply { putParcelable(ARG_ALBUM, album) }
+            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, album) }
         }
     }
 }

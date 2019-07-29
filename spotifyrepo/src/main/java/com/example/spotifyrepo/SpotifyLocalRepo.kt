@@ -55,24 +55,24 @@ class SpotifyLocalRepo(
     }
 
     override fun isAlbumSaved(
-            album: AlbumEntity
-    ): Single<Boolean> = albumDao.findById(album.id).isPresent()
+            albumId: String
+    ): Single<Boolean> = albumDao.findById(albumId).isPresent()
 
     override fun isArtistSaved(
-            artist: ArtistEntity
-    ): Single<Boolean> = artistDao.findById(artist.id).isPresent()
+            artistId: String
+    ): Single<Boolean> = artistDao.findById(artistId).isPresent()
 
     override fun isCategorySaved(
-            category: CategoryEntity
-    ): Single<Boolean> = artistDao.findById(category.id).isPresent()
+            categoryId: String
+    ): Single<Boolean> = artistDao.findById(categoryId).isPresent()
 
     override fun isPlaylistSaved(
-            playlist: PlaylistEntity
-    ): Single<Boolean> = spotifyPlaylistDao.findById(playlist.id).isPresent()
+            playlistId: String
+    ): Single<Boolean> = spotifyPlaylistDao.findById(playlistId).isPresent()
 
     override fun isTrackSaved(
-            track: TrackEntity
-    ): Single<Boolean> = trackDao.findById(track.id).isPresent()
+            trackId: String
+    ): Single<Boolean> = trackDao.findById(trackId).isPresent()
 
     override fun deleteAlbum(album: AlbumEntity): Completable = Completable.fromCallable {
         albumDao.delete(album.db)

@@ -31,9 +31,9 @@ class InsertAlbum(
 class IsAlbumSaved(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
-) : SingleUseCaseWithArgs<AlbumEntity, Boolean>(schedulersProvider) {
+) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
 
-    override fun run(args: AlbumEntity): Single<Boolean> = repository.isAlbumSaved(args)
+    override fun run(args: String): Single<Boolean> = repository.isAlbumSaved(args)
 }
 
 class DeleteAlbum(

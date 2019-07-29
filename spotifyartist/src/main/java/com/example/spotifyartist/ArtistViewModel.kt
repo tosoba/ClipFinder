@@ -120,7 +120,7 @@ class ArtistViewModel(
     }
 
     private fun loadArtistFavouriteState() = lastArtist?.let { artist ->
-        isArtistSaved(artist.domain)
+        isArtistSaved(artist.id)
                 .subscribeAndDisposeOnCleared {
                     viewStates.peek().isSavedAsFavourite.set(it)
                     viewState.isSavedAsFavourite.set(it)

@@ -1,12 +1,12 @@
 package com.example.coreandroid.base.trackvideos
 
-import android.util.Log
 import androidx.databinding.ObservableField
 import com.example.coreandroid.base.model.BaseTrackUiModel
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.there.domain.usecase.base.DeleteTrackUseCase
 import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
+import timber.log.Timber
 import java.util.*
 
 abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, TrackEntity>(
@@ -43,7 +43,7 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(true)
                 viewState.isSavedAsFavourite.set(true)
-            }, { Log.e(javaClass.name, "Insert error.") })
+            }, Timber::e)
 
     fun deleteFavouriteTrack(
             track: Track
@@ -51,11 +51,11 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
             .subscribeAndDisposeOnCleared({
                 viewStates.peek().isSavedAsFavourite.set(false)
                 viewState.isSavedAsFavourite.set(false)
-            }, { Log.e(javaClass.name, "Delete error.") })
+            }, Timber::e)
 
     private fun loadTrackFavouriteState(
             track: Track
-    ) = isTrackSaved(track.domainEntity)
+    ) = isTrackSaved(track.id)
             .subscribeAndDisposeOnCleared {
                 viewStates.peek().isSavedAsFavourite.set(it)
                 viewState.isSavedAsFavourite.set(it)
