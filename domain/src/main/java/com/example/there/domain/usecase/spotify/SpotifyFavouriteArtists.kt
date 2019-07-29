@@ -30,9 +30,9 @@ class InsertArtist(
 class IsArtistSaved(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
-) : SingleUseCaseWithArgs<ArtistEntity, Boolean>(schedulersProvider) {
+) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
 
-    override fun run(args: ArtistEntity): Single<Boolean> = repository.isArtistSaved(args)
+    override fun run(args: String): Single<Boolean> = repository.isArtistSaved(args)
 }
 
 class DeleteArtist(

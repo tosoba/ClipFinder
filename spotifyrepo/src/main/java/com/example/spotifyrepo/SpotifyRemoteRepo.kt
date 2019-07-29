@@ -289,46 +289,29 @@ class SpotifyRemoteRepo(
     )
 
     override fun getTracksFromAlbum(
-            albumId: String
-    ): Observable<Resource<ListPage<TrackEntity>>> {
-        val offsetSubject = BehaviorSubject.createDefault(0)
-        return offsetSubject.concatMap { offset ->
-            withTokenObservable { token ->
-                api.getTracksFromAlbum(
-                        authorization = getAccessTokenHeader(token),
-                        albumId = albumId,
-                        offset = offset
-                ).toObservable().mapToDataOrThrow {
-                    TrackIdsPage(
-                            ids = tracks.joinToString(separator = ",") { it.id },
-                            offset = offset,
-                            totalItems = totalItems)
-                }.flatMap { idsPage ->
-                    api.getTracks(
-                            authorization = getAccessTokenHeader(token),
-                            ids = idsPage.ids
-                    ).toObservable().mapToDataOrThrow {
-                        ListPage(
-                                items = tracks.map(TrackApiModel::domain),
-                                offset = idsPage.offset,
-                                totalItems = idsPage.totalItems
-                        )
-                    }
-                }
-            }.doOnNext { entityPage ->
-                if (entityPage.offset < entityPage.totalItems - SpotifyApi.DEFAULT_LIMIT)
-                    offsetSubject.onNext(entityPage.offset + SpotifyApi.DEFAULT_LIMIT)
-                else offsetSubject.onComplete()
-            }.map<Resource<ListPage<TrackEntity>>> {
-                Resource.Success(it)
-            }.onErrorResumeNext { throwable: Throwable ->
-                when (throwable) {
-                    is ThrowableServerError -> Observable.just(Resource.Error(throwable.error))
-                    else -> Observable.just(Resource.Error(throwable))
-                }
+            albumId: String, offset: Int
+    ): Single<Resource<ListPage<TrackEntity>>> = withTokenSingle { token ->
+        api.getTracksFromAlbum(
+                authorization = getAccessTokenHeader(token),
+                albumId = albumId,
+                offset = offset
+        ).mapToDataOrThrow {
+            TrackIdsPage(
+                    ids = tracks.joinToString(separator = ",") { it.id },
+                    offset = offset,
+                    totalItems = totalItems)
+        }.flatMap { idsPage ->
+            api.getTracks(
+                    authorization = getAccessTokenHeader(token),
+                    ids = idsPage.ids
+            ).mapToResource {
+                ListPage(
+                        items = tracks.map(TrackApiModel::domain),
+                        offset = idsPage.offset + SpotifyApi.DEFAULT_LIMIT,
+                        totalItems = idsPage.totalItems
+                )
             }
         }
-
     }
 
     override fun getNewReleases(

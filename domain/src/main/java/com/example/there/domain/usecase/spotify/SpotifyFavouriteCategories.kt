@@ -30,9 +30,9 @@ class InsertCategory(
 class IsCategorySaved(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: ISpotifyLocalRepo
-) : SingleUseCaseWithArgs<CategoryEntity, Boolean>(schedulersProvider) {
+) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
 
-    override fun run(args: CategoryEntity): Single<Boolean> = repository.isCategorySaved(args)
+    override fun run(args: String): Single<Boolean> = repository.isCategorySaved(args)
 }
 
 class DeleteCategory(

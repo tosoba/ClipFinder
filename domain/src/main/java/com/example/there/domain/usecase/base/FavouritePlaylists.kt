@@ -16,8 +16,8 @@ abstract class InsertPlaylistUseCase<Playlist>(
 abstract class IsPlaylistSavedUseCase<Playlist>(
         schedulersProvider: UseCaseSchedulersProvider,
         private val repository: IFavouritePlaylistRepository<Playlist>
-) : SingleUseCaseWithArgs<Playlist, Boolean>(schedulersProvider) {
-    override fun run(args: Playlist): Single<Boolean> = repository.isPlaylistSaved(args)
+) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
+    override fun run(args: String): Single<Boolean> = repository.isPlaylistSaved(args)
 }
 
 abstract class DeletePlaylistUseCase<Playlist>(

@@ -54,6 +54,6 @@ class PlaylistViewModel(
 
     private fun loadPlaylistFavouriteState(
             playlist: Playlist
-    ) = isSpotifyPlaylistSaved(playlist.domain)
+    ) = isSpotifyPlaylistSaved(playlist.id)
             .subscribeAndDisposeOnCleared(viewState.isSavedAsFavourite::set)
 }

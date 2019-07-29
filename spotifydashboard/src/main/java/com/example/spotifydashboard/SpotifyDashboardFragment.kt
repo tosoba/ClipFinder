@@ -43,7 +43,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     override val toolbar: Toolbar
         get() = dashboard_toolbar
 
-    //TODO: test what happens on no connection
     private val epoxyController by lazy {
         asyncController(builder, differ, viewModel) { state ->
             headerItem {
