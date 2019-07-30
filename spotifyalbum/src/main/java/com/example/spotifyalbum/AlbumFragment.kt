@@ -138,14 +138,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(
                 inflater, R.layout.fragment_album, container, false)
-        mainContentFragment?.enablePlayButton {
-            val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
-            if (spotifyPlayerController?.isPlayerLoggedIn == true) playAlbum()
-            else spotifyLoginController?.let {
-                it.showLoginDialog()
-                it.onLoginSuccessful = playAlbum
-            }
-        }
+        enableSpotifyPlayButton { loadAlbum(album) }
         return binding.apply {
             view = this@AlbumFragment.view
             albumToolbarGradientBackgroundView.loadBackgroundGradient(album.iconUrl, disposablesComponent)

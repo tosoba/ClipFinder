@@ -91,15 +91,8 @@ class TrackVideosFragment :
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.trackFavouriteFab.hideAndShow()
         })
-        mainContentFragment?.enablePlayButton {
-            viewModel.viewState.track.get()?.let {
-                val playTrack: () -> Unit = { spotifyPlayerController?.loadTrack(track = it) }
-                if (spotifyPlayerController?.isPlayerLoggedIn == true) playTrack()
-                else spotifyLoginController?.let {
-                    it.showLoginDialog()
-                    it.onLoginSuccessful = playTrack
-                }
-            }
+        enableSpotifyPlayButton {
+            viewModel.viewState.track.get()?.let { loadTrack(track = it) }
         }
         return binding.apply {
             view = this@TrackVideosFragment.view

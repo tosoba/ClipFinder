@@ -59,15 +59,7 @@ class PlaylistFragment : BaseVMFragment<PlaylistViewModel>(PlaylistViewModel::cl
         lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
             binding.playlistFavouriteFab.hideAndShow()
         })
-        mainContentFragment?.enablePlayButton {
-            val playPlaylist: () -> Unit = { spotifyPlayerController?.loadPlaylist(playlist) }
-            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                playPlaylist()
-            } else {
-                spotifyLoginController?.showLoginDialog()
-                spotifyLoginController?.onLoginSuccessful = playPlaylist
-            }
-        }
+        enableSpotifyPlayButton { loadPlaylist(playlist) }
         return binding.apply {
             view = this@PlaylistFragment.view
             playlistToolbarGradientBackgroundView.loadBackgroundGradient(playlist.iconUrl, disposablesComponent)

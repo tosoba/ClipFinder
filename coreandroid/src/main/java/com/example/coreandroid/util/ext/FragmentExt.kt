@@ -119,3 +119,13 @@ fun Fragment.reloadingConnectivityComponent(
         activity?.startActivity(Intent(Settings.ACTION_SETTINGS))
     }
 })
+
+fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> Unit) {
+    mainContentFragment?.enablePlayButton {
+        if (spotifyPlayerController?.isPlayerLoggedIn == true) spotifyPlayerController?.playClicked()
+        else spotifyLoginController?.let {
+            it.showLoginDialog()
+            it.onLoginSuccessful = { spotifyPlayerController?.playClicked() }
+        }
+    }
+}
