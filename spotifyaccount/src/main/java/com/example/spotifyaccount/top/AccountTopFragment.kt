@@ -52,9 +52,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
                                 ClickHandler {
                                     navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() = viewModel.loadArtists()
-                                }
+                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadArtists() }
                         ),
                         RecyclerViewItemView(
                                 RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.tracksLoadingErrorOccurred),
@@ -65,9 +63,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
                                 ClickHandler {
                                     navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() = viewModel.loadTracks()
-                                }
+                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadTracks() }
                         )
                 )
         )

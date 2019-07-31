@@ -42,9 +42,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        object : EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
-            override fun onLoadMore() = viewModel.searchRelatedVideosWithToLastId()
-        }
+        EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) { viewModel.searchRelatedVideosWithToLastId() }
     }
 
     private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {

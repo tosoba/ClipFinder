@@ -68,8 +68,8 @@ class InfiniteNestedScrollingCarouselModel(
 ) : NestedScrollingCarouselModel() {
 
     override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
-        addOnScrollListener(object : EndlessRecyclerOnScrollListener(visibleThreshold, minItemsBeforeLoadingMore) {
-            override fun onLoadMore() = this@InfiniteNestedScrollingCarouselModel.onLoadMore()
+        addOnScrollListener(EndlessRecyclerOnScrollListener(visibleThreshold, minItemsBeforeLoadingMore) {
+            this@InfiniteNestedScrollingCarouselModel.onLoadMore()
         })
     }
 }

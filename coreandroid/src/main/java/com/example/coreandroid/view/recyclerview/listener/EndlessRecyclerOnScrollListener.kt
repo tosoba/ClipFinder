@@ -4,9 +4,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-abstract class EndlessRecyclerOnScrollListener(
+class EndlessRecyclerOnScrollListener(
         private val visibleThreshold: Int = 5,
-        private val minItemsBeforeLoadingMore: Int = 0
+        private val minItemsBeforeLoadingMore: Int = 0,
+        private val onLoadMore: () -> Unit
 ) : RecyclerView.OnScrollListener() {
     private var previousItemCount = 0
     private var loading = true
@@ -30,6 +31,4 @@ abstract class EndlessRecyclerOnScrollListener(
             loading = true
         }
     }
-
-    abstract fun onLoadMore()
 }

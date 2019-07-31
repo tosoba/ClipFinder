@@ -2,6 +2,7 @@ package com.example.coreandroid.model.spotify
 
 import android.os.Parcelable
 import android.view.View
+import com.example.coreandroid.GridPlaylistItemBindingModel_
 import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.R
 import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
@@ -36,4 +37,11 @@ fun Playlist.clickableListItem(
         .loadingDrawableId(R.drawable.playlist_placeholder)
         .label(name)
         .showGradient(false)
+        .itemClicked(View.OnClickListener { itemClicked() })
+
+fun Playlist.clickableGridListItem(
+        itemClicked: () -> Unit
+): GridPlaylistItemBindingModel_ = GridPlaylistItemBindingModel_()
+        .id(id)
+        .playlist(this)
         .itemClicked(View.OnClickListener { itemClicked() })

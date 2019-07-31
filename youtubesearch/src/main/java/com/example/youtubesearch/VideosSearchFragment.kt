@@ -50,8 +50,8 @@ class VideosSearchFragment :
     override val videos: List<Video>
         get() = viewModel.viewState.videos.map { it.video }
 
-    private val onScrollListener: RecyclerView.OnScrollListener = object : EndlessRecyclerOnScrollListener() {
-        override fun onLoadMore() = viewModel.searchVideosWithLastQuery()
+    private val onScrollListener: RecyclerView.OnScrollListener = EndlessRecyclerOnScrollListener {
+        viewModel.searchVideosWithLastQuery()
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {

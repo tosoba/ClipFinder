@@ -6,17 +6,20 @@
         <variable
             name="playlist"
             type="com.example.coreandroid.model.spotify.Playlist" />
+
+        <variable
+            name="itemClicked"
+            type="android.view.View.OnClickListener" />
     </data>
 
 
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
         imageSrc="@{playlist.imageViewSrc}"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginBottom="6dp"
+        android:layout_height="120dp"
         android:foreground="@drawable/spotify_foreground_ripple"
+        android:clickable="@{itemClicked != null}"
+        android:onClick="@{itemClicked}"
         android:scaleType="fitXY" />
 
 </layout>

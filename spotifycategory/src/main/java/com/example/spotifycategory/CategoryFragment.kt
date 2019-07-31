@@ -16,9 +16,10 @@ import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
 import com.example.coreandroid.model.spotify.Category
-import com.example.coreandroid.model.spotify.clickableListItem
+import com.example.coreandroid.model.spotify.clickableGridListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
+import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_category.*
@@ -37,13 +38,14 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val viewModel: CategoryViewModel by fragmentViewModel()
 
-    //TODO: add endless scroll listener
+    //TODO: test endless scroll listener
     private val epoxyController by lazy {
         itemListController(builder, differ, viewModel,
                 CategoryViewState::playlists, "Playlists",
+                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadPlaylists() },
                 reloadClicked = { viewModel.loadPlaylists() }
         ) {
-            it.clickableListItem { show { newSpotifyPlaylistFragment(it) } }
+            it.clickableGridListItem { show { newSpotifyPlaylistFragment(it) } }
         }
     }
 
@@ -87,7 +89,9 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
             categoryToolbarGradientBackgroundView.loadBackgroundGradient(category.iconUrl, disposablesComponent)
             categoryRecyclerView.apply {
                 setController(epoxyController)
-                layoutManager = GridLayoutManager(context, if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                layoutManager = GridLayoutManager(context,
+                        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                setItemSpacingDp(5)
                 //TODO: animation
             }
             categoryToolbar.setupWithBackNavigation(appCompatActivity)
@@ -105,7 +109,8 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        category_recycler_view?.layoutManager = GridLayoutManager(context, if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+        category_recycler_view?.layoutManager = GridLayoutManager(context,
+                if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false

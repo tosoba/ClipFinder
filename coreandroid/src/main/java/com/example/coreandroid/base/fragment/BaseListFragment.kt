@@ -70,11 +70,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         get() = if (activity?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) 3 else 2
 
     private val onScrollListener: RecyclerView.OnScrollListener by lazy {
-        object : EndlessRecyclerOnScrollListener() {
-            override fun onLoadMore() {
-                loadMore?.invoke()
-            }
-        }
+        EndlessRecyclerOnScrollListener { loadMore?.invoke() }
     }
 
     protected abstract fun fragmentToShowOnItemClick(item: T): Fragment

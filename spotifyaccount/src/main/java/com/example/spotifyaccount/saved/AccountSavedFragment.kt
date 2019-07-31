@@ -51,9 +51,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(fragmentFactory.newSpotifyAlbumFragment(album = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() = viewModel.loadAlbums()
-                                }
+                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadAlbums() }
                         ),
                         RecyclerViewItemView(
                                 RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.tracks, viewModel.viewState.tracksLoadingErrorOccurred),
@@ -64,11 +62,7 @@ class AccountSavedFragment :
                                 ClickHandler {
                                     navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
                                 },
-                                onScrollListener = object : EndlessRecyclerOnScrollListener() {
-                                    override fun onLoadMore() {
-                                        viewModel.loadTracks()
-                                    }
-                                }
+                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadTracks() }
                         )
                 )
         )
