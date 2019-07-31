@@ -1,54 +1,69 @@
 package com.example.spotifycategory
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import com.example.coreandroid.base.fragment.BaseVMFragment
+import com.airbnb.mvrx.*
+import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
 import com.example.coreandroid.model.spotify.Category
+import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.ext.*
-import com.example.itemlist.spotify.SpotifyPlaylistsFragment
+import com.example.coreandroid.view.epoxy.itemListController
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.example.spotifyrepo.preferences.SpotifyPreferences
+import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
+import timber.log.Timber
 
-class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::class) {
+class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
-    private val category: Category by lazy { arguments!!.getParcelable<Category>(ARG_CATEGORY) }
+    override val factory: IFragmentFactory by inject()
+
+    private val builder by inject<Handler>(named("builder"))
+    private val differ by inject<Handler>(named("differ"))
+
+    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+
+    private val viewModel: CategoryViewModel by fragmentViewModel()
+
+    private val epoxyController by lazy {
+        itemListController(builder, differ, viewModel,
+                CategoryViewState::playlists, "Playlists",
+                reloadClicked = { viewModel.loadPlaylists() }
+        ) {
+            it.clickableListItem { show { newSpotifyPlaylistFragment(it) } }
+        }
+    }
+
+    private val category: Category by args()
 
     private val view: CategoryView by lazy {
         CategoryView(
-                state = viewModel.viewState,
                 category = category,
                 onFavouriteBtnClickListener = View.OnClickListener {
-                    if (viewModel.viewState.isSavedAsFavourite.get() == true) {
-                        viewModel.deleteFavouriteCategory(category)
-                        Toast.makeText(activity, "${category.name} removed from favourite categories.", Toast.LENGTH_SHORT).show()
-                    } else {
-                        viewModel.addFavouriteCategory(category)
-                        Toast.makeText(activity, "${category.name} added to favourite categories.", Toast.LENGTH_SHORT).show()
-                    }
+                    viewModel.toggleCategoryFavouriteState()
                 }
         )
     }
 
     private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent(::loadData) { viewModel.playlists.value == null }
+        reloadingConnectivityComponent({ viewModel.loadPlaylists() }) {
+            withState(viewModel) { state -> state.playlists.isEmptyAndLastLoadingFailed() }
+        }
     }
 
     private val disposablesComponent = DisposablesComponent()
 
     private val appPreferences: SpotifyPreferences by inject()
-
-    private val playlistsFragment: SpotifyPlaylistsFragment?
-        get() = childFragmentManager.findFragmentById(R.id.category_spotify_playlists_fragment) as? SpotifyPlaylistsFragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,53 +74,45 @@ class CategoryFragment : BaseVMFragment<CategoryViewModel>(CategoryViewModel::cl
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         observePreferences()
-        loadData()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
-            binding.categoryFavouriteFab.hideAndShow()
-        })
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@CategoryFragment.view
             categoryToolbarGradientBackgroundView.loadBackgroundGradient(category.iconUrl, disposablesComponent)
+            categoryRecyclerView.apply {
+                setController(epoxyController)
+                //TODO: animation
+            }
             categoryToolbar.setupWithBackNavigation(appCompatActivity)
         }.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playlistsFragment!!.loadMore = ::loadData
+        viewModel.selectSubscribe(this, CategoryViewState::isSavedAsFavourite) {
+            category_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
+                    if (it.value) R.drawable.delete else R.drawable.favourite))
+            category_favourite_fab?.hideAndShow()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
-    override fun setupObservers() {
-        super.setupObservers()
-        viewModel.playlists.observe(this, Observer { playlists ->
-            playlists?.let { playlistsFragment?.updateItems(it, false) }
-        })
+    private fun observePreferences() {
+        appPreferences.countryObservable
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe({ viewModel.loadPlaylists(true) }, Timber::e)
+                .disposeWith(disposablesComponent)
     }
 
-    private fun observePreferences() = disposablesComponent.add(appPreferences.countryObservable
-            .skip(1)
-            .distinctUntilChanged()
-            .subscribe {
-                playlistsFragment?.clearItems()
-                viewModel.loadData(category.id, true)
-            }
-    )
-
-    private fun loadData() = viewModel.loadPlaylists(category)
-
     companion object {
-        private const val ARG_CATEGORY = "ARG_CATEGORY"
-
         fun newInstance(category: Category) = CategoryFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(ARG_CATEGORY, category)
+                putParcelable(MvRx.KEY_ARG, category)
             }
         }
     }
