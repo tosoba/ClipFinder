@@ -1,5 +1,6 @@
 package com.example.spotifycategory
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
@@ -35,6 +37,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val viewModel: CategoryViewModel by fragmentViewModel()
 
+    //TODO: add endless scroll listener
     private val epoxyController by lazy {
         itemListController(builder, differ, viewModel,
                 CategoryViewState::playlists, "Playlists",
@@ -84,6 +87,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
             categoryToolbarGradientBackgroundView.loadBackgroundGradient(category.iconUrl, disposablesComponent)
             categoryRecyclerView.apply {
                 setController(epoxyController)
+                layoutManager = GridLayoutManager(context, if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
                 //TODO: animation
             }
             categoryToolbar.setupWithBackNavigation(appCompatActivity)
@@ -97,6 +101,11 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
                     if (it.value) R.drawable.delete else R.drawable.favourite))
             category_favourite_fab?.hideAndShow()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        category_recycler_view?.layoutManager = GridLayoutManager(context, if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
