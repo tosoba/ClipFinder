@@ -6,7 +6,6 @@ import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import com.example.spotifyaccount.playlist.AccountPlaylistsViewModel
 import com.example.spotifyaccount.saved.AccountSavedViewModel
 import com.example.spotifyaccount.top.AccountTopViewModel
-import com.example.spotifyalbum.AlbumViewModel
 import com.example.spotifyartist.ArtistViewModel
 import com.example.spotifycategory.CategoryViewModel
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
@@ -24,7 +23,6 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
     viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { AlbumViewModel(get(), get(), get(), get(), get()) }
     viewModel { ArtistViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { CategoryViewModel(get(), get(), get(), get()) }
     viewModel { PlaylistViewModel(get(), get(), get(), get()) }

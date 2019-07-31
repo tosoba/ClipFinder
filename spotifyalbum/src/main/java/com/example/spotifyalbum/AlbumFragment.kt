@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.*
@@ -13,7 +14,6 @@ import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
@@ -24,8 +24,8 @@ import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
 import com.example.coreandroid.util.withModelsFrom
-import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
+import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -66,7 +66,6 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                     withModelsFrom(state.artists.value) { artist ->
                         artist.clickableListItem {
                             show { newSpotifyArtistFragment(artist) }
-
                         }
                     }
                 }
@@ -77,22 +76,20 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 text("Tracks")
             }
 
-            fun loadTracks(): () -> Unit = { withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) } }
+            val loadTracks: () -> Unit = { withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) } }
 
             fun tracksCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
                     minItemsBeforeLoadingMore = 1,
-                    onLoadMore = ::loadTracks
+                    onLoadMore = loadTracks
             ) {
                 id("tracks")
                 withModelsFrom(
-                        items = state.tracks.value.chunked(2),
+                        items = state.tracks.value,
                         extraModels = extraModels
-                ) { chunk ->
-                    Column(chunk.map { track ->
-                        TrackPopularityItemBindingModel_()
-                                .id(track.id)
-                                .track(track) //TODO: navigation
-                    })
+                ) { track ->
+                    TrackPopularityItemBindingModel_()
+                            .id(track.id)
+                            .track(track) //TODO: navigation + a nicer layout
                 }
             }
 
@@ -104,7 +101,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
                     is LoadingFailed<*> -> reloadControl {
                         id("reload-control")
-                        onReloadClicked(View.OnClickListener { loadTracks()() })
+                        onReloadClicked(View.OnClickListener { loadTracks() })
                         message("Error occurred lmao") //TODO: error msg
                     }
                 }
@@ -114,7 +111,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                             .id("loading-more-tracks"))
                     is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
                             .message("Error occurred")
-                            .onReloadClicked(View.OnClickListener { loadTracks()() }))
+                            .onReloadClicked(View.OnClickListener { loadTracks() }))
                     else -> emptyList()
                 })
             }
@@ -123,9 +120,8 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val view: AlbumView by lazy {
         AlbumView(
-                state = viewModel.viewState, //TODO: remove this
                 album = album,
-                onFavouriteBtnClickListener = View.OnClickListener { viewModel.toggleAlbumFavouriteState() }
+                onFavouriteBtnClickListener = View.OnClickListener { viewModel.toggleAlbumFavouriteState() } //TODO: test this
         )
     }
 
@@ -142,19 +138,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(
                 inflater, R.layout.fragment_album, container, false)
-        //TODO: replace this with a select subscribe
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
-            binding.albumFavouriteFab.hideAndShow()
-        })
-        mainContentFragment?.enablePlayButton {
-            val playAlbum: () -> Unit = { spotifyPlayerController?.loadAlbum(album) }
-            if (spotifyPlayerController?.isPlayerLoggedIn == true) {
-                playAlbum()
-            } else {
-                spotifyLoginController?.showLoginDialog()
-                spotifyLoginController?.onLoginSuccessful = playAlbum
-            }
-        }
+        enableSpotifyPlayButton { loadAlbum(album) }
         return binding.apply {
             view = this@AlbumFragment.view
             albumToolbarGradientBackgroundView.loadBackgroundGradient(album.iconUrl, disposablesComponent)
@@ -166,11 +150,19 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         }.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.selectSubscribe(this, AlbumViewState::isSavedAsFavourite) {
+            album_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
+                    if (it.value) R.drawable.delete else R.drawable.favourite))
+            album_favourite_fab?.hideAndShow()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         lifecycle.addObserver(disposablesComponent)
-        loadData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -180,9 +172,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         lifecycle.addObserver(connectivityComponent)
     }
 
-    override fun invalidate() {
-        withState(viewModel) { state -> epoxyController.setData(state) }
-    }
+    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
 
     private fun loadData() = viewModel.loadAlbumData(album)
 

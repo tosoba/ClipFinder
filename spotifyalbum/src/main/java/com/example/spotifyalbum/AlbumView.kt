@@ -10,7 +10,6 @@ import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 
 class AlbumView(
-        val state: AlbumViewState,
         val album: Album,
         val onFavouriteBtnClickListener: View.OnClickListener
 )
@@ -21,5 +20,5 @@ data class AlbumViewState(
         val tracks: PagedDataList<Track> = PagedDataList(),
         val isSavedAsFavourite: Data<Boolean> = Data(false)
 ) : MvRxState {
-//    constructor(argAlbum: Album) : this(argAlbum, DataList(), DataList(), Data(false))
+    constructor(argAlbum: Album) : this(argAlbum, DataList(), PagedDataList(), Data(false))
 }

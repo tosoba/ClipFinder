@@ -9,6 +9,7 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import kotlin.reflect.KProperty1
 
 
 fun BaseMvRxFragment.simpleController(
@@ -39,6 +40,18 @@ fun <S : MvRxState, A : MvRxViewModel<S>> BaseMvRxFragment.asyncController(
         if (view == null || isRemoving) return
         withState(viewModel) { state ->
             build(state)
+        }
+    }
+}
+
+fun <S : MvRxState, A : MvRxViewModel<S>, L> BaseMvRxFragment.asyncController(
+        modelBuildingHandler: Handler, diffingHandler: Handler,
+        viewModel: A, prop: KProperty1<S, L>, build: EpoxyController.(state: L) -> Unit
+) = object : TypedEpoxyController<L>(modelBuildingHandler, diffingHandler) {
+    override fun buildModels(data: L) {
+        if (view == null || isRemoving) return
+        withState(viewModel) { state ->
+            build(prop.get(state))
         }
     }
 }

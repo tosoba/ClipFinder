@@ -26,8 +26,11 @@ class AlbumViewModel(
         private val isAlbumSaved: IsAlbumSaved
 ) : MvRxViewModel<AlbumViewState>(initialState) {
 
-    fun loadAlbumData(album: Album) = withState { state ->
-        if (state.album.id == album.id) return@withState
+    init {
+        loadAlbumData(initialState.album)
+    }
+
+    fun loadAlbumData(album: Album) {
         loadAlbumsArtists(artistIds = album.artists.map { it.id })
         loadTracksFromAlbum(albumId = album.id)
         loadAlbumFavouriteState(album)
