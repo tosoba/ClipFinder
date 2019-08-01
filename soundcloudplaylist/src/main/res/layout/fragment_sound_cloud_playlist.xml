@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.coreandroid.base.playlist.PlaylistView&lt;com.example.coreandroid.model.soundcloud.ISoundCloudPlaylist&gt;" />
+            type="com.example.coreandroid.base.playlist.PlaylistView&lt;com.example.coreandroid.model.soundcloud.BaseSoundCloudPlaylist&gt;" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -83,36 +83,12 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/sound_cloud_playlist_main_content"
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/sound_cloud_playlist_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/sound_cloud_background_gradient"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <fragment
-                android:id="@+id/sound_cloud_playlist_tracks_fragment"
-                android:name="com.example.itemlist.soundcloud.SoundCloudTracksFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:additional_hint_text=""
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:main_hint_text="@string/no_tracks_loaded_yet"
-                app:should_show_header="true" />
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="50dp"
-                android:visibility="@{safeUnbox(view.state.loadingInProgress) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/sound_cloud_playlist_favourite_fab"
@@ -120,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
+            android:src="@drawable/favourite"
             app:layout_anchor="@id/sound_cloud_playlist_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

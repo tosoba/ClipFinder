@@ -1,6 +1,8 @@
 package com.example.coreandroid.model.spotify
 
 import android.os.Parcelable
+import android.view.View
+import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.R
 import com.example.coreandroid.base.model.BaseTrackUiModel
 import com.example.coreandroid.mapper.spotify.domain
@@ -41,6 +43,16 @@ data class Track(
 
     override val domainEntity: TrackEntity get() = domain
 }
+
+fun Track.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_ = ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+        .imageUrl(iconUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.track_placeholder)
+        .loadingDrawableId(R.drawable.track_placeholder)
+        .label(name)
+        .itemClicked(View.OnClickListener { itemClicked() })
 
 @Parcelize
 data class TopTrack(val position: Int, val track: Track) : Parcelable, IdentifiableNumberedObservableListItem<String> {

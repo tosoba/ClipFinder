@@ -9,10 +9,9 @@ import com.example.coreandroid.view.imageview.ImageViewSrc
 import com.example.coreandroid.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
 
-interface ISoundCloudPlaylist : Parcelable, NamedImageListItem {
-    val artworkUrl: String?
-    val title: String
-
+sealed class BaseSoundCloudPlaylist : Parcelable, NamedImageListItem {
+    abstract val artworkUrl: String?
+    abstract val title: String
     override val name: String
         get() = title
 
@@ -34,7 +33,7 @@ data class SoundCloudPlaylist(
         override val title: String,
         val trackCount: Int,
         val userId: Int
-) : ISoundCloudPlaylist, IdentifiableNamedObservableListItem<Int> {
+) : BaseSoundCloudPlaylist(), IdentifiableNamedObservableListItem<Int> {
 
     override val name: String
         get() = super.name
@@ -60,7 +59,7 @@ data class SoundCloudSystemPlaylist(
         val shortDescription: String,
         override val title: String,
         val trackIds: List<Int>
-) : ISoundCloudPlaylist, IdentifiableNamedObservableListItem<String> {
+) : BaseSoundCloudPlaylist(), IdentifiableNamedObservableListItem<String> {
 
     override val name: String
         get() = super.name

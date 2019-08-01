@@ -1,59 +1,84 @@
 package com.example.spotifyplaylist
 
-import android.util.Log
-import com.example.coreandroid.base.playlist.BasePlaylistViewModel
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
+import com.example.core.model.mapData
+import com.example.coreandroid.base.playlist.PlaylistViewState
+import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.model.Data
+import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
-import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.GetPlaylistTracks
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
+import io.reactivex.schedulers.Schedulers
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class PlaylistViewModel(
+        initialState: PlaylistViewState<Playlist, Track>,
         private val getPlaylistTracks: GetPlaylistTracks,
         private val insertSpotifyPlaylist: InsertSpotifyPlaylist,
         private val deleteSpotifyPlaylist: DeleteSpotifyPlaylist,
         private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved
-) : BasePlaylistViewModel<Track>() {
+) : MvRxViewModel<PlaylistViewState<Playlist, Track>>(initialState) {
 
-    fun loadTracks(playlist: Playlist) {
-        loadData(playlist)
-        loadPlaylistFavouriteState(playlist)
+    init {
+        loadTracks()
+        loadPlaylistFavouriteState()
     }
 
-    private var currentOffset = 0
-    private var totalItems = 0
-
-    private fun loadData(playlist: Playlist) {
-        if (currentOffset == 0 || (currentOffset < totalItems)) {
-            viewState.loadingInProgress.set(true)
-            getPlaylistTracks(GetPlaylistTracks.Args(playlist.id, playlist.userId, currentOffset))
-                    .takeSuccessOnly()
-                    .doFinally { viewState.loadingInProgress.set(false) }
-                    .subscribeAndDisposeOnCleared({
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_TRACKS_LIMIT
-                        totalItems = it.totalItems
-                        mutableTracks.value = it.items.map(TrackEntity::ui)
-                    }, ::onError)
+    fun loadTracks() {
+        withState { state ->
+            if (state.tracks.status is Loading) return@withState
+            //TODO: check if offset works without current {}
+            getPlaylistTracks(GetPlaylistTracks.Args(state.playlist.id, state.playlist.userId, state.tracks.offset), applySchedulers = false)
+                    .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
+                    .subscribeOn(Schedulers.io())
+                    .updateWithPagedResource(PlaylistViewState<Playlist, Track>::tracks) { copy(tracks = it) }
         }
     }
 
-    fun addFavouritePlaylist(
-            playlist: Playlist
-    ) = insertSpotifyPlaylist(playlist.domain)
-            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(true) }, { Log.e(javaClass.name, "Insert error.") })
+    fun togglePlaylistFavouriteState() = withState { state ->
+        if (state.isSavedAsFavourite.value) deleteFavouritePlaylist(state.playlist)
+        else addFavouritePlaylist(state.playlist)
+    }
 
-    fun deleteFavouritePlaylist(
-            playlist: Playlist
-    ) = deleteSpotifyPlaylist(playlist.domain)
-            .subscribeAndDisposeOnCleared({ viewState.isSavedAsFavourite.set(false) }, { Log.e(javaClass.name, "Delete error.") })
+    private fun addFavouritePlaylist(playlist: Playlist) = insertSpotifyPlaylist(playlist.domain, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, Timber::e)
+            .disposeOnClear()
 
-    private fun loadPlaylistFavouriteState(
-            playlist: Playlist
-    ) = isSpotifyPlaylistSaved(playlist.id)
-            .subscribeAndDisposeOnCleared(viewState.isSavedAsFavourite::set)
+    private fun deleteFavouritePlaylist(playlist: Playlist) = deleteSpotifyPlaylist(playlist.domain, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, Timber::e)
+            .disposeOnClear()
+
+    private fun loadPlaylistFavouriteState() = withState { state ->
+        if (state.isSavedAsFavourite.status is Loading) return@withState
+
+        isSpotifyPlaylistSaved(state.playlist.id)
+                .subscribeOn(Schedulers.io())
+                .update(PlaylistViewState<Playlist, Track>::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+    }
+
+    companion object : MvRxViewModelFactory<PlaylistViewModel, PlaylistViewState<Playlist, Track>> {
+        override fun create(
+                viewModelContext: ViewModelContext, state: PlaylistViewState<Playlist, Track>
+        ): PlaylistViewModel {
+            val getPlaylistTracks: GetPlaylistTracks by viewModelContext.activity.inject()
+            val insertSpotifyPlaylist: InsertSpotifyPlaylist by viewModelContext.activity.inject()
+            val deleteSpotifyPlaylist: DeleteSpotifyPlaylist by viewModelContext.activity.inject()
+            val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved by viewModelContext.activity.inject()
+            return PlaylistViewModel(state, getPlaylistTracks, insertSpotifyPlaylist, deleteSpotifyPlaylist, isSpotifyPlaylistSaved)
+        }
+    }
 }

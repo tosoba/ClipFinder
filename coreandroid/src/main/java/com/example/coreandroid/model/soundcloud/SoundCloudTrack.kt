@@ -1,6 +1,8 @@
 package com.example.coreandroid.model.soundcloud
 
 import android.os.Parcelable
+import android.view.View
+import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.R
 import com.example.coreandroid.base.model.BaseTrackUiModel
 import com.example.coreandroid.mapper.soundcloud.domain
@@ -39,3 +41,13 @@ data class SoundCloudTrack(
     override val domainEntity: SoundCloudTrackEntity
         get() = domain
 }
+
+fun SoundCloudTrack.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_ = ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+        .imageUrl(artworkUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.track_placeholder)
+        .loadingDrawableId(R.drawable.track_placeholder)
+        .label(name)
+        .itemClicked(View.OnClickListener { itemClicked() })
