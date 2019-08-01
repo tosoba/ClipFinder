@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -12,14 +13,22 @@
             type="android.view.View.OnClickListener" />
     </data>
 
-
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-        imageSrc="@{playlist.imageViewSrc}"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:foreground="@drawable/spotify_foreground_ripple"
-        android:clickable="@{itemClicked != null}"
-        android:onClick="@{itemClicked}"
-        android:scaleType="fitXY" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            imageSrc="@{playlist.imageViewSrc}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clickable="@{itemClicked != null}"
+            android:foreground="@drawable/spotify_foreground_ripple"
+            android:onClick="@{itemClicked}"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
