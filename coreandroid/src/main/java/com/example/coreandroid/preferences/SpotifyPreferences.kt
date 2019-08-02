@@ -1,9 +1,9 @@
-package com.example.spotifyrepo.preferences
+package com.example.coreandroid.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.example.spotifyapi.SpotifyApi
+import com.example.core.SpotifyDefaults
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
@@ -18,13 +18,13 @@ open class SpotifyPreferences(context: Context) {
     private val languageRx: Preference<String>
 
     var country: String
-        get() = preferences.getString(PREF_KEY_COUNTRY, SpotifyApi.DEFAULT_COUNTRY)
-                ?: SpotifyApi.DEFAULT_COUNTRY
+        get() = preferences.getString(PREF_KEY_COUNTRY, SpotifyDefaults.COUNTRY)
+                ?: SpotifyDefaults.COUNTRY
         set(value) = preferences.edit().putString(PREF_KEY_COUNTRY, value).apply()
 
     var language: String
-        get() = preferences.getString(PREF_KEY_LANGUAGE, SpotifyApi.DEFAULT_LOCALE)
-                ?: SpotifyApi.DEFAULT_LOCALE
+        get() = preferences.getString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE)
+                ?: SpotifyDefaults.LOCALE
         set(value) = preferences.edit().putString(PREF_KEY_LANGUAGE, value).apply()
 
     var accessToken: AccessTokenEntity?
@@ -67,8 +67,8 @@ open class SpotifyPreferences(context: Context) {
 
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
-            if (!contains(PREF_KEY_COUNTRY)) edit().putString(PREF_KEY_COUNTRY, SpotifyApi.DEFAULT_COUNTRY).apply()
-            if (!contains(PREF_KEY_LANGUAGE)) edit().putString(PREF_KEY_LANGUAGE, SpotifyApi.DEFAULT_LOCALE).apply()
+            if (!contains(PREF_KEY_COUNTRY)) edit().putString(PREF_KEY_COUNTRY, SpotifyDefaults.COUNTRY).apply()
+            if (!contains(PREF_KEY_LANGUAGE)) edit().putString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE).apply()
         }
         rxPreferences = RxSharedPreferences.create(preferences)
 

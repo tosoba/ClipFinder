@@ -53,7 +53,3 @@ val TrackApiModel.domain: TrackEntity
             uri = uri,
             durationMs = durationMs
     )
-
-object ChartTrackIdMapper {
-    fun map(from: String): String = from.substring(from.lastIndexOf('/') + 1)
-}

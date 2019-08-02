@@ -16,7 +16,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repoModule = module {
-    single { SpotifyRemoteRepo(get(), get(), get(), get()) } bind ISpotifyRemoteDataStore::class
+    single { SpotifyRemoteRepo(get(), get(), get()) } bind ISpotifyRemoteDataStore::class
     single { SpotifyLocalRepo(get(), get(), get(), get(), get()) } bind ISpotifyLocalRepo::class
     single { VideosRemoteDataStore(get()) } bind IVideosRemoteDataStore::class
     single { VideosDbDataStore(get(), get(), get(), get()) } bind IVideosDbDataStore::class

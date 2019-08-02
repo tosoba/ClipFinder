@@ -1,4 +1,4 @@
-package com.example.spotifydashboard
+package com.example.spotifydashboard.ui
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -7,24 +7,24 @@ import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.spotify.TopTrack
+import com.example.spotifydashboard.domain.usecase.GetCategories
+import com.example.spotifydashboard.domain.usecase.GetDailyViralTracks
+import com.example.spotifydashboard.domain.usecase.GetFeaturedPlaylists
+import com.example.spotifydashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.there.domain.usecase.spotify.GetCategories
-import com.example.there.domain.usecase.spotify.GetDailyViralTracks
-import com.example.there.domain.usecase.spotify.GetFeaturedPlaylists
-import com.example.there.domain.usecase.spotify.GetNewReleases
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 class SpotifyDashboardViewModel(
-        initialState: SpotifyDashboardViewState,
+        initialState: SpotifyDashboardState,
         private val getCategories: GetCategories,
         private val getFeaturedPlaylists: GetFeaturedPlaylists,
         private val getNewReleases: GetNewReleases,
         private val getDailyViralTracks: GetDailyViralTracks
-) : MvRxViewModel<SpotifyDashboardViewState>(initialState) {
+) : MvRxViewModel<SpotifyDashboardState>(initialState) {
 
     init {
         loadCategories()
@@ -42,7 +42,7 @@ class SpotifyDashboardViewModel(
                     categories.map(CategoryEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardViewState::categories) {
+                .updateWithResource(SpotifyDashboardState::categories) {
                     copy(categories = it)
                 }
     }
@@ -56,7 +56,7 @@ class SpotifyDashboardViewModel(
                     playlists.map(PlaylistEntity::ui).sortedBy { it.name }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardViewState::featuredPlaylists) {
+                .updateWithResource(SpotifyDashboardState::featuredPlaylists) {
                     copy(featuredPlaylists = it)
                 }
     }
@@ -71,7 +71,7 @@ class SpotifyDashboardViewModel(
                             .sortedBy { it.position }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardViewState::topTracks) {
+                .updateWithResource(SpotifyDashboardState::topTracks) {
                     copy(topTracks = it)
                 }
     }
@@ -81,16 +81,15 @@ class SpotifyDashboardViewModel(
             getNewReleases(applySchedulers = false, args = current { newReleases.offset })
                     .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                     .subscribeOn(Schedulers.io())
-                    .updateWithPagedResource(SpotifyDashboardViewState::newReleases) {
+                    .updateWithPagedResource(SpotifyDashboardState::newReleases) {
                         copy(newReleases = it)
                     }
         }
     }
 
-
-    companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardViewState> {
+    companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {
         override fun create(
-                viewModelContext: ViewModelContext, state: SpotifyDashboardViewState
+                viewModelContext: ViewModelContext, state: SpotifyDashboardState
         ): SpotifyDashboardViewModel {
             val getCategories: GetCategories by viewModelContext.activity.inject()
             val getFeaturedPlaylists: GetFeaturedPlaylists by viewModelContext.activity.inject()

@@ -1,8 +1,8 @@
 package com.example.spotifyaccount.top
 
+import com.example.core.SpotifyDefaults
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
-import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists
@@ -31,7 +31,7 @@ class AccountTopViewModel(
                     .doFinally { viewState.tracksLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.topTracks.addAll(it.items.map(TrackEntity::ui))
-                        currentTracksOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
+                        currentTracksOffset = it.offset + SpotifyDefaults.LIMIT
                         totalTracks = it.totalItems
                         viewState.tracksLoadingErrorOccurred.set(false)
                     }, getOnErrorWith {
@@ -56,7 +56,7 @@ class AccountTopViewModel(
                     .doFinally { viewState.artistsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.artists.addAll(it.items.map(ArtistEntity::ui))
-                        currentArtistsOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
+                        currentArtistsOffset = it.offset + SpotifyDefaults.LIMIT
                         totalArtists = it.totalItems
                         viewState.tracksLoadingErrorOccurred.set(false)
                     }, getOnErrorWith {

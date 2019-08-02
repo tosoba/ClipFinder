@@ -88,6 +88,8 @@ dependencies {
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'
     kapt 'com.airbnb.android:epoxy-processor:3.7.0'
 
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
+
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-core-ext:$koin_version"
     testImplementation "org.koin:koin-test:$koin_version"

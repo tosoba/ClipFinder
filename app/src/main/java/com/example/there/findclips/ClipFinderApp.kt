@@ -7,14 +7,16 @@ import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.util.Constants
+import com.example.spotifydashboard.di.spotifyDashboardDataModule
+import com.example.spotifydashboard.di.spotifyDashboardDomainModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-//TODO: rename this class lol
-class FindClipsApp : Application() {
+
+class ClipFinderApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -28,11 +30,12 @@ class FindClipsApp : Application() {
 
         //TODO: maybe think about moving koin modules into their respective modules :D
         startKoin {
-            androidContext(this@FindClipsApp)
+            androidContext(this@ClipFinderApp)
             modules(listOf(
                     appModule, databaseModule, apiModule, repoModule,
                     soundCloudModule, spotifyModule, videosModule,
-                    viewModelsModule
+                    viewModelsModule,
+                    spotifyDashboardDataModule, spotifyDashboardDomainModule
             ))
         }
     }

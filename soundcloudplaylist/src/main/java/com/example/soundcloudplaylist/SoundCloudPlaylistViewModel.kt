@@ -38,6 +38,7 @@ class SoundCloudPlaylistViewModel(
     private fun loadTracksWithIds(ids: List<String>) = withState { state ->
         if (state.tracks.status is Loading) return@withState
 
+        setState { copy(tracks = state.tracks.copyWithLoadingInProgress) }
         //TODO: SoundCloud api needs to be reworked to return Resource objects
         getTracks(ids, applySchedulers = false)
                 .subscribeOn(Schedulers.io())

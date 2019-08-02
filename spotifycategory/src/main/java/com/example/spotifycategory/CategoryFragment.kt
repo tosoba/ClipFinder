@@ -17,11 +17,11 @@ import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.clickableGridListItem
+import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
-import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named

@@ -30,6 +30,7 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
+import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnNavigationDrawerClosedListerner
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -40,7 +41,6 @@ import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
 import com.example.spotifyapi.SpotifyAuth
-import com.example.spotifyrepo.preferences.SpotifyPreferences
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.example.youtubeaddvideo.AddVideoViewState

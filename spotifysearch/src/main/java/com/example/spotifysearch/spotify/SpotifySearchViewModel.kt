@@ -1,9 +1,9 @@
 package com.example.spotifysearch.spotify
 
 import androidx.lifecycle.MutableLiveData
+import com.example.core.SpotifyDefaults
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
-import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
@@ -29,7 +29,7 @@ class SpotifySearchViewModel(
                     .takeSuccessOnly()
                     .doFinally { viewState.loadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
-                        currentOffset += SpotifyApi.DEFAULT_LIMIT
+                        currentOffset += SpotifyDefaults.LIMIT
                         totalItems = it.totalItems
                         viewState.albums.addAll(it.albums.map(AlbumEntity::ui))
                         viewState.artists.addAll(it.artists.map(ArtistEntity::ui))

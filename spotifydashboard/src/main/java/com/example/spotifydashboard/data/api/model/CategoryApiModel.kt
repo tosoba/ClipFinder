@@ -1,4 +1,4 @@
-package com.example.spotifyapi.model
+package com.example.spotifydashboard.data.api.model
 
 import com.example.core.model.StringUrlModel
 

@@ -8,12 +8,10 @@ import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
-import com.example.spotifyapi.SpotifyChartsApi
 import com.example.youtubeapi.YoutubeApi
 import com.vpaliy.soundcloud.SoundCloud
 import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val apiModule = module {
     single {
@@ -31,13 +29,7 @@ val apiModule = module {
                         "Content-Type" to "application/x-www-form-urlencoded"))
         ).create(SpotifyAccountsApi::class.java)
     }
-    single {
-        retrofitWith(
-                url = spotifyChartsBaseUrl,
-                converterFactory = ScalarsConverterFactory.create(),
-                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
-        ).create(SpotifyChartsApi::class.java)
-    }
+
     single {
         retrofitWith(
                 url = youtubeBaseUrl,
@@ -61,7 +53,6 @@ val apiModule = module {
 
 private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
 private const val accessTokenBaseUrl: String = "https://accounts.spotify.com/api/"
-private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"
 private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
 private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
 private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"

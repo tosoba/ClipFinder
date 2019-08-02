@@ -22,18 +22,6 @@ class SimilarTracksResponse(val tracks: List<SimilarTrackApiModel>)
 
 class ArtistsOnlyResponse(val artists: List<ArtistApiModel>)
 
-class CategoriesResponse(
-        @SerializedName("categories")
-        val result: CategoriesResult,
-
-        val offset: Int,
-
-        @SerializedName("total")
-        val totalItems: Int
-)
-
-class CategoriesResult(@SerializedName("items") val categories: List<CategoryApiModel>)
-
 class PlaylistsResponse(@SerializedName("playlists") val result: PlaylistsResult)
 
 class PlaylistTracksResponse(

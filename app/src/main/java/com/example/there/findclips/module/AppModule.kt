@@ -3,7 +3,7 @@ package com.example.there.findclips.module
 import android.os.Handler
 import android.os.HandlerThread
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.spotifyrepo.preferences.SpotifyPreferences
+import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.findclips.FragmentFactory
 import io.reactivex.Scheduler

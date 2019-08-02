@@ -1,4 +1,4 @@
-package com.example.spotifydashboard
+package com.example.spotifydashboard.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -18,14 +18,15 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.clickableListItem
+import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
+import com.example.spotifydashboard.R
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
-import com.example.spotifyrepo.preferences.SpotifyPreferences
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named

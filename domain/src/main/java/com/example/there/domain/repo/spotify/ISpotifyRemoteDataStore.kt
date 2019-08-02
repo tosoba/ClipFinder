@@ -8,12 +8,6 @@ import io.reactivex.Single
 
 interface ISpotifyRemoteDataStore {
 
-    val categories: Observable<Resource<List<CategoryEntity>>>
-
-    val featuredPlaylists: Observable<Resource<List<PlaylistEntity>>>
-
-    val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
-
     val currentUser: Single<Resource<UserEntity>>
 
     fun searchAll(query: String, offset: Int): Single<Resource<SearchAllEntity>>
@@ -35,8 +29,6 @@ interface ISpotifyRemoteDataStore {
     fun getRelatedArtists(artistId: String): Single<Resource<List<ArtistEntity>>>
 
     fun getTracksFromAlbum(albumId: String, offset: Int): Single<Resource<ListPage<TrackEntity>>>
-
-    fun getNewReleases(offset: Int): Single<Resource<ListPage<AlbumEntity>>>
 
     fun getCurrentUsersPlaylists(offset: Int): Single<Resource<ListPage<PlaylistEntity>>>
     fun getCurrentUsersTopTracks(offset: Int): Single<Resource<ListPage<TrackEntity>>>

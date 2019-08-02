@@ -8,16 +8,12 @@ val spotifyModule = module {
     factory { GetAlbumsFromArtist(get(), get()) }
     factory { GetArtists(get(), get()) }
     factory { GetAudioFeatures(get(), get()) }
-    factory { GetCategories(get(), get()) }
     factory { GetCurrentUser(get(), get()) }
     factory { GetCurrentUsersPlaylists(get(), get()) }
     factory { GetCurrentUsersSavedAlbums(get(), get()) }
     factory { GetCurrentUsersSavedTracks(get(), get()) }
     factory { GetCurrentUsersTopArtists(get(), get()) }
     factory { GetCurrentUsersTopTracks(get(), get()) }
-    factory { GetDailyViralTracks(get(), get()) }
-    factory { GetFeaturedPlaylists(get(), get()) }
-    factory { GetNewReleases(get(), get()) }
     factory { GetPlaylistsForCategory(get(), get()) }
     factory { GetPlaylistTracks(get(), get()) }
     factory { GetRelatedArtists(get(), get()) }

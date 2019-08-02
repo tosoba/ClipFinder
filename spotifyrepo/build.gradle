@@ -33,6 +33,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation project(':coreandroid')
     implementation project(':core')
     implementation project(':db')
     implementation project(':domain')
@@ -44,8 +45,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-
-    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
 }
 
 sourceCompatibility = "8"

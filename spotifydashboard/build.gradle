@@ -44,6 +44,10 @@ dependencies {
 
     implementation rootProject.ext.rxJava
 
+    implementation rootProject.ext.retrofit
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
     implementation 'com.airbnb.android:mvrx:1.0.2'

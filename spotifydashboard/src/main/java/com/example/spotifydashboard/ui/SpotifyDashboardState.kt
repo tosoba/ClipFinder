@@ -1,4 +1,4 @@
-package com.example.spotifydashboard
+package com.example.spotifydashboard.ui
 
 import com.airbnb.mvrx.MvRxState
 import com.example.coreandroid.model.DataList
@@ -9,7 +9,7 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.TopTrack
 
 
-data class SpotifyDashboardViewState(
+data class SpotifyDashboardState(
         val categories: DataList<Category> = DataList(),
         val featuredPlaylists: DataList<Playlist> = DataList(),
         val topTracks: DataList<TopTrack> = DataList(),

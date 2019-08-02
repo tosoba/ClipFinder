@@ -80,6 +80,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':itemlist')
     implementation project(':main')
+    implementation project(':settings')
     implementation project(':soundcloudapi')
     implementation project(':soundclouddashboard')
     implementation project(':soundcloudfavourites')

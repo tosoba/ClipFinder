@@ -1,9 +1,9 @@
 package com.example.spotifyaccount.playlist
 
 import androidx.lifecycle.MutableLiveData
+import com.example.core.SpotifyDefaults
 import com.example.coreandroid.base.vm.BaseViewModel
 import com.example.coreandroid.mapper.spotify.ui
-import com.example.spotifyapi.SpotifyApi
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
 
@@ -31,7 +31,7 @@ class AccountPlaylistsViewModel(
                     .doFinally { viewState.playlistsLoadingInProgress.set(false) }
                     .subscribeAndDisposeOnCleared({
                         viewState.playlists.addAll(it.items.map(PlaylistEntity::ui))
-                        currentOffset = it.offset + SpotifyApi.DEFAULT_LIMIT
+                        currentOffset = it.offset + SpotifyDefaults.LIMIT
                         totalItems = it.totalItems
                         loadedFlag.value = Unit
                     }, ::onError)
