@@ -3,8 +3,8 @@ package com.example.spotifydashboard.di
 import com.example.core.retrofit.clientWithInterceptors
 import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
-import com.example.spotifyapi.SpotifyApi
 import com.example.spotifydashboard.data.SpotifyDashboardRemoteRepo
+import com.example.spotifydashboard.data.api.SpotifyDashboardApi
 import com.example.spotifydashboard.data.api.SpotifyDashboardChartsApi
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
 import org.koin.dsl.bind
@@ -19,7 +19,7 @@ val spotifyDashboardDataModule = module {
                 client = clientWithInterceptors(interceptorWithHeaders(
                         "Accept" to "application/json",
                         "Content-Type" to "application/json"))
-        ).create(SpotifyApi::class.java)
+        ).create(SpotifyDashboardApi::class.java)
     }
 
     single {

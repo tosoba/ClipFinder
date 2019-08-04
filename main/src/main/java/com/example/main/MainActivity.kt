@@ -356,7 +356,7 @@ class MainActivity :
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == LOGIN_REQUEST_CODE) {
-            val response = AuthenticationClient.getResponse(resultCode, data)
+            val response: AuthenticationResponse = AuthenticationClient.getResponse(resultCode, data)
 
             when (response.type) {
                 AuthenticationResponse.Type.TOKEN -> onSpotifyAuthenticationComplete(response.accessToken)

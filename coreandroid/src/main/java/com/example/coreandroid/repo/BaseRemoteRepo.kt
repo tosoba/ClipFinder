@@ -23,6 +23,7 @@ abstract class BaseRemoteRepo {
             is NetworkResponse.Success -> Resource.Success(response.body.finisher())
             is NetworkResponse.ServerError -> Resource.Error(response.body)
             is NetworkResponse.NetworkError -> Resource.Error(response.error)
+            is NetworkResponse.DifferentError -> Resource.Error(response.error)
         }
     }
 
@@ -33,6 +34,7 @@ abstract class BaseRemoteRepo {
             is NetworkResponse.Success -> Resource.Success(response.body.finisher()).data
             is NetworkResponse.NetworkError -> throw response.error
             is NetworkResponse.ServerError -> throw ThrowableServerError(response)
+            is NetworkResponse.DifferentError -> throw response.error
         }
     }
 

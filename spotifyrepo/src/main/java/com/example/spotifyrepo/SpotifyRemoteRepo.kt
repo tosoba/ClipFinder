@@ -2,7 +2,6 @@ package com.example.spotifyrepo
 
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Resource
-import com.example.core.retrofit.NetworkResponse
 import com.example.core.retrofit.ThrowableServerError
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
@@ -15,7 +14,6 @@ import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
 
 class SpotifyRemoteRepo(
         preferences: SpotifyPreferences,
@@ -35,13 +33,13 @@ class SpotifyRemoteRepo(
         api.searchAll(authorization = getAccessTokenHeader(token), query = query)
                 .mapToResource {
                     SearchAllEntity(
-                            albums = albumsResult?.albums?.map(AlbumApiModel::domain)
+                            albums = albumsResult?.items?.map(AlbumApiModel::domain)
                                     ?: emptyList(),
-                            artists = artistsResult?.artists?.map(ArtistApiModel::domain)
+                            artists = artistsResult?.items?.map(ArtistApiModel::domain)
                                     ?: emptyList(),
-                            playlists = playlistsResult?.playlists?.map(PlaylistApiModel::domain)
+                            playlists = playlistsResult?.items?.map(PlaylistApiModel::domain)
                                     ?: emptyList(),
-                            tracks = tracksResult?.tracks?.map(TrackApiModel::domain)
+                            tracks = tracksResult?.items?.map(TrackApiModel::domain)
                                     ?: emptyList(),
                             totalItems = arrayOf(
                                     albumsResult?.totalItems ?: 0,
@@ -63,7 +61,7 @@ class SpotifyRemoteRepo(
                 country = preferences.country
         ).mapToResource {
             ListPage(
-                    items = result.playlists.map(PlaylistApiModel::domain),
+                    items = result.items.map(PlaylistApiModel::domain),
                     offset = result.offset + SpotifyDefaults.LIMIT,
                     totalItems = result.totalItems
             )
@@ -80,7 +78,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = playlistTracks.map { it.track.domain },
+                    items = items.map { it.track.domain },
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -102,7 +100,6 @@ class SpotifyRemoteRepo(
                 artistIds = artistIds.joinToString(",")
         ).mapToResource { artists.map(ArtistApiModel::domain) }
     }
-
 
     override fun getSimilarTracks(
             trackId: String
@@ -130,24 +127,16 @@ class SpotifyRemoteRepo(
                 }
     }
 
-    override fun getAlbumsFromArtist(artistId: String): Observable<Resource<List<AlbumEntity>>> {
-        val offsetSubject = BehaviorSubject.createDefault(0)
-        return offsetSubject.concatMap { offset ->
-            withTokenObservable { token ->
-                api.getAlbumsFromArtist(
-                        authorization = getAccessTokenHeader(token),
-                        artistId = artistId,
-                        offset = offset
-                ).toObservable()
-            }
-        }.doOnNext {
-            if (it is NetworkResponse.Success) {
-                if (it.body.offset < it.body.totalItems - SpotifyDefaults.LIMIT)
-                    offsetSubject.onNext(it.body.offset + SpotifyDefaults.LIMIT)
-                else offsetSubject.onComplete()
-            } else offsetSubject.onComplete()
-        }.mapToResource { albums.map(AlbumApiModel::domain) }
-    }
+    override fun getAlbumsFromArtist(
+            artistId: String
+    ): Observable<Resource<List<AlbumEntity>>> = getAllItems { token, offset ->
+        api.getAlbumsFromArtist(
+                authorization = getAccessTokenHeader(token),
+                artistId = artistId,
+                offset = offset
+        ).toObservable()
+    }.mapToResource { items.map(AlbumApiModel::domain) }
+
 
     override fun getTopTracksFromArtist(
             artistId: String
@@ -183,7 +172,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToDataOrThrow {
             TrackIdsPage(
-                    ids = tracks.joinToString(separator = ",") { it.id },
+                    ids = items.joinToString(separator = ",") { it.id },
                     offset = offset,
                     totalItems = totalItems)
         }.flatMap { idsPage ->
@@ -208,7 +197,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = playlists.map(PlaylistApiModel::domain),
+                    items = items.map(PlaylistApiModel::domain),
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -223,7 +212,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = tracks.map(TrackApiModel::domain),
+                    items = items.map(TrackApiModel::domain),
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -238,7 +227,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = artists.map(ArtistApiModel::domain),
+                    items = items.map(ArtistApiModel::domain),
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -253,7 +242,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = savedTracks.map { it.track.domain },
+                    items = items.map { it.track.domain },
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -268,7 +257,7 @@ class SpotifyRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = savedAlbums.map { it.album.domain },
+                    items = items.map { it.album.domain },
                     offset = offset + SpotifyDefaults.LIMIT,
                     totalItems = totalItems
             )
@@ -283,6 +272,4 @@ class SpotifyRemoteRepo(
                 trackId = trackEntity.id
         ).mapToResource(AudioFeaturesApiModel::domain)
     }
-
-
 }

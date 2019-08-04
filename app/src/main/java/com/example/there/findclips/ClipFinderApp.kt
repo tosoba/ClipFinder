@@ -3,6 +3,7 @@ package com.example.there.findclips
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
@@ -38,6 +39,11 @@ class ClipFinderApp : Application() {
                     spotifyDashboardDataModule, spotifyDashboardDomainModule
             ))
         }
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+//        MultiDex.install(this)
     }
 
     override fun onTerminate() {

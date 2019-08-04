@@ -259,7 +259,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                         .skip(1)
                         .distinctUntilChanged()
                         .subscribe { reloadDataOnPreferencesChange() },
-                appPreferences.languageObservable
+                appPreferences.localeObservable
                         .skip(1)
                         .distinctUntilChanged()
                         .subscribe { reloadDataOnPreferencesChange() }

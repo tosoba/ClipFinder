@@ -18,12 +18,14 @@ sealed class NetworkResponse<out T : Any, out E : Any> {
     /**
      * A request that resulted in a response with a non-2xx status code.
      */
-    data class ServerError<E : Any>(val body: E?, val code: Int) : NetworkResponse<Nothing, E>()
+    data class ServerError<E : Any>(val body: E?, val code: Int?) : NetworkResponse<Nothing, E>()
 
     /**
      * A request that didn't result in a response.
      */
     data class NetworkError(val error: IOException) : NetworkResponse<Nothing, Nothing>()
+
+    data class DifferentError(val error: Throwable) : NetworkResponse<Nothing, Nothing>()
 }
 
 class ThrowableServerError(val error: NetworkResponse.ServerError<*>) : Throwable()

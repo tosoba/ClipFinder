@@ -1,18 +1,21 @@
 package com.example.spotifyrepo
 
 import android.util.Base64
+import com.example.core.SpotifyDefaults
 import com.example.core.retrofit.NetworkResponse
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.repo.BaseRemoteRepo
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyAuth
 import com.example.spotifyapi.model.AccessTokenApiModel
+import com.example.spotifyapi.model.PagedResponse
 import com.example.spotifyapi.model.SpotifyAuthErrorApiModel
 import com.example.spotifyrepo.mapper.domain
 import com.example.spotifyrepo.util.observable
 import com.example.spotifyrepo.util.single
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 
 abstract class BaseSpotifyRemoteRepo(
         private val accountsApi: SpotifyAccountsApi,
@@ -46,6 +49,25 @@ abstract class BaseSpotifyRemoteRepo(
                     .doOnNext { preferences.accessToken = it }
                     .map { it.token }
                     .flatMap(block)
+        }
+    }
+
+    protected fun <R : PagedResponse<T>, E : Any, T> getAllItems(
+            request: (String, Int) -> Observable<NetworkResponse<R, E>>
+    ): Observable<NetworkResponse<R, E>> {
+        val offsetSubject = BehaviorSubject.createDefault(0)
+        return offsetSubject.concatMap { offset ->
+            withTokenObservable { token -> request(token, offset) }
+        }.doOnNext {
+            when (it) {
+                is NetworkResponse.Success -> {
+                    if (it.body.offset < it.body.totalItems - SpotifyDefaults.LIMIT)
+                        offsetSubject.onNext(it.body.offset + SpotifyDefaults.LIMIT)
+                    else offsetSubject.onComplete()
+                }
+                //TODO: this swallows exceptions... - can result in "partial" responses - for ex. one success followed by error it should probably be replaced with onError()
+                else -> offsetSubject.onComplete()
+            }
         }
     }
 

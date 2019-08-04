@@ -22,7 +22,7 @@ open class SpotifyPreferences(context: Context) {
                 ?: SpotifyDefaults.COUNTRY
         set(value) = preferences.edit().putString(PREF_KEY_COUNTRY, value).apply()
 
-    var language: String
+    var locale: String
         get() = preferences.getString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE)
                 ?: SpotifyDefaults.LOCALE
         set(value) = preferences.edit().putString(PREF_KEY_LANGUAGE, value).apply()
@@ -62,7 +62,7 @@ open class SpotifyPreferences(context: Context) {
     val countryObservable: Observable<String>
         get() = countryRx.asObservable()
 
-    val languageObservable: Observable<String>
+    val localeObservable: Observable<String>
         get() = languageRx.asObservable()
 
     init {

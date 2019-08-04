@@ -2,7 +2,6 @@ package com.example.spotifydashboard.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Resource
-import com.example.core.retrofit.NetworkResponse
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
@@ -13,6 +12,7 @@ import com.example.spotifyapi.model.TracksOnlyResponse
 import com.example.spotifydashboard.data.api.ChartTrackIdMapper
 import com.example.spotifydashboard.data.api.SpotifyDashboardApi
 import com.example.spotifydashboard.data.api.SpotifyDashboardChartsApi
+import com.example.spotifydashboard.data.api.domain
 import com.example.spotifydashboard.data.api.model.CategoryApiModel
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
 import com.example.spotifyrepo.BaseSpotifyRemoteRepo
@@ -25,7 +25,7 @@ import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import io.reactivex.subjects.BehaviorSubject
+
 
 class SpotifyDashboardRemoteRepo(
         preferences: SpotifyPreferences,
@@ -36,46 +36,24 @@ class SpotifyDashboardRemoteRepo(
 ) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
 
     override val categories: Observable<Resource<List<CategoryEntity>>>
-        get() {
-            val offsetSubject = BehaviorSubject.createDefault(0)
-            return offsetSubject.concatMap { offset ->
-                withTokenObservable {
-                    api.getCategories(
-                            authorization = getAccessTokenHeader(it),
-                            offset = offset,
-                            country = preferences.country,
-                            locale = preferences.language
-                    ).toObservable()
-                }
-            }.doOnNext {
-                if (it is NetworkResponse.Success) {
-                    if (it.body.offset < it.body.totalItems - SpotifyDefaults.LIMIT)
-                        offsetSubject.onNext(it.body.offset + SpotifyDefaults.LIMIT)
-                    else offsetSubject.onComplete()
-                } else offsetSubject.onComplete()
-            }.mapToResource { result.categories.map(CategoryApiModel::domain) }
-        }
+        get() = getAllItems { token, offset ->
+            api.getCategories(
+                    authorization = getAccessTokenHeader(token),
+                    offset = offset,
+                    country = preferences.country,
+                    locale = preferences.locale
+            ).toObservable()
+        }.mapToResource { items.map(CategoryApiModel::domain) }
 
     override val featuredPlaylists: Observable<Resource<List<PlaylistEntity>>>
-        get() {
-            val offsetSubject = BehaviorSubject.createDefault(0)
-            return offsetSubject.concatMap { offset ->
-                withTokenObservable {
-                    api.getFeaturedPlaylists(
-                            authorization = getAccessTokenHeader(it),
-                            offset = offset,
-                            country = preferences.country,
-                            locale = preferences.language
-                    ).toObservable()
-                }
-            }.doOnNext {
-                if (it is NetworkResponse.Success) {
-                    if (it.body.result.offset < it.body.result.totalItems - SpotifyDefaults.LIMIT)
-                        offsetSubject.onNext(it.body.result.offset + SpotifyDefaults.LIMIT)
-                    else offsetSubject.onComplete()
-                } else offsetSubject.onComplete()
-            }.mapToResource { result.playlists.map(PlaylistApiModel::domain) }
-        }
+        get() = getAllItems { token, offset ->
+            api.getFeaturedPlaylists(
+                    authorization = getAccessTokenHeader(token),
+                    offset = offset,
+                    country = preferences.country,
+                    locale = preferences.locale
+            ).toObservable()
+        }.mapToResource { result.items.map(PlaylistApiModel::domain) }
 
     override val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
         get() = chartsApi.getDailyViralTracks()
@@ -112,7 +90,7 @@ class SpotifyDashboardRemoteRepo(
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = result.albums.map(AlbumApiModel::domain),
+                    items = result.items.map(AlbumApiModel::domain),
                     offset = result.offset + SpotifyDefaults.LIMIT,
                     totalItems = result.totalItems
             )
