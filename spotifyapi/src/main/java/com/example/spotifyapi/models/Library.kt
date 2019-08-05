@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Represents an album saved in a user's library
@@ -9,7 +9,7 @@ import com.squareup.moshi.Json
  * @property album Information about the album.
  */
 data class SavedAlbum(
-        @Json(name = "added_at") val addedAt: String,
+        @SerializedName("added_at") val addedAt: String,
         val album: Album
 )
 
@@ -20,6 +20,6 @@ data class SavedAlbum(
  * @property track The track object.
  */
 data class SavedTrack(
-        @Json(name = "added_at") val addedAt: String,
+        @SerializedName("added_at") val addedAt: String,
         val track: Track
 )

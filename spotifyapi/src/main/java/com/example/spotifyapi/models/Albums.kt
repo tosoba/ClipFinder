@@ -1,8 +1,8 @@
 package com.example.spotifyapi.models
 
 import com.example.spotifyapi.util.match
+import com.google.gson.annotations.SerializedName
 import com.neovisionaries.i18n.CountryCode
-import com.squareup.moshi.Json
 
 /**
  * Simplified Album object that can be used to retrieve a full [Album]
@@ -28,34 +28,33 @@ import com.squareup.moshi.Json
  * "restrictions" : {"reason" : "market"}
  */
 data class SimpleAlbum(
-        @Json(name = "album_type") private val _albumType: String,
-        @Json(name = "available_markets") private val _availableMarkets: List<String> = listOf(),
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("album_type") private val _albumType: String,
+        @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
         val artists: List<SimpleArtist>,
         val images: List<SpotifyImage>,
         val name: String,
         val type: String,
         val restrictions: Restrictions? = null,
-        @Json(name = "release_date") val releaseDate: String,
-        @Json(name = "release_date_precision") val releaseDatePrecision: String,
-        @Json(name = "total_tracks") val totalTracks: Int? = null,
-        @Json(name = "album_group") private val albumGroupString: String? = null
+        @SerializedName("release_date") val releaseDate: String,
+        @SerializedName("release_date_precision") val releaseDatePrecision: String,
+        @SerializedName("total_tracks") val totalTracks: Int? = null,
+        @SerializedName("album_group") private val albumGroupString: String? = null
 ) {
-    @Transient
-    val availableMarkets = _availableMarkets.map { CountryCode.valueOf(it) }
+    val availableMarkets get() = _availableMarkets.map { CountryCode.valueOf(it) }
 
-    @Transient
-    val albumType: AlbumResultType = _albumType.let { _ ->
-        AlbumResultType.values().first { it.id.equals(_albumType, true) }
-    }
+    val albumType: AlbumResultType
+        get() = _albumType.let { _ ->
+            AlbumResultType.values().first { it.id.equals(_albumType, true) }
+        }
 
-    @Transient
-    val albumGroup: AlbumResultType? = albumGroupString?.let { _ ->
-        AlbumResultType.values().find { it.id == albumGroupString }
-    }
+    val albumGroup: AlbumResultType?
+        get() = albumGroupString?.let { _ ->
+            AlbumResultType.values().find { it.id == albumGroupString }
+        }
 }
 
 /**
@@ -100,13 +99,13 @@ enum class AlbumResultType(internal val id: String) {
  * restrictions object containing the reason why the track is not available: "restrictions" : {"reason" : "market"}
  */
 data class Album(
-        @Json(name = "album_type") private val _albumType: String,
-        @Json(name = "available_markets") private val _availableMarkets: List<String> = listOf(),
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "external_ids") private val _externalIds: Map<String, String> = hashMapOf(),
-        @Json(name = "href") val href: String,
+        @SerializedName("album_type") private val _albumType: String,
+        @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("external_ids") private val _externalIds: Map<String, String> = hashMapOf(),
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val artists: List<SimpleArtist>,
         val copyrights: List<SpotifyCopyright>,
@@ -115,21 +114,18 @@ data class Album(
         val label: String,
         val name: String,
         val popularity: Int,
-        @Json(name = "release_date") val releaseDate: String,
-        @Json(name = "release_date_precision") val releaseDatePrecision: String,
+        @SerializedName("release_date") val releaseDate: String,
+        @SerializedName("release_date_precision") val releaseDatePrecision: String,
         val tracks: PagingObject<SimpleTrack>,
         val type: String,
-        @Json(name = "total_tracks") val totalTracks: Int,
+        @SerializedName("total_tracks") val totalTracks: Int,
         val restrictions: Restrictions? = null
 ) {
-    @Transient
-    val availableMarkets = _availableMarkets.map { CountryCode.valueOf(it) }
+    val availableMarkets get() = _availableMarkets.map { CountryCode.valueOf(it) }
 
-    @Transient
-    val externalIds = _externalIds.map { ExternalId(it.key, it.value) }
+    val externalIds get() = _externalIds.map { ExternalId(it.key, it.value) }
 
-    @Transient
-    val albumType: AlbumResultType = AlbumResultType.values().first { it.id == _albumType }
+    val albumType: AlbumResultType get() = AlbumResultType.values().first { it.id == _albumType }
 }
 
 /**
@@ -140,16 +136,16 @@ data class Album(
  * P = the sound recording (performance) copyright.
  */
 data class SpotifyCopyright(
-        @Json(name = "text") private val _text: String,
-        @Json(name = "type") private val _type: String
+        @SerializedName("text") private val _text: String,
+        @SerializedName("type") private val _type: String
 ) {
-    @Transient
-    val text = _text
-            .removePrefix("(P)")
-            .removePrefix("(C)")
-            .trim()
-    @Transient
-    val type = CopyrightType.values().match(_type)!!
+    val text
+        get() = _text
+                .removePrefix("(P)")
+                .removePrefix("(C)")
+                .trim()
+
+    val type get() = CopyrightType.values().match(_type)!!
 }
 
 /**

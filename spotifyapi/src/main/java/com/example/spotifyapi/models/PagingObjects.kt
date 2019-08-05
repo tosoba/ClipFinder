@@ -21,4 +21,4 @@ class PagingObject<T>(
         val offset: Int = 0,
         val previous: String? = null,
         val total: Int
-) : ArrayList<T>(items)
+)

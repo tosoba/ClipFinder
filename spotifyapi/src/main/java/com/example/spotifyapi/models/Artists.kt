@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Simplified Artist object that can be used to retrieve a full [Artist]
@@ -11,10 +11,10 @@ import com.squareup.moshi.Json
  * @property type The object type: "artist"
  */
 data class SimpleArtist(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val name: String,
         val type: String
@@ -35,10 +35,10 @@ data class SimpleArtist(
  * @property type The object type: "artist"
  */
 data class Artist(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val followers: Followers,
         val genres: List<String>,

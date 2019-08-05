@@ -1,7 +1,7 @@
 package com.example.spotifyapi.models
 
 import com.example.spotifyapi.model.PagedResponse
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 class ExternalUrl(val name: String, val url: String)
 
@@ -35,7 +35,7 @@ data class ErrorResponse(val error: ErrorObject)
 data class ErrorObject(val status: Int, val message: String)
 
 data class PlaylistsResponse(
-        @Json(name = "playlists") val result: PagingObject<SimplePlaylist>
+        @SerializedName("playlists") val result: PagingObject<SimplePlaylist>
 ) : PagedResponse<SimplePlaylist> {
     override val items: List<SimplePlaylist> get() = result.items
     override val offset: Int get() = result.offset
@@ -43,7 +43,7 @@ data class PlaylistsResponse(
 }
 
 data class CategoriesResponse(
-        @Json(name = "categories") val result: PagingObject<SpotifyCategory>
+        @SerializedName("categories") val result: PagingObject<SpotifyCategory>
 ) : PagedResponse<SpotifyCategory> {
     override val items: List<SpotifyCategory> get() = result.items
     override val offset: Int get() = result.offset
@@ -51,7 +51,7 @@ data class CategoriesResponse(
 }
 
 data class AlbumsResponse(
-        @Json(name = "albums") val result: PagingObject<SimpleAlbum>
+        @SerializedName("albums") val result: PagingObject<SimpleAlbum>
 ) : PagedResponse<SimpleAlbum> {
     override val items: List<SimpleAlbum> get() = result.items
     override val offset: Int get() = result.offset

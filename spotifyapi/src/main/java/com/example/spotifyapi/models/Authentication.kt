@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Represents a Spotify Token, retrieved through instantiating a [SpotifyAPI]
@@ -16,17 +16,16 @@ import com.squareup.moshi.Json
  * @property expiresAt The time, in milliseconds, at which this Token expires
  */
 data class Token(
-        @Json(name = "access_token") val accessToken: String,
-        @Json(name = "token_type") val tokenType: String,
-        @Json(name = "expires_in") val expiresIn: Int,
-        @Json(name = "refresh_token") val refreshToken: String? = null,
-        @Json(name = "scope") private val scopeString: String? = null,
+        @SerializedName("access_token") val accessToken: String,
+        @SerializedName("token_type") val tokenType: String,
+        @SerializedName("expires_in") val expiresIn: Int,
+        @SerializedName("refresh_token") val refreshToken: String? = null,
+        @SerializedName("scope") private val scopeString: String? = null,
         @Transient val scopes: List<SpotifyScope> = scopeString?.let { str ->
             str.split(" ").mapNotNull { scope -> SpotifyScope.values().find { it.uri.equals(scope, true) } }
         } ?: listOf()
 ) {
-    @Transient
-    val expiresAt: Long = System.currentTimeMillis() + expiresIn * 1000
+    val expiresAt: Long get() = System.currentTimeMillis() + expiresIn * 1000
 
     fun shouldRefresh(): Boolean = System.currentTimeMillis() > expiresAt
 }

@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Spotify music category
@@ -11,7 +11,7 @@ import com.squareup.moshi.Json
  * @property name The name of the category.
  */
 data class SpotifyCategory(
-        @Json(name = "href") val href: String,
+        @SerializedName("href") val href: String,
         val id: String,
 
         val icons: List<SpotifyImage>,
@@ -31,7 +31,7 @@ data class SpotifyCategory(
  * @property type The entity type of this seed. One of artist , track or genre.
  */
 data class RecommendationSeed(
-        @Json(name = "href") val href: String?,
+        @SerializedName("href") val href: String?,
         val id: String,
 
         val initialPoolSize: Int,

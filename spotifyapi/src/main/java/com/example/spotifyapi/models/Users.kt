@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Private information about a Spotify user. Each field may require a specific scope.
@@ -23,14 +23,14 @@ import com.squareup.moshi.Json
  * @property type The object type: “user”
  */
 data class SpotifyUserInformation(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val birthdate: String? = null,
         val country: String? = null,
-        @Json(name = "display_name") val displayName: String? = null,
+        @SerializedName("display_name") val displayName: String? = null,
         val email: String? = null,
         val followers: Followers,
         val images: List<SpotifyImage>,
@@ -49,12 +49,12 @@ data class SpotifyUserInformation(
  * @property type The object type: “user”
  */
 data class SpotifyPublicUser(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
-        @Json(name = "display_name") val displayName: String? = null,
+        @SerializedName("display_name") val displayName: String? = null,
         val followers: Followers = Followers(null, -1),
         val images: List<SpotifyImage> = listOf(),
         val type: String
@@ -70,6 +70,6 @@ data class SpotifyPublicUser(
  */
 data class Followers(
         val href: String?,
-        @Json(name = "total") private val _total: Int,
+        @SerializedName("total") private val _total: Int,
         @Transient val total: Int = _total
 )

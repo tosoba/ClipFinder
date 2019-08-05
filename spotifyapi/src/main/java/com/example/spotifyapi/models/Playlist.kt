@@ -1,6 +1,6 @@
 package com.example.spotifyapi.models
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 /**
  * Simplified Playlist object that can be used to retrieve a full [Playlist]
@@ -24,23 +24,22 @@ import com.squareup.moshi.Json
  * requests to target a specific playlist version
  */
 data class SimplePlaylist(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val collaborative: Boolean,
         val images: List<SpotifyImage>,
         val name: String,
         val owner: SpotifyPublicUser,
-        @Json(name = "primary_color") val primaryColor: String? = null,
+        @SerializedName("primary_color") val primaryColor: String? = null,
         val public: Boolean? = null,
-        @Json(name = "snapshot_id") private val _snapshotId: String,
+        @SerializedName("snapshot_id") private val _snapshotId: String,
         val tracks: PlaylistTrackInfo,
         val type: String
 ) {
-    @Transient
-    val snapshot: Snapshot = Snapshot(_snapshotId)
+    val snapshot: Snapshot get() = Snapshot(_snapshotId)
 }
 
 /**
@@ -53,12 +52,12 @@ data class SimplePlaylist(
  * @property track Information about the track.
  */
 data class PlaylistTrack(
-        @Json(name = "primary_color") val primaryColor: String? = null,
-        @Json(name = "added_at") val addedAt: String?,
-        @Json(name = "added_by") val addedBy: SpotifyPublicUser?,
-        @Json(name = "is_local") val isLocal: Boolean?,
+        @SerializedName("primary_color") val primaryColor: String? = null,
+        @SerializedName("added_at") val addedAt: String?,
+        @SerializedName("added_by") val addedBy: SpotifyPublicUser?,
+        @SerializedName("is_local") val isLocal: Boolean?,
         val track: Track,
-        @Json(name = "video_thumbnail") val videoThumbnail: VideoThumbnail? = null
+        @SerializedName("video_thumbnail") val videoThumbnail: VideoThumbnail? = null
 )
 
 /**
@@ -84,25 +83,24 @@ data class PlaylistTrack(
  * @property type The object type: “playlist”
  */
 data class Playlist(
-        @Json(name = "external_urls") val externalUrls: Map<String, String>,
-        @Json(name = "href") val href: String,
+        @SerializedName("external_urls") val externalUrls: Map<String, String>,
+        @SerializedName("href") val href: String,
         val id: String,
-        @Json(name = "uri") val uri: String,
+        @SerializedName("uri") val uri: String,
 
         val collaborative: Boolean,
         val description: String,
         val followers: Followers,
-        @Json(name = "primary_color") val primaryColor: String? = null,
+        @SerializedName("primary_color") val primaryColor: String? = null,
         val images: List<SpotifyImage>,
         val name: String,
         val owner: SpotifyPublicUser,
         val public: Boolean? = null,
-        @Json(name = "snapshot_id") private val _snapshotId: String,
+        @SerializedName("snapshot_id") private val _snapshotId: String,
         val tracks: PagingObject<PlaylistTrack>,
         val type: String
 ) {
-    @Transient
-    val snapshot: Snapshot = Snapshot(_snapshotId)
+    val snapshot: Snapshot get() = Snapshot(_snapshotId)
 }
 
 /**
@@ -125,4 +123,4 @@ data class VideoThumbnail(val url: String?)
  *
  * @param snapshotId The playlist state identifier
  */
-data class Snapshot(@Json(name = "snapshot_id") val snapshotId: String)
+data class Snapshot(@SerializedName("snapshot_id") val snapshotId: String)
