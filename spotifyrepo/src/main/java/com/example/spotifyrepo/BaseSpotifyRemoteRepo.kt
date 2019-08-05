@@ -6,10 +6,10 @@ import com.example.core.retrofit.NetworkResponse
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.repo.BaseRemoteRepo
 import com.example.spotifyapi.SpotifyAccountsApi
-import com.example.spotifyapi.SpotifyAuth
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
 import com.example.spotifyapi.model.SpotifyAuthErrorApiModel
+import com.example.spotifyapi.util.SpotifyAuth
 import com.example.spotifyrepo.mapper.domain
 import com.example.spotifyrepo.util.observable
 import com.example.spotifyrepo.util.single

@@ -22,7 +22,3 @@ class PagingObject<T>(
         val previous: String? = null,
         val total: Int
 ) : ArrayList<T>(items)
-
-
-
-

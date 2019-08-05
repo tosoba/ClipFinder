@@ -8,8 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.util.Constants
 import com.example.spotifyapi.spotifyApiModule
-import com.example.spotifydashboard.di.spotifyDashboardDataModule
-import com.example.spotifydashboard.di.spotifyDashboardDomainModule
+import com.example.spotifydashboard.di.spotifyDashboardModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
@@ -37,7 +36,7 @@ class ClipFinderApp : Application() {
                     soundCloudModule, spotifyModule, videosModule,
                     viewModelsModule,
                     spotifyApiModule,
-                    spotifyDashboardDataModule, spotifyDashboardDomainModule
+                    spotifyDashboardModule
             ))
         }
     }

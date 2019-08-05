@@ -152,8 +152,6 @@ data class SpotifyCopyright(
     val type = CopyrightType.values().match(_type)!!
 }
 
-internal data class AlbumsResponse(val albums: List<Album>)
-
 /**
  * Copyright statement type of an Album
  */

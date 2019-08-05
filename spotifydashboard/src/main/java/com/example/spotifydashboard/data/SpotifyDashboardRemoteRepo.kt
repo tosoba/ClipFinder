@@ -6,15 +6,14 @@ import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.SpotifyBrowseApi
-import com.example.spotifyapi.model.AlbumApiModel
-import com.example.spotifyapi.model.PlaylistApiModel
+import com.example.spotifyapi.SpotifyChartsApi
 import com.example.spotifyapi.model.TrackApiModel
 import com.example.spotifyapi.model.TracksOnlyResponse
+import com.example.spotifyapi.models.SimpleAlbum
+import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.SpotifyCategory
+import com.example.spotifyapi.util.ChartTrackIdMapper
 import com.example.spotifyapi.util.domain
-import com.example.spotifydashboard.data.api.ChartTrackIdMapper
-import com.example.spotifydashboard.data.api.SpotifyDashboardApi
-import com.example.spotifydashboard.data.api.SpotifyDashboardChartsApi
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
 import com.example.spotifyrepo.BaseSpotifyRemoteRepo
 import com.example.spotifyrepo.mapper.domain
@@ -31,9 +30,8 @@ import io.reactivex.functions.BiFunction
 class SpotifyDashboardRemoteRepo(
         preferences: SpotifyPreferences,
         accountsApi: SpotifyAccountsApi,
-        private val api: SpotifyDashboardApi,
         private val commonApi: SpotifyApi,
-        private val chartsApi: SpotifyDashboardChartsApi,
+        private val chartsApi: SpotifyChartsApi,
         private val browseApi: SpotifyBrowseApi
 ) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
 
@@ -49,13 +47,13 @@ class SpotifyDashboardRemoteRepo(
 
     override val featuredPlaylists: Observable<Resource<List<PlaylistEntity>>>
         get() = getAllItems { token, offset ->
-            api.getFeaturedPlaylists(
+            browseApi.getFeaturedPlaylists(
                     authorization = getAccessTokenHeader(token),
                     offset = offset,
                     country = preferences.country,
                     locale = preferences.locale
             ).toObservable()
-        }.mapToResource { result.items.map(PlaylistApiModel::domain) }
+        }.mapToResource { result.items.map(SimplePlaylist::domain) }
 
     override val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
         get() = chartsApi.getDailyViralTracks()
@@ -87,14 +85,14 @@ class SpotifyDashboardRemoteRepo(
     override fun getNewReleases(
             offset: Int
     ): Single<Resource<ListPage<AlbumEntity>>> = withTokenSingle { token ->
-        api.getNewReleases(
+        browseApi.getNewReleases(
                 authorization = getAccessTokenHeader(token),
                 offset = offset
         ).mapToResource {
             ListPage(
-                    items = result.items.map(AlbumApiModel::domain),
+                    items = result.items.map(SimpleAlbum::domain),
                     offset = result.offset + SpotifyDefaults.LIMIT,
-                    totalItems = result.totalItems
+                    totalItems = result.total
             )
         }
     }

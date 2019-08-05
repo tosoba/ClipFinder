@@ -25,7 +25,7 @@ import com.example.coreandroid.util.Constants
 import com.example.coreandroid.util.PendingIntents
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.onSeekBarProgressChangeListener
-import com.example.spotifyapi.SpotifyAuth
+import com.example.spotifyapi.util.SpotifyAuth
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso

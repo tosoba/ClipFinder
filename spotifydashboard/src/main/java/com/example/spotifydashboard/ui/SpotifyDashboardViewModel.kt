@@ -33,7 +33,6 @@ class SpotifyDashboardViewModel(
         loadNewReleases()
     }
 
-    //TODO: maybe use Timber for logging in onError
     fun loadCategories() = withState { state ->
         if (state.categories.status is Loading) return@withState
 

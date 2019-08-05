@@ -50,3 +50,10 @@ data class CategoriesResponse(
     override val totalItems: Int get() = result.total
 }
 
+data class AlbumsResponse(
+        @Json(name = "albums") val result: PagingObject<SimpleAlbum>
+) : PagedResponse<SimpleAlbum> {
+    override val items: List<SimpleAlbum> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
