@@ -1,7 +1,6 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
-import com.example.spotifyapi.service.utils.match
+import com.example.spotifyapi.util.match
 import com.neovisionaries.i18n.CountryCode
 import com.squareup.moshi.Json
 
@@ -31,11 +30,10 @@ import com.squareup.moshi.Json
 data class SimpleAlbum(
         @Json(name = "album_type") private val _albumType: String,
         @Json(name = "available_markets") private val _availableMarkets: List<String> = listOf(),
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
-
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
         val artists: List<SimpleArtist>,
         val images: List<SpotifyImage>,
         val name: String,
@@ -45,7 +43,7 @@ data class SimpleAlbum(
         @Json(name = "release_date_precision") val releaseDatePrecision: String,
         @Json(name = "total_tracks") val totalTracks: Int? = null,
         @Json(name = "album_group") private val albumGroupString: String? = null
-) : CoreObject(_href, _id, AlbumURI(_uri), _externalUrls) {
+) {
     @Transient
     val availableMarkets = _availableMarkets.map { CountryCode.valueOf(it) }
 
@@ -58,14 +56,6 @@ data class SimpleAlbum(
     val albumGroup: AlbumResultType? = albumGroupString?.let { _ ->
         AlbumResultType.values().find { it.id == albumGroupString }
     }
-
-    /**
-     * Converts this [SimpleAlbum] into a full [Album] object with the given
-     * market
-     *
-     * @param market Provide this parameter if you want the list of returned items to be relevant to a particular country.
-     */
-    fun toFullAlbum(market: CountryCode? = null) = api.albums.getAlbum(id, market)
 }
 
 /**
@@ -112,11 +102,11 @@ enum class AlbumResultType(internal val id: String) {
 data class Album(
         @Json(name = "album_type") private val _albumType: String,
         @Json(name = "available_markets") private val _availableMarkets: List<String> = listOf(),
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
         @Json(name = "external_ids") private val _externalIds: Map<String, String> = hashMapOf(),
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
 
         val artists: List<SimpleArtist>,
         val copyrights: List<SpotifyCopyright>,
@@ -131,7 +121,7 @@ data class Album(
         val type: String,
         @Json(name = "total_tracks") val totalTracks: Int,
         val restrictions: Restrictions? = null
-) : CoreObject(_href, _id, AlbumURI(_uri), _externalUrls) {
+) {
     @Transient
     val availableMarkets = _availableMarkets.map { CountryCode.valueOf(it) }
 
@@ -162,15 +152,14 @@ data class SpotifyCopyright(
     val type = CopyrightType.values().match(_type)!!
 }
 
-internal data class AlbumsResponse(val albums: List<Album?>)
+internal data class AlbumsResponse(val albums: List<Album>)
 
 /**
  * Copyright statement type of an Album
  */
 enum class CopyrightType(val identifier: String) : ResultEnum {
     COPYRIGHT("C"),
-    SOUND_PERFORMANCE_COPYRIGHT("P")
-    ;
+    SOUND_PERFORMANCE_COPYRIGHT("P");
 
     override fun retrieveIdentifier() = identifier
 }

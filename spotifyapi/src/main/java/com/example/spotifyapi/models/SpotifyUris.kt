@@ -1,5 +1,4 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
 private fun String.matchType(type: String): String? {
     val typeRegex = "^spotify:(?:.*:)*$type:([^:]+)(?::.*)*$|^([^:]+)$".toRegex()
@@ -11,14 +10,14 @@ private fun String.add(type: String): String {
     this.matchType(type)?.let {
         return "spotify:$type:${it.trim()}"
     }
-    throw SpotifyUriException("Illegal Spotify ID/URI: '$this' isn't convertible to '$type' uri")
+    throw IllegalArgumentException("Illegal Spotify ID/URI: '$this' isn't convertible to '$type' uri")
 }
 
 private fun String.remove(type: String): String {
     this.matchType(type)?.let {
         return it.trim()
     }
-    throw SpotifyUriException("Illegal Spotify ID/URI: '$this' isn't convertible to '$type' id")
+    throw IllegalArgumentException("Illegal Spotify ID/URI: '$this' isn't convertible to '$type' id")
 }
 
 /**

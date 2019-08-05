@@ -1,9 +1,5 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
-import com.example.spotifyapi.service.SpotifyRestAction
-import com.example.spotifyapi.service.endpoints.client.ClientPlaylistAPI
-import com.neovisionaries.i18n.CountryCode
 import com.squareup.moshi.Json
 
 /**
@@ -28,10 +24,10 @@ import com.squareup.moshi.Json
  * requests to target a specific playlist version
  */
 data class SimplePlaylist(
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
 
         val collaborative: Boolean,
         val images: List<SpotifyImage>,
@@ -42,17 +38,9 @@ data class SimplePlaylist(
         @Json(name = "snapshot_id") private val _snapshotId: String,
         val tracks: PlaylistTrackInfo,
         val type: String
-) : CoreObject(_href, _id, PlaylistURI(_uri), _externalUrls) {
+) {
     @Transient
-    val snapshot: ClientPlaylistAPI.Snapshot = ClientPlaylistAPI.Snapshot(_snapshotId)
-
-    /**
-     * Converts this [SimplePlaylist] into a full [Playlist] object with the given
-     * market
-     *
-     * @param market Provide this parameter if you want the list of returned items to be relevant to a particular country.
-     */
-    fun toFullPlaylist(market: CountryCode? = null): SpotifyRestAction<Playlist> = api.playlists.getPlaylist(id, market)
+    val snapshot: Snapshot = Snapshot(_snapshotId)
 }
 
 /**
@@ -96,10 +84,10 @@ data class PlaylistTrack(
  * @property type The object type: “playlist”
  */
 data class Playlist(
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
 
         val collaborative: Boolean,
         val description: String,
@@ -112,9 +100,9 @@ data class Playlist(
         @Json(name = "snapshot_id") private val _snapshotId: String,
         val tracks: PagingObject<PlaylistTrack>,
         val type: String
-) : CoreObject(_href, _id, PlaylistURI(_uri), _externalUrls) {
+) {
     @Transient
-    val snapshot: ClientPlaylistAPI.Snapshot = ClientPlaylistAPI.Snapshot(_snapshotId)
+    val snapshot: Snapshot = Snapshot(_snapshotId)
 }
 
 /**
@@ -131,3 +119,10 @@ data class PlaylistTrackInfo(
 )
 
 data class VideoThumbnail(val url: String?)
+
+/**
+ * Contains the snapshot id, returned from API responses
+ *
+ * @param snapshotId The playlist state identifier
+ */
+data class Snapshot(@Json(name = "snapshot_id") val snapshotId: String)

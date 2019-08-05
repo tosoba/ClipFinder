@@ -1,7 +1,6 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
-import com.example.spotifyapi.service.utils.match
+import com.example.spotifyapi.util.match
 import com.squareup.moshi.Json
 
 /**
@@ -11,12 +10,12 @@ import com.squareup.moshi.Json
  * @property href A link to the Web API endpoint providing full details of the track.
  */
 data class PlayHistoryContext(
-        @Json(name = "href") val _href: String,
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "href") val href: String,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "uri") val uri: String,
 
         val type: String
-) : CoreObject(_href, _href, TrackURI(_uri), _externalUrls)
+)
 
 /**
  * Information about a previously-played track
@@ -43,7 +42,7 @@ data class PlayHistory(
  * @property type Device type, such as “Computer”, “Smartphone” or “Speaker”.
  */
 data class Device(
-        @Json(name = "id") val _id: String?,
+        @Json(name = "id") val id: String?,
 
         @Json(name = "is_active") val isActive: Boolean,
         @Json(name = "is_private_session") val isPrivateSession: Boolean,
@@ -52,7 +51,7 @@ data class Device(
         val _type: String,
         @Json(name = "volume_percent") val volumePercent: Int,
         val type: DeviceType = DeviceType.values().first { it.identifier.equals(_type, true) }
-) : IdentifiableNullable(null, _id)
+)
 
 /**
  * Electronic type of registered Spotify device

@@ -1,7 +1,5 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
-import com.example.spotifyapi.service.SpotifyScope
 import com.squareup.moshi.Json
 
 /**

@@ -1,5 +1,4 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
 import com.squareup.moshi.Json
 
@@ -12,12 +11,12 @@ import com.squareup.moshi.Json
  * @property name The name of the category.
  */
 data class SpotifyCategory(
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
+        @Json(name = "href") val href: String,
+        val id: String,
 
         val icons: List<SpotifyImage>,
         val name: String
-) : Identifiable(_href, _id)
+)
 
 /**
  * Seed from which the recommendation was constructed
@@ -32,14 +31,14 @@ data class SpotifyCategory(
  * @property type The entity type of this seed. One of artist , track or genre.
  */
 data class RecommendationSeed(
-        @Json(name = "href") val _href: String?,
-        @Json(name = "id") val _id: String,
+        @Json(name = "href") val href: String?,
+        val id: String,
 
         val initialPoolSize: Int,
         val afterFilteringSize: Int,
         val afterRelinkingSize: Int?,
         val type: String
-) : Identifiable(_href, _id)
+)
 
 /**
  * @property seeds An array of recommendation seed objects.

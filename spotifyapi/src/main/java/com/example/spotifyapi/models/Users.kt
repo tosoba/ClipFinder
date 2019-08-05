@@ -1,5 +1,4 @@
-/* Spotify Web API - Kotlin Wrapper; MIT License, 2019; Original author: Adam Ratzman */
-package com.example.spotifyapi.service.models
+package com.example.spotifyapi.models
 
 import com.squareup.moshi.Json
 
@@ -24,10 +23,10 @@ import com.squareup.moshi.Json
  * @property type The object type: “user”
  */
 data class SpotifyUserInformation(
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
 
         val birthdate: String? = null,
         val country: String? = null,
@@ -37,7 +36,7 @@ data class SpotifyUserInformation(
         val images: List<SpotifyImage>,
         val product: String?,
         val type: String
-) : CoreObject(_href, _id, UserURI(_uri), _externalUrls)
+)
 
 /**
  * Public information about a Spotify user
@@ -50,16 +49,16 @@ data class SpotifyUserInformation(
  * @property type The object type: “user”
  */
 data class SpotifyPublicUser(
-        @Json(name = "external_urls") val _externalUrls: Map<String, String>,
-        @Json(name = "href") val _href: String,
-        @Json(name = "id") val _id: String,
-        @Json(name = "uri") val _uri: String,
+        @Json(name = "external_urls") val externalUrls: Map<String, String>,
+        @Json(name = "href") val href: String,
+        val id: String,
+        @Json(name = "uri") val uri: String,
 
         @Json(name = "display_name") val displayName: String? = null,
         val followers: Followers = Followers(null, -1),
         val images: List<SpotifyImage> = listOf(),
         val type: String
-) : CoreObject(_href, _id, UserURI(_uri), _externalUrls)
+)
 
 /**
  * Information about a Spotify user's followers
