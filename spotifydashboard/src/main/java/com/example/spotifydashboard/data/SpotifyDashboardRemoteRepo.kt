@@ -53,7 +53,7 @@ class SpotifyDashboardRemoteRepo(
                     country = preferences.country,
                     locale = preferences.locale
             ).toObservable()
-        }.mapToResource { result.items.map(SimplePlaylist::domain) }
+        }.mapToResource { playlists.items.map(SimplePlaylist::domain) }
 
     override val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
         get() = chartsApi.getDailyViralTracks()

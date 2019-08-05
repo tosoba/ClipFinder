@@ -1,5 +1,6 @@
 package com.example.spotifyapi.models
 
+import com.example.spotifyapi.model.PagedResponse
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -52,4 +53,10 @@ data class RecommendationResponse(val seeds: List<RecommendationSeed>, val track
  * @property message the featured message in "Overview"
  * @property playlists [PagingObject] of returned items
  */
-data class FeaturedPlaylists(val message: String, val playlists: PagingObject<SimplePlaylist>)
+data class FeaturedPlaylists(
+        val message: String, val playlists: PagingObject<SimplePlaylist>
+) : PagedResponse<SimplePlaylist> {
+    override val items: List<SimplePlaylist> get() = playlists.items
+    override val offset: Int get() = playlists.offset
+    override val totalItems: Int get() = playlists.total
+}
