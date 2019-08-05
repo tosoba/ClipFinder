@@ -3,11 +3,11 @@ package com.example.there.findclips
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.util.Constants
+import com.example.spotifyapi.spotifyApiModule
 import com.example.spotifydashboard.di.spotifyDashboardDataModule
 import com.example.spotifydashboard.di.spotifyDashboardDomainModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
@@ -36,14 +36,10 @@ class ClipFinderApp : Application() {
                     appModule, databaseModule, apiModule, repoModule,
                     soundCloudModule, spotifyModule, videosModule,
                     viewModelsModule,
+                    spotifyApiModule,
                     spotifyDashboardDataModule, spotifyDashboardDomainModule
             ))
         }
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-//        MultiDex.install(this)
     }
 
     override fun onTerminate() {

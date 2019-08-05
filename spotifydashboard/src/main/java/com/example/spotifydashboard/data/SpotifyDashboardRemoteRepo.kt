@@ -5,15 +5,16 @@ import com.example.core.model.Resource
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
+import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.model.AlbumApiModel
 import com.example.spotifyapi.model.PlaylistApiModel
 import com.example.spotifyapi.model.TrackApiModel
 import com.example.spotifyapi.model.TracksOnlyResponse
+import com.example.spotifyapi.models.SpotifyCategory
+import com.example.spotifyapi.util.domain
 import com.example.spotifydashboard.data.api.ChartTrackIdMapper
 import com.example.spotifydashboard.data.api.SpotifyDashboardApi
 import com.example.spotifydashboard.data.api.SpotifyDashboardChartsApi
-import com.example.spotifydashboard.data.api.domain
-import com.example.spotifydashboard.data.api.model.CategoryApiModel
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
 import com.example.spotifyrepo.BaseSpotifyRemoteRepo
 import com.example.spotifyrepo.mapper.domain
@@ -32,18 +33,19 @@ class SpotifyDashboardRemoteRepo(
         accountsApi: SpotifyAccountsApi,
         private val api: SpotifyDashboardApi,
         private val commonApi: SpotifyApi,
-        private val chartsApi: SpotifyDashboardChartsApi
+        private val chartsApi: SpotifyDashboardChartsApi,
+        private val browseApi: SpotifyBrowseApi
 ) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
 
     override val categories: Observable<Resource<List<CategoryEntity>>>
         get() = getAllItems { token, offset ->
-            api.getCategories(
+            browseApi.getCategories(
                     authorization = getAccessTokenHeader(token),
                     offset = offset,
                     country = preferences.country,
                     locale = preferences.locale
             ).toObservable()
-        }.mapToResource { items.map(CategoryApiModel::domain) }
+        }.mapToResource { items.map(SpotifyCategory::domain) }
 
     override val featuredPlaylists: Observable<Resource<List<PlaylistEntity>>>
         get() = getAllItems { token, offset ->

@@ -30,7 +30,7 @@ val spotifyDashboardDataModule = module {
         ).create(SpotifyDashboardChartsApi::class.java)
     }
 
-    single { SpotifyDashboardRemoteRepo(get(), get(), get(), get(), get()) } bind ISpotifyDashboardRemoteRepo::class
+    single { SpotifyDashboardRemoteRepo(get(), get(), get(), get(), get(), get()) } bind ISpotifyDashboardRemoteRepo::class
 }
 
 private const val spotifyApiUrl: String = "https://api.spotify.com/v1/"

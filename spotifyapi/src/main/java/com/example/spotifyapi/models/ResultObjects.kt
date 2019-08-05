@@ -1,5 +1,8 @@
 package com.example.spotifyapi.models
 
+import com.example.spotifyapi.model.PagedResponse
+import com.squareup.moshi.Json
+
 class ExternalUrl(val name: String, val url: String)
 
 /**
@@ -30,3 +33,20 @@ data class ErrorResponse(val error: ErrorObject)
  * @property message A short description of the cause of the error.
  */
 data class ErrorObject(val status: Int, val message: String)
+
+data class PlaylistsResponse(
+        @Json(name = "playlists") val result: PagingObject<SimplePlaylist>
+) : PagedResponse<SimplePlaylist> {
+    override val items: List<SimplePlaylist> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
+data class CategoriesResponse(
+        @Json(name = "categories") val result: PagingObject<SpotifyCategory>
+) : PagedResponse<SpotifyCategory> {
+    override val items: List<SpotifyCategory> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
