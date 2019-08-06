@@ -28,7 +28,8 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         if (item.itemId == main_bottom_navigation_view.selectedItemId) {
-            return@OnNavigationItemSelectedListener false
+            currentNavHostFragment?.popAll()
+            return@OnNavigationItemSelectedListener true
         }
 
         main_view_pager.currentItem = itemIds.indexOf(item.itemId)

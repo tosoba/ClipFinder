@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 
 abstract class BaseNavHostFragment : Fragment() {
 
@@ -28,5 +29,9 @@ abstract class BaseNavHostFragment : Fragment() {
         replace(backStackLayoutId, fragment)
         if (addToBackStack) addToBackStack(null)
         commit()
+    }
+
+    fun popAll() {
+        childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 }

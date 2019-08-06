@@ -28,8 +28,10 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard, R.id.sound_cloud_action_favorites)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId)
-            return@OnNavigationItemSelectedListener false
+        if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId) {
+            currentNavHostFragment?.popAll()
+            return@OnNavigationItemSelectedListener true
+        }
 
         sound_cloud_view_pager.currentItem = itemIds.indexOf(item.itemId)
         toolbarController?.toggleToolbar()

@@ -1,17 +1,20 @@
 package com.example.coreandroid.view.viewpager.adapter
 
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 abstract class CurrentFragmentStatePagerAdapter(
-        manager: androidx.fragment.app.FragmentManager
-) : androidx.fragment.app.FragmentStatePagerAdapter(manager) {
+        manager: FragmentManager
+) : FragmentStatePagerAdapter(manager) {
 
-    var currentFragment: androidx.fragment.app.Fragment? = null
+    var currentFragment: Fragment? = null
         private set
 
     override fun setPrimaryItem(container: ViewGroup, position: Int, `object`: Any) {
         if (currentFragment !== `object`) {
-            currentFragment = `object` as androidx.fragment.app.Fragment
+            currentFragment = `object` as Fragment
         }
         super.setPrimaryItem(container, position, `object`)
     }
