@@ -35,6 +35,16 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".33" />
 
+        <SurfaceView
+            android:id="@+id/visualizer_surface_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias=".1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/spotify_player_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/current_track_image_view"
             android:layout_width="0dp"

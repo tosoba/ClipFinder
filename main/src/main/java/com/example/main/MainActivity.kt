@@ -537,6 +537,8 @@ class MainActivity :
         viewModel.viewState.isLoggedIn.set(true)
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
 
+        //TODO: permission check
+
         if (spotifyPlayerFragment?.isPlayerInitialized == true)
             onLoginSuccessful?.invoke()
         onLoginSuccessful = null

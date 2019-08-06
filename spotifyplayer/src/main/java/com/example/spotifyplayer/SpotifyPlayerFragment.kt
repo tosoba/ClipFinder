@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.PixelFormat
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -30,6 +31,9 @@ import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
+import me.bogerchan.niervisualizer.NierVisualizerManager
+import me.bogerchan.niervisualizer.renderer.IRenderer
+import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
 import org.koin.android.ext.android.inject
 
 class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class),
@@ -73,10 +77,14 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         get() = viewModel.playerState.lastPlayedPlaylist
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
-        if (viewModel.playerState.currentPlaybackState != null && viewModel.playerState.currentPlaybackState!!.isPlaying) {
+        if (viewModel.playerState.currentPlaybackState?.isPlaying == true) {
             spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
+
+            mVisualizerManager?.pause()
         } else {
             spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
+
+            mVisualizerManager?.resume()
         }
     }
 
@@ -117,7 +125,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
     }
 
-
     private val loggerSpotifyPlayerOperationCallback = object : Player.OperationCallback {
         override fun onSuccess() {
             Log.e("SUCCESS", "loggerSpotifyPlayerOperationCallback")
@@ -128,12 +135,26 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
     }
 
+    private val visualizerRenderer: Array<IRenderer> by lazy { arrayOf<IRenderer>(CircleBarRenderer()) }
+
+    private var mVisualizerManager: NierVisualizerManager? = null
+
+    private fun createNewVisualizerManager() {
+        mVisualizerManager?.release()
+        mVisualizerManager = NierVisualizerManager().apply {
+            init(0)
+        }
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyPlayerBinding>(
             inflater, R.layout.fragment_spotify_player, container, false
     ).apply {
         fragmentView = spotifyPlayerView
+
+        visualizerSurfaceView.setZOrderOnTop(true)
+        visualizerSurfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -143,9 +164,14 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     override fun onStart() {
         super.onStart()
+
         if (viewModel.playerState.backgroundPlaybackNotificationIsShowing) {
             applicationContext.notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
+        }
+
+        mVisualizerManager?.apply {
+            if (spotifyPlayer?.playbackState?.isPlaying == true) resume()
         }
     }
 
@@ -154,6 +180,9 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = true
             showPlaybackNotification()
         }
+
+        mVisualizerManager?.pause()
+
         super.onStop()
     }
 
@@ -166,6 +195,9 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         spotifyPlayer?.removeNotificationCallback(this)
         spotifyPlayer?.removeConnectionStateCallback(connectionStateCallback)
         Spotify.destroyPlayer(this)
+
+        mVisualizerManager?.release()
+        mVisualizerManager = null
 
         super.onDestroy()
     }
@@ -232,6 +264,9 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                         .error(R.drawable.error_placeholder)
                         .placeholder(R.drawable.track_placeholder)
                         .into(current_track_image_view)
+
+                createNewVisualizerManager()
+                mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
             }
 
             else -> return

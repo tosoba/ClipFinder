@@ -42,6 +42,7 @@ dependencies {
     implementation project(':core')
     implementation project(':coreandroid')
     implementation project(':spotifyapi')
+    implementation project(':visualizer')
 
     implementation rootProject.ext.rxJava
 
