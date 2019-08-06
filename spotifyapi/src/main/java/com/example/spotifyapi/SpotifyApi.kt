@@ -62,7 +62,7 @@ interface SpotifyApi {
             @Query("seed_tracks") trackId: String
     ): Single<NetworkResponse<SimilarTracksResponse, SpotifyErrorResponse>>
 
-    @GET("artists/{id}/items")
+    @GET("artists/{id}/albums")
     fun getAlbumsFromArtist(
             @Header("Authorization") authorization: String,
             @Path("id") artistId: String,
@@ -83,7 +83,7 @@ interface SpotifyApi {
             @Path("id") artistId: String
     ): Single<NetworkResponse<ArtistsOnlyResponse, SpotifyErrorResponse>>
 
-    @GET("items/{id}/tracks")
+    @GET("albums/{id}/tracks")
     fun getTracksFromAlbum(
             @Header("Authorization") authorization: String,
             @Path("id") albumId: String,
@@ -119,7 +119,7 @@ interface SpotifyApi {
             @Query("offset") offset: Int = SpotifyDefaults.OFFSET
     ): Single<NetworkResponse<SavedTracksResult, SpotifyErrorResponse>>
 
-    @GET("me/items")
+    @GET("me/albums")
     fun getCurrentUsersSavedAlbums(
             @Header("Authorization") authorization: String,
             @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
