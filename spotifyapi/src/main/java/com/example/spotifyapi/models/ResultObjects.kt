@@ -34,7 +34,7 @@ data class ErrorResponse(val error: ErrorObject)
  */
 data class ErrorObject(val status: Int, val message: String)
 
-data class PlaylistsResponse(
+data class SimplePlaylistsPagedResponse(
         @SerializedName("playlists") val result: PagingObject<SimplePlaylist>
 ) : PagedResponse<SimplePlaylist> {
     override val items: List<SimplePlaylist> get() = result.items
@@ -50,10 +50,16 @@ data class CategoriesResponse(
     override val totalItems: Int get() = result.total
 }
 
-data class AlbumsResponse(
+data class SimpleAlbumsPagedResponse(
         @SerializedName("albums") val result: PagingObject<SimpleAlbum>
 ) : PagedResponse<SimpleAlbum> {
     override val items: List<SimpleAlbum> get() = result.items
     override val offset: Int get() = result.offset
     override val totalItems: Int get() = result.total
 }
+
+data class AlbumsResponse(@SerializedName("albums") val result: List<Album>)
+
+data class TracksResponse(@SerializedName("tracks") val result: List<Track>)
+
+data class ArtistsResponse(@SerializedName("artists") val result: List<Artist>)

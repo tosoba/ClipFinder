@@ -15,7 +15,7 @@ interface SpotifyBrowseApi {
             @Query("offset") offset: Int,
             @Query("country") country: String = SpotifyDefaults.COUNTRY,
             @Query("limit") limit: Int = SpotifyDefaults.LIMIT
-    ): Single<NetworkResponse<PlaylistsResponse, ErrorResponse>>
+    ): Single<NetworkResponse<SimplePlaylistsPagedResponse, ErrorResponse>>
 
     @GET("browse/categories")
     fun getCategories(
@@ -48,7 +48,7 @@ interface SpotifyBrowseApi {
             @Query("country") country: String = SpotifyDefaults.COUNTRY,
             @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
             @Query("offset") offset: Int = SpotifyDefaults.OFFSET
-    ): Single<NetworkResponse<AlbumsResponse, ErrorResponse>>
+    ): Single<NetworkResponse<SimpleAlbumsPagedResponse, ErrorResponse>>
 
     @GET("recommendations")
     fun getRecommendations(
