@@ -43,3 +43,22 @@ fun interceptorWithHeaders(
             }
             .build())
 }
+
+fun onlineCacheInterceptor(maxAge: Long = 60 * 5) = Interceptor { chain ->
+    val response = chain.proceed(chain.request())
+    response.newBuilder()
+            .header("Cache-Control", "public, max-age=$maxAge")
+            .removeHeader("Pragma")
+            .build()
+}
+
+fun offlineCacheInterceptor(maxStale: Long = 60 * 60 * 24 * 7, isConnected: () -> Boolean) = Interceptor { chain ->
+    val request = chain.request().run {
+        if (!isConnected()) newBuilder()
+                .header("Cache-Control", "public, only-if-cached, max-stale=$maxStale")
+                .removeHeader("Pragma")
+                .build()
+        else this
+    }
+    chain.proceed(request)
+}

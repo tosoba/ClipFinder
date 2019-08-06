@@ -41,3 +41,6 @@ val Context.networkConnectivity: Connectivity
         return if (activeNetwork != null && activeNetwork.isConnected) Connectivity.fromNetworkType(activeNetwork.type)
         else Connectivity.OFFLINE
     }
+
+val Context.isConnected: Boolean
+    get() = networkConnectivity != Connectivity.OFFLINE

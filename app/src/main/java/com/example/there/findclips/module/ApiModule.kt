@@ -10,6 +10,8 @@ import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.youtubeapi.YoutubeApi
 import com.vpaliy.soundcloud.SoundCloud
+import okhttp3.Interceptor
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
@@ -17,9 +19,11 @@ val apiModule = module {
     single {
         retrofitWith(
                 url = spotifyApiBaseUrl,
-                client = clientWithInterceptors(interceptorWithHeaders(
-                        "Accept" to "application/json",
-                        "Content-Type" to "application/json"))
+                client = get {
+                    parametersOf(listOf(interceptorWithHeaders(
+                            "Accept" to "application/json",
+                            "Content-Type" to "application/json")))
+                }
         ).create(SpotifyApi::class.java)
     }
     single {
@@ -33,18 +37,21 @@ val apiModule = module {
     single {
         retrofitWith(
                 url = youtubeBaseUrl,
+                client = get { parametersOf(emptyList<Interceptor>()) },
                 callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(YoutubeApi::class.java)
     }
     single {
         retrofitWith(
                 url = soundCloudBaseUrl,
+                client = get { parametersOf(emptyList<Interceptor>()) },
                 callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(SoundCloudApi::class.java)
     }
     single {
         retrofitWith(
                 url = soundCloudBaseUrlV2,
+                client = get { parametersOf(emptyList<Interceptor>()) },
                 callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(SoundCloudApiV2::class.java)
     }
