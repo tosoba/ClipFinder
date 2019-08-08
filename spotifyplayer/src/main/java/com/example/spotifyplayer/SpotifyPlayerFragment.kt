@@ -37,6 +37,7 @@ import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
 import org.koin.android.ext.android.inject
+import kotlin.math.pow
 
 class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class),
         ISpotifyPlayerFragment,
@@ -166,11 +167,11 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                     audioTrackController.mAudioBuffer.peek(mAudioRecordByteBufferShort)
 
                     mAudioRecordByteBufferShort.forEachIndexed { index, sh ->
-                        mAudioRecordByteBuffer[index] = (sh / Math.pow(2.0, 8.0)).toByte()
+                        mAudioRecordByteBuffer[index] = (sh / 2.0.pow(8.0)).toByte()
                     }
 
                     var tempCounter = 0
-                    for (idx in 0..(mAudioRecordByteBuffer.size - 1) step (mAudioRecordByteBuffer.size / (audioLength + mBuffer.size))) {
+                    for (idx in 0 until mAudioRecordByteBuffer.size step (mAudioRecordByteBuffer.size / (mBuffer.size))) {
                         if (tempCounter >= mBuffer.size) {
                             break
                         }
@@ -405,11 +406,9 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
             visualizer_surface_view?.holder?.addCallback(object : SurfaceHolder.Callback {
-                override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-                }
+                override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
 
-                override fun surfaceDestroyed(holder: SurfaceHolder?) {
-                }
+                override fun surfaceDestroyed(holder: SurfaceHolder?) {}
 
                 //TODO: test this
                 override fun surfaceCreated(holder: SurfaceHolder?) {
