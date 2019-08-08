@@ -1,5 +1,6 @@
 package com.example.main
 
+import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -23,6 +24,7 @@ import com.example.coreandroid.base.activity.BaseVMActivity
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.*
 import com.example.coreandroid.base.handler.*
+import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.model.spotify.Album
@@ -51,6 +53,7 @@ import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import com.spotify.sdk.android.player.Error
+import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -293,12 +296,16 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycle.addObserver(disposables)
+
         viewModel.clearAllVideoSearchData()
 
         initViewBindings()
         setupNavigationFromSimilarTracks()
 
         addStatePropertyChangedCallbacks()
+
+        checkPermissions()
     }
 
     override fun onDestroy() {
@@ -407,6 +414,19 @@ class MainActivity :
             setSupportActionBar(mainToolbar)
             if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
         }
+    }
+
+    private val disposables = DisposablesComponent()
+
+    private val rxPermissions by lazy { RxPermissions(this) }
+
+    //TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission is granted show visualization or not
+    // or keep it here and just check if permission is granted in SpotifyPlayerFragment
+    //TODO: check what happens on rotation when permission dialog is showing
+    private fun checkPermissions() {
+        rxPermissions.request(Manifest.permission.RECORD_AUDIO)
+                .subscribe()
+                .disposeWith(disposables)
     }
 
     override fun loadTrack(track: SoundCloudTrack) {

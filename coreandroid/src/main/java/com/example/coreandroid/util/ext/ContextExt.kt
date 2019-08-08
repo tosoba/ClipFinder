@@ -5,9 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.spotify.sdk.android.player.Connectivity
 
 fun Context.dpToPx(dp: Float): Float = dp * (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
@@ -44,3 +46,5 @@ val Context.networkConnectivity: Connectivity
 
 val Context.isConnected: Boolean
     get() = networkConnectivity != Connectivity.OFFLINE
+
+fun Context.isPermissionGranted(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED

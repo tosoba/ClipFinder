@@ -1,5 +1,6 @@
 package com.example.spotifyplayer
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -141,9 +142,13 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     private fun createNewVisualizerManager() {
         mVisualizerManager?.release()
-        mVisualizerManager = NierVisualizerManager().apply {
-            init(0)
-        }
+        //TODO: so this bullshit doesn't work... (when given 0 it crashes)
+        //maybe try to modify spotify aar to be able to set player's audio controller to inherit from AudioTrackController
+        //and override onAudioDataDelivered and use it in NierVisualizer with custom NierVisualizerManager.NVDataSource
+        //data would have to be saved in like a local variable every time onAudioDataDelivered and also scaled down from Short to Byte...
+
+        //or try to do it like in that other visualizer app (where activity extended a class that had a method that gave access to audio data)
+//        mVisualizerManager = NierVisualizerManager().apply { init(1) }
     }
 
     override fun onCreateView(
@@ -264,9 +269,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                         .error(R.drawable.error_placeholder)
                         .placeholder(R.drawable.track_placeholder)
                         .into(current_track_image_view)
-
-                createNewVisualizerManager()
-                mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
             }
 
             else -> return
@@ -366,6 +368,11 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         slidingPanelController?.expandIfHidden()
         playback_seek_bar?.progress = 0
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
+
+        if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
+            createNewVisualizerManager()
+            mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
+        }
     }
 
     private fun notificationBuilder(
