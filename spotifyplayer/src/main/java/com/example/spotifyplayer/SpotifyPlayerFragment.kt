@@ -146,8 +146,6 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         //maybe try to modify spotify aar to be able to set player's audio controller to inherit from AudioTrackController
         //and override onAudioDataDelivered and use it in NierVisualizer with custom NierVisualizerManager.NVDataSource
         //data would have to be saved in like a local variable every time onAudioDataDelivered and also scaled down from Short to Byte...
-
-        //or try to do it like in that other visualizer app (where activity extended a class that had a method that gave access to audio data)
 //        mVisualizerManager = NierVisualizerManager().apply { init(1) }
     }
 
