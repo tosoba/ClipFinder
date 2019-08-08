@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -146,7 +147,39 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         //maybe try to modify spotify aar to be able to set player's audio controller to inherit from AudioTrackController
         //and override onAudioDataDelivered and use it in NierVisualizer with custom NierVisualizerManager.NVDataSource
         //data would have to be saved in like a local variable every time onAudioDataDelivered and also scaled down from Short to Byte...
-//        mVisualizerManager = NierVisualizerManager().apply { init(1) }
+        mVisualizerManager = NierVisualizerManager().apply {
+            init(object : NierVisualizerManager.NVDataSource {
+                private val mAudioBufferSize = 81920
+
+                private val mBuffer: ByteArray = ByteArray(512)
+                private val mAudioRecordByteBuffer by lazy { ByteArray(mAudioBufferSize / 2) }
+                private val audioLength = mAudioRecordByteBuffer.size
+                private val mAudioRecordByteBufferShort by lazy { ShortArray(mAudioBufferSize / 2) }
+
+                override fun getDataSamplingInterval() = 0L
+                override fun getDataLength() = mBuffer.size
+                override fun fetchFftData(): ByteArray? = null
+
+                override fun fetchWaveData(): ByteArray? {
+                    mAudioRecordByteBufferShort.fill(0)
+
+                    audioTrackController.mAudioBuffer.peek(mAudioRecordByteBufferShort)
+
+                    mAudioRecordByteBufferShort.forEachIndexed { index, sh ->
+                        mAudioRecordByteBuffer[index] = (sh / Math.pow(2.0, 8.0)).toByte()
+                    }
+
+                    var tempCounter = 0
+                    for (idx in 0..(mAudioRecordByteBuffer.size - 1) step (mAudioRecordByteBuffer.size / (audioLength + mBuffer.size))) {
+                        if (tempCounter >= mBuffer.size) {
+                            break
+                        }
+                        mBuffer[tempCounter++] = mAudioRecordByteBuffer[idx]
+                    }
+                    return mBuffer
+                }
+            })
+        }
     }
 
     override fun onCreateView(
@@ -277,11 +310,13 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
     }
 
+    private val audioTrackController: SpotifyAudioTrackController by lazy { SpotifyAudioTrackController() }
+
     override fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
             val playerConfig = Config(applicationContext, accessToken, SpotifyAuth.id)
             spotifyPlayer = SpotifyPlayerManager.getPlayer(playerConfig, this,
-                    SpotifyAudioTrackController(), object : SpotifyPlayer.InitializationObserver {
+                    audioTrackController, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
                     spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, applicationContext.networkConnectivity)
                     spotifyPlayer?.addNotificationCallback(this@SpotifyPlayerFragment)
@@ -369,7 +404,18 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
         if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
-            mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
+            visualizer_surface_view?.holder?.addCallback(object : SurfaceHolder.Callback {
+                override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                }
+
+                //TODO: test this
+                override fun surfaceCreated(holder: SurfaceHolder?) {
+                    mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
+                }
+            })
         }
     }
 
