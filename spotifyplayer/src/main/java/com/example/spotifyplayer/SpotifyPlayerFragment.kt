@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -405,16 +404,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
         if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
-            visualizer_surface_view?.holder?.addCallback(object : SurfaceHolder.Callback {
-                override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
-
-                override fun surfaceDestroyed(holder: SurfaceHolder?) {}
-
-                //TODO: test this
-                override fun surfaceCreated(holder: SurfaceHolder?) {
-                    mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
-                }
-            })
+            mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
         }
     }
 
