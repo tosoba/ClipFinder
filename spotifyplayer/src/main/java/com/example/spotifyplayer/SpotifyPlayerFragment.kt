@@ -143,41 +143,35 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     private fun createNewVisualizerManager() {
         mVisualizerManager?.release()
-        //TODO: so this bullshit doesn't work... (when given 0 it crashes)
-        //maybe try to modify spotify aar to be able to set player's audio controller to inherit from AudioTrackController
-        //and override onAudioDataDelivered and use it in NierVisualizer with custom NierVisualizerManager.NVDataSource
-        //data would have to be saved in like a local variable every time onAudioDataDelivered and also scaled down from Short to Byte...
         mVisualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
                 private val mAudioBufferSize = 81920
-
-                private val mBuffer: ByteArray = ByteArray(512)
-                private val mAudioRecordByteBuffer by lazy { ByteArray(mAudioBufferSize / 2) }
-                private val audioLength = mAudioRecordByteBuffer.size
-                private val mAudioRecordByteBufferShort by lazy { ShortArray(mAudioBufferSize / 2) }
+                private val audioRecordByteBuffer by lazy { ByteArray(mAudioBufferSize / 2) }
+                private val audioRecordShortBuffer by lazy { ShortArray(mAudioBufferSize / 2) }
+                private val outputBuffer: ByteArray = ByteArray(512)
 
                 override fun getDataSamplingInterval() = 0L
-                override fun getDataLength() = mBuffer.size
-                override fun fetchFftData(): ByteArray? = null
+                override fun getDataLength() = outputBuffer.size
+                override fun fetchFftData(): ByteArray? {
+                    audioRecordShortBuffer.fill(0)
 
-                override fun fetchWaveData(): ByteArray? {
-                    mAudioRecordByteBufferShort.fill(0)
+                    audioTrackController.mAudioBuffer.peek(audioRecordShortBuffer)
 
-                    audioTrackController.mAudioBuffer.peek(mAudioRecordByteBufferShort)
-
-                    mAudioRecordByteBufferShort.forEachIndexed { index, sh ->
-                        mAudioRecordByteBuffer[index] = (sh / 2.0.pow(8.0)).toByte()
+                    audioRecordShortBuffer.forEachIndexed { index, sh ->
+                        audioRecordByteBuffer[index] = (sh / 2.0.pow(8.0)).toByte()
                     }
 
-                    var tempCounter = 0
-                    for (idx in 0 until mAudioRecordByteBuffer.size step (mAudioRecordByteBuffer.size / (mBuffer.size))) {
-                        if (tempCounter >= mBuffer.size) {
+                    var bufferIndex = 0
+                    for (idx in 0 until audioRecordByteBuffer.size step (audioRecordByteBuffer.size / (outputBuffer.size))) {
+                        if (bufferIndex >= outputBuffer.size) {
                             break
                         }
-                        mBuffer[tempCounter++] = mAudioRecordByteBuffer[idx]
+                        outputBuffer[bufferIndex++] = audioRecordByteBuffer[idx]
                     }
-                    return mBuffer
+                    return outputBuffer
                 }
+
+                override fun fetchWaveData(): ByteArray? = null
             })
         }
     }
