@@ -140,7 +140,7 @@ data class LinkedTrack(
         val type: String
 )
 
-internal data class AudioFeaturesResponse(
+data class AudioFeaturesResponse(
         @SerializedName("audio_features") val audioFeatures: List<AudioFeatures?>
 )
 

@@ -58,8 +58,55 @@ data class SimpleAlbumsPagedResponse(
     override val totalItems: Int get() = result.total
 }
 
+data class AlbumsPagedResponse(
+        @SerializedName("albums") val result: PagingObject<Album>
+) : PagedResponse<Album> {
+    override val items: List<Album> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
+data class ArtistsPagedResponse(
+        @SerializedName("albums") val result: PagingObject<Artist>
+) : PagedResponse<Artist> {
+    override val items: List<Artist> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
+data class PlaylistsPagedResponse(
+        @SerializedName("albums") val result: PagingObject<Playlist>
+) : PagedResponse<Playlist> {
+    override val items: List<Playlist> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
+data class TracksPagedResponse(
+        @SerializedName("albums") val result: PagingObject<Track>
+) : PagedResponse<Track> {
+    override val items: List<Track> get() = result.items
+    override val offset: Int get() = result.offset
+    override val totalItems: Int get() = result.total
+}
+
 data class AlbumsResponse(@SerializedName("albums") val result: List<Album>)
 
 data class TracksResponse(@SerializedName("tracks") val result: List<Track>)
 
 data class ArtistsResponse(@SerializedName("artists") val result: List<Artist>)
+
+
+class SearchAllResponse(
+        @SerializedName("albums")
+        val albumsResult: AlbumsPagedResponse?,
+
+        @SerializedName("artists")
+        val artistsResult: ArtistsPagedResponse?,
+
+        @SerializedName("playlists")
+        val playlistsResult: PlaylistsPagedResponse?,
+
+        @SerializedName("tracks")
+        val tracksResult: TracksPagedResponse?
+)
