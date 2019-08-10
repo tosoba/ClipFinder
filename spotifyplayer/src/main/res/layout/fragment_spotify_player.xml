@@ -39,20 +39,22 @@
             android:id="@+id/visualizer_surface_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginLeft="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias=".1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/spotify_player_guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/current_track_image_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="5dp"
-            android:scaleType="fitCenter"
+            android:layout_marginLeft="3dp"
+            app:civ_border_color="#00000000"
+            app:civ_border_width="12dp"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias=".1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/spotify_player_guideline"
             app:layout_constraintTop_toTopOf="parent" />
@@ -103,8 +105,7 @@
             progressChangeListener="@{fragmentView.onPlaybackSeekBarProgressChangeListener}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             android:max="@{safeUnbox(fragmentView.state.playbackSeekbarMaxValue)}"
             android:maxHeight="2dp"
             android:minHeight="2dp"

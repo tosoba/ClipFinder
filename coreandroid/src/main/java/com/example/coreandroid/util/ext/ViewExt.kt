@@ -26,3 +26,11 @@ fun View.loadBackgroundGradient(
         .run {
             disposables?.let { disposeWith(it) }; null ?: this
         }
+
+fun View.showIfHidden() {
+    if (visibility == View.GONE) visibility = View.VISIBLE
+}
+
+fun View.hideIfShowing() {
+    if (visibility == View.VISIBLE) visibility = View.GONE
+}

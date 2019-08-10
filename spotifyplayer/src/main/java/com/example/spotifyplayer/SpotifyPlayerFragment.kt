@@ -5,9 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.PixelFormat
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -18,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
+import androidx.palette.graphics.Palette
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
 import com.example.coreandroid.model.spotify.Album
@@ -31,10 +31,10 @@ import com.example.spotifyapi.util.SpotifyAuth
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
-import me.bogerchan.niervisualizer.renderer.circle.CircleBarRenderer
 import org.koin.android.ext.android.inject
 import kotlin.math.pow
 
@@ -82,11 +82,11 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         if (viewModel.playerState.currentPlaybackState?.isPlaying == true) {
             spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
 
-            mVisualizerManager?.pause()
+            visualizerManager?.pause()
         } else {
             spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
 
-            mVisualizerManager?.resume()
+            visualizerManager?.resume()
         }
     }
 
@@ -137,13 +137,24 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
     }
 
-    private val visualizerRenderer: Array<IRenderer> by lazy { arrayOf<IRenderer>(CircleBarRenderer()) }
-
-    private var mVisualizerManager: NierVisualizerManager? = null
+    private lateinit var albumCoverImageTarget: Target
+    private val visualizerPaint: Paint by lazy(LazyThreadSafetyMode.NONE) {
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            strokeWidth = 8f
+            color = Color.parseColor("#ffffff")
+        }
+    }
+    private val visualizerRenderer by lazy(LazyThreadSafetyMode.NONE) {
+        SpotifyCircularVisualizerRenderer(visualizerPaint)
+    }
+    private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
+        arrayOf<IRenderer>(visualizerRenderer)
+    }
+    private var visualizerManager: NierVisualizerManager? = null
 
     private fun createNewVisualizerManager() {
-        mVisualizerManager?.release()
-        mVisualizerManager = NierVisualizerManager().apply {
+        visualizerManager?.release()
+        visualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
                 private val mAudioBufferSize = 81920
                 private val audioRecordByteBuffer by lazy { ByteArray(mAudioBufferSize / 2) }
@@ -153,25 +164,22 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 override fun getDataSamplingInterval() = 0L
                 override fun getDataLength() = outputBuffer.size
                 override fun fetchFftData(): ByteArray? {
-                    audioRecordShortBuffer.fill(0)
-
                     audioTrackController.mAudioBuffer.peek(audioRecordShortBuffer)
-
                     audioRecordShortBuffer.forEachIndexed { index, sh ->
                         audioRecordByteBuffer[index] = (sh / 2.0.pow(8.0)).toByte()
                     }
 
                     var bufferIndex = 0
                     for (idx in 0 until audioRecordByteBuffer.size step (audioRecordByteBuffer.size / (outputBuffer.size))) {
-                        if (bufferIndex >= outputBuffer.size) {
-                            break
-                        }
+                        if (bufferIndex >= outputBuffer.size) break
                         outputBuffer[bufferIndex++] = audioRecordByteBuffer[idx]
                     }
                     return outputBuffer
                 }
 
-                override fun fetchWaveData(): ByteArray? = null
+                override fun fetchWaveData(): ByteArray? {
+                    return null
+                }
             })
         }
     }
@@ -200,7 +208,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
         }
 
-        mVisualizerManager?.apply {
+        visualizerManager?.apply {
             if (spotifyPlayer?.playbackState?.isPlaying == true) resume()
         }
     }
@@ -211,7 +219,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
             showPlaybackNotification()
         }
 
-        mVisualizerManager?.pause()
+        visualizerManager?.pause()
 
         super.onStop()
     }
@@ -226,8 +234,8 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         spotifyPlayer?.removeConnectionStateCallback(connectionStateCallback)
         Spotify.destroyPlayer(this)
 
-        mVisualizerManager?.release()
-        mVisualizerManager = null
+        visualizerManager?.release()
+        visualizerManager = null
 
         super.onDestroy()
     }
@@ -272,12 +280,14 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 updatePlayback()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.pause)
                 refreshBackgroundPlaybackNotificationIfShowing()
+                visualizer_surface_view?.showIfHidden()
             }
 
             PlayerEvent.kSpPlaybackNotifyPause -> {
                 spotifyPlaybackTimer?.cancel()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
                 refreshBackgroundPlaybackNotificationIfShowing()
+                visualizer_surface_view?.hideIfShowing()
             }
 
             PlayerEvent.kSpPlaybackNotifyTrackChanged -> viewModel.playerState.playerMetadata?.currentTrack?.let {
@@ -285,15 +295,30 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 val artistName = it.artistName
                 val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
-                it.id?.let { id ->
-                    spotifyTrackChangeHandler?.onTrackChanged(id)
+                it.id?.let { id -> spotifyTrackChangeHandler?.onTrackChanged(id) }
+
+                albumCoverImageTarget = object : Target {
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                        current_track_image_view?.setImageDrawable(placeHolderDrawable)
+                    }
+
+                    override fun onBitmapFailed(errorDrawable: Drawable?) {
+                        current_track_image_view?.setImageDrawable(errorDrawable)
+                    }
+
+                    override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
+                        Palette.from(bitmap).generate { palette ->
+                            palette?.dominantColor?.let { color ->
+                                visualizerPaint.color = color
+                            }
+                        }
+                        current_track_image_view?.setImageBitmap(bitmap)
+                    }
                 }
 
                 Picasso.with(context)
                         .load(it.albumCoverWebUrl)
-                        .error(R.drawable.error_placeholder)
-                        .placeholder(R.drawable.track_placeholder)
-                        .into(current_track_image_view)
+                        .into(albumCoverImageTarget)
             }
 
             else -> return
@@ -362,7 +387,8 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         with(applicationContext) {
             receivers.addAll(
                     registerReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
-                        spotifyPlayer?.setConnectivityStatus(this@SpotifyPlayerFragment, applicationContext.networkConnectivity)
+                        spotifyPlayer?.setConnectivityStatus(
+                                this@SpotifyPlayerFragment, applicationContext.networkConnectivity)
                     },
                     registerReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
                         viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
@@ -398,7 +424,10 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
         if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
-            mVisualizerManager?.start(visualizer_surface_view, visualizerRenderer)
+
+            //TODO: implement a mechanism which will return the surface views surrounding circular image views in fragments like the playlist fragment etc
+            //use a subject within MainActivity (or SpotifyMainFragment) and change visualizers accordingly
+            visualizerManager?.start(visualizer_surface_view, visualizerRenderers)
         }
     }
 
