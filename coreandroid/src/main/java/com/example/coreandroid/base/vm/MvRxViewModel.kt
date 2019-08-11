@@ -24,10 +24,12 @@ open class MvRxViewModel<S : MvRxState>(
             stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
-        return map { currentValueOf(prop).copyWithNewValue(it) }
-                .doOnError { setState { stateReducer(currentValueOf(prop).copyWithError(it)) } }
-                .subscribe({ data -> setState { stateReducer(data) } }, onError)
-                .disposeOnClear()
+        return subscribe({ data ->
+            setState { stateReducer(currentValueOf(prop).copyWithNewValue(data)) }
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
@@ -36,16 +38,17 @@ open class MvRxViewModel<S : MvRxState>(
             stateReducer: S.(PagedDataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
-        return map {
+        return subscribe({
             when (it) {
-                is Resource.Success -> currentValueOf(prop).copyWithNewItems(
-                        it.data.items, it.data.offset, it.data.totalItems
-                )
-                is Resource.Error<ListPage<T>, *> -> currentValueOf(prop).copyWithError(it.error)
+                is Resource.Success -> setState {
+                    stateReducer(currentValueOf(prop).copyWithNewItems(it.data.items, it.data.offset, it.data.totalItems))
+                }
+                is Resource.Error<ListPage<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
             }
-        }.doOnError { setState { stateReducer(currentValueOf(prop).copyWithError(it)) } }
-                .subscribe({ data -> setState { stateReducer(data) } }, onError)
-                .disposeOnClear()
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     protected fun <T> Single<Resource<List<T>>>.updateWithResource(
@@ -54,14 +57,15 @@ open class MvRxViewModel<S : MvRxState>(
             stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
-        return map {
+        return subscribe({
             when (it) {
-                is Resource.Success -> currentValueOf(prop).copyWithNewItems(it.data)
-                is Resource.Error<List<T>, *> -> currentValueOf(prop).copyWithError(it.error)
+                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewItems(it.data)) }
+                is Resource.Error<List<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
             }
-        }.doOnError { setState { stateReducer(currentValueOf(prop).copyWithError(it)) } }
-                .subscribe({ data -> setState { stateReducer(data) } }, onError)
-                .disposeOnClear()
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
@@ -70,14 +74,15 @@ open class MvRxViewModel<S : MvRxState>(
             stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
-        return map {
+        return subscribe({
             when (it) {
-                is Resource.Success -> currentValueOf(prop).copyWithNewItems(it.data)
-                is Resource.Error<List<T>, *> -> currentValueOf(prop).copyWithError(it.error)
+                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewItems(it.data)) }
+                is Resource.Error<List<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
             }
-        }.doOnError { setState { stateReducer(currentValueOf(prop).copyWithError(it)) } }
-                .subscribe({ data -> setState { stateReducer(data) } }, onError)
-                .disposeOnClear()
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     protected fun <T> current(mapper: S.() -> T): T = withState(this) { it.mapper() }

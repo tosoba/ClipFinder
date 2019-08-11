@@ -64,15 +64,13 @@ class SpotifyDashboardViewModel(
         if (state.topTracks.status is Loading) return@withState
 
         getDailyViralTracks(applySchedulers = false)
-                .timeout(5, TimeUnit.SECONDS)
+                .timeout(10, TimeUnit.SECONDS)
                 .mapData { tracks ->
                     tracks.map { TopTrack(it.position, it.track.ui) }
                             .sortedBy { it.position }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardState::topTracks) {
-                    copy(topTracks = it)
-                }
+                .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
     }
 
     fun loadNewReleases() = withState { state ->
