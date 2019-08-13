@@ -38,6 +38,7 @@ class RelatedVideosViewModel(
                     if (loadMore) viewState.loadingMoreVideosInProgress.set(false)
                     else viewState.initialVideosLoadingInProgress.set(false)
                 }
+                .takeSuccessOnly()
                 .subscribeAndDisposeOnCleared({ videos ->
                     val mapped = videos.map(VideoEntity::ui)
                     viewState.videos.addAll(mapped.map { VideoItemView(it, null) })

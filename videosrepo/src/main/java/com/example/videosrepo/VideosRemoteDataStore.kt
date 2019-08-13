@@ -1,22 +1,27 @@
 package com.example.videosrepo
 
+import com.example.core.model.Resource
+import com.example.core.retrofit.NetworkResponse
+import com.example.coreandroid.repo.BaseRemoteRepo
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
 import com.example.videosrepo.mapper.domain
 import com.example.videosrepo.util.urlMedium
 import com.example.youtubeapi.YoutubeApi
 import com.example.youtubeapi.model.VideoApiModel
+import com.example.youtubeapi.model.VideosSearchResponse
+import com.example.youtubeapi.model.YoutubeErrorResponse
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
 class VideosRemoteDataStore(
         private val api: YoutubeApi
-) : IVideosRemoteDataStore {
+) : IVideosRemoteDataStore, BaseRemoteRepo() {
 
     override fun getChannelsThumbnailUrls(
             videos: List<VideoEntity>
-    ): Single<List<Pair<Int, String>>> = Observable.fromIterable(videos.chunked(50))
+    ): Single<Resource<List<Pair<Int, String>>>> = Observable.fromIterable(videos.chunked(50))
             .zipWith(
                     Observable.range(0, Int.MAX_VALUE),
                     BiFunction<List<VideoEntity>, Int, Pair<Int, List<VideoEntity>>> { vids, chunkIndex ->
@@ -26,7 +31,7 @@ class VideosRemoteDataStore(
             .flatMap { (chunkIndex, vids) ->
                 api.loadChannelsInfo(ids = vids.joinToString(",") { it.channelId })
                         .toObservable()
-                        .map { response -> response.channels.map { it.snippet.thumbnails.urlMedium } }
+                        .mapToDataOrThrow { channels.map { it.snippet.thumbnails.urlMedium } }
                         .concatMapIterable { it }
                         .zipWith(
                                 Observable.range(0, Int.MAX_VALUE),
@@ -36,24 +41,30 @@ class VideosRemoteDataStore(
                         )
             }
             .toList()
+            .map<Resource<List<Pair<Int, String>>>> { Resource.Success(it) }
+
 
     override fun getVideos(
             query: String,
             pageToken: String?
-    ): Single<Pair<String?, List<VideoEntity>>> = api.searchVideos(query = query, pageToken = pageToken)
-            .flatMap { searchResponse ->
-                api.loadVideosInfo(ids = searchResponse.videos.joinToString(",") { it.id.id })
-                        .map { it.videos.map(VideoApiModel::domain) }
-                        .map { Pair(searchResponse.nextPageToken, it) }
-            }
+    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchVideos(query = query, pageToken = pageToken)
+            .mapToResourceWithPageTokenAndVideos()
 
     override fun getRelatedVideos(
             toVideoId: String,
             pageToken: String?
-    ): Single<Pair<String?, List<VideoEntity>>> = api.searchRelatedVideos(toVideoId = toVideoId, pageToken = pageToken)
-            .flatMap { searchResponse ->
-                api.loadVideosInfo(ids = searchResponse.videos.joinToString(",") { it.id.id })
-                        .map { it.videos.map(VideoApiModel::domain) }
-                        .map { Pair(searchResponse.nextPageToken, it) }
+    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchRelatedVideos(toVideoId = toVideoId, pageToken = pageToken)
+            .mapToResourceWithPageTokenAndVideos()
+
+    private fun Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>.mapToResourceWithPageTokenAndVideos(): Single<Resource<Pair<String?, List<VideoEntity>>>> {
+        return flatMap<Resource<Pair<String?, List<VideoEntity>>>> { searchResponse ->
+            when (searchResponse) {
+                is NetworkResponse.Success<VideosSearchResponse> -> api.loadVideosInfo(ids = searchResponse.body.videos.joinToString(",") { it.id.id })
+                        .mapToResource { Pair(searchResponse.body.nextPageToken, videos.map(VideoApiModel::domain)) }
+                is NetworkResponse.ServerError -> Single.just(Resource.Error(searchResponse.code))
+                is NetworkResponse.NetworkError -> Single.just(Resource.Error(searchResponse.error))
+                is NetworkResponse.DifferentError -> Single.just(Resource.Error(searchResponse.error))
             }
+        }
+    }
 }

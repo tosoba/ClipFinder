@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.videos
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosDbDataStore
@@ -11,35 +12,49 @@ class SearchRelatedVideos(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: IVideosRemoteDataStore,
         private val local: IVideosDbDataStore
-) : SingleUseCaseWithArgs<SearchRelatedVideos.Args, List<VideoEntity>>(schedulersProvider) {
+) : SingleUseCaseWithArgs<SearchRelatedVideos.Args, Resource<List<VideoEntity>>>(schedulersProvider) {
 
     class Args(val videoId: String, val loadMore: Boolean)
 
-    override fun run(args: Args): Single<List<VideoEntity>> = if (args.loadMore)
+    override fun run(args: Args): Single<Resource<List<VideoEntity>>> = if (args.loadMore)
         getMoreRelatedVideos(args.videoId)
     else getRelatedVideos(args.videoId)
 
     private fun getRelatedVideos(
             videoId: String
-    ): Single<List<VideoEntity>> = local.getRelatedVideosForVideoId(videoId)
-            .flatMap {
-                if (it.isEmpty()) {
+    ): Single<Resource<List<VideoEntity>>> = local.getRelatedVideosForVideoId(videoId)
+            .flatMap { savedVideos ->
+                if (savedVideos.isEmpty()) {
                     remote.getRelatedVideos(videoId)
-                            .flatMap { (nextPageToken, videos) ->
-                                local.insertRelatedVideosForNewVideoId(videoId, videos, nextPageToken)
-                                        .andThen(Single.just(videos))
+                            .flatMap { resource ->
+                                when (resource) {
+                                    is Resource.Success -> {
+                                        val (nextPageToken, videos) = resource.data
+                                        local.insertRelatedVideosForNewVideoId(videoId, videos, nextPageToken)
+                                                .andThen(Single.just(Resource.Success(videos)))
+                                    }
+                                    is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
+                                        Single.just(resource.map { it.second })
+                                }
                             }
                 } else {
-                    Single.just(it)
+                    Single.just(Resource.Success(savedVideos))
                 }
             }
 
     private fun getMoreRelatedVideos(
             videoId: String
-    ): Single<List<VideoEntity>> = local.getNextPageTokenForVideoId(videoId)
+    ): Single<Resource<List<VideoEntity>>> = local.getNextPageTokenForVideoId(videoId)
             .flatMapSingle { remote.getRelatedVideos(videoId, it) }
-            .flatMap { (nextPageToken, videos) ->
-                local.insertRelatedVideosForVideoId(videoId, videos, nextPageToken)
-                        .andThen(Single.just(videos))
+            .flatMap { resource: Resource<Pair<String?, List<VideoEntity>>> ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val (nextPageToken, videos) = resource.data
+                        local.insertRelatedVideosForVideoId(videoId, videos, nextPageToken)
+                                .andThen(Single.just(Resource.Success(videos)))
+                    }
+                    is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
+                        Single.just(resource.map { it.second })
+                }
             }
 }

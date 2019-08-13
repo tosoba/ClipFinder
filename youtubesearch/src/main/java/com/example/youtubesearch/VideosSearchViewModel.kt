@@ -39,6 +39,7 @@ class VideosSearchViewModel(
     private fun addSearchVideosDisposable(query: String, loadMore: Boolean) {
         searchVideos(SearchVideos.Args(query, loadMore))
                 .doFinally { viewState.videosLoadingInProgress.set(false) }
+                .takeSuccessOnly()
                 .subscribeAndDisposeOnCleared({ videos ->
                     updateVideos(videos)
                     viewState.videosLoadingErrorOccurred.set(false)

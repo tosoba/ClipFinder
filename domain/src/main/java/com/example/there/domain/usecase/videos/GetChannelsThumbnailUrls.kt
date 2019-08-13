@@ -1,5 +1,6 @@
 package com.example.there.domain.usecase.videos
 
+import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
@@ -9,7 +10,7 @@ import io.reactivex.Single
 class GetChannelsThumbnailUrls(
         schedulersProvider: UseCaseSchedulersProvider,
         private val remote: IVideosRemoteDataStore
-) : SingleUseCaseWithArgs<List<VideoEntity>, List<Pair<Int, String>>>(schedulersProvider) {
+) : SingleUseCaseWithArgs<List<VideoEntity>, Resource<List<Pair<Int, String>>>>(schedulersProvider) {
 
-    override fun run(args: List<VideoEntity>): Single<List<Pair<Int, String>>> = remote.getChannelsThumbnailUrls(args)
+    override fun run(args: List<VideoEntity>): Single<Resource<List<Pair<Int, String>>>> = remote.getChannelsThumbnailUrls(args)
 }

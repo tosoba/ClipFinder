@@ -37,8 +37,7 @@ val apiModule = module {
     single {
         retrofitWith(
                 url = youtubeBaseUrl,
-                client = get { parametersOf(emptyList<Interceptor>()) },
-                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+                client = get { parametersOf(emptyList<Interceptor>()) }
         ).create(YoutubeApi::class.java)
     }
     single {

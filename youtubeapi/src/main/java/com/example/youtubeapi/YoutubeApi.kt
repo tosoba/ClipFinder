@@ -1,8 +1,10 @@
 package com.example.youtubeapi
 
+import com.example.core.retrofit.NetworkResponse
 import com.example.youtubeapi.model.ChannelsResponse
 import com.example.youtubeapi.model.VideosResponse
 import com.example.youtubeapi.model.VideosSearchResponse
+import com.example.youtubeapi.model.YoutubeErrorResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,7 +16,7 @@ interface YoutubeApi {
             @Query("id") ids: String,
             @Query("maxResults") maxResults: String = "50",
             @Query("key") key: String = YoutubeAuth.key
-    ): Single<VideosResponse>
+    ): Single<NetworkResponse<VideosResponse, YoutubeErrorResponse>>
 
     @GET("search")
     fun searchVideos(
@@ -24,7 +26,7 @@ interface YoutubeApi {
             @Query("maxResults") maxResults: String = "50",
             @Query("pageToken") pageToken: String? = null,
             @Query("key") key: String = YoutubeAuth.key
-    ): Single<VideosSearchResponse>
+    ): Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>
 
     @GET("search")
     fun searchRelatedVideos(
@@ -34,7 +36,7 @@ interface YoutubeApi {
             @Query("maxResults") maxResults: String = "50",
             @Query("pageToken") pageToken: String? = null,
             @Query("key") key: String = YoutubeAuth.key
-    ): Single<VideosSearchResponse>
+    ): Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>
 
     @GET("channels")
     fun loadChannelsInfo(
@@ -42,5 +44,5 @@ interface YoutubeApi {
             @Query("id") ids: String,
             @Query("maxResults") maxResults: String = "50",
             @Query("key") key: String = YoutubeAuth.key
-    ): Single<ChannelsResponse>
+    ): Single<NetworkResponse<ChannelsResponse, YoutubeErrorResponse>>
 }

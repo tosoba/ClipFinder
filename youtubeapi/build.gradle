@@ -8,6 +8,8 @@ dependencies {
     implementation rootProject.ext.rxJava
 
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation project(':core')
 }
 
 sourceCompatibility = "8"
