@@ -18,7 +18,7 @@ class SpotifyColumnarVisualizerRenderer(paint: Paint) : IRenderer {
     private val mRadius = 10F
 
     override fun onStart(captureSize: Int) {
-        mRenderColumns = Array(min(36, captureSize)) { RectF(0F, -5F, 0F, 0F) }
+        mRenderColumns = Array(min(36, captureSize)) { RectF(0F, 0F, 0F, 0F) }
         mLastDrawArea.set(0, 0, 0, 0)
     }
 
@@ -26,7 +26,7 @@ class SpotifyColumnarVisualizerRenderer(paint: Paint) : IRenderer {
 
     }
 
-    override fun getInputDataType() = IRenderer.DataType.WAVE
+    override fun getInputDataType() = IRenderer.DataType.FFT
 
     override fun calculate(drawArea: Rect, data: ByteArray) {
         if (drawArea != mLastDrawArea) {

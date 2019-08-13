@@ -145,7 +145,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
     }
     private val visualizerRenderer by lazy(LazyThreadSafetyMode.NONE) {
-        SpotifyCircularVisualizerRenderer(visualizerPaint)
+        SpotifyColumnarVisualizerRenderer(visualizerPaint)
     }
     private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
         arrayOf<IRenderer>(visualizerRenderer)
@@ -166,7 +166,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 override fun fetchFftData(): ByteArray? {
                     audioTrackController.mAudioBuffer.peek(audioRecordShortBuffer)
                     audioRecordShortBuffer.forEachIndexed { index, sh ->
-                        audioRecordByteBuffer[index] = (sh / 2.0.pow(8.0)).toByte()
+                        audioRecordByteBuffer[index] = (sh / 2.0.pow(10.0)).toByte()
                     }
 
                     var bufferIndex = 0
@@ -240,6 +240,16 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         super.onDestroy()
     }
 
+    override fun onDragging() {
+        visualizer_surface_view?.hideIfShowing()
+        visualizerManager?.pause()
+    }
+
+    override fun onExpanded() {
+        visualizer_surface_view?.showIfHidden()
+        visualizerManager?.resume()
+    }
+
     override fun onHidden() {
         stopPlayback()
     }
@@ -280,14 +290,14 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 updatePlayback()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.pause)
                 refreshBackgroundPlaybackNotificationIfShowing()
-                visualizer_surface_view?.showIfHidden()
+//                visualizer_surface_view?.showIfHidden()
             }
 
             PlayerEvent.kSpPlaybackNotifyPause -> {
                 spotifyPlaybackTimer?.cancel()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
                 refreshBackgroundPlaybackNotificationIfShowing()
-                visualizer_surface_view?.hideIfShowing()
+//                visualizer_surface_view?.hideIfShowing()
             }
 
             PlayerEvent.kSpPlaybackNotifyTrackChanged -> viewModel.playerState.playerMetadata?.currentTrack?.let {

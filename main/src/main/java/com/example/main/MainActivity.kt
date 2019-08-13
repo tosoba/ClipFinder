@@ -254,9 +254,13 @@ class MainActivity :
             when (newState) {
                 SlidingUpPanelLayout.PanelState.DRAGGING -> {
                     youtubePlayerFragment?.onDragging()
+                    if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                        spotifyPlayerFragment?.onDragging()
+                    }
                 }
                 SlidingUpPanelLayout.PanelState.EXPANDED -> {
                     youtubePlayerFragment?.onExpanded()
+                    spotifyPlayerFragment?.onExpanded()
                 }
                 SlidingUpPanelLayout.PanelState.COLLAPSED -> {
                     youtubePlayerFragment?.onCollapsed()
