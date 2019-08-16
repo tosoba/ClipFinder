@@ -5,7 +5,7 @@
 
         <variable
             name="view"
-            type="com.example.spotifyartist.ArtistView" />
+            type="com.example.spotifyartist.ArtistViewBinding" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,7 +32,7 @@
                 app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.state.artist.name}"
+                app:title="@{view.artist.name}"
                 app:toolbarId="@+id/artist_toolbar">
 
                 <View
@@ -43,7 +43,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.state.artist.imageViewSrc}"
+                    imageSrc="@{view.artist.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -81,11 +81,10 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.airbnb.epoxy.EpoxyRecyclerView
             android:id="@+id/artist_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adapter="@{view.artistAdapter}"
             android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -95,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
+            android:src="@drawable/favourite"
             app:layout_anchor="@id/artist_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

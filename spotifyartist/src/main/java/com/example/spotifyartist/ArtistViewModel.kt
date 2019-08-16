@@ -1,129 +1,138 @@
 package com.example.spotifyartist
 
-import android.util.Log
-import androidx.databinding.ObservableField
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
+import com.example.core.model.mapData
+import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
+import com.example.coreandroid.model.*
 import com.example.coreandroid.model.spotify.Artist
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
-import java.util.*
+import io.reactivex.schedulers.Schedulers
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class ArtistViewModel(
+        initialState: ArtistViewState,
         private val getAlbumsFromArtist: GetAlbumsFromArtist,
         private val getTopTracksFromArtist: GetTopTracksFromArtist,
         private val getRelatedArtists: GetRelatedArtists,
         private val insertArtist: InsertArtist,
         private val deleteArtist: DeleteArtist,
         private val isArtistSaved: IsArtistSaved
-) : BaseViewModel() {
+) : MvRxViewModel<ArtistViewState>(initialState) {
 
-    private val viewStates: Stack<ArtistViewState> = Stack()
-
-    val viewState: ArtistViewState = ArtistViewState()
-
-    val lastArtist: Artist?
-        get() = viewState.artist.get()
-
-    fun onBackPressed(): Boolean = if (viewStates.size < 2) false
-    else {
-        viewStates.pop()
-        val previous = viewStates.peek()
-        viewState.clearAll()
-        viewState.artist.set(previous.artist.get())
-        viewState.albums.addAll(previous.albums)
-        viewState.topTracks.addAll(previous.topTracks)
-        viewState.relatedArtists.addAll(previous.relatedArtists)
-        viewState.isSavedAsFavourite.set(previous.isSavedAsFavourite.get())
-        true
+    init {
+        loadData(initialState.artists.value.last())
     }
 
-    fun loadArtistData(artist: Artist) {
-        if (artist.id == lastArtist?.id) return
+    fun onBackPressed() = withState { state ->
+        if (state.artists.value.size < 2) {
+            setState { copy(artists = DataList(emptyList())) }
+            return@withState
+        }
 
-        viewState.artist.set(artist)
-        viewStates.push(ArtistViewState(ObservableField(artist)))
+        val previousArtist = state.artists.value.elementAt(state.artists.value.size - 2)
+        setState { copy(artists = DataList(artists.value.take(artists.value.size - 1))) }
+        loadData(previousArtist)
+    }
 
-        loadData(artist = artist)
+
+    fun updateArtist(artist: Artist) {
+        setState { copy(artists = artists.copyWithNewItems(artist)) }
+        loadData(artist)
+    }
+
+    fun loadMissingData() = withState { state ->
+        state.artists.value.lastOrNull()?.id?.let {
+            if (state.albums.status is LoadingFailed<*>)
+                loadAlbumsFromArtist(it)
+            if (state.topTracks.status is LoadingFailed<*>)
+                loadTopTracksFromArtist(it)
+            if (state.relatedArtists.status is LoadingFailed<*>)
+                loadRelatedArtists(it)
+        }
     }
 
     private fun loadData(artist: Artist) {
-        viewState.clearAll()
         loadAlbumsFromArtist(artist.id)
         loadTopTracksFromArtist(artist.id)
         loadRelatedArtists(artist.id)
         loadArtistFavouriteState()
     }
 
-    fun loadAlbumsFromArtist(artistId: String) {
-        viewState.albumsLoadingInProgress.set(true)
-        getAlbumsFromArtist(artistId)
-                .takeSuccessOnly()
-                .doFinally { viewState.albumsLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    val toAdd = it.map(AlbumEntity::ui)
-                    viewStates.peek().albums.addAll(toAdd)
-                    viewState.albums.addAll(toAdd)
-                    viewState.albumsLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.albumsLoadingErrorOccurred.set(true)
-                })
+    fun loadAlbumsFromArtist(artistId: String) = withState { state ->
+        if (state.albums.status is Loading) return@withState
+
+        getAlbumsFromArtist(args = artistId, applySchedulers = false)
+                .mapData { albums -> albums.map(AlbumEntity::ui) }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(ArtistViewState::albums) { copy(albums = it) }
     }
 
-    fun loadTopTracksFromArtist(artistId: String) {
-        viewState.topTracksLoadingInProgress.set(true)
-        getTopTracksFromArtist(artistId)
-                .takeSuccessOnly()
-                .doFinally { viewState.topTracksLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    val toAdd = it.map(TrackEntity::ui)
-                    viewStates.peek().topTracks.addAll(toAdd)
-                    viewState.topTracks.addAll(toAdd)
-                    viewState.topTracksLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.topTracksLoadingErrorOccurred.set(true)
-                })
+
+    fun loadTopTracksFromArtist(artistId: String) = withState { state ->
+        if (state.topTracks.status is Loading) return@withState
+
+        getTopTracksFromArtist(args = artistId, applySchedulers = false)
+                .mapData { tracks -> tracks.map(TrackEntity::ui).sortedBy { it.name } }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(ArtistViewState::topTracks) { copy(topTracks = it) }
     }
 
-    fun loadRelatedArtists(artistId: String) {
-        viewState.relatedArtistsLoadingInProgress.set(true)
-        getRelatedArtists(artistId)
-                .takeSuccessOnly()
-                .doFinally { viewState.relatedArtistsLoadingInProgress.set(false) }
-                .subscribeAndDisposeOnCleared({
-                    val toAdd = it.map(ArtistEntity::ui)
-                    viewStates.peek().relatedArtists.addAll(toAdd)
-                    viewState.relatedArtists.addAll(toAdd)
-                    viewState.relatedArtistsLoadingErrorOccurred.set(false)
-                }, getOnErrorWith {
-                    viewState.relatedArtistsLoadingErrorOccurred.set(true)
-                })
+    fun loadRelatedArtists(artistId: String) = withState { state ->
+        if (state.relatedArtists.status is Loading) return@withState
+
+        getRelatedArtists(args = artistId, applySchedulers = false)
+                .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
+                .subscribeOn(Schedulers.io())
+                .updateWithResource(ArtistViewState::relatedArtists) { copy(relatedArtists = it) }
     }
 
-    fun addFavouriteArtist() = lastArtist?.let { artist ->
-        insertArtist(artist.domain)
-                .subscribeAndDisposeOnCleared({
-                    viewStates.peek().isSavedAsFavourite.set(true)
-                    viewState.isSavedAsFavourite.set(true)
-                }, { Log.e(javaClass.name, "Insert error.") })
+    fun toggleArtistFavouriteState() = withState { state ->
+        state.artists.value.lastOrNull()?.let {
+            if (state.isSavedAsFavourite.value) deleteFavouriteArtist(it)
+            else addFavouriteArtist(it)
+        }
     }
 
-    fun deleteFavouriteArtist() = lastArtist?.let { artist ->
-        deleteArtist(artist.domain)
-                .subscribeAndDisposeOnCleared({
-                    viewStates.peek().isSavedAsFavourite.set(false)
-                    viewState.isSavedAsFavourite.set(false)
-                }, { Log.e(javaClass.name, "Delete error.") })
+    private fun addFavouriteArtist(artist: Artist) = insertArtist(artist.domain, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
+            .disposeOnClear()
+
+    private fun deleteFavouriteArtist(artist: Artist) = deleteArtist(artist.domain, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
+            .disposeOnClear()
+
+    private fun loadArtistFavouriteState() = withState { state ->
+        if (state.isSavedAsFavourite.status is Loading) return@withState
+
+        isArtistSaved(args = state.artists.value.last().id)
+                .subscribeOn(Schedulers.io())
+                .update(ArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
-    private fun loadArtistFavouriteState() = lastArtist?.let { artist ->
-        isArtistSaved(artist.id)
-                .subscribeAndDisposeOnCleared {
-                    viewStates.peek().isSavedAsFavourite.set(it)
-                    viewState.isSavedAsFavourite.set(it)
-                }
+    companion object : MvRxViewModelFactory<ArtistViewModel, ArtistViewState> {
+        override fun create(viewModelContext: ViewModelContext, state: ArtistViewState): ArtistViewModel? {
+            val getAlbumsFromArtist: GetAlbumsFromArtist by viewModelContext.activity.inject()
+            val getTopTracksFromArtist: GetTopTracksFromArtist by viewModelContext.activity.inject()
+            val getRelatedArtists: GetRelatedArtists by viewModelContext.activity.inject()
+            val insertArtist: InsertArtist by viewModelContext.activity.inject()
+            val deleteArtist: DeleteArtist by viewModelContext.activity.inject()
+            val isArtistSaved: IsArtistSaved by viewModelContext.activity.inject()
+            return ArtistViewModel(state, getAlbumsFromArtist, getTopTracksFromArtist, getRelatedArtists, insertArtist, deleteArtist, isArtistSaved)
+        }
     }
 }

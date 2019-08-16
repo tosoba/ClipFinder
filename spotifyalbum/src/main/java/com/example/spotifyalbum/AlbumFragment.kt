@@ -54,7 +54,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 }
 
                 is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
+                    id("artists-reload-control")
                     onReloadClicked(View.OnClickListener {
                         withState(viewModel) { state -> viewModel.loadAlbumsArtists(state.album.artists.map { it.id }) }
                     })
@@ -100,7 +100,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                     }
 
                     is LoadingFailed<*> -> reloadControl {
-                        id("reload-control")
+                        id("tracks-reload-control")
                         onReloadClicked(View.OnClickListener { loadTracks() })
                         message("Error occurred lmao") //TODO: error msg
                     }

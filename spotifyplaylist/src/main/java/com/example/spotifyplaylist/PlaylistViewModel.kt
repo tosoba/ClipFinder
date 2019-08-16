@@ -52,14 +52,18 @@ class PlaylistViewModel(
 
     private fun addFavouritePlaylist(playlist: Playlist) = insertSpotifyPlaylist(playlist.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun deleteFavouritePlaylist(playlist: Playlist) = deleteSpotifyPlaylist(playlist.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun loadPlaylistFavouriteState() = withState { state ->

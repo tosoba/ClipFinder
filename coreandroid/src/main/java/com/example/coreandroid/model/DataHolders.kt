@@ -41,14 +41,14 @@ data class Data<Value>(
     )
 }
 
-fun <Data : HoldsData<Collection<Value>>, Value> Data.isEmptyAndLastLoadingFailed(): Boolean = loadingFailed && value.isEmpty()
+fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailed(): Boolean = loadingFailed && value.isEmpty()
 
 
-inline fun <Data : HoldsData<Collection<Value>>, Value> Data.ifEmptyAndIsNotLoading(block: (Data) -> Unit) {
+inline fun <Holder : HoldsData<Collection<Value>>, Value> Holder.ifEmptyAndIsNotLoading(block: (Holder) -> Unit) {
     if (status !is Loading && value.isEmpty()) block(this)
 }
 
-inline fun <Data : HoldsData<Collection<Item>>, Item> Data.ifNotEmpty(block: (Data) -> Unit) {
+inline fun <Holder : HoldsData<Collection<Item>>, Item> Holder.ifNotEmpty(block: (Holder) -> Unit) {
     if (value.isNotEmpty()) block(this)
 }
 
@@ -65,6 +65,11 @@ data class DataList<Value>(
     )
 
     fun copyWithNewItems(newItems: Collection<Value>): DataList<Value> = copy(
+            value = value + newItems,
+            status = LoadedSuccessfully
+    )
+
+    fun copyWithNewItems(vararg newItems: Value): DataList<Value> = copy(
             value = value + newItems,
             status = LoadedSuccessfully
     )

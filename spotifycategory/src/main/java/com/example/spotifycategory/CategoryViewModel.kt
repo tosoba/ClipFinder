@@ -53,14 +53,18 @@ class CategoryViewModel(
 
     private fun addFavouriteCategory(category: Category) = insertCategory(category.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun deleteFavouriteCategory(category: Category) = deleteCategory(category.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun loadCategoryFavouriteState() = withState { state ->

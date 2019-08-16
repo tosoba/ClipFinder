@@ -62,14 +62,18 @@ class AlbumViewModel(
 
     private fun addFavouriteAlbum(album: Album) = insertAlbum(album.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun deleteFavouriteAlbum(album: Album) = deleteAlbum(album.domain, applySchedulers = false)
             .subscribeOn(Schedulers.io())
-            .doOnError { setState { copy(isSavedAsFavourite = current { isSavedAsFavourite }.copyWithError(it)) } }
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, Timber::e)
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
             .disposeOnClear()
 
     private fun loadAlbumFavouriteState(album: Album) = withState { state ->
