@@ -5,13 +5,15 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.example.coreandroid.base.fragment.BaseVMFragment
+import androidx.lifecycle.MutableLiveData
+import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.OnTrackChangeListener
+import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
+import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
@@ -22,15 +24,16 @@ import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
-class TrackVideosFragment :
-        BaseVMFragment<TrackVideosViewModel>(TrackVideosViewModel::class),
+class TrackVideosFragment : BaseMvRxFragment(),
         OnTrackChangeListener<Track>,
         GoesToPreviousStateOnBackPressed {
+
+    private val viewModel: TrackVideosViewModel by fragmentViewModel()
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             track_videos_tab_layout?.getTabAt(position)?.select()
-            updateCurrentFragment(viewModel.viewState.track.get()!!)
+            withCurrentTrack { updateCurrentFragment(it) }
         }
     }
 
@@ -51,22 +54,16 @@ class TrackVideosFragment :
     }
 
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
-        viewModel.viewState.track.get()?.let {
-            if (viewModel.viewState.isSavedAsFavourite.get() == true) {
-                viewModel.deleteFavouriteTrack(it)
-                Toast.makeText(activity, "${it.name} removed from favourite tracks.", Toast.LENGTH_SHORT).show()
-            } else {
-                viewModel.addFavouriteTrack(it)
-                Toast.makeText(activity, "${it.name} added to favourite tracks.", Toast.LENGTH_SHORT).show()
-            }
-        }
+        viewModel.toggleTrackFavouriteState()
+        //TODO: add a callback that will show a toast with a msg saying: added/deleted from favs
     }
 
-    private val argTrack: Track by lazy { arguments!!.getParcelable<Track>(ARG_TRACK) }
+    private val argTrack: Track by args()
 
-    private val view: TrackVideosView by lazy {
-        TrackVideosView(
-                state = viewModel.viewState,
+    private val view: TrackVideosViewBinding<Track> by lazy {
+        TrackVideosViewBinding(
+                fragmentTabs = arrayOf("Clips", "Info"),
+                track = MutableLiveData<Track>().apply { value = argTrack },
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
@@ -80,7 +77,6 @@ class TrackVideosFragment :
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         lifecycle.addObserver(disposablesComponent)
-        viewModel.updateState(argTrack)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
@@ -88,33 +84,37 @@ class TrackVideosFragment :
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_track_videos, container, false)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isSavedAsFavourite) { _, _ ->
+
+        viewModel.selectSubscribe(this, TrackVideosViewState<Track>::isSavedAsFavourite) {
+            binding.trackFavouriteFab.setImageDrawable(ContextCompat.getDrawable(requireContext(),
+                    if (it.value) R.drawable.delete else R.drawable.favourite))
             binding.trackFavouriteFab.hideAndShow()
-        })
-        enableSpotifyPlayButton {
-            viewModel.viewState.track.get()?.let { loadTrack(track = it) }
         }
+
+        viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
+            tracks.value.lastOrNull()?.let {
+                view.track.value = it
+                binding.trackVideosToolbarGradientBackgroundView.loadBackgroundGradient(it.iconUrl, disposablesComponent)
+                binding.executePendingBindings()
+                updateCurrentFragment(it)
+            } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+        }
+
+        enableSpotifyPlayButton { withCurrentTrack(::loadTrack) }
+
         return binding.apply {
+            lifecycleOwner = this@TrackVideosFragment
             view = this@TrackVideosFragment.view
-            trackVideosToolbarGradientBackgroundView.loadBackgroundGradient(argTrack.iconUrl, disposablesComponent)
             trackVideosViewpager.offscreenPageLimit = 1
             trackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root
     }
 
-    override fun onBackPressed() {
-        if (!viewModel.onBackPressed()) backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
-        else viewModel.viewState.track.get()?.let {
-            updateCurrentFragment(it)
-            track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(it.iconUrl, disposablesComponent)
-        }
-    }
+    override fun onBackPressed() = viewModel.onBackPressed()
 
-    override fun onTrackChanged(newTrack: Track) = with(newTrack) {
-        viewModel.updateState(this)
-        track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(iconUrl, disposablesComponent)
-        updateCurrentFragment(this)
-    }
+    override fun onTrackChanged(newTrack: Track) = viewModel.updateTrack(newTrack)
+
+    override fun invalidate() = Unit
 
     private fun updateCurrentFragment(newTrack: Track) {
         when (val currentFragment = pagerAdapter.currentFragment) {
@@ -123,13 +123,13 @@ class TrackVideosFragment :
         }
     }
 
-    companion object {
-        private const val ARG_TRACK = "ARG_TRACK"
+    private fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { state ->
+        state.tracks.value.lastOrNull()?.let(block)
+    }
 
+    companion object {
         fun newInstance(track: Track) = TrackVideosFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_TRACK, track)
-            }
+            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
         }
     }
 }

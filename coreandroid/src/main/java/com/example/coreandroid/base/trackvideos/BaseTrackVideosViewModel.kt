@@ -1,63 +1,70 @@
 package com.example.coreandroid.base.trackvideos
 
-import androidx.databinding.ObservableField
 import com.example.coreandroid.base.model.BaseTrackUiModel
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.example.coreandroid.base.vm.MvRxViewModel
+import com.example.coreandroid.model.Data
+import com.example.coreandroid.model.DataList
+import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.Loading
 import com.example.there.domain.usecase.base.DeleteTrackUseCase
 import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.util.*
 
 abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, TrackEntity>(
+        initialState: TrackVideosViewState<Track>,
         private val insertTrack: InsertTrackUseCase<TrackEntity>,
         private val deleteTrack: DeleteTrackUseCase<TrackEntity>,
         private val isTrackSaved: IsTrackSavedUseCase<TrackEntity>
-) : BaseViewModel() {
+) : MvRxViewModel<TrackVideosViewState<Track>>(initialState) {
 
-    val viewState: TrackVideosViewState<Track> = TrackVideosViewState()
-
-    private val viewStates: Stack<TrackVideosViewState<Track>> = Stack()
-
-    private val lastTrack: Track? get() = viewState.track.get()
-
-    fun onBackPressed(): Boolean = if (viewStates.size < 2) false
-    else {
-        viewStates.pop()
-        val previous = viewStates.peek()
-        viewState.track.set(previous.track.get())
-        viewState.isSavedAsFavourite.set(previous.isSavedAsFavourite.get())
-        true
+    init {
+        loadTrackFavouriteState(initialState.tracks.value.last())
     }
 
-    fun updateState(track: Track) {
-        if (track.id == lastTrack?.id) return
-        viewState.track.set(track)
-        viewStates.push(TrackVideosViewState(ObservableField(track)))
+    fun onBackPressed() = withState { state ->
+        if (state.tracks.value.size < 2) {
+            setState { copy(tracks = DataList(emptyList())) }
+            return@withState
+        }
+
+        setState { copy(tracks = DataList(tracks.value.take(tracks.value.size - 1))) }
+    }
+
+    fun updateTrack(track: Track) {
+        setState { copy(tracks = tracks.copyWithNewItems(track)) }
         loadTrackFavouriteState(track)
     }
 
-    fun addFavouriteTrack(
-            track: Track
-    ) = insertTrack(track.domainEntity)
-            .subscribeAndDisposeOnCleared({
-                viewStates.peek().isSavedAsFavourite.set(true)
-                viewState.isSavedAsFavourite.set(true)
-            }, Timber::e)
+    fun toggleTrackFavouriteState() = withState { state ->
+        state.tracks.value.lastOrNull()?.let {
+            if (state.isSavedAsFavourite.value) deleteFavouriteTrack(it)
+            else addFavouriteTrack(it)
+        }
+    }
 
-    fun deleteFavouriteTrack(
-            track: Track
-    ) = deleteTrack(track.domainEntity)
-            .subscribeAndDisposeOnCleared({
-                viewStates.peek().isSavedAsFavourite.set(false)
-                viewState.isSavedAsFavourite.set(false)
-            }, Timber::e)
+    private fun addFavouriteTrack(track: Track) = insertTrack(track.domainEntity, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
+            .disposeOnClear()
 
-    private fun loadTrackFavouriteState(
-            track: Track
-    ) = isTrackSaved(track.id)
-            .subscribeAndDisposeOnCleared {
-                viewStates.peek().isSavedAsFavourite.set(it)
-                viewState.isSavedAsFavourite.set(it)
-            }
+    private fun deleteFavouriteTrack(track: Track) = deleteTrack(track.domainEntity, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
+            .disposeOnClear()
+
+    private fun loadTrackFavouriteState(track: Track) = withState { state ->
+        if (state.isSavedAsFavourite.status is Loading) return@withState
+
+        isTrackSaved(args = track.id, applySchedulers = false)
+                .subscribeOn(Schedulers.io())
+                .update(TrackVideosViewState<Track>::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+    }
 }
