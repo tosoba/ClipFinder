@@ -9,7 +9,7 @@
 
         <variable
             name="view"
-            type="com.example.soundcloudtrackvideos.SoundCloudTrackVideosView" />
+            type="com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewBinding" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout

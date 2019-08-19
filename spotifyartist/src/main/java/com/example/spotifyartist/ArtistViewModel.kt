@@ -119,7 +119,7 @@ class ArtistViewModel(
     private fun loadArtistFavouriteState() = withState { state ->
         if (state.isSavedAsFavourite.status is Loading) return@withState
 
-        isArtistSaved(args = state.artists.value.last().id)
+        isArtistSaved(args = state.artists.value.last().id, applySchedulers = false)
                 .subscribeOn(Schedulers.io())
                 .update(ArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }

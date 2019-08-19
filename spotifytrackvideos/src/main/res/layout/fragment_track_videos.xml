@@ -9,7 +9,7 @@
 
         <variable
             name="view"
-            type="com.example.spotifytrackvideos.TrackVideosView" />
+            type="com.example.spotifytrackvideos.TrackVideosViewBinding" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout

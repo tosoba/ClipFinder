@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
+import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.BaseListFragment
-import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -23,17 +24,18 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
-class SoundCloudTrackVideosFragment :
-        BaseVMFragment<SoundCloudTrackVideosViewModel>(SoundCloudTrackVideosViewModel::class),
+class SoundCloudTrackVideosFragment : BaseMvRxFragment(),
         OnTrackChangeListener<SoundCloudTrack>,
         GoesToPreviousStateOnBackPressed {
 
-    private val argTrack: SoundCloudTrack by lazy { arguments!!.getParcelable<SoundCloudTrack>(ARG_TRACK) }
+    private val viewModel: SoundCloudTrackVideosViewModel by fragmentViewModel()
+
+    private val argTrack: SoundCloudTrack by args()
 
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             sound_cloud_track_videos_tab_layout?.getTabAt(position)?.select()
-            updateCurrentFragment(viewModel.viewState.track.get()!!)
+            withCurrentTrack { updateCurrentFragment(it) }
         }
     }
 
@@ -67,9 +69,9 @@ class SoundCloudTrackVideosFragment :
         )
     }
 
-    private val view: SoundCloudTrackVideosView by lazy {
-        SoundCloudTrackVideosView(
-                state = viewModel.viewState,
+    private val view: SoundCloudTrackVideosViewBinding by lazy {
+        SoundCloudTrackVideosViewBinding(
+                track = MutableLiveData<SoundCloudTrack>().apply { value = argTrack },
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
                 onTabSelectedListener = onTabSelectedListener,
@@ -81,9 +83,8 @@ class SoundCloudTrackVideosFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadSimilarTracks(argTrack.id)
+        viewModel.loadSimilarTracks(argTrack.id) //TODO: move this to SoundCloudTrackFragment
         lifecycle.addObserver(disposablesComponent)
-        viewModel.updateState(argTrack)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -127,13 +128,9 @@ class SoundCloudTrackVideosFragment :
         }
     }
 
-    override fun onTrackChanged(newTrack: SoundCloudTrack) = with(newTrack) {
-        viewModel.updateState(this)
-        artworkUrl?.let {
-            sound_cloud_track_videos_toolbar_gradient_background_view?.loadBackgroundGradient(it, disposablesComponent)
-        }
-        updateCurrentFragment(this)
-    }
+    override fun onTrackChanged(newTrack: SoundCloudTrack) = viewModel.updateTrack(newTrack)
+
+    override fun invalidate() = Unit
 
     private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
         when (val currentFragment = pagerAdapter.currentFragment) {
@@ -142,13 +139,13 @@ class SoundCloudTrackVideosFragment :
         }
     }
 
-    companion object {
-        private const val ARG_TRACK = "ARG_TRACK"
+    private fun withCurrentTrack(block: (SoundCloudTrack) -> Unit) = withState(viewModel) { state ->
+        state.tracks.value.lastOrNull()?.let(block)
+    }
 
+    companion object {
         fun newInstance(track: SoundCloudTrack) = SoundCloudTrackVideosFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_TRACK, track)
-            }
+            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
         }
     }
 }
