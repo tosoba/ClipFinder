@@ -1,7 +1,6 @@
 package com.example.there.findclips.module
 
 import com.example.main.MainViewModel
-import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import com.example.spotifyaccount.playlist.AccountPlaylistsViewModel
 import com.example.spotifyaccount.saved.AccountSavedViewModel
 import com.example.spotifyaccount.top.AccountTopViewModel
@@ -9,7 +8,6 @@ import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
 import com.example.spotifyplayer.SpotifyPlayerViewModel
 import com.example.spotifysearch.spotify.SpotifySearchViewModel
 import com.example.spotifytrack.TrackViewModel
-import com.example.spotifytrackvideos.TrackVideosViewModel
 import com.example.youtubefavourites.VideosFavouritesViewModel
 import com.example.youtubeplayer.YoutubePlayerViewModel
 import com.example.youtuberelatedvideos.RelatedVideosViewModel
@@ -19,7 +17,6 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
     viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { TrackVideosViewModel(get(), get(), get()) }
     viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get(), get()) }
     viewModel { VideosFavouritesViewModel(get(), get()) }
     viewModel { SpotifySearchViewModel(get()) }
@@ -31,6 +28,4 @@ val viewModelsModule = module {
     viewModel { SpotifyPlayerViewModel() }
     viewModel { RelatedVideosViewModel(get(), get()) }
     viewModel { YoutubePlayerViewModel() }
-    viewModel { SoundCloudTrackVideosViewModel(get(), get(), get(), get()) }
 }
-

@@ -9,7 +9,8 @@ import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
 import com.google.android.material.tabs.TabLayout
 
-abstract class BaseTrackVideosViewBinding<Track>(
+class TrackVideosViewBinding<Track>(
+        val fragmentTabs: Array<String>,
         val track: MutableLiveData<Track>,
         val pagerAdapter: FragmentStatePagerAdapter,
         val onTabSelectedListener: TabLayout.OnTabSelectedListener,

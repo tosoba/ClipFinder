@@ -9,7 +9,7 @@
 
         <variable
             name="view"
-            type="com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewBinding" />
+            type="com.example.coreandroid.base.trackvideos.TrackVideosViewBinding&lt;com.example.coreandroid.model.soundcloud.SoundCloudTrack&gt;" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout
@@ -34,7 +34,7 @@
                 app:expandedTitleMarginBottom="56dp"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.state.track.name}"
+                app:title="@{view.track.name}"
                 app:titleEnabled="true"
                 app:toolbarId="@+id/sound_cloud_track_videos_toolbar">
 
@@ -44,9 +44,9 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true" />
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/sound_cloud_track_videos_profile_image"
-                    imageSrc="@{view.state.track.imageViewSrc}"
+                    imageSrc="@{view.track.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:onClick="@{view.onFavouriteBtnClickListener}"
-            android:src="@{safeUnbox(view.state.isSavedAsFavourite) ? @drawable/delete : @drawable/favourite}"
+            android:src="@drawable/favourite"
             app:layout_anchor="@id/sound_cloud_track_videos_app_bar"
             app:layout_anchorGravity="bottom|end" />
 

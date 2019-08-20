@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.OnTrackChangeListener
+import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.spotify.Track
@@ -59,8 +60,9 @@ class TrackVideosFragment : BaseMvRxFragment(),
 
     private val argTrack: Track by args()
 
-    private val view: TrackVideosViewBinding by lazy {
+    private val view: TrackVideosViewBinding<Track> by lazy {
         TrackVideosViewBinding(
+                fragmentTabs = arrayOf("Clips", "Info"),
                 track = MutableLiveData<Track>().apply { value = argTrack },
                 pagerAdapter = pagerAdapter,
                 onPageChangeListener = onPageChangeListener,
@@ -103,7 +105,6 @@ class TrackVideosFragment : BaseMvRxFragment(),
         return binding.apply {
             lifecycleOwner = this@TrackVideosFragment
             view = this@TrackVideosFragment.view
-            trackVideosToolbarGradientBackgroundView.loadBackgroundGradient(argTrack.iconUrl, disposablesComponent)
             trackVideosViewpager.offscreenPageLimit = 1
             trackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
         }.root

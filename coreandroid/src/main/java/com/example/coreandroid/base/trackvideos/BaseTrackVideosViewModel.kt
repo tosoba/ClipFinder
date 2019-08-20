@@ -19,6 +19,10 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
         private val isTrackSaved: IsTrackSavedUseCase<TrackEntity>
 ) : MvRxViewModel<TrackVideosViewState<Track>>(initialState) {
 
+    init {
+        loadTrackFavouriteState(initialState.tracks.value.last())
+    }
+
     fun onBackPressed() = withState { state ->
         if (state.tracks.value.size < 2) {
             setState { copy(tracks = DataList(emptyList())) }
