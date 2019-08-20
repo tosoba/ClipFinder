@@ -2,12 +2,11 @@ package com.example.coreandroid.view.radarchart
 
 import android.graphics.Color
 import android.graphics.Typeface
-import androidx.databinding.ObservableField
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 class RadarChartView(
-        val data: ObservableField<RadarData> = ObservableField(),
+        val data: RadarData,
         val xAxisView: RadarChartAxisView,
         val yAxisView: RadarChartAxisView,
         val backgroundColor: Int = Color.TRANSPARENT,

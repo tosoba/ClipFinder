@@ -21,6 +21,8 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
 
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
 
+    //TODO: connectivityComponent
+
     private val epoxyController by lazy {
         itemListController(builder, differ, viewModel,
                 SoundCloudTrackViewState::similarTracks, "Similar tracks",

@@ -16,7 +16,8 @@
                 R2.layout.video_thumbnails_playlist_item,
                 R2.layout.loading_indicator,
                 R2.layout.reload_control,
-                R2.layout.image_list_item
+                R2.layout.image_list_item,
+                R2.layout.radar_chart
         }
 )
 package com.example.coreandroid;
