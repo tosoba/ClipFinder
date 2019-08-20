@@ -32,6 +32,40 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
+    protected fun <T> Single<Resource<T>>.updateWithSingleResource(
+            prop: KProperty1<S, Data<T>>,
+            onError: (Throwable) -> Unit = Timber::e,
+            stateReducer: S.(Data<T>) -> S
+    ): Disposable {
+        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
+        return subscribe({
+            when (it) {
+                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewValue(it.data)) }
+                is Resource.Error<T, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+            }
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
+    }
+
+    protected fun <T> Single<Resource<T>>.updateNullableWithSingleResource(
+            prop: KProperty1<S, Data<T?>>,
+            onError: (Throwable) -> Unit = Timber::e,
+            stateReducer: S.(Data<T?>) -> S
+    ): Disposable {
+        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
+        return subscribe({
+            when (it) {
+                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewValue(it.data)) }
+                is Resource.Error<T, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+            }
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
+    }
+
     protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
             prop: KProperty1<S, PagedDataList<T>>,
             onError: (Throwable) -> Unit = Timber::e,
