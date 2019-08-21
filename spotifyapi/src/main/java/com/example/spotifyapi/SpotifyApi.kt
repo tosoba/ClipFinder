@@ -49,7 +49,7 @@ interface SpotifyApi {
             @Query("ids") artistIds: String
     ): Single<NetworkResponse<ArtistsOnlyResponse, SpotifyErrorResponse>>
 
-    @GET("items/{id}")
+    @GET("albums/{id}")
     fun getAlbum(
             @Header("Authorization") authorization: String,
             @Path("id") albumId: String

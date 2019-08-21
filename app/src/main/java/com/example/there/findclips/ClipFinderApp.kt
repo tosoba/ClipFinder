@@ -14,6 +14,8 @@ import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 
 class ClipFinderApp : Application() {
@@ -22,12 +24,37 @@ class ClipFinderApp : Application() {
         super.onCreate()
 
 //        initLeakCanary()
-
-        startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
-        createNotificationChannel()
+        initNotifications()
+        initKoin()
 
         ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caussed by Glide - maybe try to remove this later
 
+        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
+    }
+
+    override fun onTerminate() {
+        stopService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
+        super.onTerminate()
+    }
+
+    private fun initLeakCanary() {
+        if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this)
+    }
+
+    private fun initNotifications() {
+        startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getSystemService(NotificationManager::class.java).run {
+                createNotificationChannel(NotificationChannel(
+                        Constants.NOTIFICATION_CHANNEL_ID,
+                        getString(R.string.channel_name),
+                        NotificationManager.IMPORTANCE_DEFAULT
+                ).apply { description = getString(R.string.channel_description) })
+            }
+        }
+    }
+
+    private fun initKoin() {
         //TODO: maybe think about moving koin modules into their respective modules :D
         startKoin {
             androidContext(this@ClipFinderApp)
@@ -38,28 +65,6 @@ class ClipFinderApp : Application() {
                     spotifyApiModule,
                     spotifyDashboardModule
             ))
-        }
-    }
-
-    override fun onTerminate() {
-        stopService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
-        super.onTerminate()
-    }
-
-    private fun initLeakCanary() {
-        if (LeakCanary.isInAnalyzerProcess(this)) return
-        LeakCanary.install(this)
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager::class.java).run {
-                createNotificationChannel(NotificationChannel(
-                        Constants.NOTIFICATION_CHANNEL_ID,
-                        getString(R.string.channel_name),
-                        NotificationManager.IMPORTANCE_DEFAULT
-                ).apply { description = getString(R.string.channel_description) })
-            }
         }
     }
 }
