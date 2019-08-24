@@ -124,7 +124,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     withModelsFrom(state.similarTracks.value.chunked(2)) { chunk ->
                         Column(chunk.map { track ->
                             track.clickableListItem {
-                                (parentFragment as? OnTrackChangeListener<Track>)
+                                (parentFragment as? OnTrackChangeListener<Track>) //TODO: replace this with a reference to an existing TrackVideosViewModel
                                         ?.onTrackChanged(track)
                             }
                         })

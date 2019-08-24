@@ -1,42 +1,80 @@
 package com.example.spotifysearch.spotify
 
-import androidx.lifecycle.MutableLiveData
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.example.core.model.Resource
+import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
+import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.Loading
+import com.example.coreandroid.model.LoadingFailed
+import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.SearchSpotify
+import io.reactivex.schedulers.Schedulers
+import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 
 class SpotifySearchViewModel(
+        initialState: SpotifySearchViewState,
         private val searchSpotify: SearchSpotify
-) : BaseViewModel() {
+) : MvRxViewModel<SpotifySearchViewState>(initialState) {
 
-    val viewState: SpotifySearchViewState = SpotifySearchViewState()
+    fun onNewQuery(query: String) = withState { state ->
+        if (state.status is Loading) return@withState
 
-    val loadedFlag: MutableLiveData<Unit> = MutableLiveData()
+        if (state.query != query) {
+            setState { resetWithNewQuery(query) }
+            searchWith(query, 0)
+        } else if (state.offset == 0 || (state.offset < state.totalItems)) {
+            searchWith(query, state.offset)
+        }
+    }
 
-    private var currentOffset = 0
-    private var totalItems = 0
+    fun searchWithLastQuery() = withState { state ->
+        if (state.status is Loading) return@withState
 
-    fun searchAll(query: String) {
-        if (currentOffset == 0 || (currentOffset < totalItems)) {
-            viewState.loadingInProgress.set(true)
-            searchSpotify(SearchSpotify.Args(query, currentOffset))
-                    .takeSuccessOnly()
-                    .doFinally { viewState.loadingInProgress.set(false) }
-                    .subscribeAndDisposeOnCleared({
-                        currentOffset += SpotifyDefaults.LIMIT
-                        totalItems = it.totalItems
-                        viewState.albums.addAll(it.albums.map(AlbumEntity::ui))
-                        viewState.artists.addAll(it.artists.map(ArtistEntity::ui))
-                        viewState.playlists.addAll(it.playlists.map(PlaylistEntity::ui))
-                        viewState.tracks.addAll(it.tracks.map(TrackEntity::ui))
-                        loadedFlag.value = Unit
-                    }, ::onError)
+        if (state.offset == 0 || (state.offset < state.totalItems)) {
+            searchWith(state.query, state.offset)
+        }
+    }
+
+    private fun searchWith(query: String, offset: Int) {
+        setState { copy(status = Loading) }
+        searchSpotify(args = SearchSpotify.Args(query, offset), applySchedulers = false)
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    when (it) {
+                        is Resource.Success<SearchAllEntity> -> setState {
+                            val searchResult = it.data
+                            copy(
+                                    status = LoadedSuccessfully,
+                                    offset = this.offset + SpotifyDefaults.LIMIT,
+                                    totalItems = searchResult.totalItems,
+                                    artists = this.artists + searchResult.artists.map(ArtistEntity::ui),
+                                    albums = this.albums + searchResult.albums.map(AlbumEntity::ui),
+                                    tracks = this.tracks + searchResult.tracks.map(TrackEntity::ui),
+                                    playlists = this.playlists + searchResult.playlists.map(PlaylistEntity::ui)
+                            )
+                        }
+                        is Resource.Error<SearchAllEntity, *> -> setState {
+                            copy(status = LoadingFailed(it))
+                        }
+                    }
+                }, {
+                    setState { copy(status = LoadingFailed(it)) }
+                    Timber.e(it)
+                })
+                .disposeOnClear()
+    }
+
+    companion object : MvRxViewModelFactory<SpotifySearchViewModel, SpotifySearchViewState> {
+        override fun create(
+                viewModelContext: ViewModelContext, state: SpotifySearchViewState
+        ): SpotifySearchViewModel {
+            val searchSpotify: SearchSpotify by viewModelContext.activity.inject()
+            return SpotifySearchViewModel(state, searchSpotify)
         }
     }
 }

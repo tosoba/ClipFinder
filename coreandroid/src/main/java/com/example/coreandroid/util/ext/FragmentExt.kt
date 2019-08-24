@@ -8,6 +8,8 @@ import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import com.airbnb.mvrx.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseListFragment
@@ -17,6 +19,7 @@ import com.example.coreandroid.base.handler.*
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
+import kotlin.reflect.KClass
 
 val Fragment.appCompatActivity: AppCompatActivity?
     get() = activity as? AppCompatActivity
@@ -128,4 +131,13 @@ fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> 
             it.onLoginSuccessful = { spotifyPlayerController?.playClicked() }
         }
     }
+}
+
+inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmentViewModel(
+        viewModelClass: KClass<VM> = VM::class,
+        crossinline keyFactory: () -> String = { viewModelClass.java.name }
+) where T : Fragment, T : MvRxView = lifecycleAwareLazy(this) {
+    val factory = MvRxFactory { throw IllegalStateException("ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!") }
+    ViewModelProviders.of(parentFragment!!, factory).get(keyFactory(), viewModelClass.java)
+            .apply { subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() }) }
 }
