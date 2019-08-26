@@ -1,4 +1,4 @@
-package com.example.soundcloudtrack
+package com.example.soundcloudtrackvideos.track
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.*
-import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.model.soundcloud.clickableListItem
+import com.example.coreandroid.util.ext.parentFragmentViewModel
 import com.example.coreandroid.view.epoxy.itemListController
+import com.example.soundcloudtrackvideos.R
+import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track.view.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -21,17 +23,15 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
 
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
 
+    private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
+
     //TODO: connectivityComponent
 
     private val epoxyController by lazy {
         itemListController(builder, differ, viewModel,
                 SoundCloudTrackViewState::similarTracks, "Similar tracks",
                 reloadClicked = { track?.id?.let { viewModel.loadSimilarTracks(it) } }
-        ) {
-            it.clickableListItem {
-                (parentFragment as? OnTrackChangeListener<SoundCloudTrack>)?.onTrackChanged(newTrack = it)
-            }
-        }
+        ) { it.clickableListItem { parentViewModel.updateTrack(it) } }
     }
 
     private val argTrack: SoundCloudTrack by args()

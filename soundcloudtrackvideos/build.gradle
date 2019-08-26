@@ -40,7 +40,6 @@ dependencies {
     implementation project(':core')
     implementation project(':coreandroid')
     implementation project(':itemlist')
-    implementation project(':soundcloudtrack')
     implementation project(':youtubesearch')
 
     implementation rootProject.ext.rxJava

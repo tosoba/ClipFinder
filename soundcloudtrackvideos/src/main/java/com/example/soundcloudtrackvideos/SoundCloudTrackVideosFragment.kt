@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -18,16 +17,14 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import com.example.soundcloudtrack.SoundCloudTrackFragment
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
+import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 
-class SoundCloudTrackVideosFragment : BaseMvRxFragment(),
-        OnTrackChangeListener<SoundCloudTrack>,
-        GoesToPreviousStateOnBackPressed {
+class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
     private val viewModel: SoundCloudTrackVideosViewModel by fragmentViewModel()
 
@@ -108,8 +105,6 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(),
     }
 
     override fun onBackPressed() = viewModel.onBackPressed()
-
-    override fun onTrackChanged(newTrack: SoundCloudTrack) = viewModel.updateTrack(newTrack)
 
     override fun invalidate() = Unit
 

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.headerItem
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.loadingIndicator
@@ -22,6 +21,7 @@ import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
+import com.example.coreandroid.util.ext.parentFragmentViewModel
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.show
 import com.example.coreandroid.util.withModelsFrom
@@ -30,6 +30,7 @@ import com.example.coreandroid.view.radarchart.RadarChartAxisView
 import com.example.coreandroid.view.radarchart.RadarChartView
 import com.example.coreandroid.view.radarchart.RadarMarkerView
 import com.example.spotifytrackvideos.R
+import com.example.spotifytrackvideos.TrackVideosViewModel
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
@@ -46,6 +47,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
     override val factory: IFragmentFactory by inject()
 
     private val viewModel: TrackViewModel by fragmentViewModel()
+    private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
 
     private val epoxyController by lazy {
         asyncController(builder, differ, viewModel) { state ->
@@ -124,10 +126,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     id("similar-tracks")
                     withModelsFrom(state.similarTracks.value.chunked(2)) { chunk ->
                         Column(chunk.map { track ->
-                            track.clickableListItem {
-                                (parentFragment as? OnTrackChangeListener<Track>) //TODO: replace this with a reference to an existing TrackVideosViewModel
-                                        ?.onTrackChanged(track)
-                            }
+                            track.clickableListItem { parentViewModel.updateTrack(track) }
                         })
                     }
                 }

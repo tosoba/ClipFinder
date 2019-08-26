@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.coreandroid.base.handler.OnTrackChangeListener
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -24,9 +23,7 @@ import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
-class TrackVideosFragment : BaseMvRxFragment(),
-        OnTrackChangeListener<Track>,
-        GoesToPreviousStateOnBackPressed {
+class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
     private val viewModel: TrackVideosViewModel by fragmentViewModel()
 
@@ -111,8 +108,6 @@ class TrackVideosFragment : BaseMvRxFragment(),
     }
 
     override fun onBackPressed() = viewModel.onBackPressed()
-
-    override fun onTrackChanged(newTrack: Track) = viewModel.updateTrack(newTrack)
 
     override fun invalidate() = Unit
 
