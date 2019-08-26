@@ -1,4 +1,4 @@
-package com.example.spotifytrack
+package com.example.spotifytrackvideos.track
 
 import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory

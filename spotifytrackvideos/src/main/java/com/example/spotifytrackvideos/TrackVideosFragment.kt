@@ -18,8 +18,8 @@ import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
-import com.example.spotifytrack.TrackFragment
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
+import com.example.spotifytrackvideos.track.TrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_track_videos.*

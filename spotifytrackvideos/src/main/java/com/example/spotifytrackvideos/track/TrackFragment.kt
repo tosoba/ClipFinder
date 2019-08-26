@@ -1,4 +1,4 @@
-package com.example.spotifytrack
+package com.example.spotifytrackvideos.track
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -29,6 +29,7 @@ import com.example.coreandroid.view.epoxy.Column
 import com.example.coreandroid.view.radarchart.RadarChartAxisView
 import com.example.coreandroid.view.radarchart.RadarChartView
 import com.example.coreandroid.view.radarchart.RadarMarkerView
+import com.example.spotifytrackvideos.R
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
