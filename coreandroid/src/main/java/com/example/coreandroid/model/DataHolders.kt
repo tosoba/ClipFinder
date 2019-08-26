@@ -43,7 +43,6 @@ data class Data<Value>(
 
 fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailed(): Boolean = loadingFailed && value.isEmpty()
 
-
 inline fun <Holder : HoldsData<Collection<Value>>, Value> Holder.ifEmptyAndIsNotLoading(block: (Holder) -> Unit) {
     if (status !is Loading && value.isEmpty()) block(this)
 }

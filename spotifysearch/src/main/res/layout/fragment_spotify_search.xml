@@ -6,7 +6,7 @@
 
         <variable
             name="spotifySearchView"
-            type="com.example.spotifysearch.spotify.SpotifySearchView" />
+            type="com.example.spotifysearch.spotify.SpotifySearchViewBinding" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,15 +41,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spotify_tab_layout" />
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="50dp"
-            android:visibility="@{(safeUnbox(spotifySearchView.state.loadingInProgress) &amp;&amp; spotifySearchView.state.albums.size() == 0 &amp;&amp; spotifySearchView.state.artists.size() == 0 &amp;&amp; spotifySearchView.state.playlists.size() == 0 &amp;&amp; spotifySearchView.state.tracks.size() == 0) ? View.VISIBLE : View.GONE}"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

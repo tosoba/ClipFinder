@@ -30,7 +30,7 @@ class SpotifyRemoteRepo(
     override fun searchAll(
             query: String, offset: Int
     ): Single<Resource<SearchAllEntity>> = withTokenSingle { token ->
-        api.searchAll(authorization = getAccessTokenHeader(token), query = query)
+        api.searchAll(authorization = getAccessTokenHeader(token), query = query, offset = offset)
                 .mapToResource {
                     SearchAllEntity(
                             albums = albumsResult?.items?.map(AlbumApiModel::domain)

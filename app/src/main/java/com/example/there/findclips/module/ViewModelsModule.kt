@@ -6,7 +6,6 @@ import com.example.spotifyaccount.saved.AccountSavedViewModel
 import com.example.spotifyaccount.top.AccountTopViewModel
 import com.example.spotifyfavourites.spotify.SpotifyFavouritesViewModel
 import com.example.spotifyplayer.SpotifyPlayerViewModel
-import com.example.spotifysearch.spotify.SpotifySearchViewModel
 import com.example.youtubefavourites.VideosFavouritesViewModel
 import com.example.youtubeplayer.YoutubePlayerViewModel
 import com.example.youtuberelatedvideos.RelatedVideosViewModel
@@ -18,7 +17,6 @@ val viewModelsModule = module {
     viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get(), get()) }
     viewModel { VideosFavouritesViewModel(get(), get()) }
-    viewModel { SpotifySearchViewModel(get()) }
     viewModel { VideosSearchViewModel(get(), get(), get(), get()) }
     viewModel { AccountPlaylistsViewModel(get()) }
     viewModel { AccountTopViewModel(get(), get()) }
