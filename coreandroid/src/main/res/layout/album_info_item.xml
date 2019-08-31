@@ -4,23 +4,50 @@
 
     <data>
 
-        <import type="android.view.View" />
+        <variable
+            name="foregroundDrawableId"
+            type="Integer" />
 
         <variable
-            name="view"
-            type="com.example.coreandroid.view.recyclerview.item.AlbumInfoItemView" />
+            name="imageUrl"
+            type="String" />
+
+        <variable
+            name="errorDrawableId"
+            type="Integer" />
+
+        <variable
+            name="fallbackDrawableId"
+            type="Integer" />
+
+        <variable
+            name="loadingDrawableId"
+            type="Integer" />
+
+        <variable
+            name="itemClicked"
+            type="android.view.View.OnClickListener" />
+
     </data>
 
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/track_album_image_view"
-        imageSrc="@{view.state.album.imageViewSrc}"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:foreground="@drawable/spotify_foreground_ripple"
-        android:onClick="@{view.onClickListener}"
-        android:visibility="@{safeUnbox(view.state.albumLoadingInProgress) ? View.GONE : View.VISIBLE}" />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        foregroundDrawable="@{foregroundDrawableId}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            glideImage="@{imageUrl}"
+            glideImageError="@{errorDrawableId}"
+            glideImageFallback="@{fallbackDrawableId}"
+            glideImageLoading="@{loadingDrawableId}"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_marginBottom="6dp"
+            android:clickable="@{itemClicked != null}"
+            android:onClick="@{itemClicked}" />
+
+    </FrameLayout>
 </layout>
 

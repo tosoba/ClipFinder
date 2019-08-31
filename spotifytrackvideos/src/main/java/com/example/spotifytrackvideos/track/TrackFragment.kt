@@ -16,6 +16,7 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.clickableListItem
+import com.example.coreandroid.model.spotify.infoItem
 import com.example.coreandroid.radarChart
 import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.asyncController
@@ -69,10 +70,9 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     message("Error occurred lmao") //TODO: error msg
                 }
 
-                is LoadedSuccessfully -> {
-                    state.album.value?.clickableListItem {
-                        show { newSpotifyAlbumFragment(state.album.value!!) }
-                    }
+                is LoadedSuccessfully -> state.album.value?.let {
+                    it.infoItem { show { newSpotifyAlbumFragment(it) } }
+                            .addTo(this)
                 }
             }
 

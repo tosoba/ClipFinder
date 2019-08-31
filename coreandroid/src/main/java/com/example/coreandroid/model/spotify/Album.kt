@@ -2,6 +2,7 @@ package com.example.coreandroid.model.spotify
 
 import android.os.Parcelable
 import android.view.View
+import com.example.coreandroid.AlbumInfoItemBindingModel_
 import com.example.coreandroid.ImageListItemBindingModel_
 import com.example.coreandroid.R
 import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
@@ -25,6 +26,17 @@ data class Album(
     override val foregroundDrawableId: Int
         get() = R.drawable.spotify_foreground_ripple
 }
+
+fun Album.infoItem(
+        itemClicked: () -> Unit
+): AlbumInfoItemBindingModel_ = AlbumInfoItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+        .imageUrl(iconUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.album_placeholder)
+        .loadingDrawableId(R.drawable.album_placeholder)
+        .itemClicked(View.OnClickListener { itemClicked() })
 
 fun Album.clickableListItem(
         itemClicked: () -> Unit
