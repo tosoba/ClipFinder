@@ -29,43 +29,42 @@ import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
 import org.koin.android.ext.android.inject
 
-
-class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class),
-        TracksDataLoaded {
+class AccountTopFragment :
+    BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class),
+    TracksDataLoaded {
 
     private val fragmentFactory: IFragmentFactory by inject()
 
     override val isDataLoaded: Boolean
-        get() = viewModel.viewState.artists.isNotEmpty()
-                && viewModel.viewState.topTracks.isNotEmpty()
+        get() = viewModel.viewState.artists.isNotEmpty() && viewModel.viewState.topTracks.isNotEmpty()
 
     private val view: AccountTopView by lazy {
         AccountTopView(
-                viewModel.viewState,
-                ArtistsAndTracksAdapter(
-                        RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
-                                object : ListItemView<Artist>(viewModel.viewState.artists) {
-                                    override val itemViewBinder: ItemBinder<Artist>
-                                        get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
-                                },
-                                ClickHandler {
-                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
-                                },
-                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadArtists() }
-                        ),
-                        RecyclerViewItemView(
-                                RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.tracksLoadingErrorOccurred),
-                                object : ListItemView<Track>(viewModel.viewState.topTracks) {
-                                    override val itemViewBinder: ItemBinder<Track>
-                                        get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
-                                },
-                                ClickHandler {
-                                    navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
-                                },
-                                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadTracks() }
-                        )
+            viewModel.viewState,
+            ArtistsAndTracksAdapter(
+                RecyclerViewItemView(
+                    RecyclerViewItemViewState(viewModel.viewState.artistsLoadingInProgress, viewModel.viewState.artists, viewModel.viewState.artistsLoadingErrorOccurred),
+                    object : ListItemView<Artist>(viewModel.viewState.artists) {
+                        override val itemViewBinder: ItemBinder<Artist>
+                            get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
+                    },
+                    ClickHandler {
+                        navHostFragment?.showFragment(fragmentFactory.newSpotifyArtistFragment(artist = it), true)
+                    },
+                    onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadArtists() }
+                ),
+                RecyclerViewItemView(
+                    RecyclerViewItemViewState(viewModel.viewState.tracksLoadingInProgress, viewModel.viewState.topTracks, viewModel.viewState.tracksLoadingErrorOccurred),
+                    object : ListItemView<Track>(viewModel.viewState.topTracks) {
+                        override val itemViewBinder: ItemBinder<Track>
+                            get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_list_item)
+                    },
+                    ClickHandler {
+                        navHostFragment?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(track = it), true)
+                    },
+                    onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadTracks() }
                 )
+            )
         )
     }
 
@@ -78,7 +77,7 @@ class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewMod
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentAccountTopBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_top, container, false)
         return binding.apply {

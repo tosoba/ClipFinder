@@ -12,12 +12,12 @@ import com.example.there.domain.usecase.soundcloud.IsSoundCloudTrackSaved
 import org.koin.android.ext.android.inject
 
 class SoundCloudTrackVideosViewModel(
-        initialState: TrackVideosViewState<SoundCloudTrack>,
-        insertSoundCloudTrack: InsertSoundCloudTrack,
-        isSoundCloudTrackSaved: IsSoundCloudTrackSaved,
-        deleteSoundCloudTrack: DeleteSoundCloudTrack
+    initialState: TrackVideosViewState<SoundCloudTrack>,
+    insertSoundCloudTrack: InsertSoundCloudTrack,
+    isSoundCloudTrackSaved: IsSoundCloudTrackSaved,
+    deleteSoundCloudTrack: DeleteSoundCloudTrack
 ) : BaseTrackVideosViewModel<SoundCloudTrack, SoundCloudTrackEntity>(
-        initialState, insertSoundCloudTrack, deleteSoundCloudTrack, isSoundCloudTrackSaved
+    initialState, insertSoundCloudTrack, deleteSoundCloudTrack, isSoundCloudTrackSaved
 ) {
     companion object : MvRxViewModelFactory<SoundCloudTrackVideosViewModel, TrackVideosViewState<SoundCloudTrack>> {
         override fun create(viewModelContext: ViewModelContext, state: TrackVideosViewState<SoundCloudTrack>): SoundCloudTrackVideosViewModel? {

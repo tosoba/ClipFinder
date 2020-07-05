@@ -24,20 +24,20 @@ inline fun <Holder : HoldsData<Value>, Value> Holder.ifLastLoadingCompletedSucce
 }
 
 data class Data<Value>(
-        override val value: Value,
-        override val status: DataStatus = Initial
+    override val value: Value,
+    override val status: DataStatus = Initial
 ) : HoldsData<Value> {
 
     override val copyWithLoadingInProgress: Data<Value>
         get() = copy(status = Loading)
 
     override fun <E> copyWithError(error: E): Data<Value> = copy(
-            status = LoadingFailed(error)
+        status = LoadingFailed(error)
     )
 
     fun copyWithNewValue(value: Value): Data<Value> = copy(
-            value = value,
-            status = LoadedSuccessfully
+        value = value,
+        status = LoadedSuccessfully
     )
 }
 
@@ -52,57 +52,57 @@ inline fun <Holder : HoldsData<Collection<Item>>, Item> Holder.ifNotEmpty(block:
 }
 
 data class DataList<Value>(
-        override val value: Collection<Value> = emptyList(),
-        override val status: DataStatus = Initial
+    override val value: Collection<Value> = emptyList(),
+    override val status: DataStatus = Initial
 ) : HoldsData<Collection<Value>> {
 
     override val copyWithLoadingInProgress: DataList<Value>
         get() = copy(status = Loading)
 
     override fun <E> copyWithError(error: E): DataList<Value> = copy(
-            status = LoadingFailed(error)
+        status = LoadingFailed(error)
     )
 
     fun copyWithNewItems(newItems: Collection<Value>): DataList<Value> = copy(
-            value = value + newItems,
-            status = LoadedSuccessfully
+        value = value + newItems,
+        status = LoadedSuccessfully
     )
 
     fun copyWithNewItems(vararg newItems: Value): DataList<Value> = copy(
-            value = value + newItems,
-            status = LoadedSuccessfully
+        value = value + newItems,
+        status = LoadedSuccessfully
     )
 }
 
 data class PagedDataList<Value>(
-        override val value: Collection<Value> = emptyList(),
-        override val status: DataStatus = Initial,
-        val offset: Int = 0,
-        val totalItems: Int = Integer.MAX_VALUE
+    override val value: Collection<Value> = emptyList(),
+    override val status: DataStatus = Initial,
+    val offset: Int = 0,
+    val totalItems: Int = Integer.MAX_VALUE
 ) : HoldsData<Collection<Value>> {
 
     override val copyWithLoadingInProgress: PagedDataList<Value>
         get() = copy(status = Loading)
 
     override fun <E> copyWithError(error: E): PagedDataList<Value> = copy(
-            status = LoadingFailed(error)
+        status = LoadingFailed(error)
     )
 
     fun copyWithNewItems(
-            newItems: Collection<Value>, offset: Int
+        newItems: Collection<Value>, offset: Int
     ): PagedDataList<Value> = copy(
-            value = value + newItems,
-            offset = offset,
-            status = LoadedSuccessfully
+        value = value + newItems,
+        offset = offset,
+        status = LoadedSuccessfully
     )
 
     fun copyWithNewItems(
-            newItems: Collection<Value>, offset: Int, totalItems: Int
+        newItems: Collection<Value>, offset: Int, totalItems: Int
     ): PagedDataList<Value> = copy(
-            value = value + newItems,
-            offset = offset,
-            status = LoadedSuccessfully,
-            totalItems = totalItems
+        value = value + newItems,
+        offset = offset,
+        status = LoadedSuccessfully,
+        totalItems = totalItems
     )
 
     inline fun ifNotLoadingAndNotAllLoaded(block: (PagedDataList<Value>) -> Unit) {

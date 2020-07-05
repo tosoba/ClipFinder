@@ -1,5 +1,7 @@
 package com.example.coreandroid.util.list
 
+import java.util.*
+
 interface IdentifiableObservableListItem<Id> {
     val id: Id
 
@@ -15,7 +17,8 @@ interface IdentifiableNamedObservableListItem<Id> : IdentifiableObservableListIt
 
     companion object {
         fun <Id, Item : IdentifiableNamedObservableListItem<Id>> sortedByNameCallback(): ObservableSortedList.Callback<Item> = object : BaseCallback<Id, Item> {
-            override fun compare(o1: Item, o2: Item): Int = o1.name.toLowerCase().compareTo(o2.name.toLowerCase())
+            override fun compare(o1: Item, o2: Item): Int = o1.name.toLowerCase(Locale.getDefault())
+                .compareTo(o2.name.toLowerCase(Locale.getDefault()))
         }
     }
 }

@@ -34,19 +34,19 @@ class VideoPlaylistFragment : Fragment() {
         get() = childFragmentManager.findFragmentById(R.id.videos_fragment_container_layout) as? IYoutubeSearchFragment
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentVideoPlaylistBinding>(
-            inflater, R.layout.fragment_video_playlist, container, false
+        inflater, R.layout.fragment_video_playlist, container, false
     ).apply {
         view = VideoPlaylistView(
-                VideoPlaylistViewState(playlist),
-                PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList()),
-                View.OnClickListener { _ ->
-                    videoFragment?.let {
-                        if (it.videosLoaded) youtubePlayerController?.loadVideoPlaylist(playlist, it.videos)
-                        else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
-                    }
+            VideoPlaylistViewState(playlist),
+            PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList()),
+            View.OnClickListener { _ ->
+                videoFragment?.let {
+                    if (it.videosLoaded) youtubePlayerController?.loadVideoPlaylist(playlist, it.videos)
+                    else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
                 }
+            }
         )
         videoPlaylistToolbar.setupWithBackNavigation(appCompatActivity)
     }.root
@@ -57,15 +57,15 @@ class VideoPlaylistFragment : Fragment() {
     }
 
     private fun showVideosFragment() = childFragmentManager.beginTransaction()
-            .replace(R.id.videos_fragment_container_layout, fragmentFactory.newVideosSearchFragment(playlist))
-            .commit()
+        .replace(R.id.videos_fragment_container_layout, fragmentFactory.newVideosSearchFragment(playlist))
+        .commit()
 
     companion object {
         private const val ARG_PLAYLIST = "ARG_PLAYLIST"
         private const val ARG_THUMBNAIL_URLS = "ARG_THUMBNAIL_URLS"
 
         fun newInstance(
-                playlist: VideoPlaylist, thumbnailUrls: Array<String>
+            playlist: VideoPlaylist, thumbnailUrls: Array<String>
         ) = VideoPlaylistFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(ARG_PLAYLIST, playlist)

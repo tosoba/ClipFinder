@@ -7,8 +7,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetTracksFromPlaylist(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISoundCloudRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISoundCloudRemoteDataStore
 ) : SingleUseCaseWithArgs<String, List<SoundCloudTrackEntity>>(schedulersProvider) {
     override fun run(args: String): Single<List<SoundCloudTrackEntity>> = remote.getTracksFromPlaylist(args)
 }

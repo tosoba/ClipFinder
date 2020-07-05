@@ -9,16 +9,21 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetPlaylistTracks(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<GetPlaylistTracks.Args, Resource<ListPage<TrackEntity>>>(schedulersProvider) {
 
     class Args(
-            val playlistId: String,
-            val userId: String,
-            val offset: Int
+        val playlistId: String,
+        val userId: String,
+        val offset: Int
     )
 
-    override fun run(args: Args): Single<Resource<ListPage<TrackEntity>>> =
-            remote.getPlaylistTracks(args.playlistId, args.userId, args.offset)
+    override fun run(
+        args: Args
+    ): Single<Resource<ListPage<TrackEntity>>> = remote.getPlaylistTracks(
+        args.playlistId,
+        args.userId,
+        args.offset
+    )
 }

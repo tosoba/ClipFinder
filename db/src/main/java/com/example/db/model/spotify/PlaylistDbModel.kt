@@ -5,18 +5,17 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.db.StringListConverter
 
-
 @Entity(tableName = "spotify_playlists")
 data class PlaylistDbModel(
-        @PrimaryKey
-        val id: String,
+    @PrimaryKey
+    val id: String,
 
-        @TypeConverters(StringListConverter::class)
-        val icons: List<String>,
+    @TypeConverters(StringListConverter::class)
+    val icons: List<String>,
 
-        val name: String,
+    val name: String,
 
-        val owner: String,
+    val owner: String,
 
-        val uri: String
+    val uri: String
 )

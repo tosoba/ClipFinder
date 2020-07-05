@@ -16,25 +16,24 @@ import java.math.BigInteger
 
 @Parcelize
 data class Video(
-        val id: String,
-        val channelId: String,
-        val title: String,
-        val description: String,
-        val publishedAt: String,
-        val thumbnailUrl: String,
-        val duration: String,
-        val viewCount: BigInteger,
-        var channelThumbnailUrl: ObservableField<String> = ObservableField(""),
-        var playlistId: Long? = null,
-        var query: String? = null,
-        var relatedVideoId: String? = null
+    val id: String,
+    val channelId: String,
+    val title: String,
+    val description: String,
+    val publishedAt: String,
+    val thumbnailUrl: String,
+    val duration: String,
+    val viewCount: BigInteger,
+    var channelThumbnailUrl: ObservableField<String> = ObservableField(""),
+    var playlistId: Long? = null,
+    var query: String? = null,
+    var relatedVideoId: String? = null
 ) : Parcelable {
 
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc.with(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
 
-    val details: String
-        get() = "$publishedAgo • ${viewCount.formattedString} views"
+    val details: String get() = "$publishedAgo • ${viewCount.formattedString} views"
 
     private val publishedAgo: String
         get() {

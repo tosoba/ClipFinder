@@ -34,74 +34,79 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                BaseListFragment.newInstance<SpotifyAlbumsFragment, Album>(
-                        getString(R.string.no_favourite_albums_addded_yet),
-                        getString(R.string.browse_for_albums),
-                        viewModel.viewState.value?.albums
-                ).apply {
-                    refreshData = { fragment ->
-                        viewModel.viewState.value?.let {
-                            fragment.updateItems(it.albums)
-                        }
-                    }
-                },
-                BaseListFragment.newInstance<SpotifyArtistsFragment, Artist>(
-                        getString(R.string.no_favourite_artists_added_yet),
-                        getString(R.string.browse_for_artists),
-                        viewModel.viewState.value?.artists
-                ).apply {
-                    refreshData = { fragment ->
-                        viewModel.viewState.value?.let {
-                            fragment.updateItems(it.artists)
-                        }
-                    }
-                },
-                BaseListFragment.newInstance<SpotifyCategoriesFragment, Category>(
-                        getString(R.string.no_favourite_categories_added_yet),
-                        getString(R.string.browse_for_categories),
-                        viewModel.viewState.value?.categories
-                ).apply {
-                    refreshData = { fragment ->
-                        viewModel.viewState.value?.let {
-                            fragment.updateItems(it.categories)
-                        }
-                    }
-                },
-                BaseListFragment.newInstance<SpotifyPlaylistsFragment, Playlist>(
-                        getString(R.string.no_favourite_playlists_added_yet),
-                        getString(R.string.browse_for_playlists),
-                        viewModel.viewState.value?.playlists
-                ).apply {
-                    refreshData = { fragment ->
-                        viewModel.viewState.value?.let {
-                            fragment.updateItems(it.playlists)
-                        }
-                    }
-                },
-                BaseListFragment.newInstance<SpotifyTracksFragment, Track>(
-                        getString(R.string.no_favourite_tracks_added_yet),
-                        getString(R.string.browse_for_tracks),
-                        viewModel.viewState.value?.tracks
-                ).apply {
-                    refreshData = { fragment ->
-                        viewModel.viewState.value?.let {
-                            fragment.updateItems(it.tracks)
-                        }
+            BaseListFragment.newInstance<SpotifyAlbumsFragment, Album>(
+                getString(R.string.no_favourite_albums_addded_yet),
+                getString(R.string.browse_for_albums),
+                viewModel.viewState.value?.albums
+            ).apply {
+                refreshData = { fragment ->
+                    viewModel.viewState.value?.let {
+                        fragment.updateItems(it.albums)
                     }
                 }
+            },
+            BaseListFragment.newInstance<SpotifyArtistsFragment, Artist>(
+                getString(R.string.no_favourite_artists_added_yet),
+                getString(R.string.browse_for_artists),
+                viewModel.viewState.value?.artists
+            ).apply {
+                refreshData = { fragment ->
+                    viewModel.viewState.value?.let {
+                        fragment.updateItems(it.artists)
+                    }
+                }
+            },
+            BaseListFragment.newInstance<SpotifyCategoriesFragment, Category>(
+                getString(R.string.no_favourite_categories_added_yet),
+                getString(R.string.browse_for_categories),
+                viewModel.viewState.value?.categories
+            ).apply {
+                refreshData = { fragment ->
+                    viewModel.viewState.value?.let {
+                        fragment.updateItems(it.categories)
+                    }
+                }
+            },
+            BaseListFragment.newInstance<SpotifyPlaylistsFragment, Playlist>(
+                getString(R.string.no_favourite_playlists_added_yet),
+                getString(R.string.browse_for_playlists),
+                viewModel.viewState.value?.playlists
+            ).apply {
+                refreshData = { fragment ->
+                    viewModel.viewState.value?.let {
+                        fragment.updateItems(it.playlists)
+                    }
+                }
+            },
+            BaseListFragment.newInstance<SpotifyTracksFragment, Track>(
+                getString(R.string.no_favourite_tracks_added_yet),
+                getString(R.string.browse_for_tracks),
+                viewModel.viewState.value?.tracks
+            ).apply {
+                refreshData = { fragment ->
+                    viewModel.viewState.value?.let {
+                        fragment.updateItems(it.tracks)
+                    }
+                }
+            }
         ))
     }
 
     private val view: SpotifyFavouritesFragmentView by lazy {
         SpotifyFavouritesFragmentView(
-                pagerAdapter = pagerAdapter,
-                onTabSelectedListener = onSpotifyTabSelectedListener,
-                onPageChangeListener = onSpotifyPageChangedListener
+            pagerAdapter = pagerAdapter,
+            onTabSelectedListener = onSpotifyTabSelectedListener,
+            onPageChangeListener = onSpotifyPageChangedListener
         )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifyFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites, container, false)
+        val binding: FragmentSpotifyFavouritesBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_spotify_favourites,
+            container,
+            false
+        )
         return binding.apply {
             this.view = this@SpotifyFavouritesFragment.view
         }.root
@@ -119,7 +124,6 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
 
     private fun updateCurrentFragment() {
         val fragment = pagerAdapter.currentFragment
-
         viewModel.viewState.value?.let {
             when (fragment) {
                 is SpotifyAlbumsFragment -> fragment.updateItems(it.albums)

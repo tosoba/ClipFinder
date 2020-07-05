@@ -3,22 +3,22 @@ package com.example.api.model
 import com.google.gson.annotations.SerializedName
 
 class SoundCloudCollectionApiModel(
-        val description: String,
+    val description: String,
 
-        val id: String,
+    val id: String,
 
-        val kind: String,
+    val kind: String,
 
-        @SerializedName("last_updated")
-        val lastUpdated: String,
+    @SerializedName("last_updated")
+    val lastUpdated: String,
 
-        val playlists: List<SoundCloudPlaylistApiModel>?,
+    val playlists: List<SoundCloudPlaylistApiModel>?,
 
-        @SerializedName("system_playlists")
-        val systemPlaylists: List<SoundCloudSystemPlaylistApiModel>?,
+    @SerializedName("system_playlists")
+    val systemPlaylists: List<SoundCloudSystemPlaylistApiModel>?,
 
-        val title: String,
+    val title: String,
 
-        @SerializedName("tracking_feature_name")
-        val trackingFeatureName: String
+    @SerializedName("tracking_feature_name")
+    val trackingFeatureName: String
 )

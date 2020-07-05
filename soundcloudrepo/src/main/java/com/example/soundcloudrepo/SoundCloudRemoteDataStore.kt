@@ -14,42 +14,42 @@ import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 
 class SoundCloudRemoteDataStore(
-        private val apiV2: SoundCloudApiV2,
-        private val api: SoundCloudApi,
-        private val service: SoundCloudService
+    private val apiV2: SoundCloudApiV2,
+    private val api: SoundCloudApi,
+    private val service: SoundCloudService
 ) : ISoundCloudRemoteDataStore {
 
     override val discover: Single<SoundCloudDiscoverEntity>
         get() = apiV2.discover().map { response ->
             SoundCloudDiscoverEntity(
-                    playlists = response.collection.map {
-                        it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
-                    }.flatten(),
-                    systemPlaylists = response.collection.map {
-                        it.systemPlaylists?.map(SoundCloudSystemPlaylistApiModel::domain)
-                                ?: emptyList()
-                    }.flatten()
+                playlists = response.collection.map {
+                    it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
+                }.flatten(),
+                systemPlaylists = response.collection.map {
+                    it.systemPlaylists?.map(SoundCloudSystemPlaylistApiModel::domain)
+                        ?: emptyList()
+                }.flatten()
             )
         }
 
     override fun getTracksFromPlaylist(
-            id: String
+        id: String
     ): Single<List<SoundCloudTrackEntity>> = api.getTracksFromPlaylist(id)
-            .map { it.map(SoundCloudTrackApiModel::domain) }
+        .map { it.map(SoundCloudTrackApiModel::domain) }
 
     override fun getTracks(
-            ids: List<String>
+        ids: List<String>
     ): Single<List<SoundCloudTrackEntity>> = apiV2.getTracks(ids.joinToString(separator = ","))
-            .map { it.map(TrackEntity::domain) }
+        .map { it.map(TrackEntity::domain) }
 
     override fun getSimilarTracks(
-            id: String
+        id: String
     ): Single<List<SoundCloudTrackEntity>> = apiV2.getRelatedTracks(id)
-            .map {
-                it.collection?.run {
-                    map(SoundCloudTrackApiModel::domain)
-                } ?: run {
-                    emptyList<SoundCloudTrackEntity>()
-                }
+        .map {
+            it.collection?.run {
+                map(SoundCloudTrackApiModel::domain)
+            } ?: run {
+                emptyList<SoundCloudTrackEntity>()
             }
+        }
 }

@@ -9,22 +9,21 @@ import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
 
 class GetFavouriteTracks(
-        schedulersProvider: UseCaseSchedulersProvider,
-        repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    repository: ISpotifyLocalRepo
 ) : GetFavouriteTracksUseCase<TrackEntity>(schedulersProvider, repository)
 
 class InsertTrack(
-        schedulersProvider: UseCaseSchedulersProvider,
-        repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    repository: ISpotifyLocalRepo
 ) : InsertTrackUseCase<TrackEntity>(schedulersProvider, repository)
 
 class IsTrackSaved(
-        schedulersProvider: UseCaseSchedulersProvider,
-        repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    repository: ISpotifyLocalRepo
 ) : IsTrackSavedUseCase<TrackEntity>(schedulersProvider, repository)
 
 class DeleteTrack(
-        schedulersProvider: UseCaseSchedulersProvider,
-        repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    repository: ISpotifyLocalRepo
 ) : DeleteTrackUseCase<TrackEntity>(schedulersProvider, repository)
-

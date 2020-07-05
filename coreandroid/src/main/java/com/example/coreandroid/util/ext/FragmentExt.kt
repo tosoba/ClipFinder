@@ -64,10 +64,10 @@ val Fragment.intentProvider: IntentProvider?
     get() = activity as? IntentProvider
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
-        mainHintText: String,
-        additionalHintText: String,
-        items: ArrayList<I>?,
-        shouldShowHeader: Boolean
+    mainHintText: String,
+    additionalHintText: String,
+    items: ArrayList<I>?,
+    shouldShowHeader: Boolean
 ) {
     val args = Bundle().apply {
         putString(BaseListFragment.EXTRA_MAIN_HINT, mainHintText)
@@ -99,20 +99,19 @@ interface NavigationCapable {
 }
 
 inline fun <T> T.show(
-        addToBackStack: Boolean = true, getFragment: IFragmentFactory.() -> Fragment
+    addToBackStack: Boolean = true,
+    getFragment: IFragmentFactory.() -> Fragment
 ) where T : Fragment, T : NavigationCapable {
     navHostFragment?.showFragment(factory.getFragment(), addToBackStack)
 }
 
 fun Fragment.reloadingConnectivityComponent(
-        reloadData: () -> Unit,
-        isReloadNeeded: () -> Boolean
+    reloadData: () -> Unit,
+    isReloadNeeded: () -> Boolean
 ): ConnectivityComponent = ConnectivityComponent(object : ConnectivityComponent.Binder {
-    override val context: Context
-        get() = this@reloadingConnectivityComponent.requireContext()
+    override val context: Context get() = this@reloadingConnectivityComponent.requireContext()
 
-    override val snackbarParentView: View?
-        get() = connectivitySnackbarHost?.snackbarParentView
+    override val snackbarParentView: View? get() = connectivitySnackbarHost?.snackbarParentView
 
     override fun shouldReload(): Boolean = isReloadNeeded()
 
@@ -134,10 +133,10 @@ fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> 
 }
 
 inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmentViewModel(
-        viewModelClass: KClass<VM> = VM::class,
-        crossinline keyFactory: () -> String = { viewModelClass.java.name }
+    viewModelClass: KClass<VM> = VM::class,
+    crossinline keyFactory: () -> String = { viewModelClass.java.name }
 ) where T : Fragment, T : MvRxView = lifecycleAwareLazy(this) {
     val factory = MvRxFactory { throw IllegalStateException("ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!") }
     ViewModelProviders.of(parentFragment!!, factory).get(keyFactory(), viewModelClass.java)
-            .apply { subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() }) }
+        .apply { subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() }) }
 }

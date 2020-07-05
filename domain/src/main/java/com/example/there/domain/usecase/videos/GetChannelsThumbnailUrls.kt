@@ -8,9 +8,10 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetChannelsThumbnailUrls(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: IVideosRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: IVideosRemoteDataStore
 ) : SingleUseCaseWithArgs<List<VideoEntity>, Resource<List<Pair<Int, String>>>>(schedulersProvider) {
-
-    override fun run(args: List<VideoEntity>): Single<Resource<List<Pair<Int, String>>>> = remote.getChannelsThumbnailUrls(args)
+    override fun run(
+        args: List<VideoEntity>
+    ): Single<Resource<List<Pair<Int, String>>>> = remote.getChannelsThumbnailUrls(args)
 }

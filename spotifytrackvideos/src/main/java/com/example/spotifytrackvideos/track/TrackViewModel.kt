@@ -24,11 +24,11 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
 class TrackViewModel(
-        initialState: TrackViewState,
-        private val getAlbum: GetAlbum,
-        private val getArtists: GetArtists,
-        private val getSimilarTracks: GetSimilarTracks,
-        private val getAudioFeatures: GetAudioFeatures
+    initialState: TrackViewState,
+    private val getAlbum: GetAlbum,
+    private val getArtists: GetArtists,
+    private val getSimilarTracks: GetSimilarTracks,
+    private val getAudioFeatures: GetAudioFeatures
 ) : MvRxViewModel<TrackViewState>(initialState) {
 
     fun loadData(track: Track) {
@@ -46,29 +46,29 @@ class TrackViewModel(
         if (state.album.status is Loading) return@withState
 
         getAlbum(args = albumId, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .mapData(AlbumEntity::ui)
-                .updateNullableWithSingleResource(TrackViewState::album) {
-                    copy(album = it)
-                }
+            .subscribeOn(Schedulers.io())
+            .mapData(AlbumEntity::ui)
+            .updateNullableWithSingleResource(TrackViewState::album) {
+                copy(album = it)
+            }
     }
 
     fun loadArtists(artistIds: List<String>) = withState { state ->
         if (state.artists.status is Loading) return@withState
 
         getArtists(args = artistIds, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .mapData { artists -> artists.map(ArtistEntity::ui) }
-                .updateWithResource(TrackViewState::artists) { copy(artists = it) }
+            .subscribeOn(Schedulers.io())
+            .mapData { artists -> artists.map(ArtistEntity::ui) }
+            .updateWithResource(TrackViewState::artists) { copy(artists = it) }
     }
 
     fun loadSimilarTracks(track: Track) = withState { state ->
         if (state.similarTracks.status is Loading) return@withState
 
         getSimilarTracks(args = track.id, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .mapData { tracks -> tracks.map(TrackEntity::ui) }
-                .updateWithResource(TrackViewState::similarTracks) { copy(similarTracks = it) }
+            .subscribeOn(Schedulers.io())
+            .mapData { tracks -> tracks.map(TrackEntity::ui) }
+            .updateWithResource(TrackViewState::similarTracks) { copy(similarTracks = it) }
     }
 
     fun loadAudioFeatures(track: Track) {
@@ -76,26 +76,26 @@ class TrackViewModel(
             if (state.audioFeaturesChartData.status is Loading) return@withState
 
             getAudioFeatures(args = track.domain, applySchedulers = false)
-                    .subscribeOn(Schedulers.io())
-                    .mapData {
-                        val entries = listOf(
-                                RadarEntry(it.acousticness),
-                                RadarEntry(it.danceability),
-                                RadarEntry(it.energy),
-                                RadarEntry(it.instrumentalness),
-                                RadarEntry(it.liveness),
-                                RadarEntry(it.speechiness),
-                                RadarEntry(it.valence)
-                        )
-                        RadarData(
-                                RadarDataSet(entries, "Audio features")
-                        ).apply {
-                            setValueTextSize(12f)
-                            setDrawValues(false)
-                            setValueTextColor(Color.WHITE)
-                        }
+                .subscribeOn(Schedulers.io())
+                .mapData {
+                    val entries = listOf(
+                        RadarEntry(it.acousticness),
+                        RadarEntry(it.danceability),
+                        RadarEntry(it.energy),
+                        RadarEntry(it.instrumentalness),
+                        RadarEntry(it.liveness),
+                        RadarEntry(it.speechiness),
+                        RadarEntry(it.valence)
+                    )
+                    RadarData(
+                        RadarDataSet(entries, "Audio features")
+                    ).apply {
+                        setValueTextSize(12f)
+                        setDrawValues(false)
+                        setValueTextColor(Color.WHITE)
                     }
-                    .updateNullableWithSingleResource(TrackViewState::audioFeaturesChartData) { copy(audioFeaturesChartData = it) }
+                }
+                .updateNullableWithSingleResource(TrackViewState::audioFeaturesChartData) { copy(audioFeaturesChartData = it) }
         }
     }
 

@@ -21,8 +21,7 @@ import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : Fragment(), HasMainToolbar {
 
-    override val toolbar: Toolbar
-        get() = account_toolbar
+    override val toolbar: Toolbar get() = account_toolbar
 
     private val onTabSelectedListener: TabLayout.OnTabSelectedListener by lazy {
         object : OnTabSelectedListener {
@@ -34,9 +33,9 @@ class AccountFragment : Fragment(), HasMainToolbar {
 
     private val viewPagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter by lazy {
         TitledCustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                "Playlists" to AccountPlaylistsFragment(),
-                "Saved" to AccountSavedFragment(),
-                "Top" to AccountTopFragment()
+            "Playlists" to AccountPlaylistsFragment(),
+            "Saved" to AccountSavedFragment(),
+            "Top" to AccountTopFragment()
         ))
     }
 
@@ -45,10 +44,16 @@ class AccountFragment : Fragment(), HasMainToolbar {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentAccountBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_account, container, false)
+            inflater,
+            R.layout.fragment_account,
+            container,
+            false
+        )
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@AccountFragment.view
@@ -69,7 +74,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
     }
 
     override fun onOptionsItemSelected(
-            item: MenuItem?
+        item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
         navigationDrawerController?.openDrawer()
         true

@@ -8,6 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.fragment.ISoundCloudPlayerFragment
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.util.ext.slidingPanelController
@@ -22,8 +23,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_sound_cloud_player.*
 import kotlinx.android.synthetic.main.fragment_sound_cloud_player.view.*
 
-
-class SoundCloudPlayerFragment : androidx.fragment.app.Fragment(), ISoundCloudPlayerFragment {
+class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
 
     private val exoPlayer: SimpleExoPlayer by lazy(LazyThreadSafetyMode.NONE) {
         ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector()).apply {
@@ -33,11 +33,10 @@ class SoundCloudPlayerFragment : androidx.fragment.app.Fragment(), ISoundCloudPl
 
     private var lastTrack: SoundCloudTrack? = null
 
-    override val playerView: View?
-        get() = this.view
+    override val playerView: View? get() = this.view
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_sound_cloud_player, container, false).apply {
         close_sound_cloud_player_image_button.setOnClickListener {
             slidingPanelController?.hideIfVisible()
@@ -62,14 +61,20 @@ class SoundCloudPlayerFragment : androidx.fragment.app.Fragment(), ISoundCloudPl
         lastTrack = track
 
         Picasso.with(context)
-                .load(track.artworkUrl)
-                .placeholder(com.example.coreandroid.R.drawable.track_placeholder)
-                .error(com.example.coreandroid.R.drawable.track_placeholder)
-                .into(sound_cloud_current_track_image_view)
+            .load(track.artworkUrl)
+            .placeholder(com.example.coreandroid.R.drawable.track_placeholder)
+            .error(com.example.coreandroid.R.drawable.track_placeholder)
+            .into(sound_cloud_current_track_image_view)
 
         val userAgent = Util.getUserAgent(context, getString(com.example.coreandroid.R.string.app_name))
         val mediaUri = Uri.parse(track.streamUrl)
-        val mediaSource = ExtractorMediaSource(mediaUri, DefaultDataSourceFactory(context, userAgent), DefaultExtractorsFactory(), null, null)
+        val mediaSource = ExtractorMediaSource(
+            mediaUri,
+            DefaultDataSourceFactory(context, userAgent),
+            DefaultExtractorsFactory(),
+            null,
+            null
+        )
 
         exoPlayer.prepare(mediaSource)
 

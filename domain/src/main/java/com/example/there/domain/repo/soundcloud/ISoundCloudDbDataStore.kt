@@ -6,7 +6,5 @@ import com.example.there.domain.repo.IFavouritePlaylistRepository
 import com.example.there.domain.repo.IFavouriteTrackRepo
 
 interface ISoundCloudDbDataStore :
-        IFavouriteTrackRepo<SoundCloudTrackEntity>,
-        IFavouritePlaylistRepository<SoundCloudPlaylistEntity> {
-
-}
+    IFavouriteTrackRepo<SoundCloudTrackEntity>,
+    IFavouritePlaylistRepository<SoundCloudPlaylistEntity>

@@ -17,13 +17,13 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class ArtistViewModel(
-        initialState: ArtistViewState,
-        private val getAlbumsFromArtist: GetAlbumsFromArtist,
-        private val getTopTracksFromArtist: GetTopTracksFromArtist,
-        private val getRelatedArtists: GetRelatedArtists,
-        private val insertArtist: InsertArtist,
-        private val deleteArtist: DeleteArtist,
-        private val isArtistSaved: IsArtistSaved
+    initialState: ArtistViewState,
+    private val getAlbumsFromArtist: GetAlbumsFromArtist,
+    private val getTopTracksFromArtist: GetTopTracksFromArtist,
+    private val getRelatedArtists: GetRelatedArtists,
+    private val insertArtist: InsertArtist,
+    private val deleteArtist: DeleteArtist,
+    private val isArtistSaved: IsArtistSaved
 ) : MvRxViewModel<ArtistViewState>(initialState) {
 
     init {
@@ -69,9 +69,9 @@ class ArtistViewModel(
         if (state.albums.status is Loading) return@withState
 
         getAlbumsFromArtist(args = artistId, applySchedulers = false)
-                .mapData { albums -> albums.map(AlbumEntity::ui) }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(ArtistViewState::albums) { copy(albums = it) }
+            .mapData { albums -> albums.map(AlbumEntity::ui) }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(ArtistViewState::albums) { copy(albums = it) }
     }
 
 
@@ -79,18 +79,18 @@ class ArtistViewModel(
         if (state.topTracks.status is Loading) return@withState
 
         getTopTracksFromArtist(args = artistId, applySchedulers = false)
-                .mapData { tracks -> tracks.map(TrackEntity::ui).sortedBy { it.name } }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(ArtistViewState::topTracks) { copy(topTracks = it) }
+            .mapData { tracks -> tracks.map(TrackEntity::ui).sortedBy { it.name } }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(ArtistViewState::topTracks) { copy(topTracks = it) }
     }
 
     fun loadRelatedArtists(artistId: String) = withState { state ->
         if (state.relatedArtists.status is Loading) return@withState
 
         getRelatedArtists(args = artistId, applySchedulers = false)
-                .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(ArtistViewState::relatedArtists) { copy(relatedArtists = it) }
+            .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(ArtistViewState::relatedArtists) { copy(relatedArtists = it) }
     }
 
     fun toggleArtistFavouriteState() = withState { state ->
@@ -101,27 +101,27 @@ class ArtistViewModel(
     }
 
     private fun addFavouriteArtist(artist: Artist) = insertArtist(artist.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
+        .subscribeOn(Schedulers.io())
+        .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+            setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+            Timber.e(it)
+        })
+        .disposeOnClear()
 
     private fun deleteFavouriteArtist(artist: Artist) = deleteArtist(artist.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
+        .subscribeOn(Schedulers.io())
+        .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+            setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+            Timber.e(it)
+        })
+        .disposeOnClear()
 
     private fun loadArtistFavouriteState() = withState { state ->
         if (state.isSavedAsFavourite.status is Loading) return@withState
 
         isArtistSaved(args = state.artists.value.last().id, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .update(ArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+            .subscribeOn(Schedulers.io())
+            .update(ArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
     companion object : MvRxViewModelFactory<ArtistViewModel, ArtistViewState> {

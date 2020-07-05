@@ -8,23 +8,23 @@ import com.example.db.SimplifiedArtistConverter
 
 @Entity(tableName = "tracks")
 data class TrackDbModel(
-        @PrimaryKey
-        val id: String,
+    @PrimaryKey
+    val id: String,
 
-        val name: String,
+    val name: String,
 
-        @TypeConverters(SimplifiedArtistConverter::class)
-        val artists: List<SimplifiedArtistDbModel>,
+    @TypeConverters(SimplifiedArtistConverter::class)
+    val artists: List<SimplifiedArtistDbModel>,
 
-        @TypeConverters(SimplifiedAlbumDbModel::class)
-        val album: SimplifiedAlbumDbModel,
+    @TypeConverters(SimplifiedAlbumDbModel::class)
+    val album: SimplifiedAlbumDbModel,
 
-        val popularity: Int,
+    val popularity: Int,
 
-        @ColumnInfo(name = "track_number")
-        val trackNumber: Int,
+    @ColumnInfo(name = "track_number")
+    val trackNumber: Int,
 
-        val uri: String,
+    val uri: String,
 
-        val durationMs: Int
+    val durationMs: Int
 )

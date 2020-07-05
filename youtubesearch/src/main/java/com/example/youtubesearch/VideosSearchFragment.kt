@@ -33,8 +33,8 @@ import kotlinx.android.synthetic.main.fragment_videos_search.*
 
 
 class VideosSearchFragment :
-        BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class),
-        IYoutubeSearchFragment {
+    BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class),
+    IYoutubeSearchFragment {
 
     override var query: String = ""
         set(value) {
@@ -44,11 +44,9 @@ class VideosSearchFragment :
             viewModel.viewState.videos.clear()
         }
 
-    override val videosLoaded: Boolean
-        get() = viewModel.viewState.videos.isNotEmpty()
+    override val videosLoaded: Boolean get() = viewModel.viewState.videos.isNotEmpty()
 
-    override val videos: List<Video>
-        get() = viewModel.viewState.videos.map { it.video }
+    override val videos: List<Video> get() = viewModel.viewState.videos.map { it.video }
 
     private val onScrollListener: RecyclerView.OnScrollListener = EndlessRecyclerOnScrollListener {
         viewModel.searchVideosWithLastQuery()
@@ -62,23 +60,23 @@ class VideosSearchFragment :
 
     private val view: VideosSearchView by lazy {
         VideosSearchView(
-                state = viewModel.viewState,
-                recyclerViewItemView = RecyclerViewItemView(
-                        RecyclerViewItemViewState(
-                                viewModel.viewState.videosLoadingInProgress,
-                                viewModel.viewState.videos,
-                                viewModel.viewState.videosLoadingErrorOccurred
-                        ),
-                        object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
-                            override val itemViewBinder: ItemBinder<VideoItemView>
-                                get() = ItemBinderBase(BR.videoView, R.layout.video_item)
-                        },
-                        ClickHandler {
-                            youtubePlayerController?.loadVideo(video = it.video)
-                        },
-                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
-                        onScrollListener
-                )
+            state = viewModel.viewState,
+            recyclerViewItemView = RecyclerViewItemView(
+                RecyclerViewItemViewState(
+                    viewModel.viewState.videosLoadingInProgress,
+                    viewModel.viewState.videos,
+                    viewModel.viewState.videosLoadingErrorOccurred
+                ),
+                object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
+                    override val itemViewBinder: ItemBinder<VideoItemView>
+                        get() = ItemBinderBase(BR.videoView, R.layout.video_item)
+                },
+                ClickHandler {
+                    youtubePlayerController?.loadVideo(video = it.video)
+                },
+                SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
+                onScrollListener
+            )
         )
     }
 
@@ -90,7 +88,12 @@ class VideosSearchFragment :
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_search, container, false)
+        val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_videos_search,
+            container,
+            false
+        )
         return binding.apply {
             videosSearchView = view
             videosRecyclerView.layoutManager = videosLayoutManager

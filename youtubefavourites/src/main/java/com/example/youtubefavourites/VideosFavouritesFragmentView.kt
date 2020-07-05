@@ -6,13 +6,13 @@ import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
 
 class VideosFavouritesFragmentView(
-        val state: VideosFavouritesFragmentViewState,
-        val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView>
+    val state: VideosFavouritesFragmentViewState,
+    val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView>
 )
 
 class VideosFavouritesFragmentViewState(
-        val playlists: ObservableList<PlaylistThumbnailView> = ObservableSortedList<PlaylistThumbnailView>(
-                PlaylistThumbnailView::class.java,
-                PlaylistThumbnailView.sortedListCallback
-        )
+    val playlists: ObservableList<PlaylistThumbnailView> = ObservableSortedList(
+        PlaylistThumbnailView::class.java,
+        PlaylistThumbnailView.sortedListCallback
+    )
 )

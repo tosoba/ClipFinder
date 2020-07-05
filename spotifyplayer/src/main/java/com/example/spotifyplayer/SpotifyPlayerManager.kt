@@ -12,26 +12,26 @@ object SpotifyPlayerManager {
     private val sPlayerReferences = Collections.newSetFromMap<Any>(IdentityHashMap())
 
     fun getPlayer(
-            config: Config,
-            reference: Any,
-            audioController: AudioController,
-            observer: SpotifyPlayer.InitializationObserver
+        config: Config,
+        reference: Any,
+        audioController: AudioController,
+        observer: SpotifyPlayer.InitializationObserver
     ): SpotifyPlayer {
         val builder = SpotifyPlayer.Builder(config).setAudioController(audioController)
         return getPlayer(builder, reference, observer)
     }
 
     private fun getPlayer(
-            builder: SpotifyPlayer.Builder,
-            reference: Any,
-            observer: SpotifyPlayer.InitializationObserver?
+        builder: SpotifyPlayer.Builder,
+        reference: Any,
+        observer: SpotifyPlayer.InitializationObserver?
     ): SpotifyPlayer = synchronized(sPlayerMutex) {
         sPlayer?.let {
             if (!it.isShutdown) {
                 var waitCounter = 300
                 while (!it.isInitialized && waitCounter > 0) try {
                     --waitCounter
-                    Thread.sleep(10L)
+                    Thread.sleep(10L) //TODO: get rid of this...
                 } catch (var7: InterruptedException) {
                     Thread.currentThread().interrupt()
                 }

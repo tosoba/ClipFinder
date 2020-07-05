@@ -20,13 +20,12 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
     private val fragmentFactory: IFragmentFactory by inject()
 
-    override val toolbar: Toolbar
-        get() = favourites_toolbar
+    override val toolbar: Toolbar get() = favourites_toolbar
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                SpotifyFavouritesFragment(),
-                fragmentFactory.newVideosFavouritesFragment
+            SpotifyFavouritesFragment(),
+            fragmentFactory.newVideosFavouritesFragment
         ))
     }
 
@@ -44,18 +43,23 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
     private val view: SpotifyFavouritesMainView by lazy {
         SpotifyFavouritesMainView(
-                pagerAdapter,
-                onNavigationItemSelectedListener,
-                1,
-                //TODO: fix this - it broke after change with hiding main bottom nav
-                AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                    favourites_bottom_navigation_view?.translationY = (-1 * verticalOffset).toFloat()
-                }
+            pagerAdapter,
+            onNavigationItemSelectedListener,
+            1,
+            //TODO: fix this - it broke after change with hiding main bottom nav
+            AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                favourites_bottom_navigation_view?.translationY = (-1 * verticalOffset).toFloat()
+            }
         )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_favourites_main, container, false)
+        val binding: FragmentSpotifyFavouritesMainBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_spotify_favourites_main,
+            container,
+            false
+        )
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             favouritesFragmentView = view
@@ -76,7 +80,7 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
     }
 
     override fun onOptionsItemSelected(
-            item: MenuItem?
+        item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
         navigationDrawerController?.openDrawer()
         true

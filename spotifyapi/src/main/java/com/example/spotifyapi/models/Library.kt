@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName
  * @property album Information about the album.
  */
 data class SavedAlbum(
-        @SerializedName("added_at") val addedAt: String,
-        val album: Album
+    @SerializedName("added_at") val addedAt: String,
+    val album: Album
 )
 
 /**
@@ -20,6 +20,6 @@ data class SavedAlbum(
  * @property track The track object.
  */
 data class SavedTrack(
-        @SerializedName("added_at") val addedAt: String,
-        val track: Track
+    @SerializedName("added_at") val addedAt: String,
+    val track: Track
 )

@@ -13,15 +13,15 @@ import retrofit2.http.Query
 interface SpotifyPersonalizationApi {
     @GET("me/top/tracks")
     fun getCurrentUsersTopTracks(
-            @Header("Authorization") authorization: String,
-            @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
-            @Query("offset") offset: Int = SpotifyDefaults.OFFSET
+        @Header("Authorization") authorization: String,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET
     ): Single<NetworkResponse<TracksPagedResponse, SpotifyErrorResponse>>
 
     @GET("me/top/artists")
     fun getCurrentUsersTopArtists(
-            @Header("Authorization") authorization: String,
-            @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
-            @Query("offset") offset: Int = SpotifyDefaults.OFFSET
+        @Header("Authorization") authorization: String,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET
     ): Single<NetworkResponse<ArtistsPagedResponse, SpotifyErrorResponse>>
 }

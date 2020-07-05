@@ -11,12 +11,12 @@ import retrofit2.http.Path
 interface SpotifyUsersApi {
     @GET("me")
     fun getCurrentUser(
-            @Header("Authorization") authorization: String
+        @Header("Authorization") authorization: String
     ): Single<NetworkResponse<SpotifyUserInformation, ErrorResponse>>
 
     @GET("users/{user_id}")
     fun getUser(
-            @Header("Authorization") authorization: String,
-            @Path("user_id") userId: String
+        @Header("Authorization") authorization: String,
+        @Path("user_id") userId: String
     ): Single<NetworkResponse<SpotifyUserInformation, ErrorResponse>>
 }

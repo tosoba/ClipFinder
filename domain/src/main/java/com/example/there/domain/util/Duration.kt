@@ -12,19 +12,19 @@ fun convertDuration(isoString: String): String {
     val matcherDay = Pattern.compile("P(\\d+)DT(\\d+)H(\\d+)M(\\d+)S").matcher(isoString)
     if (matcherDay.matches()) {
         return toString(matcherDay.group(1).toLong(), matcherDay.group(2).toLong(),
-                matcherDay.group(3).toLong(), matcherDay.group(4).toLong())
+            matcherDay.group(3).toLong(), matcherDay.group(4).toLong())
     }
 
     val matcherHour = Pattern.compile("PT(\\d+)H(\\d+)M(\\d+)S").matcher(isoString)
     if (matcherHour.matches()) {
         return toString(0L, matcherHour.group(1).toLong(),
-                matcherHour.group(2).toLong(), matcherHour.group(3).toLong())
+            matcherHour.group(2).toLong(), matcherHour.group(3).toLong())
     }
 
     val matcherMinute = Pattern.compile("PT(\\d+)M(\\d+)S").matcher(isoString)
     if (matcherMinute.matches()) {
         return toString(0L, 0L,
-                matcherMinute.group(1).toLong(), matcherMinute.group(2).toLong())
+            matcherMinute.group(1).toLong(), matcherMinute.group(2).toLong())
     }
 
     val matcherSecond = Pattern.compile("PT(\\d+)S").matcher(isoString)

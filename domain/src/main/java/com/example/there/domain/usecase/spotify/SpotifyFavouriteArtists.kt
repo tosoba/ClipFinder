@@ -11,34 +11,29 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 class GetFavouriteArtists(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<ArtistEntity>>(schedulersProvider) {
-
-    override val result: Flowable<List<ArtistEntity>>
-        get() = repository.favouriteArtists
+    override val result: Flowable<List<ArtistEntity>> get() = repository.favouriteArtists
 }
 
 class InsertArtist(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<ArtistEntity>(schedulersProvider) {
-
     override fun run(args: ArtistEntity): Completable = repository.insertArtist(args)
 }
 
 class IsArtistSaved(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
-
     override fun run(args: String): Single<Boolean> = repository.isArtistSaved(args)
 }
 
 class DeleteArtist(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<ArtistEntity>(schedulersProvider) {
-
     override fun run(args: ArtistEntity): Completable = repository.deleteArtist(args)
 }

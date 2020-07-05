@@ -15,13 +15,13 @@ import timber.log.Timber
 import kotlin.reflect.KProperty1
 
 open class MvRxViewModel<S : MvRxState>(
-        initialState: S, debugMode: Boolean = false
+    initialState: S, debugMode: Boolean = false
 ) : BaseMvRxViewModel<S>(initialState, debugMode) {
 
     protected fun <T> Single<T>.update(
-            prop: KProperty1<S, Data<T>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(Data<T>) -> S
+        prop: KProperty1<S, Data<T>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({ data ->
@@ -33,15 +33,19 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T> Single<Resource<T>>.updateWithSingleResource(
-            prop: KProperty1<S, Data<T>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(Data<T>) -> S
+        prop: KProperty1<S, Data<T>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({
             when (it) {
-                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewValue(it.data)) }
-                is Resource.Error<T, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+                is Resource.Success -> setState {
+                    stateReducer(currentValueOf(prop).copyWithNewValue(it.data))
+                }
+                is Resource.Error<T, *> -> setState {
+                    stateReducer(currentValueOf(prop).copyWithError(it.error))
+                }
             }
         }, {
             setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
@@ -50,15 +54,22 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T> Single<Resource<T>>.updateNullableWithSingleResource(
-            prop: KProperty1<S, Data<T?>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(Data<T?>) -> S
+        prop: KProperty1<S, Data<T?>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(Data<T?>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({
-            when (it) {
-                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewValue(it.data)) }
-                is Resource.Error<T, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+            setState {
+                when (it) {
+                    is Resource.Success -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithNewValue(it.data))
+                    is Resource.Error<T, *> -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithError(it.error)
+                    )
+                }
             }
         }, {
             setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
@@ -67,17 +78,23 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
-            prop: KProperty1<S, PagedDataList<T>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(PagedDataList<T>) -> S
+        prop: KProperty1<S, PagedDataList<T>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(PagedDataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({
-            when (it) {
-                is Resource.Success -> setState {
-                    stateReducer(currentValueOf(prop).copyWithNewItems(it.data.items, it.data.offset, it.data.totalItems))
+            setState {
+                when (it) {
+                    is Resource.Success -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithNewItems(it.data.items, it.data.offset, it.data.totalItems)
+                    )
+                    is Resource.Error<ListPage<T>, *> -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithError(it.error)
+                    )
                 }
-                is Resource.Error<ListPage<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
             }
         }, {
             setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
@@ -86,15 +103,23 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T> Single<Resource<List<T>>>.updateWithResource(
-            prop: KProperty1<S, DataList<T>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(DataList<T>) -> S
+        prop: KProperty1<S, DataList<T>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({
-            when (it) {
-                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewItems(it.data)) }
-                is Resource.Error<List<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+            setState {
+                when (it) {
+                    is Resource.Success -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithNewItems(it.data)
+                    )
+                    is Resource.Error<List<T>, *> -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithError(it.error)
+                    )
+                }
             }
         }, {
             setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
@@ -103,15 +128,23 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
-            prop: KProperty1<S, DataList<T>>,
-            onError: (Throwable) -> Unit = Timber::e,
-            stateReducer: S.(DataList<T>) -> S
+        prop: KProperty1<S, DataList<T>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
         return subscribe({
-            when (it) {
-                is Resource.Success -> setState { stateReducer(currentValueOf(prop).copyWithNewItems(it.data)) }
-                is Resource.Error<List<T>, *> -> setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
+            setState {
+                when (it) {
+                    is Resource.Success -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithNewItems(it.data)
+                    )
+                    is Resource.Error<List<T>, *> -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithError(it.error)
+                    )
+                }
             }
         }, {
             setState { stateReducer(currentValueOf(prop).copyWithError(it)) }

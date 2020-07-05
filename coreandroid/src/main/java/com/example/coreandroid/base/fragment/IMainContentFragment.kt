@@ -6,7 +6,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 interface IMainContentFragment {
     val currentNavHostFragment: BaseNavHostFragment?
     val currentFragment: Fragment?
-
     val playButton: FloatingActionButton
 
     fun disablePlayButton() {

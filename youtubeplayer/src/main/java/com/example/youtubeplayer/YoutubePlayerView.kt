@@ -5,14 +5,14 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 
 class YoutubePlayerView(
-        val onYoutubePlayerCloseBtnClickListener: View.OnClickListener,
-        val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener
+    val onYoutubePlayerCloseBtnClickListener: View.OnClickListener,
+    val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener
 )
 
 class YoutubePlayerState(
-        var lastPlayedVideo: Video? = null,
-        var youtubePlaybackInProgress: Boolean = false,
-        var lastVideoPlaylist: VideoPlaylist? = null,
-        var videosToPlay: List<Video>? = null,
-        var currentVideoIndex: Int = 0
+    var lastPlayedVideo: Video? = null,
+    var youtubePlaybackInProgress: Boolean = false,
+    var lastVideoPlaylist: VideoPlaylist? = null,
+    var videosToPlay: List<Video>? = null,
+    var currentVideoIndex: Int = 0
 )

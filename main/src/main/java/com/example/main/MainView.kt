@@ -12,27 +12,27 @@ import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class MainView(
-        val state: MainViewState,
-        val onDrawerNavigationItemSelectedListener: NavigationView.OnNavigationItemSelectedListener,
-        val fadeOnClickListener: View.OnClickListener,
-        val slideListener: SlidingUpPanelLayout.PanelSlideListener,
-        val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
-        val onFavouriteBtnClickListener: View.OnClickListener,
-        val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
-        val offScreenPageLimit: Int
+    val state: MainViewState,
+    val onDrawerNavigationItemSelectedListener: NavigationView.OnNavigationItemSelectedListener,
+    val fadeOnClickListener: View.OnClickListener,
+    val slideListener: SlidingUpPanelLayout.PanelSlideListener,
+    val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
+    val onFavouriteBtnClickListener: View.OnClickListener,
+    val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
+    val offScreenPageLimit: Int
 )
 
 class MainViewState(
-        val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
-        val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
-        val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
-        val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
-        val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList<VideoPlaylist>(),
-        val mainContent: ObservableField<MainContent> = ObservableField(MainContent.SPOTIFY)
+    val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
+    val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
+    val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
+    val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
+    val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
+    val mainContent: ObservableField<MainContent> = ObservableField(MainContent.SPOTIFY)
 )
 
 class DrawerHeaderViewState(
-        val user: ObservableField<User> = ObservableField()
+    val user: ObservableField<User> = ObservableField()
 )
 
 enum class PlayerState {

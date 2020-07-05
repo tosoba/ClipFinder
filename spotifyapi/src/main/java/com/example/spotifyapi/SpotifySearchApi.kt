@@ -12,11 +12,11 @@ import retrofit2.http.Query
 interface SpotifySearchApi {
     @GET("search")
     fun searchAll(
-            @Header("Authorization") authorization: String,
-            @Query("q") query: String,
-            @Query("type") type: String = SpotifySearchApi.ALL_SEARCH_TYPES,
-            @Query("offset") offset: Int = SpotifyDefaults.OFFSET,
-            @Query("limit") limit: Int = SpotifyDefaults.LIMIT
+        @Header("Authorization") authorization: String,
+        @Query("q") query: String,
+        @Query("type") type: String = ALL_SEARCH_TYPES,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT
     ): Single<NetworkResponse<SearchAllResponse, SpotifyErrorResponse>>
 
     companion object {

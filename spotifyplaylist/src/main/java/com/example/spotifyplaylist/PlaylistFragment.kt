@@ -38,9 +38,13 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     //TODO: scroll listener
     private val epoxyController by lazy {
-        itemListController(builder, differ, viewModel,
-                PlaylistViewState<Playlist, Track>::tracks, "Tracks",
-                reloadClicked = viewModel::loadTracks
+        itemListController(
+            builder,
+            differ,
+            viewModel,
+            PlaylistViewState<Playlist, Track>::tracks,
+            "Tracks",
+            reloadClicked = viewModel::loadTracks
         ) {
             it.clickableListItem { show { newSpotifyTrackVideosFragment(it) } }
         }
@@ -58,8 +62,8 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val view: PlaylistView<Playlist> by lazy {
         PlaylistView(
-                playlist = playlist,
-                onFavouriteBtnClickListener = View.OnClickListener { viewModel.togglePlaylistFavouriteState() }
+            playlist = playlist,
+            onFavouriteBtnClickListener = View.OnClickListener { viewModel.togglePlaylistFavouriteState() }
         )
     }
 
@@ -80,7 +84,7 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
             spotifyPlaylistRecyclerView.apply {
                 setController(epoxyController)
                 layoutManager = GridLayoutManager(context,
-                        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
                 setItemSpacingDp(5)
                 //TODO: animation
 
@@ -94,7 +98,7 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         super.onViewCreated(view, savedInstanceState)
         viewModel.selectSubscribe(this, PlaylistViewState<Playlist, Track>::isSavedAsFavourite) {
             playlist_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+                if (it.value) R.drawable.delete else R.drawable.favourite))
             playlist_favourite_fab?.hideAndShow()
         }
     }

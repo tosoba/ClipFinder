@@ -19,12 +19,12 @@ open class SpotifyPreferences(context: Context) {
 
     var country: String
         get() = preferences.getString(PREF_KEY_COUNTRY, SpotifyDefaults.COUNTRY)
-                ?: SpotifyDefaults.COUNTRY
+            ?: SpotifyDefaults.COUNTRY
         set(value) = preferences.edit().putString(PREF_KEY_COUNTRY, value).apply()
 
     var locale: String
         get() = preferences.getString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE)
-                ?: SpotifyDefaults.LOCALE
+            ?: SpotifyDefaults.LOCALE
         set(value) = preferences.edit().putString(PREF_KEY_LANGUAGE, value).apply()
 
     var accessToken: AccessTokenEntity?

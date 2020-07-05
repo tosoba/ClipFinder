@@ -9,8 +9,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetCurrentUsersTopTracks(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<Int, Resource<ListPage<TrackEntity>>>(schedulersProvider) {
     override fun run(args: Int): Single<Resource<ListPage<TrackEntity>>> = remote.getCurrentUsersTopTracks(offset = args)
 }

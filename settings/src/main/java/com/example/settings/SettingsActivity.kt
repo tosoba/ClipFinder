@@ -6,15 +6,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
-
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fragmentManager.beginTransaction()
-                .replace(android.R.id.content, SettingsFragment())
-                .commit()
+            .replace(android.R.id.content, SettingsFragment())
+            .commit()
 
         setupActionBar()
     }
@@ -32,6 +31,10 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupActionBar() = supportActionBar?.apply {
         setDisplayShowHomeEnabled(true)
         setDisplayHomeAsUpEnabled(true)
-        setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@SettingsActivity, R.color.colorPrimaryDark)))
+        setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(this@SettingsActivity, R.color.colorPrimaryDark)
+            )
+        )
     }
 }

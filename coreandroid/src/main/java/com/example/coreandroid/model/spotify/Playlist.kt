@@ -12,36 +12,33 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Playlist(
-        override val id: String,
-        override val name: String,
-        val iconUrl: String,
-        val userId: String,
-        val uri: String
+    override val id: String,
+    override val name: String,
+    val iconUrl: String,
+    val userId: String,
+    val uri: String
 ) : Parcelable, NamedImageListItem, IdentifiableNamedObservableListItem<String> {
-
-    override val foregroundDrawableId: Int
-        get() = R.drawable.spotify_foreground_ripple
-
+    override val foregroundDrawableId: Int get() = R.drawable.spotify_foreground_ripple
     override val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc.with(iconUrl, R.drawable.playlist_placeholder, R.drawable.error_placeholder)
 }
 
 fun Playlist.clickableListItem(
-        itemClicked: () -> Unit
+    itemClicked: () -> Unit
 ): ImageListItemBindingModel_ = ImageListItemBindingModel_()
-        .id(id)
-        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
-        .imageUrl(iconUrl)
-        .errorDrawableId(R.drawable.error_placeholder)
-        .fallbackDrawableId(R.drawable.playlist_placeholder)
-        .loadingDrawableId(R.drawable.playlist_placeholder)
-        .label(name)
-        .showGradient(false)
-        .itemClicked(View.OnClickListener { itemClicked() })
+    .id(id)
+    .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+    .imageUrl(iconUrl)
+    .errorDrawableId(R.drawable.error_placeholder)
+    .fallbackDrawableId(R.drawable.playlist_placeholder)
+    .loadingDrawableId(R.drawable.playlist_placeholder)
+    .label(name)
+    .showGradient(false)
+    .itemClicked(View.OnClickListener { itemClicked() })
 
 fun Playlist.clickableGridListItem(
-        itemClicked: () -> Unit
+    itemClicked: () -> Unit
 ): GridPlaylistItemBindingModel_ = GridPlaylistItemBindingModel_()
-        .id(id)
-        .playlist(this)
-        .itemClicked(View.OnClickListener { itemClicked() })
+    .id(id)
+    .playlist(this)
+    .itemClicked(View.OnClickListener { itemClicked() })

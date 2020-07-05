@@ -24,11 +24,10 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.*
 
 
 class YoutubePlayerFragment :
-        BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class),
-        IYoutubePlayerFragment {
+    BaseVMFragment<YoutubePlayerViewModel>(YoutubePlayerViewModel::class),
+    IYoutubePlayerFragment {
 
-    override val playerView: View?
-        get() = view
+    override val playerView: View? get() = view
 
     private var youTubePlayer: YouTubePlayer? = null
 
@@ -47,7 +46,10 @@ class YoutubePlayerFragment :
     private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
         ImageButton(context).apply {
             setImageResource(R.drawable.close)
-            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT).apply {
+            layoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
                 setMargins(10, 10, 10, 10)
                 addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             }
@@ -68,7 +70,7 @@ class YoutubePlayerFragment :
                         playVideo(viewModel.playerState.videosToPlay!![viewModel.playerState.currentVideoIndex])
                     } else {
                         Toast.makeText(context, "${viewModel.playerState.lastVideoPlaylist?.name
-                                ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
+                            ?: "Unknown playlist"} has ended.", Toast.LENGTH_SHORT).show()
                         slidingPanelController?.hideIfVisible()
                     }
                 }
@@ -95,13 +97,14 @@ class YoutubePlayerFragment :
         }
     }
 
-   override val lastPlayedVideo: Video?
-        get() = viewModel.playerState.lastPlayedVideo
+    override val lastPlayedVideo: Video? get() = viewModel.playerState.lastPlayedVideo
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentYoutubePlayerBinding>(
-            inflater, R.layout.fragment_youtube_player, container, false
+        inflater, R.layout.fragment_youtube_player, container, false
     ).apply {
         fragmentView = this@YoutubePlayerFragment.fragmentView
     }.root

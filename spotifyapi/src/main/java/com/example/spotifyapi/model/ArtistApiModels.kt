@@ -4,17 +4,17 @@ import com.example.core.model.StringUrlModel
 import com.google.gson.annotations.SerializedName
 
 class ArtistApiModel(
-        val id: String,
+    val id: String,
 
-        @SerializedName("images")
-        val icons: List<StringUrlModel>,
+    @SerializedName("images")
+    val icons: List<StringUrlModel>,
 
-        val name: String,
+    val name: String,
 
-        val popularity: Int
+    val popularity: Int
 )
 
 class SimplifiedArtistApiModel(
-        val id: String,
-        val name: String
+    val id: String,
+    val name: String
 )

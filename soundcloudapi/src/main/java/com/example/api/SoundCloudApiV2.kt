@@ -11,20 +11,20 @@ import retrofit2.http.Query
 interface SoundCloudApiV2 {
     @GET("selections")
     fun discover(
-            @Query("client_id") clientId: String = SoundCloudAuth.key,
-            @Query("app_locale") locale: String = "us"
+        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("app_locale") locale: String = "us"
     ): Single<DiscoverResponse>
 
     @GET("tracks")
     fun getTracks(
-            @Query("ids") ids: String,
-            @Query("client_id") clientId: String = SoundCloudAuth.key,
-            @Query("app_locale") locale: String = "us"
+        @Query("ids") ids: String,
+        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("app_locale") locale: String = "us"
     ): Single<List<TrackEntity>>
 
     @GET("tracks/{id}/related")
     fun getRelatedTracks(
-            @Path("id") id: String,
-            @Query("client_id") clientId: String = SoundCloudAuth.key
+        @Path("id") id: String,
+        @Query("client_id") clientId: String = SoundCloudAuth.key
     ): Single<SoundCloudRelatedTracksResponse>
 }

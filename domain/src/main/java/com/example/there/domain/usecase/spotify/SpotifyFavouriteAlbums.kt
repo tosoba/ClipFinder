@@ -10,36 +10,30 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-
 class GetFavouriteAlbums(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : FlowableUseCase<List<AlbumEntity>>(schedulersProvider) {
-
-    override val result: Flowable<List<AlbumEntity>>
-        get() = repository.favouriteAlbums
+    override val result: Flowable<List<AlbumEntity>> get() = repository.favouriteAlbums
 }
 
 class InsertAlbum(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
-
     override fun run(args: AlbumEntity): Completable = repository.insertAlbum(args)
 }
 
 class IsAlbumSaved(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
-
     override fun run(args: String): Single<Boolean> = repository.isAlbumSaved(args)
 }
 
 class DeleteAlbum(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val repository: ISpotifyLocalRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val repository: ISpotifyLocalRepo
 ) : CompletableUseCaseWithArgs<AlbumEntity>(schedulersProvider) {
-
     override fun run(args: AlbumEntity): Completable = repository.deleteAlbum(args)
 }

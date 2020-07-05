@@ -19,10 +19,10 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
+import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
 import kotlinx.android.synthetic.main.fragment_album.*
@@ -41,8 +41,8 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val album: Album by args()
 
-    private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        typedController(builder, differ, viewModel) { state ->
             headerItem {
                 id("artists-header")
                 text("Artists")
@@ -79,17 +79,17 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
             val loadTracks: () -> Unit = { withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) } }
 
             fun tracksCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
-                    minItemsBeforeLoadingMore = 1,
-                    onLoadMore = loadTracks
+                minItemsBeforeLoadingMore = 1,
+                onLoadMore = loadTracks
             ) {
                 id("tracks")
                 withModelsFrom(
-                        items = state.tracks.value,
-                        extraModels = extraModels
+                    items = state.tracks.value,
+                    extraModels = extraModels
                 ) { track ->
                     TrackPopularityItemBindingModel_()
-                            .id(track.id)
-                            .track(track) //TODO: navigation + a nicer layout
+                        .id(track.id)
+                        .track(track) //TODO: navigation + a nicer layout
                 }
             }
 
@@ -108,10 +108,10 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
             } else {
                 tracksCarousel(extraModels = when (state.tracks.status) {
                     is Loading -> listOf(LoadingIndicatorBindingModel_()
-                            .id("loading-more-tracks"))
+                        .id("loading-more-tracks"))
                     is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
-                            .message("Error occurred")
-                            .onReloadClicked(View.OnClickListener { loadTracks() }))
+                        .message("Error occurred")
+                        .onReloadClicked(View.OnClickListener { loadTracks() }))
                     else -> emptyList()
                 })
             }
@@ -120,8 +120,10 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val view: AlbumView by lazy {
         AlbumView(
-                album = album,
-                onFavouriteBtnClickListener = View.OnClickListener { viewModel.toggleAlbumFavouriteState() } //TODO: test this
+            album = album,
+            onFavouriteBtnClickListener = View.OnClickListener {
+                viewModel.toggleAlbumFavouriteState()
+            } //TODO: test this
         )
     }
 
@@ -137,7 +139,11 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(
-                inflater, R.layout.fragment_album, container, false)
+            inflater,
+            R.layout.fragment_album,
+            container,
+            false
+        )
         enableSpotifyPlayButton { loadAlbum(album) }
         return binding.apply {
             view = this@AlbumFragment.view
@@ -154,7 +160,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         super.onViewCreated(view, savedInstanceState)
         viewModel.selectSubscribe(this, AlbumViewState::isSavedAsFavourite) {
             album_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+                if (it.value) R.drawable.delete else R.drawable.favourite))
             album_favourite_fab?.hideAndShow()
         }
     }

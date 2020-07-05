@@ -16,7 +16,6 @@ class ExternalUrl(val name: String, val url: String)
  */
 class ExternalId(val key: String, val id: String)
 
-
 interface ResultEnum {
     fun retrieveIdentifier(): Any
 }
@@ -35,7 +34,7 @@ data class ErrorResponse(val error: ErrorObject)
 data class ErrorObject(val status: Int, val message: String)
 
 data class SimplePlaylistsPagedResponse(
-        @SerializedName("playlists") val result: PagingObject<SimplePlaylist>
+    @SerializedName("playlists") val result: PagingObject<SimplePlaylist>
 ) : PagedResponse<SimplePlaylist> {
     override val items: List<SimplePlaylist> get() = result.items
     override val offset: Int get() = result.offset
@@ -43,7 +42,7 @@ data class SimplePlaylistsPagedResponse(
 }
 
 data class CategoriesResponse(
-        @SerializedName("categories") val result: PagingObject<SpotifyCategory>
+    @SerializedName("categories") val result: PagingObject<SpotifyCategory>
 ) : PagedResponse<SpotifyCategory> {
     override val items: List<SpotifyCategory> get() = result.items
     override val offset: Int get() = result.offset
@@ -51,7 +50,7 @@ data class CategoriesResponse(
 }
 
 data class SimpleAlbumsPagedResponse(
-        @SerializedName("albums") val result: PagingObject<SimpleAlbum>
+    @SerializedName("albums") val result: PagingObject<SimpleAlbum>
 ) : PagedResponse<SimpleAlbum> {
     override val items: List<SimpleAlbum> get() = result.items
     override val offset: Int get() = result.offset
@@ -59,7 +58,7 @@ data class SimpleAlbumsPagedResponse(
 }
 
 data class AlbumsPagedResponse(
-        @SerializedName("albums") val result: PagingObject<Album>
+    @SerializedName("albums") val result: PagingObject<Album>
 ) : PagedResponse<Album> {
     override val items: List<Album> get() = result.items
     override val offset: Int get() = result.offset
@@ -67,7 +66,7 @@ data class AlbumsPagedResponse(
 }
 
 data class ArtistsPagedResponse(
-        @SerializedName("albums") val result: PagingObject<Artist>
+    @SerializedName("albums") val result: PagingObject<Artist>
 ) : PagedResponse<Artist> {
     override val items: List<Artist> get() = result.items
     override val offset: Int get() = result.offset
@@ -75,7 +74,7 @@ data class ArtistsPagedResponse(
 }
 
 data class PlaylistsPagedResponse(
-        @SerializedName("albums") val result: PagingObject<Playlist>
+    @SerializedName("albums") val result: PagingObject<Playlist>
 ) : PagedResponse<Playlist> {
     override val items: List<Playlist> get() = result.items
     override val offset: Int get() = result.offset
@@ -83,7 +82,7 @@ data class PlaylistsPagedResponse(
 }
 
 data class TracksPagedResponse(
-        @SerializedName("albums") val result: PagingObject<Track>
+    @SerializedName("albums") val result: PagingObject<Track>
 ) : PagedResponse<Track> {
     override val items: List<Track> get() = result.items
     override val offset: Int get() = result.offset
@@ -96,17 +95,9 @@ data class TracksResponse(@SerializedName("tracks") val result: List<Track>)
 
 data class ArtistsResponse(@SerializedName("artists") val result: List<Artist>)
 
-
-class SearchAllResponse(
-        @SerializedName("albums")
-        val albumsResult: AlbumsPagedResponse?,
-
-        @SerializedName("artists")
-        val artistsResult: ArtistsPagedResponse?,
-
-        @SerializedName("playlists")
-        val playlistsResult: PlaylistsPagedResponse?,
-
-        @SerializedName("tracks")
-        val tracksResult: TracksPagedResponse?
+data class SearchAllResponse(
+    @SerializedName("albums") val albumsResult: AlbumsPagedResponse?,
+    @SerializedName("artists") val artistsResult: ArtistsPagedResponse?,
+    @SerializedName("playlists") val playlistsResult: PlaylistsPagedResponse?,
+    @SerializedName("tracks") val tracksResult: TracksPagedResponse?
 )

@@ -11,8 +11,8 @@ import org.koin.android.ext.android.inject
 
 //TODO: make a BuildConfig that specifies debugMode
 class SoundCloudDashboardViewModel(
-        initialState: SoundCloudDashboardViewState,
-        private val discoverSoundCloud: DiscoverSoundCloud
+    initialState: SoundCloudDashboardViewState,
+    private val discoverSoundCloud: DiscoverSoundCloud
 ) : MvRxViewModel<SoundCloudDashboardViewState>(initialState) {
 
     init {
@@ -23,19 +23,19 @@ class SoundCloudDashboardViewModel(
         if (state.playlists.status is Loading) return@withState
 
         discoverSoundCloud(applySchedulers = false)
-                .map { discoverEntity ->
-                    SoundCloudPlaylists(
-                            discoverEntity.playlists.map { it.ui }.sortedBy { it.name },
-                            discoverEntity.systemPlaylists.map { it.ui }.sortedBy { it.name }
-                    )
-                }
-                .subscribeOn(Schedulers.io())
-                .update(SoundCloudDashboardViewState::playlists) { copy(playlists = it) }
+            .map { discoverEntity ->
+                SoundCloudPlaylists(
+                    discoverEntity.playlists.map { it.ui }.sortedBy { it.name },
+                    discoverEntity.systemPlaylists.map { it.ui }.sortedBy { it.name }
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .update(SoundCloudDashboardViewState::playlists) { copy(playlists = it) }
     }
 
     companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardViewState> {
         override fun create(
-                viewModelContext: ViewModelContext, state: SoundCloudDashboardViewState
+            viewModelContext: ViewModelContext, state: SoundCloudDashboardViewState
         ): SoundCloudDashboardViewModel {
             val discoverSoundCloud: DiscoverSoundCloud by viewModelContext.activity.inject()
             return SoundCloudDashboardViewModel(state, discoverSoundCloud)

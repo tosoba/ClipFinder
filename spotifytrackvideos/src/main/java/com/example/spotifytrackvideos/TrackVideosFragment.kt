@@ -42,11 +42,11 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
 
     private val pagerAdapter: TrackVideosPagerAdapter by lazy {
         TrackVideosPagerAdapter(
-                manager = childFragmentManager,
-                fragments = arrayOf(
-                        VideosSearchFragment.newInstanceWithQuery(argTrack.query),
-                        TrackFragment.newInstanceWithTrack(argTrack)
-                )
+            manager = childFragmentManager,
+            fragments = arrayOf(
+                VideosSearchFragment.newInstanceWithQuery(argTrack.query),
+                TrackFragment.newInstanceWithTrack(argTrack)
+            )
         )
     }
 
@@ -59,12 +59,12 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
 
     private val view: TrackVideosViewBinding<Track> by lazy {
         TrackVideosViewBinding(
-                fragmentTabs = arrayOf("Clips", "Info"),
-                track = MutableLiveData<Track>().apply { value = argTrack },
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = onFavouriteBtnClickListener
+            fragmentTabs = arrayOf("Clips", "Info"),
+            track = MutableLiveData<Track>().apply { value = argTrack },
+            pagerAdapter = pagerAdapter,
+            onPageChangeListener = onPageChangeListener,
+            onTabSelectedListener = onTabSelectedListener,
+            onFavouriteBtnClickListener = onFavouriteBtnClickListener
         )
     }
 
@@ -80,11 +80,11 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_track_videos, container, false)
+            inflater, R.layout.fragment_track_videos, container, false)
 
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::isSavedAsFavourite) {
             binding.trackFavouriteFab.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+                if (it.value) R.drawable.delete else R.drawable.favourite))
             binding.trackFavouriteFab.hideAndShow()
         }
 

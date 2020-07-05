@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.coreandroid.model.spotify.Artist
 
 class ArtistViewBinding(
-        val onFavouriteBtnClickListener: View.OnClickListener,
-        val artist: MutableLiveData<Artist>
+    val onFavouriteBtnClickListener: View.OnClickListener,
+    val artist: MutableLiveData<Artist>
 )
-

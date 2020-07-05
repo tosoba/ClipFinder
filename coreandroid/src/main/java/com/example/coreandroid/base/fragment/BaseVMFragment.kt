@@ -1,12 +1,12 @@
 package com.example.coreandroid.base.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 abstract class BaseVMFragment<T : BaseViewModel>(vmClass: KClass<T>) : Fragment() {
@@ -27,7 +27,9 @@ abstract class BaseVMFragment<T : BaseViewModel>(vmClass: KClass<T>) : Fragment(
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
-            error?.let { Log.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault()) }
+            error?.let {
+                Timber.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault())
+            }
         })
     }
 }

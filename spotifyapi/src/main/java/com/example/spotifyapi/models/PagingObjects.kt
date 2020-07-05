@@ -14,11 +14,11 @@ package com.example.spotifyapi.models
  * @property offset The offset of the items returned (as set in the query or by default).
  */
 class PagingObject<T>(
-        val href: String,
-        val items: List<T>,
-        val limit: Int,
-        val next: String? = null,
-        val offset: Int = 0,
-        val previous: String? = null,
-        val total: Int
+    val href: String,
+    val items: List<T>,
+    val limit: Int,
+    val next: String? = null,
+    val offset: Int = 0,
+    val previous: String? = null,
+    val total: Int
 )

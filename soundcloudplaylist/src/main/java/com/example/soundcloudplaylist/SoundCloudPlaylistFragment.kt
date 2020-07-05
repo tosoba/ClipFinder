@@ -36,9 +36,13 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
     private val differ by inject<Handler>(named("differ"))
 
     private val epoxyController by lazy {
-        itemListController(builder, differ, viewModel,
-                PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>::tracks, "Tracks",
-                reloadClicked = viewModel::loadData
+        itemListController(
+            builder,
+            differ,
+            viewModel,
+            PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>::tracks,
+            "Tracks",
+            reloadClicked = viewModel::loadData
         ) {
             it.clickableListItem { show { newSoundCloudTrackVideosFragment(it) } }
         }
@@ -58,8 +62,8 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val view: PlaylistView<BaseSoundCloudPlaylist> by lazy {
         PlaylistView(
-                playlist = playlist,
-                onFavouriteBtnClickListener = View.OnClickListener {}
+            playlist = playlist,
+            onFavouriteBtnClickListener = View.OnClickListener {}
         )
     }
 
@@ -72,9 +76,9 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSoundCloudPlaylistBinding>(
-            inflater, R.layout.fragment_sound_cloud_playlist, container, false
+        inflater, R.layout.fragment_sound_cloud_playlist, container, false
     ).apply {
         view = this@SoundCloudPlaylistFragment.view
         playlist.artworkUrl?.let { url ->
@@ -83,7 +87,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         soundCloudPlaylistRecyclerView.apply {
             setController(epoxyController)
             layoutManager = GridLayoutManager(context,
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
             setItemSpacingDp(5)
             //TODO: animation
         }

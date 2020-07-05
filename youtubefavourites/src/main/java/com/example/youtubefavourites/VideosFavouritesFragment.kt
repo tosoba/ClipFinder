@@ -27,34 +27,40 @@ import com.example.youtubefavourites.databinding.FragmentVideosFavouritesBinding
 import org.koin.android.ext.android.inject
 
 class VideosFavouritesFragment :
-        BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class) {
+    BaseVMFragment<VideosFavouritesViewModel>(VideosFavouritesViewModel::class) {
 
     private val fragmentFactory: IFragmentFactory by inject()
 
     private val playlistsRecyclerViewItemView: RecyclerViewItemView<PlaylistThumbnailView> by lazy {
         RecyclerViewItemView(
-                RecyclerViewItemViewState(
-                        ObservableField(false), viewModel.state.playlists, ObservableField(false)),
-                object : ListItemView<PlaylistThumbnailView>(viewModel.state.playlists) {
-                    override val itemViewBinder: ItemBinder<PlaylistThumbnailView>
-                        get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
-                },
-                ClickHandler {
-                    navHostFragment?.showFragment(fragmentFactory.newVideoPlaylistFragment(it.playlist, it.adapter.thumbnailUrls.toTypedArray()), true)
-                },
-                SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+            RecyclerViewItemViewState(
+                ObservableField(false), viewModel.state.playlists, ObservableField(false)),
+            object : ListItemView<PlaylistThumbnailView>(viewModel.state.playlists) {
+                override val itemViewBinder: ItemBinder<PlaylistThumbnailView>
+                    get() = ItemBinderBase(BR.view, R.layout.video_thumbnails_playlist_item)
+            },
+            ClickHandler {
+                navHostFragment?.showFragment(
+                    fragmentFactory.newVideoPlaylistFragment(
+                        it.playlist,
+                        it.adapter.thumbnailUrls.toTypedArray()
+                    ),
+                    true
+                )
+            },
+            SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
         )
     }
 
     private val view: VideosFavouritesFragmentView by lazy {
         VideosFavouritesFragmentView(
-                state = viewModel.state,
-                playlistsRecyclerViewItemView = playlistsRecyclerViewItemView
+            state = viewModel.state,
+            playlistsRecyclerViewItemView = playlistsRecyclerViewItemView
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentVideosFavouritesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos_favourites, container, false)
         return binding.apply {
@@ -62,10 +68,10 @@ class VideosFavouritesFragment :
             videosFavouritesPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
             val headerBinding = DataBindingUtil.inflate<HeaderItemBinding>(
-                    LayoutInflater.from(context),
-                    R.layout.header_item,
-                    null,
-                    false
+                LayoutInflater.from(context),
+                R.layout.header_item,
+                null,
+                false
             ).apply {
                 text = "Playlists"
                 executePendingBindings()

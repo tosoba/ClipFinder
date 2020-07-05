@@ -8,7 +8,7 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersPlaylists
 
 class AccountPlaylistsViewModel(
-        private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists
+    private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists
 ) : BaseViewModel() {
 
     lateinit var viewState: AccountPlaylistViewState
@@ -17,8 +17,8 @@ class AccountPlaylistsViewModel(
 
     private val canLoadPlaylists
         get() = viewState.playlistsLoadingInProgress.get() == false &&
-                viewState.userLoggedIn.get() == true &&
-                (currentOffset == 0 || (currentOffset < totalItems))
+            viewState.userLoggedIn.get() == true &&
+            (currentOffset == 0 || (currentOffset < totalItems))
 
     private var currentOffset = 0
     private var totalItems = 0
@@ -27,14 +27,14 @@ class AccountPlaylistsViewModel(
         if (canLoadPlaylists) {
             viewState.playlistsLoadingInProgress.set(true)
             getCurrentUsersPlaylists(currentOffset)
-                    .takeSuccessOnly()
-                    .doFinally { viewState.playlistsLoadingInProgress.set(false) }
-                    .subscribeAndDisposeOnCleared({
-                        viewState.playlists.addAll(it.items.map(PlaylistEntity::ui))
-                        currentOffset = it.offset + SpotifyDefaults.LIMIT
-                        totalItems = it.totalItems
-                        loadedFlag.value = Unit
-                    }, ::onError)
+                .takeSuccessOnly()
+                .doFinally { viewState.playlistsLoadingInProgress.set(false) }
+                .subscribeAndDisposeOnCleared({
+                    viewState.playlists.addAll(it.items.map(PlaylistEntity::ui))
+                    currentOffset = it.offset + SpotifyDefaults.LIMIT
+                    totalItems = it.totalItems
+                    loadedFlag.value = Unit
+                }, ::onError)
         }
     }
 }

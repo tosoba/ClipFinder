@@ -40,12 +40,12 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
-                childFragmentManager,
-                arrayOf(
-                        fragmentFactory.newSpotifyDashboardNavHostFragment,
-                        fragmentFactory.newSpotifyAccountNavHostFragment,
-                        fragmentFactory.newSpotifyFavouritesMainNavHostFragment
-                )
+            childFragmentManager,
+            arrayOf(
+                fragmentFactory.newSpotifyDashboardNavHostFragment,
+                fragmentFactory.newSpotifyAccountNavHostFragment,
+                fragmentFactory.newSpotifyFavouritesMainNavHostFragment
+            )
         )
     }
 
@@ -67,17 +67,17 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     private val view: SpotifyMainView by lazy {
         SpotifyMainView(
-                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                offScreenPageLimit = 2
+            onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+            pagerAdapter = pagerAdapter,
+            onPageChangeListener = onPageChangeListener,
+            offScreenPageLimit = 2
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyMainBinding>(
-            inflater, R.layout.fragment_spotify_main, container, false
+        inflater, R.layout.fragment_spotify_main, container, false
     ).apply {
         fragmentView = view
     }.root

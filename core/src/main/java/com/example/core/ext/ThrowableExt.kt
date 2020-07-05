@@ -1,5 +1,3 @@
 package com.example.core.ext
 
-fun Throwable.messageOrDefault(message: String = "Unknown error."): String {
-    return this.message ?: message
-}
+fun Throwable.messageOrDefault(default: String = "Unknown error."): String = this.message ?: default

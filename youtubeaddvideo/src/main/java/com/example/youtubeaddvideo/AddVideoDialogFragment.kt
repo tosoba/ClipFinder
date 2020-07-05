@@ -30,41 +30,57 @@ class AddVideoDialogFragment : androidx.fragment.app.DialogFragment() {
         videoPlaylistController?.showNewPlaylistDialog()
     }
 
-    private val view: AddVideoView by lazy {
+    private val view: AddVideoView by lazy(LazyThreadSafetyMode.NONE) {
         AddVideoView(
-                state = state,
-                playlistsRecyclerViewItemView = RecyclerViewItemView(
-                        RecyclerViewItemViewState(
-                                ObservableField(false),
-                                state.playlists,
-                                ObservableField(false)
-                        ),
-                        object : ListItemView<VideoPlaylist>(state.playlists) {
-                            override val itemViewBinder: ItemBinder<VideoPlaylist>
-                                get() = ItemBinderBase(BR.playlist, R.layout.video_playlist_item)
-                        },
-                        ClickHandler {
-                            videoPlaylistController?.addVideoToPlaylist(playlist = it)
-                            dismiss()
-                        },
-                        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorPrimary, null), 2f),
-                        null
+            state = state,
+            playlistsRecyclerViewItemView = RecyclerViewItemView(
+                RecyclerViewItemViewState(
+                    ObservableField(false),
+                    state.playlists,
+                    ObservableField(false)
                 ),
-                onAddNewPlaylistBtnClickListener = onAddNewPlaylistsBtnClickListener
+                object : ListItemView<VideoPlaylist>(state.playlists) {
+                    override val itemViewBinder: ItemBinder<VideoPlaylist>
+                        get() = ItemBinderBase(BR.playlist, R.layout.video_playlist_item)
+                },
+                ClickHandler {
+                    videoPlaylistController?.addVideoToPlaylist(playlist = it)
+                    dismiss()
+                },
+                SeparatorDecoration(
+                    requireContext(),
+                    ResourcesCompat.getColor(resources, R.color.colorPrimary, null),
+                    2f
+                ),
+                null
+            ),
+            onAddNewPlaylistBtnClickListener = onAddNewPlaylistsBtnClickListener
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val binding: DialogAddVideoBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_video, container, false)
+        val binding: DialogAddVideoBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.dialog_add_video,
+            container,
+            false
+        )
         binding.view = view
-        binding.addVideoPlaylistsRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        binding.addVideoPlaylistsRecyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 }

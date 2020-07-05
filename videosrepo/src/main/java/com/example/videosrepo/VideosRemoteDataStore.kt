@@ -16,51 +16,51 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
 class VideosRemoteDataStore(
-        private val api: YoutubeApi
+    private val api: YoutubeApi
 ) : IVideosRemoteDataStore, BaseRemoteRepo() {
 
     override fun getChannelsThumbnailUrls(
-            videos: List<VideoEntity>
+        videos: List<VideoEntity>
     ): Single<Resource<List<Pair<Int, String>>>> = Observable.fromIterable(videos.chunked(50))
-            .zipWith(
-                    Observable.range(0, Int.MAX_VALUE),
-                    BiFunction<List<VideoEntity>, Int, Pair<Int, List<VideoEntity>>> { vids, chunkIndex ->
-                        Pair(chunkIndex, vids)
-                    }
-            )
-            .flatMap { (chunkIndex, vids) ->
-                api.loadChannelsInfo(ids = vids.joinToString(",") { it.channelId })
-                        .toObservable()
-                        .mapToDataOrThrow { channels.map { it.snippet.thumbnails.urlMedium } }
-                        .concatMapIterable { it }
-                        .zipWith(
-                                Observable.range(0, Int.MAX_VALUE),
-                                BiFunction<String, Int, Pair<Int, String>> { url, urlIndex ->
-                                    Pair(urlIndex + 50 * chunkIndex, url)
-                                }
-                        )
+        .zipWith(
+            Observable.range(0, Int.MAX_VALUE),
+            BiFunction<List<VideoEntity>, Int, Pair<Int, List<VideoEntity>>> { vids, chunkIndex ->
+                Pair(chunkIndex, vids)
             }
-            .toList()
-            .map<Resource<List<Pair<Int, String>>>> { Resource.Success(it) }
+        )
+        .flatMap { (chunkIndex, vids) ->
+            api.loadChannelsInfo(ids = vids.joinToString(",") { it.channelId })
+                .toObservable()
+                .mapToDataOrThrow { channels.map { it.snippet.thumbnails.urlMedium } }
+                .concatMapIterable { it }
+                .zipWith(
+                    Observable.range(0, Int.MAX_VALUE),
+                    BiFunction<String, Int, Pair<Int, String>> { url, urlIndex ->
+                        Pair(urlIndex + 50 * chunkIndex, url)
+                    }
+                )
+        }
+        .toList()
+        .map { Resource.Success(it) }
 
 
     override fun getVideos(
-            query: String,
-            pageToken: String?
+        query: String,
+        pageToken: String?
     ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchVideos(query = query, pageToken = pageToken)
-            .mapToResourceWithPageTokenAndVideos()
+        .mapToResourceWithPageTokenAndVideos()
 
     override fun getRelatedVideos(
-            toVideoId: String,
-            pageToken: String?
+        toVideoId: String,
+        pageToken: String?
     ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchRelatedVideos(toVideoId = toVideoId, pageToken = pageToken)
-            .mapToResourceWithPageTokenAndVideos()
+        .mapToResourceWithPageTokenAndVideos()
 
     private fun Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>.mapToResourceWithPageTokenAndVideos(): Single<Resource<Pair<String?, List<VideoEntity>>>> {
         return flatMap<Resource<Pair<String?, List<VideoEntity>>>> { searchResponse ->
             when (searchResponse) {
                 is NetworkResponse.Success<VideosSearchResponse> -> api.loadVideosInfo(ids = searchResponse.body.videos.joinToString(",") { it.id.id })
-                        .mapToResource { Pair(searchResponse.body.nextPageToken, videos.map(VideoApiModel::domain)) }
+                    .mapToResource { Pair(searchResponse.body.nextPageToken, videos.map(VideoApiModel::domain)) }
                 is NetworkResponse.ServerError -> Single.just(Resource.Error(searchResponse.code))
                 is NetworkResponse.NetworkError -> Single.just(Resource.Error(searchResponse.error))
                 is NetworkResponse.DifferentError -> Single.just(Resource.Error(searchResponse.error))

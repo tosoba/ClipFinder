@@ -9,9 +9,9 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class SearchRelatedVideos(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: IVideosRemoteDataStore,
-        private val local: IVideosDbDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: IVideosRemoteDataStore,
+    private val local: IVideosDbDataStore
 ) : SingleUseCaseWithArgs<SearchRelatedVideos.Args, Resource<List<VideoEntity>>>(schedulersProvider) {
 
     class Args(val videoId: String, val loadMore: Boolean)
@@ -21,40 +21,40 @@ class SearchRelatedVideos(
     else getRelatedVideos(args.videoId)
 
     private fun getRelatedVideos(
-            videoId: String
+        videoId: String
     ): Single<Resource<List<VideoEntity>>> = local.getRelatedVideosForVideoId(videoId)
-            .flatMap { savedVideos ->
-                if (savedVideos.isEmpty()) {
-                    remote.getRelatedVideos(videoId)
-                            .flatMap { resource ->
-                                when (resource) {
-                                    is Resource.Success -> {
-                                        val (nextPageToken, videos) = resource.data
-                                        local.insertRelatedVideosForNewVideoId(videoId, videos, nextPageToken)
-                                                .andThen(Single.just(Resource.Success(videos)))
-                                    }
-                                    is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
-                                        Single.just(resource.map { it.second })
-                                }
+        .flatMap { savedVideos ->
+            if (savedVideos.isEmpty()) {
+                remote.getRelatedVideos(videoId)
+                    .flatMap { resource ->
+                        when (resource) {
+                            is Resource.Success -> {
+                                val (nextPageToken, videos) = resource.data
+                                local.insertRelatedVideosForNewVideoId(videoId, videos, nextPageToken)
+                                    .andThen(Single.just(Resource.Success(videos)))
                             }
-                } else {
-                    Single.just(Resource.Success(savedVideos))
-                }
+                            is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
+                                Single.just(resource.map { it.second })
+                        }
+                    }
+            } else {
+                Single.just(Resource.Success(savedVideos))
             }
+        }
 
     private fun getMoreRelatedVideos(
-            videoId: String
+        videoId: String
     ): Single<Resource<List<VideoEntity>>> = local.getNextPageTokenForVideoId(videoId)
-            .flatMapSingle { remote.getRelatedVideos(videoId, it) }
-            .flatMap { resource: Resource<Pair<String?, List<VideoEntity>>> ->
-                when (resource) {
-                    is Resource.Success -> {
-                        val (nextPageToken, videos) = resource.data
-                        local.insertRelatedVideosForVideoId(videoId, videos, nextPageToken)
-                                .andThen(Single.just(Resource.Success(videos)))
-                    }
-                    is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
-                        Single.just(resource.map { it.second })
+        .flatMapSingle { remote.getRelatedVideos(videoId, it) }
+        .flatMap { resource: Resource<Pair<String?, List<VideoEntity>>> ->
+            when (resource) {
+                is Resource.Success -> {
+                    val (nextPageToken, videos) = resource.data
+                    local.insertRelatedVideosForVideoId(videoId, videos, nextPageToken)
+                        .andThen(Single.just(Resource.Success(videos)))
                 }
+                is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
+                    Single.just(resource.map { it.second })
             }
+        }
 }

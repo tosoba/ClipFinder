@@ -19,9 +19,9 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class SoundCloudPlaylistViewModel(
-        initialState: PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>,
-        private val getTracksFromPlaylist: GetTracksFromPlaylist,
-        private val getTracks: GetTracks
+    initialState: PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>,
+    private val getTracksFromPlaylist: GetTracksFromPlaylist,
+    private val getTracks: GetTracks
 ) : MvRxViewModel<PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>>(initialState) {
 
     init {
@@ -41,21 +41,27 @@ class SoundCloudPlaylistViewModel(
         setState { copy(tracks = state.tracks.copyWithLoadingInProgress) }
         //TODO: SoundCloud api needs to be reworked to return Resource objects
         getTracks(ids, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ setState { copy(tracks = PagedDataList(it.map(SoundCloudTrackEntity::ui))) } }, Timber::e)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { setState { copy(tracks = PagedDataList(it.map(SoundCloudTrackEntity::ui))) } },
+                Timber::e
+            )
     }
 
     private fun loadTracksFromPlaylist(id: String) = withState { state ->
         if (state.tracks.status is Loading) return@withState
 
         getTracksFromPlaylist(id, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ setState { copy(tracks = PagedDataList(it.map(SoundCloudTrackEntity::ui))) } }, Timber::e)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { setState { copy(tracks = PagedDataList(it.map(SoundCloudTrackEntity::ui))) } },
+                Timber::e
+            )
     }
 
     companion object : MvRxViewModelFactory<SoundCloudPlaylistViewModel, PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>> {
         override fun create(
-                viewModelContext: ViewModelContext, state: PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>
+            viewModelContext: ViewModelContext, state: PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>
         ): SoundCloudPlaylistViewModel {
             val getTracksFromPlaylist: GetTracksFromPlaylist by viewModelContext.activity.inject()
             val getTracks: GetTracks by viewModelContext.activity.inject()

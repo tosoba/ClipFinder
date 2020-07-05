@@ -12,10 +12,10 @@ import com.example.there.domain.usecase.spotify.IsTrackSaved
 import org.koin.android.ext.android.inject
 
 class TrackVideosViewModel(
-        initialState: TrackVideosViewState<Track>,
-        insertTrack: InsertTrack,
-        deleteTrack: DeleteTrack,
-        isTrackSaved: IsTrackSaved
+    initialState: TrackVideosViewState<Track>,
+    insertTrack: InsertTrack,
+    deleteTrack: DeleteTrack,
+    isTrackSaved: IsTrackSaved
 ) : BaseTrackVideosViewModel<Track, TrackEntity>(initialState, insertTrack, deleteTrack, isTrackSaved) {
     companion object : MvRxViewModelFactory<TrackVideosViewModel, TrackVideosViewState<Track>> {
         override fun create(viewModelContext: ViewModelContext, state: TrackVideosViewState<Track>): TrackVideosViewModel? {

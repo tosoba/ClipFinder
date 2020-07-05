@@ -45,22 +45,22 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
-                fragmentManager = childFragmentManager,
-                fragments = arrayOf(
-                        VideosSearchFragment.newInstanceWithQuery(argTrack.title),
-                        SoundCloudTrackFragment.newInstance(argTrack)
-                )
+            fragmentManager = childFragmentManager,
+            fragments = arrayOf(
+                VideosSearchFragment.newInstanceWithQuery(argTrack.title),
+                SoundCloudTrackFragment.newInstance(argTrack)
+            )
         )
     }
 
     private val view: TrackVideosViewBinding<SoundCloudTrack> by lazy {
         TrackVideosViewBinding(
-                fragmentTabs = arrayOf("Clips", "Similar"),
-                track = MutableLiveData<SoundCloudTrack>().apply { value = argTrack },
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                onTabSelectedListener = onTabSelectedListener,
-                onFavouriteBtnClickListener = View.OnClickListener { }
+            fragmentTabs = arrayOf("Clips", "Similar"),
+            track = MutableLiveData<SoundCloudTrack>().apply { value = argTrack },
+            pagerAdapter = pagerAdapter,
+            onPageChangeListener = onPageChangeListener,
+            onTabSelectedListener = onTabSelectedListener,
+            onFavouriteBtnClickListener = View.OnClickListener { }
         )
     }
 
@@ -73,11 +73,19 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_sound_cloud_track_videos, container, false)
+            inflater,
+            R.layout.fragment_sound_cloud_track_videos,
+            container,
+            false
+        )
 
         viewModel.selectSubscribe(this, TrackVideosViewState<SoundCloudTrack>::isSavedAsFavourite) {
-            binding.soundCloudTrackFavouriteFab.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+            binding.soundCloudTrackFavouriteFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (it.value) R.drawable.delete else R.drawable.favourite
+                )
+            )
             binding.soundCloudTrackFavouriteFab.hideAndShow()
         }
 

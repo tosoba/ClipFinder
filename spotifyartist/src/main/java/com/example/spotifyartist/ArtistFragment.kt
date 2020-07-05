@@ -22,9 +22,9 @@ import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyartist.databinding.FragmentArtistBinding
 import org.koin.android.ext.android.inject
@@ -50,7 +50,7 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
     }
 
     private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+        typedController(builder, differ, viewModel) { state ->
             headerItem {
                 id("albums-header")
                 text("Albums")
@@ -139,11 +139,11 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
 
     private val view: ArtistViewBinding by lazy {
         ArtistViewBinding(
-                onFavouriteBtnClickListener = View.OnClickListener {
-                    viewModel.toggleArtistFavouriteState()
-                    //TODO: add a callback that will show a toast with a msg saying: added/deleted from favs
-                },
-                artist = MutableLiveData<Artist>().apply { value = argArtist }
+            onFavouriteBtnClickListener = View.OnClickListener {
+                viewModel.toggleArtistFavouriteState()
+                //TODO: add a callback that will show a toast with a msg saying: added/deleted from favs
+            },
+            artist = MutableLiveData<Artist>().apply { value = argArtist }
         )
     }
 
@@ -151,8 +151,8 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         reloadingConnectivityComponent(viewModel::loadMissingData) {
             withState(viewModel) {
                 it.albums.status is LoadingFailed<*> ||
-                        it.relatedArtists.status is LoadingFailed<*> ||
-                        it.topTracks.status is LoadingFailed<*>
+                    it.relatedArtists.status is LoadingFailed<*> ||
+                    it.topTracks.status is LoadingFailed<*>
             }
 
         }
@@ -165,7 +165,7 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
 
         viewModel.selectSubscribe(this, ArtistViewState::isSavedAsFavourite) {
             binding.artistFavouriteFab.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+                if (it.value) R.drawable.delete else R.drawable.favourite))
             binding.artistFavouriteFab.hideAndShow()
         }
 

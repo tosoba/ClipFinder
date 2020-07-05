@@ -7,18 +7,18 @@ import com.example.db.StringListConverter
 
 @Entity(tableName = "artists")
 data class ArtistDbModel(
-        @PrimaryKey
-        val id: String,
+    @PrimaryKey
+    val id: String,
 
-        @TypeConverters(StringListConverter::class)
-        val icons: List<String>,
+    @TypeConverters(StringListConverter::class)
+    val icons: List<String>,
 
-        val name: String,
+    val name: String,
 
-        val popularity: Int
+    val popularity: Int
 )
 
 data class SimplifiedArtistDbModel(
-        val id: String,
-        val name: String
+    val id: String,
+    val name: String
 )

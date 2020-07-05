@@ -7,15 +7,16 @@ import android.graphics.Rect
 import android.view.animation.LinearInterpolator
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import me.bogerchan.niervisualizer.util.NierAnimator
+import kotlin.math.cos
 import kotlin.math.sin
 
 class SpotifyCircularVisualizerRenderer(
-        private val paint: Paint = getDefaultPaint(),
-        private val divisions: Int = 4,
-        private val type: Type = Type.TYPE_A,
-        private val modulationStrength: Float = 0.4f,
-        private val amplification: Float = 1f,
-        private val animator: NierAnimator = getDefaultAnimator()
+    private val paint: Paint = getDefaultPaint(),
+    private val divisions: Int = 4,
+    private val type: Type = Type.TYPE_A,
+    private val modulationStrength: Float = 0.4f,
+    private val amplification: Float = 1f,
+    private val animator: NierAnimator = getDefaultAnimator()
 ) : IRenderer {
 
     enum class Type {
@@ -34,9 +35,11 @@ class SpotifyCircularVisualizerRenderer(
             color = Color.parseColor("#e6ebfe")
         }
 
-        private fun getDefaultAnimator() = NierAnimator(interpolator = LinearInterpolator(),
-                duration = 20000,
-                values = floatArrayOf(0f, 360f))
+        private fun getDefaultAnimator() = NierAnimator(
+            interpolator = LinearInterpolator(),
+            duration = 20000,
+            values = floatArrayOf(0f, 360f)
+        )
     }
 
     override fun onStart(captureSize: Int) {
@@ -60,7 +63,7 @@ class SpotifyCircularVisualizerRenderer(
             val ifk = data[divisions * i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()
             val dbValue = (75 * Math.log10(magnitude.toDouble()).toFloat() * amplification)
-                    .let { if (it < 20f) 20f else it }
+                .let { if (it < 20f) 20f else it }
             val cartPoint = when (type) {
                 Type.TYPE_A -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
                 Type.TYPE_B -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f - dbValue)
@@ -85,9 +88,11 @@ class SpotifyCircularVisualizerRenderer(
 
     override fun render(canvas: Canvas) {
         canvas.save()
-        canvas.rotate(animator.computeCurrentValue(),
-                (mLastDrawArea.left + mLastDrawArea.right) / 2F,
-                (mLastDrawArea.top + mLastDrawArea.bottom) / 2F)
+        canvas.rotate(
+            animator.computeCurrentValue(),
+            (mLastDrawArea.left + mLastDrawArea.right) / 2F,
+            (mLastDrawArea.top + mLastDrawArea.bottom) / 2F
+        )
         canvas.drawLines(mFFTPoints, paint)
         canvas.restore()
     }
@@ -99,6 +104,6 @@ class SpotifyCircularVisualizerRenderer(
         val cY = (rect.height() / 2).toDouble()
         val angle = cartesian[0].toDouble() * 2.0 * Math.PI
         val radius = (rect.width() / 2 * (1 - mAggresive) + mAggresive * cartesian[1] / 2) * (1 - modulationStrength + modulationStrength * (1 + sin(mModulation)) / 2)
-        return floatArrayOf((cX + radius * Math.sin(angle + mAngleModulation)).toFloat(), (cY + radius * Math.cos(angle + mAngleModulation)).toFloat())
+        return floatArrayOf((cX + radius * sin(angle + mAngleModulation)).toFloat(), (cY + radius * cos(angle + mAngleModulation)).toFloat())
     }
 }

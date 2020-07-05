@@ -6,27 +6,26 @@ import com.example.spotifyapi.model.ArtistApiModel
 import com.example.spotifyrepo.util.secondIconUrlOrDefault
 import com.example.there.domain.entity.spotify.ArtistEntity
 
-
 val ArtistDbModel.domain: ArtistEntity
     get() = ArtistEntity(
-            id = id,
-            name = name,
-            iconUrl = icons.map { StringUrlModel(it) }.secondIconUrlOrDefault,
-            popularity = popularity
+        id = id,
+        name = name,
+        iconUrl = icons.map { StringUrlModel(it) }.secondIconUrlOrDefault,
+        popularity = popularity
     )
 
 val ArtistEntity.db: ArtistDbModel
     get() = ArtistDbModel(
-            id = id,
-            name = name,
-            popularity = popularity,
-            icons = listOf(iconUrl)
+        id = id,
+        name = name,
+        popularity = popularity,
+        icons = listOf(iconUrl)
     )
 
 val ArtistApiModel.domain: ArtistEntity
     get() = ArtistEntity(
-            id = id,
-            name = name,
-            iconUrl = icons.secondIconUrlOrDefault,
-            popularity = popularity
+        id = id,
+        name = name,
+        iconUrl = icons.secondIconUrlOrDefault,
+        popularity = popularity
     )

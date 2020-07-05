@@ -12,11 +12,11 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 class SpotifyLocalRepo(
-        private val albumDao: AlbumDao,
-        private val artistDao: ArtistDao,
-        private val categoryDao: CategoryDao,
-        private val spotifyPlaylistDao: SpotifyPlaylistDao,
-        private val trackDao: TrackDao
+    private val albumDao: AlbumDao,
+    private val artistDao: ArtistDao,
+    private val categoryDao: CategoryDao,
+    private val spotifyPlaylistDao: SpotifyPlaylistDao,
+    private val trackDao: TrackDao
 ) : ISpotifyLocalRepo {
 
     override val favouriteAlbums: Flowable<List<AlbumEntity>>
@@ -55,23 +55,23 @@ class SpotifyLocalRepo(
     }
 
     override fun isAlbumSaved(
-            albumId: String
+        albumId: String
     ): Single<Boolean> = albumDao.findById(albumId).isPresent()
 
     override fun isArtistSaved(
-            artistId: String
+        artistId: String
     ): Single<Boolean> = artistDao.findById(artistId).isPresent()
 
     override fun isCategorySaved(
-            categoryId: String
+        categoryId: String
     ): Single<Boolean> = artistDao.findById(categoryId).isPresent()
 
     override fun isPlaylistSaved(
-            playlistId: String
+        playlistId: String
     ): Single<Boolean> = spotifyPlaylistDao.findById(playlistId).isPresent()
 
     override fun isTrackSaved(
-            trackId: String
+        trackId: String
     ): Single<Boolean> = trackDao.findById(trackId).isPresent()
 
     override fun deleteAlbum(album: AlbumEntity): Completable = Completable.fromCallable {

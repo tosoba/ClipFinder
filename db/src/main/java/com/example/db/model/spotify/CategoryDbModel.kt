@@ -7,11 +7,11 @@ import com.example.db.StringListConverter
 
 @Entity(tableName = "categories")
 data class CategoryDbModel(
-        @PrimaryKey
-        val id: String,
+    @PrimaryKey
+    val id: String,
 
-        @TypeConverters(StringListConverter::class)
-        val icons: List<String>,
+    @TypeConverters(StringListConverter::class)
+    val icons: List<String>,
 
-        val name: String
+    val name: String
 )

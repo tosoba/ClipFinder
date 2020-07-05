@@ -19,7 +19,9 @@ class RxSealedCallAdapterFactory private constructor() : CallAdapter.Factory() {
     }
 
     override fun get(
-            returnType: Type, annotations: Array<Annotation>, retrofit: Retrofit
+        returnType: Type,
+        annotations: Array<Annotation>,
+        retrofit: Retrofit
     ): CallAdapter<*, *>? {
         val rawType = getRawType(returnType)
 
@@ -32,8 +34,8 @@ class RxSealedCallAdapterFactory private constructor() : CallAdapter.Factory() {
 
         if (returnType !is ParameterizedType) {
             throw IllegalStateException(
-                    "${rawType.simpleName} return type must be parameterized as " +
-                            "${rawType.simpleName}<Foo> or ${rawType.simpleName}<? extends Foo>"
+                """${rawType.simpleName} return type must be parameterized as 
+                    |${rawType.simpleName}<Foo> or ${rawType.simpleName}<? extends Foo>""".trimMargin()
             )
         }
 
@@ -44,7 +46,7 @@ class RxSealedCallAdapterFactory private constructor() : CallAdapter.Factory() {
 
         if (observableEmissionType !is ParameterizedType) {
             throw IllegalStateException(
-                    "NetworkResponse must be parameterized as NetworkResponse<SuccessBody, ErrorBody>"
+                "NetworkResponse must be parameterized as NetworkResponse<SuccessBody, ErrorBody>"
             )
         }
 
@@ -56,14 +58,14 @@ class RxSealedCallAdapterFactory private constructor() : CallAdapter.Factory() {
         val errorBodyType = getParameterUpperBound(1, observableEmissionType)
         val errorBodyConverter = retrofit.nextResponseBodyConverter<Any>(null, errorBodyType, annotations)
 
-        @Suppress("UNCHECKED_CAST") // Type of delegateAdapter is not known at compile time.
+        @Suppress("UNCHECKED_CAST")
         return RxSealedCallAdapter(
-                successBodyType,
-                delegateAdapter as CallAdapter<Any, Observable<Any>>,
-                errorBodyConverter,
-                isFlowable,
-                isSingle,
-                isMaybe
+            successBodyType,
+            delegateAdapter as CallAdapter<Any, Observable<Any>>,
+            errorBodyConverter,
+            isFlowable,
+            isSingle,
+            isMaybe
         )
     }
 }

@@ -31,9 +31,9 @@ class ConnectivityComponent(private val binder: Binder) : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun observeInternetConnectivity() {
         internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(::handleConnectionStatus, Timber::e)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(::handleConnectionStatus, Timber::e)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -65,22 +65,22 @@ class ConnectivityComponent(private val binder: Binder) : LifecycleObserver {
     private fun showNoConnectionSnackbar() {
         binder.snackbarParentView?.let {
             snackbar = Snackbar
-                    .make(it, "No internet connection.", Snackbar.LENGTH_LONG)
-                    .setAction("SETTINGS") {
-                        binder.openSettings()
+                .make(it, "No internet connection.", Snackbar.LENGTH_LONG)
+                .setAction("SETTINGS") {
+                    binder.openSettings()
+                }
+                .setCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        if (event == DISMISS_EVENT_SWIPE) showNoConnectionSnackbar()
                     }
-                    .setCallback(object : Snackbar.Callback() {
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            if (event == DISMISS_EVENT_SWIPE) showNoConnectionSnackbar()
-                        }
-                    })
-                    .setActionTextColor(ContextCompat.getColor(binder.context, R.color.colorAccent))
-                    .apply {
-                        duration = BaseTransientBottomBar.LENGTH_INDEFINITE
-                        view.findViewById<TextView>(R.id.snackbar_text)
-                                ?.setTextColor(ContextCompat.getColor(binder.context, R.color.colorAccent))
-                        show()
-                    }
+                })
+                .setActionTextColor(ContextCompat.getColor(binder.context, R.color.colorAccent))
+                .apply {
+                    duration = BaseTransientBottomBar.LENGTH_INDEFINITE
+                    view.findViewById<TextView>(R.id.snackbar_text)
+                        ?.setTextColor(ContextCompat.getColor(binder.context, R.color.colorAccent))
+                    show()
+                }
         }
     }
 
@@ -96,4 +96,3 @@ class ConnectivityComponent(private val binder: Binder) : LifecycleObserver {
         fun openSettings()
     }
 }
-

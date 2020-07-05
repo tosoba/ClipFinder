@@ -9,8 +9,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetAudioFeatures(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<TrackEntity, Resource<AudioFeaturesEntity>>(schedulersProvider) {
     override fun run(args: TrackEntity): Single<Resource<AudioFeaturesEntity>> = remote.getAudioFeatures(args)
 }

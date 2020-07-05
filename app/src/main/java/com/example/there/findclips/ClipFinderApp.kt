@@ -17,7 +17,6 @@ import org.koin.core.context.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
-
 class ClipFinderApp : Application() {
 
     override fun onCreate() {
@@ -45,11 +44,15 @@ class ClipFinderApp : Application() {
         startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getSystemService(NotificationManager::class.java).run {
-                createNotificationChannel(NotificationChannel(
+                createNotificationChannel(
+                    NotificationChannel(
                         Constants.NOTIFICATION_CHANNEL_ID,
                         getString(R.string.channel_name),
                         NotificationManager.IMPORTANCE_DEFAULT
-                ).apply { description = getString(R.string.channel_description) })
+                    ).apply {
+                        description = getString(R.string.channel_description)
+                    }
+                )
             }
         }
     }
@@ -59,11 +62,11 @@ class ClipFinderApp : Application() {
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
-                    appModule, databaseModule, apiModule, repoModule,
-                    soundCloudModule, spotifyModule, videosModule,
-                    viewModelsModule,
-                    spotifyApiModule,
-                    spotifyDashboardModule
+                appModule, databaseModule, apiModule, repoModule,
+                soundCloudModule, spotifyModule, videosModule,
+                viewModelsModule,
+                spotifyApiModule,
+                spotifyDashboardModule
             ))
         }
     }

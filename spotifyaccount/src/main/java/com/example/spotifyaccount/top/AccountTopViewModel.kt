@@ -9,16 +9,16 @@ import com.example.there.domain.usecase.spotify.GetCurrentUsersTopArtists
 import com.example.there.domain.usecase.spotify.GetCurrentUsersTopTracks
 
 class AccountTopViewModel(
-        private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
-        private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists
+    private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
+    private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists
 ) : BaseViewModel() {
 
     lateinit var viewState: AccountTopViewState
 
     private val canLoadTracks: Boolean
         get() = viewState.tracksLoadingInProgress.get() == false &&
-                viewState.userLoggedIn.get() == true &&
-                (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
+            viewState.userLoggedIn.get() == true &&
+            (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
 
     private var currentTracksOffset = 0
     private var totalTracks = 0
@@ -27,23 +27,23 @@ class AccountTopViewModel(
         if (canLoadTracks) {
             viewState.tracksLoadingInProgress.set(true)
             getCurrentUsersTopTracks(currentTracksOffset)
-                    .takeSuccessOnly()
-                    .doFinally { viewState.tracksLoadingInProgress.set(false) }
-                    .subscribeAndDisposeOnCleared({
-                        viewState.topTracks.addAll(it.items.map(TrackEntity::ui))
-                        currentTracksOffset = it.offset + SpotifyDefaults.LIMIT
-                        totalTracks = it.totalItems
-                        viewState.tracksLoadingErrorOccurred.set(false)
-                    }, getOnErrorWith {
-                        viewState.tracksLoadingErrorOccurred.set(true)
-                    })
+                .takeSuccessOnly()
+                .doFinally { viewState.tracksLoadingInProgress.set(false) }
+                .subscribeAndDisposeOnCleared({
+                    viewState.topTracks.addAll(it.items.map(TrackEntity::ui))
+                    currentTracksOffset = it.offset + SpotifyDefaults.LIMIT
+                    totalTracks = it.totalItems
+                    viewState.tracksLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.tracksLoadingErrorOccurred.set(true)
+                })
         }
     }
 
     private val canLoadArtists: Boolean
         get() = viewState.artistsLoadingInProgress.get() == false &&
-                viewState.userLoggedIn.get() == true &&
-                (currentArtistsOffset == 0 || (currentArtistsOffset < totalArtists))
+            viewState.userLoggedIn.get() == true &&
+            (currentArtistsOffset == 0 || (currentArtistsOffset < totalArtists))
 
     private var currentArtistsOffset = 0
     private var totalArtists = 0
@@ -52,16 +52,16 @@ class AccountTopViewModel(
         if (canLoadArtists) {
             viewState.artistsLoadingInProgress.set(true)
             getCurrentUsersTopArtists(currentArtistsOffset)
-                    .takeSuccessOnly()
-                    .doFinally { viewState.artistsLoadingInProgress.set(false) }
-                    .subscribeAndDisposeOnCleared({
-                        viewState.artists.addAll(it.items.map(ArtistEntity::ui))
-                        currentArtistsOffset = it.offset + SpotifyDefaults.LIMIT
-                        totalArtists = it.totalItems
-                        viewState.tracksLoadingErrorOccurred.set(false)
-                    }, getOnErrorWith {
-                        viewState.tracksLoadingErrorOccurred.set(true)
-                    })
+                .takeSuccessOnly()
+                .doFinally { viewState.artistsLoadingInProgress.set(false) }
+                .subscribeAndDisposeOnCleared({
+                    viewState.artists.addAll(it.items.map(ArtistEntity::ui))
+                    currentArtistsOffset = it.offset + SpotifyDefaults.LIMIT
+                    totalArtists = it.totalItems
+                    viewState.tracksLoadingErrorOccurred.set(false)
+                }, getOnErrorWith {
+                    viewState.tracksLoadingErrorOccurred.set(true)
+                })
         }
     }
 }

@@ -11,13 +11,12 @@ import com.google.gson.annotations.SerializedName
  * @property type The object type: "artist"
  */
 data class SimpleArtist(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        val name: String,
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val name: String,
+    val type: String
 )
 
 /**
@@ -35,17 +34,16 @@ data class SimpleArtist(
  * @property type The object type: "artist"
  */
 data class Artist(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        val followers: Followers,
-        val genres: List<String>,
-        val images: List<SpotifyImage>,
-        val name: String,
-        val popularity: Int,
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val followers: Followers,
+    val genres: List<String>,
+    val images: List<SpotifyImage>,
+    val name: String,
+    val popularity: Int,
+    val type: String
 )
 
 internal data class ArtistList(val artists: List<Artist>)

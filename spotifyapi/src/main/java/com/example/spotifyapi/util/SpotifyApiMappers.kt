@@ -23,26 +23,26 @@ val List<SpotifyImage>.secondIconUrlOrDefault: String
 
 val SpotifyCategory.domain: CategoryEntity
     get() = CategoryEntity(
-            id = id,
-            name = name,
-            iconUrl = icons.firstIconUrlOrDefault
+        id = id,
+        name = name,
+        iconUrl = icons.firstIconUrlOrDefault
     )
 
 val SimpleAlbum.domain: AlbumEntity
     get() = AlbumEntity(
-            id = id,
-            name = name,
-            albumType = albumType.name,
-            artists = artists.map { SimpleArtistEntity(it.id, it.name) },
-            iconUrl = images.secondIconUrlOrDefault,
-            uri = uri
+        id = id,
+        name = name,
+        albumType = albumType.name,
+        artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+        iconUrl = images.secondIconUrlOrDefault,
+        uri = uri
     )
 
 val SimplePlaylist.domain: PlaylistEntity
     get() = PlaylistEntity(
-            id = id,
-            name = name,
-            iconUrl = images.firstIconUrlOrDefault,
-            userId = owner.id,
-            uri = uri
+        id = id,
+        name = name,
+        iconUrl = images.firstIconUrlOrDefault,
+        userId = owner.id,
+        uri = uri
     )

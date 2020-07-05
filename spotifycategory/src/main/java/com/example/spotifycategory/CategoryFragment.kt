@@ -41,9 +41,9 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
     //TODO: test endless scroll listener
     private val epoxyController by lazy {
         itemListController(builder, differ, viewModel,
-                CategoryViewState::playlists, "Playlists",
-                onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadPlaylists() },
-                reloadClicked = { viewModel.loadPlaylists() }
+            CategoryViewState::playlists, "Playlists",
+            onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadPlaylists() },
+            reloadClicked = { viewModel.loadPlaylists() }
         ) {
             it.clickableGridListItem { show { newSpotifyPlaylistFragment(it) } }
         }
@@ -53,10 +53,10 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val view: CategoryView by lazy {
         CategoryView(
-                category = category,
-                onFavouriteBtnClickListener = View.OnClickListener {
-                    viewModel.toggleCategoryFavouriteState()
-                }
+            category = category,
+            onFavouriteBtnClickListener = View.OnClickListener {
+                viewModel.toggleCategoryFavouriteState()
+            }
         )
     }
 
@@ -90,7 +90,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
             categoryRecyclerView.apply {
                 setController(epoxyController)
                 layoutManager = GridLayoutManager(context,
-                        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
                 setItemSpacingDp(5)
                 //TODO: animation
             }
@@ -102,7 +102,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
         super.onViewCreated(view, savedInstanceState)
         viewModel.selectSubscribe(this, CategoryViewState::isSavedAsFavourite) {
             category_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
-                    if (it.value) R.drawable.delete else R.drawable.favourite))
+                if (it.value) R.drawable.delete else R.drawable.favourite))
             category_favourite_fab?.hideAndShow()
         }
     }
@@ -110,17 +110,17 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         category_recycler_view?.layoutManager = GridLayoutManager(context,
-                if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+            if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     private fun observePreferences() {
         appPreferences.countryObservable
-                .skip(1)
-                .distinctUntilChanged()
-                .subscribe({ viewModel.loadPlaylists(true) }, Timber::e)
-                .disposeWith(disposablesComponent)
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribe({ viewModel.loadPlaylists(true) }, Timber::e)
+            .disposeWith(disposablesComponent)
     }
 
     companion object {

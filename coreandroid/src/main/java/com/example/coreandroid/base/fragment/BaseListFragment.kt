@@ -45,20 +45,20 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     private val view: View<T> by lazy(LazyThreadSafetyMode.NONE) {
         View(
-                state = viewState,
-                recyclerViewItemView = RecyclerViewItemView(
-                        RecyclerViewItemViewState(
-                                ObservableField(false),
-                                viewState.items,
-                                ObservableField(false)
-                        ),
-                        listItemView,
-                        ClickHandler { item ->
-                            onItemClick?.let { it(item) }
-                                    ?: run { navHostFragment?.showFragment(fragmentToShowOnItemClick(item), true) }
-                        },
-                        onScrollListener = onScrollListener
-                )
+            state = viewState,
+            recyclerViewItemView = RecyclerViewItemView(
+                RecyclerViewItemViewState(
+                    ObservableField(false),
+                    viewState.items,
+                    ObservableField(false)
+                ),
+                listItemView,
+                ClickHandler { item ->
+                    onItemClick?.let { it(item) }
+                        ?: run { navHostFragment?.showFragment(fragmentToShowOnItemClick(item), true) }
+                },
+                onScrollListener = onScrollListener
+            )
         )
     }
 
@@ -136,7 +136,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     private fun headerItemDecoration(): RecyclerView.ItemDecoration {
         val binding = DataBindingUtil.inflate<com.example.coreandroid.databinding.HeaderItemBinding>(
-                LayoutInflater.from(context), R.layout.header_item, null, false
+            LayoutInflater.from(context), R.layout.header_item, null, false
         ).apply {
             text = xmlHeaderText ?: defaultHeaderText
             executePendingBindings()
@@ -166,15 +166,15 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     }
 
     class ViewState<T : Parcelable>(
-            val items: ObservableSortedList<T>,
-            val mainHintText: ObservableField<String> = ObservableField(""),
-            val additionalHintText: ObservableField<String> = ObservableField(""),
-            var shouldShowHeader: Boolean = false
+        val items: ObservableSortedList<T>,
+        val mainHintText: ObservableField<String> = ObservableField(""),
+        val additionalHintText: ObservableField<String> = ObservableField(""),
+        var shouldShowHeader: Boolean = false
     )
 
     class View<T : Parcelable>(
-            val state: ViewState<T>,
-            val recyclerViewItemView: RecyclerViewItemView<T>
+        val state: ViewState<T>,
+        val recyclerViewItemView: RecyclerViewItemView<T>
     )
 
     companion object {
@@ -184,10 +184,10 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         const val EXTRA_SHOULD_SHOW_HEADER = "SHOULD_SHOW_HEADER"
 
         inline fun <reified F : BaseListFragment<I>, I : Parcelable> newInstance(
-                mainHintText: String,
-                additionalHintText: String,
-                items: ArrayList<I>?,
-                shouldShowHeader: Boolean = false
+            mainHintText: String,
+            additionalHintText: String,
+            items: ArrayList<I>?,
+            shouldShowHeader: Boolean = false
         ): F = F::class.java.newInstance().apply {
             putArguments(mainHintText, additionalHintText, items, shouldShowHeader)
         }

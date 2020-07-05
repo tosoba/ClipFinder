@@ -41,8 +41,8 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
-                childFragmentManager,
-                arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment, fragmentFactory.newSoundCloudFavouritesNavHostFragment)
+            childFragmentManager,
+            arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment, fragmentFactory.newSoundCloudFavouritesNavHostFragment)
         )
     }
 
@@ -64,16 +64,16 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
     private val view: SoundCloudMainView by lazy {
         SoundCloudMainView(
-                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
-                pagerAdapter = pagerAdapter,
-                onPageChangeListener = onPageChangeListener,
-                offScreenPageLimit = 1
+            onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+            pagerAdapter = pagerAdapter,
+            onPageChangeListener = onPageChangeListener,
+            offScreenPageLimit = 1
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSoundcloudMainBinding>(
-            inflater, R.layout.fragment_soundcloud_main, container, false
+        inflater, R.layout.fragment_soundcloud_main, container, false
     ).apply { fragmentView = view }.root
 }

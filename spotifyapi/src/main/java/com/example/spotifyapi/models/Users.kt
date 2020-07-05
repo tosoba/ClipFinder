@@ -23,19 +23,18 @@ import com.google.gson.annotations.SerializedName
  * @property type The object type: “user”
  */
 data class SpotifyUserInformation(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        val birthdate: String? = null,
-        val country: String? = null,
-        @SerializedName("display_name") val displayName: String? = null,
-        val email: String? = null,
-        val followers: Followers,
-        val images: List<SpotifyImage>,
-        val product: String?,
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val birthdate: String? = null,
+    val country: String? = null,
+    @SerializedName("display_name") val displayName: String? = null,
+    val email: String? = null,
+    val followers: Followers,
+    val images: List<SpotifyImage>,
+    val product: String?,
+    val type: String
 )
 
 /**
@@ -49,15 +48,14 @@ data class SpotifyUserInformation(
  * @property type The object type: “user”
  */
 data class SpotifyPublicUser(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        @SerializedName("display_name") val displayName: String? = null,
-        val followers: Followers = Followers(null, -1),
-        val images: List<SpotifyImage> = listOf(),
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    @SerializedName("display_name") val displayName: String? = null,
+    val followers: Followers = Followers(null, -1),
+    val images: List<SpotifyImage> = listOf(),
+    val type: String
 )
 
 /**
@@ -69,7 +67,7 @@ data class SpotifyPublicUser(
  * @property total -1 if the user object does not contain followers, otherwise the amount of followers the user has
  */
 data class Followers(
-        val href: String?,
-        @SerializedName("total") private val _total: Int,
-        @Transient val total: Int = _total
+    val href: String?,
+    @SerializedName("total") private val _total: Int,
+    @Transient val total: Int = _total
 )

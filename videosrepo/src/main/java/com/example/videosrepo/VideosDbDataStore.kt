@@ -21,34 +21,34 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 
 class VideosDbDataStore(
-        private val videoDao: VideoDao,
-        private val videoPlaylistDao: VideoPlaylistDao,
-        private val videoSearchDao: VideoSearchDao,
-        private val relatedVideoSearchDao: RelatedVideoSearchDao
+    private val videoDao: VideoDao,
+    private val videoPlaylistDao: VideoPlaylistDao,
+    private val videoSearchDao: VideoSearchDao,
+    private val relatedVideoSearchDao: RelatedVideoSearchDao
 ) : IVideosDbDataStore {
 
     override fun getRelatedVideosForVideoId(
-            videoId: String
+        videoId: String
     ): Single<List<VideoEntity>> = videoDao.findAllRelatedToVideo(videoId)
-            .map { it.map(VideoDbModel::domain) }
+        .map { it.map(VideoDbModel::domain) }
 
     override fun getNextPageTokenForVideoId(
-            videoId: String
+        videoId: String
     ): Maybe<String> = relatedVideoSearchDao.getNextPageTokenForVideoId(videoId)
 
     override fun insertRelatedVideosForNewVideoId(
-            videoId: String,
-            videos: List<VideoEntity>,
-            nextPageToken: String?
+        videoId: String,
+        videos: List<VideoEntity>,
+        nextPageToken: String?
     ): Completable = Completable.fromAction {
         relatedVideoSearchDao.insert(RelatedVideoSearchDbModel(videoId, nextPageToken))
         insertRelatedVideos(videoId, videos)
     }
 
     override fun insertRelatedVideosForVideoId(
-            videoId: String,
-            videos: List<VideoEntity>,
-            nextPageToken: String?
+        videoId: String,
+        videos: List<VideoEntity>,
+        nextPageToken: String?
     ): Completable = Completable.fromAction {
         relatedVideoSearchDao.updateNextPageTokenForVideo(videoId, nextPageToken)
         insertRelatedVideos(videoId, videos)
@@ -60,22 +60,22 @@ class VideosDbDataStore(
     }
 
     override fun getNextPageTokenForQuery(
-            query: String
+        query: String
     ): Maybe<String> = videoSearchDao.getNextPageTokenForQuery(query)
 
     override fun insertVideosForNewQuery(
-            query: String,
-            videos: List<VideoEntity>,
-            nextPageToken: String?
+        query: String,
+        videos: List<VideoEntity>,
+        nextPageToken: String?
     ): Completable = Completable.fromAction {
         videoSearchDao.insert(VideoSearchDbModel(query, nextPageToken))
         insertVideosWithQuery(query, videos)
     }
 
     override fun insertVideosForQuery(
-            query: String,
-            videos: List<VideoEntity>,
-            nextPageToken: String?
+        query: String,
+        videos: List<VideoEntity>,
+        nextPageToken: String?
     ): Completable = Completable.fromAction {
         videoSearchDao.updateNextPageTokenForQuery(query, nextPageToken)
         insertVideosWithQuery(query, videos)
@@ -87,24 +87,24 @@ class VideosDbDataStore(
     }
 
     override fun getSavedVideosForQuery(
-            query: String
+        query: String
     ): Single<List<VideoEntity>> = videoDao.findAllWithQuery(query)
-            .map { it.map(VideoDbModel::domain) }
+        .map { it.map(VideoDbModel::domain) }
 
     override val favouritePlaylists: Flowable<List<VideoPlaylistEntity>>
         get() = videoPlaylistDao.findAll().map { it.map(VideoPlaylistDbModel::domain) }
 
     override fun getVideosFromPlaylist(
-            playlistId: Long
+        playlistId: Long
     ): Flowable<List<VideoEntity>> = videoDao.findVideosFromPlaylist(playlistId)
-            .map { it.map(VideoDbModel::domain) }
+        .map { it.map(VideoDbModel::domain) }
 
     override fun insertPlaylist(playlistEntity: VideoPlaylistEntity): Single<Long> = Single.fromCallable {
         videoPlaylistDao.insert(playlistEntity.data)
     }
 
     override fun addVideoToPlaylist(
-            videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity
+        videoEntity: VideoEntity, playlistEntity: VideoPlaylistEntity
     ): Completable = Completable.fromCallable {
         videoEntity.playlistId = playlistEntity.id
         videoDao.insert(videoEntity.db)
@@ -112,32 +112,32 @@ class VideosDbDataStore(
 
     override val videoPlaylistsWithThumbnails: Flowable<VideoPlaylistThumbnailsEntity>
         get() = videoPlaylistDao.findAll()
-                .flatMapIterable { it }
-                .filter { it.id != null }
-                .flatMap { playlist ->
-                    videoDao.find5VideosFromPlaylist(playlist.id!!)
-                            .map { videos ->
-                                VideoPlaylistThumbnailsEntity(
-                                        playlist.domain,
-                                        videos.map { it.thumbnailUrl }
-                                )
-                            }
-                }
-                .filter { it.thumbnailUrls.isNotEmpty() }
+            .flatMapIterable { it }
+            .filter { it.id != null }
+            .flatMap { playlist ->
+                videoDao.find5VideosFromPlaylist(playlist.id!!)
+                    .map { videos ->
+                        VideoPlaylistThumbnailsEntity(
+                            playlist.domain,
+                            videos.map { it.thumbnailUrl }
+                        )
+                    }
+            }
+            .filter { it.thumbnailUrls.isNotEmpty() }
 
     override fun deleteVideo(videoEntity: VideoEntity): Completable = Completable.fromCallable {
         videoDao.delete(videoEntity.db)
     }
 
     override fun deleteVideoPlaylist(
-            videoPlaylistEntity: VideoPlaylistEntity
+        videoPlaylistEntity: VideoPlaylistEntity
     ): Completable = Completable.fromCallable {
         videoPlaylistDao.delete(videoPlaylistEntity.data)
     }
 
     override fun deleteAllVideoSearchData(): Completable = Completable.merge(listOf(
-            Completable.fromAction { videoSearchDao.deleteAll() },
-            Completable.fromAction { relatedVideoSearchDao.deleteAll() }
+        Completable.fromAction { videoSearchDao.deleteAll() },
+        Completable.fromAction { relatedVideoSearchDao.deleteAll() }
     )).andThen {
         Completable.fromAction { videoDao.deleteAllWithNullForeignKeys() }
     }

@@ -1,12 +1,12 @@
 package com.example.coreandroid.base.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.core.ext.messageOrDefault
 import com.example.coreandroid.base.vm.BaseViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 abstract class BaseVMActivity<T : BaseViewModel>(vmClass: KClass<T>) : AppCompatActivity() {
@@ -23,7 +23,7 @@ abstract class BaseVMActivity<T : BaseViewModel>(vmClass: KClass<T>) : AppCompat
 
     protected open fun setupObservers() {
         viewModel.errorState.observe(this, Observer { error ->
-            error?.let { Log.e(javaClass.name ?: "Error", it.messageOrDefault()) }
+            error?.let { Timber.e(javaClass.name ?: "Error", it.messageOrDefault()) }
         })
     }
 }

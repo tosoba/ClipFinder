@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.base.ObservableUseCaseWithArgs
 import io.reactivex.Observable
 
 class GetSimilarTracks(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : ObservableUseCaseWithArgs<String, Resource<List<TrackEntity>>>(schedulersProvider) {
     override fun run(args: String): Observable<Resource<List<TrackEntity>>> = remote.getSimilarTracks(args)
 }

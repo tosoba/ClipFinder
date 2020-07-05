@@ -8,27 +8,27 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 
 val PlaylistDbModel.domain: PlaylistEntity
     get() = PlaylistEntity(
-            id = id,
-            name = name,
-            iconUrl = icons.map { StringUrlModel(it) }.firstIconUrlOrDefault,
-            userId = owner,
-            uri = uri
+        id = id,
+        name = name,
+        iconUrl = icons.map { StringUrlModel(it) }.firstIconUrlOrDefault,
+        userId = owner,
+        uri = uri
     )
 
 val PlaylistEntity.db: PlaylistDbModel
     get() = PlaylistDbModel(
-            id = id,
-            name = name,
-            owner = userId,
-            icons = listOf(iconUrl),
-            uri = uri
+        id = id,
+        name = name,
+        owner = userId,
+        icons = listOf(iconUrl),
+        uri = uri
     )
 
 val PlaylistApiModel.domain: PlaylistEntity
     get() = PlaylistEntity(
-            id = id,
-            name = name,
-            iconUrl = icons.firstIconUrlOrDefault,
-            userId = owner.id,
-            uri = uri
+        id = id,
+        name = name,
+        iconUrl = icons.firstIconUrlOrDefault,
+        userId = owner.id,
+        uri = uri
     )

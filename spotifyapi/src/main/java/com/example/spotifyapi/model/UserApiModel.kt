@@ -4,9 +4,9 @@ import com.example.core.model.StringUrlModel
 import com.google.gson.annotations.SerializedName
 
 data class UserApiModel(
-        @SerializedName("id")
-        val name: String,
+    @SerializedName("id")
+    val name: String,
 
-        @SerializedName("images")
-        val icons: List<StringUrlModel>
+    @SerializedName("images")
+    val icons: List<StringUrlModel>
 )

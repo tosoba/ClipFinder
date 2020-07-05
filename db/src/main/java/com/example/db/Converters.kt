@@ -7,17 +7,16 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*
 
-
 class SimplifiedAlbumConverter {
     @TypeConverter
     fun toString(obj: SimplifiedAlbumDbModel): String = Gson().toJson(obj)
 
     @TypeConverter
     fun toObject(
-            string: String
+        string: String
     ): SimplifiedAlbumDbModel = Gson().fromJson(
-            string,
-            object : TypeToken<SimplifiedAlbumDbModel>() {}.type
+        string,
+        object : TypeToken<SimplifiedAlbumDbModel>() {}.type
     )
 }
 
@@ -27,10 +26,10 @@ class SimplifiedArtistConverter {
 
     @TypeConverter
     fun stringToList(
-            string: String
+        string: String
     ): List<SimplifiedArtistDbModel> = Gson().fromJson<ArrayList<SimplifiedArtistDbModel>>(
-            string,
-            object : TypeToken<ArrayList<SimplifiedArtistDbModel>>() {}.type
+        string,
+        object : TypeToken<ArrayList<SimplifiedArtistDbModel>>() {}.type
     )
 }
 

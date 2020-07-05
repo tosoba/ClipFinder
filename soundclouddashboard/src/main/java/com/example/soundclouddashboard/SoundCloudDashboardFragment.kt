@@ -17,9 +17,9 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.soundcloud.clickableListItem
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
@@ -48,13 +48,11 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         }
     }
 
-    private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        typedController(builder, differ, viewModel) { state ->
             when (state.playlists.status) {
-                is Loading -> {
-                    loadingIndicator {
-                        id("loading-indicator")
-                    }
+                is Loading -> loadingIndicator {
+                    id("loading-indicator")
                 }
 
                 is LoadedSuccessfully -> {
@@ -69,8 +67,8 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                             Column(chunk.map { playlist ->
                                 playlist.clickableListItem {
                                     navHostFragment?.showFragment(
-                                            fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
-                                            true
+                                        fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
+                                        true
                                     )
                                 }
                             })
@@ -88,8 +86,8 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                             Column(chunk.map { playlist ->
                                 playlist.clickableListItem {
                                     navHostFragment?.showFragment(
-                                            fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
-                                            true
+                                        fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
+                                        true
                                     )
                                 }
                             })
@@ -97,12 +95,10 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     }
                 }
 
-                is LoadingFailed<*> -> {
-                    reloadControl {
-                        id("reload-control")
-                        onReloadClicked(View.OnClickListener { viewModel.loadPlaylists() })
-                        message("Error occurred lmao") //TODO: better error msg
-                    }
+                is LoadingFailed<*> -> reloadControl {
+                    id("reload-control")
+                    onReloadClicked(View.OnClickListener { viewModel.loadPlaylists() })
+                    message("Error occurred lmao") //TODO: better error msg
                 }
             }
         }
@@ -118,18 +114,18 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSoundCloudDashboardBinding.inflate(inflater, container, false)
-            .apply {
-                appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
-                appCompatActivity?.showDrawerHamburger()
-                soundCloudDashboardRecyclerView.apply {
-                    setController(epoxyController)
-                    //TODO: animation
-                }
-                mainContentFragment?.disablePlayButton()
-                binding = this
-            }.root
+        .apply {
+            appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
+            appCompatActivity?.showDrawerHamburger()
+            soundCloudDashboardRecyclerView.apply {
+                setController(epoxyController)
+                //TODO: animation
+            }
+            mainContentFragment?.disablePlayButton()
+            binding = this
+        }.root
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -138,9 +134,9 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     override fun onOptionsItemSelected(
-            item: MenuItem?
+        item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home
-            && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+        && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
         navigationDrawerController?.openDrawer()
         true
     } else false

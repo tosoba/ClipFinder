@@ -8,8 +8,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetArtists(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<List<String>, Resource<List<ArtistEntity>>>(schedulersProvider) {
     override fun run(args: List<String>): Single<Resource<List<ArtistEntity>>> = remote.getArtists(artistIds = args)
 }

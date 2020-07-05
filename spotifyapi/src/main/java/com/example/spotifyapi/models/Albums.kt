@@ -28,21 +28,21 @@ import com.neovisionaries.i18n.CountryCode
  * "restrictions" : {"reason" : "market"}
  */
 data class SimpleAlbum(
-        @SerializedName("album_type") private val _albumType: String,
-        @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-        val artists: List<SimpleArtist>,
-        val images: List<SpotifyImage>,
-        val name: String,
-        val type: String,
-        val restrictions: Restrictions? = null,
-        @SerializedName("release_date") val releaseDate: String,
-        @SerializedName("release_date_precision") val releaseDatePrecision: String,
-        @SerializedName("total_tracks") val totalTracks: Int? = null,
-        @SerializedName("album_group") private val albumGroupString: String? = null
+    @SerializedName("album_type") private val _albumType: String,
+    @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val artists: List<SimpleArtist>,
+    val images: List<SpotifyImage>,
+    val name: String,
+    val type: String,
+    val restrictions: Restrictions? = null,
+    @SerializedName("release_date") val releaseDate: String,
+    @SerializedName("release_date_precision") val releaseDatePrecision: String,
+    @SerializedName("total_tracks") val totalTracks: Int? = null,
+    @SerializedName("album_group") private val albumGroupString: String? = null
 ) {
     val availableMarkets get() = _availableMarkets.map { CountryCode.valueOf(it) }
 
@@ -99,27 +99,27 @@ enum class AlbumResultType(internal val id: String) {
  * restrictions object containing the reason why the track is not available: "restrictions" : {"reason" : "market"}
  */
 data class Album(
-        @SerializedName("album_type") private val _albumType: String,
-        @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("external_ids") private val _externalIds: Map<String, String> = hashMapOf(),
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
+    @SerializedName("album_type") private val _albumType: String,
+    @SerializedName("available_markets") private val _availableMarkets: List<String> = listOf(),
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("external_ids") private val _externalIds: Map<String, String> = hashMapOf(),
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
 
-        val artists: List<SimpleArtist>,
-        val copyrights: List<SpotifyCopyright>,
-        val genres: List<String>,
-        val images: List<SpotifyImage>,
-        val label: String,
-        val name: String,
-        val popularity: Int,
-        @SerializedName("release_date") val releaseDate: String,
-        @SerializedName("release_date_precision") val releaseDatePrecision: String,
-        val tracks: PagingObject<SimpleTrack>,
-        val type: String,
-        @SerializedName("total_tracks") val totalTracks: Int,
-        val restrictions: Restrictions? = null
+    val artists: List<SimpleArtist>,
+    val copyrights: List<SpotifyCopyright>,
+    val genres: List<String>,
+    val images: List<SpotifyImage>,
+    val label: String,
+    val name: String,
+    val popularity: Int,
+    @SerializedName("release_date") val releaseDate: String,
+    @SerializedName("release_date_precision") val releaseDatePrecision: String,
+    val tracks: PagingObject<SimpleTrack>,
+    val type: String,
+    @SerializedName("total_tracks") val totalTracks: Int,
+    val restrictions: Restrictions? = null
 ) {
     val availableMarkets get() = _availableMarkets.map { CountryCode.valueOf(it) }
 
@@ -136,14 +136,14 @@ data class Album(
  * P = the sound recording (performance) copyright.
  */
 data class SpotifyCopyright(
-        @SerializedName("text") private val _text: String,
-        @SerializedName("type") private val _type: String
+    @SerializedName("text") private val _text: String,
+    @SerializedName("type") private val _type: String
 ) {
     val text
         get() = _text
-                .removePrefix("(P)")
-                .removePrefix("(C)")
-                .trim()
+            .removePrefix("(P)")
+            .removePrefix("(C)")
+            .trim()
 
     val type get() = CopyrightType.values().match(_type)!!
 }

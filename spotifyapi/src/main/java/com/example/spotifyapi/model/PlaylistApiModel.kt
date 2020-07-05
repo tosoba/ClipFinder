@@ -5,14 +5,14 @@ import com.example.core.model.StringUrlModel
 import com.google.gson.annotations.SerializedName
 
 class PlaylistApiModel(
-        val id: String,
+    val id: String,
 
-        @SerializedName("images")
-        val icons: List<StringUrlModel>,
+    @SerializedName("images")
+    val icons: List<StringUrlModel>,
 
-        val name: String,
+    val name: String,
 
-        val owner: StringIdModel,
+    val owner: StringIdModel,
 
-        val uri: String
+    val uri: String
 )

@@ -8,9 +8,8 @@ import com.example.there.domain.usecase.base.SingleUseCase
 import io.reactivex.Single
 
 class GetCurrentUser(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCase<Resource<UserEntity>>(schedulersProvider) {
-    override val result: Single<Resource<UserEntity>>
-        get() = remote.currentUser
+    override val result: Single<Resource<UserEntity>> get() = remote.currentUser
 }

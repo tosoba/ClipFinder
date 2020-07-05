@@ -12,11 +12,11 @@ import com.google.gson.annotations.SerializedName
  * @property name The name of the category.
  */
 data class SpotifyCategory(
-        @SerializedName("href") val href: String,
-        val id: String,
+    @SerializedName("href") val href: String,
+    val id: String,
 
-        val icons: List<SpotifyImage>,
-        val name: String
+    val icons: List<SpotifyImage>,
+    val name: String
 )
 
 /**
@@ -32,13 +32,12 @@ data class SpotifyCategory(
  * @property type The entity type of this seed. One of artist , track or genre.
  */
 data class RecommendationSeed(
-        @SerializedName("href") val href: String?,
-        val id: String,
-
-        val initialPoolSize: Int,
-        val afterFilteringSize: Int,
-        val afterRelinkingSize: Int?,
-        val type: String
+    @SerializedName("href") val href: String?,
+    val id: String,
+    val initialPoolSize: Int,
+    val afterFilteringSize: Int,
+    val afterRelinkingSize: Int?,
+    val type: String
 )
 
 /**
@@ -54,7 +53,7 @@ data class RecommendationResponse(val seeds: List<RecommendationSeed>, val track
  * @property playlists [PagingObject] of returned items
  */
 data class FeaturedPlaylists(
-        val message: String, val playlists: PagingObject<SimplePlaylist>
+    val message: String, val playlists: PagingObject<SimplePlaylist>
 ) : PagedResponse<SimplePlaylist> {
     override val items: List<SimplePlaylist> get() = playlists.items
     override val offset: Int get() = playlists.offset

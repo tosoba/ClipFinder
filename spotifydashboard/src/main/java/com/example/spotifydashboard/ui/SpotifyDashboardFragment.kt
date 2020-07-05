@@ -19,10 +19,10 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.preferences.SpotifyPreferences
-import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
+import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifydashboard.R
@@ -45,7 +45,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         get() = dashboard_toolbar
 
     private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+        typedController(builder, differ, viewModel) { state ->
             headerItem {
                 id("categories-header")
                 text("Categories")

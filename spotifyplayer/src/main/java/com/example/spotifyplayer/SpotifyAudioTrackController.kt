@@ -115,7 +115,6 @@ class SpotifyAudioTrackController : AudioController {
                 return itemsWritten
             }
         }
-
         return 0
     }
 

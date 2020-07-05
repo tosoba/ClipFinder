@@ -9,8 +9,10 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetNewReleases(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyDashboardRemoteRepo
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyDashboardRemoteRepo
 ) : SingleUseCaseWithArgs<Int, Resource<ListPage<AlbumEntity>>>(schedulersProvider) {
-    override fun run(args: Int): Single<Resource<ListPage<AlbumEntity>>> = remote.getNewReleases(offset = args)
+    override fun run(
+        args: Int
+    ): Single<Resource<ListPage<AlbumEntity>>> = remote.getNewReleases(offset = args)
 }

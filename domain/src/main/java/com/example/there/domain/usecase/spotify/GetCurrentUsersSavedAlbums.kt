@@ -9,8 +9,8 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetCurrentUsersSavedAlbums(
-        schedulersProvider: UseCaseSchedulersProvider,
-        private val remote: ISpotifyRemoteDataStore
+    schedulersProvider: UseCaseSchedulersProvider,
+    private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<Int, Resource<ListPage<AlbumEntity>>>(schedulersProvider) {
     override fun run(args: Int): Single<Resource<ListPage<AlbumEntity>>> = remote.getCurrentUsersSavedAlbums(offset = args)
 }

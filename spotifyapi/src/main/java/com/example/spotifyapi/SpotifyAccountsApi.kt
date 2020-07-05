@@ -10,11 +10,10 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface SpotifyAccountsApi {
-
     @FormUrlEncoded
     @POST("token")
     fun getAccessToken(
-            @Header("Authorization") authorization: String,
-            @Field("grant_type") grantType: String = "client_credentials"
+        @Header("Authorization") authorization: String,
+        @Field("grant_type") grantType: String = "client_credentials"
     ): Single<NetworkResponse<AccessTokenApiModel, SpotifyAuthErrorApiModel>>
 }

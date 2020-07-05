@@ -10,17 +10,17 @@ import com.example.coreandroid.model.DataList
 import com.google.android.material.tabs.TabLayout
 
 class TrackVideosViewBinding<Track>(
-        val fragmentTabs: Array<String>,
-        val track: MutableLiveData<Track>,
-        val pagerAdapter: FragmentStatePagerAdapter,
-        val onTabSelectedListener: TabLayout.OnTabSelectedListener,
-        val onPageChangeListener: ViewPager.OnPageChangeListener,
-        val onFavouriteBtnClickListener: View.OnClickListener
+    val fragmentTabs: Array<String>,
+    val track: MutableLiveData<Track>,
+    val pagerAdapter: FragmentStatePagerAdapter,
+    val onTabSelectedListener: TabLayout.OnTabSelectedListener,
+    val onPageChangeListener: ViewPager.OnPageChangeListener,
+    val onFavouriteBtnClickListener: View.OnClickListener
 )
 
 data class TrackVideosViewState<Track>(
-        val tracks: DataList<Track> = DataList(),
-        val isSavedAsFavourite: Data<Boolean> = Data(false)
+    val tracks: DataList<Track> = DataList(),
+    val isSavedAsFavourite: Data<Boolean> = Data(false)
 ) : MvRxState {
     constructor(argTrack: Track) : this(DataList(listOf(argTrack)))
 }

@@ -7,10 +7,10 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface ISpotifyLocalRepo : IFavouriteTrackRepo<TrackEntity>,
-        IFavouritePlaylistRepository<PlaylistEntity>,
-        IFavouriteAlbumRepository<AlbumEntity>,
-        IFavouriteArtistRepository<ArtistEntity>,
-        IFavouriteCategoryRepository<CategoryEntity> {
+    IFavouritePlaylistRepository<PlaylistEntity>,
+    IFavouriteAlbumRepository<AlbumEntity>,
+    IFavouriteArtistRepository<ArtistEntity>,
+    IFavouriteCategoryRepository<CategoryEntity> {
 
     override val favouriteAlbums: Flowable<List<AlbumEntity>>
     override val favouriteArtists: Flowable<List<ArtistEntity>>

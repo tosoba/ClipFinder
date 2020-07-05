@@ -7,20 +7,20 @@ import com.example.there.domain.entity.spotify.SimpleArtistEntity
 
 val AlbumEntity.ui: Album
     get() = Album(
-            id = id,
-            name = name,
-            artists = artists.map { SimpleArtist(it.id, it.name) },
-            albumType = albumType,
-            iconUrl = iconUrl,
-            uri = uri
+        id = id,
+        name = name,
+        artists = artists.map { SimpleArtist(it.id, it.name) },
+        albumType = albumType,
+        iconUrl = iconUrl,
+        uri = uri
     )
 
 val Album.domain: AlbumEntity
     get() = AlbumEntity(
-            id = id,
-            name = name,
-            artists = artists.map { SimpleArtistEntity(it.id, it.name) },
-            albumType = albumType,
-            iconUrl = iconUrl,
-            uri = uri
+        id = id,
+        name = name,
+        artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+        albumType = albumType,
+        iconUrl = iconUrl,
+        uri = uri
     )

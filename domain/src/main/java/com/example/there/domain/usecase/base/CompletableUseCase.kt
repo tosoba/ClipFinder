@@ -5,25 +5,28 @@ import com.example.there.domain.UseCaseSchedulersProvider
 import io.reactivex.Completable
 
 abstract class CompletableUseCase(
-        schedulersProvider: UseCaseSchedulersProvider
+    schedulersProvider: UseCaseSchedulersProvider
 ) : BaseRxUseCase(schedulersProvider) {
 
     protected abstract val result: Completable
 
     operator fun invoke(
-            applySchedulers: Boolean = true, retry: RetryStrategy? = null
+        applySchedulers: Boolean = true,
+        retry: RetryStrategy? = null
     ): Completable = result.retryIfNeeded(retry)
-            .applySchedulersIfRequested(applySchedulers)
+        .applySchedulersIfRequested(applySchedulers)
 }
 
 abstract class CompletableUseCaseWithArgs<Args>(
-        schedulersProvider: UseCaseSchedulersProvider
+    schedulersProvider: UseCaseSchedulersProvider
 ) : BaseRxUseCase(schedulersProvider) {
 
     protected abstract fun run(args: Args): Completable
 
     operator fun invoke(
-            args: Args, applySchedulers: Boolean = true, retry: RetryStrategy? = null
+        args: Args,
+        applySchedulers: Boolean = true,
+        retry: RetryStrategy? = null
     ): Completable = run(args).retryIfNeeded(retry)
-            .applySchedulersIfRequested(applySchedulers)
+        .applySchedulersIfRequested(applySchedulers)
 }

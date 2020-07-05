@@ -19,12 +19,12 @@ import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.model.spotify.infoItem
 import com.example.coreandroid.radarChart
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.util.asyncController
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
 import com.example.coreandroid.util.ext.parentFragmentViewModel
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.show
+import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.coreandroid.view.radarchart.RadarChartAxisView
@@ -51,7 +51,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
     private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
 
     private val epoxyController by lazy {
-        asyncController(builder, differ, viewModel) { state ->
+        typedController(builder, differ, viewModel) { state ->
             headerItem {
                 id("album-header")
                 text("Album")
@@ -72,7 +72,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
 
                 is LoadedSuccessfully -> state.album.value?.let {
                     it.infoItem { show { newSpotifyAlbumFragment(it) } }
-                            .addTo(this)
+                        .addTo(this)
                 }
             }
 
@@ -154,19 +154,19 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     radarChart {
                         id("audio-features-radar-chart")
                         view(RadarChartView(
-                                state.audioFeaturesChartData.value!!,
-                                xAxisView = RadarChartAxisView(
-                                        typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
-                                        valueFormatter = IAxisValueFormatter { value, _ ->
-                                            audioFeaturesChartLabels[value.toInt() % audioFeaturesChartLabels.size]
-                                        }
-                                ),
-                                yAxisView = RadarChartAxisView(
-                                        typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
-                                        axisMaximum = 1f,
-                                        drawLabels = false
-                                ),
-                                markerView = RadarMarkerView(context, R.layout.radar_marker_view)
+                            state.audioFeaturesChartData.value!!,
+                            xAxisView = RadarChartAxisView(
+                                typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
+                                valueFormatter = IAxisValueFormatter { value, _ ->
+                                    audioFeaturesChartLabels[value.toInt() % audioFeaturesChartLabels.size]
+                                }
+                            ),
+                            yAxisView = RadarChartAxisView(
+                                typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
+                                axisMaximum = 1f,
+                                drawLabels = false
+                            ),
+                            markerView = RadarMarkerView(context, R.layout.radar_marker_view)
                         ))
                     }
                 }
@@ -189,15 +189,15 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
         reloadingConnectivityComponent(::loadData) {
             withState(viewModel) {
                 it.album.status is LoadingFailed<*> ||
-                        it.artists.status is LoadingFailed<*> ||
-                        it.similarTracks.status is LoadingFailed<*> ||
-                        it.audioFeaturesChartData.status is LoadingFailed<*>
+                    it.artists.status is LoadingFailed<*> ||
+                    it.similarTracks.status is LoadingFailed<*> ||
+                    it.audioFeaturesChartData.status is LoadingFailed<*>
             }
         }
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_track, container, false).apply {
         this.track_recycler_view.apply {
             setController(epoxyController)

@@ -24,20 +24,19 @@ import com.google.gson.annotations.SerializedName
  * requests to target a specific playlist version
  */
 data class SimplePlaylist(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        val collaborative: Boolean,
-        val images: List<SpotifyImage>,
-        val name: String,
-        val owner: SpotifyPublicUser,
-        @SerializedName("primary_color") val primaryColor: String? = null,
-        val public: Boolean? = null,
-        @SerializedName("snapshot_id") private val _snapshotId: String,
-        val tracks: PlaylistTrackInfo,
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val collaborative: Boolean,
+    val images: List<SpotifyImage>,
+    val name: String,
+    val owner: SpotifyPublicUser,
+    @SerializedName("primary_color") val primaryColor: String? = null,
+    val public: Boolean? = null,
+    @SerializedName("snapshot_id") private val _snapshotId: String,
+    val tracks: PlaylistTrackInfo,
+    val type: String
 ) {
     val snapshot: Snapshot get() = Snapshot(_snapshotId)
 }
@@ -52,12 +51,12 @@ data class SimplePlaylist(
  * @property track Information about the track.
  */
 data class PlaylistTrack(
-        @SerializedName("primary_color") val primaryColor: String? = null,
-        @SerializedName("added_at") val addedAt: String?,
-        @SerializedName("added_by") val addedBy: SpotifyPublicUser?,
-        @SerializedName("is_local") val isLocal: Boolean?,
-        val track: Track,
-        @SerializedName("video_thumbnail") val videoThumbnail: VideoThumbnail? = null
+    @SerializedName("primary_color") val primaryColor: String? = null,
+    @SerializedName("added_at") val addedAt: String?,
+    @SerializedName("added_by") val addedBy: SpotifyPublicUser?,
+    @SerializedName("is_local") val isLocal: Boolean?,
+    val track: Track,
+    @SerializedName("video_thumbnail") val videoThumbnail: VideoThumbnail? = null
 )
 
 /**
@@ -83,22 +82,21 @@ data class PlaylistTrack(
  * @property type The object type: “playlist”
  */
 data class Playlist(
-        @SerializedName("external_urls") val externalUrls: Map<String, String>,
-        @SerializedName("href") val href: String,
-        val id: String,
-        @SerializedName("uri") val uri: String,
-
-        val collaborative: Boolean,
-        val description: String,
-        val followers: Followers,
-        @SerializedName("primary_color") val primaryColor: String? = null,
-        val images: List<SpotifyImage>,
-        val name: String,
-        val owner: SpotifyPublicUser,
-        val public: Boolean? = null,
-        @SerializedName("snapshot_id") private val _snapshotId: String,
-        val tracks: PagingObject<PlaylistTrack>,
-        val type: String
+    @SerializedName("external_urls") val externalUrls: Map<String, String>,
+    @SerializedName("href") val href: String,
+    val id: String,
+    @SerializedName("uri") val uri: String,
+    val collaborative: Boolean,
+    val description: String,
+    val followers: Followers,
+    @SerializedName("primary_color") val primaryColor: String? = null,
+    val images: List<SpotifyImage>,
+    val name: String,
+    val owner: SpotifyPublicUser,
+    val public: Boolean? = null,
+    @SerializedName("snapshot_id") private val _snapshotId: String,
+    val tracks: PagingObject<PlaylistTrack>,
+    val type: String
 ) {
     val snapshot: Snapshot get() = Snapshot(_snapshotId)
 }
@@ -112,8 +110,8 @@ data class Playlist(
  * @property total the total number of tracks in the playlist.
  */
 data class PlaylistTrackInfo(
-        val href: String,
-        val total: Int
+    val href: String,
+    val total: Int
 )
 
 data class VideoThumbnail(val url: String?)

@@ -9,37 +9,37 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 abstract class BaseRxUseCase(
-        protected val schedulersProvider: UseCaseSchedulersProvider
+    protected val schedulersProvider: UseCaseSchedulersProvider
 ) {
     protected fun <T> Flowable<T>.applySchedulersIfRequested(
-            applySchedulers: Boolean
+        applySchedulers: Boolean
     ): Flowable<T> = run {
         if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                .observeOn(schedulersProvider.observeOnScheduler)
+            .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 
     protected fun <T> Single<T>.applySchedulersIfRequested(
-            applySchedulers: Boolean
+        applySchedulers: Boolean
     ): Single<T> = run {
         if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                .observeOn(schedulersProvider.observeOnScheduler)
+            .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 
     protected fun <T> Observable<T>.applySchedulersIfRequested(
-            applySchedulers: Boolean
+        applySchedulers: Boolean
     ): Observable<T> = run {
         if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                .observeOn(schedulersProvider.observeOnScheduler)
+            .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 
     protected fun Completable.applySchedulersIfRequested(
-            applySchedulers: Boolean
+        applySchedulers: Boolean
     ): Completable = run {
         if (applySchedulers) this.subscribeOn(schedulersProvider.subscribeOnScheduler)
-                .observeOn(schedulersProvider.observeOnScheduler)
+            .observeOn(schedulersProvider.observeOnScheduler)
         else this
     }
 

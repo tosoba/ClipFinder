@@ -10,18 +10,25 @@ import com.example.coreandroid.model.spotify.Track
 
 
 data class SpotifySearchViewState(
-        val query: String,
-        val offset: Int = 0,
-        val totalItems: Int = 0,
-        val status: DataStatus = Initial,
-        val albums: SpotifySearchItemList<Album> = SpotifySearchItemList(status = status),
-        val artists: SpotifySearchItemList<Artist> = SpotifySearchItemList(status = status),
-        val playlists: SpotifySearchItemList<Playlist> = SpotifySearchItemList(status = status),
-        val tracks: SpotifySearchItemList<Track> = SpotifySearchItemList(status = status)
+    val query: String,
+    val offset: Int = 0,
+    val totalItems: Int = 0,
+    val status: DataStatus = Initial,
+    val albums: SpotifySearchItemList<Album> = SpotifySearchItemList(status = status),
+    val artists: SpotifySearchItemList<Artist> = SpotifySearchItemList(status = status),
+    val playlists: SpotifySearchItemList<Playlist> = SpotifySearchItemList(status = status),
+    val tracks: SpotifySearchItemList<Track> = SpotifySearchItemList(status = status)
 ) : MvRxState {
-    constructor(query: String) : this(query, 0, 0, Initial,
-            SpotifySearchItemList(status = Initial), SpotifySearchItemList(status = Initial),
-            SpotifySearchItemList(status = Initial), SpotifySearchItemList(status = Initial))
+    constructor(query: String) : this(
+        query,
+        0,
+        0,
+        Initial,
+        SpotifySearchItemList(status = Initial),
+        SpotifySearchItemList(status = Initial),
+        SpotifySearchItemList(status = Initial),
+        SpotifySearchItemList(status = Initial)
+    )
 
     fun resetWithNewQuery(query: String): SpotifySearchViewState = SpotifySearchViewState(query)
 }

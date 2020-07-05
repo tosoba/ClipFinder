@@ -36,7 +36,7 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
         } else passedArgs.spanCountPortrait
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_item_list, container, false).apply {
         this.item_list_recycler_view.apply {
             setController(epoxyController)
@@ -56,7 +56,7 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
 
     companion object {
         inline fun <reified F : ItemListFragment<S>, S> new(
-                args: Args
+            args: Args
         ): F = F::class.java.newInstance().apply {
             arguments = Bundle().apply {
                 putParcelable(MvRx.KEY_ARG, args)

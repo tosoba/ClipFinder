@@ -13,10 +13,10 @@ import com.example.there.domain.usecase.videos.GetFavouriteVideosFromPlaylist
 import com.example.there.domain.usecase.videos.SearchVideos
 
 class VideosSearchViewModel(
-        private val searchVideos: SearchVideos,
-        getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
-        private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist,
-        private val deleteVideo: DeleteVideo
+    private val searchVideos: SearchVideos,
+    getChannelsThumbnailUrls: GetChannelsThumbnailUrls,
+    private val getFavouriteVideosFromPlaylist: GetFavouriteVideosFromPlaylist,
+    private val deleteVideo: DeleteVideo
 ) : BaseVideosViewModel(getChannelsThumbnailUrls) {
 
     val viewState: VideosSearchViewState = VideosSearchViewState()
@@ -38,19 +38,19 @@ class VideosSearchViewModel(
 
     private fun addSearchVideosDisposable(query: String, loadMore: Boolean) {
         searchVideos(SearchVideos.Args(query, loadMore))
-                .doFinally { viewState.videosLoadingInProgress.set(false) }
-                .takeSuccessOnly()
-                .subscribeAndDisposeOnCleared({ videos ->
-                    updateVideos(videos)
-                    viewState.videosLoadingErrorOccurred.set(false)
-                }, getOnErrorWith { viewState.videosLoadingErrorOccurred.set(true) })
+            .doFinally { viewState.videosLoadingInProgress.set(false) }
+            .takeSuccessOnly()
+            .subscribeAndDisposeOnCleared({ videos ->
+                updateVideos(videos)
+                viewState.videosLoadingErrorOccurred.set(false)
+            }, getOnErrorWith { viewState.videosLoadingErrorOccurred.set(true) })
     }
 
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {
         //TODO: check if it isn't broken after usecase changes
         videoPlaylist.domain.id?.let { id ->
             getFavouriteVideosFromPlaylist(id)
-                    .subscribeAndDisposeOnCleared({ updateVideos(it, true) }, ::onError)
+                .subscribeAndDisposeOnCleared({ updateVideos(it, true) }, ::onError)
         }
     }
 
@@ -58,12 +58,13 @@ class VideosSearchViewModel(
         val mapped = videos.map(VideoEntity::ui)
 
         viewState.videos.addAll(mapped.map { video ->
-            VideoItemView(video = video, onRemoveBtnClickListener = if (withRemoveOption) {
-                View.OnClickListener {
+            VideoItemView(
+                video = video,
+                onRemoveBtnClickListener = if (withRemoveOption) View.OnClickListener {
                     viewState.videos.removeAll { it.video == video }
                     deleteVideo(video.domain)
-                }
-            } else null)
+                } else null
+            )
         })
 
         getChannelThumbnails(videos, onSuccess = {
@@ -72,5 +73,5 @@ class VideosSearchViewModel(
     }
 
     private fun deleteVideo(video: VideoEntity) = deleteVideo.invoke(video)
-            .subscribeAndDisposeOnCleared()
+        .subscribeAndDisposeOnCleared()
 }

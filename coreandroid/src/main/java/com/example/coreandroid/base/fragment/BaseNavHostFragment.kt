@@ -19,7 +19,7 @@ abstract class BaseNavHostFragment : Fragment() {
     protected abstract val mainFragment: Fragment
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(layoutId, container, false).apply {
         showFragment(mainFragment, false)
     }

@@ -14,40 +14,34 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SoundCloudTrack(
-        override val id: String,
-        val title: String,
-        val artworkUrl: String?,
-        val description: String?,
-        val duration: String,
-        val genre: String?,
-        val tags: String?,
-        val streamUrl: String?,
-        val downloadUrl: String?,
-        val waveformUrl: String?
+    override val id: String,
+    val title: String,
+    val artworkUrl: String?,
+    val description: String?,
+    val duration: String,
+    val genre: String?,
+    val tags: String?,
+    val streamUrl: String?,
+    val downloadUrl: String?,
+    val waveformUrl: String?
 ) : Parcelable,
-        NamedImageListItem,
-        IdentifiableNamedObservableListItem<String>,
-        BaseTrackUiModel<SoundCloudTrackEntity> {
-
-    override val name: String
-        get() = title
-
-    override val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc.with(artworkUrl, R.drawable.track_placeholder)
-
-    override val foregroundDrawableId: Int
-        get() = R.drawable.sound_cloud_foreground_ripple
-
-    override val domainEntity: SoundCloudTrackEntity
-        get() = domain
+    NamedImageListItem,
+    IdentifiableNamedObservableListItem<String>,
+    BaseTrackUiModel<SoundCloudTrackEntity> {
+    override val name: String get() = title
+    override val imageViewSrc: ImageViewSrc get() = ImageViewSrc.with(artworkUrl, R.drawable.track_placeholder)
+    override val foregroundDrawableId: Int get() = R.drawable.sound_cloud_foreground_ripple
+    override val domainEntity: SoundCloudTrackEntity get() = domain
 }
 
-fun SoundCloudTrack.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_ = ImageListItemBindingModel_()
-        .id(id)
-        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
-        .imageUrl(artworkUrl)
-        .errorDrawableId(R.drawable.error_placeholder)
-        .fallbackDrawableId(R.drawable.track_placeholder)
-        .loadingDrawableId(R.drawable.track_placeholder)
-        .label(name)
-        .itemClicked(View.OnClickListener { itemClicked() })
+fun SoundCloudTrack.clickableListItem(
+    itemClicked: () -> Unit
+): ImageListItemBindingModel_ = ImageListItemBindingModel_()
+    .id(id)
+    .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+    .imageUrl(artworkUrl)
+    .errorDrawableId(R.drawable.error_placeholder)
+    .fallbackDrawableId(R.drawable.track_placeholder)
+    .loadingDrawableId(R.drawable.track_placeholder)
+    .label(name)
+    .itemClicked(View.OnClickListener { itemClicked() })

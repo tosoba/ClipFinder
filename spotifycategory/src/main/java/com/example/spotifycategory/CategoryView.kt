@@ -8,14 +8,14 @@ import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.Playlist
 
 class CategoryView(
-        val category: Category,
-        val onFavouriteBtnClickListener: View.OnClickListener
+    val category: Category,
+    val onFavouriteBtnClickListener: View.OnClickListener
 )
 
 data class CategoryViewState(
-        val category: Category,
-        val isSavedAsFavourite: Data<Boolean> = Data(false),
-        val playlists: PagedDataList<Playlist> = PagedDataList()
+    val category: Category,
+    val isSavedAsFavourite: Data<Boolean> = Data(false),
+    val playlists: PagedDataList<Playlist> = PagedDataList()
 ) : MvRxState {
     constructor(category: Category) : this(category, Data(false), PagedDataList())
 }

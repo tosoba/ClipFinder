@@ -18,12 +18,12 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class AlbumViewModel(
-        initialState: AlbumViewState,
-        private val getArtists: GetArtists,
-        private val getTracksFromAlbum: GetTracksFromAlbum,
-        private val insertAlbum: InsertAlbum,
-        private val deleteAlbum: DeleteAlbum,
-        private val isAlbumSaved: IsAlbumSaved
+    initialState: AlbumViewState,
+    private val getArtists: GetArtists,
+    private val getTracksFromAlbum: GetTracksFromAlbum,
+    private val insertAlbum: InsertAlbum,
+    private val deleteAlbum: DeleteAlbum,
+    private val isAlbumSaved: IsAlbumSaved
 ) : MvRxViewModel<AlbumViewState>(initialState) {
 
     init {
@@ -40,18 +40,18 @@ class AlbumViewModel(
         if (state.artists.status is Loading) return@withState
 
         getArtists(args = artistIds, applySchedulers = false)
-                .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(AlbumViewState::artists) { copy(artists = it) }
+            .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(AlbumViewState::artists) { copy(artists = it) }
     }
 
     fun loadTracksFromAlbum(albumId: String) = withState { state ->
         if (state.tracks.status is Loading) return@withState
 
         getTracksFromAlbum(args = GetTracksFromAlbum.Args(albumId, current { tracks.offset }), applySchedulers = false)
-                .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(AlbumViewState::tracks) { copy(tracks = it) }
+            .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
+            .subscribeOn(Schedulers.io())
+            .updateWithPagedResource(AlbumViewState::tracks) { copy(tracks = it) }
     }
 
     //TODO: test if this works, maybe also write it in a different way?
@@ -61,32 +61,35 @@ class AlbumViewModel(
     }
 
     private fun addFavouriteAlbum(album: Album) = insertAlbum(album.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
+        .subscribeOn(Schedulers.io())
+        .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+            setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+            Timber.e(it)
+        })
+        .disposeOnClear()
 
     private fun deleteFavouriteAlbum(album: Album) = deleteAlbum(album.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+        .subscribeOn(Schedulers.io())
+        .subscribe(
+            { setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } },
+            {
                 setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
                 Timber.e(it)
-            })
-            .disposeOnClear()
+            }
+        )
+        .disposeOnClear()
 
     private fun loadAlbumFavouriteState(album: Album) = withState { state ->
         if (state.isSavedAsFavourite.status is Loading) return@withState
 
         isAlbumSaved(album.id)
-                .subscribeOn(Schedulers.io())
-                .update(AlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+            .subscribeOn(Schedulers.io())
+            .update(AlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
     companion object : MvRxViewModelFactory<AlbumViewModel, AlbumViewState> {
         override fun create(
-                viewModelContext: ViewModelContext, state: AlbumViewState
+            viewModelContext: ViewModelContext, state: AlbumViewState
         ): AlbumViewModel {
             val getArtists: GetArtists by viewModelContext.activity.inject()
             val getTracksFromAlbum: GetTracksFromAlbum by viewModelContext.activity.inject()

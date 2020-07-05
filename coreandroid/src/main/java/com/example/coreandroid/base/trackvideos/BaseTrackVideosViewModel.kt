@@ -13,10 +13,10 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, TrackEntity>(
-        initialState: TrackVideosViewState<Track>,
-        private val insertTrack: InsertTrackUseCase<TrackEntity>,
-        private val deleteTrack: DeleteTrackUseCase<TrackEntity>,
-        private val isTrackSaved: IsTrackSavedUseCase<TrackEntity>
+    initialState: TrackVideosViewState<Track>,
+    private val insertTrack: InsertTrackUseCase<TrackEntity>,
+    private val deleteTrack: DeleteTrackUseCase<TrackEntity>,
+    private val isTrackSaved: IsTrackSavedUseCase<TrackEntity>
 ) : MvRxViewModel<TrackVideosViewState<Track>>(initialState) {
 
     init {
@@ -45,26 +45,29 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
     }
 
     private fun addFavouriteTrack(track: Track) = insertTrack(track.domainEntity, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } }, {
+        .subscribeOn(Schedulers.io())
+        .subscribe(
+            { setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } },
+            {
                 setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
                 Timber.e(it)
-            })
-            .disposeOnClear()
+            }
+        )
+        .disposeOnClear()
 
     private fun deleteFavouriteTrack(track: Track) = deleteTrack(track.domainEntity, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
+        .subscribeOn(Schedulers.io())
+        .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
+            setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+            Timber.e(it)
+        })
+        .disposeOnClear()
 
     private fun loadTrackFavouriteState(track: Track) = withState { state ->
         if (state.isSavedAsFavourite.status is Loading) return@withState
 
         isTrackSaved(args = track.id, applySchedulers = false)
-                .subscribeOn(Schedulers.io())
-                .update(TrackVideosViewState<Track>::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+            .subscribeOn(Schedulers.io())
+            .update(TrackVideosViewState<Track>::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 }

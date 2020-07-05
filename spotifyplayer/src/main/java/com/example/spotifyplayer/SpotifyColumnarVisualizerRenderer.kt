@@ -13,12 +13,15 @@ class SpotifyColumnarVisualizerRenderer(paint: Paint) : IRenderer {
     private val mPaint: Paint = paint
     private val mLastDrawArea = Rect()
     private lateinit var mRenderColumns: Array<RectF>
+
     // per column' width equals to twice of gap
     private val mGapRatio = 0.7F
     private val mRadius = 10F
 
     override fun onStart(captureSize: Int) {
-        mRenderColumns = Array(min(36, captureSize)) { RectF(0F, 0F, 0F, 0F) }
+        mRenderColumns = Array(min(36, captureSize)) {
+            RectF(0F, 0F, 0F, 0F)
+        }
         mLastDrawArea.set(0, 0, 0, 0)
     }
 

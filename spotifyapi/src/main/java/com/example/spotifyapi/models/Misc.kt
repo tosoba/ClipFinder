@@ -8,9 +8,9 @@ package com.example.spotifyapi.models
  * @property width The image width in pixels. If unknown: null or not returned.
  */
 data class SpotifyImage(
-        val height: Int? = null,
-        val url: String,
-        val width: Int? = null
+    val height: Int? = null,
+    val url: String,
+    val width: Int? = null
 )
 
 /**

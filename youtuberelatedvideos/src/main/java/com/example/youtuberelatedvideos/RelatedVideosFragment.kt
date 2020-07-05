@@ -26,27 +26,37 @@ import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
 
 
 class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class),
-        IRelatedVideosSearchFragment {
+    IRelatedVideosSearchFragment {
 
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {
         RecyclerViewItemView(
-                RecyclerViewItemViewState(viewModel.viewState.initialVideosLoadingInProgress, viewModel.viewState.videos, viewModel.viewState.videosLoadingErrorOccurred),
-                object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
-                    override val itemViewBinder: ItemBinder<VideoItemView>
-                        get() = ItemBinderBase(BR.videoView, R.layout.video_item)
-                },
-                ClickHandler { youtubePlayerController?.loadVideo(it.video) },
-                relatedVideosItemDecoration,
-                onRelatedVideosScrollListener
+            RecyclerViewItemViewState(
+                viewModel.viewState.initialVideosLoadingInProgress,
+                viewModel.viewState.videos,
+                viewModel.viewState.videosLoadingErrorOccurred
+            ),
+            object : ListItemView<VideoItemView>(viewModel.viewState.videos) {
+                override val itemViewBinder: ItemBinder<VideoItemView>
+                    get() = ItemBinderBase(BR.videoView, R.layout.video_item)
+            },
+            ClickHandler { youtubePlayerController?.loadVideo(it.video) },
+            relatedVideosItemDecoration,
+            onRelatedVideosScrollListener
         )
     }
 
     private val onRelatedVideosScrollListener: RecyclerView.OnScrollListener by lazy(LazyThreadSafetyMode.NONE) {
-        EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) { viewModel.searchRelatedVideosWithToLastId() }
+        EndlessRecyclerOnScrollListener(minItemsBeforeLoadingMore = 1) {
+            viewModel.searchRelatedVideosWithToLastId()
+        }
     }
 
     private val relatedVideosItemDecoration: RecyclerView.ItemDecoration by lazy(LazyThreadSafetyMode.NONE) {
-        SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f)
+        SeparatorDecoration(
+            requireContext(),
+            ResourcesCompat.getColor(resources, R.color.colorAccent, null),
+            2f
+        )
     }
 
     private val view: RelatedVideosView by lazy {
@@ -54,9 +64,9 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentRelatedVideosBinding>(
-            inflater, R.layout.fragment_related_videos, container, false
+        inflater, R.layout.fragment_related_videos, container, false
     ).apply {
         fragmentView = this@RelatedVideosFragment.view
         relatedVideosRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)

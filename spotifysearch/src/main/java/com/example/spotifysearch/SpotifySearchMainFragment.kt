@@ -21,8 +21,8 @@ class SpotifySearchMainFragment : Fragment() {
 
     private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-                fragmentFactory.newSpotifySearchFragment(query),
-                fragmentFactory.newVideosSearchFragment(query)
+            fragmentFactory.newSpotifySearchFragment(query),
+            fragmentFactory.newVideosSearchFragment(query)
         ))
     }
 
@@ -52,7 +52,12 @@ class SpotifySearchMainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_spotify_search_main, container, false)
+        val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_spotify_search_main,
+            container,
+            false
+        )
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             searchFragmentView = view

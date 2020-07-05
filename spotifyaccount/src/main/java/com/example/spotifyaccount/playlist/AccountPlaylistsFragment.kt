@@ -16,8 +16,8 @@ import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
 class AccountPlaylistsFragment :
-        BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class),
-        TracksDataLoaded {
+    BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class),
+    TracksDataLoaded {
 
     override val isDataLoaded: Boolean
         get() = viewModel.viewState.playlists.isNotEmpty()
@@ -39,10 +39,11 @@ class AccountPlaylistsFragment :
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val binding: FragmentAccountPlaylistsBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_account_playlists, container, false)
+            inflater, R.layout.fragment_account_playlists, container, false
+        )
         return binding.apply { viewState = viewModel.viewState }.root
     }
 
