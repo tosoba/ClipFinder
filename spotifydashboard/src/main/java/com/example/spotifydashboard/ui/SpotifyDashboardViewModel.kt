@@ -19,11 +19,11 @@ import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
 class SpotifyDashboardViewModel(
-        initialState: SpotifyDashboardState,
-        private val getCategories: GetCategories,
-        private val getFeaturedPlaylists: GetFeaturedPlaylists,
-        private val getNewReleases: GetNewReleases,
-        private val getDailyViralTracks: GetDailyViralTracks
+    initialState: SpotifyDashboardState,
+    private val getCategories: GetCategories,
+    private val getFeaturedPlaylists: GetFeaturedPlaylists,
+    private val getNewReleases: GetNewReleases,
+    private val getDailyViralTracks: GetDailyViralTracks
 ) : MvRxViewModel<SpotifyDashboardState>(initialState) {
 
     init {
@@ -37,13 +37,13 @@ class SpotifyDashboardViewModel(
         if (state.categories.status is Loading) return@withState
 
         getCategories(applySchedulers = false)
-                .mapData { categories ->
-                    categories.map(CategoryEntity::ui).sortedBy { it.name }
-                }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardState::categories) {
-                    copy(categories = it)
-                }
+            .mapData { categories ->
+                categories.map(CategoryEntity::ui).sortedBy { it.name }
+            }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(SpotifyDashboardState::categories) {
+                copy(categories = it)
+            }
     }
 
 
@@ -51,42 +51,42 @@ class SpotifyDashboardViewModel(
         if (state.featuredPlaylists.status is Loading) return@withState
 
         getFeaturedPlaylists(applySchedulers = false)
-                .mapData { playlists ->
-                    playlists.map(PlaylistEntity::ui).sortedBy { it.name }
-                }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardState::featuredPlaylists) {
-                    copy(featuredPlaylists = it)
-                }
+            .mapData { playlists ->
+                playlists.map(PlaylistEntity::ui).sortedBy { it.name }
+            }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(SpotifyDashboardState::featuredPlaylists) {
+                copy(featuredPlaylists = it)
+            }
     }
 
     fun loadDailyViralTracks() = withState { state ->
         if (state.topTracks.status is Loading) return@withState
 
         getDailyViralTracks(applySchedulers = false)
-                .timeout(10, TimeUnit.SECONDS)
-                .mapData { tracks ->
-                    tracks.map { TopTrack(it.position, it.track.ui) }
-                            .sortedBy { it.position }
-                }
-                .subscribeOn(Schedulers.io())
-                .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+            .timeout(10, TimeUnit.SECONDS)
+            .mapData { tracks ->
+                tracks.map { TopTrack(it.position, it.track.ui) }
+                    .sortedBy { it.position }
+            }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
     }
 
     fun loadNewReleases() = withState { state ->
         state.newReleases.ifNotLoadingAndNotAllLoaded {
             getNewReleases(applySchedulers = false, args = current { newReleases.offset })
-                    .mapData { listPage -> listPage.map(AlbumEntity::ui) }
-                    .subscribeOn(Schedulers.io())
-                    .updateWithPagedResource(SpotifyDashboardState::newReleases) {
-                        copy(newReleases = it)
-                    }
+                .mapData { listPage -> listPage.map(AlbumEntity::ui) }
+                .subscribeOn(Schedulers.io())
+                .updateWithPagedResource(SpotifyDashboardState::newReleases) {
+                    copy(newReleases = it)
+                }
         }
     }
 
     companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {
         override fun create(
-                viewModelContext: ViewModelContext, state: SpotifyDashboardState
+            viewModelContext: ViewModelContext, state: SpotifyDashboardState
         ): SpotifyDashboardViewModel {
             val getCategories: GetCategories by viewModelContext.activity.inject()
             val getFeaturedPlaylists: GetFeaturedPlaylists by viewModelContext.activity.inject()

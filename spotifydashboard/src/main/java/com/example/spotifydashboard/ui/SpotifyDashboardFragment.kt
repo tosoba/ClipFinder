@@ -27,6 +27,7 @@ import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifydashboard.R
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -111,13 +112,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             }
 
             fun newReleasesCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
-                    minItemsBeforeLoadingMore = 1,
-                    onLoadMore = viewModel::loadNewReleases
+                minItemsBeforeLoadingMore = 1,
+                onLoadMore = viewModel::loadNewReleases
             ) {
                 id("releases")
                 withModelsFrom(
-                        items = state.newReleases.value.chunked(2),
-                        extraModels = extraModels
+                    items = state.newReleases.value.chunked(2),
+                    extraModels = extraModels
                 ) { chunk ->
                     Column(chunk.map { album ->
                         album.clickableListItem {
@@ -142,10 +143,10 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             } else {
                 newReleasesCarousel(extraModels = when (state.newReleases.status) {
                     is Loading -> listOf(LoadingIndicatorBindingModel_()
-                            .id("loading-more-releases"))
+                        .id("loading-more-releases"))
                     is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
-                            .message("Error occurred")
-                            .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() }))
+                        .message("Error occurred")
+                        .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() }))
                     else -> emptyList()
                 })
             }
@@ -173,11 +174,11 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     id("tracks")
                     withModelsFrom(state.topTracks.value) { topTrack ->
                         TopTrackItemBindingModel_()
-                                .id(topTrack.track.id)
-                                .track(topTrack)
-                                .itemClicked(View.OnClickListener {
-                                    show { newSpotifyTrackVideosFragment(topTrack.track) }
-                                })
+                            .id(topTrack.track.id)
+                            .track(topTrack)
+                            .itemClicked(View.OnClickListener {
+                                show { newSpotifyTrackVideosFragment(topTrack.track) }
+                            })
                     }
                 }
             }
@@ -196,9 +197,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         }) {
             withState(viewModel) {
                 it.categories.loadingFailed
-                        || it.featuredPlaylists.loadingFailed
-                        || it.topTracks.loadingFailed
-                        || (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
+                    || it.featuredPlaylists.loadingFailed
+                    || it.topTracks.loadingFailed
+                    || (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
             }
         }
     }
@@ -215,9 +216,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
-            inflater, R.layout.fragment_spotify_dashboard, container, false
+        inflater, R.layout.fragment_spotify_dashboard, container, false
     ).apply {
         appCompatActivity?.setSupportActionBar(dashboardToolbar)
         appCompatActivity?.showDrawerHamburger()
@@ -234,7 +235,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = if (item?.itemId == android.R.id.home
-            && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+        && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
         navigationDrawerController?.openDrawer()
         true
     } else false
@@ -254,15 +255,16 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             viewModel.loadFeaturedPlaylists()
         }
 
+        //TODO: move this to VM
         disposablesComponent.addAll(
-                appPreferences.countryObservable
-                        .skip(1)
-                        .distinctUntilChanged()
-                        .subscribe { reloadDataOnPreferencesChange() },
-                appPreferences.localeObservable
-                        .skip(1)
-                        .distinctUntilChanged()
-                        .subscribe { reloadDataOnPreferencesChange() }
+            appPreferences.countryObservable
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe { reloadDataOnPreferencesChange() },
+            appPreferences.localeObservable
+                .skip(1)
+                .distinctUntilChanged()
+                .subscribe { reloadDataOnPreferencesChange() }
         )
     }
 }
