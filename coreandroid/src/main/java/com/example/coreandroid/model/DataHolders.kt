@@ -1,5 +1,7 @@
 package com.example.coreandroid.model
 
+import java.io.IOException
+
 
 interface HoldsData<Value> {
     val value: Value
@@ -108,6 +110,11 @@ data class PagedDataList<Value>(
     inline fun ifNotLoadingAndNotAllLoaded(block: (PagedDataList<Value>) -> Unit) {
         if (status !is Loading && offset < totalItems) block(this)
     }
+}
+
+fun <Value> HoldsData<Collection<Value>>.isEmptyDueToNetworkError(): Boolean {
+    val stat = status
+    return value.isEmpty() && stat is LoadingFailed<*> /*&& stat.error is IOException*/
 }
 
 sealed class DataStatus

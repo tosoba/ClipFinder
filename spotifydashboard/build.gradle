@@ -57,6 +57,8 @@ dependencies {
 
     implementation 'com.airbnb.android:mvrx:1.0.2'
 
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:2.1.0'
+
     implementation 'com.airbnb.android:epoxy:3.7.0'
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'
     kapt 'com.airbnb.android:epoxy-processor:3.7.0'
