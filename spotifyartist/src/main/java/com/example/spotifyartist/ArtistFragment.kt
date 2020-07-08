@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.headerItem
@@ -182,7 +184,10 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         return binding.apply {
             lifecycleOwner = this@ArtistFragment
             view = this@ArtistFragment.view
-            artistToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
+            artistToolbar.setupWithBackNavigation(
+                requireActivity() as AppCompatActivity,
+                ::onBackPressed
+            )
             artistRecyclerView.apply {
                 setController(epoxyController)
                 //TODO: animation

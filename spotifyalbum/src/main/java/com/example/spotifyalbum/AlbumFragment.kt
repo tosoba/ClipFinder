@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
@@ -152,7 +154,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 setController(epoxyController)
                 //TODO: animation
             }
-            albumToolbar.setupWithBackNavigation(appCompatActivity)
+            albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
     }
 

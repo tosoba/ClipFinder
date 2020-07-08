@@ -6,8 +6,8 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.coreandroid.R
 
 fun Toolbar.setupWithBackNavigation(
-        activity: AppCompatActivity?,
-        onBackPressed: () -> Unit = { activity?.onBackPressed() }
+    activity: AppCompatActivity?,
+    onBackPressed: () -> Unit = { activity?.onBackPressed() }
 ) {
     activity?.setSupportActionBar(this)
     navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.arrow_back, null)

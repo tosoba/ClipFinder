@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
@@ -108,7 +110,10 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
             lifecycleOwner = this@SoundCloudTrackVideosFragment
             view = this@SoundCloudTrackVideosFragment.view
             soundCloudTrackVideosViewpager.offscreenPageLimit = 1
-            soundCloudTrackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
+            soundCloudTrackVideosToolbar.setupWithBackNavigation(
+                requireActivity() as? AppCompatActivity,
+                ::onBackPressed
+            )
         }.root
     }
 

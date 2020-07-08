@@ -3,10 +3,12 @@ package com.example.soundclouddashboard
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.headerItem
@@ -117,8 +119,10 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSoundCloudDashboardBinding.inflate(inflater, container, false)
         .apply {
-            appCompatActivity?.setSupportActionBar(soundCloudDashboardToolbar)
-            appCompatActivity?.showDrawerHamburger()
+            activity?.castAs<AppCompatActivity>()?.apply {
+                setSupportActionBar(soundCloudDashboardToolbar)
+                showDrawerHamburger()
+            }
             soundCloudDashboardRecyclerView.apply {
                 setController(epoxyController)
                 //TODO: animation
@@ -130,7 +134,9 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) {
+            requireActivity().castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        }
     }
 
     override fun onOptionsItemSelected(

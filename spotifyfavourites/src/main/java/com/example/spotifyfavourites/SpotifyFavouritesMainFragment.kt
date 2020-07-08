@@ -2,9 +2,11 @@ package com.example.spotifyfavourites
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.util.ext.*
@@ -63,9 +65,13 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             favouritesFragmentView = view
-            appCompatActivity?.setSupportActionBar(favouritesToolbar)
-            appCompatActivity?.showDrawerHamburger()
-            favouritesBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
+            requireActivity().let {
+                it.castAs<AppCompatActivity>()?.apply {
+                    setSupportActionBar(favouritesToolbar)
+                    showDrawerHamburger()
+                }
+                favouritesBottomNavigationView.setHeight(it.dpToPx(40f).toInt())
+            }
         }.root
     }
 
@@ -76,7 +82,9 @@ class SpotifyFavouritesMainFragment : Fragment(), HasMainToolbar {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) {
+            activity?.castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        }
     }
 
     override fun onOptionsItemSelected(

@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -94,7 +96,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
                 setItemSpacingDp(5)
                 //TODO: animation
             }
-            categoryToolbar.setupWithBackNavigation(appCompatActivity)
+            categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
     }
 

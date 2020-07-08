@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.base.playlist.PlaylistViewState
@@ -90,7 +92,7 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
                 //TODO: change layout manager onConfigurationChanged (same in SoundCloud) + use grid layout items
             }
-            playlistToolbar.setupWithBackNavigation(appCompatActivity)
+            playlistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
     }
 

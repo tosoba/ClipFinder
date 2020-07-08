@@ -2,11 +2,12 @@ package com.example.spotifyaccount
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.HasMainToolbar
-import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.mainContentFragment
 import com.example.coreandroid.util.ext.navigationDrawerController
 import com.example.coreandroid.util.ext.showDrawerHamburger
@@ -58,8 +59,10 @@ class AccountFragment : Fragment(), HasMainToolbar {
         return binding.apply {
             view = this@AccountFragment.view
             accountTabLayout.setupWithViewPager(accountViewPager)
-            appCompatActivity?.setSupportActionBar(accountToolbar)
-            appCompatActivity?.showDrawerHamburger()
+            requireActivity().castAs<AppCompatActivity>()?.apply {
+                setSupportActionBar(accountToolbar)
+                showDrawerHamburger()
+            }
         }.root
     }
 
@@ -70,7 +73,9 @@ class AccountFragment : Fragment(), HasMainToolbar {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) {
+            activity?.castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        }
     }
 
     override fun onOptionsItemSelected(

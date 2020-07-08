@@ -3,12 +3,14 @@ package com.example.spotifydashboard.ui
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.example.core.ext.castAs
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
@@ -214,8 +216,10 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
         inflater, R.layout.fragment_spotify_dashboard, container, false
     ).apply {
-        appCompatActivity?.setSupportActionBar(dashboardToolbar)
-        appCompatActivity?.showDrawerHamburger()
+        activity?.castAs<AppCompatActivity>()?.apply {
+            setSupportActionBar(dashboardToolbar)
+            showDrawerHamburger()
+        }
         mainContentFragment?.disablePlayButton()
         dashboardRecyclerView.apply {
             setController(epoxyController)
@@ -225,7 +229,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) activity?.castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

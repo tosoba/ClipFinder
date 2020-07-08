@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
 import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.util.ext.appCompatActivity
 import com.example.coreandroid.util.ext.setupWithBackNavigation
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
@@ -48,7 +49,7 @@ class VideoPlaylistFragment : Fragment() {
                 }
             }
         )
-        videoPlaylistToolbar.setupWithBackNavigation(appCompatActivity)
+        videoPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -21,9 +21,6 @@ import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
 import kotlin.reflect.KClass
 
-val Fragment.appCompatActivity: AppCompatActivity?
-    get() = activity as? AppCompatActivity
-
 val Fragment.slidingPanelController: SlidingPanelController?
     get() = activity as? SlidingPanelController
 

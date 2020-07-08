@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
@@ -103,7 +104,10 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
             lifecycleOwner = this@TrackVideosFragment
             view = this@TrackVideosFragment.view
             trackVideosViewpager.offscreenPageLimit = 1
-            trackVideosToolbar.setupWithBackNavigation(appCompatActivity, ::onBackPressed)
+            trackVideosToolbar.setupWithBackNavigation(
+                requireActivity() as? AppCompatActivity,
+                ::onBackPressed
+            )
         }.root
     }
 

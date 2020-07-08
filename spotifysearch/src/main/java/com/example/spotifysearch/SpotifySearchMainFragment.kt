@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.IFragmentFactory
@@ -62,7 +63,7 @@ class SpotifySearchMainFragment : Fragment() {
         return binding.apply {
             searchFragmentView = view
             searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
-            searchToolbar.setupWithBackNavigation(appCompatActivity)
+            searchToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
     }
 
