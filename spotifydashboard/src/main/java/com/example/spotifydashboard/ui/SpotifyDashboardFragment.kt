@@ -14,13 +14,12 @@ import com.example.core.ext.castAs
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.infiniteCarousel
@@ -29,19 +28,16 @@ import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotifydashboard.R
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationCapable {
 
     override val factory: IFragmentFactory by inject()
 
-    //TODO: move builder/differ names to constants holder
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
+    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
+    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
@@ -212,11 +208,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
         inflater, R.layout.fragment_spotify_dashboard, container, false
     ).apply {
-        activity?.castAs<AppCompatActivity>()?.apply {
+        requireActivity().castAs<AppCompatActivity>()?.apply {
             setSupportActionBar(dashboardToolbar)
             showDrawerHamburger()
         }
@@ -229,7 +227,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        if (toolbar.menu?.size() == 0) activity?.castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        if (toolbar.menu?.size() == 0) {
+            requireActivity().castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

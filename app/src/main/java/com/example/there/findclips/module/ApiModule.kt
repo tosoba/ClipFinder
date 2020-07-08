@@ -18,40 +18,46 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 val apiModule = module {
     single {
         retrofitWith(
-                url = spotifyApiBaseUrl,
-                client = get {
-                    parametersOf(listOf(interceptorWithHeaders(
+            url = spotifyApiBaseUrl,
+            client = get {
+                parametersOf(
+                    listOf(
+                        interceptorWithHeaders(
                             "Accept" to "application/json",
-                            "Content-Type" to "application/json")))
-                }
+                            "Content-Type" to "application/json"
+                        )
+                    )
+                )
+            }
         ).create(SpotifyApi::class.java)
     }
     single {
         retrofitWith(
-                url = accessTokenBaseUrl,
-                client = clientWithInterceptors(interceptorWithHeaders(
-                        "Content-Type" to "application/x-www-form-urlencoded"))
+            url = accessTokenBaseUrl,
+            client = clientWithInterceptors(
+                interceptorWithHeaders("Content-Type" to "application/x-www-form-urlencoded")
+            )
         ).create(SpotifyAccountsApi::class.java)
     }
 
     single {
         retrofitWith(
-                url = youtubeBaseUrl,
-                client = get { parametersOf(emptyList<Interceptor>()) }
+            url = youtubeBaseUrl,
+            client = get { parametersOf(emptyList<Interceptor>()) }
         ).create(YoutubeApi::class.java)
     }
     single {
         retrofitWith(
-                url = soundCloudBaseUrl,
-                client = get { parametersOf(emptyList<Interceptor>()) },
-                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+            url = soundCloudBaseUrl,
+            client = get { parametersOf(emptyList<Interceptor>()) },
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(SoundCloudApi::class.java)
     }
     single {
         retrofitWith(
-                url = soundCloudBaseUrlV2,
-                client = get { parametersOf(emptyList<Interceptor>()) },
-                callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
+            url = soundCloudBaseUrlV2,
+            client = get { parametersOf(emptyList<Interceptor>()) },
+            callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(SoundCloudApiV2::class.java)
     }
     single { SoundCloud.create(SoundCloudAuth.key).createService(get()) }

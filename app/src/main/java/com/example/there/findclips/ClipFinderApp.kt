@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
+import com.example.coreandroid.di.epoxyModule
 import com.example.coreandroid.util.Constants
 import com.example.spotifyapi.spotifyApiModule
 import com.example.spotifydashboard.di.spotifyDashboardModule
@@ -62,7 +63,7 @@ class ClipFinderApp : Application() {
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
-                appModule, databaseModule, apiModule, repoModule,
+                appModule, epoxyModule, databaseModule, apiModule, repoModule,
                 soundCloudModule, spotifyModule, videosModule,
                 viewModelsModule,
                 spotifyApiModule,

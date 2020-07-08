@@ -1,7 +1,5 @@
 package com.example.there.findclips.module
 
-import android.os.Handler
-import android.os.HandlerThread
 import com.example.core.retrofit.offlineCacheInterceptor
 import com.example.core.retrofit.onlineCacheInterceptor
 import com.example.coreandroid.base.IFragmentFactory
@@ -32,23 +30,13 @@ val appModule = module {
         }
     }
 
-    single(named("diffing-thread")) {
-        HandlerThread("epoxy-diffing-thread").apply { start() }
-    }
-    single(named("building-thread")) {
-        HandlerThread("epoxy-model-building-thread").apply { start() }
-    }
-    single(named("differ")) { Handler(get<HandlerThread>(named("diffing-thread")).looper) }
-    single(named("builder")) { Handler(get<HandlerThread>(named("building-thread")).looper) }
-
-    single {
-        Cache(androidContext().cacheDir, 10 * 1000 * 1000)
-    }
+    single { Cache(androidContext().cacheDir, 10 * 1000 * 1000) }
 
     single(named("onlineCacheInterceptor")) { onlineCacheInterceptor() }
-    single(named("offlineCacheInterceptor")) { offlineCacheInterceptor { androidContext().isConnected } }
+    single(named("offlineCacheInterceptor")) {
+        offlineCacheInterceptor { androidContext().isConnected }
+    }
 
-    //TODO: factory or single (because of different sets of interceptors between apis)? - more likely factory
     factory<OkHttpClient> { (extraInterceptors: Collection<Interceptor>?) ->
         OkHttpClient.Builder()
             .addNetworkInterceptor(get<Interceptor>(named("onlineCacheInterceptor")))
