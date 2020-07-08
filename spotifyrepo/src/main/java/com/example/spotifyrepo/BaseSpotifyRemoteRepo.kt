@@ -3,8 +3,8 @@ package com.example.spotifyrepo
 import android.util.Base64
 import com.example.core.SpotifyDefaults
 import com.example.core.retrofit.NetworkResponse
+import com.example.core.retrofit.mapToDataOrThrow
 import com.example.coreandroid.preferences.SpotifyPreferences
-import com.example.coreandroid.repo.BaseRemoteRepo
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
@@ -20,7 +20,7 @@ import io.reactivex.subjects.BehaviorSubject
 abstract class BaseSpotifyRemoteRepo(
     private val accountsApi: SpotifyAccountsApi,
     protected val preferences: SpotifyPreferences
-) : BaseRemoteRepo() {
+) {
 
     private val clientDataHeader: String
         get() {

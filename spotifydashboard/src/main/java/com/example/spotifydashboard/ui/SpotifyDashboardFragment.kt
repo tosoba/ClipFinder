@@ -228,11 +228,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         if (toolbar.menu?.size() == 0) appCompatActivity?.setSupportActionBar(toolbar)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = if (item?.itemId == android.R.id.home
-        && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        navigationDrawerController?.openDrawer()
-        true
-    } else false
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == android.R.id.home
+            && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+            navigationDrawerController?.openDrawer()
+            true
+        } else false
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -2,7 +2,8 @@ package com.example.videosrepo
 
 import com.example.core.model.Resource
 import com.example.core.retrofit.NetworkResponse
-import com.example.coreandroid.repo.BaseRemoteRepo
+import com.example.core.retrofit.mapToDataOrThrow
+import com.example.core.retrofit.mapToResource
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
 import com.example.videosrepo.mapper.domain
@@ -15,9 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
-class VideosRemoteDataStore(
-    private val api: YoutubeApi
-) : IVideosRemoteDataStore, BaseRemoteRepo() {
+class VideosRemoteDataStore(private val api: YoutubeApi) : IVideosRemoteDataStore {
 
     override fun getChannelsThumbnailUrls(
         videos: List<VideoEntity>
@@ -43,24 +42,30 @@ class VideosRemoteDataStore(
         .toList()
         .map { Resource.Success(it) }
 
-
     override fun getVideos(
         query: String,
         pageToken: String?
-    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchVideos(query = query, pageToken = pageToken)
-        .mapToResourceWithPageTokenAndVideos()
+    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchVideos(
+        query = query,
+        pageToken = pageToken
+    ).mapToResourceWithPageTokenAndVideos()
 
     override fun getRelatedVideos(
         toVideoId: String,
         pageToken: String?
-    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchRelatedVideos(toVideoId = toVideoId, pageToken = pageToken)
-        .mapToResourceWithPageTokenAndVideos()
+    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchRelatedVideos(
+        toVideoId = toVideoId,
+        pageToken = pageToken
+    ).mapToResourceWithPageTokenAndVideos()
 
     private fun Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>.mapToResourceWithPageTokenAndVideos(): Single<Resource<Pair<String?, List<VideoEntity>>>> {
         return flatMap<Resource<Pair<String?, List<VideoEntity>>>> { searchResponse ->
             when (searchResponse) {
-                is NetworkResponse.Success<VideosSearchResponse> -> api.loadVideosInfo(ids = searchResponse.body.videos.joinToString(",") { it.id.id })
-                    .mapToResource { Pair(searchResponse.body.nextPageToken, videos.map(VideoApiModel::domain)) }
+                is NetworkResponse.Success<VideosSearchResponse> -> api.loadVideosInfo(
+                    ids = searchResponse.body.videos.joinToString(",") { it.id.id }
+                ).mapToResource {
+                    Pair(searchResponse.body.nextPageToken, videos.map(VideoApiModel::domain))
+                }
                 is NetworkResponse.ServerError -> Single.just(Resource.Error(searchResponse.code))
                 is NetworkResponse.NetworkError -> Single.just(Resource.Error(searchResponse.error))
                 is NetworkResponse.DifferentError -> Single.just(Resource.Error(searchResponse.error))

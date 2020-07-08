@@ -3,6 +3,8 @@ package com.example.spotifyrepo
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Resource
 import com.example.core.retrofit.ThrowableServerError
+import com.example.core.retrofit.mapToDataOrThrow
+import com.example.core.retrofit.mapToResource
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
