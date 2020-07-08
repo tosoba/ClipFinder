@@ -7,6 +7,7 @@ import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.spotify.TopTrack
+import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifydashboard.domain.usecase.GetCategories
 import com.example.spotifydashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotifydashboard.domain.usecase.GetFeaturedPlaylists
@@ -14,6 +15,7 @@ import com.example.spotifydashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
@@ -23,7 +25,8 @@ class SpotifyDashboardViewModel(
     private val getCategories: GetCategories,
     private val getFeaturedPlaylists: GetFeaturedPlaylists,
     private val getNewReleases: GetNewReleases,
-    private val getDailyViralTracks: GetDailyViralTracks
+    private val getDailyViralTracks: GetDailyViralTracks,
+    private val preferences: SpotifyPreferences
 ) : MvRxViewModel<SpotifyDashboardState>(initialState) {
 
     init {
@@ -31,6 +34,7 @@ class SpotifyDashboardViewModel(
         loadFeaturedPlaylists()
         loadDailyViralTracks()
         loadNewReleases()
+        handlePreferencesChanges()
     }
 
     fun loadCategories() = withState { state ->
@@ -84,15 +88,34 @@ class SpotifyDashboardViewModel(
         }
     }
 
+    private fun handlePreferencesChanges() {
+        Observable.merge(
+            preferences.countryObservable.skip(1).distinctUntilChanged(),
+            preferences.localeObservable.skip(1).distinctUntilChanged()
+        ).doOnNext {
+            loadCategories()
+            loadFeaturedPlaylists()
+        }.subscribe().disposeOnClear()
+    }
+
     companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifyDashboardState
+            viewModelContext: ViewModelContext,
+            state: SpotifyDashboardState
         ): SpotifyDashboardViewModel {
             val getCategories: GetCategories by viewModelContext.activity.inject()
             val getFeaturedPlaylists: GetFeaturedPlaylists by viewModelContext.activity.inject()
             val getNewReleases: GetNewReleases by viewModelContext.activity.inject()
             val getDailyViralTracks: GetDailyViralTracks by viewModelContext.activity.inject()
-            return SpotifyDashboardViewModel(state, getCategories, getFeaturedPlaylists, getNewReleases, getDailyViralTracks)
+            val preferences: SpotifyPreferences by viewModelContext.activity.inject()
+            return SpotifyDashboardViewModel(
+                state,
+                getCategories,
+                getFeaturedPlaylists,
+                getNewReleases,
+                getDailyViralTracks,
+                preferences
+            )
         }
     }
 }

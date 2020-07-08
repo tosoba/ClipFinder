@@ -37,13 +37,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override val factory: IFragmentFactory by inject()
 
+    //TODO: move builder/differ names to constants holder
     private val builder by inject<Handler>(named("builder"))
     private val differ by inject<Handler>(named("differ"))
 
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
-    override val toolbar: Toolbar
-        get() = dashboard_toolbar
+    override val toolbar: Toolbar get() = dashboard_toolbar
 
     private val epoxyController by lazy {
         typedController(builder, differ, viewModel) { state ->
@@ -204,15 +204,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         }
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
-    private val appPreferences: SpotifyPreferences by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
-        observePreferences()
     }
 
     override fun onCreateView(
@@ -247,24 +241,5 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override fun invalidate() {
         withState(viewModel) { state -> epoxyController.setData(state) }
-    }
-
-    private fun observePreferences() {
-        fun reloadDataOnPreferencesChange() {
-            viewModel.loadCategories()
-            viewModel.loadFeaturedPlaylists()
-        }
-
-        //TODO: move this to VM
-        disposablesComponent.addAll(
-            appPreferences.countryObservable
-                .skip(1)
-                .distinctUntilChanged()
-                .subscribe { reloadDataOnPreferencesChange() },
-            appPreferences.localeObservable
-                .skip(1)
-                .distinctUntilChanged()
-                .subscribe { reloadDataOnPreferencesChange() }
-        )
     }
 }

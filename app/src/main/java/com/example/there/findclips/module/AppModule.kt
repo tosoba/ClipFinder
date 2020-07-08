@@ -51,12 +51,12 @@ val appModule = module {
     //TODO: factory or single (because of different sets of interceptors between apis)? - more likely factory
     factory<OkHttpClient> { (extraInterceptors: Collection<Interceptor>?) ->
         OkHttpClient.Builder()
-                .addNetworkInterceptor(get<Interceptor>(named("onlineCacheInterceptor")))
-                .addInterceptor(get<Interceptor>(named("offlineCacheInterceptor")))
-                .apply {
-                    extraInterceptors?.forEach { addInterceptor(it) }
-                }
-                .cache(get<Cache>())
-                .build()
+            .addNetworkInterceptor(get<Interceptor>(named("onlineCacheInterceptor")))
+            .addInterceptor(get<Interceptor>(named("offlineCacheInterceptor")))
+            .apply {
+                extraInterceptors?.forEach { addInterceptor(it) }
+            }
+            .cache(get<Cache>())
+            .build()
     }
 }
