@@ -8,9 +8,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.ext.castAs
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
+import com.example.coreandroid.base.handler.YoutubePlayerController
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
@@ -39,7 +41,7 @@ class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVide
                 override val itemViewBinder: ItemBinder<VideoItemView>
                     get() = ItemBinderBase(BR.videoView, R.layout.video_item)
             },
-            ClickHandler { youtubePlayerController?.loadVideo(it.video) },
+            ClickHandler { activity?.castAs<YoutubePlayerController>()?.loadVideo(it.video) },
             relatedVideosItemDecoration,
             onRelatedVideosScrollListener
         )

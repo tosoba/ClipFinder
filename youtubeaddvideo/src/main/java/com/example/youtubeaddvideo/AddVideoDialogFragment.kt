@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.ext.castAs
 import com.example.coreandroid.BR
+import com.example.coreandroid.base.handler.VideoPlaylistController
 import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.util.ext.videoPlaylistController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
@@ -22,12 +24,12 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.youtubeaddvideo.databinding.DialogAddVideoBinding
 
 
-class AddVideoDialogFragment : androidx.fragment.app.DialogFragment() {
+class AddVideoDialogFragment : DialogFragment() {
 
     lateinit var state: AddVideoViewState
 
     private val onAddNewPlaylistsBtnClickListener = View.OnClickListener {
-        videoPlaylistController?.showNewPlaylistDialog()
+        activity?.castAs<VideoPlaylistController>()?.showNewPlaylistDialog()
     }
 
     private val view: AddVideoView by lazy(LazyThreadSafetyMode.NONE) {
@@ -44,7 +46,7 @@ class AddVideoDialogFragment : androidx.fragment.app.DialogFragment() {
                         get() = ItemBinderBase(BR.playlist, R.layout.video_playlist_item)
                 },
                 ClickHandler {
-                    videoPlaylistController?.addVideoToPlaylist(playlist = it)
+                    activity?.castAs<VideoPlaylistController>()?.addVideoToPlaylist(playlist = it)
                     dismiss()
                 },
                 SeparatorDecoration(

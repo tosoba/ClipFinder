@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
+import com.example.coreandroid.base.handler.ToolbarController
 import com.example.coreandroid.util.ext.checkItem
 import com.example.coreandroid.util.ext.toolbarController
 import com.example.coreandroid.view.OnPageChangeListener
@@ -34,7 +36,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
         }
 
         sound_cloud_view_pager.currentItem = itemIds.indexOf(item.itemId)
-        toolbarController?.toggleToolbar()
+        activity?.castAs<ToolbarController>()?.toggleToolbar()
 
         return@OnNavigationItemSelectedListener true
     }
@@ -49,7 +51,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             sound_cloud_bottom_navigation_view?.checkItem(itemIds[position])
-            toolbarController?.toggleToolbar()
+            activity?.castAs<ToolbarController>()?.toggleToolbar()
         }
     }
 

@@ -14,6 +14,7 @@ import com.example.core.ext.castAs
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.base.handler.NavigationDrawerController
 import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.LoadedSuccessfully
@@ -235,7 +236,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home
             && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-            navigationDrawerController?.openDrawer()
+            activity?.castAs<NavigationDrawerController>()?.openDrawer()
             true
         } else false
     }

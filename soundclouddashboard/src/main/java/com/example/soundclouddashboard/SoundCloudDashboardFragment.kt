@@ -11,6 +11,7 @@ import com.airbnb.mvrx.withState
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.base.handler.NavigationDrawerController
 import com.example.coreandroid.headerItem
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.loadingIndicator
@@ -20,7 +21,10 @@ import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.soundcloud.clickableListItem
 import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.carousel
-import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.util.ext.mainContentFragment
+import com.example.coreandroid.util.ext.navHostFragment
+import com.example.coreandroid.util.ext.reloadingConnectivityComponent
+import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
@@ -143,7 +147,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home
         && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        navigationDrawerController?.openDrawer()
+        activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
     } else false
 

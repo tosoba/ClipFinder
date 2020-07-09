@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.coreandroid.base.handler.SoundCloudPlayerController
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
 import com.example.coreandroid.lifecycle.DisposablesComponent
@@ -103,7 +104,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
         }
 
         mainContentFragment?.enablePlayButton {
-            withCurrentTrack { soundCloudPlayerController?.loadTrack(it) }
+            withCurrentTrack { activity?.castAs<SoundCloudPlayerController>()?.loadTrack(it) }
         }
 
         return binding.apply {

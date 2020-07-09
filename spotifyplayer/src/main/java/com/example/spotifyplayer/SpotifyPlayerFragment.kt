@@ -18,8 +18,12 @@ import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
+import com.example.core.ext.castAs
+import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.ISpotifyPlayerFragment
+import com.example.coreandroid.base.handler.SlidingPanelController
+import com.example.coreandroid.base.handler.SpotifyTrackChangeHandler
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
@@ -91,7 +95,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     }
 
     private val onCloseSpotifyPlayerBtnClickListener = View.OnClickListener {
-        slidingPanelController?.hideIfVisible()
+        activity?.castAs<SlidingPanelController>()?.hideIfVisible()
         stopPlayback()
     }
 
@@ -219,7 +223,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
 
         spotifyPlayer?.removeNotificationCallback(this)
-        spotifyPlayer?.removeConnectionStateCallback(connectionStateCallback)
+        spotifyPlayer?.removeConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
         Spotify.destroyPlayer(this)
 
         visualizerManager?.release()
@@ -293,7 +297,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 val artistName = it.artistName
                 val currentTrackLabelText = if (trackName != null && artistName != null) "$artistName - $trackName" else ""
                 viewModel.viewState.currentTrackTitle.set(currentTrackLabelText)
-                it.id?.let { id -> spotifyTrackChangeHandler?.onTrackChanged(id) }
+                it.id?.let { id -> activity?.castAs<SpotifyTrackChangeHandler>()?.onTrackChanged(id) }
 
                 albumCoverImageTarget = object : Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
@@ -337,7 +341,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
                 override fun onInitialized(player: SpotifyPlayer) {
                     spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, applicationContext.networkConnectivity)
                     spotifyPlayer?.addNotificationCallback(this@SpotifyPlayerFragment)
-                    spotifyPlayer?.addConnectionStateCallback(connectionStateCallback)
+                    spotifyPlayer?.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
                 }
 
                 override fun onError(error: Throwable) {
@@ -408,7 +412,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
 
         spotifyPlayer?.addNotificationCallback(this)
-        spotifyPlayer?.addConnectionStateCallback(connectionStateCallback)
+        spotifyPlayer?.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
     }
 
     private fun refreshBackgroundPlaybackNotificationIfShowing() {
@@ -416,7 +420,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     }
 
     private fun resetProgressAndPlay(uri: String) {
-        slidingPanelController?.expandIfHidden()
+        activity?.castAs<SlidingPanelController>()?.expandIfHidden()
         playback_seek_bar?.progress = 0
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
 
@@ -447,7 +451,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
         .setContentTitle("ClipFinder")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setContentIntent(PendingIntents.getActivity(context, intentProvider?.providedIntent))
+        .setContentIntent(PendingIntents.getActivity(context, activity?.castAs<IntentProvider>()?.providedIntent))
         .setDeleteIntent(PendingIntents.getBroadcast(context, Intent(ACTION_DELETE_NOTIFICATION)))
         .apply {
             if (viewModel.playerState.playerMetadata?.prevTrack != null) {

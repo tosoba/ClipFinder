@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
+import com.example.coreandroid.base.handler.ToolbarController
 import com.example.coreandroid.util.ext.checkItem
-import com.example.coreandroid.util.ext.toolbarController
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.main.R
@@ -33,12 +34,12 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
         }
 
         main_view_pager.currentItem = itemIds.indexOf(item.itemId)
-        toolbarController?.toggleToolbar()
+        activity?.castAs<ToolbarController>()?.toggleToolbar()
 
         return@OnNavigationItemSelectedListener true
     }
 
-    private val pagerAdapter by lazy {
+    private val pagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CustomCurrentStatePagerAdapter(
             childFragmentManager,
             arrayOf(
@@ -52,18 +53,15 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
     private val onPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             main_bottom_navigation_view?.checkItem(itemIds[position])
-            toolbarController?.toggleToolbar()
+            activity?.castAs<ToolbarController>()?.toggleToolbar()
         }
     }
 
-    override val currentFragment: Fragment?
-        get() = pagerAdapter.currentFragment
+    override val currentFragment: Fragment? get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: BaseNavHostFragment?
-        get() = pagerAdapter.currentNavHostFragment
+    override val currentNavHostFragment: BaseNavHostFragment? get() = pagerAdapter.currentNavHostFragment
 
-    override val playButton: FloatingActionButton
-        get() = spotify_play_fab
+    override val playButton: FloatingActionButton get() = spotify_play_fab
 
     private val view: SpotifyMainView by lazy {
         SpotifyMainView(

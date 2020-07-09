@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.HasMainToolbar
+import com.example.coreandroid.base.handler.NavigationDrawerController
 import com.example.coreandroid.util.ext.mainContentFragment
-import com.example.coreandroid.util.ext.navigationDrawerController
 import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
@@ -81,7 +81,7 @@ class AccountFragment : Fragment(), HasMainToolbar {
     override fun onOptionsItemSelected(
         item: MenuItem?
     ): Boolean = if (item?.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
-        navigationDrawerController?.openDrawer()
+        activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
     } else false
 }

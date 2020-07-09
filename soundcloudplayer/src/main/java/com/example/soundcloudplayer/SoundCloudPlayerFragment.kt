@@ -9,9 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.ISoundCloudPlayerFragment
+import com.example.coreandroid.base.handler.SlidingPanelController
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.util.ext.slidingPanelController
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -39,7 +40,7 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_sound_cloud_player, container, false).apply {
         close_sound_cloud_player_image_button.setOnClickListener {
-            slidingPanelController?.hideIfVisible()
+            activity?.castAs<SlidingPanelController>()?.hideIfVisible()
             exoPlayer.stop()
         }
     }

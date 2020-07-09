@@ -10,9 +10,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.ext.castAs
 import com.example.coreandroid.BR
 import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
+import com.example.coreandroid.base.handler.YoutubePlayerController
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
@@ -72,7 +74,7 @@ class VideosSearchFragment :
                         get() = ItemBinderBase(BR.videoView, R.layout.video_item)
                 },
                 ClickHandler {
-                    youtubePlayerController?.loadVideo(video = it.video)
+                    activity?.castAs<YoutubePlayerController>()?.loadVideo(video = it.video)
                 },
                 SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 onScrollListener

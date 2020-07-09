@@ -6,59 +6,27 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.mvrx.*
+import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseListFragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
-import com.example.coreandroid.base.handler.*
+import com.example.coreandroid.base.handler.BackPressedWithNoPreviousStateController
+import com.example.coreandroid.base.handler.ConnectivitySnackbarHost
+import com.example.coreandroid.base.handler.SpotifyLoginController
+import com.example.coreandroid.base.handler.SpotifyPlayerController
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.spotify.sdk.android.player.ConnectionStateCallback
 import java.util.*
 import kotlin.reflect.KClass
-
-val Fragment.slidingPanelController: SlidingPanelController?
-    get() = activity as? SlidingPanelController
-
-val Fragment.videoPlaylistController: VideoPlaylistController?
-    get() = activity as? VideoPlaylistController
-
-val Fragment.spotifyPlayerController: SpotifyPlayerController?
-    get() = activity as? SpotifyPlayerController
-
-val Fragment.youtubePlayerController: YoutubePlayerController?
-    get() = activity as? YoutubePlayerController
-
-val Fragment.soundCloudPlayerController: SoundCloudPlayerController?
-    get() = activity as? SoundCloudPlayerController
-
-val Fragment.spotifyTrackChangeHandler: SpotifyTrackChangeHandler?
-    get() = activity as? SpotifyTrackChangeHandler
 
 val Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
     get() = activity as? BackPressedWithNoPreviousStateController
 
 val Fragment.spotifyLoginController: SpotifyLoginController?
     get() = activity as? SpotifyLoginController
-
-val Fragment.connectivitySnackbarHost: ConnectivitySnackbarHost?
-    get() = activity as? ConnectivitySnackbarHost
-
-val Fragment.connectionStateCallback: ConnectionStateCallback?
-    get() = activity as? ConnectionStateCallback
-
-val Fragment.navigationDrawerController: NavigationDrawerController?
-    get() = activity as? NavigationDrawerController
-
-val Fragment.toolbarController: ToolbarController?
-    get() = activity as? ToolbarController
-
-val Fragment.intentProvider: IntentProvider?
-    get() = activity as? IntentProvider
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
     mainHintText: String,
@@ -108,7 +76,7 @@ fun Fragment.reloadingConnectivityComponent(
 ): ConnectivityComponent = ConnectivityComponent(object : ConnectivityComponent.Binder {
     override val context: Context get() = this@reloadingConnectivityComponent.requireContext()
 
-    override val snackbarParentView: View? get() = connectivitySnackbarHost?.snackbarParentView
+    override val snackbarParentView: View? get() = activity?.castAs<ConnectivitySnackbarHost>()?.snackbarParentView
 
     override fun shouldReload(): Boolean = isReloadNeeded()
 
@@ -121,10 +89,11 @@ fun Fragment.reloadingConnectivityComponent(
 
 fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> Unit) {
     mainContentFragment?.enablePlayButton {
-        if (spotifyPlayerController?.isPlayerLoggedIn == true) spotifyPlayerController?.playClicked()
-        else spotifyLoginController?.let {
+        val playerController = activity?.castAs<SpotifyPlayerController>()
+        if (playerController?.isPlayerLoggedIn == true) playerController.playClicked()
+        else activity?.castAs<SpotifyLoginController>()?.let {
             it.showLoginDialog()
-            it.onLoginSuccessful = { spotifyPlayerController?.playClicked() }
+            it.onLoginSuccessful = { playerController?.playClicked() }
         }
     }
 }

@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
+import com.example.coreandroid.base.handler.YoutubePlayerController
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.setupWithBackNavigation
-import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
 import com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding
 import org.koin.android.ext.android.inject
@@ -44,7 +44,8 @@ class VideoPlaylistFragment : Fragment() {
             PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList()),
             View.OnClickListener { _ ->
                 videoFragment?.let {
-                    if (it.videosLoaded) youtubePlayerController?.loadVideoPlaylist(playlist, it.videos)
+                    if (it.videosLoaded) activity?.castAs<YoutubePlayerController>()
+                        ?.loadVideoPlaylist(playlist, it.videos)
                     else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
                 }
             }
