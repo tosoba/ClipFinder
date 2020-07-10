@@ -25,7 +25,6 @@ import com.example.coreandroid.util.ext.NavigationCapable
 import com.example.coreandroid.util.ext.mainContentFragment
 import com.example.coreandroid.util.ext.show
 import com.example.coreandroid.util.ext.showDrawerHamburger
-import com.example.coreandroid.util.infiniteCarousel
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
@@ -101,7 +100,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                         })
                     }
                 }
-
             }
 
             headerItem {
@@ -109,20 +107,19 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("New releases")
             }
 
-            fun newReleasesCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
-                minItemsBeforeLoadingMore = 1,
-                onLoadMore = viewModel::loadNewReleases
-            ) {
-                id("releases")
-                withModelsFrom(
-                    items = state.newReleases.value.chunked(2),
-                    extraModels = extraModels
-                ) { chunk ->
-                    Column(chunk.map { album ->
-                        album.clickableListItem {
-                            show { newSpotifyAlbumFragment(album) }
-                        }
-                    })
+            fun newReleasesCarousel(extraModels: Collection<EpoxyModel<*>>) {
+                carousel {
+                    id("releases")
+                    withModelsFrom(
+                        items = state.newReleases.value.chunked(2),
+                        extraModels = extraModels
+                    ) { chunk ->
+                        Column(chunk.map { album ->
+                            album.clickableListItem {
+                                show { newSpotifyAlbumFragment(album) }
+                            }
+                        })
+                    }
                 }
             }
 
@@ -139,14 +136,21 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     }
                 }
             } else {
-                newReleasesCarousel(extraModels = when (state.newReleases.status) {
-                    is Loading -> listOf(LoadingIndicatorBindingModel_()
-                        .id("loading-more-releases"))
-                    is LoadingFailed<*> -> listOf(ReloadControlBindingModel_()
-                        .message("Error occurred")
-                        .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() }))
-                    else -> emptyList()
-                })
+                newReleasesCarousel(
+                    extraModels = when (state.newReleases.status) {
+                        is LoadingFailed<*> -> listOf(
+                            ReloadControlBindingModel_()
+                                .message("Error occurred")
+                                .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
+                        )
+                        else -> listOf(
+                            LoadingIndicatorBindingModel_()
+                                .id("loading-more-releases")
+                                .onBind { _, _, _ -> viewModel.loadNewReleases() }
+                            //TODO: addIf can load more (and do the same in AlbumFragment)
+                        )
+                    }
+                )
             }
 
             headerItem {

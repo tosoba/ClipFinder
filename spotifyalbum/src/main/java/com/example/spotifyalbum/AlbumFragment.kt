@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.*
-import com.example.core.ext.castAs
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
@@ -23,14 +22,12 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.util.infiniteCarousel
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
 import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
-
 
 class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
@@ -58,7 +55,9 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 is LoadingFailed<*> -> reloadControl {
                     id("artists-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        withState(viewModel) { state -> viewModel.loadAlbumsArtists(state.album.artists.map { it.id }) }
+                        withState(viewModel) { state ->
+                            viewModel.loadAlbumsArtists(state.album.artists.map { it.id })
+                        }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
@@ -78,20 +77,21 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 text("Tracks")
             }
 
-            val loadTracks: () -> Unit = { withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) } }
+            val loadTracks: () -> Unit = {
+                withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) }
+            }
 
-            fun tracksCarousel(extraModels: Collection<EpoxyModel<*>>) = infiniteCarousel(
-                minItemsBeforeLoadingMore = 1,
-                onLoadMore = loadTracks
-            ) {
-                id("tracks")
-                withModelsFrom(
-                    items = state.tracks.value,
-                    extraModels = extraModels
-                ) { track ->
-                    TrackPopularityItemBindingModel_()
-                        .id(track.id)
-                        .track(track) //TODO: navigation + a nicer layout
+            fun tracksCarousel(extraModels: Collection<EpoxyModel<*>>) {
+                carousel {
+                    id("tracks")
+                    withModelsFrom(
+                        items = state.tracks.value,
+                        extraModels = extraModels
+                    ) { track ->
+                        TrackPopularityItemBindingModel_()
+                            .id(track.id)
+                            .track(track) //TODO: navigation + a nicer layout
+                    }
                 }
             }
 
