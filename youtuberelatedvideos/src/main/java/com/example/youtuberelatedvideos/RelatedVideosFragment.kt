@@ -14,7 +14,6 @@ import com.example.coreandroid.base.fragment.BaseVMFragment
 import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
 import com.example.coreandroid.base.handler.YoutubePlayerController
 import com.example.coreandroid.model.videos.Video
-import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
@@ -26,8 +25,8 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
 
-
-class RelatedVideosFragment : BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class),
+class RelatedVideosFragment :
+    BaseVMFragment<RelatedVideosViewModel>(RelatedVideosViewModel::class),
     IRelatedVideosSearchFragment {
 
     private val relatedVideosRecyclerViewItemView: RecyclerViewItemView<VideoItemView> by lazy(LazyThreadSafetyMode.NONE) {

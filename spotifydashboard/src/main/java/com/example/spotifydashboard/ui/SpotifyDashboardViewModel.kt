@@ -1,11 +1,15 @@
 package com.example.spotifydashboard.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.Loading
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifydashboard.domain.usecase.GetCategories
@@ -15,7 +19,10 @@ import com.example.spotifydashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
+import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
@@ -26,7 +33,8 @@ class SpotifyDashboardViewModel(
     private val getFeaturedPlaylists: GetFeaturedPlaylists,
     private val getNewReleases: GetNewReleases,
     private val getDailyViralTracks: GetDailyViralTracks,
-    private val preferences: SpotifyPreferences
+    private val preferences: SpotifyPreferences,
+    context: Context
 ) : MvRxViewModel<SpotifyDashboardState>(initialState) {
 
     init {
@@ -35,29 +43,37 @@ class SpotifyDashboardViewModel(
         loadDailyViralTracks()
         loadNewReleases()
         handlePreferencesChanges()
+
+        @SuppressLint("MissingPermission")
+        val disposable = ReactiveNetwork.observeNetworkConnectivity(context)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+            .subscribe {
+                withState { (categories, playlists, tracks, releases) ->
+                    if (categories.isEmptyAndLastLoadingFailed()) loadCategories()
+                    if (playlists.isEmptyAndLastLoadingFailed()) loadFeaturedPlaylists()
+                    if (tracks.isEmptyAndLastLoadingFailed()) loadDailyViralTracks()
+                    if (releases.isEmptyAndLastLoadingFailed()) loadNewReleases()
+                }
+            }
+            .disposeOnClear()
     }
 
     fun loadCategories() = withState { state ->
         if (state.categories.status is Loading) return@withState
 
         getCategories(applySchedulers = false)
-            .mapData { categories ->
-                categories.map(CategoryEntity::ui).sortedBy { it.name }
-            }
+            .mapData { categories -> categories.map(CategoryEntity::ui).sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyDashboardState::categories) {
-                copy(categories = it)
-            }
+            .updateWithResource(SpotifyDashboardState::categories) { copy(categories = it) }
     }
-
 
     fun loadFeaturedPlaylists() = withState { state ->
         if (state.featuredPlaylists.status is Loading) return@withState
 
         getFeaturedPlaylists(applySchedulers = false)
-            .mapData { playlists ->
-                playlists.map(PlaylistEntity::ui).sortedBy { it.name }
-            }
+            .mapData { playlists -> playlists.map(PlaylistEntity::ui).sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
             .updateWithResource(SpotifyDashboardState::featuredPlaylists) {
                 copy(featuredPlaylists = it)
@@ -70,8 +86,7 @@ class SpotifyDashboardViewModel(
         getDailyViralTracks(applySchedulers = false)
             .timeout(10, TimeUnit.SECONDS)
             .mapData { tracks ->
-                tracks.map { TopTrack(it.position, it.track.ui) }
-                    .sortedBy { it.position }
+                tracks.map { TopTrack(it.position, it.track.ui) }.sortedBy { it.position }
             }
             .subscribeOn(Schedulers.io())
             .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
@@ -114,7 +129,8 @@ class SpotifyDashboardViewModel(
                 getFeaturedPlaylists,
                 getNewReleases,
                 getDailyViralTracks,
-                preferences
+                preferences,
+                viewModelContext.app()
             )
         }
     }

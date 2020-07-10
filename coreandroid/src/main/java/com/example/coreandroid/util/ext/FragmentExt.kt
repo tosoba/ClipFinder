@@ -102,7 +102,13 @@ inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmen
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name }
 ) where T : Fragment, T : MvRxView = lifecycleAwareLazy(this) {
-    val factory = MvRxFactory { throw IllegalStateException("ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!") }
-    ViewModelProviders.of(parentFragment!!, factory).get(keyFactory(), viewModelClass.java)
-        .apply { subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() }) }
+    val parent = requireNotNull(parentFragment)
+    val factory = MvRxFactory {
+        throw IllegalStateException("ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!")
+    }
+    ViewModelProviders.of(parent, factory)
+        .get(keyFactory(), viewModelClass.java)
+        .apply {
+            subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() })
+        }
 }

@@ -20,7 +20,6 @@ import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.screenOrientation
-import com.example.coreandroid.util.ext.youtubePlayerController
 import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
@@ -32,7 +31,6 @@ import com.example.coreandroid.view.recyclerview.listener.ClickHandler
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.youtubesearch.databinding.FragmentVideosSearchBinding
 import kotlinx.android.synthetic.main.fragment_videos_search.*
-
 
 class VideosSearchFragment :
     BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class),

@@ -16,13 +16,15 @@ import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.base.handler.NavigationDrawerController
 import com.example.coreandroid.di.EpoxyHandlerQualifier
-import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.carousel
-import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.util.ext.NavigationCapable
+import com.example.coreandroid.util.ext.mainContentFragment
+import com.example.coreandroid.util.ext.show
+import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.util.infiniteCarousel
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
@@ -31,7 +33,6 @@ import com.example.spotifydashboard.R
 import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
-
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationCapable {
 
@@ -44,7 +45,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override val toolbar: Toolbar get() = dashboard_toolbar
 
-    private val epoxyController by lazy {
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         typedController(builder, differ, viewModel) { state ->
             headerItem {
                 id("categories-header")
@@ -84,13 +85,11 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     id("loading-indicator-playlists")
                 }
 
-
                 is LoadingFailed<*> -> reloadControl {
                     id("reload-control")
                     onReloadClicked(View.OnClickListener { viewModel.loadFeaturedPlaylists() })
                     message("Error occurred lmao") //TODO: error msg
                 }
-
 
                 is LoadedSuccessfully -> carousel {
                     id("playlists")
@@ -150,7 +149,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 })
             }
 
-
             headerItem {
                 id("tracks-header")
                 text("Top tracks")
@@ -161,13 +159,11 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     id("loading-indicator-tracks")
                 }
 
-
                 is LoadingFailed<*> -> reloadControl {
                     id("reload-control")
                     onReloadClicked(View.OnClickListener { viewModel.loadDailyViralTracks() })
                     message("Error occurred lmao") //TODO: error msg
                 }
-
 
                 is LoadedSuccessfully -> carousel {
                     id("tracks")
@@ -180,25 +176,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                             })
                     }
                 }
-            }
-        }
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent({
-            withState(viewModel) {
-                if (it.categories.loadingFailed) viewModel.loadCategories()
-                if (it.featuredPlaylists.loadingFailed) viewModel.loadFeaturedPlaylists()
-                if (it.topTracks.loadingFailed) viewModel.loadDailyViralTracks()
-                if (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
-                    viewModel.loadNewReleases()
-            }
-        }) {
-            withState(viewModel) {
-                it.categories.loadingFailed
-                    || it.featuredPlaylists.loadingFailed
-                    || it.topTracks.loadingFailed
-                    || (it.newReleases.value.isEmpty() && it.newReleases.loadingFailed)
             }
         }
     }
@@ -239,11 +216,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             activity?.castAs<NavigationDrawerController>()?.openDrawer()
             true
         } else false
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
     }
 
     override fun invalidate() {

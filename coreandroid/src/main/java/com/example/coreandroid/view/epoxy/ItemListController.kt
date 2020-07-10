@@ -17,12 +17,15 @@ import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.reloadControl
 import kotlin.reflect.KProperty1
 
-
 fun <S : MvRxState, A : MvRxViewModel<S>, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.itemListController(
-        modelBuildingHandler: Handler, diffingHandler: Handler,
-        viewModel: A, prop: KProperty1<S, L>, headerText: String? = null,
-        onScrollListener: RecyclerView.OnScrollListener? = null,
-        reloadClicked: () -> Unit, buildItem: (I) -> EpoxyModel<*>
+    modelBuildingHandler: Handler,
+    diffingHandler: Handler,
+    viewModel: A,
+    prop: KProperty1<S, L>,
+    headerText: String? = null,
+    onScrollListener: RecyclerView.OnScrollListener? = null,
+    reloadClicked: () -> Unit,
+    buildItem: (I) -> EpoxyModel<*>
 ) = object : TypedEpoxyController<S>(modelBuildingHandler, diffingHandler) {
 
     //TODO: consistent and nice looking spacing between items
@@ -51,7 +54,7 @@ fun <S : MvRxState, A : MvRxViewModel<S>, L : HoldsData<Collection<I>>, I> BaseM
             } else {
                 items.value.forEach {
                     buildItem(it).spanSizeOverride { _, _, _ -> 1 }
-                            .addTo(this)
+                        .addTo(this)
                 }
 
                 if (items.status is Loading) {

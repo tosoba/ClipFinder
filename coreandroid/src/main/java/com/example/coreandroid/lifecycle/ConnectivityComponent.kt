@@ -30,10 +30,10 @@ class ConnectivityComponent(private val binder: Binder) : LifecycleObserver {
     @SuppressLint("MissingPermission")
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun observeInternetConnectivity() {
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(::handleConnectionStatus, Timber::e)
+//        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(::handleConnectionStatus, Timber::e)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)

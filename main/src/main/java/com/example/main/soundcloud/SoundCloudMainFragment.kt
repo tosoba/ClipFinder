@@ -12,7 +12,6 @@ import com.example.coreandroid.base.fragment.BaseNavHostFragment
 import com.example.coreandroid.base.fragment.IMainContentFragment
 import com.example.coreandroid.base.handler.ToolbarController
 import com.example.coreandroid.util.ext.checkItem
-import com.example.coreandroid.util.ext.toolbarController
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.main.R
@@ -21,7 +20,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
 import org.koin.android.ext.android.inject
-
 
 class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
