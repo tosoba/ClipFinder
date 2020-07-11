@@ -6,6 +6,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -15,10 +16,9 @@ import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.base.handler.NavigationDrawerController
 import com.example.coreandroid.di.EpoxyHandlerQualifier
-import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
-import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.model.PagedDataList
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
@@ -48,31 +48,59 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         typedController(builder, differ, viewModel) { state ->
             val (categories, playlists, topTracks, newReleases) = state
 
+            fun <Value> pagedDataListCarousel(
+                data: PagedDataList<Value>,
+                idSuffix: String,
+                loadItems: () -> Unit,
+                buildItem: (Value) -> EpoxyModel<*>
+            ) {
+                val (value, status) = data
+                if (value.isEmpty()) when (status) {
+                    is Loading -> loadingIndicator {
+                        id("loading-indicator-$idSuffix")
+                    }
+
+                    is LoadingFailed<*> -> reloadControl {
+                        id("reload-control-$idSuffix")
+                        onReloadClicked(View.OnClickListener { loadItems() })
+                        message("Error occurred")
+                    }
+                } else carousel {
+                    id(idSuffix)
+                    withModelsFrom<List<Value>>(
+                        items = value.chunked(2),
+                        extraModels = when (status) {
+                            is LoadingFailed<*> -> listOf(
+                                ReloadControlBindingModel_()
+                                    .id("reload-control-$idSuffix")
+                                    .message("Error occurred")
+                                    .onReloadClicked(View.OnClickListener { loadItems() })
+                            )
+
+                            else -> if (data.canLoadMore) listOf(
+                                LoadingIndicatorBindingModel_()
+                                    .id("loading-more-$idSuffix")
+                                    .onBind { _, _, _ -> loadItems() }
+                            ) else emptyList()
+                        }
+                    ) { chunk ->
+                        Column(chunk.map(buildItem))
+                    }
+                }
+            }
+
             headerItem {
                 id("categories-header")
                 text("Categories")
             }
 
-            when (categories.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-categories")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadCategories() })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("categories")
-                    withModelsFrom(categories.value.chunked(2)) { chunk ->
-                        Column(chunk.map { category ->
-                            category.clickableListItem {
-                                show { newSpotifyCategoryFragment(category) }
-                            }
-                        })
-                    }
+            pagedDataListCarousel(
+                categories,
+                "categories",
+                viewModel::loadCategories
+            ) { category ->
+                category.clickableListItem {
+                    show { newSpotifyCategoryFragment(category) }
                 }
             }
 
@@ -81,26 +109,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("Featured playlists")
             }
 
-            when (playlists.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-playlists")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadFeaturedPlaylists() })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("playlists")
-                    withModelsFrom(playlists.value.chunked(2)) { chunk ->
-                        Column(chunk.map { playlist ->
-                            playlist.clickableListItem {
-                                show { newSpotifyPlaylistFragment(playlist) }
-                            }
-                        })
-                    }
+            pagedDataListCarousel(
+                playlists,
+                "playlists",
+                viewModel::loadFeaturedPlaylists
+            ) { playlist ->
+                playlist.clickableListItem {
+                    show { newSpotifyPlaylistFragment(playlist) }
                 }
             }
 
@@ -109,40 +124,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("New releases")
             }
 
-            if (newReleases.value.isEmpty()) when (newReleases.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-releases")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-            } else carousel {
-                id("releases")
-                withModelsFrom<List<Album>>(
-                    items = newReleases.value.chunked(2),
-                    extraModels = when (newReleases.status) {
-                        is LoadingFailed<*> -> listOf(
-                            ReloadControlBindingModel_()
-                                .id("reload-new-releases")
-                                .message("Error occurred")
-                                .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
-                        )
-
-                        else -> if (newReleases.canLoadMore) listOf(
-                            LoadingIndicatorBindingModel_()
-                                .id("loading-more-releases")
-                                .onBind { _, _, _ -> viewModel.loadNewReleases() }
-                        ) else emptyList()
-                    }
-                ) { chunk ->
-                    Column(chunk.map { album ->
-                        album.clickableListItem {
-                            show { newSpotifyAlbumFragment(album) }
-                        }
-                    })
+            pagedDataListCarousel(
+                newReleases,
+                "releases",
+                viewModel::loadNewReleases
+            ) { album ->
+                album.clickableListItem {
+                    show { newSpotifyAlbumFragment(album) }
                 }
             }
 
@@ -151,28 +139,17 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("Top tracks")
             }
 
-            when (topTracks.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-tracks")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadDailyViralTracks() })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("tracks")
-                    withModelsFrom(topTracks.value) { topTrack ->
-                        TopTrackItemBindingModel_()
-                            .id(topTrack.track.id)
-                            .track(topTrack)
-                            .itemClicked(View.OnClickListener {
-                                show { newSpotifyTrackVideosFragment(topTrack.track) }
-                            })
-                    }
-                }
+            pagedDataListCarousel(
+                topTracks,
+                "tracks",
+                viewModel::loadDailyViralTracks
+            ) { topTrack ->
+                TopTrackItemBindingModel_()
+                    .id(topTrack.track.id)
+                    .track(topTrack)
+                    .itemClicked(View.OnClickListener {
+                        show { newSpotifyTrackVideosFragment(topTrack.track) }
+                    })
             }
         }
     }

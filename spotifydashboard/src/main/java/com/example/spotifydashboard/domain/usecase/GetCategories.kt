@@ -12,5 +12,7 @@ class GetCategories(
     schedulersProvider: UseCaseSchedulersProvider,
     private val remote: ISpotifyDashboardRemoteRepo
 ) : SingleUseCaseWithArgs<Int, Resource<ListPage<CategoryEntity>>>(schedulersProvider) {
-    override fun run(args: Int): Single<Resource<ListPage<CategoryEntity>>> = remote.getCategories(offset = args)
+    override fun run(
+        args: Int
+    ): Single<Resource<ListPage<CategoryEntity>>> = remote.getCategories(offset = args)
 }

@@ -2,36 +2,31 @@ package com.example.spotifydashboard.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Resource
-import com.example.core.retrofit.mapToDataOrThrow
 import com.example.core.retrofit.mapToResource
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
-import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.SpotifyChartsApi
-import com.example.spotifyapi.model.TrackApiModel
-import com.example.spotifyapi.model.TracksOnlyResponse
+import com.example.spotifyapi.SpotifyTracksApi
 import com.example.spotifyapi.models.SimpleAlbum
 import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.SpotifyCategory
+import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.ChartTrackIdMapper
 import com.example.spotifyapi.util.domain
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
 import com.example.spotifyrepo.BaseSpotifyRemoteRepo
-import com.example.spotifyrepo.mapper.domain
 import com.example.there.domain.entity.ListPage
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TopTrackEntity
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 
 class SpotifyDashboardRemoteRepo(
     preferences: SpotifyPreferences,
     accountsApi: SpotifyAccountsApi,
-    private val commonApi: SpotifyApi,
+    private val tracksApi: SpotifyTracksApi,
     private val chartsApi: SpotifyChartsApi,
     private val browseApi: SpotifyBrowseApi
 ) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
@@ -64,38 +59,43 @@ class SpotifyDashboardRemoteRepo(
         )
     }.mapToResource {
         ListPage(
-            items = playlists.items.map(SimplePlaylist::domain),
+            items = items.map(SimplePlaylist::domain),
             offset = playlists.offset + SpotifyDefaults.LIMIT,
             totalItems = playlists.total
         )
     }
 
-    override val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
-        get() = chartsApi.getDailyViralTracks()
-            .map { csv -> csv.split('\n').filter { it.isNotBlank() && it.first().isDigit() } }
-            .map { it.map(ChartTrackIdMapper::map) }
-            .map { it.chunked(50).map { chunk -> chunk.joinToString(",") } }
-            .concatMapIterable { it }
-            .concatMap { ids ->
-                withTokenObservable {
-                    commonApi.getTracks(
-                        authorization = getAccessTokenHeader(it),
-                        ids = ids
-                    ).toObservable()
-                }
+    override fun getDailyViralTracks(
+        offset: Int
+    ): Single<Resource<ListPage<TopTrackEntity>>> = chartsApi.getDailyViralTracks()
+        .map { csv ->
+            csv.split('\n')
+                .filter { it.isNotBlank() && it.first().isDigit() }
+                .map(ChartTrackIdMapper::map)
+                .chunked(SpotifyDefaults.LIMIT)
+        }
+        .flatMap { chunks ->
+            val chunk = chunks[offset]
+            val ids = chunk.joinToString(",")
+            withTokenSingle { token ->
+                tracksApi.getTracks(
+                    authorization = getAccessTokenHeader(token),
+                    ids = ids
+                )
+            }.mapToResource {
+                ListPage(
+                    items = result.mapIndexed { index: Int, track: Track ->
+                        TopTrackEntity(
+                            offset * SpotifyDefaults.LIMIT + index + 1,
+                            track.domain
+                        )
+                    },
+                    offset = offset + 1,
+                    totalItems = chunks.size
+                )
             }
-            .mapToDataOrThrow { this }
-            .zipWith(
-                Observable.range(0, Int.MAX_VALUE),
-                BiFunction<TracksOnlyResponse, Int, Pair<TracksOnlyResponse, Int>> { response, index ->
-                    Pair(response, index)
-                }
-            )
-            .map { (response: TracksOnlyResponse, index: Int) ->
-                Resource.Success(response.tracks.mapIndexed { i: Int, trackData: TrackApiModel ->
-                    TopTrackEntity(index * 50 + i + 1, trackData.domain)
-                })
-            }
+        }
+
 
     override fun getNewReleases(
         offset: Int

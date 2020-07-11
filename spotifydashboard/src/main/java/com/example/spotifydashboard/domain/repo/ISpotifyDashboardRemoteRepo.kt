@@ -12,6 +12,6 @@ import io.reactivex.Single
 interface ISpotifyDashboardRemoteRepo {
     fun getCategories(offset: Int): Single<Resource<ListPage<CategoryEntity>>>
     fun getFeaturedPlaylists(offset: Int): Single<Resource<ListPage<PlaylistEntity>>>
-    val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
+    fun getDailyViralTracks(offset: Int): Single<Resource<ListPage<TopTrackEntity>>>
     fun getNewReleases(offset: Int): Single<Resource<ListPage<AlbumEntity>>>
 }

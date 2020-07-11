@@ -8,7 +8,6 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
-import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.coreandroid.preferences.SpotifyPreferences
@@ -25,7 +24,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
-import java.util.concurrent.TimeUnit
 
 class SpotifyDashboardViewModel(
     initialState: SpotifyDashboardState,
@@ -43,21 +41,7 @@ class SpotifyDashboardViewModel(
         loadDailyViralTracks()
         loadNewReleases()
         handlePreferencesChanges()
-
-        @SuppressLint("MissingPermission")
-        val disposable = ReactiveNetwork.observeNetworkConnectivity(context)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .subscribe {
-                withState { (categories, playlists, tracks, releases) ->
-                    if (categories.isEmptyAndLastLoadingFailedWithNetworkError()) loadCategories()
-                    if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadFeaturedPlaylists()
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadDailyViralTracks()
-                    if (releases.isEmptyAndLastLoadingFailedWithNetworkError()) loadNewReleases()
-                }
-            }
-            .disposeOnClear()
+        handleConnectivityChanges(context)
     }
 
     fun loadCategories() = withState { (categories) ->
@@ -65,7 +49,9 @@ class SpotifyDashboardViewModel(
             getCategories(applySchedulers = false, args = categories.offset)
                 .mapData { categories -> categories.map(CategoryEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::categories) { copy(categories = it) }
+                .updateWithPagedResource(SpotifyDashboardState::categories) {
+                    copy(categories = it)
+                }
         }
     }
 
@@ -80,16 +66,13 @@ class SpotifyDashboardViewModel(
         }
     }
 
-    fun loadDailyViralTracks() = withState { state ->
-        if (state.topTracks.status is Loading) return@withState
-
-        getDailyViralTracks(applySchedulers = false)
-            .timeout(10, TimeUnit.SECONDS)
-            .mapData { tracks ->
-                tracks.map { TopTrack(it.position, it.track.ui) }.sortedBy { it.position }
-            }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+    fun loadDailyViralTracks() = withState { (_, _, topTracks) ->
+        topTracks.ifNotLoadingAndNotAllLoaded {
+            getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
+                .mapData { tracks -> tracks.map { TopTrack(it.position, it.track.ui) } }
+                .subscribeOn(Schedulers.io())
+                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+        }
     }
 
     fun loadNewReleases() = withState { (_, _, _, newReleases) ->
@@ -111,6 +94,23 @@ class SpotifyDashboardViewModel(
             loadCategories()
             loadFeaturedPlaylists()
         }.subscribe().disposeOnClear()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun handleConnectivityChanges(context: Context) {
+        ReactiveNetwork.observeNetworkConnectivity(context)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+            .subscribe {
+                withState { (categories, playlists, tracks, releases) ->
+                    if (categories.isEmptyAndLastLoadingFailedWithNetworkError()) loadCategories()
+                    if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadFeaturedPlaylists()
+                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadDailyViralTracks()
+                    if (releases.isEmptyAndLastLoadingFailedWithNetworkError()) loadNewReleases()
+                }
+            }
+            .disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {

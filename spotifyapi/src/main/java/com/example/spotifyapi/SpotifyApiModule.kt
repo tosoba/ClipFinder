@@ -4,26 +4,28 @@ import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-val spotifyApiModule = module {
-    single {
-        retrofitWith(
-            url = spotifyApiBaseUrl,
-            client = get {
-                parametersOf(
-                    listOf(
-                        interceptorWithHeaders(
-                            "Accept" to "application/json",
-                            "Content-Type" to "application/json"
-                        )
-                    )
+private inline fun <reified API> Scope.spotifyRetrofit(): API = retrofitWith(
+    url = spotifyApiBaseUrl,
+    client = get {
+        parametersOf(
+            listOf(
+                interceptorWithHeaders(
+                    "Accept" to "application/json",
+                    "Content-Type" to "application/json"
                 )
-            }
-        ).create(SpotifyBrowseApi::class.java)
+            )
+        )
     }
+).create(API::class.java)
+
+val spotifyApiModule = module {
+    single { spotifyRetrofit<SpotifyBrowseApi>() }
+    single { spotifyRetrofit<SpotifyTracksApi>() }
 
     single {
         retrofitWith(

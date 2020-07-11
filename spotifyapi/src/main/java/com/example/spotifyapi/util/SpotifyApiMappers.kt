@@ -1,13 +1,8 @@
 package com.example.spotifyapi.util
 
-import com.example.spotifyapi.models.SimpleAlbum
-import com.example.spotifyapi.models.SimplePlaylist
-import com.example.spotifyapi.models.SpotifyCategory
-import com.example.spotifyapi.models.SpotifyImage
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.CategoryEntity
-import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.there.domain.entity.spotify.SimpleArtistEntity
+import com.example.spotifyapi.model.TrackApiModel
+import com.example.spotifyapi.models.*
+import com.example.there.domain.entity.spotify.*
 
 private const val DEFAULT_ICON_URL = "https://t.scdn.co/media/derived/r-b-274x274_fd56efa72f4f63764b011b68121581d8_0_0_274_274.jpg"
 
@@ -45,4 +40,18 @@ val SimplePlaylist.domain: PlaylistEntity
         iconUrl = images.firstIconUrlOrDefault,
         userId = owner.id,
         uri = uri
+    )
+
+val Track.domain: TrackEntity
+    get() = TrackEntity(
+        id = id,
+        name = name,
+        iconUrl = album.images.secondIconUrlOrDefault,
+        albumId = album.id,
+        albumName = album.name,
+        artists = artists.map { SimpleArtistEntity(it.id, it.name) },
+        popularity = popularity,
+        trackNumber = trackNumber,
+        uri = uri,
+        durationMs = durationMs
     )

@@ -9,7 +9,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 fun retrofitWith(
-    url: String, client: OkHttpClient = OkHttpClient(),
+    url: String,
+    client: OkHttpClient = OkHttpClient(),
     converterFactory: Converter.Factory = GsonConverterFactory.create(),
     callAdapterFactories: Array<CallAdapter.Factory> = arrayOf(
         RxSealedCallAdapterFactory.create(), RxJava2CallAdapterFactory.create()
