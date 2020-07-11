@@ -60,24 +60,24 @@ class SpotifyDashboardViewModel(
             .disposeOnClear()
     }
 
-    fun loadCategories() = withState { state ->
-        if (state.categories.status is Loading) return@withState
-
-        getCategories(applySchedulers = false)
-            .mapData { categories -> categories.map(CategoryEntity::ui).sortedBy { it.name } }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyDashboardState::categories) { copy(categories = it) }
+    fun loadCategories() = withState { (categories) ->
+        categories.ifNotLoadingAndNotAllLoaded {
+            getCategories(applySchedulers = false, args = categories.offset)
+                .mapData { categories -> categories.map(CategoryEntity::ui) }
+                .subscribeOn(Schedulers.io())
+                .updateWithPagedResource(SpotifyDashboardState::categories) { copy(categories = it) }
+        }
     }
 
-    fun loadFeaturedPlaylists() = withState { state ->
-        if (state.featuredPlaylists.status is Loading) return@withState
-
-        getFeaturedPlaylists(applySchedulers = false)
-            .mapData { playlists -> playlists.map(PlaylistEntity::ui).sortedBy { it.name } }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyDashboardState::featuredPlaylists) {
-                copy(featuredPlaylists = it)
-            }
+    fun loadFeaturedPlaylists() = withState { (_, featuredPlaylists) ->
+        featuredPlaylists.ifNotLoadingAndNotAllLoaded {
+            getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
+                .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
+                .subscribeOn(Schedulers.io())
+                .updateWithPagedResource(SpotifyDashboardState::featuredPlaylists) {
+                    copy(featuredPlaylists = it)
+                }
+        }
     }
 
     fun loadDailyViralTracks() = withState { state ->
@@ -92,9 +92,9 @@ class SpotifyDashboardViewModel(
             .updateWithResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
     }
 
-    fun loadNewReleases() = withState { state ->
-        state.newReleases.ifNotLoadingAndNotAllLoaded {
-            getNewReleases(applySchedulers = false, args = current { newReleases.offset })
+    fun loadNewReleases() = withState { (_, _, _, newReleases) ->
+        newReleases.ifNotLoadingAndNotAllLoaded {
+            getNewReleases(applySchedulers = false, args = newReleases.offset)
                 .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyDashboardState::newReleases) {

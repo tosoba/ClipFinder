@@ -9,8 +9,8 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.TopTrack
 
 data class SpotifyDashboardState(
-    val categories: DataList<Category> = DataList(),
-    val featuredPlaylists: DataList<Playlist> = DataList(),
+    val categories: PagedDataList<Category> = PagedDataList(),
+    val featuredPlaylists: PagedDataList<Playlist> = PagedDataList(),
     val topTracks: DataList<TopTrack> = DataList(),
     val newReleases: PagedDataList<Album> = PagedDataList()
 ) : MvRxState

@@ -28,7 +28,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 
-
 class SpotifyDashboardRemoteRepo(
     preferences: SpotifyPreferences,
     accountsApi: SpotifyAccountsApi,
@@ -37,29 +36,39 @@ class SpotifyDashboardRemoteRepo(
     private val browseApi: SpotifyBrowseApi
 ) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
 
-    override val categories: Observable<Resource<List<CategoryEntity>>>
-        get() = getAllItems { token, offset ->
-            browseApi
-                .getCategories(
-                    authorization = getAccessTokenHeader(token),
-                    offset = offset,
-                    country = preferences.country,
-                    locale = preferences.locale
-                )
-                .toObservable()
-        }.mapToResource { items.map(SpotifyCategory::domain) }
+    override fun getCategories(
+        offset: Int
+    ): Single<Resource<ListPage<CategoryEntity>>> = withTokenSingle { token ->
+        browseApi.getCategories(
+            authorization = getAccessTokenHeader(token),
+            offset = offset,
+            country = preferences.country,
+            locale = preferences.locale
+        ).mapToResource {
+            ListPage(
+                items = items.map(SpotifyCategory::domain),
+                offset = result.offset + SpotifyDefaults.LIMIT,
+                totalItems = result.total
+            )
+        }
+    }
 
-    override val featuredPlaylists: Observable<Resource<List<PlaylistEntity>>>
-        get() = getAllItems { token, offset ->
-            browseApi
-                .getFeaturedPlaylists(
-                    authorization = getAccessTokenHeader(token),
-                    offset = offset,
-                    country = preferences.country,
-                    locale = preferences.locale
-                )
-                .toObservable()
-        }.mapToResource { playlists.items.map(SimplePlaylist::domain) }
+    override fun getFeaturedPlaylists(
+        offset: Int
+    ): Single<Resource<ListPage<PlaylistEntity>>> = withTokenSingle { token ->
+        browseApi.getFeaturedPlaylists(
+            authorization = getAccessTokenHeader(token),
+            offset = offset,
+            country = preferences.country,
+            locale = preferences.locale
+        )
+    }.mapToResource {
+        ListPage(
+            items = playlists.items.map(SimplePlaylist::domain),
+            offset = playlists.offset + SpotifyDefaults.LIMIT,
+            totalItems = playlists.total
+        )
+    }
 
     override val dailyViralTracks: Observable<Resource<List<TopTrackEntity>>>
         get() = chartsApi.getDailyViralTracks()
