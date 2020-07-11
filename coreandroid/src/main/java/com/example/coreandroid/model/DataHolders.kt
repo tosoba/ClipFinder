@@ -40,7 +40,7 @@ data class Data<Value>(
 
 fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailedWithNetworkError(): Boolean {
     val stat = status
-    return stat is LoadingFailed<*> && stat.error is IOException && value.isEmpty()
+    return value.isEmpty() && stat is LoadingFailed<*> && (stat.error == null || stat.error is IOException)
 }
 
 inline fun <Holder : HoldsData<Collection<Value>>, Value> Holder.ifEmptyAndIsNotLoading(block: (Holder) -> Unit) {
