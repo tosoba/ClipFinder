@@ -11,13 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
-import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.base.playlist.PlaylistViewState
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.model.soundcloud.clickableListItem
@@ -56,7 +55,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(viewModel::loadData) {
-            withState(viewModel) { state -> state.tracks.isEmptyAndLastLoadingFailed() }
+            withState(viewModel) { state -> state.tracks.isEmptyAndLastLoadingFailedWithNetworkError() }
         }
     }
 

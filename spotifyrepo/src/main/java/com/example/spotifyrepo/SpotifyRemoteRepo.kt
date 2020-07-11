@@ -180,7 +180,8 @@ class SpotifyRemoteRepo(
             TrackIdsPage(
                 ids = items.joinToString(separator = ",") { it.id },
                 offset = offset,
-                totalItems = totalItems)
+                totalItems = totalItems
+            )
         }.flatMap { idsPage ->
             api.getTracks(
                 authorization = getAccessTokenHeader(token),

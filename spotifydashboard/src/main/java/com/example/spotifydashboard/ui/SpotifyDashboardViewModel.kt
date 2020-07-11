@@ -9,7 +9,7 @@ import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.Loading
-import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.TopTrack
 import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifydashboard.domain.usecase.GetCategories
@@ -51,10 +51,10 @@ class SpotifyDashboardViewModel(
             .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
             .subscribe {
                 withState { (categories, playlists, tracks, releases) ->
-                    if (categories.isEmptyAndLastLoadingFailed()) loadCategories()
-                    if (playlists.isEmptyAndLastLoadingFailed()) loadFeaturedPlaylists()
-                    if (tracks.isEmptyAndLastLoadingFailed()) loadDailyViralTracks()
-                    if (releases.isEmptyAndLastLoadingFailed()) loadNewReleases()
+                    if (categories.isEmptyAndLastLoadingFailedWithNetworkError()) loadCategories()
+                    if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadFeaturedPlaylists()
+                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadDailyViralTracks()
+                    if (releases.isEmptyAndLastLoadingFailedWithNetworkError()) loadNewReleases()
                 }
             }
             .disposeOnClear()

@@ -12,13 +12,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
-import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.base.playlist.PlaylistViewState
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
-import com.example.coreandroid.model.isEmptyAndLastLoadingFailed
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.clickableListItem
@@ -58,7 +57,7 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(viewModel::loadTracks) {
-            withState(viewModel) { state -> state.tracks.isEmptyAndLastLoadingFailed() }
+            withState(viewModel) { state -> state.tracks.isEmptyAndLastLoadingFailedWithNetworkError() }
         }
     }
 

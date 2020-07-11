@@ -1,12 +1,12 @@
 package com.example.coreandroid.model
 
+import java.io.IOException
 
 interface HoldsData<Value> {
     val value: Value
     val status: DataStatus
     val copyWithLoadingInProgress: HoldsData<Value>
-    val loadingFailed: Boolean
-        get() = status is LoadingFailed<*>
+    val loadingFailed: Boolean get() = status is LoadingFailed<*>
 
     fun <E> copyWithError(error: E): HoldsData<Value>
 }
@@ -28,12 +28,9 @@ data class Data<Value>(
     override val status: DataStatus = Initial
 ) : HoldsData<Value> {
 
-    override val copyWithLoadingInProgress: Data<Value>
-        get() = copy(status = Loading)
+    override val copyWithLoadingInProgress: Data<Value> get() = copy(status = Loading)
 
-    override fun <E> copyWithError(error: E): Data<Value> = copy(
-        status = LoadingFailed(error)
-    )
+    override fun <E> copyWithError(error: E): Data<Value> = copy(status = LoadingFailed(error))
 
     fun copyWithNewValue(value: Value): Data<Value> = copy(
         value = value,
@@ -41,7 +38,10 @@ data class Data<Value>(
     )
 }
 
-fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailed(): Boolean = loadingFailed && value.isEmpty()
+fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailedWithNetworkError(): Boolean {
+    val stat = status
+    return stat is LoadingFailed<*> && stat.error is IOException && value.isEmpty()
+}
 
 inline fun <Holder : HoldsData<Collection<Value>>, Value> Holder.ifEmptyAndIsNotLoading(block: (Holder) -> Unit) {
     if (status !is Loading && value.isEmpty()) block(this)
@@ -56,12 +56,9 @@ data class DataList<Value>(
     override val status: DataStatus = Initial
 ) : HoldsData<Collection<Value>> {
 
-    override val copyWithLoadingInProgress: DataList<Value>
-        get() = copy(status = Loading)
+    override val copyWithLoadingInProgress: DataList<Value> get() = copy(status = Loading)
 
-    override fun <E> copyWithError(error: E): DataList<Value> = copy(
-        status = LoadingFailed(error)
-    )
+    override fun <E> copyWithError(error: E): DataList<Value> = copy(status = LoadingFailed(error))
 
     fun copyWithNewItems(newItems: Collection<Value>): DataList<Value> = copy(
         value = value + newItems,
@@ -83,8 +80,7 @@ data class PagedDataList<Value>(
 
     val canLoadMore: Boolean get() = offset < totalItems
 
-    override val copyWithLoadingInProgress: PagedDataList<Value>
-        get() = copy(status = Loading)
+    override val copyWithLoadingInProgress: PagedDataList<Value> get() = copy(status = Loading)
 
     override fun <E> copyWithError(error: E): PagedDataList<Value> = copy(
         status = LoadingFailed(error)
@@ -110,11 +106,6 @@ data class PagedDataList<Value>(
     inline fun ifNotLoadingAndNotAllLoaded(block: (PagedDataList<Value>) -> Unit) {
         if (status !is Loading && offset < totalItems) block(this)
     }
-}
-
-fun <Value> HoldsData<Collection<Value>>.isEmptyDueToNetworkError(): Boolean {
-    val stat = status
-    return value.isEmpty() && stat is LoadingFailed<*> /*&& stat.error is IOException*/
 }
 
 sealed class DataStatus

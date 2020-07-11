@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
@@ -91,8 +90,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                     onReloadClicked(View.OnClickListener { loadTracks() })
                     message("Error occurred lmao") //TODO: error msg
                 }
-            }
-            else carousel {
+            } else carousel {
                 id("tracks")
                 withModelsFrom<Track>(
                     items = state.tracks.value,
@@ -116,7 +114,6 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                         .track(track) //TODO: navigation + a nicer layout
                 }
             }
-
         }
     }
 
@@ -127,14 +124,6 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 viewModel.toggleAlbumFavouriteState()
             } //TODO: test this
         )
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy(LazyThreadSafetyMode.NONE) {
-        reloadingConnectivityComponent(::loadData) {
-            withState(viewModel) {
-                (it.tracks.loadingFailed && it.tracks.value.isEmpty()) || it.artists.loadingFailed
-            }
-        }
     }
 
     private val disposablesComponent = DisposablesComponent()
@@ -153,7 +142,10 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         enableSpotifyPlayButton { loadAlbum(album) }
         return binding.apply {
             view = this@AlbumFragment.view
-            albumToolbarGradientBackgroundView.loadBackgroundGradient(album.iconUrl, disposablesComponent)
+            albumToolbarGradientBackgroundView.loadBackgroundGradient(
+                album.iconUrl,
+                disposablesComponent
+            )
             albumRecyclerView.apply {
                 setController(epoxyController)
                 //TODO: animation
@@ -183,16 +175,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
     override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
-
-    private fun loadData() {
-        viewModel.loadAlbumData(album)
-    }
 
     companion object {
         fun newInstance(album: Album) = AlbumFragment().apply {

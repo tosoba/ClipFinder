@@ -1,5 +1,8 @@
 package com.example.spotifyalbum
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.mapData
@@ -9,10 +12,14 @@ import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
+import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Album
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*
+import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -23,17 +30,30 @@ class AlbumViewModel(
     private val getTracksFromAlbum: GetTracksFromAlbum,
     private val insertAlbum: InsertAlbum,
     private val deleteAlbum: DeleteAlbum,
-    private val isAlbumSaved: IsAlbumSaved
+    private val isAlbumSaved: IsAlbumSaved,
+    context: Context
 ) : MvRxViewModel<AlbumViewState>(initialState) {
 
     init {
-        loadAlbumData(initialState.album)
-    }
-
-    fun loadAlbumData(album: Album) {
+        val album = initialState.album
         loadAlbumsArtists(artistIds = album.artists.map { it.id })
         loadTracksFromAlbum(albumId = album.id)
         loadAlbumFavouriteState(album)
+
+        @SuppressLint("MissingPermission")
+        val disposable = ReactiveNetwork.observeNetworkConnectivity(context)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+            .subscribe {
+                withState { (album, artists, tracks, _) ->
+                    if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
+                        loadAlbumsArtists(album.artists.map { it.id })
+                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
+                        loadTracksFromAlbum(album.id)
+                }
+            }
+            .disposeOnClear()
     }
 
     fun loadAlbumsArtists(artistIds: List<String>) = withState { state ->
@@ -110,7 +130,8 @@ class AlbumViewModel(
                 getTracksFromAlbum,
                 insertAlbum,
                 deleteAlbum,
-                isAlbumSaved
+                isAlbumSaved,
+                viewModelContext.app()
             )
         }
     }
