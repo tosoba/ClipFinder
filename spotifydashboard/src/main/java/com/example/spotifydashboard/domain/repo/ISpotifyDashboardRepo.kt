@@ -9,7 +9,7 @@ import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface ISpotifyDashboardRemoteRepo {
+interface ISpotifyDashboardRepo {
     fun getCategories(offset: Int): Single<Resource<ListPage<CategoryEntity>>>
     fun getFeaturedPlaylists(offset: Int): Single<Resource<ListPage<PlaylistEntity>>>
     fun getDailyViralTracks(offset: Int): Single<Resource<ListPage<TopTrackEntity>>>

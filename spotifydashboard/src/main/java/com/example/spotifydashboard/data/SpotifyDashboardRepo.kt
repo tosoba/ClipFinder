@@ -14,7 +14,7 @@ import com.example.spotifyapi.models.SpotifyCategory
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.ChartTrackIdMapper
 import com.example.spotifyapi.util.domain
-import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
+import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
 import com.example.spotifyrepo.BaseSpotifyRemoteRepo
 import com.example.there.domain.entity.ListPage
 import com.example.there.domain.entity.spotify.AlbumEntity
@@ -23,13 +23,13 @@ import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Single
 
-class SpotifyDashboardRemoteRepo(
+class SpotifyDashboardRepo(
     preferences: SpotifyPreferences,
     accountsApi: SpotifyAccountsApi,
     private val tracksApi: SpotifyTracksApi,
     private val chartsApi: SpotifyChartsApi,
     private val browseApi: SpotifyBrowseApi
-) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRemoteRepo {
+) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRepo {
 
     override fun getCategories(
         offset: Int

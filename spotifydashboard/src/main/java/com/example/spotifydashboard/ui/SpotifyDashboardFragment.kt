@@ -3,6 +3,7 @@ package com.example.spotifydashboard.ui
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
@@ -48,12 +49,18 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         typedController(builder, differ, viewModel) { state ->
             val (categories, playlists, topTracks, newReleases) = state
 
-            fun <Value> pagedDataListCarousel(
+            fun <Value> pagedDataListCarouselWithHeader(
                 data: PagedDataList<Value>,
+                @StringRes headerRes: Int,
                 idSuffix: String,
                 loadItems: () -> Unit,
                 buildItem: (Value) -> EpoxyModel<*>
             ) {
+                headerItem {
+                    id("header-$idSuffix")
+                    text(getString(headerRes))
+                }
+
                 val (value, status) = data
                 if (value.isEmpty()) when (status) {
                     is Loading -> loadingIndicator {
@@ -63,7 +70,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     is LoadingFailed<*> -> reloadControl {
                         id("reload-control-$idSuffix")
                         onReloadClicked(View.OnClickListener { loadItems() })
-                        message("Error occurred")
+                        message(getString(R.string.error_occurred))
                     }
                 } else carousel {
                     id(idSuffix)
@@ -73,7 +80,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                             is LoadingFailed<*> -> listOf(
                                 ReloadControlBindingModel_()
                                     .id("reload-control-$idSuffix")
-                                    .message("Error occurred")
+                                    .message(getString(R.string.error_occurred))
                                     .onReloadClicked(View.OnClickListener { loadItems() })
                             )
 
@@ -89,13 +96,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 }
             }
 
-            headerItem {
-                id("categories-header")
-                text("Categories")
-            }
-
-            pagedDataListCarousel(
+            pagedDataListCarouselWithHeader(
                 categories,
+                R.string.categories,
                 "categories",
                 viewModel::loadCategories
             ) { category ->
@@ -104,13 +107,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 }
             }
 
-            headerItem {
-                id("playlists-header")
-                text("Featured playlists")
-            }
-
-            pagedDataListCarousel(
+            pagedDataListCarouselWithHeader(
                 playlists,
+                R.string.featured_playlists,
                 "playlists",
                 viewModel::loadFeaturedPlaylists
             ) { playlist ->
@@ -119,13 +118,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 }
             }
 
-            headerItem {
-                id("releases-header")
-                text("New releases")
-            }
-
-            pagedDataListCarousel(
+            pagedDataListCarouselWithHeader(
                 newReleases,
+                R.string.new_releases,
                 "releases",
                 viewModel::loadNewReleases
             ) { album ->
@@ -134,13 +129,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 }
             }
 
-            headerItem {
-                id("tracks-header")
-                text("Top tracks")
-            }
-
-            pagedDataListCarousel(
+            pagedDataListCarouselWithHeader(
                 topTracks,
+                R.string.top_tracks,
                 "tracks",
                 viewModel::loadDailyViralTracks
             ) { topTrack ->
@@ -160,28 +151,19 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
-        inflater,
-        R.layout.fragment_spotify_dashboard,
-        container,
-        false
+        inflater, R.layout.fragment_spotify_dashboard, container, false
     ).apply {
         requireActivity().castAs<AppCompatActivity>()?.apply {
             setSupportActionBar(dashboardToolbar)
             showDrawerHamburger()
         }
         mainContentFragment?.disablePlayButton()
-        dashboardRecyclerView.apply {
-            setController(epoxyController)
-            //TODO: animation
-        }
+        dashboardRecyclerView.setController(epoxyController)
     }.root
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
         if (toolbar.menu?.size() == 0) {
             requireActivity().castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
         }

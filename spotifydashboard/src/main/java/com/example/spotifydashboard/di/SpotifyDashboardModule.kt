@@ -1,7 +1,7 @@
 package com.example.spotifydashboard.di
 
-import com.example.spotifydashboard.data.SpotifyDashboardRemoteRepo
-import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRemoteRepo
+import com.example.spotifydashboard.data.SpotifyDashboardRepo
+import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
 import com.example.spotifydashboard.domain.usecase.GetCategories
 import com.example.spotifydashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotifydashboard.domain.usecase.GetFeaturedPlaylists
@@ -16,6 +16,6 @@ val spotifyDashboardModule = module {
     single { GetDailyViralTracks(get(), get()) }
 
     single {
-        SpotifyDashboardRemoteRepo(get(), get(), get(), get(), get())
-    } bind ISpotifyDashboardRemoteRepo::class
+        SpotifyDashboardRepo(get(), get(), get(), get(), get())
+    } bind ISpotifyDashboardRepo::class
 }
