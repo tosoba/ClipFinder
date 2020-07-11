@@ -126,6 +126,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                     extraModels = when (newReleases.status) {
                         is LoadingFailed<*> -> listOf(
                             ReloadControlBindingModel_()
+                                .id("reload-new-releases")
                                 .message("Error occurred")
                                 .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
                         )
