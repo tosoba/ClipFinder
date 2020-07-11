@@ -1,7 +1,5 @@
 package com.example.coreandroid.model
 
-import java.io.IOException
-
 
 interface HoldsData<Value> {
     val value: Value
@@ -82,6 +80,8 @@ data class PagedDataList<Value>(
     val offset: Int = 0,
     val totalItems: Int = Integer.MAX_VALUE
 ) : HoldsData<Collection<Value>> {
+
+    val canLoadMore: Boolean get() = offset < totalItems
 
     override val copyWithLoadingInProgress: PagedDataList<Value>
         get() = copy(status = Loading)

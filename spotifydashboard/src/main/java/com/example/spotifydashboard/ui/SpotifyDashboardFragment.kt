@@ -6,7 +6,6 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
-import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -19,6 +18,7 @@ import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
+import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
@@ -46,12 +46,14 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         typedController(builder, differ, viewModel) { state ->
+            val (categories, playlists, topTracks, newReleases) = state
+
             headerItem {
                 id("categories-header")
                 text("Categories")
             }
 
-            when (state.categories.status) {
+            when (categories.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-categories")
                 }
@@ -64,7 +66,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
                 is LoadedSuccessfully -> carousel {
                     id("categories")
-                    withModelsFrom(state.categories.value.chunked(2)) { chunk ->
+                    withModelsFrom(categories.value.chunked(2)) { chunk ->
                         Column(chunk.map { category ->
                             category.clickableListItem {
                                 show { newSpotifyCategoryFragment(category) }
@@ -79,7 +81,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("Featured playlists")
             }
 
-            when (state.featuredPlaylists.status) {
+            when (playlists.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-playlists")
                 }
@@ -92,7 +94,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
                 is LoadedSuccessfully -> carousel {
                     id("playlists")
-                    withModelsFrom(state.featuredPlaylists.value.chunked(2)) { chunk ->
+                    withModelsFrom(playlists.value.chunked(2)) { chunk ->
                         Column(chunk.map { playlist ->
                             playlist.clickableListItem {
                                 show { newSpotifyPlaylistFragment(playlist) }
@@ -107,50 +109,40 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("New releases")
             }
 
-            fun newReleasesCarousel(extraModels: Collection<EpoxyModel<*>>) {
-                carousel {
-                    id("releases")
-                    withModelsFrom(
-                        items = state.newReleases.value.chunked(2),
-                        extraModels = extraModels
-                    ) { chunk ->
-                        Column(chunk.map { album ->
-                            album.clickableListItem {
-                                show { newSpotifyAlbumFragment(album) }
-                            }
-                        })
-                    }
+            if (newReleases.value.isEmpty()) when (newReleases.status) {
+                is Loading -> loadingIndicator {
+                    id("loading-indicator-releases")
                 }
-            }
 
-            if (state.newReleases.value.isEmpty()) {
-                when (state.newReleases.status) {
-                    is Loading -> loadingIndicator {
-                        id("loading-indicator-releases")
-                    }
-
-                    is LoadingFailed<*> -> reloadControl {
-                        id("reload-control")
-                        onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
-                        message("Error occurred lmao") //TODO: error msg
-                    }
+                is LoadingFailed<*> -> reloadControl {
+                    id("reload-control")
+                    onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
+                    message("Error occurred lmao") //TODO: error msg
                 }
-            } else {
-                newReleasesCarousel(
-                    extraModels = when (state.newReleases.status) {
+            } else carousel {
+                id("releases")
+                withModelsFrom<List<Album>>(
+                    items = newReleases.value.chunked(2),
+                    extraModels = when (newReleases.status) {
                         is LoadingFailed<*> -> listOf(
                             ReloadControlBindingModel_()
                                 .message("Error occurred")
                                 .onReloadClicked(View.OnClickListener { viewModel.loadNewReleases() })
                         )
-                        else -> listOf(
+
+                        else -> if (newReleases.canLoadMore) listOf(
                             LoadingIndicatorBindingModel_()
                                 .id("loading-more-releases")
                                 .onBind { _, _, _ -> viewModel.loadNewReleases() }
-                            //TODO: addIf can load more (and do the same in AlbumFragment)
-                        )
+                        ) else emptyList()
                     }
-                )
+                ) { chunk ->
+                    Column(chunk.map { album ->
+                        album.clickableListItem {
+                            show { newSpotifyAlbumFragment(album) }
+                        }
+                    })
+                }
             }
 
             headerItem {
@@ -158,7 +150,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                 text("Top tracks")
             }
 
-            when (state.topTracks.status) {
+            when (topTracks.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-tracks")
                 }
@@ -171,7 +163,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
                 is LoadedSuccessfully -> carousel {
                     id("tracks")
-                    withModelsFrom(state.topTracks.value) { topTrack ->
+                    withModelsFrom(topTracks.value) { topTrack ->
                         TopTrackItemBindingModel_()
                             .id(topTrack.track.id)
                             .track(topTrack)
@@ -194,7 +186,10 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
-        inflater, R.layout.fragment_spotify_dashboard, container, false
+        inflater,
+        R.layout.fragment_spotify_dashboard,
+        container,
+        false
     ).apply {
         requireActivity().castAs<AppCompatActivity>()?.apply {
             setSupportActionBar(dashboardToolbar)

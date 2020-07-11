@@ -93,5 +93,3 @@ open class SpotifyPreferences(context: Context) {
         private const val PREF_KEY_LANGUAGE = "Language"
     }
 }
-
-

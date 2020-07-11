@@ -44,19 +44,6 @@ inline fun <S : MvRxState, A : MvRxViewModel<S>> BaseMvRxFragment.typedControlle
     }
 }
 
-inline fun <A : BaseMvRxViewModel<B>, B : MvRxState, C : BaseMvRxViewModel<D>, D : MvRxState> BaseMvRxFragment.typedController(
-    viewModel1: A,
-    viewModel2: C,
-    crossinline build: EpoxyController.(state1: B, state2: D) -> Unit
-) = object : AsyncEpoxyController() {
-    override fun buildModels() {
-        if (view == null || isRemoving) return
-        withState(viewModel1, viewModel2) { state1, state2 ->
-            build(state1, state2)
-        }
-    }
-}
-
 open class NestedScrollingCarouselModel : CarouselModel_() {
     override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent).apply {
         isNestedScrollingEnabled = false
@@ -70,7 +57,8 @@ inline fun EpoxyController.carousel(modelInitializer: CarouselModelBuilder.() ->
 }
 
 inline fun <T> CarouselModelBuilder.withModelsFrom(
-    items: Collection<T>, modelBuilder: (T) -> EpoxyModel<*>
+    items: Collection<T>,
+    modelBuilder: (T) -> EpoxyModel<*>
 ) {
     models(items.map { modelBuilder(it) })
 }
@@ -81,11 +69,4 @@ inline fun <T> CarouselModelBuilder.withModelsFrom(
     modelBuilder: (T) -> EpoxyModel<*>
 ) {
     models(items.map { modelBuilder(it) } + extraModels)
-}
-
-inline fun <T, R> CarouselModelBuilder.withModelsFrom(
-    items: Map<T, R>,
-    modelBuilder: (T, R) -> EpoxyModel<*>
-) {
-    models(items.map { (key, value) -> modelBuilder(key, value) })
 }
