@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.clickableGridListItem
@@ -23,6 +22,7 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -67,8 +67,6 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
         }
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     private val appPreferences: SpotifyPreferences by inject()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -87,7 +85,9 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
         mainContentFragment?.disablePlayButton()
         return binding.apply {
             view = this@CategoryFragment.view
-            categoryToolbarGradientBackgroundView.loadBackgroundGradient(category.iconUrl, disposablesComponent)
+            categoryToolbarGradientBackgroundView
+                .loadBackgroundGradient(category.iconUrl)
+                .disposeOnDestroy(this@CategoryFragment)
             categoryRecyclerView.apply {
                 setController(epoxyController)
                 layoutManager = GridLayoutManager(context,
@@ -102,26 +102,32 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.selectSubscribe(this, CategoryViewState::isSavedAsFavourite) {
-            category_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
-                if (it.value) R.drawable.delete else R.drawable.favourite))
+            category_favourite_fab?.setImageDrawable(
+                ContextCompat.getDrawable(
+                    view.context,
+                    if (it.value) R.drawable.delete else R.drawable.favourite
+                )
+            )
             category_favourite_fab?.hideAndShow()
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        category_recycler_view?.layoutManager = GridLayoutManager(context,
-            if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+        category_recycler_view?.layoutManager = GridLayoutManager(
+            context,
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+        )
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     private fun observePreferences() {
         appPreferences.countryObservable
             .skip(1)
             .distinctUntilChanged()
             .subscribe({ viewModel.loadPlaylists(true) }, Timber::e)
-            .disposeWith(disposablesComponent)
+            .disposeOnDestroy(this)
     }
 
     companion object {

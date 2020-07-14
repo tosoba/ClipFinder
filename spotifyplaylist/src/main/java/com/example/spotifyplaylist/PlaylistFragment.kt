@@ -16,7 +16,6 @@ import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.base.playlist.PlaylistViewState
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
@@ -24,6 +23,7 @@ import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.spotifyplaylist.databinding.FragmentPlaylistBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_playlist.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -68,12 +68,9 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,13 +78,16 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         enableSpotifyPlayButton { loadPlaylist(playlist) }
         return binding.apply {
             view = this@PlaylistFragment.view
-            playlistToolbarGradientBackgroundView.loadBackgroundGradient(playlist.iconUrl, disposablesComponent)
+            playlistToolbarGradientBackgroundView
+                .loadBackgroundGradient(playlist.iconUrl)
+                .disposeOnDestroy(this@PlaylistFragment)
             spotifyPlaylistRecyclerView.apply {
                 setController(epoxyController)
-                layoutManager = GridLayoutManager(context,
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                layoutManager = GridLayoutManager(
+                    context,
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+                )
                 setItemSpacingDp(5)
-                //TODO: animation
 
                 //TODO: change layout manager onConfigurationChanged (same in SoundCloud) + use grid layout items
             }
@@ -109,7 +109,7 @@ class PlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         lifecycle.addObserver(connectivityComponent)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     companion object {
         fun newInstance(playlist: Playlist) = PlaylistFragment().apply {

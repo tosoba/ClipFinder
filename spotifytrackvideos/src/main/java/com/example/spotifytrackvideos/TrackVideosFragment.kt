@@ -13,7 +13,6 @@ import com.airbnb.mvrx.*
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
@@ -22,6 +21,7 @@ import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.spotifytrackvideos.track.TrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
@@ -69,15 +69,12 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentTrackVideosBinding = DataBindingUtil.inflate(
@@ -92,7 +89,9 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
             tracks.value.lastOrNull()?.let {
                 view.track.value = it
-                binding.trackVideosToolbarGradientBackgroundView.loadBackgroundGradient(it.iconUrl, disposablesComponent)
+                binding.trackVideosToolbarGradientBackgroundView
+                    .loadBackgroundGradient(it.iconUrl)
+                    .disposeOnDestroy(this)
                 binding.executePendingBindings()
                 updateCurrentFragment(it)
             } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()

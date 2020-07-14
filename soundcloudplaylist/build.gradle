@@ -46,6 +46,7 @@ dependencies {
     implementation project(':itemlist')
 
     implementation rootProject.ext.rxJava
+    implementation 'com.github.wada811:LifecycleDispose:2.0.3'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 

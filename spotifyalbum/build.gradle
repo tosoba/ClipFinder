@@ -43,6 +43,7 @@ dependencies {
     implementation project(':itemlist')
 
     implementation rootProject.ext.rxJava
+    implementation 'com.github.wada811:LifecycleDispose:2.0.3'
 
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
 

@@ -11,12 +11,10 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
-import com.example.core.ext.castAs
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.headerItem
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
@@ -29,6 +27,7 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyartist.databinding.FragmentArtistBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -160,8 +159,6 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         }
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
 
@@ -174,7 +171,9 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         viewModel.selectSubscribe(this, ArtistViewState::artists) { artists ->
             artists.value.lastOrNull()?.let {
                 view.artist.value = it
-                binding.artistToolbarGradientBackgroundView.loadBackgroundGradient(it.iconUrl, disposablesComponent)
+                binding.artistToolbarGradientBackgroundView
+                    .loadBackgroundGradient(it.iconUrl)
+                    .disposeOnDestroy(this)
                 binding.executePendingBindings()
             } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
         }
@@ -198,11 +197,10 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
         lifecycle.addObserver(connectivityComponent)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun onBackPressed() {
         viewModel.onBackPressed()

@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
@@ -24,6 +23,7 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -126,8 +126,6 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -142,14 +140,10 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         enableSpotifyPlayButton { loadAlbum(album) }
         return binding.apply {
             view = this@AlbumFragment.view
-            albumToolbarGradientBackgroundView.loadBackgroundGradient(
-                album.iconUrl,
-                disposablesComponent
-            )
-            albumRecyclerView.apply {
-                setController(epoxyController)
-                //TODO: animation
-            }
+            albumToolbarGradientBackgroundView
+                .loadBackgroundGradient(album.iconUrl)
+                .disposeOnDestroy(this@AlbumFragment)
+            albumRecyclerView.setController(epoxyController)
             albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
     }
@@ -170,10 +164,9 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
 

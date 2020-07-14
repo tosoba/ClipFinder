@@ -50,7 +50,7 @@ class SpotifySearchMainFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(

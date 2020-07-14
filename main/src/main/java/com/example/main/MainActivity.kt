@@ -399,7 +399,7 @@ class MainActivity :
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item?.itemId) {
         R.id.search_view_menu_item -> true
         else -> super.onOptionsItemSelected(item)
     }

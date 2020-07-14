@@ -14,7 +14,6 @@ import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.base.handler.SoundCloudPlayerController
 import com.example.coreandroid.base.trackvideos.TrackVideosViewBinding
 import com.example.coreandroid.base.trackvideos.TrackVideosViewState
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
@@ -24,8 +23,8 @@ import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVide
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.google.android.material.tabs.TabLayout
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
-
 
 class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
@@ -67,13 +66,6 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycle.addObserver(disposablesComponent)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(
             inflater,
@@ -96,7 +88,9 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
             tracks.value.lastOrNull()?.let { track ->
                 view.track.value = track
                 track.artworkUrl?.let {
-                    binding.soundCloudTrackVideosToolbarGradientBackgroundView.loadBackgroundGradient(it, disposablesComponent)
+                    binding.soundCloudTrackVideosToolbarGradientBackgroundView
+                        .loadBackgroundGradient(it)
+                        .disposeOnDestroy(this)
                 }
                 binding.executePendingBindings()
                 updateCurrentFragment(track)

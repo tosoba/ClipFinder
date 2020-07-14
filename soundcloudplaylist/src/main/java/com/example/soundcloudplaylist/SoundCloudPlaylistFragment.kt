@@ -15,7 +15,6 @@ import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.playlist.PlaylistView
 import com.example.coreandroid.base.playlist.PlaylistViewState
 import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
@@ -23,6 +22,7 @@ import com.example.coreandroid.model.soundcloud.clickableListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -55,7 +55,9 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(viewModel::loadData) {
-            withState(viewModel) { state -> state.tracks.isEmptyAndLastLoadingFailedWithNetworkError() }
+            withState(viewModel) { state ->
+                state.tracks.isEmptyAndLastLoadingFailedWithNetworkError()
+            }
         }
     }
 
@@ -68,12 +70,9 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
         )
     }
 
-    private val disposablesComponent = DisposablesComponent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(disposablesComponent)
     }
 
     override fun onCreateView(
@@ -83,21 +82,23 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
     ).apply {
         view = this@SoundCloudPlaylistFragment.view
         playlist.artworkUrl?.let { url ->
-            soundCloudPlaylistToolbarGradientBackgroundView.loadBackgroundGradient(url, disposablesComponent)
+            soundCloudPlaylistToolbarGradientBackgroundView
+                .loadBackgroundGradient(url)
+                .disposeOnDestroy(this@SoundCloudPlaylistFragment)
         }
         soundCloudPlaylistRecyclerView.apply {
             setController(epoxyController)
-            layoutManager = GridLayoutManager(context,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+            layoutManager = GridLayoutManager(
+                context,
+                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+            )
             setItemSpacingDp(5)
-            //TODO: animation
         }
         soundCloudPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         mainContentFragment?.enablePlayButton { }
     }.root
 
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean = false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
