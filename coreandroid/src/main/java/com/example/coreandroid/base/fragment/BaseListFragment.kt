@@ -28,7 +28,6 @@ import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrol
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
-
 abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     var refreshData: ((BaseListFragment<T>) -> Unit)? = null
@@ -90,12 +89,12 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         }.root
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         updateRecyclerViewOnConfigChange()
     }
 
-    override fun onInflate(context: Context?, attrs: AttributeSet?, savedInstanceState: Bundle?) {
+    override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
         super.onInflate(context, attrs, savedInstanceState)
 
         val attributes = activity?.obtainStyledAttributes(attrs, R.styleable.BaseListFragment)

@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_item_list.view.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
-
 abstract class ItemListFragment<S> : BaseMvRxFragment() {
 
     private val passedArgs: Args by args()
@@ -46,7 +45,7 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
     }
 
     //TODO: make it so spanCount changes on config change
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 //        item_list_recycler_view?.layoutManager = listLayoutManager
     }

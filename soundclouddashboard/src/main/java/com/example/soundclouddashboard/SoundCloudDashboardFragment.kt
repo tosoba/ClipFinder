@@ -136,17 +136,16 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         }.root
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (toolbar.menu?.size() == 0) {
             requireActivity().castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
         }
     }
 
-    override fun onOptionsItemSelected(
-        item: MenuItem?
-    ): Boolean = if (item?.itemId == android.R.id.home
-        && parentFragment?.childFragmentManager?.backStackEntryCount == 0) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (
+        item.itemId == android.R.id.home
+        && parentFragment?.childFragmentManager?.backStackEntryCount == 0
+    ) {
         activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
     } else false
