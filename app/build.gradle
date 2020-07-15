@@ -114,7 +114,6 @@ dependencies {
     implementation project(':youtubevideoplaylist')
 
     implementation rootProject.ext.rxJava
-    implementation 'com.github.wada811:LifecycleDispose:2.0.3'
 
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter

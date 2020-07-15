@@ -24,7 +24,6 @@ import com.example.coreandroid.base.activity.BaseVMActivity
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.*
 import com.example.coreandroid.base.handler.*
-import com.example.coreandroid.lifecycle.DisposablesComponent
 import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.coreandroid.model.soundcloud.SoundCloudTrack
 import com.example.coreandroid.model.spotify.Album
@@ -54,6 +53,7 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import com.spotify.sdk.android.player.Error
 import com.tbruyelle.rxpermissions2.RxPermissions
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
@@ -304,8 +304,6 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycle.addObserver(disposables)
-
         viewModel.clearAllVideoSearchData()
 
         initViewBindings()
@@ -424,8 +422,6 @@ class MainActivity :
         }
     }
 
-    private val disposables = DisposablesComponent()
-
     private val rxPermissions by lazy { RxPermissions(this) }
 
     //TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission is granted show visualization or not
@@ -434,7 +430,7 @@ class MainActivity :
     private fun checkPermissions() {
         rxPermissions.request(Manifest.permission.RECORD_AUDIO)
             .subscribe()
-            .disposeWith(disposables)
+            .disposeOnDestroy(this)
     }
 
     override fun loadTrack(track: SoundCloudTrack) {
