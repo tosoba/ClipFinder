@@ -1,5 +1,6 @@
 package com.example.itemlist.spotify
 
+import androidx.fragment.app.Fragment
 import com.example.coreandroid.BR
 import com.example.coreandroid.R
 import com.example.coreandroid.base.fragment.BaseListFragment
@@ -10,12 +11,16 @@ import com.example.coreandroid.view.recyclerview.binder.ItemBinder
 import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
 import com.example.coreandroid.view.recyclerview.item.ListItemView
 
-
 class SpotifyArtistsFragment : BaseListFragment<Artist>() {
 
     override val defaultHeaderText: String = "Artists"
 
-    override val viewState: ViewState<Artist> = ViewState(ObservableSortedList<Artist>(Artist::class.java, IdentifiableObservableListItem.unsortedCallback()))
+    override val viewState: ViewState<Artist> = ViewState(
+        ObservableSortedList<Artist>(
+            Artist::class.java,
+            IdentifiableObservableListItem.unsortedCallback()
+        )
+    )
 
     override val listItemView: ListItemView<Artist>
         get() = object : ListItemView<Artist>(viewState.items) {
@@ -24,6 +29,6 @@ class SpotifyArtistsFragment : BaseListFragment<Artist>() {
         }
 
     override fun fragmentToShowOnItemClick(
-            item: Artist
-    ): androidx.fragment.app.Fragment = fragmentFactory.newSpotifyArtistFragment(artist = item)
+        item: Artist
+    ): Fragment = fragmentFactory.newSpotifyArtistFragment(artist = item)
 }

@@ -677,7 +677,7 @@ class MainActivity :
         //TODO: handle soundcloud search here
     }
 
-    private fun showMainToolbarOnBackPressed(currentFragment: androidx.fragment.app.Fragment) {
+    private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
         if (currentFragment.childFragmentManager.backStackEntryCount == 1) {
             val mainToolbar = (currentFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)

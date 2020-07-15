@@ -1,10 +1,12 @@
 package com.example.main.spotify
 
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SpotifyMainView(
     val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener,
-    val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
-    val onPageChangeListener: androidx.viewpager.widget.ViewPager.OnPageChangeListener,
+    val pagerAdapter: FragmentStatePagerAdapter,
+    val onPageChangeListener: ViewPager.OnPageChangeListener,
     val offScreenPageLimit: Int
 )

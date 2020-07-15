@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.base.handler.NavigationDrawerController
@@ -32,12 +33,15 @@ class AccountFragment : Fragment(), HasMainToolbar {
         }
     }
 
-    private val viewPagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter by lazy {
-        TitledCustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-            "Playlists" to AccountPlaylistsFragment(),
-            "Saved" to AccountSavedFragment(),
-            "Top" to AccountTopFragment()
-        ))
+    private val viewPagerAdapter: FragmentStatePagerAdapter by lazy {
+        TitledCustomCurrentStatePagerAdapter(
+            childFragmentManager,
+            arrayOf(
+                "Playlists" to AccountPlaylistsFragment(),
+                "Saved" to AccountSavedFragment(),
+                "Top" to AccountTopFragment()
+            )
+        )
     }
 
     private val view: AccountView by lazy(LazyThreadSafetyMode.NONE) {

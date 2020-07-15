@@ -4,6 +4,7 @@ import android.view.View
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.MutableLiveData
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.User
@@ -18,7 +19,7 @@ class MainView(
     val slideListener: SlidingUpPanelLayout.PanelSlideListener,
     val initialSlidePanelState: SlidingUpPanelLayout.PanelState,
     val onFavouriteBtnClickListener: View.OnClickListener,
-    val pagerAdapter: androidx.fragment.app.FragmentStatePagerAdapter,
+    val pagerAdapter: FragmentStatePagerAdapter,
     val offScreenPageLimit: Int
 )
 
