@@ -59,7 +59,8 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     override val currentFragment: Fragment? get() = pagerAdapter.currentFragment
 
-    override val currentNavHostFragment: BaseNavHostFragment? get() = pagerAdapter.currentNavHostFragment
+    override val currentNavHostFragment: BaseNavHostFragment?
+        get() = pagerAdapter.currentFragment?.castAs<BaseNavHostFragment>()
 
     override val playButton: FloatingActionButton get() = spotify_play_fab
 

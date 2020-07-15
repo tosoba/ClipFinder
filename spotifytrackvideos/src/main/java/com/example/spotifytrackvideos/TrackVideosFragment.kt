@@ -17,6 +17,7 @@ import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
+import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.spotifytrackvideos.track.TrackFragment
 import com.example.youtubesearch.VideosSearchFragment
@@ -41,9 +42,9 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
         }
     }
 
-    private val pagerAdapter: TrackVideosPagerAdapter by lazy {
-        TrackVideosPagerAdapter(
-            manager = childFragmentManager,
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        CustomCurrentStatePagerAdapter(
+            fragmentManager = childFragmentManager,
             fragments = arrayOf(
                 VideosSearchFragment.newInstanceWithQuery(argTrack.query),
                 TrackFragment.newInstanceWithTrack(argTrack)

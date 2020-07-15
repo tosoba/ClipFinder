@@ -42,7 +42,10 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     private val pagerAdapter by lazy {
         CustomCurrentStatePagerAdapter(
             childFragmentManager,
-            arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment, fragmentFactory.newSoundCloudFavouritesNavHostFragment)
+            arrayOf(
+                fragmentFactory.newSoundCloudDashboardNavHostFragment,
+                fragmentFactory.newSoundCloudFavouritesNavHostFragment
+            )
         )
     }
 
@@ -57,10 +60,9 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
         get() = pagerAdapter.currentFragment
 
     override val currentNavHostFragment: BaseNavHostFragment?
-        get() = pagerAdapter.currentNavHostFragment
+        get() = pagerAdapter.currentFragment?.castAs<BaseNavHostFragment>()
 
-    override val playButton: FloatingActionButton
-        get() = sound_cloud_play_fab
+    override val playButton: FloatingActionButton get() = sound_cloud_play_fab
 
     private val view: SoundCloudMainView by lazy {
         SoundCloudMainView(
@@ -75,5 +77,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSoundcloudMainBinding>(
         inflater, R.layout.fragment_soundcloud_main, container, false
-    ).apply { fragmentView = view }.root
+    ).apply {
+        fragmentView = view
+    }.root
 }
