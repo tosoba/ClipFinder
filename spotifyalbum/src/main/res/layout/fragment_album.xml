@@ -4,8 +4,12 @@
     <data>
 
         <variable
-            name="view"
-            type="com.example.spotifyalbum.AlbumView" />
+            name="album"
+            type="com.example.coreandroid.model.spotify.Album" />
+
+        <variable
+            name="favouriteFabClicked"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,7 +36,7 @@
                 app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.album.name}"
+                app:title="@{album.name}"
                 app:toolbarId="@+id/album_toolbar">
 
                 <View
@@ -41,9 +45,9 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true" />
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.album.imageViewSrc}"
+                    imageSrc="@{album.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -93,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="@{view.onFavouriteBtnClickListener}"
+            android:onClick="@{favouriteFabClicked}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/album_app_bar"
             app:layout_anchorGravity="bottom|end" />

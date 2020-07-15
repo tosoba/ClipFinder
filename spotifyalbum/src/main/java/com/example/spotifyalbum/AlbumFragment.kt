@@ -117,36 +117,20 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
         }
     }
 
-    private val view: AlbumView by lazy(LazyThreadSafetyMode.NONE) {
-        AlbumView(
-            album = album,
-            onFavouriteBtnClickListener = View.OnClickListener {
-                viewModel.toggleAlbumFavouriteState()
-            } //TODO: test this
-        )
-    }
-
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding = DataBindingUtil.inflate<FragmentAlbumBinding>(
-            inflater,
-            R.layout.fragment_album,
-            container,
-            false
-        )
-        enableSpotifyPlayButton { loadAlbum(album) }
-        return binding.apply {
-            view = this@AlbumFragment.view
-            albumToolbarGradientBackgroundView
-                .loadBackgroundGradient(album.iconUrl)
-                .disposeOnDestroy(this@AlbumFragment)
-            albumRecyclerView.setController(epoxyController)
-            albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-        }.root
-    }
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = DataBindingUtil.inflate<FragmentAlbumBinding>(
+        inflater, R.layout.fragment_album, container, false
+    ).apply {
+        album = this@AlbumFragment.album
+        enableSpotifyPlayButton { loadAlbum(this@AlbumFragment.album) }
+        favouriteFabClicked = View.OnClickListener { viewModel.toggleAlbumFavouriteState() }
+        albumToolbarGradientBackgroundView
+            .loadBackgroundGradient(this@AlbumFragment.album.iconUrl)
+            .disposeOnDestroy(this@AlbumFragment)
+        albumRecyclerView.setController(epoxyController)
+        albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -168,7 +152,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
         fun newInstance(album: Album) = AlbumFragment().apply {

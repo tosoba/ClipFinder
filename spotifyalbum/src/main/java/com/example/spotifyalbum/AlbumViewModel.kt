@@ -39,21 +39,7 @@ class AlbumViewModel(
         loadAlbumsArtists(artistIds = album.artists.map { it.id })
         loadTracksFromAlbum(albumId = album.id)
         loadAlbumFavouriteState(album)
-
-        @SuppressLint("MissingPermission")
-        val disposable = ReactiveNetwork.observeNetworkConnectivity(context)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .subscribe {
-                withState { (album, artists, tracks, _) ->
-                    if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadAlbumsArtists(album.artists.map { it.id })
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadTracksFromAlbum(album.id)
-                }
-            }
-            .disposeOnClear()
+        handleConnectivityChanges(context)
     }
 
     fun loadAlbumsArtists(artistIds: List<String>) = withState { state ->
@@ -112,6 +98,23 @@ class AlbumViewModel(
         isAlbumSaved(album.id)
             .subscribeOn(Schedulers.io())
             .update(AlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun handleConnectivityChanges(context: Context) {
+        ReactiveNetwork.observeNetworkConnectivity(context)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
+            .subscribe {
+                withState { (album, artists, tracks, _) ->
+                    if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
+                        loadAlbumsArtists(album.artists.map { it.id })
+                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
+                        loadTracksFromAlbum(album.id)
+                }
+            }
+            .disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<AlbumViewModel, AlbumViewState> {
