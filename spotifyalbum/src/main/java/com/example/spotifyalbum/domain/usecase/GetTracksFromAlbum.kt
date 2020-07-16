@@ -1,4 +1,4 @@
-package com.example.there.domain.usecase.spotify
+package com.example.spotifyalbum.domain.usecase
 
 import com.example.core.model.Resource
 import com.example.there.domain.UseCaseSchedulersProvider
@@ -11,11 +11,15 @@ import io.reactivex.Single
 class GetTracksFromAlbum(
     schedulersProvider: UseCaseSchedulersProvider,
     private val remote: ISpotifyRemoteDataStore
-) : SingleUseCaseWithArgs<GetTracksFromAlbum.Args, Resource<ListPage<TrackEntity>>>(schedulersProvider) {
-
+) : SingleUseCaseWithArgs<GetTracksFromAlbum.Args, Resource<ListPage<TrackEntity>>>(
+    schedulersProvider
+) {
     override fun run(
         args: Args
-    ): Single<Resource<ListPage<TrackEntity>>> = remote.getTracksFromAlbum(args.albumId, args.offset)
+    ): Single<Resource<ListPage<TrackEntity>>> = remote.getTracksFromAlbum(
+        args.albumId,
+        args.offset
+    )
 
     class Args(val albumId: String, val offset: Int)
 }

@@ -8,6 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.di.epoxyModule
 import com.example.coreandroid.util.Constants
+import com.example.spotifyalbum.di.spotifyAlbumModule
 import com.example.spotifyapi.spotifyApiModule
 import com.example.spotifydashboard.di.spotifyDashboardModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
@@ -27,7 +28,7 @@ class ClipFinderApp : Application() {
         initNotifications()
         initKoin()
 
-        ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caussed by Glide - maybe try to remove this later
+        ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
 
         if (BuildConfig.DEBUG) Timber.plant(DebugTree())
     }
@@ -67,7 +68,7 @@ class ClipFinderApp : Application() {
                 soundCloudModule, spotifyModule, videosModule,
                 viewModelsModule,
                 spotifyApiModule,
-                spotifyDashboardModule
+                spotifyDashboardModule, spotifyAlbumModule
             ))
         }
     }

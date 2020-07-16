@@ -1,4 +1,4 @@
-package com.example.spotifyalbum
+package com.example.spotifyalbum.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -22,6 +22,7 @@ import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
+import com.example.spotifyalbum.R
 import com.example.spotifyalbum.databinding.FragmentAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_album.*
@@ -54,9 +55,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 is LoadingFailed<*> -> reloadControl {
                     id("artists-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        withState(viewModel) { state ->
-                            viewModel.loadAlbumsArtists(state.album.artists.map { it.id })
-                        }
+                        viewModel.loadAlbumsArtists(state.album.artists.map { it.id })
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
@@ -76,10 +75,6 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 text("Tracks")
             }
 
-            val loadTracks: () -> Unit = {
-                withState(viewModel) { state -> viewModel.loadTracksFromAlbum(state.album.id) }
-            }
-
             if (state.tracks.value.isEmpty()) when (state.tracks.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-tracks")
@@ -87,7 +82,9 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
                 is LoadingFailed<*> -> reloadControl {
                     id("tracks-reload-control")
-                    onReloadClicked(View.OnClickListener { loadTracks() })
+                    onReloadClicked(View.OnClickListener {
+                        viewModel.loadTracksFromAlbum(state.album.id)
+                    })
                     message("Error occurred lmao") //TODO: error msg
                 }
             } else carousel {
@@ -99,13 +96,17 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
                             ReloadControlBindingModel_()
                                 .id("reload-tracks")
                                 .message("Error occurred")
-                                .onReloadClicked(View.OnClickListener { loadTracks() })
+                                .onReloadClicked(View.OnClickListener {
+                                    viewModel.loadTracksFromAlbum(state.album.id)
+                                })
                         )
 
                         else -> if (state.tracks.canLoadMore) listOf(
                             LoadingIndicatorBindingModel_()
                                 .id("loading-more-tracks")
-                                .onBind { _, _, _ -> loadTracks() }
+                                .onBind { _, _, _ ->
+                                    viewModel.loadTracksFromAlbum(state.album.id)
+                                }
                         ) else emptyList()
                     }
                 ) { track ->

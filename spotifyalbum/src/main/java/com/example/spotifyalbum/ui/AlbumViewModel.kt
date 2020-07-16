@@ -1,4 +1,4 @@
-package com.example.spotifyalbum
+package com.example.spotifyalbum.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,6 +14,7 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Album
+import com.example.spotifyalbum.domain.usecase.GetTracksFromAlbum
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.*

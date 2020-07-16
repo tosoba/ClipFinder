@@ -19,7 +19,6 @@ val spotifyModule = module {
     factory { GetRelatedArtists(get(), get()) }
     factory { GetSimilarTracks(get(), get()) }
     factory { GetTopTracksFromArtist(get(), get()) }
-    factory { GetTracksFromAlbum(get(), get()) }
     factory { SearchSpotify(get(), get()) }
 
     factory { GetFavouriteAlbums(get(), get()) }
