@@ -27,8 +27,8 @@ import com.example.coreandroid.base.handler.SpotifyTrackChangeHandler
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.Constants
 import com.example.coreandroid.util.PendingIntents
+import com.example.coreandroid.util.PlaybackNotification
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.onSeekBarProgressChangeListener
 import com.example.spotifyapi.util.SpotifyAuth
@@ -196,7 +196,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         super.onStart()
 
         if (viewModel.playerState.backgroundPlaybackNotificationIsShowing) {
-            applicationContext.notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+            applicationContext.notificationManager.cancel(PlaybackNotification.ID)
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
         }
 
@@ -435,7 +435,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     private fun notificationBuilder(
         largeIcon: Bitmap?
-    ): NotificationCompat.Builder = NotificationCompat.Builder(context!!, Constants.NOTIFICATION_CHANNEL_ID)
+    ): NotificationCompat.Builder = NotificationCompat.Builder(context!!, PlaybackNotification.CHANNEL_ID)
         .setSmallIcon(R.drawable.play)
         .apply {
             val bigText = viewModel.playerState.playerMetadata?.currentTrack?.name
@@ -478,19 +478,23 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         viewModel.getBitmapSingle(
             Picasso.with(context),
             viewModel.playerState.playerMetadata!!.currentTrack.albumCoverWebUrl,
-            { applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(null).build()) },
-            { bitmap -> applicationContext.notificationManager.notify(PLAYBACK_NOTIFICATION_ID, notificationBuilder(bitmap).build()) }
+            {
+                applicationContext.notificationManager
+                    .notify(PlaybackNotification.ID, notificationBuilder(null).build())
+            },
+            { bitmap ->
+                applicationContext.notificationManager
+                    .notify(PlaybackNotification.ID, notificationBuilder(bitmap).build())
+            }
         )
     }
 
     private fun refreshPlaybackNotification() {
-        applicationContext.notificationManager.cancel(PLAYBACK_NOTIFICATION_ID)
+        applicationContext.notificationManager.cancel(PlaybackNotification.ID)
         showPlaybackNotification()
     }
 
     companion object {
-        private const val PLAYBACK_NOTIFICATION_ID = 100
-
         private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"
         private const val ACTION_RESUME_PLAYBACK = "ACTION_RESUME_PLAYBACK"
         private const val ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION"

@@ -6,6 +6,10 @@ import com.squareup.picasso.Picasso
 import timber.log.Timber
 
 fun BaseViewModel.getBitmapSingle(
-        picasso: Picasso, url: String, onError: (Throwable) -> Unit = Timber::e, onSuccess: (Bitmap) -> Unit) {
+    picasso: Picasso,
+    url: String,
+    onError: (Throwable) -> Unit = Timber::e,
+    onSuccess: (Bitmap) -> Unit
+) {
     picasso.getBitmapSingle(url, onError, onSuccess).disposeOnCleared()
 }

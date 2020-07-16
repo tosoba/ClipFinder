@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.coreandroid.di.epoxyModule
-import com.example.coreandroid.util.Constants
+import com.example.coreandroid.util.PlaybackNotification
 import com.example.spotifyalbum.di.spotifyAlbumModule
 import com.example.spotifyapi.spotifyApiModule
 import com.example.spotifydashboard.di.spotifyDashboardModule
@@ -48,7 +48,7 @@ class ClipFinderApp : Application() {
             getSystemService(NotificationManager::class.java).run {
                 createNotificationChannel(
                     NotificationChannel(
-                        Constants.NOTIFICATION_CHANNEL_ID,
+                        PlaybackNotification.CHANNEL_ID,
                         getString(R.string.channel_name),
                         NotificationManager.IMPORTANCE_DEFAULT
                     ).apply {

@@ -34,7 +34,4 @@ fun Artist.clickableListItem(
     .itemClicked(View.OnClickListener { itemClicked() })
 
 @Parcelize
-data class SimpleArtist(
-    val id: String,
-    val name: String
-) : Parcelable
+data class SimpleArtist(val id: String, val name: String) : Parcelable

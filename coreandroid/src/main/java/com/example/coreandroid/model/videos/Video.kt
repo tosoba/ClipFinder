@@ -37,8 +37,7 @@ data class Video(
 
     private val publishedAgo: String
         get() {
-            val publishedAtMillis = Instant.parse(publishedAt).millis
-            val difference = System.currentTimeMillis() - publishedAtMillis
+            val difference = System.currentTimeMillis() - Instant.parse(publishedAt).millis
             with(Duration.millis(difference)) {
                 return when {
                     standardYears > 0 -> standardYears.getPublishedAgoString("year")
