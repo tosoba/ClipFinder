@@ -1,9 +1,9 @@
 package com.example.spotifydashboard.data
 
 import com.example.core.SpotifyDefaults
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.SpotifyChartsApi

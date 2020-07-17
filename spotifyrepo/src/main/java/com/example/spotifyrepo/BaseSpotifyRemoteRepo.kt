@@ -1,16 +1,16 @@
 package com.example.spotifyrepo
 
 import com.example.core.SpotifyDefaults
-import com.example.core.android.spotify.api.accessToken
+import com.example.core.android.spotify.api.ext.accessToken
+import com.example.core.android.spotify.model.ext.observable
+import com.example.core.android.spotify.model.ext.single
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.retrofit.NetworkResponse
 import com.example.core.retrofit.mapToDataOrThrow
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
 import com.example.spotifyrepo.mapper.domain
-import com.example.spotifyrepo.util.observable
-import com.example.spotifyrepo.util.single
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject

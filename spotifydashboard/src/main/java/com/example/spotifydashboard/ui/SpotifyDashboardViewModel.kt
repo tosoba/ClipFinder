@@ -5,12 +5,12 @@ import android.content.Context
 import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.TopTrack
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifydashboard.domain.usecase.GetCategories
 import com.example.spotifydashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotifydashboard.domain.usecase.GetFeaturedPlaylists

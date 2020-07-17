@@ -3,7 +3,6 @@ package com.example.there.findclips.module
 import com.example.core.retrofit.offlineCacheInterceptor
 import com.example.core.retrofit.onlineCacheInterceptor
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.ext.isConnected
 import com.example.there.domain.UseCaseSchedulersProvider
 import com.example.there.findclips.FragmentFactory
@@ -19,8 +18,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val appModule = module {
-    single { SpotifyPreferences(get()) }
-
     factory { FragmentFactory } bind IFragmentFactory::class
 
     factory<UseCaseSchedulersProvider> {

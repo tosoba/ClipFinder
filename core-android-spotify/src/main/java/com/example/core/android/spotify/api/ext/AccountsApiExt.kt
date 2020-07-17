@@ -1,5 +1,6 @@
-package com.example.core.android.spotify.api
+package com.example.core.android.spotify.api.ext
 
+import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.retrofit.NetworkResponse
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel

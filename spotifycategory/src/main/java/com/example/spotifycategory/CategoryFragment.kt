@@ -12,12 +12,12 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.*
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.clickableGridListItem
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener

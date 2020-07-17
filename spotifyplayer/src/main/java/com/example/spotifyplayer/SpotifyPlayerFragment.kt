@@ -335,7 +335,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     override fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
-            val playerConfig = Config(applicationContext, accessToken, SpotifyAuth.id)
+            val playerConfig = Config(applicationContext, accessToken, SpotifyAuth.ID)
             spotifyPlayer = SpotifyPlayerManager.getPlayer(playerConfig, this,
                 audioTrackController, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {

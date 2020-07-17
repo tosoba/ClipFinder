@@ -19,6 +19,8 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
+import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.activity.BaseVMActivity
 import com.example.coreandroid.base.activity.IntentProvider
@@ -31,7 +33,6 @@ import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.videos.Video
 import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.OnNavigationDrawerClosedListerner
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -41,7 +42,6 @@ import com.example.main.databinding.DrawerHeaderBinding
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
-import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.example.youtubeaddvideo.AddVideoViewState
@@ -605,9 +605,11 @@ class MainActivity :
     }
 
     private fun openLoginWindow() {
-        val request = AuthenticationRequest.Builder(SpotifyAuth.id, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-            .setScopes(SCOPES)
-            .build()
+        val request = AuthenticationRequest.Builder(
+            SpotifyAuth.ID,
+            AuthenticationResponse.Type.TOKEN,
+            SpotifyAuth.REDIRECT_URI
+        ).setScopes(SpotifyAuth.scopes).build()
 
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
@@ -758,20 +760,7 @@ class MainActivity :
 
     companion object {
         private const val minimumPlayerHeightDp = 120
-
         private const val LOGIN_REQUEST_CODE = 100
-        private const val REDIRECT_URI = "testschema://callback"
-        private val SCOPES = arrayOf(
-            "user-read-private",
-            "user-library-read",
-            "user-top-read",
-            "playlist-read",
-            "playlist-read-private",
-            "streaming",
-            "user-read-birthdate",
-            "user-read-email"
-        )
-
         private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
     }
 }

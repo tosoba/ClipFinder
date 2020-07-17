@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
+import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.coreandroid.di.epoxyModule
 import com.example.coreandroid.util.PlaybackNotification
 import com.example.spotifyalbum.di.spotifyAlbumModule
@@ -39,7 +40,9 @@ class ClipFinderApp : Application() {
     }
 
     private fun initLeakCanary() {
-        if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this)
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            LeakCanary.install(this)
+        }
     }
 
     private fun initNotifications() {
@@ -65,7 +68,7 @@ class ClipFinderApp : Application() {
             androidContext(this@ClipFinderApp)
             modules(listOf(
                 appModule, epoxyModule, databaseModule, apiModule, repoModule,
-                soundCloudModule, spotifyModule, videosModule,
+                soundCloudModule, spotifyModule, spotifyCoreAndroidModule, videosModule,
                 viewModelsModule,
                 spotifyApiModule,
                 spotifyDashboardModule, spotifyAlbumModule

@@ -1,16 +1,16 @@
 package com.example.spotifyrepo
 
 import com.example.core.SpotifyDefaults
+import com.example.core.android.spotify.model.ext.single
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Resource
 import com.example.core.retrofit.ThrowableServerError
 import com.example.core.retrofit.mapToDataOrThrow
 import com.example.core.retrofit.mapToResource
-import com.example.coreandroid.preferences.SpotifyPreferences
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.model.*
 import com.example.spotifyrepo.mapper.domain
-import com.example.spotifyrepo.util.single
 import com.example.there.domain.entity.ListPage
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore

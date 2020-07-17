@@ -33,11 +33,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation project(':db')
-    implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
     implementation project(':core-android-spotify')
+    implementation project(':db')
+    implementation project(':domain')
     implementation project(':spotifyapi')
 
     implementation rootProject.ext.rxJava

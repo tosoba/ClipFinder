@@ -1,4 +1,4 @@
-package com.example.coreandroid.preferences
+package com.example.core.android.spotify.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,7 +9,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
 
-open class SpotifyPreferences(context: Context) {
+class SpotifyPreferences(context: Context) {
 
     private val preferences: SharedPreferences
     private val rxPreferences: RxSharedPreferences
