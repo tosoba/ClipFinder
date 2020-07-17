@@ -9,7 +9,7 @@ import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
 import com.example.spotifyapi.model.SpotifyAuthErrorApiModel
-import com.example.spotifyapi.util.SpotifyAuth
+import com.example.coreandroid.util.SpotifyAuth
 import com.example.spotifyrepo.mapper.domain
 import com.example.spotifyrepo.util.observable
 import com.example.spotifyrepo.util.single

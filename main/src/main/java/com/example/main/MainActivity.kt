@@ -41,7 +41,7 @@ import com.example.main.databinding.DrawerHeaderBinding
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
-import com.example.spotifyapi.util.SpotifyAuth
+import com.example.coreandroid.util.SpotifyAuth
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.example.youtubeaddvideo.AddVideoViewState
