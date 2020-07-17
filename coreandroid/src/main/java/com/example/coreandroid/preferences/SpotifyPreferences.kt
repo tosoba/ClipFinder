@@ -59,16 +59,17 @@ open class SpotifyPreferences(context: Context) {
             }
         }
 
-    val countryObservable: Observable<String>
-        get() = countryRx.asObservable()
-
-    val localeObservable: Observable<String>
-        get() = languageRx.asObservable()
+    val countryObservable: Observable<String> get() = countryRx.asObservable()
+    val localeObservable: Observable<String> get() = languageRx.asObservable()
 
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
-            if (!contains(PREF_KEY_COUNTRY)) edit().putString(PREF_KEY_COUNTRY, SpotifyDefaults.COUNTRY).apply()
-            if (!contains(PREF_KEY_LANGUAGE)) edit().putString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE).apply()
+            if (!contains(PREF_KEY_COUNTRY)) {
+                edit().putString(PREF_KEY_COUNTRY, SpotifyDefaults.COUNTRY).apply()
+            }
+            if (!contains(PREF_KEY_LANGUAGE)) {
+                edit().putString(PREF_KEY_LANGUAGE, SpotifyDefaults.LOCALE).apply()
+            }
         }
         rxPreferences = RxSharedPreferences.create(preferences)
 
