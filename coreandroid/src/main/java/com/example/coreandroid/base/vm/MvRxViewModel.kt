@@ -7,7 +7,7 @@ import com.example.core.model.Resource
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
 import com.example.coreandroid.model.PagedDataList
-import com.example.there.domain.entity.ListPage
+import com.example.there.domain.entity.Page
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -77,7 +77,7 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <T> Single<Resource<ListPage<T>>>.updateWithPagedResource(
+    protected fun <T> Single<Resource<Page<T>>>.updateWithPagedResource(
         prop: KProperty1<S, PagedDataList<T>>,
         onError: (Throwable) -> Unit = Timber::e,
         stateReducer: S.(PagedDataList<T>) -> S
@@ -88,9 +88,9 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> stateReducer(
                         currentValueOf(prop)
-                            .copyWithNewItems(it.data.items, it.data.offset, it.data.totalItems)
+                            .copyWithNewItems(it.data.items, it.data.offset, it.data.total)
                     )
-                    is Resource.Error<ListPage<T>, *> -> stateReducer(
+                    is Resource.Error<Page<T>, *> -> stateReducer(
                         currentValueOf(prop)
                             .copyWithError(it.error)
                     )

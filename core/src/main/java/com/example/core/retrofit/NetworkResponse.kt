@@ -15,29 +15,29 @@ sealed class NetworkResponse<out T : Any, out E : Any> {
 class ThrowableServerError(val error: NetworkResponse.ServerError<*>) : Throwable()
 
 fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapToResource(
-    finisher: T.() -> R
-): Observable<Resource<R>> = map(resourceMapper(finisher))
+    mapBody: T.() -> R
+): Observable<Resource<R>> = map(resourceMapper(mapBody))
 
 fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapToResource(
-    finisher: T.() -> R
-): Single<Resource<R>> = map(resourceMapper(finisher))
+    mapBody: T.() -> R
+): Single<Resource<R>> = map(resourceMapper(mapBody))
 
 private fun <T : Any, E : Any, R> resourceMapper(
-    finisher: T.() -> R
+    mapBody: T.() -> R
 ): (NetworkResponse<T, E>) -> Resource<R> = { response ->
     when (response) {
-        is NetworkResponse.Success -> Resource.Success(response.body.finisher())
+        is NetworkResponse.Success -> Resource.Success(response.body.mapBody())
         is NetworkResponse.ServerError -> Resource.Error(response.body)
         is NetworkResponse.NetworkError -> Resource.Error(response.error)
         is NetworkResponse.DifferentError -> Resource.Error(response.error)
     }
 }
 
-fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapToDataOrThrow(
+fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapSuccessOrThrow(
     finisher: T.() -> R
 ): Observable<R> = map(throwingResourceMapper(finisher))
 
-fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapToDataOrThrow(
+fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccessOrThrow(
     finisher: T.() -> R
 ): Single<R> = map(throwingResourceMapper(finisher))
 

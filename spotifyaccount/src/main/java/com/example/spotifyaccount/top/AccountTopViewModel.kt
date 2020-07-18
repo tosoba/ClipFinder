@@ -32,7 +32,7 @@ class AccountTopViewModel(
                 .subscribeAndDisposeOnCleared({
                     viewState.topTracks.addAll(it.items.map(TrackEntity::ui))
                     currentTracksOffset = it.offset + SpotifyDefaults.LIMIT
-                    totalTracks = it.totalItems
+                    totalTracks = it.total
                     viewState.tracksLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.tracksLoadingErrorOccurred.set(true)
@@ -57,7 +57,7 @@ class AccountTopViewModel(
                 .subscribeAndDisposeOnCleared({
                     viewState.artists.addAll(it.items.map(ArtistEntity::ui))
                     currentArtistsOffset = it.offset + SpotifyDefaults.LIMIT
-                    totalArtists = it.totalItems
+                    totalArtists = it.total
                     viewState.tracksLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.tracksLoadingErrorOccurred.set(true)

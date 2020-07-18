@@ -5,6 +5,7 @@ import com.example.core.retrofit.NetworkResponse
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.SpotifyAuthErrorApiModel
+import com.example.there.domain.entity.spotify.AccessTokenEntity
 import io.reactivex.Single
 
 val SpotifyAccountsApi.accessToken: Single<NetworkResponse<AccessTokenApiModel, SpotifyAuthErrorApiModel>>
@@ -20,3 +21,10 @@ val SpotifyAccountsApi.accessTokenHeader: Single<NetworkResponse<String, Spotify
                 is NetworkResponse.DifferentError -> NetworkResponse.DifferentError(it.error)
             }
         }
+
+val AccessTokenApiModel.domain: AccessTokenEntity
+    get() = AccessTokenEntity(
+        token = accessToken,
+        timestamp = System.currentTimeMillis()
+    )
+

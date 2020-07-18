@@ -2,7 +2,7 @@ package com.example.core.android.spotify.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.example.core.SpotifyDefaults
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference

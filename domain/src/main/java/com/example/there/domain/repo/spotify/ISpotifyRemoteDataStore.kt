@@ -1,7 +1,7 @@
 package com.example.there.domain.repo.spotify
 
 import com.example.core.model.Resource
-import com.example.there.domain.entity.ListPage
+import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.*
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -12,9 +12,9 @@ interface ISpotifyRemoteDataStore {
 
     fun searchAll(query: String, offset: Int): Single<Resource<SearchAllEntity>>
 
-    fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<ListPage<PlaylistEntity>>>
+    fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<Page<PlaylistEntity>>>
 
-    fun getPlaylistTracks(playlistId: String, userId: String, offset: Int): Single<Resource<ListPage<TrackEntity>>>
+    fun getPlaylistTracks(playlistId: String, userId: String, offset: Int): Single<Resource<Page<TrackEntity>>>
 
     fun getAlbum(albumId: String): Single<Resource<AlbumEntity>>
 
@@ -28,14 +28,14 @@ interface ISpotifyRemoteDataStore {
 
     fun getRelatedArtists(artistId: String): Single<Resource<List<ArtistEntity>>>
 
-    fun getTracksFromAlbum(albumId: String, offset: Int): Single<Resource<ListPage<TrackEntity>>>
+    fun getTracksFromAlbum(albumId: String, offset: Int): Single<Resource<Page<TrackEntity>>>
 
-    fun getCurrentUsersPlaylists(offset: Int): Single<Resource<ListPage<PlaylistEntity>>>
-    fun getCurrentUsersTopTracks(offset: Int): Single<Resource<ListPage<TrackEntity>>>
+    fun getCurrentUsersPlaylists(offset: Int): Single<Resource<Page<PlaylistEntity>>>
+    fun getCurrentUsersTopTracks(offset: Int): Single<Resource<Page<TrackEntity>>>
 
-    fun getCurrentUsersTopArtists(offset: Int): Single<Resource<ListPage<ArtistEntity>>>
-    fun getCurrentUsersSavedTracks(offset: Int): Single<Resource<ListPage<TrackEntity>>>
-    fun getCurrentUsersSavedAlbums(offset: Int): Single<Resource<ListPage<AlbumEntity>>>
+    fun getCurrentUsersTopArtists(offset: Int): Single<Resource<Page<ArtistEntity>>>
+    fun getCurrentUsersSavedTracks(offset: Int): Single<Resource<Page<TrackEntity>>>
+    fun getCurrentUsersSavedAlbums(offset: Int): Single<Resource<Page<AlbumEntity>>>
 
     fun getAudioFeatures(trackEntity: TrackEntity): Single<Resource<AudioFeaturesEntity>>
 }

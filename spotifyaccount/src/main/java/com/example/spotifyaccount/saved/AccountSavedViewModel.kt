@@ -32,7 +32,7 @@ class AccountSavedViewModel(
                 .subscribeAndDisposeOnCleared({
                     viewState.tracks.addAll(it.items.map(TrackEntity::ui))
                     currentTracksOffset = it.offset + SpotifyDefaults.LIMIT
-                    totalTracks = it.totalItems
+                    totalTracks = it.total
                     viewState.tracksLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.tracksLoadingErrorOccurred.set(true)
@@ -57,7 +57,7 @@ class AccountSavedViewModel(
                 .subscribeAndDisposeOnCleared({
                     viewState.albums.addAll(it.items.map(AlbumEntity::ui))
                     currentAlbumsOffset = it.offset + SpotifyDefaults.LIMIT
-                    totalAlbums = it.totalItems
+                    totalAlbums = it.total
                     viewState.albumsLoadingErrorOccurred.set(false)
                 }, getOnErrorWith {
                     viewState.albumsLoadingErrorOccurred.set(true)

@@ -5,13 +5,13 @@ import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Resource
 import com.example.core.retrofit.ThrowableServerError
-import com.example.core.retrofit.mapToDataOrThrow
+import com.example.core.retrofit.mapSuccessOrThrow
 import com.example.core.retrofit.mapToResource
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.spotifyapi.model.*
 import com.example.spotifyrepo.mapper.domain
-import com.example.there.domain.entity.ListPage
+import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.repo.spotify.ISpotifyRemoteDataStore
 import io.reactivex.Observable
@@ -57,17 +57,17 @@ class SpotifyRemoteRepo(
     override fun getPlaylistsForCategory(
         categoryId: String,
         offset: Int
-    ): Single<Resource<ListPage<PlaylistEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<PlaylistEntity>>> = withTokenSingle { token ->
         api.getPlaylistsForCategory(
             authorization = getAccessTokenHeader(token),
             categoryId = categoryId,
             offset = offset,
             country = preferences.country
         ).mapToResource {
-            ListPage(
+            Page(
                 items = result.items.map(PlaylistApiModel::domain),
                 offset = result.offset + SpotifyDefaults.LIMIT,
-                totalItems = result.totalItems
+                total = result.totalItems
             )
         }
     }
@@ -76,17 +76,17 @@ class SpotifyRemoteRepo(
         playlistId: String,
         userId: String,
         offset: Int
-    ): Single<Resource<ListPage<TrackEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<TrackEntity>>> = withTokenSingle { token ->
         api.getPlaylistTracks(
             authorization = getAccessTokenHeader(token),
             playlistId = playlistId,
             userId = userId,
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map { it.track.domain },
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }
@@ -111,7 +111,7 @@ class SpotifyRemoteRepo(
         trackId: String
     ): Observable<Resource<List<TrackEntity>>> = withTokenObservable { token ->
         api.getSimilarTracks(authorization = getAccessTokenHeader(token), trackId = trackId)
-            .mapToDataOrThrow {
+            .mapSuccessOrThrow {
                 tracks.chunked(50).map {
                     it.joinToString(",") { track -> track.id }
                 }
@@ -171,12 +171,12 @@ class SpotifyRemoteRepo(
 
     override fun getTracksFromAlbum(
         albumId: String, offset: Int
-    ): Single<Resource<ListPage<TrackEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<TrackEntity>>> = withTokenSingle { token ->
         api.getTracksFromAlbum(
             authorization = getAccessTokenHeader(token),
             albumId = albumId,
             offset = offset
-        ).mapToDataOrThrow {
+        ).mapSuccessOrThrow {
             TrackIdsPage(
                 ids = items.joinToString(separator = ",") { it.id },
                 offset = offset,
@@ -187,10 +187,10 @@ class SpotifyRemoteRepo(
                 authorization = getAccessTokenHeader(token),
                 ids = idsPage.ids
             ).mapToResource {
-                ListPage(
+                Page(
                     items = tracks.map(TrackApiModel::domain),
                     offset = idsPage.offset + SpotifyDefaults.LIMIT,
-                    totalItems = idsPage.totalItems
+                    total = idsPage.totalItems
                 )
             }
         }
@@ -198,75 +198,75 @@ class SpotifyRemoteRepo(
 
     override fun getCurrentUsersPlaylists(
         offset: Int
-    ): Single<Resource<ListPage<PlaylistEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+    ): Single<Resource<Page<PlaylistEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
         api.getCurrentUsersPlaylists(
             authorization = getAccessTokenHeader(token),
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map(PlaylistApiModel::domain),
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }
 
     override fun getCurrentUsersTopTracks(
         offset: Int
-    ): Single<Resource<ListPage<TrackEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+    ): Single<Resource<Page<TrackEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
         api.getCurrentUsersTopTracks(
             authorization = getAccessTokenHeader(token),
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map(TrackApiModel::domain),
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }
 
     override fun getCurrentUsersTopArtists(
         offset: Int
-    ): Single<Resource<ListPage<ArtistEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+    ): Single<Resource<Page<ArtistEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
         api.getCurrentUsersTopArtists(
             authorization = getAccessTokenHeader(token),
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map(ArtistApiModel::domain),
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }
 
     override fun getCurrentUsersSavedTracks(
         offset: Int
-    ): Single<Resource<ListPage<TrackEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+    ): Single<Resource<Page<TrackEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
         api.getCurrentUsersSavedTracks(
             authorization = getAccessTokenHeader(token),
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map { it.track.domain },
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }
 
     override fun getCurrentUsersSavedAlbums(
         offset: Int
-    ): Single<Resource<ListPage<AlbumEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
+    ): Single<Resource<Page<AlbumEntity>>> = preferences.userPrivateAccessToken.single.flatMapValidElseThrow { token ->
         api.getCurrentUsersSavedAlbums(
             authorization = getAccessTokenHeader(token),
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map { it.album.domain },
                 offset = offset + SpotifyDefaults.LIMIT,
-                totalItems = totalItems
+                total = totalItems
             )
         }
     }

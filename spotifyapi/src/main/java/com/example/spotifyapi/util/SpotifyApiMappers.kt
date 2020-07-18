@@ -1,14 +1,9 @@
 package com.example.spotifyapi.util
 
-import com.example.spotifyapi.model.TrackApiModel
 import com.example.spotifyapi.models.*
 import com.example.there.domain.entity.spotify.*
 
 private const val DEFAULT_ICON_URL = "https://t.scdn.co/media/derived/r-b-274x274_fd56efa72f4f63764b011b68121581d8_0_0_274_274.jpg"
-
-object ChartTrackIdMapper {
-    fun map(from: String): String = from.substring(from.lastIndexOf('/') + 1)
-}
 
 val List<SpotifyImage>.firstIconUrlOrDefault: String
     get() = getOrNull(0)?.url ?: DEFAULT_ICON_URL

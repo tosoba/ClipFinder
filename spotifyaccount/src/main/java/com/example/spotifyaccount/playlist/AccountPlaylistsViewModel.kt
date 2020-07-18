@@ -32,7 +32,7 @@ class AccountPlaylistsViewModel(
                 .subscribeAndDisposeOnCleared({
                     viewState.playlists.addAll(it.items.map(PlaylistEntity::ui))
                     currentOffset = it.offset + SpotifyDefaults.LIMIT
-                    totalItems = it.totalItems
+                    totalItems = it.total
                     loadedFlag.value = Unit
                 }, ::onError)
         }

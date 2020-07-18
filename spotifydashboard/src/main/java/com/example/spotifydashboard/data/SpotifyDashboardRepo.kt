@@ -1,10 +1,10 @@
 package com.example.spotifydashboard.data
 
 import com.example.core.SpotifyDefaults
+import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
-import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.SpotifyChartsApi
 import com.example.spotifyapi.SpotifyTracksApi
@@ -12,11 +12,9 @@ import com.example.spotifyapi.models.SimpleAlbum
 import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.SpotifyCategory
 import com.example.spotifyapi.models.Track
-import com.example.spotifyapi.util.ChartTrackIdMapper
 import com.example.spotifyapi.util.domain
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
-import com.example.spotifyrepo.BaseSpotifyRemoteRepo
-import com.example.there.domain.entity.ListPage
+import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
@@ -24,66 +22,63 @@ import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Single
 
 class SpotifyDashboardRepo(
-    preferences: SpotifyPreferences,
-    accountsApi: SpotifyAccountsApi,
+    private val preferences: SpotifyPreferences,
+    private val auth: SpotifyAuth,
     private val tracksApi: SpotifyTracksApi,
     private val chartsApi: SpotifyChartsApi,
     private val browseApi: SpotifyBrowseApi
-) : BaseSpotifyRemoteRepo(accountsApi, preferences), ISpotifyDashboardRepo {
+) : ISpotifyDashboardRepo {
 
     override fun getCategories(
         offset: Int
-    ): Single<Resource<ListPage<CategoryEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<CategoryEntity>>> = auth.withTokenSingle { token ->
         browseApi.getCategories(
-            authorization = getAccessTokenHeader(token),
+            authorization = token,
             offset = offset,
             country = preferences.country,
             locale = preferences.locale
         ).mapToResource {
-            ListPage(
+            Page(
                 items = items.map(SpotifyCategory::domain),
                 offset = result.offset + SpotifyDefaults.LIMIT,
-                totalItems = result.total
+                total = result.total
             )
         }
     }
 
     override fun getFeaturedPlaylists(
         offset: Int
-    ): Single<Resource<ListPage<PlaylistEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<PlaylistEntity>>> = auth.withTokenSingle { token ->
         browseApi.getFeaturedPlaylists(
-            authorization = getAccessTokenHeader(token),
+            authorization = token,
             offset = offset,
             country = preferences.country,
             locale = preferences.locale
         )
     }.mapToResource {
-        ListPage(
+        Page(
             items = items.map(SimplePlaylist::domain),
             offset = playlists.offset + SpotifyDefaults.LIMIT,
-            totalItems = playlists.total
+            total = playlists.total
         )
     }
 
     override fun getDailyViralTracks(
         offset: Int
-    ): Single<Resource<ListPage<TopTrackEntity>>> = chartsApi.getDailyViralTracks()
+    ): Single<Resource<Page<TopTrackEntity>>> = chartsApi.getDailyViralTracks()
         .map { csv ->
             csv.split('\n')
-                .filter { it.isNotBlank() && it.first().isDigit() }
-                .map(ChartTrackIdMapper::map)
+                .filter { line -> line.isNotBlank() && line.first().isDigit() }
+                .map { line -> line.substring(line.lastIndexOf('/') + 1) }
                 .chunked(SpotifyDefaults.LIMIT)
         }
         .flatMap { chunks ->
             val chunk = chunks[offset]
-            val ids = chunk.joinToString(",")
-            withTokenSingle { token ->
-                tracksApi.getTracks(
-                    authorization = getAccessTokenHeader(token),
-                    ids = ids
-                )
+            val trackIds = chunk.joinToString(",")
+            auth.withTokenSingle { token ->
+                tracksApi.getTracks(authorization = token, ids = trackIds)
             }.mapToResource {
-                ListPage(
+                Page(
                     items = result.mapIndexed { index: Int, track: Track ->
                         TopTrackEntity(
                             offset * SpotifyDefaults.LIMIT + index + 1,
@@ -91,23 +86,22 @@ class SpotifyDashboardRepo(
                         )
                     },
                     offset = offset + 1,
-                    totalItems = chunks.size
+                    total = chunks.size
                 )
             }
         }
 
-
     override fun getNewReleases(
         offset: Int
-    ): Single<Resource<ListPage<AlbumEntity>>> = withTokenSingle { token ->
+    ): Single<Resource<Page<AlbumEntity>>> = auth.withTokenSingle { token ->
         browseApi.getNewReleases(
-            authorization = getAccessTokenHeader(token),
+            authorization = token,
             offset = offset
         ).mapToResource {
-            ListPage(
+            Page(
                 items = result.items.map(SimpleAlbum::domain),
                 offset = result.offset + SpotifyDefaults.LIMIT,
-                totalItems = result.total
+                total = result.total
             )
         }
     }

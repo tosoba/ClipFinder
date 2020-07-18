@@ -6,7 +6,7 @@ import com.example.core.android.spotify.model.ext.observable
 import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.retrofit.NetworkResponse
-import com.example.core.retrofit.mapToDataOrThrow
+import com.example.core.retrofit.mapSuccessOrThrow
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
@@ -35,7 +35,7 @@ abstract class BaseSpotifyRemoteRepo(
             is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
             else -> accountsApi.accessToken
                 .toObservable()
-                .mapToDataOrThrow(AccessTokenApiModel::domain)
+                .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnNext { preferences.accessToken = it }
                 .map { it.token }
                 .flatMap(block)
@@ -61,22 +61,13 @@ abstract class BaseSpotifyRemoteRepo(
         }
     }
 
-    protected fun <T> Observable<SpotifyPreferences.SavedAccessTokenEntity>.flatMapValidElseThrow(
-        block: (String) -> Observable<T>
-    ): Observable<T> = flatMap { saved ->
-        when (saved) {
-            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
-            else -> Observable.error { IllegalStateException(ACCESS_TOKEN_UNAVAILABLE) }
-        }
-    }
-
     protected fun <T> Single<SpotifyPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
         block: (String) -> Single<T>
     ): Single<T> = flatMap { saved ->
         when (saved) {
             is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
             else -> accountsApi.accessToken
-                .mapToDataOrThrow(AccessTokenApiModel::domain)
+                .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }
                 .map { it.token }
                 .flatMap(block)
