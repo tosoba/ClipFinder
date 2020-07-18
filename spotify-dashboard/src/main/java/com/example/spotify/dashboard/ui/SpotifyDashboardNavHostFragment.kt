@@ -1,4 +1,4 @@
-package com.example.spotifydashboard.ui
+package com.example.spotify.dashboard.ui
 
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment

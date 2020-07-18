@@ -1,7 +1,6 @@
-package com.example.spotifydashboard.ui
+package com.example.spotify.dashboard.ui
 
 import com.airbnb.mvrx.MvRxState
-import com.example.coreandroid.model.DataList
 import com.example.coreandroid.model.PagedDataList
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Category

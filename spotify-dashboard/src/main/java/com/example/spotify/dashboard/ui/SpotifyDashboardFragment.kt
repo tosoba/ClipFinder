@@ -1,4 +1,4 @@
-package com.example.spotifydashboard.ui
+package com.example.spotify.dashboard.ui
 
 import android.os.Bundle
 import android.os.Handler

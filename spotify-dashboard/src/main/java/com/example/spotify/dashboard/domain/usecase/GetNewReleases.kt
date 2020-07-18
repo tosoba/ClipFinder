@@ -1,7 +1,7 @@
-package com.example.spotifydashboard.domain.usecase
+package com.example.spotify.dashboard.domain.usecase
 
 import com.example.core.model.Resource
-import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
+import com.example.spotify.dashboard.domain.repo.ISpotifyDashboardRepo
 import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.AlbumEntity

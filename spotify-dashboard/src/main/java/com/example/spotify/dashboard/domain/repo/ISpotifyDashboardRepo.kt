@@ -1,4 +1,4 @@
-package com.example.spotifydashboard.domain.repo
+package com.example.spotify.dashboard.domain.repo
 
 import com.example.core.model.Resource
 import com.example.there.domain.entity.Page

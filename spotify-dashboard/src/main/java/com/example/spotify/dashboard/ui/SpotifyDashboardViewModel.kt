@@ -1,4 +1,4 @@
-package com.example.spotifydashboard.ui
+package com.example.spotify.dashboard.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,10 +11,10 @@ import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.TopTrack
-import com.example.spotifydashboard.domain.usecase.GetCategories
-import com.example.spotifydashboard.domain.usecase.GetDailyViralTracks
-import com.example.spotifydashboard.domain.usecase.GetFeaturedPlaylists
-import com.example.spotifydashboard.domain.usecase.GetNewReleases
+import com.example.spotify.dashboard.domain.usecase.GetCategories
+import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
+import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
+import com.example.spotify.dashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity

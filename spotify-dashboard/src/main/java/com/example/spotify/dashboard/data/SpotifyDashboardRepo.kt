@@ -1,4 +1,4 @@
-package com.example.spotifydashboard.data
+package com.example.spotify.dashboard.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -13,7 +13,7 @@ import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.SpotifyCategory
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.domain
-import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
+import com.example.spotify.dashboard.domain.repo.ISpotifyDashboardRepo
 import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
