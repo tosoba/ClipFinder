@@ -19,7 +19,9 @@ interface SpotifyAlbumsApi {
     @GET("albums/{id}/tracks")
     fun getAlbumsTracks(
         @Header("Authorization") authorization: String,
-        @Path("id") id: String
+        @Path("id") id: String,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET
     ): Single<NetworkResponse<PagingObject<SimpleTrack>, ErrorResponse>>
 
     @GET("albums")

@@ -37,8 +37,7 @@ class SpotifyAuth(
                 .toObservable()
                 .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnNext { preferences.accessToken = it }
-                .map { "Bearer ${it.token}" }
-                .flatMap(block)
+                .flatMap { block("Bearer ${it.token}") }
         }
     }
 
@@ -50,8 +49,7 @@ class SpotifyAuth(
             else -> accountsApi.accessToken
                 .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }
-                .map { "Bearer ${it.token}" }
-                .flatMap(block)
+                .flatMap { block("Bearer ${it.token}") }
         }
     }
 

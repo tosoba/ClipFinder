@@ -15,7 +15,5 @@ val spotifyDashboardModule = module {
     single { GetNewReleases(get(), get()) }
     single { GetDailyViralTracks(get(), get()) }
 
-    single {
-        SpotifyDashboardRepo(get(), get(), get(), get(), get())
-    } bind ISpotifyDashboardRepo::class
+    single { SpotifyDashboardRepo(get(), get(), get(), get(), get()) } bind ISpotifyDashboardRepo::class
 }

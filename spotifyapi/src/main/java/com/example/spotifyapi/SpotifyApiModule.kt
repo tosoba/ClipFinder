@@ -26,6 +26,7 @@ private inline fun <reified API> Scope.spotifyRetrofit(): API = retrofitWith(
 val spotifyApiModule = module {
     single { spotifyRetrofit<SpotifyBrowseApi>() }
     single { spotifyRetrofit<SpotifyTracksApi>() }
+    single { spotifyRetrofit<SpotifyAlbumsApi>() }
 
     single {
         retrofitWith(
