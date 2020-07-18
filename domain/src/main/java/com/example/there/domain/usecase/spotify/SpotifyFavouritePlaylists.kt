@@ -1,6 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
 import com.example.there.domain.usecase.base.DeletePlaylistUseCase
@@ -9,21 +9,21 @@ import com.example.there.domain.usecase.base.InsertPlaylistUseCase
 import com.example.there.domain.usecase.base.IsPlaylistSavedUseCase
 
 class GetFavouriteSpotifyPlaylists(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : GetFavouritePlaylistsUseCase<PlaylistEntity>(schedulersProvider, repository)
+) : GetFavouritePlaylistsUseCase<PlaylistEntity>(schedulers, repository)
 
 class InsertSpotifyPlaylist(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : InsertPlaylistUseCase<PlaylistEntity>(schedulersProvider, repository)
+) : InsertPlaylistUseCase<PlaylistEntity>(schedulers, repository)
 
 class IsSpotifyPlaylistSaved(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : IsPlaylistSavedUseCase<PlaylistEntity>(schedulersProvider, repository)
+) : IsPlaylistSavedUseCase<PlaylistEntity>(schedulers, repository)
 
 class DeleteSpotifyPlaylist(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : DeletePlaylistUseCase<PlaylistEntity>(schedulersProvider, repository)
+) : DeletePlaylistUseCase<PlaylistEntity>(schedulers, repository)

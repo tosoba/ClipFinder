@@ -1,6 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
 import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
@@ -11,29 +11,29 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 class GetFavouriteCategories(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: ISpotifyLocalRepo
-) : FlowableUseCase<List<CategoryEntity>>(schedulersProvider) {
+) : FlowableUseCase<List<CategoryEntity>>(schedulers) {
     override val result: Flowable<List<CategoryEntity>> get() = repository.favouriteCategories
 }
 
 class InsertCategory(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: ISpotifyLocalRepo
-) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<CategoryEntity>(schedulers) {
     override fun run(args: CategoryEntity): Completable = repository.insertCategory(args)
 }
 
 class IsCategorySaved(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: ISpotifyLocalRepo
-) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
+) : SingleUseCaseWithArgs<String, Boolean>(schedulers) {
     override fun run(args: String): Single<Boolean> = repository.isCategorySaved(args)
 }
 
 class DeleteCategory(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: ISpotifyLocalRepo
-) : CompletableUseCaseWithArgs<CategoryEntity>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<CategoryEntity>(schedulers) {
     override fun run(args: CategoryEntity): Completable = repository.deleteCategory(args)
 }

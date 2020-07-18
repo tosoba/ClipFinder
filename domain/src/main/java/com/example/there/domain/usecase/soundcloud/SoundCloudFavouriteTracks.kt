@@ -1,6 +1,6 @@
 package com.example.there.domain.usecase.soundcloud
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.ISoundCloudDbDataStore
 import com.example.there.domain.usecase.base.DeleteTrackUseCase
@@ -9,21 +9,21 @@ import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
 
 class GetFavouriteSoundCloudTracks(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISoundCloudDbDataStore
-) : GetFavouriteTracksUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
+) : GetFavouriteTracksUseCase<SoundCloudTrackEntity>(schedulers, repository)
 
 class InsertSoundCloudTrack(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISoundCloudDbDataStore
-) : InsertTrackUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
+) : InsertTrackUseCase<SoundCloudTrackEntity>(schedulers, repository)
 
 class IsSoundCloudTrackSaved(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISoundCloudDbDataStore
-) : IsTrackSavedUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
+) : IsTrackSavedUseCase<SoundCloudTrackEntity>(schedulers, repository)
 
 class DeleteSoundCloudTrack(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISoundCloudDbDataStore
-) : DeleteTrackUseCase<SoundCloudTrackEntity>(schedulersProvider, repository)
+) : DeleteTrackUseCase<SoundCloudTrackEntity>(schedulers, repository)

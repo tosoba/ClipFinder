@@ -1,6 +1,6 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.repo.videos.IVideosDbDataStore
@@ -10,16 +10,16 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 
 class GetFavouriteVideosFromPlaylist(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val local: IVideosDbDataStore
-) : FlowableUseCaseWithArgs<Long, List<VideoEntity>>(schedulersProvider) {
+) : FlowableUseCaseWithArgs<Long, List<VideoEntity>>(schedulers) {
     override fun run(args: Long): Flowable<List<VideoEntity>> = local.getVideosFromPlaylist(args)
 }
 
 class AddVideoToPlaylist(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IVideosDbDataStore
-) : CompletableUseCaseWithArgs<AddVideoToPlaylist.Args>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<AddVideoToPlaylist.Args>(schedulers) {
 
     class Args(
         val playlistEntity: VideoPlaylistEntity,
@@ -30,8 +30,8 @@ class AddVideoToPlaylist(
 }
 
 class DeleteVideo(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IVideosDbDataStore
-) : CompletableUseCaseWithArgs<VideoEntity>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<VideoEntity>(schedulers) {
     override fun run(args: VideoEntity): Completable = repository.deleteVideo(args)
 }

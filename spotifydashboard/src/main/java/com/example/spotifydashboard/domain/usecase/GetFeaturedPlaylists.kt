@@ -2,16 +2,16 @@ package com.example.spotifydashboard.domain.usecase
 
 import com.example.core.model.Resource
 import com.example.spotifydashboard.domain.repo.ISpotifyDashboardRepo
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetFeaturedPlaylists(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val remote: ISpotifyDashboardRepo
-) : SingleUseCaseWithArgs<Int, Resource<Page<PlaylistEntity>>>(schedulersProvider) {
+) : SingleUseCaseWithArgs<Int, Resource<Page<PlaylistEntity>>>(schedulers) {
     override fun run(
         args: Int
     ): Single<Resource<Page<PlaylistEntity>>> = remote.getFeaturedPlaylists(offset = args)

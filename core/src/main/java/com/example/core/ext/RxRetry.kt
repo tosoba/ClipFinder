@@ -12,7 +12,6 @@ class Times(attempts: Long = 1) : RetryStrategy(attempts)
 class WithDelay(val delay: Long, val unit: TimeUnit, attempts: Long = 1) : RetryStrategy(attempts)
 class WithVariableDelay(attempts: Long, val unit: TimeUnit, val getDelay: (Int) -> Long) : RetryStrategy(attempts)
 
-
 fun <T> Single<T>.retry(strategy: RetryStrategy): Single<T> = when (strategy) {
     is Times -> retry(strategy.attempts)
     is WithDelay -> retryWhen { errors ->

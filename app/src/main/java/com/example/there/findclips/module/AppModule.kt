@@ -4,7 +4,7 @@ import com.example.core.retrofit.offlineCacheInterceptor
 import com.example.core.retrofit.onlineCacheInterceptor
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.util.ext.isConnected
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.findclips.FragmentFactory
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,8 +20,8 @@ import org.koin.dsl.module
 val appModule = module {
     factory { FragmentFactory } bind IFragmentFactory::class
 
-    factory<UseCaseSchedulersProvider> {
-        object : UseCaseSchedulersProvider {
+    factory<RxSchedulers> {
+        object : RxSchedulers {
             override val subscribeOnScheduler: Scheduler get() = Schedulers.io()
             override val observeOnScheduler: Scheduler get() = AndroidSchedulers.mainThread()
         }

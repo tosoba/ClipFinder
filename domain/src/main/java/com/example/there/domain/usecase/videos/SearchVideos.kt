@@ -1,7 +1,7 @@
 package com.example.there.domain.usecase.videos
 
 import com.example.core.model.Resource
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosDbDataStore
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
@@ -9,10 +9,10 @@ import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class SearchVideos(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val remote: IVideosRemoteDataStore,
     private val local: IVideosDbDataStore
-) : SingleUseCaseWithArgs<SearchVideos.Args, Resource<List<VideoEntity>>>(schedulersProvider) {
+) : SingleUseCaseWithArgs<SearchVideos.Args, Resource<List<VideoEntity>>>(schedulers) {
 
     class Args(val query: String, val loadMore: Boolean)
 

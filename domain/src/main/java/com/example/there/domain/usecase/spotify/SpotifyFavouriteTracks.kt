@@ -1,6 +1,6 @@
 package com.example.there.domain.usecase.spotify
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
 import com.example.there.domain.usecase.base.DeleteTrackUseCase
@@ -9,21 +9,21 @@ import com.example.there.domain.usecase.base.InsertTrackUseCase
 import com.example.there.domain.usecase.base.IsTrackSavedUseCase
 
 class GetFavouriteTracks(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : GetFavouriteTracksUseCase<TrackEntity>(schedulersProvider, repository)
+) : GetFavouriteTracksUseCase<TrackEntity>(schedulers, repository)
 
 class InsertTrack(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : InsertTrackUseCase<TrackEntity>(schedulersProvider, repository)
+) : InsertTrackUseCase<TrackEntity>(schedulers, repository)
 
 class IsTrackSaved(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : IsTrackSavedUseCase<TrackEntity>(schedulersProvider, repository)
+) : IsTrackSavedUseCase<TrackEntity>(schedulers, repository)
 
 class DeleteTrack(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     repository: ISpotifyLocalRepo
-) : DeleteTrackUseCase<TrackEntity>(schedulersProvider, repository)
+) : DeleteTrackUseCase<TrackEntity>(schedulers, repository)

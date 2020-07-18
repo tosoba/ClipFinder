@@ -1,8 +1,6 @@
 package com.example.core.ext
 
-import io.reactivex.Maybe
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.disposables.Disposable
 
 fun <T> Maybe<T>.isPresent(): Single<Boolean> = map { true }
@@ -13,6 +11,27 @@ fun Disposable.disposeIfNeeded() {
     if (!isDisposed) dispose()
 }
 
-fun <T> T.single(): Single<T> = Single.just(this)
+interface RxSchedulers {
+    val subscribeOnScheduler: Scheduler
+    val observeOnScheduler: Scheduler
+}
 
-fun <T> T.observable(): Observable<T> = Observable.just(this)
+fun <T> Flowable<T>.applySchedulers(
+    schedulers: RxSchedulers
+): Flowable<T> = subscribeOn(schedulers.subscribeOnScheduler)
+    .observeOn(schedulers.observeOnScheduler)
+
+fun <T> Single<T>.applySchedulers(
+    schedulers: RxSchedulers
+): Single<T> = subscribeOn(schedulers.subscribeOnScheduler)
+    .observeOn(schedulers.observeOnScheduler)
+
+fun <T> Observable<T>.applySchedulers(
+    schedulers: RxSchedulers
+): Observable<T> = subscribeOn(schedulers.subscribeOnScheduler)
+    .observeOn(schedulers.observeOnScheduler)
+
+fun Completable.applySchedulers(
+    schedulers: RxSchedulers
+): Completable = subscribeOn(schedulers.subscribeOnScheduler)
+    .observeOn(schedulers.observeOnScheduler)

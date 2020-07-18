@@ -1,35 +1,35 @@
 package com.example.there.domain.usecase.base
 
-import com.example.there.domain.UseCaseSchedulersProvider
+import com.example.core.ext.RxSchedulers
 import com.example.there.domain.repo.IFavouritePlaylistRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 abstract class InsertPlaylistUseCase<Playlist>(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IFavouritePlaylistRepository<Playlist>
-) : CompletableUseCaseWithArgs<Playlist>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<Playlist>(schedulers) {
     override fun run(args: Playlist): Completable = repository.insertPlaylist(args)
 }
 
 abstract class IsPlaylistSavedUseCase<Playlist>(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IFavouritePlaylistRepository<Playlist>
-) : SingleUseCaseWithArgs<String, Boolean>(schedulersProvider) {
+) : SingleUseCaseWithArgs<String, Boolean>(schedulers) {
     override fun run(args: String): Single<Boolean> = repository.isPlaylistSaved(args)
 }
 
 abstract class DeletePlaylistUseCase<Playlist>(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IFavouritePlaylistRepository<Playlist>
-) : CompletableUseCaseWithArgs<Playlist>(schedulersProvider) {
+) : CompletableUseCaseWithArgs<Playlist>(schedulers) {
     override fun run(args: Playlist): Completable = repository.deletePlaylist(args)
 }
 
 abstract class GetFavouritePlaylistsUseCase<Playlist>(
-    schedulersProvider: UseCaseSchedulersProvider,
+    schedulers: RxSchedulers,
     private val repository: IFavouritePlaylistRepository<Playlist>
-) : FlowableUseCase<List<Playlist>>(schedulersProvider) {
+) : FlowableUseCase<List<Playlist>>(schedulers) {
     override val result: Flowable<List<Playlist>> get() = repository.favouritePlaylists
 }
