@@ -6,6 +6,7 @@ import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.ui
@@ -49,7 +50,7 @@ class SpotifyDashboardViewModel(
             getCategories(applySchedulers = false, args = categories.offset)
                 .mapData { categories -> categories.map(CategoryEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithResourcePage(SpotifyDashboardState::categories) {
+                .updateWithPagedResource(SpotifyDashboardState::categories) {
                     copy(categories = it)
                 }
         }
@@ -60,7 +61,7 @@ class SpotifyDashboardViewModel(
             getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
                 .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithResourcePage(SpotifyDashboardState::featuredPlaylists) {
+                .updateWithPagedResource(SpotifyDashboardState::featuredPlaylists) {
                     copy(featuredPlaylists = it)
                 }
         }
@@ -71,7 +72,7 @@ class SpotifyDashboardViewModel(
             getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
                 .mapData { tracks -> tracks.map { TopTrack(it.position, it.track.ui) } }
                 .subscribeOn(Schedulers.io())
-                .updateWithResourcePage(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
         }
     }
 
@@ -80,7 +81,7 @@ class SpotifyDashboardViewModel(
             getNewReleases(applySchedulers = false, args = newReleases.offset)
                 .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithResourcePage(SpotifyDashboardState::newReleases) {
+                .updateWithPagedResource(SpotifyDashboardState::newReleases) {
                     copy(newReleases = it)
                 }
         }
