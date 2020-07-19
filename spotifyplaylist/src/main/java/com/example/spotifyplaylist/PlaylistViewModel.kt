@@ -41,7 +41,7 @@ class PlaylistViewModel(
             getPlaylistTracks(GetPlaylistTracks.Args(state.playlist.id, state.playlist.userId, state.tracks.offset), applySchedulers = false)
                 .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(PlaylistViewState<Playlist, Track>::tracks) { copy(tracks = it) }
+                .updateWithResourcePage(PlaylistViewState<Playlist, Track>::tracks) { copy(tracks = it) }
         }
     }
 

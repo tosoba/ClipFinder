@@ -32,7 +32,7 @@ class SpotifyAuth(
         block: (String) -> Observable<T>
     ): Observable<T> = flatMap { saved ->
         when (saved) {
-            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block("Bearer ${saved.token}")
             else -> accountsApi.accessToken
                 .toObservable()
                 .mapSuccessOrThrow(AccessTokenApiModel::domain)
@@ -45,7 +45,7 @@ class SpotifyAuth(
         block: (String) -> Single<T>
     ): Single<T> = flatMap { saved ->
         when (saved) {
-            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
+            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block("Bearer ${saved.token}")
             else -> accountsApi.accessToken
                 .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }

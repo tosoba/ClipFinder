@@ -10,7 +10,7 @@ import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.coreandroid.di.epoxyModule
 import com.example.coreandroid.util.PlaybackNotification
 import com.example.spotify.dashboard.di.spotifyDashboardModule
-import com.example.spotifyalbum.di.spotifyAlbumModule
+import com.example.spotify.album.di.spotifyAlbumModule
 import com.example.spotifyapi.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*

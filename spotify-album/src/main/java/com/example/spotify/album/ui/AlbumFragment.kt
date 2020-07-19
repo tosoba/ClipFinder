@@ -1,4 +1,4 @@
-package com.example.spotifyalbum.ui
+package com.example.spotify.album.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -22,8 +22,8 @@ import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
-import com.example.spotifyalbum.R
-import com.example.spotifyalbum.databinding.FragmentAlbumBinding
+import com.example.spotify.album.R
+import com.example.spotify.album.databinding.FragmentAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject

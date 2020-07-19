@@ -41,7 +41,7 @@ class CategoryViewModel(
             getPlaylistsForCategory(GetPlaylistsForCategory.Args(state.category.id, if (shouldClear) 0 else state.playlists.offset))
                 .mapData { playlistsPage -> playlistsPage.map(PlaylistEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(CategoryViewState::playlists) { copy(playlists = it) }
+                .updateWithResourcePage(CategoryViewState::playlists) { copy(playlists = it) }
         }
     }
 

@@ -29,8 +29,8 @@ import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
-import com.example.spotifydashboard.R
-import com.example.spotifydashboard.databinding.FragmentSpotifyDashboardBinding
+import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
+import com.example.spotify.dashboard.R
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
 
@@ -175,7 +175,5 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
         true
     } else false
 
-    override fun invalidate() {
-        withState(viewModel) { state -> epoxyController.setData(state) }
-    }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 }

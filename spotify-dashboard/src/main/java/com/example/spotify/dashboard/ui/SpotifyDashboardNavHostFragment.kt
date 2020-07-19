@@ -2,7 +2,7 @@ package com.example.spotify.dashboard.ui
 
 import androidx.fragment.app.Fragment
 import com.example.coreandroid.base.fragment.BaseNavHostFragment
-import com.example.spotifydashboard.R
+import com.example.spotify.dashboard.R
 
 class SpotifyDashboardNavHostFragment : BaseNavHostFragment() {
     override val layoutId: Int = R.layout.fragment_spotify_dashboard_host

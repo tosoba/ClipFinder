@@ -4,6 +4,6 @@ data class StringIdModel(val id: String)
 
 data class StringUrlModel(val url: String)
 
-data class Paged<T>(val data: T, val offset: Int, val total: Int)
+data class Paged<T>(val contents: T, val offset: Int, val total: Int)
 
-fun <S, I> Paged<Iterable<I>>.map(mapper: (I) -> S): Paged<List<S>> = Paged(data.map(mapper), offset, total)
+fun <T : Iterable<I>, S, I> Paged<T>.map(mapper: (I) -> S): Paged<List<S>> = Paged(contents.map(mapper), offset, total)

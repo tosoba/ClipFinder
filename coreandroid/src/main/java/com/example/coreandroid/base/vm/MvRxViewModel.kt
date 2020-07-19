@@ -3,6 +3,7 @@ package com.example.coreandroid.base.vm
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
+import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
@@ -77,7 +78,7 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <T> Single<Resource<Page<T>>>.updateWithPagedResource(
+    protected fun <T> Single<Resource<Page<T>>>.updateWithResourcePage(
         prop: KProperty1<S, PagedDataList<T>>,
         onError: (Throwable) -> Unit = Timber::e,
         stateReducer: S.(PagedDataList<T>) -> S
@@ -91,6 +92,31 @@ open class MvRxViewModel<S : MvRxState>(
                             .copyWithNewItems(it.data.items, it.data.offset, it.data.total)
                     )
                     is Resource.Error<Page<T>, *> -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithError(it.error)
+                    )
+                }
+            }
+        }, {
+            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
+    }
+
+    protected fun <C : Collection<I>, I> Single<Resource<Paged<C>>>.updateWithPagedResource(
+        prop: KProperty1<S, PagedDataList<I>>,
+        onError: (Throwable) -> Unit = Timber::e,
+        stateReducer: S.(PagedDataList<I>) -> S
+    ): Disposable {
+        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
+        return subscribe({
+            setState {
+                when (it) {
+                    is Resource.Success -> stateReducer(
+                        currentValueOf(prop)
+                            .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
+                    )
+                    is Resource.Error<*, *> -> stateReducer(
                         currentValueOf(prop)
                             .copyWithError(it.error)
                     )

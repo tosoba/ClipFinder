@@ -1,10 +1,12 @@
-package com.example.spotifyalbum.ui
+package com.example.spotify.album.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.example.core.model.Paged
+import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.domain
@@ -14,10 +16,13 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Album
-import com.example.spotifyalbum.domain.usecase.GetTracksFromAlbum
+import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
-import com.example.there.domain.usecase.spotify.*
+import com.example.there.domain.usecase.spotify.DeleteAlbum
+import com.example.there.domain.usecase.spotify.GetArtists
+import com.example.there.domain.usecase.spotify.InsertAlbum
+import com.example.there.domain.usecase.spotify.IsAlbumSaved
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -58,7 +63,7 @@ class AlbumViewModel(
         getTracksFromAlbum(
             args = GetTracksFromAlbum.Args(albumId, state.tracks.offset),
             applySchedulers = false
-        ).mapData { tracksPage ->
+        ).mapData { tracksPage: Paged<List<TrackEntity>> ->
             tracksPage.map(TrackEntity::ui)
         }.subscribeOn(Schedulers.io())
             .updateWithPagedResource(AlbumViewState::tracks) { copy(tracks = it) }

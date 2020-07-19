@@ -49,7 +49,7 @@ class SpotifyDashboardViewModel(
             getCategories(applySchedulers = false, args = categories.offset)
                 .mapData { categories -> categories.map(CategoryEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::categories) {
+                .updateWithResourcePage(SpotifyDashboardState::categories) {
                     copy(categories = it)
                 }
         }
@@ -60,7 +60,7 @@ class SpotifyDashboardViewModel(
             getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
                 .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::featuredPlaylists) {
+                .updateWithResourcePage(SpotifyDashboardState::featuredPlaylists) {
                     copy(featuredPlaylists = it)
                 }
         }
@@ -71,7 +71,7 @@ class SpotifyDashboardViewModel(
             getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
                 .mapData { tracks -> tracks.map { TopTrack(it.position, it.track.ui) } }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+                .updateWithResourcePage(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
         }
     }
 
@@ -80,7 +80,7 @@ class SpotifyDashboardViewModel(
             getNewReleases(applySchedulers = false, args = newReleases.offset)
                 .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::newReleases) {
+                .updateWithResourcePage(SpotifyDashboardState::newReleases) {
                     copy(newReleases = it)
                 }
         }

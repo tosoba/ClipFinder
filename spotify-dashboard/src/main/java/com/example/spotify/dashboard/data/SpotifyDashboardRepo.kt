@@ -3,8 +3,10 @@ package com.example.spotify.dashboard.data
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
+import com.example.spotify.dashboard.domain.repo.ISpotifyDashboardRepo
 import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.SpotifyChartsApi
 import com.example.spotifyapi.SpotifyTracksApi
@@ -13,8 +15,6 @@ import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.SpotifyCategory
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.domain
-import com.example.spotify.dashboard.domain.repo.ISpotifyDashboardRepo
-import com.example.there.domain.entity.Page
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
@@ -31,15 +31,15 @@ class SpotifyDashboardRepo(
 
     override fun getCategories(
         offset: Int
-    ): Single<Resource<Page<CategoryEntity>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<CategoryEntity>>>> = auth.withTokenSingle { token ->
         browseApi.getCategories(
             authorization = token,
             offset = offset,
             country = preferences.country,
             locale = preferences.locale
         ).mapToResource {
-            Page(
-                items = items.map(SpotifyCategory::domain),
+            Paged(
+                contents = items.map(SpotifyCategory::domain),
                 offset = result.offset + SpotifyDefaults.LIMIT,
                 total = result.total
             )
@@ -48,7 +48,7 @@ class SpotifyDashboardRepo(
 
     override fun getFeaturedPlaylists(
         offset: Int
-    ): Single<Resource<Page<PlaylistEntity>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<PlaylistEntity>>>> = auth.withTokenSingle { token ->
         browseApi.getFeaturedPlaylists(
             authorization = token,
             offset = offset,
@@ -56,8 +56,8 @@ class SpotifyDashboardRepo(
             locale = preferences.locale
         )
     }.mapToResource {
-        Page(
-            items = items.map(SimplePlaylist::domain),
+        Paged(
+            contents = items.map(SimplePlaylist::domain),
             offset = playlists.offset + SpotifyDefaults.LIMIT,
             total = playlists.total
         )
@@ -65,7 +65,7 @@ class SpotifyDashboardRepo(
 
     override fun getDailyViralTracks(
         offset: Int
-    ): Single<Resource<Page<TopTrackEntity>>> = chartsApi.getDailyViralTracks()
+    ): Single<Resource<Paged<List<TopTrackEntity>>>> = chartsApi.getDailyViralTracks()
         .map { csv ->
             csv.split('\n')
                 .filter { line -> line.isNotBlank() && line.first().isDigit() }
@@ -78,8 +78,8 @@ class SpotifyDashboardRepo(
             auth.withTokenSingle { token ->
                 tracksApi.getTracks(authorization = token, ids = trackIds)
             }.mapToResource {
-                Page(
-                    items = result.mapIndexed { index: Int, track: Track ->
+                Paged(
+                    contents = result.mapIndexed { index: Int, track: Track ->
                         TopTrackEntity(
                             offset * SpotifyDefaults.LIMIT + index + 1,
                             track.domain
@@ -93,13 +93,13 @@ class SpotifyDashboardRepo(
 
     override fun getNewReleases(
         offset: Int
-    ): Single<Resource<Page<AlbumEntity>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<AlbumEntity>>>> = auth.withTokenSingle { token ->
         browseApi.getNewReleases(
             authorization = token,
             offset = offset
         ).mapToResource {
-            Page(
-                items = result.items.map(SimpleAlbum::domain),
+            Paged(
+                contents = result.items.map(SimpleAlbum::domain),
                 offset = result.offset + SpotifyDefaults.LIMIT,
                 total = result.total
             )
