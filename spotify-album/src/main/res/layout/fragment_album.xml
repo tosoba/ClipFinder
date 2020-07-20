@@ -6,10 +6,6 @@
         <variable
             name="album"
             type="com.example.coreandroid.model.spotify.Album" />
-
-        <variable
-            name="favouriteFabClicked"
-            type="android.view.View.OnClickListener" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -97,7 +93,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="@{favouriteFabClicked}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/album_app_bar"
             app:layout_anchorGravity="bottom|end" />

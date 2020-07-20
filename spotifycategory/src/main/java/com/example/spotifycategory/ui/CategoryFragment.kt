@@ -1,4 +1,4 @@
-package com.example.spotifycategory
+package com.example.spotifycategory.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.coreandroid.base.IFragmentFactory
@@ -21,6 +22,7 @@ import com.example.coreandroid.model.spotify.clickableGridListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
 import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import com.example.spotifycategory.R
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_category.*
@@ -52,48 +54,28 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val category: Category by args()
 
-    private val view: CategoryView by lazy {
-        CategoryView(
-            category = category,
-            onFavouriteBtnClickListener = View.OnClickListener {
-                viewModel.toggleCategoryFavouriteState()
-            }
-        )
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent({ viewModel.loadPlaylists() }) {
-            withState(viewModel) { state -> state.playlists.isEmptyAndLastLoadingFailedWithNetworkError() }
-        }
-    }
-
-    private val appPreferences: SpotifyPreferences by inject()
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        observePreferences()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentCategoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val binding: FragmentCategoryBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_category, container, false
+        )
         mainContentFragment?.disablePlayButton()
         return binding.apply {
-            view = this@CategoryFragment.view
+            category = this@CategoryFragment.category
+            categoryFavouriteFab.setOnClickListener { viewModel.toggleCategoryFavouriteState() }
             categoryToolbarGradientBackgroundView
                 .loadBackgroundGradient(category.iconUrl)
                 .disposeOnDestroy(this@CategoryFragment)
             categoryRecyclerView.apply {
                 setController(epoxyController)
-                layoutManager = GridLayoutManager(context,
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+                layoutManager = layoutManagerFor(resources.configuration.orientation)
                 setItemSpacingDp(5)
-                //TODO: animation
             }
             categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }.root
@@ -114,27 +96,19 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        category_recycler_view?.layoutManager = GridLayoutManager(
-            context,
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
-        )
+        category_recycler_view?.layoutManager = layoutManagerFor(newConfig.orientation)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
-    private fun observePreferences() {
-        appPreferences.countryObservable
-            .skip(1)
-            .distinctUntilChanged()
-            .subscribe({ viewModel.loadPlaylists(true) }, Timber::e)
-            .disposeOnDestroy(this)
-    }
+    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
+        context,
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+    )
 
     companion object {
         fun newInstance(category: Category) = CategoryFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(MvRx.KEY_ARG, category)
-            }
+            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, category) }
         }
     }
 }

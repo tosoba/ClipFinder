@@ -3,11 +3,9 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
-            name="view"
-            type="com.example.spotifycategory.CategoryView" />
+            name="category"
+            type="com.example.coreandroid.model.spotify.Category" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,7 +32,7 @@
                 app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.category.name}"
+                app:title="@{category.name}"
                 app:toolbarId="@+id/category_toolbar">
 
                 <View
@@ -43,9 +41,9 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true" />
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.category.imageViewSrc}"
+                    imageSrc="@{category.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -95,7 +93,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
-            android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/category_app_bar"
             app:layout_anchorGravity="bottom|end" />

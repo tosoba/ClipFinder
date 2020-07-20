@@ -125,7 +125,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
     ).apply {
         album = this@AlbumFragment.album
         enableSpotifyPlayButton { loadAlbum(this@AlbumFragment.album) }
-        favouriteFabClicked = View.OnClickListener { viewModel.toggleAlbumFavouriteState() }
+        albumFavouriteFab.setOnClickListener { viewModel.toggleAlbumFavouriteState() }
         albumToolbarGradientBackgroundView
             .loadBackgroundGradient(this@AlbumFragment.album.iconUrl)
             .disposeOnDestroy(this@AlbumFragment)
