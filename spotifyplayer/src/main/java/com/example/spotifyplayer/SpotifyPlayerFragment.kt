@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
 import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -29,13 +30,13 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.PendingIntents
-import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.onSeekBarProgressChangeListener
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
@@ -474,19 +475,21 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         }
         .setAutoCancel(true)
 
-    private fun showPlaybackNotification() = viewModel.playerState.playerMetadata?.currentTrack?.let {
-        viewModel.getBitmapSingle(
-            Picasso.with(context),
-            viewModel.playerState.playerMetadata!!.currentTrack.albumCoverWebUrl,
-            {
-                applicationContext.notificationManager
-                    .notify(PlaybackNotification.ID, notificationBuilder(null).build())
-            },
-            { bitmap ->
-                applicationContext.notificationManager
-                    .notify(PlaybackNotification.ID, notificationBuilder(bitmap).build())
-            }
-        )
+    private fun showPlaybackNotification() {
+        viewModel.playerState.playerMetadata?.currentTrack?.let {
+            Picasso.with(context)
+                .getBitmapSingle(
+                    url = it.albumCoverWebUrl,
+                    onError = {
+                        applicationContext.notificationManager
+                            .notify(PlaybackNotification.ID, notificationBuilder(null).build())
+                    }
+                ) { bitmap ->
+                    applicationContext.notificationManager
+                        .notify(PlaybackNotification.ID, notificationBuilder(bitmap).build())
+                }
+                .disposeOnDestroy(this)
+        }
     }
 
     private fun refreshPlaybackNotification() {
