@@ -1,4 +1,4 @@
-package com.example.coreandroid.util
+package com.example.core.android.spotify.notification
 
 object PlaybackNotification {
     const val CHANNEL_ID: String = "PLAYBACK_CHANNEL"

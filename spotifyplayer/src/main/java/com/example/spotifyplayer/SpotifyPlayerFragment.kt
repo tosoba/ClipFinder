@@ -18,6 +18,7 @@ import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
+import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.ext.castAs
 import com.example.coreandroid.base.activity.IntentProvider
 import com.example.coreandroid.base.fragment.BaseVMFragment
@@ -28,10 +29,9 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.util.PendingIntents
-import com.example.coreandroid.util.PlaybackNotification
+import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.onSeekBarProgressChangeListener
-import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -435,7 +435,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
 
     private fun notificationBuilder(
         largeIcon: Bitmap?
-    ): NotificationCompat.Builder = NotificationCompat.Builder(context!!, PlaybackNotification.CHANNEL_ID)
+    ): NotificationCompat.Builder = NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
         .setSmallIcon(R.drawable.play)
         .apply {
             val bigText = viewModel.playerState.playerMetadata?.currentTrack?.name

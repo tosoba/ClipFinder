@@ -11,20 +11,8 @@ import io.reactivex.Single
 val SpotifyAccountsApi.accessToken: Single<NetworkResponse<AccessTokenApiModel, SpotifyAuthErrorApiModel>>
     get() = getAccessToken(authorization = SpotifyAuth.clientDataHeader)
 
-val SpotifyAccountsApi.accessTokenHeader: Single<NetworkResponse<String, SpotifyAuthErrorApiModel>>
-    get() = getAccessToken(authorization = SpotifyAuth.clientDataHeader)
-        .map {
-            when (it) {
-                is NetworkResponse.Success -> NetworkResponse.Success("Bearer ${it.body.accessToken}")
-                is NetworkResponse.ServerError -> NetworkResponse.ServerError(it.body, it.code)
-                is NetworkResponse.NetworkError -> NetworkResponse.NetworkError(it.error)
-                is NetworkResponse.DifferentError -> NetworkResponse.DifferentError(it.error)
-            }
-        }
-
 val AccessTokenApiModel.domain: AccessTokenEntity
     get() = AccessTokenEntity(
         token = accessToken,
         timestamp = System.currentTimeMillis()
     )
-
