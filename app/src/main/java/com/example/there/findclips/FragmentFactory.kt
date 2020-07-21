@@ -12,9 +12,9 @@ import com.example.soundcloudfavourites.SoundCloudFavouritesNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
 import com.example.spotifyaccount.AccountNavHostFragment
-import com.example.spotify.album.ui.AlbumFragment
+import com.example.spotify.album.ui.SpotifyAlbumFragment
 import com.example.spotifyartist.ArtistFragment
-import com.example.spotifycategory.ui.CategoryFragment
+import com.example.spotifycategory.ui.SpotifyCategoryFragment
 import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotifyfavourites.SpotifyFavouritesMainNavHostFragment
 import com.example.spotifyplaylist.PlaylistFragment
@@ -33,9 +33,9 @@ object FragmentFactory : IFragmentFactory {
     override val newSpotifyFavouritesMainNavHostFragment: Fragment
         get() = SpotifyFavouritesMainNavHostFragment()
 
-    override fun newSpotifyAlbumFragment(album: Album): Fragment = AlbumFragment.newInstance(album)
+    override fun newSpotifyAlbumFragment(album: Album): Fragment = SpotifyAlbumFragment.newInstance(album)
     override fun newSpotifyArtistFragment(artist: Artist): Fragment = ArtistFragment.newInstance(artist)
-    override fun newSpotifyCategoryFragment(category: Category): Fragment = CategoryFragment.newInstance(category)
+    override fun newSpotifyCategoryFragment(category: Category): Fragment = SpotifyCategoryFragment.newInstance(category)
     override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = PlaylistFragment.newInstance(playlist)
     override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.newInstance(track)
     override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)

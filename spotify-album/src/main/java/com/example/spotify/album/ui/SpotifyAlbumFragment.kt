@@ -24,19 +24,19 @@ import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.spotify.album.R
-import com.example.spotify.album.databinding.FragmentAlbumBinding
+import com.example.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
-import kotlinx.android.synthetic.main.fragment_album.*
+import kotlinx.android.synthetic.main.fragment_spotify_album.*
 import org.koin.android.ext.android.inject
 
-class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
+class SpotifyAlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override val factory: IFragmentFactory by inject()
 
     private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
     private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
-    private val viewModel: AlbumViewModel by fragmentViewModel()
+    private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
 
     private val album: Album by args()
 
@@ -120,22 +120,22 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentAlbumBinding>(
-        inflater, R.layout.fragment_album, container, false
+    ): View? = DataBindingUtil.inflate<FragmentSpotifyAlbumBinding>(
+        inflater, R.layout.fragment_spotify_album, container, false
     ).apply {
-        album = this@AlbumFragment.album
-        enableSpotifyPlayButton { loadAlbum(this@AlbumFragment.album) }
+        album = this@SpotifyAlbumFragment.album
+        enableSpotifyPlayButton { loadAlbum(this@SpotifyAlbumFragment.album) }
         albumFavouriteFab.setOnClickListener { viewModel.toggleAlbumFavouriteState() }
         albumToolbarGradientBackgroundView
-            .loadBackgroundGradient(this@AlbumFragment.album.iconUrl)
-            .disposeOnDestroy(this@AlbumFragment)
+            .loadBackgroundGradient(this@SpotifyAlbumFragment.album.iconUrl)
+            .disposeOnDestroy(this@SpotifyAlbumFragment)
         albumRecyclerView.setController(epoxyController)
         albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
     }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.selectSubscribe(this, AlbumViewState::isSavedAsFavourite) {
+        viewModel.selectSubscribe(this, SpotifyAlbumViewState::isSavedAsFavourite) {
             album_favourite_fab?.setImageDrawable(
                 ContextCompat.getDrawable(
                     view.context,
@@ -156,7 +156,7 @@ class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(album: Album) = AlbumFragment().apply {
+        fun newInstance(album: Album) = SpotifyAlbumFragment().apply {
             arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, album) }
         }
     }

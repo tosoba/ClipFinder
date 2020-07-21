@@ -8,7 +8,7 @@ import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.Track
 
-data class AlbumViewState(
+data class SpotifyAlbumViewState(
     val album: Album,
     val artists: DataList<Artist> = DataList(),
     val tracks: PagedDataList<Track> = PagedDataList(),

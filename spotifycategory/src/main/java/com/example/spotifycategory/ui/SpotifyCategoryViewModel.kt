@@ -27,15 +27,15 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class CategoryViewModel(
-    initialState: CategoryViewState,
+class SpotifyCategoryViewModel(
+    initialState: SpotifyCategoryViewState,
     private val getPlaylistsForCategory: GetPlaylistsForCategory,
     private val insertCategory: InsertCategory,
     private val deleteCategory: DeleteCategory,
     private val isCategorySaved: IsCategorySaved,
     private val preferences: SpotifyPreferences,
     context: Context
-) : MvRxViewModel<CategoryViewState>(initialState) {
+) : MvRxViewModel<SpotifyCategoryViewState>(initialState) {
 
     init {
         loadPlaylists()
@@ -54,7 +54,7 @@ class CategoryViewModel(
         getPlaylistsForCategory(args)
             .mapData { playlistsPage -> playlistsPage.map(PlaylistEntity::ui) }
             .subscribeOn(Schedulers.io())
-            .updateWithResourcePage(CategoryViewState::playlists) { copy(playlists = it) }
+            .updateWithResourcePage(SpotifyCategoryViewState::playlists) { copy(playlists = it) }
     }
 
     fun toggleCategoryFavouriteState() = withState { state ->
@@ -91,7 +91,7 @@ class CategoryViewModel(
 
         isCategorySaved(state.category.id)
             .subscribeOn(Schedulers.io())
-            .update(CategoryViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+            .update(SpotifyCategoryViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
     private fun handlePreferencesChanges() {
@@ -116,17 +116,17 @@ class CategoryViewModel(
             .disposeOnClear()
     }
 
-    companion object : MvRxViewModelFactory<CategoryViewModel, CategoryViewState> {
+    companion object : MvRxViewModelFactory<SpotifyCategoryViewModel, SpotifyCategoryViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: CategoryViewState
-        ): CategoryViewModel {
+            state: SpotifyCategoryViewState
+        ): SpotifyCategoryViewModel {
             val getPlaylistsForCategory: GetPlaylistsForCategory by viewModelContext.activity.inject()
             val insertCategory: InsertCategory by viewModelContext.activity.inject()
             val deleteCategory: DeleteCategory by viewModelContext.activity.inject()
             val isCategorySaved: IsCategorySaved by viewModelContext.activity.inject()
             val preferences: SpotifyPreferences by viewModelContext.activity.inject()
-            return CategoryViewModel(
+            return SpotifyCategoryViewModel(
                 state,
                 getPlaylistsForCategory,
                 insertCategory,

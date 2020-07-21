@@ -30,15 +30,15 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class AlbumViewModel(
-    initialState: AlbumViewState,
+class SpotifyAlbumViewModel(
+    initialState: SpotifyAlbumViewState,
     private val getArtists: GetArtists,
     private val getTracksFromAlbum: GetTracksFromAlbum,
     private val insertAlbum: InsertAlbum,
     private val deleteAlbum: DeleteAlbum,
     private val isAlbumSaved: IsAlbumSaved,
     context: Context
-) : MvRxViewModel<AlbumViewState>(initialState) {
+) : MvRxViewModel<SpotifyAlbumViewState>(initialState) {
 
     init {
         val album = initialState.album
@@ -54,7 +54,7 @@ class AlbumViewModel(
         getArtists(args = artistIds, applySchedulers = false)
             .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
-            .updateWithResource(AlbumViewState::artists) { copy(artists = it) }
+            .updateWithResource(SpotifyAlbumViewState::artists) { copy(artists = it) }
     }
 
     fun loadTracksFromAlbum(albumId: String) = withState { state ->
@@ -66,7 +66,7 @@ class AlbumViewModel(
         ).mapData { tracksPage: Paged<List<TrackEntity>> ->
             tracksPage.map(TrackEntity::ui)
         }.subscribeOn(Schedulers.io())
-            .updateWithPagedResource(AlbumViewState::tracks) { copy(tracks = it) }
+            .updateWithPagedResource(SpotifyAlbumViewState::tracks) { copy(tracks = it) }
     }
 
     fun toggleAlbumFavouriteState() = withState { state ->
@@ -103,7 +103,7 @@ class AlbumViewModel(
 
         isAlbumSaved(album.id)
             .subscribeOn(Schedulers.io())
-            .update(AlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
+            .update(SpotifyAlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
     @SuppressLint("MissingPermission")
@@ -123,17 +123,17 @@ class AlbumViewModel(
             .disposeOnClear()
     }
 
-    companion object : MvRxViewModelFactory<AlbumViewModel, AlbumViewState> {
+    companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, SpotifyAlbumViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: AlbumViewState
-        ): AlbumViewModel {
+            state: SpotifyAlbumViewState
+        ): SpotifyAlbumViewModel {
             val getArtists: GetArtists by viewModelContext.activity.inject()
             val getTracksFromAlbum: GetTracksFromAlbum by viewModelContext.activity.inject()
             val insertAlbum: InsertAlbum by viewModelContext.activity.inject()
             val deleteAlbum: DeleteAlbum by viewModelContext.activity.inject()
             val isAlbumSaved: IsAlbumSaved by viewModelContext.activity.inject()
-            return AlbumViewModel(
+            return SpotifyAlbumViewModel(
                 state,
                 getArtists,
                 getTracksFromAlbum,

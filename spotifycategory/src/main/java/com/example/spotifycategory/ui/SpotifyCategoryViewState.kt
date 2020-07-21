@@ -6,7 +6,7 @@ import com.example.coreandroid.model.PagedDataList
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.Playlist
 
-data class CategoryViewState(
+data class SpotifyCategoryViewState(
     val category: Category,
     val isSavedAsFavourite: Data<Boolean> = Data(false),
     val playlists: PagedDataList<Playlist> = PagedDataList()
