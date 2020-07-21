@@ -2,7 +2,6 @@ package com.example.coreandroid.view.epoxy
 
 import android.os.Handler
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
@@ -14,6 +13,7 @@ import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.HoldsData
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
+import com.example.coreandroid.model.PagedDataList
 import com.example.coreandroid.reloadControl
 import kotlin.reflect.KProperty1
 
@@ -23,13 +23,12 @@ fun <S : MvRxState, A : MvRxViewModel<S>, L : HoldsData<Collection<I>>, I> BaseM
     viewModel: A,
     prop: KProperty1<S, L>,
     headerText: String? = null,
-    onScrollListener: RecyclerView.OnScrollListener? = null,
+    loadMore: (() -> Unit)? = null,
     reloadClicked: () -> Unit,
     buildItem: (I) -> EpoxyModel<*>
 ) = object : TypedEpoxyController<S>(modelBuildingHandler, diffingHandler) {
 
     //TODO: consistent and nice looking spacing between items
-
     override fun buildModels(data: S) {
         if (view == null || isRemoving) return
 
@@ -53,21 +52,16 @@ fun <S : MvRxState, A : MvRxViewModel<S>, L : HoldsData<Collection<I>>, I> BaseM
                 }
             } else {
                 items.value.forEach {
-                    buildItem(it).spanSizeOverride { _, _, _ -> 1 }
-                        .addTo(this)
+                    buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this)
                 }
 
-                if (items.status is Loading) {
+                if (items.status is Loading && items is PagedDataList<*> && items.canLoadMore && loadMore != null) {
                     loadingIndicator {
                         id("loading-indicator-more-items") //TODO: maybe use a different indicator for loading more
+                        onBind { _, _, _ -> loadMore() }
                     }
                 }
             }
         }
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        onScrollListener?.let { recyclerView.addOnScrollListener(it) }
     }
 }

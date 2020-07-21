@@ -26,7 +26,6 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
-
 class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     //TODO: async subscribe showing Toasts when toggling favourite state

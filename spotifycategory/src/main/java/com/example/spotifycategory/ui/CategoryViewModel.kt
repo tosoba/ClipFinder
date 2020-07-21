@@ -16,10 +16,10 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.there.domain.usecase.spotify.DeleteCategory
-import com.example.there.domain.usecase.spotify.GetPlaylistsForCategory
-import com.example.there.domain.usecase.spotify.InsertCategory
-import com.example.there.domain.usecase.spotify.IsCategorySaved
+import com.example.spotifycategory.domain.usecase.DeleteCategory
+import com.example.spotifycategory.domain.usecase.GetPlaylistsForCategory
+import com.example.spotifycategory.domain.usecase.InsertCategory
+import com.example.spotifycategory.domain.usecase.IsCategorySaved
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,14 +47,13 @@ class CategoryViewModel(
     fun loadPlaylists(shouldClear: Boolean = false) = withState { state ->
         if (state.playlists.status is Loading) return@withState
 
-        getPlaylistsForCategory(
-            GetPlaylistsForCategory.Args(
-                categoryId = state.category.id,
-                offset = if (shouldClear) 0 else state.playlists.offset
-            )
-        ).mapData { playlistsPage ->
-            playlistsPage.map(PlaylistEntity::ui)
-        }.subscribeOn(Schedulers.io())
+        val args = GetPlaylistsForCategory.Args(
+            categoryId = state.category.id,
+            offset = if (shouldClear) 0 else state.playlists.offset
+        )
+        getPlaylistsForCategory(args)
+            .mapData { playlistsPage -> playlistsPage.map(PlaylistEntity::ui) }
+            .subscribeOn(Schedulers.io())
             .updateWithResourcePage(CategoryViewState::playlists) { copy(playlists = it) }
     }
 

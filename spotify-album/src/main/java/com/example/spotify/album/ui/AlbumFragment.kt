@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
+import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
@@ -27,14 +28,13 @@ import com.example.spotify.album.databinding.FragmentAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_album.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 class AlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override val factory: IFragmentFactory by inject()
 
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
+    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
+    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
     private val viewModel: AlbumViewModel by fragmentViewModel()
 

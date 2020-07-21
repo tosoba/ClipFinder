@@ -14,7 +14,6 @@ val spotifyModule = module {
     factory { GetCurrentUsersSavedTracks(get(), get()) }
     factory { GetCurrentUsersTopArtists(get(), get()) }
     factory { GetCurrentUsersTopTracks(get(), get()) }
-    factory { GetPlaylistsForCategory(get(), get()) }
     factory { GetPlaylistTracks(get(), get()) }
     factory { GetRelatedArtists(get(), get()) }
     factory { GetSimilarTracks(get(), get()) }
@@ -32,9 +31,6 @@ val spotifyModule = module {
     factory { DeleteArtist(get(), get()) }
 
     factory { GetFavouriteCategories(get(), get()) }
-    factory { InsertCategory(get(), get()) }
-    factory { IsCategorySaved(get(), get()) }
-    factory { DeleteCategory(get(), get()) }
 
     factory { GetFavouriteSpotifyPlaylists(get(), get()) }
     factory { InsertSpotifyPlaylist(get(), get()) }

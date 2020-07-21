@@ -36,13 +36,14 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
     implementation project(':core-android-spotify')
+    implementation project(':db')
+    implementation project(':domain')
+    implementation project(':itemlist')
     implementation project(':spotifyapi')
     implementation project(':spotifyrepo')
-    implementation project(':itemlist')
 
     implementation rootProject.ext.rxJava
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'

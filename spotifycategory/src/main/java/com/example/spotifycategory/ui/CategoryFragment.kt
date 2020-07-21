@@ -13,46 +13,45 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
-import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.lifecycle.ConnectivityComponent
-import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.clickableGridListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
-import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifycategory.R
 import com.example.spotifycategory.databinding.FragmentCategoryBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
-import timber.log.Timber
 
 class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
 
     override val factory: IFragmentFactory by inject()
 
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
-
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
+    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
     private val viewModel: CategoryViewModel by fragmentViewModel()
 
-    //TODO: test endless scroll listener
-    private val epoxyController by lazy {
-        itemListController(builder, differ, viewModel,
-            CategoryViewState::playlists, "Playlists",
-            onScrollListener = EndlessRecyclerOnScrollListener { viewModel.loadPlaylists() },
-            reloadClicked = { viewModel.loadPlaylists() }
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        val loadPlaylists = { viewModel.loadPlaylists() }
+        itemListController(
+            builder,
+            differ,
+            viewModel,
+            CategoryViewState::playlists,
+            getString(R.string.playlists),
+            loadMore = loadPlaylists,
+            reloadClicked = loadPlaylists
         ) {
             it.clickableGridListItem { show { newSpotifyPlaylistFragment(it) } }
         }
     }
 
     private val category: Category by args()
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +69,7 @@ class CategoryFragment : BaseMvRxFragment(), NavigationCapable {
             category = this@CategoryFragment.category
             categoryFavouriteFab.setOnClickListener { viewModel.toggleCategoryFavouriteState() }
             categoryToolbarGradientBackgroundView
-                .loadBackgroundGradient(category.iconUrl)
+                .loadBackgroundGradient(this@CategoryFragment.category.iconUrl)
                 .disposeOnDestroy(this@CategoryFragment)
             categoryRecyclerView.apply {
                 setController(epoxyController)

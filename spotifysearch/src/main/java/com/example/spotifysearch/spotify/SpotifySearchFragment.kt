@@ -21,14 +21,12 @@ import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.view.OnPageChangeListener
 import com.example.coreandroid.view.OnTabSelectedListener
 import com.example.coreandroid.view.epoxy.itemListController
-import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
-
 
 class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment, NavigationCapable {
 
@@ -125,7 +123,7 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment, NavigationCap
             override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy {
                 itemListController(builder, differ, viewModel, prop,
                     reloadClicked = viewModel::searchWithLastQuery,
-                    onScrollListener = EndlessRecyclerOnScrollListener(onLoadMore = viewModel::searchWithLastQuery),
+                    loadMore = viewModel::searchWithLastQuery,
                     buildItem = ::buildItem
                 )
             }
