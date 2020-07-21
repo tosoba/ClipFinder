@@ -12,7 +12,7 @@ import com.example.coreandroid.di.epoxyModule
 import com.example.spotify.album.di.spotifyAlbumModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotifyapi.spotifyApiModule
-import com.example.spotifycategory.di.spotifyCategoryModule
+import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary

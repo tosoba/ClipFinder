@@ -14,7 +14,7 @@ import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
 import com.example.spotifyaccount.AccountNavHostFragment
 import com.example.spotify.album.ui.SpotifyAlbumFragment
 import com.example.spotifyartist.ArtistFragment
-import com.example.spotifycategory.ui.SpotifyCategoryFragment
+import com.example.spotify.category.ui.SpotifyCategoryFragment
 import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotifyfavourites.SpotifyFavouritesMainNavHostFragment
 import com.example.spotifyplaylist.PlaylistFragment

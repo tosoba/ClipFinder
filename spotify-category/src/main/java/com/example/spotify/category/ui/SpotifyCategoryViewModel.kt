@@ -1,4 +1,4 @@
-package com.example.spotifycategory.ui
+package com.example.spotify.category.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,10 +16,10 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.spotifycategory.domain.usecase.DeleteCategory
-import com.example.spotifycategory.domain.usecase.GetPlaylistsForCategory
-import com.example.spotifycategory.domain.usecase.InsertCategory
-import com.example.spotifycategory.domain.usecase.IsCategorySaved
+import com.example.spotify.category.domain.usecase.DeleteCategory
+import com.example.spotify.category.domain.usecase.GetPlaylistsForCategory
+import com.example.spotify.category.domain.usecase.InsertCategory
+import com.example.spotify.category.domain.usecase.IsCategorySaved
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers

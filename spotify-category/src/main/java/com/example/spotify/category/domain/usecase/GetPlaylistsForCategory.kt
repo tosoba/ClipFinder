@@ -1,4 +1,4 @@
-package com.example.spotifycategory.domain.usecase
+package com.example.spotify.category.domain.usecase
 
 import com.example.core.model.Resource
 import com.example.core.ext.RxSchedulers

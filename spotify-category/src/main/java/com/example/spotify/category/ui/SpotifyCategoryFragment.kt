@@ -1,4 +1,4 @@
-package com.example.spotifycategory.ui
+package com.example.spotify.category.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -19,8 +19,8 @@ import com.example.coreandroid.model.spotify.Category
 import com.example.coreandroid.model.spotify.clickableGridListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
-import com.example.spotifycategory.R
-import com.example.spotifycategory.databinding.FragmentSpotifyCategoryBinding
+import com.example.spotify.category.R
+import com.example.spotify.category.databinding.FragmentSpotifyCategoryBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
