@@ -10,10 +10,11 @@ import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.coreandroid.di.epoxyModule
 import com.example.spotify.album.di.spotifyAlbumModule
+import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotifyapi.spotifyApiModule
-import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
+import com.example.spotifyplaylist.di.spotifyPlaylistModule
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
@@ -61,7 +62,6 @@ class ClipFinderApp : Application() {
     }
 
     private fun initKoin() {
-        //TODO: maybe think about moving koin modules into their respective modules :D
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
@@ -69,7 +69,7 @@ class ClipFinderApp : Application() {
                 soundCloudModule, spotifyModule, spotifyCoreAndroidModule, videosModule,
                 viewModelsModule,
                 spotifyApiModule,
-                spotifyDashboardModule, spotifyAlbumModule, spotifyCategoryModule
+                spotifyDashboardModule, spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule
             ))
         }
     }

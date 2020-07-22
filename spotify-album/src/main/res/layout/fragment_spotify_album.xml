@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".spotify.album.AlbumFragment">
+        tools:context="com.example.spotify.album.ui.SpotifyAlbumFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/album_app_bar"

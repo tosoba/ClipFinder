@@ -17,7 +17,7 @@ import com.example.spotifyartist.ArtistFragment
 import com.example.spotify.category.ui.SpotifyCategoryFragment
 import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotifyfavourites.SpotifyFavouritesMainNavHostFragment
-import com.example.spotifyplaylist.PlaylistFragment
+import com.example.spotifyplaylist.ui.SpotifyPlaylistFragment
 import com.example.spotifysearch.SpotifySearchMainFragment
 import com.example.spotifysearch.spotify.SpotifySearchFragment
 import com.example.spotifytrackvideos.TrackVideosFragment
@@ -36,7 +36,7 @@ object FragmentFactory : IFragmentFactory {
     override fun newSpotifyAlbumFragment(album: Album): Fragment = SpotifyAlbumFragment.newInstance(album)
     override fun newSpotifyArtistFragment(artist: Artist): Fragment = ArtistFragment.newInstance(artist)
     override fun newSpotifyCategoryFragment(category: Category): Fragment = SpotifyCategoryFragment.newInstance(category)
-    override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = PlaylistFragment.newInstance(playlist)
+    override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = SpotifyPlaylistFragment.newInstance(playlist)
     override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.newInstance(track)
     override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)
     override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)

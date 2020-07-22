@@ -14,7 +14,6 @@ val spotifyModule = module {
     factory { GetCurrentUsersSavedTracks(get(), get()) }
     factory { GetCurrentUsersTopArtists(get(), get()) }
     factory { GetCurrentUsersTopTracks(get(), get()) }
-    factory { GetPlaylistTracks(get(), get()) }
     factory { GetRelatedArtists(get(), get()) }
     factory { GetSimilarTracks(get(), get()) }
     factory { GetTopTracksFromArtist(get(), get()) }

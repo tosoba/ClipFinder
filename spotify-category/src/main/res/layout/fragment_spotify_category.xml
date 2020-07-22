@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context="com.example.spotify.spotifyitem.category.CategoryFragment">
+        tools:context="com.example.spotify.category.ui.SpotifyCategoryFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/category_app_bar"

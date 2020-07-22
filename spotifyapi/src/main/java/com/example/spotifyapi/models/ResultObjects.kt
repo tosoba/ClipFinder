@@ -101,3 +101,9 @@ data class SearchAllResponse(
     @SerializedName("playlists") val playlistsResult: PlaylistsPagedResponse?,
     @SerializedName("tracks") val tracksResult: TracksPagedResponse?
 )
+
+data class PlaylistTracksResponse(
+    override val items: List<SavedTrack>,
+    override val offset: Int,
+    @SerializedName("total") override val totalItems: Int
+) : PagedResponse<SavedTrack>

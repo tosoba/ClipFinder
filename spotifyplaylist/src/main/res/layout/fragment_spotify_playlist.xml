@@ -6,8 +6,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="view"
-            type="com.example.coreandroid.base.playlist.PlaylistView&lt;com.example.coreandroid.model.spotify.Playlist&gt;" />
+            name="playlist"
+            type="com.example.coreandroid.model.spotify.Playlist" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".spotify.spotifyitem.playlist.PlaylistFragment">
+        tools:context="com.example.spotifyplaylist.ui.SpotifyPlaylistFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/playlist_app_bar"
@@ -34,7 +34,7 @@
                 app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.playlist.name}"
+                app:title="@{playlist.name}"
                 app:toolbarId="@+id/playlist_toolbar">
 
                 <View
@@ -45,7 +45,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.playlist.imageViewSrc}"
+                    imageSrc="@{playlist.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -95,7 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/playlist_app_bar"
             app:layout_anchorGravity="bottom|right" />

@@ -39,12 +39,14 @@ dependencies {
     implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
+    implementation project(':core-android-spotify')
     implementation project(':spotifyapi')
     implementation project(':spotifyrepo')
     implementation project(':itemlist')
 
     implementation rootProject.ext.rxJava
     implementation 'com.github.wada811:LifecycleDispose:2.0.3'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
