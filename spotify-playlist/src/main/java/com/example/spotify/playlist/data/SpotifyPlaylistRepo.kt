@@ -1,4 +1,4 @@
-package com.example.spotifyplaylist.data
+package com.example.spotify.playlist.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -7,7 +7,7 @@ import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
 import com.example.spotifyapi.SpotifyUsersApi
 import com.example.spotifyapi.util.domain
-import com.example.spotifyplaylist.domain.repo.ISpotifyPlaylistRepo
+import com.example.spotify.playlist.domain.repo.ISpotifyPlaylistRepo
 import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.Single
 

@@ -3,10 +3,8 @@ package com.example.there.findclips.module
 import com.example.api.SoundCloudApi
 import com.example.api.SoundCloudApiV2
 import com.example.api.SoundCloudAuth
-import com.example.core.retrofit.clientWithInterceptors
 import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
-import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
 import com.example.youtubeapi.YoutubeApi
 import com.vpaliy.soundcloud.SoundCloud
@@ -30,14 +28,6 @@ val apiModule = module {
                 )
             }
         ).create(SpotifyApi::class.java)
-    }
-    single {
-        retrofitWith(
-            url = accessTokenBaseUrl,
-            client = clientWithInterceptors(
-                interceptorWithHeaders("Content-Type" to "application/x-www-form-urlencoded")
-            )
-        ).create(SpotifyAccountsApi::class.java)
     }
 
     single {
@@ -64,7 +54,6 @@ val apiModule = module {
 }
 
 private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
-private const val accessTokenBaseUrl: String = "https://accounts.spotify.com/api/"
 private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
 private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
 private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"

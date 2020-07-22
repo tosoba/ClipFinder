@@ -1,4 +1,4 @@
-package com.example.spotifyplaylist.domain.repo
+package com.example.spotify.playlist.domain.repo
 
 import com.example.core.model.Paged
 import com.example.core.model.Resource

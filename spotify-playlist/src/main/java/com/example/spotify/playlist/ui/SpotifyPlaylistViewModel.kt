@@ -1,4 +1,4 @@
-package com.example.spotifyplaylist.ui
+package com.example.spotify.playlist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,7 +17,7 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
-import com.example.spotifyplaylist.domain.usecase.GetPlaylistTracks
+import com.example.spotify.playlist.domain.usecase.GetPlaylistTracks
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist

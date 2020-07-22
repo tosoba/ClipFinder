@@ -17,7 +17,7 @@ import com.example.spotifyartist.ArtistFragment
 import com.example.spotify.category.ui.SpotifyCategoryFragment
 import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotifyfavourites.SpotifyFavouritesMainNavHostFragment
-import com.example.spotifyplaylist.ui.SpotifyPlaylistFragment
+import com.example.spotify.playlist.ui.SpotifyPlaylistFragment
 import com.example.spotifysearch.SpotifySearchMainFragment
 import com.example.spotifysearch.spotify.SpotifySearchFragment
 import com.example.spotifytrackvideos.TrackVideosFragment

@@ -1,7 +1,9 @@
-package com.example.spotifyapi
+package com.example.spotifyapi.di
 
+import com.example.core.retrofit.clientWithInterceptors
 import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
+import com.example.spotifyapi.*
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
@@ -24,9 +26,21 @@ private inline fun <reified API> Scope.spotifyRetrofit(): API = retrofitWith(
 ).create(API::class.java)
 
 val spotifyApiModule = module {
-    single { spotifyRetrofit<SpotifyBrowseApi>() }
-    single { spotifyRetrofit<SpotifyTracksApi>() }
+    single {
+        retrofitWith(
+            url = spotifyAccountsApiBaseUrl,
+            client = clientWithInterceptors(
+                interceptorWithHeaders("Content-Type" to "application/x-www-form-urlencoded")
+            )
+        ).create(SpotifyAccountsApi::class.java)
+    }
     single { spotifyRetrofit<SpotifyAlbumsApi>() }
+    single { spotifyRetrofit<SpotifyArtistsApi>() }
+    single { spotifyRetrofit<SpotifyBrowseApi>() }
+    single { spotifyRetrofit<SpotifyPersonalizationApi>() }
+    single { spotifyRetrofit<SpotifySearchApi>() }
+    single { spotifyRetrofit<SpotifyTracksApi>() }
+    single { spotifyRetrofit<SpotifyUsersApi>() }
 
     single {
         retrofitWith(
@@ -38,5 +52,6 @@ val spotifyApiModule = module {
     }
 }
 
+private const val spotifyAccountsApiBaseUrl: String = "https://accounts.spotify.com/api/"
 private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
 private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"

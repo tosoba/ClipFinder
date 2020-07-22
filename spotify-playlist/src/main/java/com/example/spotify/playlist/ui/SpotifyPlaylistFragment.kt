@@ -1,4 +1,4 @@
-package com.example.spotifyplaylist.ui
+package com.example.spotify.playlist.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -21,8 +21,8 @@ import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.view.epoxy.itemListController
-import com.example.spotifyplaylist.R
-import com.example.spotifyplaylist.databinding.FragmentSpotifyPlaylistBinding
+import com.example.spotify.playlist.R
+import com.example.spotify.playlist.databinding.FragmentSpotifyPlaylistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_playlist.*
 import org.koin.android.ext.android.inject
