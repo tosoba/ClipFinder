@@ -7,7 +7,7 @@ import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
-import com.example.coreandroid.model.LoadedSuccessfully
+import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.PagedDataList
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -84,17 +84,17 @@ open class MvRxViewModel<S : MvRxState>(
         shouldClear: Boolean = false,
         stateReducer: S.(PagedDataList<I>) -> S
     ): Disposable {
-        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
+        setState {
+            if (shouldClear) stateReducer(PagedDataList(status = Loading))
+            else stateReducer(currentValueOf(prop).copyWithLoadingInProgress)
+        }
         return subscribe({
             setState {
                 when (it) {
                     is Resource.Success -> stateReducer(
-                        if (shouldClear) {
-                            PagedDataList(it.data.contents, LoadedSuccessfully, it.data.offset, it.data.total)
-                        } else {
-                            currentValueOf(prop)
-                                .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
-                        }
+                        currentValueOf(prop)
+                            .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
+
                     )
                     is Resource.Error<*, *> -> stateReducer(
                         currentValueOf(prop)
@@ -158,7 +158,7 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <T> current(mapper: S.() -> T): T = withState(this) { it.mapper() }
-
-    private fun <T> currentValueOf(prop: KProperty1<S, T>): T = withState(this) { prop.get(it) }
+    private fun <T> currentValueOf(prop: KProperty1<S, T>): T = withState(this) {
+        prop.get(it)
+    }
 }

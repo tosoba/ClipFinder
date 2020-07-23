@@ -19,7 +19,7 @@ inline fun <T> CarouselModelBuilder.withModelsFrom(
     items: Collection<T>,
     modelBuilder: (T) -> EpoxyModel<*>
 ) {
-    models(items.map { modelBuilder(it) })
+    models(items.map(modelBuilder))
 }
 
 inline fun <T> CarouselModelBuilder.withModelsFrom(
@@ -27,5 +27,5 @@ inline fun <T> CarouselModelBuilder.withModelsFrom(
     extraModels: Collection<EpoxyModel<*>> = emptyList(),
     modelBuilder: (T) -> EpoxyModel<*>
 ) {
-    models(items.map { modelBuilder(it) } + extraModels)
+    models(items.map(modelBuilder) + extraModels)
 }
