@@ -14,7 +14,7 @@ import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotifyapi.di.spotifyApiModule
-import com.example.spotifyartist.di.spotifyArtistModule
+import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary

@@ -1,4 +1,4 @@
-package com.example.spotifyartist.ui
+package com.example.spotify.artist.ui
 
 import com.airbnb.mvrx.MvRxState
 import com.example.coreandroid.model.Data

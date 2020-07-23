@@ -29,8 +29,8 @@ import com.example.coreandroid.util.ext.showDrawerHamburger
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
-import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.spotify.dashboard.R
+import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
 
@@ -46,9 +46,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
     override val toolbar: Toolbar get() = dashboard_toolbar
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        typedController(builder, differ, viewModel) { state ->
-            val (categories, playlists, topTracks, newReleases) = state
-
+        typedController(builder, differ, viewModel) { (categories, playlists, topTracks, newReleases) ->
             fun <Value> pagedDataListCarouselWithHeader(
                 data: PagedDataList<Value>,
                 @StringRes headerRes: Int,

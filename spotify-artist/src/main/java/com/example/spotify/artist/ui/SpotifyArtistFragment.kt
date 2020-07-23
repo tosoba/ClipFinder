@@ -1,4 +1,4 @@
-package com.example.spotifyartist.ui
+package com.example.spotify.artist.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,23 +11,22 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
+import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.coreandroid.di.EpoxyHandlerQualifier
-import com.example.coreandroid.headerItem
-import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
+import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.reloadControl
 import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
-import com.example.spotifyartist.R
-import com.example.spotifyartist.databinding.FragmentArtistBinding
+import com.example.spotify.artist.R
+import com.example.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -53,25 +52,43 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
                 text("Albums")
             }
 
-            when (albums.status) {
+            if (albums.value.isEmpty()) when (albums.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-albums")
                 }
 
                 is LoadingFailed<*> -> reloadControl {
-                    id("albums-reload-control")
+                    id("reload-control-albums")
                     onReloadClicked(View.OnClickListener {
                         withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
                     })
-                    message("Error occurred lmao") //TODO: error msg
+                    message(getString(R.string.error_occurred))
                 }
+            } else carousel {
+                id("albums")
+                withModelsFrom<Album>(
+                    items = albums.value,
+                    extraModels = when (albums.status) {
+                        is LoadingFailed<*> -> listOf(
+                            ReloadControlBindingModel_()
+                                .id("reload-control-albums")
+                                .message(getString(R.string.error_occurred))
+                                .onReloadClicked(View.OnClickListener {
+                                    withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
+                                })
+                        )
 
-                is LoadedSuccessfully -> carousel {
-                    id("albums")
-                    withModelsFrom(albums.value) { album ->
-                        album.clickableListItem {
-                            show { newSpotifyAlbumFragment(album) }
-                        }
+                        else -> if (albums.canLoadMore) listOf(
+                            LoadingIndicatorBindingModel_()
+                                .id("loading-more-albums")
+                                .onBind { _, _, _ ->
+                                    withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
+                                }
+                        ) else emptyList()
+                    }
+                ) { album ->
+                    album.clickableListItem {
+                        show { newSpotifyAlbumFragment(album) }
                     }
                 }
             }
@@ -135,8 +152,8 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentArtistBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_artist, container, false
+        val binding: FragmentSpotifyArtistBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_spotify_artist, container, false
         )
 
         viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {

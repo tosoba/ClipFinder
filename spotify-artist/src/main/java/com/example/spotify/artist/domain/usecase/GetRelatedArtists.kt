@@ -1,8 +1,8 @@
-package com.example.spotifyartist.domain.usecase
+package com.example.spotify.artist.domain.usecase
 
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
-import com.example.spotifyartist.domain.repo.ISpotifyArtistRepo
+import com.example.spotify.artist.domain.repo.ISpotifyArtistRepo
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single

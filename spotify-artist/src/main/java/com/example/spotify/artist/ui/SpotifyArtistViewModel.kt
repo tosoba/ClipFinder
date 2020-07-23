@@ -1,10 +1,11 @@
-package com.example.spotifyartist.ui
+package com.example.spotify.artist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
@@ -12,7 +13,7 @@ import com.example.coreandroid.mapper.spotify.domain
 import com.example.coreandroid.mapper.spotify.ui
 import com.example.coreandroid.model.*
 import com.example.coreandroid.model.spotify.Artist
-import com.example.spotifyartist.domain.usecase.*
+import com.example.spotify.artist.domain.usecase.*
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
@@ -31,11 +32,13 @@ class SpotifyArtistViewModel(
     private val insertArtist: InsertArtist,
     private val deleteArtist: DeleteArtist,
     private val isArtistSaved: IsArtistSaved,
+    private val preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<SpotifyArtistViewState>(initialState) {
 
     init {
         loadData(initialState.artists.value.last())
+        handlePreferencesChanges()
         handleConnectivityChanges(context)
     }
 
@@ -129,6 +132,18 @@ class SpotifyArtistViewModel(
             .update(SpotifyArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
+    private fun handlePreferencesChanges() {
+        preferences.countryObservable
+            .skip(1)
+            .distinctUntilChanged()
+            .subscribe {
+                withState { (artists) ->
+                    artists.value.lastOrNull()?.let { loadAlbumsFromArtist(it.id) }
+                }
+            }
+            .disposeOnClear()
+    }
+
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         ReactiveNetwork.observeNetworkConnectivity(context)
@@ -138,11 +153,11 @@ class SpotifyArtistViewModel(
             .subscribe {
                 withState { (artists, albums, topTracks, relatedArtists) ->
                     artists.value.lastOrNull()?.id?.let {
-                        if (albums.status is LoadingFailed<*>)
+                        if (albums.isEmptyAndLastLoadingFailedWithNetworkError())
                             loadAlbumsFromArtist(it)
-                        if (topTracks.status is LoadingFailed<*>)
+                        if (topTracks.isEmptyAndLastLoadingFailedWithNetworkError())
                             loadTopTracksFromArtist(it)
-                        if (relatedArtists.status is LoadingFailed<*>)
+                        if (relatedArtists.isEmptyAndLastLoadingFailedWithNetworkError())
                             loadRelatedArtists(it)
                     }
                 }
@@ -161,6 +176,7 @@ class SpotifyArtistViewModel(
             val insertArtist: InsertArtist by viewModelContext.activity.inject()
             val deleteArtist: DeleteArtist by viewModelContext.activity.inject()
             val isArtistSaved: IsArtistSaved by viewModelContext.activity.inject()
+            val spotifyPreferences: SpotifyPreferences by viewModelContext.activity.inject()
             return SpotifyArtistViewModel(
                 state,
                 getAlbumsFromArtist,
@@ -169,6 +185,7 @@ class SpotifyArtistViewModel(
                 insertArtist,
                 deleteArtist,
                 isArtistSaved,
+                spotifyPreferences,
                 viewModelContext.app()
             )
         }

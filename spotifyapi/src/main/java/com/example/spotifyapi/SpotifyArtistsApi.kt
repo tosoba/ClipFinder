@@ -20,7 +20,8 @@ interface SpotifyArtistsApi {
     fun getArtistsAlbums(
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
-        @Query("offset") offset: Int
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT
     ): Single<NetworkResponse<PagingObject<SimpleAlbum>, ErrorResponse>>
 
     @GET("artists/{id}/top-tracks")

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".spotify.spotifyitem.artist.ArtistFragment">
+        tools:context="com.example.spotify.artist.ui.SpotifyArtistFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/artist_app_bar"
