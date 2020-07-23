@@ -19,7 +19,8 @@ interface SpotifyArtistsApi {
     @GET("artists/{id}/albums")
     fun getArtistsAlbums(
         @Header("Authorization") authorization: String,
-        @Path("id") id: String
+        @Path("id") id: String,
+        @Query("offset") offset: Int
     ): Single<NetworkResponse<PagingObject<SimpleAlbum>, ErrorResponse>>
 
     @GET("artists/{id}/top-tracks")

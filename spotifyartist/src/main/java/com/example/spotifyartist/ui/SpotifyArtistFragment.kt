@@ -1,4 +1,4 @@
-package com.example.spotifyartist
+package com.example.spotifyartist.ui
 
 import android.os.Bundle
 import android.os.Handler
@@ -13,8 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.headerItem
-import com.example.coreandroid.lifecycle.ConnectivityComponent
 import com.example.coreandroid.loadingIndicator
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
@@ -26,38 +26,34 @@ import com.example.coreandroid.util.carousel
 import com.example.coreandroid.util.ext.*
 import com.example.coreandroid.util.typedController
 import com.example.coreandroid.util.withModelsFrom
+import com.example.spotifyartist.R
 import com.example.spotifyartist.databinding.FragmentArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
-class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStateOnBackPressed {
-
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStateOnBackPressed {
 
     override val factory: IFragmentFactory by inject()
 
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
+    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
+    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
     private val argArtist: Artist by args()
 
-    private val viewModel: ArtistViewModel by fragmentViewModel()
+    private val viewModel: SpotifyArtistViewModel by fragmentViewModel()
 
-    private fun usingCurrentArtistsId(block: (String) -> Unit) {
-        withState(viewModel) { state ->
-            state.artists.value.lastOrNull()?.id?.let(block)
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        fun withCurrentArtistId(block: (String) -> Unit) = withState(viewModel) { (artists) ->
+            artists.value.lastOrNull()?.id?.let(block)
         }
-    }
 
-    private val epoxyController by lazy {
-        typedController(builder, differ, viewModel) { state ->
+        typedController(builder, differ, viewModel) { (_, albums, topTracks, relatedArtists) ->
             headerItem {
                 id("albums-header")
                 text("Albums")
             }
 
-            when (state.albums.status) {
+            when (albums.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-albums")
                 }
@@ -65,14 +61,14 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        usingCurrentArtistsId { viewModel.loadAlbumsFromArtist(it) }
+                        withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
 
                 is LoadedSuccessfully -> carousel {
                     id("albums")
-                    withModelsFrom(state.albums.value) { album ->
+                    withModelsFrom(albums.value) { album ->
                         album.clickableListItem {
                             show { newSpotifyAlbumFragment(album) }
                         }
@@ -85,7 +81,7 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
                 text("Related artists")
             }
 
-            when (state.relatedArtists.status) {
+            when (relatedArtists.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-artists")
                 }
@@ -93,17 +89,15 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
                 is LoadingFailed<*> -> reloadControl {
                     id("related-artists-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        usingCurrentArtistsId { viewModel.loadRelatedArtists(it) }
+                        withCurrentArtistId { viewModel.loadRelatedArtists(it) }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
 
                 is LoadedSuccessfully -> carousel {
                     id("related-artists")
-                    withModelsFrom(state.relatedArtists.value) { artist ->
-                        artist.clickableListItem {
-                            viewModel.updateArtist(artist)
-                        }
+                    withModelsFrom(relatedArtists.value) { artist ->
+                        artist.clickableListItem { viewModel.updateArtist(artist) }
                     }
                 }
             }
@@ -113,7 +107,7 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
                 text("Top tracks")
             }
 
-            when (state.topTracks.status) {
+            when (topTracks.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-top-tracks")
                 }
@@ -121,14 +115,14 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
                 is LoadingFailed<*> -> reloadControl {
                     id("top-tracks-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        usingCurrentArtistsId { viewModel.loadTopTracksFromArtist(it) }
+                        withCurrentArtistId { viewModel.loadTopTracksFromArtist(it) }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
 
                 is LoadedSuccessfully -> carousel {
                     id("top-tracks")
-                    withModelsFrom(state.topTracks.value) { topTrack ->
+                    withModelsFrom(topTracks.value) { topTrack ->
                         topTrack.clickableListItem {
                             show { newSpotifyTrackVideosFragment(topTrack) }
                         }
@@ -138,39 +132,27 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         }
     }
 
-    private val view: ArtistViewBinding by lazy {
-        ArtistViewBinding(
-            onFavouriteBtnClickListener = View.OnClickListener {
-                viewModel.toggleArtistFavouriteState()
-                //TODO: add a callback that will show a toast with a msg saying: added/deleted from favs
-            },
-            artist = MutableLiveData<Artist>().apply { value = argArtist }
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val binding: FragmentArtistBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_artist, container, false
         )
-    }
 
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent(viewModel::loadMissingData) {
-            withState(viewModel) {
-                it.albums.status is LoadingFailed<*> ||
-                    it.relatedArtists.status is LoadingFailed<*> ||
-                    it.topTracks.status is LoadingFailed<*>
-            }
-
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentArtistBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_artist, container, false)
-
-        viewModel.selectSubscribe(this, ArtistViewState::isSavedAsFavourite) {
-            binding.artistFavouriteFab.setImageDrawable(ContextCompat.getDrawable(requireContext(),
-                if (it.value) R.drawable.delete else R.drawable.favourite))
+        viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {
+            binding.artistFavouriteFab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (it.value) R.drawable.delete else R.drawable.favourite
+                )
+            )
             binding.artistFavouriteFab.hideAndShow()
         }
 
-        viewModel.selectSubscribe(this, ArtistViewState::artists) { artists ->
+        val artist = MutableLiveData<Artist>().apply { value = argArtist }
+        viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
             artists.value.lastOrNull()?.let {
-                view.artist.value = it
+                artist.value = it
                 binding.artistToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
@@ -181,33 +163,30 @@ class ArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStat
         mainContentFragment?.disablePlayButton()
 
         return binding.apply {
-            lifecycleOwner = this@ArtistFragment
-            view = this@ArtistFragment.view
+            lifecycleOwner = this@SpotifyArtistFragment
+            this.artist = artist
+            artistFavouriteFab.setOnClickListener { viewModel.toggleArtistFavouriteState() }
             artistToolbar.setupWithBackNavigation(
                 requireActivity() as AppCompatActivity,
                 ::onBackPressed
             )
-            artistRecyclerView.apply {
-                setController(epoxyController)
-                //TODO: animation
-            }
+            artistRecyclerView.setController(epoxyController)
         }.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        lifecycle.addObserver(connectivityComponent)
     }
+
+    override fun onBackPressed() = viewModel.onBackPressed()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
-    override fun onBackPressed() {
-        viewModel.onBackPressed()
-    }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(artist: Artist) = ArtistFragment().apply {
+        fun newInstance(artist: Artist) = SpotifyArtistFragment().apply {
             arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, artist) }
         }
     }

@@ -16,24 +16,3 @@ class GetFavouriteArtists(
 ) : FlowableUseCase<List<ArtistEntity>>(schedulers) {
     override val result: Flowable<List<ArtistEntity>> get() = repository.favouriteArtists
 }
-
-class InsertArtist(
-    schedulers: RxSchedulers,
-    private val repository: ISpotifyLocalRepo
-) : CompletableUseCaseWithArgs<ArtistEntity>(schedulers) {
-    override fun run(args: ArtistEntity): Completable = repository.insertArtist(args)
-}
-
-class IsArtistSaved(
-    schedulers: RxSchedulers,
-    private val repository: ISpotifyLocalRepo
-) : SingleUseCaseWithArgs<String, Boolean>(schedulers) {
-    override fun run(args: String): Single<Boolean> = repository.isArtistSaved(args)
-}
-
-class DeleteArtist(
-    schedulers: RxSchedulers,
-    private val repository: ISpotifyLocalRepo
-) : CompletableUseCaseWithArgs<ArtistEntity>(schedulers) {
-    override fun run(args: ArtistEntity): Completable = repository.deleteArtist(args)
-}

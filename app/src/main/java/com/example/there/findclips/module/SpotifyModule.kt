@@ -5,7 +5,6 @@ import org.koin.dsl.module
 
 val spotifyModule = module {
     factory { GetAlbum(get(), get()) }
-    factory { GetAlbumsFromArtist(get(), get()) }
     factory { GetArtists(get(), get()) }
     factory { GetAudioFeatures(get(), get()) }
     factory { GetCurrentUser(get(), get()) }
@@ -14,9 +13,7 @@ val spotifyModule = module {
     factory { GetCurrentUsersSavedTracks(get(), get()) }
     factory { GetCurrentUsersTopArtists(get(), get()) }
     factory { GetCurrentUsersTopTracks(get(), get()) }
-    factory { GetRelatedArtists(get(), get()) }
     factory { GetSimilarTracks(get(), get()) }
-    factory { GetTopTracksFromArtist(get(), get()) }
     factory { SearchSpotify(get(), get()) }
 
     factory { GetFavouriteAlbums(get(), get()) }
@@ -25,9 +22,6 @@ val spotifyModule = module {
     factory { DeleteAlbum(get(), get()) }
 
     factory { GetFavouriteArtists(get(), get()) }
-    factory { InsertArtist(get(), get()) }
-    factory { IsArtistSaved(get(), get()) }
-    factory { DeleteArtist(get(), get()) }
 
     factory { GetFavouriteCategories(get(), get()) }
 

@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="view"
-            type="com.example.spotifyartist.ArtistViewBinding" />
+            name="artist"
+            type="androidx.lifecycle.MutableLiveData&lt;com.example.coreandroid.model.spotify.Artist&gt;" />
     </data>
 
     <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,7 +32,7 @@
                 app:contentScrim="@color/colorPrimaryDark"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.artist.name}"
+                app:title="@{artist.name}"
                 app:toolbarId="@+id/artist_toolbar">
 
                 <View
@@ -43,7 +43,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.artist.imageViewSrc}"
+                    imageSrc="@{artist.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -93,7 +93,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/artist_app_bar"
             app:layout_anchorGravity="bottom|end" />
