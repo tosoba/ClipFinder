@@ -6,6 +6,7 @@ import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.coreandroid.base.vm.MvRxViewModel
 import com.example.coreandroid.mapper.spotify.domain
@@ -15,11 +16,11 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
-import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.spotify.category.domain.usecase.DeleteCategory
 import com.example.spotify.category.domain.usecase.GetPlaylistsForCategory
 import com.example.spotify.category.domain.usecase.InsertCategory
 import com.example.spotify.category.domain.usecase.IsCategorySaved
+import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -54,7 +55,9 @@ class SpotifyCategoryViewModel(
         getPlaylistsForCategory(args)
             .mapData { playlistsPage -> playlistsPage.map(PlaylistEntity::ui) }
             .subscribeOn(Schedulers.io())
-            .updateWithResourcePage(SpotifyCategoryViewState::playlists) { copy(playlists = it) }
+            .updateWithPagedResource(SpotifyCategoryViewState::playlists, shouldClear = shouldClear) {
+                copy(playlists = it)
+            }
     }
 
     fun toggleCategoryFavouriteState() = withState { state ->

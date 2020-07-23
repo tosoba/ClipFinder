@@ -7,8 +7,8 @@ import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.coreandroid.model.Data
 import com.example.coreandroid.model.DataList
+import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.PagedDataList
-import com.example.there.domain.entity.Page
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -78,34 +78,10 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <T> Single<Resource<Page<T>>>.updateWithResourcePage(
-        prop: KProperty1<S, PagedDataList<T>>,
-        onError: (Throwable) -> Unit = Timber::e,
-        stateReducer: S.(PagedDataList<T>) -> S
-    ): Disposable {
-        setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithNewItems(it.data.items, it.data.offset, it.data.total)
-                    )
-                    is Resource.Error<Page<T>, *> -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithError(it.error)
-                    )
-                }
-            }
-        }, {
-            setState { stateReducer(currentValueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
     protected fun <C : Collection<I>, I> Single<Resource<Paged<C>>>.updateWithPagedResource(
         prop: KProperty1<S, PagedDataList<I>>,
         onError: (Throwable) -> Unit = Timber::e,
+        shouldClear: Boolean = false,
         stateReducer: S.(PagedDataList<I>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -113,8 +89,12 @@ open class MvRxViewModel<S : MvRxState>(
             setState {
                 when (it) {
                     is Resource.Success -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
+                        if (shouldClear) {
+                            PagedDataList(it.data.contents, LoadedSuccessfully, it.data.offset, it.data.total)
+                        } else {
+                            currentValueOf(prop)
+                                .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
+                        }
                     )
                     is Resource.Error<*, *> -> stateReducer(
                         currentValueOf(prop)

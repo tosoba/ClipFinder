@@ -50,29 +50,34 @@ class SpotifyArtistViewModel(
 
         val previousArtist = state.artists.value.elementAt(state.artists.value.size - 2)
         setState { copy(artists = DataList(artists.value.take(artists.value.size - 1))) }
-        loadData(previousArtist)
+        loadData(previousArtist, clearAlbums = true)
     }
 
     fun updateArtist(artist: Artist) {
         setState { copy(artists = artists.copyWithNewItems(artist)) }
-        loadData(artist)
+        loadData(artist, clearAlbums = true)
     }
 
-    private fun loadData(artist: Artist) {
-        loadAlbumsFromArtist(artist.id)
+    private fun loadData(artist: Artist, clearAlbums: Boolean = false) {
+        loadAlbumsFromArtist(artist.id, shouldClear = clearAlbums)
         loadTopTracksFromArtist(artist.id)
         loadRelatedArtists(artist.id)
         loadArtistFavouriteState()
     }
 
-    fun loadAlbumsFromArtist(artistId: String) = withState { state ->
+    fun loadAlbumsFromArtist(artistId: String, shouldClear: Boolean = false) = withState { state ->
         if (state.albums.status is Loading) return@withState
 
-        val args = GetAlbumsFromArtist.Args(artistId, state.albums.offset)
+        val args = GetAlbumsFromArtist.Args(
+            artistId = artistId,
+            offset = if (shouldClear) 0 else state.albums.offset
+        )
         getAlbumsFromArtist(args = args, applySchedulers = false)
             .mapData { albums -> albums.map(AlbumEntity::ui) }
             .subscribeOn(Schedulers.io())
-            .updateWithPagedResource(SpotifyArtistViewState::albums) { copy(albums = it) }
+            .updateWithPagedResource(SpotifyArtistViewState::albums, shouldClear = shouldClear) {
+                copy(albums = it)
+            }
     }
 
     fun loadTopTracksFromArtist(artistId: String) = withState { state ->
