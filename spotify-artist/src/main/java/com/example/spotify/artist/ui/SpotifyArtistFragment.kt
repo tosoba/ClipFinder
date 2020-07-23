@@ -10,19 +10,14 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
-import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.coreandroid.model.LoadedSuccessfully
-import com.example.coreandroid.model.Loading
-import com.example.coreandroid.model.LoadingFailed
-import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.view.epoxy.dataListCarouselWithHeader
 import com.example.coreandroid.view.epoxy.injectedTypedController
-import com.example.coreandroid.view.epoxy.withModelsFrom
+import com.example.coreandroid.view.epoxy.pagedDataListCarouselWithHeader
 import com.example.spotify.artist.R
 import com.example.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -42,103 +37,37 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
         }
 
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
-            headerItem {
-                id("albums-header")
-                text("Albums")
-            }
-
-            if (albums.value.isEmpty()) when (albums.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-albums")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("reload-control-albums")
-                    onReloadClicked(View.OnClickListener {
-                        withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
-                    })
-                    message(getString(R.string.error_occurred))
-                }
-            } else carousel {
-                id("albums")
-                withModelsFrom<Album>(
-                    items = albums.value,
-                    extraModels = when (albums.status) {
-                        is LoadingFailed<*> -> listOf(
-                            ReloadControlBindingModel_()
-                                .id("reload-control-albums")
-                                .message(getString(R.string.error_occurred))
-                                .onReloadClicked(View.OnClickListener {
-                                    withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
-                                })
-                        )
-
-                        else -> if (albums.canLoadMore) listOf(
-                            LoadingIndicatorBindingModel_()
-                                .id("loading-more-albums")
-                                .onBind { _, _, _ ->
-                                    withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) }
-                                }
-                        ) else emptyList()
-                    }
-                ) { album ->
-                    album.clickableListItem {
-                        show { newSpotifyAlbumFragment(album) }
-                    }
+            pagedDataListCarouselWithHeader(
+                requireContext(),
+                albums,
+                R.string.albums,
+                "albums",
+                { withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) } }
+            ) { album ->
+                album.clickableListItem {
+                    show { newSpotifyAlbumFragment(album) }
                 }
             }
 
-            headerItem {
-                id("related-artists-header")
-                text("Related artists")
+            dataListCarouselWithHeader(
+                requireContext(),
+                relatedArtists,
+                R.string.related_artists,
+                "related-artists",
+                { withCurrentArtistId { viewModel.loadRelatedArtists(it) } }
+            ) { artist ->
+                artist.clickableListItem { viewModel.updateArtist(artist) }
             }
 
-            when (relatedArtists.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-artists")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("related-artists-reload-control")
-                    onReloadClicked(View.OnClickListener {
-                        withCurrentArtistId { viewModel.loadRelatedArtists(it) }
-                    })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("related-artists")
-                    withModelsFrom(relatedArtists.value) { artist ->
-                        artist.clickableListItem { viewModel.updateArtist(artist) }
-                    }
-                }
-            }
-
-            headerItem {
-                id("top-tracks-header")
-                text("Top tracks")
-            }
-
-            when (topTracks.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-top-tracks")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("top-tracks-reload-control")
-                    onReloadClicked(View.OnClickListener {
-                        withCurrentArtistId { viewModel.loadTopTracksFromArtist(it) }
-                    })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("top-tracks")
-                    withModelsFrom(topTracks.value) { topTrack ->
-                        topTrack.clickableListItem {
-                            show { newSpotifyTrackVideosFragment(topTrack) }
-                        }
-                    }
+            dataListCarouselWithHeader(
+                requireContext(),
+                topTracks,
+                R.string.top_tracks,
+                "top-tracks",
+                { withCurrentArtistId { viewModel.loadTopTracksFromArtist(it) } }
+            ) { topTrack ->
+                topTrack.clickableListItem {
+                    show { newSpotifyTrackVideosFragment(topTrack) }
                 }
             }
         }
