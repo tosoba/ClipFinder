@@ -1,7 +1,6 @@
 package com.example.spotify.album.ui
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,17 +11,16 @@ import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.util.carousel
+import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.util.typedController
-import com.example.coreandroid.util.withModelsFrom
+import com.example.coreandroid.view.epoxy.injectedTypedController
+import com.example.coreandroid.view.epoxy.withModelsFrom
 import com.example.spotify.album.R
 import com.example.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -33,15 +31,12 @@ class SpotifyAlbumFragment : BaseMvRxFragment(), NavigationCapable {
 
     override val factory: IFragmentFactory by inject()
 
-    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
-
     private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
 
     private val album: Album by args()
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        typedController(builder, differ, viewModel) { state ->
+        injectedTypedController<SpotifyAlbumViewState> { state ->
             headerItem {
                 id("artists-header")
                 text("Artists")

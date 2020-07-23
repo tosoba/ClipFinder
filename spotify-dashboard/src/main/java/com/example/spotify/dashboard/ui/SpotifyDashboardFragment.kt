@@ -1,7 +1,6 @@
 package com.example.spotify.dashboard.ui
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -16,18 +15,17 @@ import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.HasMainToolbar
 import com.example.coreandroid.base.handler.NavigationDrawerController
-import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.PagedDataList
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.util.carousel
+import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
 import com.example.coreandroid.util.ext.mainContentFragment
 import com.example.coreandroid.util.ext.show
 import com.example.coreandroid.util.ext.showDrawerHamburger
-import com.example.coreandroid.util.typedController
-import com.example.coreandroid.util.withModelsFrom
+import com.example.coreandroid.view.epoxy.injectedTypedController
+import com.example.coreandroid.view.epoxy.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.spotify.dashboard.R
 import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
@@ -38,15 +36,12 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override val factory: IFragmentFactory by inject()
 
-    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
-
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
     override val toolbar: Toolbar get() = dashboard_toolbar
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        typedController(builder, differ, viewModel) { (categories, playlists, topTracks, newReleases) ->
+        injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
             fun <Value> pagedDataListCarouselWithHeader(
                 data: PagedDataList<Value>,
                 @StringRes headerRes: Int,

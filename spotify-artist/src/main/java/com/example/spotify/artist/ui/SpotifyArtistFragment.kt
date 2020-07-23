@@ -1,7 +1,6 @@
 package com.example.spotify.artist.ui
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,17 +13,16 @@ import com.airbnb.mvrx.*
 import com.example.coreandroid.*
 import com.example.coreandroid.base.IFragmentFactory
 import com.example.coreandroid.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.coreandroid.di.EpoxyHandlerQualifier
 import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Album
 import com.example.coreandroid.model.spotify.Artist
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.util.carousel
+import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.util.typedController
-import com.example.coreandroid.util.withModelsFrom
+import com.example.coreandroid.view.epoxy.injectedTypedController
+import com.example.coreandroid.view.epoxy.withModelsFrom
 import com.example.spotify.artist.R
 import com.example.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -33,9 +31,6 @@ import org.koin.android.ext.android.inject
 class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStateOnBackPressed {
 
     override val factory: IFragmentFactory by inject()
-
-    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
 
     private val argArtist: Artist by args()
 
@@ -46,7 +41,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
             artists.value.lastOrNull()?.id?.let(block)
         }
 
-        typedController(builder, differ, viewModel) { (_, albums, topTracks, relatedArtists) ->
+        injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
             headerItem {
                 id("albums-header")
                 text("Albums")
@@ -166,7 +161,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
             binding.artistFavouriteFab.hideAndShow()
         }
 
-        val artist = MutableLiveData<Artist>().apply { value = argArtist }
+        val artist = MutableLiveData<Artist>(argArtist)
         viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
             artists.value.lastOrNull()?.let {
                 artist.value = it

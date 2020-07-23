@@ -1,7 +1,6 @@
 package com.example.soundclouddashboard
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,19 +19,17 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.soundcloud.clickableListItem
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.util.carousel
+import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.mainContentFragment
 import com.example.coreandroid.util.ext.navHostFragment
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.showDrawerHamburger
-import com.example.coreandroid.util.typedController
-import com.example.coreandroid.util.withModelsFrom
+import com.example.coreandroid.view.epoxy.injectedTypedController
+import com.example.coreandroid.view.epoxy.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
-
 
 class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
@@ -40,13 +37,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     private val viewModel: SoundCloudDashboardViewModel by fragmentViewModel()
 
-    private lateinit var binding: FragmentSoundCloudDashboardBinding
-
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
-
-    override val toolbar: Toolbar
-        get() = sound_cloud_dashboard_toolbar
+    override val toolbar: Toolbar get() = sound_cloud_dashboard_toolbar
 
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(viewModel::loadPlaylists) {
@@ -55,7 +46,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        typedController(builder, differ, viewModel) { state ->
+        injectedTypedController<SoundCloudDashboardViewState> { state ->
             when (state.playlists.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator")
@@ -115,9 +106,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         setHasOptionsMenu(true)
     }
 
-    override fun invalidate() {
-        withState(viewModel) { state -> epoxyController.setData(state) }
-    }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -127,14 +116,10 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 setSupportActionBar(soundCloudDashboardToolbar)
                 showDrawerHamburger()
             }
-            soundCloudDashboardRecyclerView.apply {
-                setController(epoxyController)
-                //TODO: animation
-            }
+            soundCloudDashboardRecyclerView.setController(epoxyController)
             mainContentFragment?.disablePlayButton()
-            binding = this
-        }.root
-
+        }
+        .root
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (toolbar.menu?.size() == 0) {

@@ -2,7 +2,6 @@ package com.example.spotifytrackvideos.track
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +18,13 @@ import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.model.spotify.infoItem
 import com.example.coreandroid.radarChart
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.util.carousel
+import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
 import com.example.coreandroid.util.ext.parentFragmentViewModel
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.show
-import com.example.coreandroid.util.typedController
-import com.example.coreandroid.util.withModelsFrom
+import com.example.coreandroid.view.epoxy.injectedTypedController
+import com.example.coreandroid.view.epoxy.withModelsFrom
 import com.example.coreandroid.view.epoxy.Column
 import com.example.coreandroid.view.radarchart.RadarChartAxisView
 import com.example.coreandroid.view.radarchart.RadarChartView
@@ -36,22 +35,18 @@ import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 class TrackFragment : BaseMvRxFragment(), NavigationCapable {
 
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
-
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     override val factory: IFragmentFactory by inject()
 
     private val viewModel: TrackViewModel by fragmentViewModel()
     private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
 
-    private val epoxyController by lazy {
-        typedController(builder, differ, viewModel) { state ->
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        injectedTypedController<TrackViewState> { state ->
             headerItem {
                 id("album-header")
                 text("Album")
@@ -199,10 +194,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_track, container, false).apply {
-        this.track_recycler_view.apply {
-            setController(epoxyController)
-            //TODO: animation
-        }
+        this.track_recycler_view.setController(epoxyController)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
