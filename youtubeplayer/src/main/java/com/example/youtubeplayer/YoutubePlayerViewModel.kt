@@ -1,8 +1,8 @@
 package com.example.youtubeplayer
 
-import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.coreandroid.model.videos.Video
-import com.example.coreandroid.model.videos.VideoPlaylist
+import com.example.core.android.base.vm.BaseViewModel
+import com.example.core.android.model.videos.Video
+import com.example.core.android.model.videos.VideoPlaylist
 
 
 class YoutubePlayerViewModel : BaseViewModel() {

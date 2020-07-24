@@ -7,7 +7,7 @@
 
         <variable
             name="videoView"
-            type="com.example.coreandroid.view.recyclerview.item.VideoItemView" />
+            type="com.example.core.android.view.recyclerview.item.VideoItemView" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"

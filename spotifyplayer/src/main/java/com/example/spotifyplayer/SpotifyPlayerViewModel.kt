@@ -1,6 +1,6 @@
 package com.example.spotifyplayer
 
-import com.example.coreandroid.base.vm.BaseViewModel
+import com.example.core.android.base.vm.BaseViewModel
 
 class SpotifyPlayerViewModel : BaseViewModel() {
     val viewState = SpotifyPlayerViewState()

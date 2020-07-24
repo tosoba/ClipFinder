@@ -8,7 +8,7 @@
 
         <variable
             name="view"
-            type="com.example.coreandroid.base.fragment.BaseListFragment.View&lt;android.os.Parcelable&gt;" />
+            type="com.example.core.android.base.fragment.BaseListFragment.View&lt;android.os.Parcelable&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

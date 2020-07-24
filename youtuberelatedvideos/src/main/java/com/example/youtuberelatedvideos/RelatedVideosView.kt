@@ -3,8 +3,8 @@ package com.example.youtuberelatedvideos
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.VideoItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.recyclerview.item.VideoItemView
 
 class RelatedVideosViewState(
     val videos: ObservableList<VideoItemView> = ObservableArrayList(),

@@ -11,16 +11,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ext.castAs
-import com.example.coreandroid.BR
-import com.example.coreandroid.base.handler.VideoPlaylistController
-import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
-import com.example.coreandroid.view.recyclerview.item.ListItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
-import com.example.coreandroid.view.recyclerview.listener.ClickHandler
+import com.example.core.android.BR
+import com.example.core.android.base.handler.VideoPlaylistController
+import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.view.recyclerview.binder.ItemBinder
+import com.example.core.android.view.recyclerview.binder.ItemBinderBase
+import com.example.core.android.view.recyclerview.decoration.SeparatorDecoration
+import com.example.core.android.view.recyclerview.item.ListItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
+import com.example.core.android.view.recyclerview.listener.ClickHandler
 import com.example.youtubeaddvideo.databinding.DialogAddVideoBinding
 
 

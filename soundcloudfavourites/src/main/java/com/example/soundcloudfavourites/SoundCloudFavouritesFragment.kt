@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.util.ext.mainContentFragment
+import com.example.core.android.util.ext.mainContentFragment
 
 class SoundCloudFavouritesFragment : Fragment() {
     override fun onCreateView(

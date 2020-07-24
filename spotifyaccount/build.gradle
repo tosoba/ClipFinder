@@ -22,8 +22,9 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
+        viewBinding true
     }
 }
 
@@ -39,6 +40,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':core')
     implementation project(':coreandroid')
+    implementation project(':core-android-spotify')
     implementation project(':itemlist')
     implementation project(':spotifyapi')
 

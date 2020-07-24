@@ -6,7 +6,7 @@
 
         <variable
             name="playlist"
-            type="com.example.coreandroid.model.spotify.Playlist" />
+            type="com.example.core.android.model.spotify.Playlist" />
     </data>
 
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"

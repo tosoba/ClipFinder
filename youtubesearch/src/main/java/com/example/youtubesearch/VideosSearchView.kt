@@ -2,9 +2,9 @@ package com.example.youtubesearch
 
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
-import com.example.coreandroid.util.list.ObservableSortedList
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.VideoItemView
+import com.example.core.android.util.list.ObservableSortedList
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.recyclerview.item.VideoItemView
 
 class VideosSearchView(
     val state: VideosSearchViewState,

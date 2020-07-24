@@ -91,4 +91,6 @@
     <string name="video_playlist">Video playlist</string>
     <string name="soundcloud">SoundCloud</string>
     <string name="error_occurred">Error occurred</string>
+    <string name="saved">Saved</string>
+    <string name="top">Top</string>
 </resources>

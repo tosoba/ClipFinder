@@ -2,15 +2,15 @@ package com.example.soundcloudplaylist
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.coreandroid.base.playlist.PlaylistViewState
-import com.example.coreandroid.base.vm.MvRxViewModel
-import com.example.coreandroid.mapper.soundcloud.ui
-import com.example.coreandroid.model.Loading
-import com.example.coreandroid.model.PagedDataList
-import com.example.coreandroid.model.soundcloud.BaseSoundCloudPlaylist
-import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
-import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
+import com.example.core.android.base.playlist.PlaylistViewState
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.mapper.soundcloud.ui
+import com.example.core.android.model.Loading
+import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.GetTracks
 import com.example.there.domain.usecase.soundcloud.GetTracksFromPlaylist

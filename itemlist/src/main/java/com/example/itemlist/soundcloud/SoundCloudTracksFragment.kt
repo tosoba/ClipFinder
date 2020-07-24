@@ -1,15 +1,15 @@
 package com.example.itemlist.soundcloud
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.BR
-import com.example.coreandroid.R
-import com.example.coreandroid.base.fragment.BaseListFragment
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.util.list.IdentifiableNamedObservableListItem
-import com.example.coreandroid.util.list.ObservableSortedList
-import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.view.recyclerview.item.ListItemView
+import com.example.core.android.BR
+import com.example.core.android.R
+import com.example.core.android.base.fragment.BaseListFragment
+import com.example.core.android.model.soundcloud.SoundCloudTrack
+import com.example.core.android.util.list.IdentifiableNamedObservableListItem
+import com.example.core.android.util.list.ObservableSortedList
+import com.example.core.android.view.recyclerview.binder.ItemBinder
+import com.example.core.android.view.recyclerview.binder.ItemBinderBase
+import com.example.core.android.view.recyclerview.item.ListItemView
 
 class SoundCloudTracksFragment : BaseListFragment<SoundCloudTrack>() {
 

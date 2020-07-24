@@ -1,12 +1,12 @@
 package com.example.spotifysearch.spotify
 
 import com.airbnb.mvrx.MvRxState
-import com.example.coreandroid.model.DataStatus
-import com.example.coreandroid.model.Initial
-import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Artist
-import com.example.coreandroid.model.spotify.Playlist
-import com.example.coreandroid.model.spotify.Track
+import com.example.core.android.model.DataStatus
+import com.example.core.android.model.Initial
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Artist
+import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.model.spotify.Track
 
 
 data class SpotifySearchViewState(

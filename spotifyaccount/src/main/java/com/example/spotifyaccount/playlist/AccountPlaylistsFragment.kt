@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.lifecycle.Observer
-import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.coreandroid.util.ext.spotifyLoginController
+import com.example.core.android.base.fragment.BaseVMFragment
+import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.core.android.util.ext.spotifyLoginController
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded

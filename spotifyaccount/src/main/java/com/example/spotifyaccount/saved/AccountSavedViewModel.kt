@@ -1,8 +1,8 @@
 package com.example.spotifyaccount.saved
 
 import com.example.core.SpotifyDefaults
-import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.coreandroid.mapper.spotify.ui
+import com.example.core.android.base.vm.BaseViewModel
+import com.example.core.android.mapper.spotify.ui
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUsersSavedAlbums

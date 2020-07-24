@@ -1,59 +1,44 @@
-<layout>
+<com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context="com.example.spotifyaccount.AccountFragment">
 
-    <data>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/account_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <variable
-            name="view"
-            type="com.example.spotifyaccount.AccountView" />
-    </data>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/account_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimaryDark"
+            app:collapseIcon="@drawable/back"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:theme="@style/ActionBar"
+            app:title="@string/account"
+            app:titleTextColor="#fff" />
 
-    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/account_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:minHeight="?android:attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabGravity="fill"
+            app:tabMaxWidth="0dp" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/account_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="false"
-        tools:context=".spotify.account.AccountFragment">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/account_app_bar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/account_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/colorPrimaryDark"
-                app:collapseIcon="@drawable/back"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/ActionBar"
-                app:title="@string/account"
-                app:titleTextColor="#fff" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/account_tab_layout"
-                onTabSelectedListener="@{view.onTabSelectedListener}"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/colorPrimary"
-                android:minHeight="?android:attr/actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:tabGravity="fill"
-                app:tabMaxWidth="0dp" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/account_view_pager"
-            offScreenPageLimit="@{view.offScreenPageLimit}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adapter="@{view.pagerAdapter}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
-</layout>
-
-
+</com.example.core.android.view.coordinator.NestedCoordinatorLayout>

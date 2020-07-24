@@ -1,12 +1,12 @@
 package com.example.there.findclips
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.model.soundcloud.SoundCloudPlaylist
-import com.example.coreandroid.model.soundcloud.SoundCloudSystemPlaylist
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.model.spotify.*
-import com.example.coreandroid.model.videos.VideoPlaylist
+import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.model.soundcloud.SoundCloudPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudTrack
+import com.example.core.android.model.spotify.*
+import com.example.core.android.model.videos.VideoPlaylist
 import com.example.soundclouddashboard.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudfavourites.SoundCloudFavouritesNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment

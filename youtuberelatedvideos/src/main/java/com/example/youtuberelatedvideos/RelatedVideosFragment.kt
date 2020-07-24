@@ -9,20 +9,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ext.castAs
-import com.example.coreandroid.BR
-import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.base.fragment.IRelatedVideosSearchFragment
-import com.example.coreandroid.base.handler.YoutubePlayerController
-import com.example.coreandroid.model.videos.Video
-import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.view.recyclerview.decoration.SeparatorDecoration
-import com.example.coreandroid.view.recyclerview.item.ListItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
-import com.example.coreandroid.view.recyclerview.item.VideoItemView
-import com.example.coreandroid.view.recyclerview.listener.ClickHandler
-import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import com.example.core.android.BR
+import com.example.core.android.base.fragment.BaseVMFragment
+import com.example.core.android.base.fragment.IRelatedVideosSearchFragment
+import com.example.core.android.base.handler.YoutubePlayerController
+import com.example.core.android.model.videos.Video
+import com.example.core.android.view.recyclerview.binder.ItemBinder
+import com.example.core.android.view.recyclerview.binder.ItemBinderBase
+import com.example.core.android.view.recyclerview.decoration.SeparatorDecoration
+import com.example.core.android.view.recyclerview.item.ListItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
+import com.example.core.android.view.recyclerview.item.VideoItemView
+import com.example.core.android.view.recyclerview.listener.ClickHandler
+import com.example.core.android.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
 
 class RelatedVideosFragment :

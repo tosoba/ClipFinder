@@ -1,8 +1,8 @@
 package com.example.youtubeplayer
 
 import android.view.View
-import com.example.coreandroid.model.videos.Video
-import com.example.coreandroid.model.videos.VideoPlaylist
+import com.example.core.android.model.videos.Video
+import com.example.core.android.model.videos.VideoPlaylist
 
 class YoutubePlayerView(
     val onYoutubePlayerCloseBtnClickListener: View.OnClickListener,

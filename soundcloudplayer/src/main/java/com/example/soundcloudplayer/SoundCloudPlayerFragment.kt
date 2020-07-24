@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.core.ext.castAs
-import com.example.coreandroid.base.fragment.ISoundCloudPlayerFragment
-import com.example.coreandroid.base.handler.SlidingPanelController
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
+import com.example.core.android.base.fragment.ISoundCloudPlayerFragment
+import com.example.core.android.base.handler.SlidingPanelController
+import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -63,11 +63,11 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
 
         Picasso.with(context)
             .load(track.artworkUrl)
-            .placeholder(com.example.coreandroid.R.drawable.track_placeholder)
-            .error(com.example.coreandroid.R.drawable.track_placeholder)
+            .placeholder(com.example.core.android.R.drawable.track_placeholder)
+            .error(com.example.core.android.R.drawable.track_placeholder)
             .into(sound_cloud_current_track_image_view)
 
-        val userAgent = Util.getUserAgent(context, getString(com.example.coreandroid.R.string.app_name))
+        val userAgent = Util.getUserAgent(context, getString(com.example.core.android.R.string.app_name))
         val mediaUri = Uri.parse(track.streamUrl)
         val mediaSource = ExtractorMediaSource(
             mediaUri,

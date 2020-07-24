@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.core.ext.castAs
-import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.fragment.IYoutubeSearchFragment
-import com.example.coreandroid.base.handler.YoutubePlayerController
-import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.util.ext.setupWithBackNavigation
-import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.base.fragment.IYoutubeSearchFragment
+import com.example.core.android.base.handler.YoutubePlayerController
+import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.util.ext.setupWithBackNavigation
+import com.example.core.android.view.viewflipper.PlaylistThumbnailFlipperAdapter
 import com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding
 import org.koin.android.ext.android.inject
 

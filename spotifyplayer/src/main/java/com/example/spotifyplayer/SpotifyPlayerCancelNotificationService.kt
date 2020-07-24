@@ -3,7 +3,7 @@ package com.example.spotifyplayer
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.example.coreandroid.util.ext.notificationManager
+import com.example.core.android.util.ext.notificationManager
 
 class SpotifyPlayerCancelNotificationService : Service() {
 

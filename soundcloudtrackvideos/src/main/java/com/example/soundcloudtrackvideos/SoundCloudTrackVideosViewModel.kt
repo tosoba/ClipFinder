@@ -2,9 +2,9 @@ package com.example.soundcloudtrackvideos
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.coreandroid.base.trackvideos.BaseTrackVideosViewModel
-import com.example.coreandroid.base.trackvideos.TrackVideosViewState
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
+import com.example.core.android.base.trackvideos.BaseTrackVideosViewModel
+import com.example.core.android.base.trackvideos.TrackVideosViewState
+import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.DeleteSoundCloudTrack
 import com.example.there.domain.usecase.soundcloud.InsertSoundCloudTrack

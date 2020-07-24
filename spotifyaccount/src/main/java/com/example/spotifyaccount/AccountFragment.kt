@@ -4,70 +4,43 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
+import com.example.core.android.base.fragment.HasMainToolbar
+import com.example.core.android.base.handler.NavigationDrawerController
+import com.example.core.android.util.ext.mainContentFragment
+import com.example.core.android.util.ext.showDrawerHamburger
+import com.example.core.android.view.binding.viewBinding
+import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.core.ext.castAs
-import com.example.coreandroid.base.fragment.HasMainToolbar
-import com.example.coreandroid.base.handler.NavigationDrawerController
-import com.example.coreandroid.util.ext.mainContentFragment
-import com.example.coreandroid.util.ext.showDrawerHamburger
-import com.example.coreandroid.view.OnTabSelectedListener
-import com.example.coreandroid.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.AccountTopFragment
-import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_account.*
 
-class AccountFragment : Fragment(), HasMainToolbar {
+class AccountFragment : Fragment(R.layout.fragment_account), HasMainToolbar {
 
+    private val binding: FragmentAccountBinding by viewBinding(FragmentAccountBinding::bind)
     override val toolbar: Toolbar get() = account_toolbar
 
-    private val onTabSelectedListener: TabLayout.OnTabSelectedListener by lazy {
-        object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                account_view_pager?.currentItem = tab.position
-            }
-        }
-    }
-
-    private val viewPagerAdapter: FragmentStatePagerAdapter by lazy {
-        TitledCustomCurrentStatePagerAdapter(
-            childFragmentManager,
-            arrayOf(
-                "Playlists" to AccountPlaylistsFragment(),
-                "Saved" to AccountSavedFragment(),
-                "Top" to AccountTopFragment()
-            )
-        )
-    }
-
-    private val view: AccountView by lazy(LazyThreadSafetyMode.NONE) {
-        AccountView(onTabSelectedListener, viewPagerAdapter, 2)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val binding: FragmentAccountBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_account,
-            container,
-            false
-        )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()
-        return binding.apply {
-            view = this@AccountFragment.view
-            accountTabLayout.setupWithViewPager(accountViewPager)
+        with(binding) {
             requireActivity().castAs<AppCompatActivity>()?.apply {
                 setSupportActionBar(accountToolbar)
                 showDrawerHamburger()
             }
-        }.root
+            accountViewPager.adapter = TitledCustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(
+                    getString(R.string.playlists) to AccountPlaylistsFragment(),
+                    getString(R.string.saved) to AccountSavedFragment(),
+                    getString(R.string.top) to AccountTopFragment()
+                )
+            )
+            accountViewPager.offscreenPageLimit = 2
+            accountTabLayout.setupWithViewPager(accountViewPager)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

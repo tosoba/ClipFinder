@@ -2,9 +2,9 @@ package com.example.soundcloudtrackvideos.track
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.coreandroid.base.vm.MvRxViewModel
-import com.example.coreandroid.mapper.soundcloud.ui
-import com.example.coreandroid.model.DataList
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.mapper.soundcloud.ui
+import com.example.core.android.model.DataList
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.GetSimilarTracks
 import org.koin.android.ext.android.inject

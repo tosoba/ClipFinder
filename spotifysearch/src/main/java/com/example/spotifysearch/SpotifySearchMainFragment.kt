@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.util.ext.*
-import com.example.coreandroid.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.util.ext.*
+import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_spotify_search_main.*

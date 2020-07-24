@@ -1,7 +1,7 @@
 package com.example.spotifyaccount
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.core.android.base.fragment.BaseNavHostFragment
 
 class AccountNavHostFragment : BaseNavHostFragment() {
     override val layoutId: Int = R.layout.fragment_account_host

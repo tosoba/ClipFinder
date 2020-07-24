@@ -1,8 +1,8 @@
 package com.example.spotifysearch.spotify
 
-import com.example.coreandroid.model.DataStatus
-import com.example.coreandroid.model.HoldsData
-import com.example.coreandroid.model.Initial
+import com.example.core.android.model.DataStatus
+import com.example.core.android.model.HoldsData
+import com.example.core.android.model.Initial
 
 data class SpotifySearchItemList<I>(
     override val value: Collection<I> = emptyList(),

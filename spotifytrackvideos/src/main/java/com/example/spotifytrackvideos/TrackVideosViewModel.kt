@@ -2,9 +2,9 @@ package com.example.spotifytrackvideos
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.coreandroid.base.trackvideos.BaseTrackVideosViewModel
-import com.example.coreandroid.base.trackvideos.TrackVideosViewState
-import com.example.coreandroid.model.spotify.Track
+import com.example.core.android.base.trackvideos.BaseTrackVideosViewModel
+import com.example.core.android.base.trackvideos.TrackVideosViewState
+import com.example.core.android.model.spotify.Track
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteTrack
 import com.example.there.domain.usecase.spotify.InsertTrack

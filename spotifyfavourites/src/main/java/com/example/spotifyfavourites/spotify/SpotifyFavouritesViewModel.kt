@@ -1,8 +1,8 @@
 package com.example.spotifyfavourites.spotify
 
 import androidx.lifecycle.MutableLiveData
-import com.example.coreandroid.base.vm.BaseViewModel
-import com.example.coreandroid.mapper.spotify.ui
+import com.example.core.android.base.vm.BaseViewModel
+import com.example.core.android.mapper.spotify.ui
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.*
 import io.reactivex.Flowable

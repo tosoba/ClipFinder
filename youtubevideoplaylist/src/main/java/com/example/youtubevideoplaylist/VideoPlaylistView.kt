@@ -1,8 +1,8 @@
 package com.example.youtubevideoplaylist
 
 import android.view.View
-import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.view.viewflipper.PlaylistThumbnailFlipperAdapter
+import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.view.viewflipper.PlaylistThumbnailFlipperAdapter
 
 class VideoPlaylistView(
     val state: VideoPlaylistViewState,

@@ -1,11 +1,11 @@
 package com.example.youtubesearch
 
 import android.view.View
-import com.example.coreandroid.base.vm.BaseVideosViewModel
-import com.example.coreandroid.mapper.videos.domain
-import com.example.coreandroid.mapper.videos.ui
-import com.example.coreandroid.model.videos.VideoPlaylist
-import com.example.coreandroid.view.recyclerview.item.VideoItemView
+import com.example.core.android.base.vm.BaseVideosViewModel
+import com.example.core.android.mapper.videos.domain
+import com.example.core.android.mapper.videos.ui
+import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.view.recyclerview.item.VideoItemView
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.usecase.videos.DeleteVideo
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls

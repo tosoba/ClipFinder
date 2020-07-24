@@ -8,21 +8,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.coreandroid.BR
-import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.base.fragment.BaseVMFragment
-import com.example.coreandroid.lifecycle.OnPropertyChangedCallbackComponent
-import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.ext.navHostFragment
-import com.example.coreandroid.util.ext.spotifyLoginController
-import com.example.coreandroid.view.recyclerview.binder.ItemBinder
-import com.example.coreandroid.view.recyclerview.binder.ItemBinderBase
-import com.example.coreandroid.view.recyclerview.item.ListItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemViewState
-import com.example.coreandroid.view.recyclerview.listener.ClickHandler
-import com.example.coreandroid.view.recyclerview.listener.EndlessRecyclerOnScrollListener
+import com.example.core.android.BR
+import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.base.fragment.BaseVMFragment
+import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Track
+import com.example.core.android.util.ext.navHostFragment
+import com.example.core.android.util.ext.spotifyLoginController
+import com.example.core.android.view.recyclerview.binder.ItemBinder
+import com.example.core.android.view.recyclerview.binder.ItemBinderBase
+import com.example.core.android.view.recyclerview.item.ListItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
+import com.example.core.android.view.recyclerview.listener.ClickHandler
+import com.example.core.android.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
 import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountSavedBinding
@@ -52,7 +52,7 @@ class AccountSavedFragment :
                         override val itemViewBinder: ItemBinder<Album>
                             get() = ItemBinderBase(
                                 BR.imageListItem,
-                                com.example.coreandroid.R.layout.named_image_list_item
+                                com.example.core.android.R.layout.named_image_list_item
                             )
                     },
                     ClickHandler {
@@ -73,7 +73,7 @@ class AccountSavedFragment :
                         override val itemViewBinder: ItemBinder<Track>
                             get() = ItemBinderBase(
                                 BR.imageListItem,
-                                com.example.coreandroid.R.layout.named_image_list_item
+                                com.example.core.android.R.layout.named_image_list_item
                             )
                     },
                     ClickHandler {

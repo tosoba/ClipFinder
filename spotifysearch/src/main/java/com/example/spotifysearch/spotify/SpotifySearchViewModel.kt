@@ -4,11 +4,11 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Resource
-import com.example.coreandroid.base.vm.MvRxViewModel
-import com.example.coreandroid.mapper.spotify.ui
-import com.example.coreandroid.model.LoadedSuccessfully
-import com.example.coreandroid.model.Loading
-import com.example.coreandroid.model.LoadingFailed
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.mapper.spotify.ui
+import com.example.core.android.model.LoadedSuccessfully
+import com.example.core.android.model.Loading
+import com.example.core.android.model.LoadingFailed
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.SearchSpotify
 import io.reactivex.schedulers.Schedulers

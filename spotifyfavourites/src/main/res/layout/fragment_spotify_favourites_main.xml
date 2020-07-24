@@ -7,7 +7,7 @@
             type="com.example.spotifyfavourites.SpotifyFavouritesMainView" />
     </data>
 
-    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,7 +33,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.example.coreandroid.view.viewpager.LockableViewPager
+        <com.example.core.android.view.viewpager.LockableViewPager
             android:id="@+id/favourites_fragment_view_pager"
             offScreenPageLimit="@{favouritesFragmentView.offScreenPageLimit}"
             swipeLocked="@{true}"
@@ -55,6 +55,6 @@
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
             app:menu="@menu/spotify_videos_bottom_navigation" />
 
-    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
+    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>

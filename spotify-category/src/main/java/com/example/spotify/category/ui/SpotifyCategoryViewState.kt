@@ -1,10 +1,10 @@
 package com.example.spotify.category.ui
 
 import com.airbnb.mvrx.MvRxState
-import com.example.coreandroid.model.Data
-import com.example.coreandroid.model.PagedDataList
-import com.example.coreandroid.model.spotify.Category
-import com.example.coreandroid.model.spotify.Playlist
+import com.example.core.android.model.Data
+import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.spotify.Category
+import com.example.core.android.model.spotify.Playlist
 
 data class SpotifyCategoryViewState(
     val category: Category,

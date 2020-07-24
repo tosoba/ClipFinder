@@ -3,8 +3,8 @@ package com.example.spotifyaccount.saved
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
-import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Track
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Track
 
 class AccountSavedView(
     val state: AccountSavedViewState,

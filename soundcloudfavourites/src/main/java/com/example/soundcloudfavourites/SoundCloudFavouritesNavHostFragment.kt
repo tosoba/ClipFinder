@@ -1,7 +1,7 @@
 package com.example.soundcloudfavourites
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.core.android.base.fragment.BaseNavHostFragment
 
 class SoundCloudFavouritesNavHostFragment : BaseNavHostFragment() {
     override val backStackLayoutId: Int = R.id.sound_cloud_favourites_back_stack_layout

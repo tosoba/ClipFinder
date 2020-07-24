@@ -2,7 +2,7 @@ package com.example.spotifyfavourites.spotify
 
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.example.coreandroid.model.spotify.*
+import com.example.core.android.model.spotify.*
 import com.google.android.material.tabs.TabLayout
 
 class SpotifyFavouritesFragmentView(

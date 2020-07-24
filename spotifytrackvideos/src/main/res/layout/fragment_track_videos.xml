@@ -9,10 +9,10 @@
 
         <variable
             name="view"
-            type="com.example.coreandroid.base.trackvideos.TrackVideosViewBinding&lt;com.example.coreandroid.model.spotify.Track&gt;" />
+            type="com.example.core.android.base.trackvideos.TrackVideosViewBinding&lt;com.example.core.android.model.spotify.Track&gt;" />
     </data>
 
-    <com.example.coreandroid.view.coordinator.NestedCoordinatorLayout
+    <com.example.core.android.view.coordinator.NestedCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
@@ -116,7 +116,7 @@
             android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </com.example.coreandroid.view.coordinator.NestedCoordinatorLayout>
+    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
 

@@ -1,7 +1,7 @@
 package com.example.soundclouddashboard
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.core.android.base.fragment.BaseNavHostFragment
 
 class SoundCloudDashboardNavHostFragment : BaseNavHostFragment() {
     override val backStackLayoutId: Int = R.id.sound_cloud_dashboard_back_stack_layout

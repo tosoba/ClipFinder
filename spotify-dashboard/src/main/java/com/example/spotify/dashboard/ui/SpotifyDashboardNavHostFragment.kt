@@ -1,7 +1,7 @@
 package com.example.spotify.dashboard.ui
 
 import androidx.fragment.app.Fragment
-import com.example.coreandroid.base.fragment.BaseNavHostFragment
+import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.spotify.dashboard.R
 
 class SpotifyDashboardNavHostFragment : BaseNavHostFragment() {

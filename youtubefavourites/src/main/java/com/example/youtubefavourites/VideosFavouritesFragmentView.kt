@@ -1,9 +1,9 @@
 package com.example.youtubefavourites
 
 import androidx.databinding.ObservableList
-import com.example.coreandroid.util.list.ObservableSortedList
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
-import com.example.coreandroid.view.viewflipper.PlaylistThumbnailView
+import com.example.core.android.util.list.ObservableSortedList
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.view.viewflipper.PlaylistThumbnailView
 
 class VideosFavouritesFragmentView(
     val state: VideosFavouritesFragmentViewState,

@@ -1,12 +1,12 @@
 package com.example.spotify.album.ui
 
 import com.airbnb.mvrx.MvRxState
-import com.example.coreandroid.model.Data
-import com.example.coreandroid.model.DataList
-import com.example.coreandroid.model.PagedDataList
-import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Artist
-import com.example.coreandroid.model.spotify.Track
+import com.example.core.android.model.Data
+import com.example.core.android.model.DataList
+import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Artist
+import com.example.core.android.model.spotify.Track
 
 data class SpotifyAlbumViewState(
     val album: Album,

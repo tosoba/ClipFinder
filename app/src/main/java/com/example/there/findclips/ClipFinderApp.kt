@@ -8,7 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.coreandroid.di.epoxyModule
+import com.example.core.android.di.epoxyModule
 import com.example.spotify.album.di.spotifyAlbumModule
 import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule

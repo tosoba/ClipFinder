@@ -1,9 +1,9 @@
 package com.example.youtuberelatedvideos
 
-import com.example.coreandroid.base.vm.BaseVideosViewModel
-import com.example.coreandroid.mapper.videos.ui
-import com.example.coreandroid.model.videos.Video
-import com.example.coreandroid.view.recyclerview.item.VideoItemView
+import com.example.core.android.base.vm.BaseVideosViewModel
+import com.example.core.android.mapper.videos.ui
+import com.example.core.android.model.videos.Video
+import com.example.core.android.view.recyclerview.item.VideoItemView
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.SearchRelatedVideos

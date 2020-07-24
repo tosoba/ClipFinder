@@ -3,14 +3,14 @@ package com.example.spotifyaccount.saved
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.coreandroid.R
-import com.example.coreandroid.databinding.HeaderItemBinding
-import com.example.coreandroid.databinding.RecyclerViewListItemBinding
-import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Track
-import com.example.coreandroid.util.ext.makeItemBinding
-import com.example.coreandroid.view.recyclerview.BindingViewHolder
-import com.example.coreandroid.view.recyclerview.item.RecyclerViewItemView
+import com.example.core.android.R
+import com.example.core.android.databinding.HeaderItemBinding
+import com.example.core.android.databinding.RecyclerViewListItemBinding
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Track
+import com.example.core.android.util.ext.makeItemBinding
+import com.example.core.android.view.recyclerview.BindingViewHolder
+import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
 
 class AccountSavedAdapter(
     private val albumsRecyclerViewItemView: RecyclerViewItemView<Album>,

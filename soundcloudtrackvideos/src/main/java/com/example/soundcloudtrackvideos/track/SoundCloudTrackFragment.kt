@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.*
-import com.example.coreandroid.model.soundcloud.SoundCloudTrack
-import com.example.coreandroid.model.soundcloud.clickableListItem
-import com.example.coreandroid.util.ext.parentFragmentViewModel
-import com.example.coreandroid.view.epoxy.itemListController
+import com.example.core.android.model.soundcloud.SoundCloudTrack
+import com.example.core.android.model.soundcloud.clickableListItem
+import com.example.core.android.util.ext.parentFragmentViewModel
+import com.example.core.android.view.epoxy.itemListController
 import com.example.soundcloudtrackvideos.R
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track.view.*

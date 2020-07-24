@@ -1,7 +1,7 @@
 package com.example.spotifyaccount.playlist
 
 import androidx.databinding.ObservableField
-import com.example.coreandroid.model.spotify.Playlist
+import com.example.core.android.model.spotify.Playlist
 
 class AccountPlaylistViewState(
     val userLoggedIn: ObservableField<Boolean>,
