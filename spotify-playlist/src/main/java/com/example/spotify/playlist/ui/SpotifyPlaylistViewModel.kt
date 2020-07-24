@@ -2,7 +2,6 @@ package com.example.spotify.playlist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.map
@@ -17,14 +16,12 @@ import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Playlist
 import com.example.coreandroid.model.spotify.Track
+import com.example.coreandroid.util.ext.observeNetworkConnectivity
 import com.example.spotify.playlist.domain.usecase.GetPlaylistTracks
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.DeleteSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.InsertSpotifyPlaylist
 import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -93,16 +90,11 @@ class SpotifyPlaylistViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        ReactiveNetwork.observeNetworkConnectivity(context)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .subscribe {
-                withState { (_, tracks) ->
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadTracks()
-                }
+        context.observeNetworkConnectivity {
+            withState { (_, tracks) ->
+                if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadTracks()
             }
-            .disposeOnClear()
+        }.disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyPlaylistViewModel, PlaylistViewState<Playlist, Track>> {

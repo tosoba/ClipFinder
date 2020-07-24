@@ -2,7 +2,6 @@ package com.example.spotify.album.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.Paged
@@ -16,6 +15,7 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Album
+import com.example.coreandroid.util.ext.observeNetworkConnectivity
 import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
@@ -23,9 +23,6 @@ import com.example.there.domain.usecase.spotify.DeleteAlbum
 import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.InsertAlbum
 import com.example.there.domain.usecase.spotify.IsAlbumSaved
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -108,19 +105,14 @@ class SpotifyAlbumViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        ReactiveNetwork.observeNetworkConnectivity(context)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .subscribe {
-                withState { (album, artists, tracks, _) ->
-                    if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadAlbumsArtists(album.artists.map { it.id })
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadTracksFromAlbum(album.id)
-                }
+        context.observeNetworkConnectivity {
+            withState { (album, artists, tracks, _) ->
+                if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
+                    loadAlbumsArtists(album.artists.map { it.id })
+                if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
+                    loadTracksFromAlbum(album.id)
             }
-            .disposeOnClear()
+        }.disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, SpotifyAlbumViewState> {

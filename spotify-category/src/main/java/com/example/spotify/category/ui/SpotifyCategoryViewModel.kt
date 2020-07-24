@@ -2,7 +2,6 @@ package com.example.spotify.category.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.NetworkInfo
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.spotify.preferences.SpotifyPreferences
@@ -16,14 +15,12 @@ import com.example.coreandroid.model.LoadedSuccessfully
 import com.example.coreandroid.model.Loading
 import com.example.coreandroid.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.coreandroid.model.spotify.Category
+import com.example.coreandroid.util.ext.observeNetworkConnectivity
 import com.example.spotify.category.domain.usecase.DeleteCategory
 import com.example.spotify.category.domain.usecase.GetPlaylistsForCategory
 import com.example.spotify.category.domain.usecase.InsertCategory
 import com.example.spotify.category.domain.usecase.IsCategorySaved
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -107,16 +104,11 @@ class SpotifyCategoryViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        ReactiveNetwork.observeNetworkConnectivity(context)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .subscribe {
-                withState { (_, _, playlists) ->
-                    if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadPlaylists()
-                }
+        context.observeNetworkConnectivity {
+            withState { (_, _, playlists) ->
+                if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadPlaylists()
             }
-            .disposeOnClear()
+        }.disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyCategoryViewModel, SpotifyCategoryViewState> {
