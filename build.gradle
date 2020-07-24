@@ -25,7 +25,7 @@ allprojects {
         maven { url 'https://jitpack.io' }
         flatDir {
             dirs 'libs'
-            dirs "../coreandroid/libs"
+            dirs "../core-android/libs"
         }
         maven {
             url 'http://www.idescout.com/maven/repo/'

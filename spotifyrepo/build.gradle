@@ -34,7 +34,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation project(':core')
-    implementation project(':coreandroid')
+    implementation project(':core-android')
     implementation project(':core-android-spotify')
     implementation project(':db')
     implementation project(':domain')
