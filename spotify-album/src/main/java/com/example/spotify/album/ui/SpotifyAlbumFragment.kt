@@ -9,18 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
-import com.example.coreandroid.*
+import com.example.coreandroid.TrackPopularityItemBindingModel_
 import com.example.coreandroid.base.IFragmentFactory
-import com.example.coreandroid.model.LoadedSuccessfully
-import com.example.coreandroid.model.Loading
-import com.example.coreandroid.model.LoadingFailed
 import com.example.coreandroid.model.spotify.Album
-import com.example.coreandroid.model.spotify.Track
 import com.example.coreandroid.model.spotify.clickableListItem
-import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.*
+import com.example.coreandroid.view.epoxy.dataListCarouselWithHeader
 import com.example.coreandroid.view.epoxy.injectedTypedController
-import com.example.coreandroid.view.epoxy.withModelsFrom
+import com.example.coreandroid.view.epoxy.pagedDataListCarouselWithHeader
 import com.example.spotify.album.R
 import com.example.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -36,79 +32,29 @@ class SpotifyAlbumFragment : BaseMvRxFragment(), NavigationCapable {
     private val album: Album by args()
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<SpotifyAlbumViewState> { state ->
-            headerItem {
-                id("artists-header")
-                text("Artists")
-            }
-
-            when (state.artists.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-artists")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("artists-reload-control")
-                    onReloadClicked(View.OnClickListener {
-                        viewModel.loadAlbumsArtists(state.album.artists.map { it.id })
-                    })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("artists")
-                    withModelsFrom(state.artists.value) { artist ->
-                        artist.clickableListItem {
-                            show { newSpotifyArtistFragment(artist) }
-                        }
-                    }
+        injectedTypedController<SpotifyAlbumViewState> { (album, artists, tracks) ->
+            dataListCarouselWithHeader(
+                requireContext(),
+                artists,
+                R.string.artists,
+                "artists",
+                { viewModel.loadAlbumsArtists(album.artists.map { it.id }) }
+            ) { artist ->
+                artist.clickableListItem {
+                    show { newSpotifyArtistFragment(artist) }
                 }
             }
 
-            headerItem {
-                id("tracks-header")
-                text("Tracks")
-            }
-
-            if (state.tracks.value.isEmpty()) when (state.tracks.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-tracks")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("tracks-reload-control")
-                    onReloadClicked(View.OnClickListener {
-                        viewModel.loadTracksFromAlbum(state.album.id)
-                    })
-                    message("Error occurred lmao") //TODO: error msg
-                }
-            } else carousel {
-                id("tracks")
-                withModelsFrom<Track>(
-                    items = state.tracks.value,
-                    extraModels = when (state.tracks.status) {
-                        is LoadingFailed<*> -> listOf(
-                            ReloadControlBindingModel_()
-                                .id("reload-tracks")
-                                .message("Error occurred")
-                                .onReloadClicked(View.OnClickListener {
-                                    viewModel.loadTracksFromAlbum(state.album.id)
-                                })
-                        )
-
-                        else -> if (state.tracks.canLoadMore) listOf(
-                            LoadingIndicatorBindingModel_()
-                                .id("loading-more-tracks")
-                                .onBind { _, _, _ ->
-                                    viewModel.loadTracksFromAlbum(state.album.id)
-                                }
-                        ) else emptyList()
-                    }
-                ) { track ->
-                    TrackPopularityItemBindingModel_()
-                        .id(track.id)
-                        .track(track) //TODO: navigation + a nicer layout
-                }
+            pagedDataListCarouselWithHeader(
+                requireContext(),
+                tracks,
+                R.string.tracks,
+                "tracks",
+                { viewModel.loadTracksFromAlbum(album.id) }
+            ) { track ->
+                TrackPopularityItemBindingModel_()
+                    .id(track.id)
+                    .track(track) //TODO: navigation + a nicer layout
             }
         }
     }

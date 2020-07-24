@@ -18,14 +18,11 @@ import com.example.coreandroid.model.spotify.clickableListItem
 import com.example.coreandroid.model.spotify.infoItem
 import com.example.coreandroid.radarChart
 import com.example.coreandroid.reloadControl
-import com.example.coreandroid.view.epoxy.carousel
 import com.example.coreandroid.util.ext.NavigationCapable
 import com.example.coreandroid.util.ext.parentFragmentViewModel
 import com.example.coreandroid.util.ext.reloadingConnectivityComponent
 import com.example.coreandroid.util.ext.show
-import com.example.coreandroid.view.epoxy.injectedTypedController
-import com.example.coreandroid.view.epoxy.withModelsFrom
-import com.example.coreandroid.view.epoxy.Column
+import com.example.coreandroid.view.epoxy.*
 import com.example.coreandroid.view.radarchart.RadarChartAxisView
 import com.example.coreandroid.view.radarchart.RadarChartView
 import com.example.coreandroid.view.radarchart.RadarMarkerView
@@ -38,21 +35,19 @@ import org.koin.android.ext.android.inject
 
 class TrackFragment : BaseMvRxFragment(), NavigationCapable {
 
-    override fun invalidate() = withState(viewModel, epoxyController::setData)
-
     override val factory: IFragmentFactory by inject()
 
     private val viewModel: TrackViewModel by fragmentViewModel()
     private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<TrackViewState> { state ->
+        injectedTypedController<TrackViewState> { (album, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
             }
 
-            when (state.album.status) {
+            when (album.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-album")
                 }
@@ -65,66 +60,35 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     message("Error occurred lmao") //TODO: error msg
                 }
 
-                is LoadedSuccessfully -> state.album.value?.let {
+                is LoadedSuccessfully -> album.value?.let {
                     it.infoItem { show { newSpotifyAlbumFragment(it) } }
                         .addTo(this)
                 }
             }
 
-            headerItem {
-                id("track-artists-header")
-                text("Artists")
-            }
-
-            when (state.artists.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-track-artists")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("track-artists-reload-control")
-                    onReloadClicked { _ ->
-                        track?.let { track -> viewModel.loadArtists(track.artists.map { it.id }) }
-                    }
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("track-artists")
-                    withModelsFrom(state.artists.value) { artist ->
-                        artist.clickableListItem {
-                            show { factory.newSpotifyArtistFragment(artist) }
-                        }
-                    }
+            dataListCarouselWithHeader(
+                requireContext(),
+                artists,
+                R.string.artists,
+                "track-artists",
+                { track?.let { track -> viewModel.loadArtists(track.artists.map { it.id }) } }
+            ) { artist ->
+                artist.clickableListItem {
+                    show { factory.newSpotifyArtistFragment(artist) }
                 }
             }
 
-            headerItem {
-                id("similar-tracks-header")
-                text("Similar tracks")
-            }
-
-            when (state.similarTracks.status) {
-                is Loading -> loadingIndicator {
-                    id("loading-indicator-similar-tracks")
-                }
-
-                is LoadingFailed<*> -> reloadControl {
-                    id("similar-tracks-reload-control")
-                    onReloadClicked { _ ->
-                        track?.let { track -> viewModel.loadSimilarTracks(track) }
-                    }
-                    message("Error occurred lmao") //TODO: error msg
-                }
-
-                is LoadedSuccessfully -> carousel {
-                    id("similar-tracks")
-                    withModelsFrom(state.similarTracks.value.chunked(2)) { chunk ->
-                        Column(chunk.map { track ->
-                            track.clickableListItem { parentViewModel.updateTrack(track) }
-                        })
-                    }
-                }
+            dataListCarouselWithHeader(
+                requireContext(),
+                similarTracks,
+                R.string.similar_tracks,
+                "similar-tracks",
+                { track?.let { track -> viewModel.loadSimilarTracks(track) } },
+                { it.chunked(2) }
+            ) { chunk ->
+                Column(chunk.map { track ->
+                    track.clickableListItem { parentViewModel.updateTrack(track) }
+                })
             }
 
             headerItem {
@@ -132,7 +96,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                 text("Audio features")
             }
 
-            when (state.audioFeaturesChartData.status) {
+            when (audioFeaturesChartData.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator-audio-features")
                 }
@@ -145,25 +109,26 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                     message("Error occurred lmao") //TODO: error msg
                 }
 
-                is LoadedSuccessfully -> {
-                    radarChart {
-                        id("audio-features-radar-chart")
-                        view(RadarChartView(
-                            state.audioFeaturesChartData.value!!,
+                is LoadedSuccessfully -> radarChart {
+                    val typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf")
+                    id("audio-features-radar-chart")
+                    view(
+                        RadarChartView(
+                            audioFeaturesChartData.value!!,
                             xAxisView = RadarChartAxisView(
-                                typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
+                                typeface = typeface,
                                 valueFormatter = IAxisValueFormatter { value, _ ->
                                     audioFeaturesChartLabels[value.toInt() % audioFeaturesChartLabels.size]
                                 }
                             ),
                             yAxisView = RadarChartAxisView(
-                                typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf"),
+                                typeface = typeface,
                                 axisMaximum = 1f,
                                 drawLabels = false
                             ),
                             markerView = RadarMarkerView(context, R.layout.radar_marker_view)
-                        ))
-                    }
+                        )
+                    )
                 }
             }
         }
@@ -206,6 +171,8 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
     }
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     private fun loadData() {
         track?.let { viewModel.loadData(it) }
