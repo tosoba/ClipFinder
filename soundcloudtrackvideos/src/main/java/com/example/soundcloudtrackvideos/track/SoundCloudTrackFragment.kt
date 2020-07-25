@@ -1,7 +1,6 @@
 package com.example.soundcloudtrackvideos.track
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +8,12 @@ import com.airbnb.mvrx.*
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.parentFragmentViewModel
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.soundcloudtrackvideos.R
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track.view.*
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 class SoundCloudTrackFragment : BaseMvRxFragment() {
-
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
 
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
@@ -27,10 +21,7 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     //TODO: connectivityComponent
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
-            builder,
-            differ,
-            viewModel,
+        injectedItemListController(
             SoundCloudTrackViewState::similarTracks,
             "Similar tracks",
             reloadClicked = { track?.id?.let { viewModel.loadSimilarTracks(it) } }
@@ -57,10 +48,12 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
         this.sound_cloud_track_recycler_view?.setController(epoxyController)
     }
 
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(track: SoundCloudTrack): SoundCloudTrackFragment = SoundCloudTrackFragment().apply {
+        fun newInstance(
+            track: SoundCloudTrack
+        ): SoundCloudTrackFragment = SoundCloudTrackFragment().apply {
             arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
         }
     }

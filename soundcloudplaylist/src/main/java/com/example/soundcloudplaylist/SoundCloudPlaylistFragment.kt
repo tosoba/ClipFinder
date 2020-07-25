@@ -2,7 +2,6 @@ package com.example.soundcloudplaylist
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -20,26 +19,19 @@ import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     //TODO: async subscribe showing Toasts when toggling favourite state
 
-    override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
-    private val builder by inject<Handler>(named("builder"))
-    private val differ by inject<Handler>(named("differ"))
-
-    private val epoxyController by lazy {
-        itemListController(
-            builder,
-            differ,
-            viewModel,
+    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+        injectedItemListController(
             PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>::tracks,
             "Tracks",
             reloadClicked = viewModel::loadData

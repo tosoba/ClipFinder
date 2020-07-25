@@ -18,10 +18,12 @@ import com.example.core.android.model.spotify.*
 import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
+import com.example.core.android.util.ext.show
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.spotifysearch.R
 import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_spotify_search.*
@@ -88,7 +90,7 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment, NavigationCap
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = DataBindingUtil.inflate<FragmentSpotifySearchBinding>(
-        inflater, com.example.spotifysearch.R.layout.fragment_spotify_search, container, false
+        inflater, R.layout.fragment_spotify_search, container, false
     ).apply {
         spotifySearchView = viewBinding
         spotifyTabViewPager.offscreenPageLimit = 3
@@ -120,17 +122,19 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment, NavigationCap
 
             override val factory: IFragmentFactory by inject()
 
-            override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy {
-                itemListController(builder, differ, viewModel, prop,
-                    reloadClicked = viewModel::searchWithLastQuery,
+            protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
+
+            override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy(LazyThreadSafetyMode.NONE) {
+                injectedItemListController(
+                    prop,
                     loadMore = viewModel::searchWithLastQuery,
+                    reloadClicked = viewModel::searchWithLastQuery,
                     buildItem = ::buildItem
                 )
             }
 
-            override fun invalidate() = withState(viewModel) { state -> epoxyController.setData(state) }
+            override fun invalidate() = withState(viewModel, epoxyController::setData)
 
-            protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
             protected abstract fun buildItem(item: I): EpoxyModel<*>
         }
 
@@ -138,28 +142,36 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment, NavigationCap
             override val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<Album>>> = SpotifySearchViewState::albums
             override fun buildItem(
                 item: Album
-            ): EpoxyModel<*> = item.clickableListItem { factory.newSpotifyAlbumFragment(item) }
+            ): EpoxyModel<*> = item.clickableListItem {
+                show { factory.newSpotifyAlbumFragment(item) }
+            }
         }
 
         class ArtistListFragment : BaseListFragment<Artist>() {
             override val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<Artist>>> = SpotifySearchViewState::artists
             override fun buildItem(
                 item: Artist
-            ): EpoxyModel<*> = item.clickableListItem { factory.newSpotifyArtistFragment(item) }
+            ): EpoxyModel<*> = item.clickableListItem {
+                show { factory.newSpotifyArtistFragment(item) }
+            }
         }
 
         class PlaylistListFragment : BaseListFragment<Playlist>() {
             override val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<Playlist>>> = SpotifySearchViewState::playlists
             override fun buildItem(
                 item: Playlist
-            ): EpoxyModel<*> = item.clickableListItem { factory.newSpotifyPlaylistFragment(item) }
+            ): EpoxyModel<*> = item.clickableListItem {
+                show { factory.newSpotifyPlaylistFragment(item) }
+            }
         }
 
         class TrackListFragment : BaseListFragment<Track>() {
             override val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<Track>>> = SpotifySearchViewState::tracks
             override fun buildItem(
                 item: Track
-            ): EpoxyModel<*> = item.clickableListItem { factory.newSpotifyTrackVideosFragment(item) }
+            ): EpoxyModel<*> = item.clickableListItem {
+                show { factory.newSpotifyTrackVideosFragment(item) }
+            }
         }
     }
 }

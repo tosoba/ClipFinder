@@ -26,13 +26,12 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
 
     protected abstract val epoxyController: TypedEpoxyController<S>
 
-    protected val builder by inject<Handler>(named("builder"))
-    protected val differ by inject<Handler>(named("differ"))
-
     private val spanCount: Int
         get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             passedArgs.spanCountLandscape
-        } else passedArgs.spanCountPortrait
+        } else {
+            passedArgs.spanCountPortrait
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -51,15 +50,15 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
     }
 
     @Parcelize
-    class Args(val spanCountPortrait: Int, val spanCountLandscape: Int, val itemSpacingDp: Int) : Parcelable
+    class Args(
+        val spanCountPortrait: Int,
+        val spanCountLandscape: Int,
+        val itemSpacingDp: Int
+    ) : Parcelable
 
     companion object {
-        inline fun <reified F : ItemListFragment<S>, S> new(
-            args: Args
-        ): F = F::class.java.newInstance().apply {
-            arguments = Bundle().apply {
-                putParcelable(MvRx.KEY_ARG, args)
-            }
-        }
+        inline fun <reified F : ItemListFragment<S>, S> new(args: Args): F = F::class.java
+            .newInstance()
+            .apply { arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, args) } }
     }
 }

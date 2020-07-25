@@ -2,25 +2,22 @@ package com.example.spotify.playlist.ui
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.playlist.PlaylistViewState
-import com.example.core.android.di.EpoxyHandlerQualifier
 import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.playlist.R
 import com.example.spotify.playlist.databinding.FragmentSpotifyPlaylistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -31,16 +28,8 @@ class SpotifyPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val playlist: Playlist by args()
 
-    override fun invalidate() = withState(viewModel, epoxyController::setData)
-
-    private val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    private val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
-
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
-            builder,
-            differ,
-            viewModel,
+        injectedItemListController(
             PlaylistViewState<Playlist, Track>::tracks,
             getString(R.string.tracks),
             loadMore = viewModel::loadTracks,
@@ -61,8 +50,8 @@ class SpotifyPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSpotifyPlaylistBinding>(
-        inflater, R.layout.fragment_spotify_playlist, container, false
+    ): View? = FragmentSpotifyPlaylistBinding.inflate(
+        inflater, container, false
     ).apply {
         enableSpotifyPlayButton { loadPlaylist(this@SpotifyPlaylistFragment.playlist) }
         playlist = this@SpotifyPlaylistFragment.playlist
@@ -96,6 +85,8 @@ class SpotifyPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
         context,

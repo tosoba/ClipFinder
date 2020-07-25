@@ -1,7 +1,10 @@
 package com.example.spotifyaccount
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -30,15 +33,15 @@ class AccountFragment : Fragment(R.layout.fragment_account), HasMainToolbar {
                 setSupportActionBar(accountToolbar)
                 showDrawerHamburger()
             }
-            accountViewPager.adapter = TitledCustomCurrentStatePagerAdapter(
-                childFragmentManager,
-                arrayOf(
-                    getString(R.string.playlists) to AccountPlaylistsFragment(),
-                    getString(R.string.saved) to AccountSavedFragment(),
-                    getString(R.string.top) to AccountTopFragment()
-                )
+            val titledFragments: Array<Pair<String, Fragment>> = arrayOf(
+                getString(R.string.playlists) to AccountPlaylistsFragment(),
+                getString(R.string.saved) to AccountSavedFragment(),
+                getString(R.string.top) to AccountTopFragment()
             )
-            accountViewPager.offscreenPageLimit = 2
+            accountViewPager.adapter = TitledCustomCurrentStatePagerAdapter(
+                childFragmentManager, titledFragments
+            )
+            accountViewPager.offscreenPageLimit = titledFragments.size - 1
             accountTabLayout.setupWithViewPager(accountViewPager)
         }
     }
