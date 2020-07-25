@@ -1,14 +1,14 @@
-package com.example.spotifysearch.spotify
+package com.example.spotifysearch
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
-import com.example.core.model.Resource
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.LoadingFailed
+import com.example.core.model.Resource
 import com.example.there.domain.entity.spotify.*
 import com.example.there.domain.usecase.spotify.SearchSpotify
 import io.reactivex.schedulers.Schedulers
@@ -24,7 +24,7 @@ class SpotifySearchViewModel(
         if (state.status is Loading) return@withState
 
         if (state.query != query) {
-            setState { resetWithNewQuery(query) }
+            setState { SpotifySearchViewState(query) }
             searchWith(query, 0)
         } else if (state.offset == 0 || (state.offset < state.totalItems)) {
             searchWith(query, state.offset)

@@ -2,7 +2,6 @@ package com.example.core.android.base.fragment
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +13,9 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.args
 import com.example.core.android.R
-import com.example.core.android.util.ext.screenOrientation
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.synthetic.main.fragment_item_list.*
 import kotlinx.android.synthetic.main.fragment_item_list.view.*
-import org.koin.android.ext.android.inject
-import org.koin.core.qualifier.named
 
 abstract class ItemListFragment<S> : BaseMvRxFragment() {
 
@@ -26,28 +23,29 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
 
     protected abstract val epoxyController: TypedEpoxyController<S>
 
-    private val spanCount: Int
-        get() = if (context?.screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-            passedArgs.spanCountLandscape
-        } else {
-            passedArgs.spanCountPortrait
-        }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_item_list, container, false).apply {
-        this.item_list_recycler_view.apply {
+    ): View? = inflater.inflate(R.layout.fragment_item_list, container, false).also {
+        it.item_list_recycler_view.apply {
             setController(epoxyController)
-            layoutManager = GridLayoutManager(context, spanCount, RecyclerView.VERTICAL, false)
+            layoutManager = layoutManagerFor(resources.configuration.orientation)
             setItemSpacingDp(passedArgs.itemSpacingDp)
         }
     }
 
-    //TODO: make it so spanCount changes on config change
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-//        item_list_recycler_view?.layoutManager = listLayoutManager
+        item_list_recycler_view?.layoutManager = layoutManagerFor(newConfig.orientation)
     }
+
+    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
+        context,
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            passedArgs.spanCountLandscape
+        } else {
+            passedArgs.spanCountPortrait
+        }
+    )
 
     @Parcelize
     class Args(

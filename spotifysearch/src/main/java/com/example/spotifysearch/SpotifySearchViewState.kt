@@ -1,4 +1,4 @@
-package com.example.spotifysearch.spotify
+package com.example.spotifysearch
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.DataStatus
@@ -7,7 +7,7 @@ import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Artist
 import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
-
+import com.example.spotifysearch.SpotifySearchItemList
 
 data class SpotifySearchViewState(
     val query: String,
@@ -29,6 +29,4 @@ data class SpotifySearchViewState(
         SpotifySearchItemList(status = Initial),
         SpotifySearchItemList(status = Initial)
     )
-
-    fun resetWithNewQuery(query: String): SpotifySearchViewState = SpotifySearchViewState(query)
 }

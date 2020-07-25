@@ -1,4 +1,4 @@
-package com.example.spotifysearch.spotify
+package com.example.spotifysearch
 
 import com.example.core.android.model.DataStatus
 import com.example.core.android.model.HoldsData

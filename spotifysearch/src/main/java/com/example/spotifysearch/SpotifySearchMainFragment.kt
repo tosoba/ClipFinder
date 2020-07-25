@@ -1,79 +1,68 @@
 package com.example.spotifysearch
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.args
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.util.ext.*
+import com.example.core.android.util.ext.dpToPx
+import com.example.core.android.util.ext.mainContentFragment
+import com.example.core.android.util.ext.setHeight
+import com.example.core.android.util.ext.setupWithBackNavigation
+import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.fragment_spotify_search_main.*
 import org.koin.android.ext.android.inject
 
-class SpotifySearchMainFragment : Fragment() {
+class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main) {
 
-    private val fragmentFactory: IFragmentFactory by inject()
+    private val binding: FragmentSpotifySearchMainBinding by viewBinding(FragmentSpotifySearchMainBinding::bind)
 
-    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
-        CustomCurrentStatePagerAdapter(childFragmentManager, arrayOf(
-            fragmentFactory.newSpotifySearchFragment(query),
-            fragmentFactory.newVideosSearchFragment(query)
-        ))
-    }
-
-    private val itemIds: Array<Int> = arrayOf(R.id.action_spotify, R.id.action_videos)
-
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (item.itemId == search_bottom_navigation_view?.selectedItemId) {
-            return@OnNavigationItemSelectedListener false
-        }
-
-        search_fragment_view_pager?.currentItem = itemIds.indexOf(item.itemId)
-
-        return@OnNavigationItemSelectedListener true
-    }
-
-    private val view: SpotifySearchMainView by lazy {
-        SpotifySearchMainView(query, pagerAdapter, onNavigationItemSelectedListener, 1)
-    }
-
-    private val query: String by lazy { arguments!!.getString(ARG_QUERY) }
+    private val query: String by args()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentSpotifySearchMainBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_spotify_search_main,
-            container,
-            false
-        )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()
-        return binding.apply {
-            searchFragmentView = view
-            searchBottomNavigationView.setHeight(activity!!.dpToPx(40f).toInt())
+        with(binding) {
+            val fragmentFactory: IFragmentFactory by inject()
+            val adapter = CustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(
+                    fragmentFactory.newSpotifySearchFragment(query),
+                    fragmentFactory.newVideosSearchFragment(query)
+                )
+            )
+            searchFragmentViewPager.adapter = adapter
+            searchFragmentViewPager.swipeLocked = true
+            searchFragmentViewPager.offscreenPageLimit = adapter.count - 1
+            searchBottomNavigationView.setOnNavigationItemSelectedListener { item ->
+                if (item.itemId == binding.searchBottomNavigationView.selectedItemId) {
+                    return@setOnNavigationItemSelectedListener false
+                }
+                binding.searchFragmentViewPager.currentItem = itemIds.indexOf(item.itemId)
+                true
+            }
+            searchBottomNavigationView.setHeight(requireContext().dpToPx(40f).toInt())
             searchToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-        }.root
+            //TODO: MutableLiveData<String> for query + revert to databinding?
+            searchToolbar.title = query
+        }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
+
     companion object {
-        private const val ARG_QUERY = "ARG_QUERY"
+        private val itemIds: Array<Int> = arrayOf(R.id.action_spotify, R.id.action_videos)
 
         fun newInstance(query: String) = SpotifySearchMainFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_QUERY, query)
-            }
+            arguments = Bundle().apply { putString(MvRx.KEY_ARG, query) }
         }
     }
 }
