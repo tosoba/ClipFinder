@@ -16,9 +16,14 @@ class TrackVideosViewModel(
     insertTrack: InsertTrack,
     deleteTrack: DeleteTrack,
     isTrackSaved: IsTrackSaved
-) : BaseTrackVideosViewModel<Track, TrackEntity>(initialState, insertTrack, deleteTrack, isTrackSaved) {
+) : BaseTrackVideosViewModel<Track, TrackEntity>(
+    initialState, insertTrack, deleteTrack, isTrackSaved
+) {
     companion object : MvRxViewModelFactory<TrackVideosViewModel, TrackVideosViewState<Track>> {
-        override fun create(viewModelContext: ViewModelContext, state: TrackVideosViewState<Track>): TrackVideosViewModel? {
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: TrackVideosViewState<Track>
+        ): TrackVideosViewModel? {
             val insertTrack: InsertTrack by viewModelContext.activity.inject()
             val deleteTrack: DeleteTrack by viewModelContext.activity.inject()
             val isTrackSaved: IsTrackSaved by viewModelContext.activity.inject()

@@ -93,4 +93,6 @@
     <string name="error_occurred">Error occurred</string>
     <string name="saved">Saved</string>
     <string name="top">Top</string>
+    <string name="clips">Clips</string>
+    <string name="info">Info</string>
 </resources>

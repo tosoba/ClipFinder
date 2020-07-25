@@ -22,7 +22,9 @@ import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.*
+import com.example.core.android.view.epoxy.Column
+import com.example.core.android.view.epoxy.dataListCarouselWithHeader
+import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView

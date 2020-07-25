@@ -43,7 +43,9 @@ class VideosSearchViewModel(
             .subscribeAndDisposeOnCleared({ videos ->
                 updateVideos(videos)
                 viewState.videosLoadingErrorOccurred.set(false)
-            }, getOnErrorWith { viewState.videosLoadingErrorOccurred.set(true) })
+            }, getOnErrorWith {
+                viewState.videosLoadingErrorOccurred.set(true) }
+            )
     }
 
     fun getFavouriteVideosFromPlaylist(videoPlaylist: VideoPlaylist) {

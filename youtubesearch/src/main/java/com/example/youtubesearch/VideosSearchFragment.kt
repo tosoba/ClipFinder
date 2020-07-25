@@ -142,7 +142,9 @@ class VideosSearchFragment :
             arguments = Bundle().apply { putString(ARG_QUERY, query) }
         }
 
-        fun newInstanceWithVideoPlaylist(videoPlaylist: VideoPlaylist): VideosSearchFragment = VideosSearchFragment().apply {
+        fun newInstanceWithVideoPlaylist(
+            videoPlaylist: VideoPlaylist
+        ): VideosSearchFragment = VideosSearchFragment().apply {
             arguments = Bundle().apply { putParcelable(ARG_VIDEO_PLAYLIST, videoPlaylist) }
         }
     }

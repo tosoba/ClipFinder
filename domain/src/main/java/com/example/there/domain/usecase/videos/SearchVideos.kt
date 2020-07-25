@@ -1,7 +1,7 @@
 package com.example.there.domain.usecase.videos
 
-import com.example.core.model.Resource
 import com.example.core.ext.RxSchedulers
+import com.example.core.model.Resource
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosDbDataStore
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
@@ -16,30 +16,30 @@ class SearchVideos(
 
     class Args(val query: String, val loadMore: Boolean)
 
-    override fun run(args: Args): Single<Resource<List<VideoEntity>>> = if (args.loadMore)
+    override fun run(args: Args): Single<Resource<List<VideoEntity>>> = if (args.loadMore) {
         getMoreVideos(args.query)
-    else getVideos(args.query)
+    } else {
+        getVideos(args.query)
+    }
 
     private fun getVideos(
         query: String
     ): Single<Resource<List<VideoEntity>>> = local.getSavedVideosForQuery(query)
-        .flatMap {
-            if (it.isEmpty()) {
-                remote.getVideos(query)
-                    .flatMap { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                val (nextPageToken, videos) = resource.data
-                                local.insertVideosForNewQuery(query, videos, nextPageToken)
-                                    .andThen(Single.just(Resource.Success(videos)))
-                            }
-                            is Resource.Error<Pair<String?, List<VideoEntity>>, *> ->
-                                Single.just(resource.map { it.second })
+        .flatMap { savedVideos ->
+            if (savedVideos.isEmpty()) {
+                remote.getVideos(query).flatMap { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            val (nextPageToken, videos) = resource.data
+                            local.insertVideosForNewQuery(query, videos, nextPageToken)
+                                .andThen(Single.just(Resource.Success(videos)))
                         }
-
+                        is Resource.Error<Pair<String?, List<VideoEntity>>, *> -> Single
+                            .just(resource.map { it.second })
                     }
+                }
             } else {
-                Single.just(Resource.Success(it))
+                Single.just(Resource.Success(savedVideos))
             }
         }
 

@@ -44,24 +44,29 @@ abstract class BaseTrackVideosViewModel<Track : BaseTrackUiModel<TrackEntity>, T
         }
     }
 
-    private fun addFavouriteTrack(track: Track) = insertTrack(track.domainEntity, applySchedulers = false)
-        .subscribeOn(Schedulers.io())
-        .subscribe(
-            { setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) } },
-            {
+    private fun addFavouriteTrack(track: Track) {
+        insertTrack(track.domainEntity, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) }
+            }, {
                 setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
                 Timber.e(it)
-            }
-        )
-        .disposeOnClear()
+            })
+            .disposeOnClear()
+    }
 
-    private fun deleteFavouriteTrack(track: Track) = deleteTrack(track.domainEntity, applySchedulers = false)
-        .subscribeOn(Schedulers.io())
-        .subscribe({ setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) } }, {
-            setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-            Timber.e(it)
-        })
-        .disposeOnClear()
+    private fun deleteFavouriteTrack(track: Track) {
+        deleteTrack(track.domainEntity, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .subscribe({
+                setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) }
+            }, {
+                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
+                Timber.e(it)
+            })
+            .disposeOnClear()
+    }
 
     private fun loadTrackFavouriteState(track: Track) = withState { state ->
         if (state.isSavedAsFavourite.status is Loading) return@withState

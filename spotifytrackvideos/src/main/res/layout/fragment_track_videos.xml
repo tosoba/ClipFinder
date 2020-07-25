@@ -7,9 +7,13 @@
 
         <import type="android.view.View" />
 
+        <import type="androidx.lifecycle.MutableLiveData" />
+
+        <import type="com.example.core.android.model.spotify.Track" />
+
         <variable
-            name="view"
-            type="com.example.core.android.base.trackvideos.TrackVideosViewBinding&lt;com.example.core.android.model.spotify.Track&gt;" />
+            name="track"
+            type="MutableLiveData&lt;Track&gt;" />
     </data>
 
     <com.example.core.android.view.coordinator.NestedCoordinatorLayout
@@ -34,7 +38,7 @@
                 app:expandedTitleMarginBottom="56dp"
                 app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow"
                 app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:title="@{view.track.name}"
+                app:title="@{track.name}"
                 app:titleEnabled="true"
                 app:toolbarId="@+id/track_videos_toolbar">
 
@@ -46,7 +50,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
-                    imageSrc="@{view.track.imageViewSrc}"
+                    imageSrc="@{track.imageViewSrc}"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:layout_gravity="center"
@@ -84,8 +88,6 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/track_videos_tab_layout"
-                    onTabSelectedListener="@{view.onTabSelectedListener}"
-                    tabs="@{view.fragmentTabs}"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
                     android:layout_gravity="bottom"
@@ -102,21 +104,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:onClick="@{view.onFavouriteBtnClickListener}"
             android:src="@drawable/favourite"
             app:layout_anchor="@id/track_videos_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/track_videos_viewpager"
-            onPageChangeListener="@{view.onPageChangeListener}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adapter="@{view.pagerAdapter}"
             android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
-
