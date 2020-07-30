@@ -3,6 +3,7 @@ package com.example.spotifyaccount.top
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableList
+import androidx.lifecycle.LiveData
 import com.example.core.android.model.spotify.Artist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.view.recyclerview.adapter.ArtistsAndTracksAdapter
@@ -13,7 +14,7 @@ class AccountTopView(
 )
 
 class AccountTopViewState(
-    val userLoggedIn: ObservableField<Boolean>,
+    val userLoggedIn: LiveData<Boolean>,
     val tracksLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
     val artistsLoadingInProgress: ObservableField<Boolean> = ObservableField(false),
     val topTracks: ObservableList<Track> = ObservableArrayList(),

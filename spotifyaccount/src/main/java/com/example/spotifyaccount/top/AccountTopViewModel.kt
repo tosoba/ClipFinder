@@ -17,7 +17,7 @@ class AccountTopViewModel(
 
     private val canLoadTracks: Boolean
         get() = viewState.tracksLoadingInProgress.get() == false &&
-            viewState.userLoggedIn.get() == true &&
+            viewState.userLoggedIn.value == true &&
             (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
 
     private var currentTracksOffset = 0
@@ -42,7 +42,7 @@ class AccountTopViewModel(
 
     private val canLoadArtists: Boolean
         get() = viewState.artistsLoadingInProgress.get() == false &&
-            viewState.userLoggedIn.get() == true &&
+            viewState.userLoggedIn.value == true &&
             (currentArtistsOffset == 0 || (currentArtistsOffset < totalArtists))
 
     private var currentArtistsOffset = 0

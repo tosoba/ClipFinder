@@ -1,6 +1,6 @@
 package com.example.core.android.base.handler
 
-import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
@@ -17,7 +17,7 @@ interface SpotifyTrackChangeHandler {
 }
 
 interface SpotifyLoginController {
-    val loggedInObservable: ObservableField<Boolean>
+    val isLoggedIn: LiveData<Boolean>
     var onLoginSuccessful: (() -> Unit)?
     fun showLoginDialog()
 }

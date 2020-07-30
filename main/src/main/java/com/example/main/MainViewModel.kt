@@ -22,7 +22,6 @@ import com.example.there.domain.usecase.videos.DeleteAllVideoSearchData
 import com.example.there.domain.usecase.videos.GetFavouriteVideoPlaylists
 import com.example.there.domain.usecase.videos.InsertVideoPlaylist
 
-
 class MainViewModel(
     private val getSimilarTracks: GetSimilarTracks,
     private val getCurrentUser: GetCurrentUser,

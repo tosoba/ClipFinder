@@ -14,13 +14,11 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.Observable
 import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
-import com.example.core.android.spotify.api.SpotifyAuth
-import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.activity.BaseVMActivity
 import com.example.core.android.base.activity.IntentProvider
@@ -33,6 +31,8 @@ import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnNavigationDrawerClosedListerner
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -187,7 +187,7 @@ class MainActivity :
                 binding.drawerNavigationView.menu.clear()
                 binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
 
-                val isLoggedIn = viewModel.viewState.isLoggedIn.get() ?: false
+                val isLoggedIn = viewModel.viewState.isLoggedIn.value ?: false
                 binding.drawerNavigationView.menu?.apply {
                     findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
                     findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
@@ -289,17 +289,9 @@ class MainActivity :
 
     private var currentSlideOffset: Float = 0.0f
 
-    override val loggedInObservable: ObservableField<Boolean> get() = viewModel.viewState.isLoggedIn
+    override val isLoggedIn: LiveData<Boolean> get() = viewModel.viewState.isLoggedIn
     override val isPlayerLoggedIn: Boolean get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
     override var onLoginSuccessful: (() -> Unit)? = null
-
-    private val loggedInCallback = object : Observable.OnPropertyChangedCallback() {
-        override fun onPropertyChanged(observable: Observable, id: Int) {
-            @Suppress("UNCHECKED_CAST") val o = observable as ObservableField<Boolean>
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !o.get()!!
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = o.get()!!
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -449,7 +441,7 @@ class MainActivity :
     }
 
     override fun loadTrack(track: Track) {
-        if (viewModel.viewState.isLoggedIn.get() == false) {
+        if (viewModel.viewState.isLoggedIn.value == false) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -463,7 +455,7 @@ class MainActivity :
     }
 
     override fun loadAlbum(album: Album) {
-        if (viewModel.viewState.isLoggedIn.get() == false) {
+        if (viewModel.viewState.isLoggedIn.value == false) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -477,7 +469,7 @@ class MainActivity :
     }
 
     override fun loadPlaylist(playlist: Playlist) {
-        if (viewModel.viewState.isLoggedIn.get() == false) {
+        if (viewModel.viewState.isLoggedIn.value == false) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -552,13 +544,13 @@ class MainActivity :
         get() = Intent(this, MainActivity::class.java)
 
     override fun onLoggedOut() {
-        viewModel.viewState.isLoggedIn.set(false)
+        viewModel.viewState.isLoggedIn.value = false
         viewModel.drawerViewState.user.set(null)
         Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLoggedIn() {
-        viewModel.viewState.isLoggedIn.set(true)
+        viewModel.viewState.isLoggedIn.value = true
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
 
         //TODO: permission check
@@ -626,7 +618,10 @@ class MainActivity :
 
     @Suppress("UNCHECKED_CAST")
     private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
-        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.isLoggedIn, loggedInCallback))
+        viewModel.viewState.isLoggedIn.observe({ this }) { isLoggedIn ->
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn!!
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn!!
+        }
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
             when ((observable as ObservableField<PlayerState>).get()!!) {
                 PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let {

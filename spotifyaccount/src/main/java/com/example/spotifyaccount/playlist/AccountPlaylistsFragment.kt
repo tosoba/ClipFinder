@@ -5,37 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.Observable
 import androidx.lifecycle.Observer
 import com.example.core.android.base.fragment.BaseVMFragment
-import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.util.ext.spotifyLoginController
 import com.example.itemlist.spotify.SpotifyPlaylistsFragment
 import com.example.spotifyaccount.R
-import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 
-class AccountPlaylistsFragment :
-    BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class),
-    TracksDataLoaded {
-
-    override val isDataLoaded: Boolean
-        get() = viewModel.viewState.playlists.isNotEmpty()
+class AccountPlaylistsFragment : BaseVMFragment<AccountPlaylistsViewModel>(AccountPlaylistsViewModel::class) {
 
     private val playlistsFragment: SpotifyPlaylistsFragment
         get() = childFragmentManager.findFragmentById(R.id.account_spotify_playlists_fragment) as SpotifyPlaylistsFragment
 
-    private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
-        object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded) loadData()
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
+        viewModel.viewState.userLoggedIn.observe(this, Observer { userLoggedIn ->
+            if (userLoggedIn && viewModel.viewState.playlists.isNotEmpty()) loadData()
+        })
     }
 
     override fun onCreateView(
@@ -56,7 +42,7 @@ class AccountPlaylistsFragment :
     }
 
     override fun AccountPlaylistsViewModel.onInitialized() {
-        viewState = AccountPlaylistViewState(spotifyLoginController!!.loggedInObservable)
+        viewState = AccountPlaylistViewState(spotifyLoginController!!.isLoggedIn)
     }
 
     private fun loadData() = viewModel.loadPlaylists()

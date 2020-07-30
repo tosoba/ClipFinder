@@ -17,7 +17,7 @@ class AccountPlaylistsViewModel(
 
     private val canLoadPlaylists
         get() = viewState.playlistsLoadingInProgress.get() == false &&
-            viewState.userLoggedIn.get() == true &&
+            viewState.userLoggedIn.value == true &&
             (currentOffset == 0 || (currentOffset < totalItems))
 
     private var currentOffset = 0

@@ -17,7 +17,7 @@ class AccountSavedViewModel(
 
     private val canLoadTracks: Boolean
         get() = viewState.tracksLoadingInProgress.get() == false &&
-            viewState.userLoggedIn.get() == true &&
+            viewState.userLoggedIn.value == true &&
             (currentTracksOffset == 0 || (currentTracksOffset < totalTracks))
 
     private var currentTracksOffset = 0
@@ -42,7 +42,7 @@ class AccountSavedViewModel(
 
     private val canLoadAlbums: Boolean
         get() = viewState.albumsLoadingInProgress.get() == false &&
-            viewState.userLoggedIn.get() == true &&
+            viewState.userLoggedIn.value == true &&
             (currentAlbumsOffset == 0 || (currentAlbumsOffset < totalAlbums))
 
     private var currentAlbumsOffset = 0

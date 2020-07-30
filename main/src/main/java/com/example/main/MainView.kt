@@ -25,7 +25,7 @@ class MainView(
 
 class MainViewState(
     val playerState: ObservableField<PlayerState> = ObservableField(PlayerState.VIDEO),
-    val isLoggedIn: ObservableField<Boolean> = ObservableField(false),
+    val isLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false),
     val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
     val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
     val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),

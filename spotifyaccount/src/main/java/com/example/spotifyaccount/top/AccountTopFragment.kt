@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.Observable
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.android.BR
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BaseVMFragment
-import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.spotify.Artist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.util.ext.navHostFragment
@@ -25,18 +24,12 @@ import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.core.android.view.recyclerview.listener.ClickHandler
 import com.example.core.android.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.spotifyaccount.R
-import com.example.spotifyaccount.TracksDataLoaded
 import com.example.spotifyaccount.databinding.FragmentAccountTopBinding
 import org.koin.android.ext.android.inject
 
-class AccountTopFragment :
-    BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class),
-    TracksDataLoaded {
+class AccountTopFragment : BaseVMFragment<AccountTopViewModel>(AccountTopViewModel::class) {
 
     private val fragmentFactory: IFragmentFactory by inject()
-
-    override val isDataLoaded: Boolean
-        get() = viewModel.viewState.artists.isNotEmpty() && viewModel.viewState.topTracks.isNotEmpty()
 
     private val view: AccountTopView by lazy {
         AccountTopView(
@@ -68,14 +61,6 @@ class AccountTopFragment :
         )
     }
 
-    private val loginCallback: Observable.OnPropertyChangedCallback by lazy {
-        object : Observable.OnPropertyChangedCallback() {
-            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                if (viewModel.viewState.userLoggedIn.get() == true && !isDataLoaded) loadData()
-            }
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -88,11 +73,13 @@ class AccountTopFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.userLoggedIn, loginCallback))
+        viewModel.viewState.userLoggedIn.observe(this, Observer { userLoggedIn ->
+            if (userLoggedIn && viewModel.viewState.artists.isNotEmpty() && viewModel.viewState.topTracks.isNotEmpty()) loadData()
+        })
     }
 
     override fun AccountTopViewModel.onInitialized() {
-        viewState = AccountTopViewState(spotifyLoginController!!.loggedInObservable)
+        viewState = AccountTopViewState(spotifyLoginController!!.isLoggedIn)
     }
 
     private fun loadData() {
