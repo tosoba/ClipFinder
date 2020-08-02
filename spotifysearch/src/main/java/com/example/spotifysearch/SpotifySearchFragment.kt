@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.base.fragment.ISearchFragment
 import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
 import com.example.core.android.model.spotify.*
@@ -17,41 +18,19 @@ import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
-import kotlinx.android.synthetic.main.fragment_spotify_search.view.*
+import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
 
-class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment {
-
-    override fun invalidate() = Unit
-
-    private val argQuery: String by args()
-
-    private val viewModel: SpotifySearchViewModel by fragmentViewModel()
-
-    //TODO: replace this with a function that calls onNewQuery to get rid of useless stateful property
-    override var query: String = ""
-        set(value) {
-            if (field == value) return
-            field = value
-            viewModel.onNewQuery(value)
-        }
+class SpotifySearchFragment : BaseMvRxFragment() {
 
     //TODO: in the future do all searches separately
     // to avoid loading more of all types of items when one of the lists is scrolled all the way down
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) query = argQuery
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(
-        R.layout.fragment_spotify_search, container, false
-    ).also {
-        it.spotify_tab_view_pager.offscreenPageLimit = 3
-        it.spotify_tab_view_pager.adapter = TitledCustomCurrentStatePagerAdapter(
+    ): View? = FragmentSpotifySearchBinding.inflate(inflater, container, false).apply {
+        val adapter = TitledCustomCurrentStatePagerAdapter(
             childFragmentManager,
             arrayOf(
                 getString(R.string.albums) to itemListFragment<AlbumListFragment>(),
@@ -60,12 +39,16 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment {
                 getString(R.string.tracks) to itemListFragment<TrackListFragment>()
             )
         )
-        it.spotify_tab_layout.setupWithViewPager(it.spotify_tab_view_pager)
-    }
+        spotifyTabViewPager.offscreenPageLimit = adapter.count - 1
+        spotifyTabViewPager.adapter = adapter
+        spotifyTabLayout.setupWithViewPager(spotifyTabViewPager)
+    }.root
 
     private inline fun <reified F : ItemListFragment<SpotifySearchViewState>> itemListFragment(): F {
         return ItemListFragment.new(ItemListFragment.Args(3, 4, 5))
     }
+
+    override fun invalidate() = Unit
 
     companion object {
         fun newInstanceWithQuery(query: String) = SpotifySearchFragment().apply {
@@ -78,7 +61,9 @@ class SpotifySearchFragment : BaseMvRxFragment(), ISearchFragment {
 
             protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
 
-            override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy(LazyThreadSafetyMode.NONE) {
+            override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy(
+                LazyThreadSafetyMode.NONE
+            ) {
                 injectedItemListController(
                     prop,
                     loadMore = viewModel::searchWithLastQuery,

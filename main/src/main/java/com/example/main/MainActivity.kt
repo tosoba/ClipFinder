@@ -620,7 +620,7 @@ class MainActivity :
     private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
         viewModel.viewState.isLoggedIn.observe({ this }) { isLoggedIn ->
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn!!
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn!!
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
         }
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
             when ((observable as ObservableField<PlayerState>).get()!!) {

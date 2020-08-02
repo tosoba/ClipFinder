@@ -20,6 +20,10 @@ class SpotifySearchViewModel(
     private val searchSpotify: SearchSpotify
 ) : MvRxViewModel<SpotifySearchViewState>(initialState) {
 
+    init {
+        searchWith(initialState.query, 0)
+    }
+
     fun onNewQuery(query: String) = withState { state ->
         if (state.status is Loading) return@withState
 
@@ -70,7 +74,8 @@ class SpotifySearchViewModel(
 
     companion object : MvRxViewModelFactory<SpotifySearchViewModel, SpotifySearchViewState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifySearchViewState
+            viewModelContext: ViewModelContext,
+            state: SpotifySearchViewState
         ): SpotifySearchViewModel {
             val searchSpotify: SearchSpotify by viewModelContext.activity.inject()
             return SpotifySearchViewModel(state, searchSpotify)
