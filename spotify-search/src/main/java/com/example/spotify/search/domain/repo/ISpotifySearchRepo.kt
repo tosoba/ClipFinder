@@ -1,7 +1,7 @@
-package com.example.spotifysearch.domain.repo
+package com.example.spotify.search.domain.repo
 
 import com.example.core.model.Resource
-import com.example.spotifysearch.domain.model.SpotifySearchResult
+import com.example.spotify.search.domain.model.SpotifySearchResult
 import io.reactivex.Single
 
 interface ISpotifySearchRepo {

@@ -16,7 +16,7 @@ import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
-import com.example.spotifysearch.di.spotifySearchModule
+import com.example.spotify.search.di.spotifySearchModule
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext

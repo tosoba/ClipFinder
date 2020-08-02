@@ -1,4 +1,4 @@
-package com.example.spotifysearch.domain.model
+package com.example.spotify.search.domain.model
 
 import com.example.core.model.Paged
 import com.example.there.domain.entity.spotify.AlbumEntity

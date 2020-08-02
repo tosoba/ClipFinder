@@ -1,4 +1,4 @@
-package com.example.spotifysearch.ui
+package com.example.spotify.search.ui
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -7,8 +7,8 @@ import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Loading
 import com.example.core.android.spotify.model.ext.SpotifySearchType
 import com.example.core.model.Resource
-import com.example.spotifysearch.domain.model.SpotifySearchResult
-import com.example.spotifysearch.domain.usecase.SearchSpotify
+import com.example.spotify.search.domain.model.SpotifySearchResult
+import com.example.spotify.search.domain.usecase.SearchSpotify
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity

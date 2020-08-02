@@ -1,6 +1,5 @@
 package com.example.there.findclips.module
 
-import com.example.spotifysearch.domain.usecase.SearchSpotify
 import com.example.there.domain.usecase.spotify.*
 import org.koin.dsl.module
 

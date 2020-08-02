@@ -1,4 +1,4 @@
-package com.example.spotifysearch.ui
+package com.example.spotify.search.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,8 +16,8 @@ import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
-import com.example.spotifysearch.R
-import com.example.spotifysearch.databinding.FragmentSpotifySearchBinding
+import com.example.spotify.search.R
+import com.example.spotify.search.databinding.FragmentSpotifySearchBinding
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
 

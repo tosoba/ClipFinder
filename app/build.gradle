@@ -103,7 +103,7 @@ dependencies {
     implementation project(':spotifyplayer')
     implementation project(':spotify-playlist')
     implementation project(':spotifyrepo')
-    implementation project(':spotifysearch')
+    implementation project(':spotify-search')
     implementation project(':spotifytrackvideos')
     implementation project(':videosrepo')
     implementation project(':youtubeaddvideo')

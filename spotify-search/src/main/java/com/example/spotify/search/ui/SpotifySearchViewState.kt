@@ -1,4 +1,4 @@
-package com.example.spotifysearch.ui
+package com.example.spotify.search.ui
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.PagedDataList

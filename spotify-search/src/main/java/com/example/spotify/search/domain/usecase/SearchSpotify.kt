@@ -1,10 +1,10 @@
-package com.example.spotifysearch.domain.usecase
+package com.example.spotify.search.domain.usecase
 
 import com.example.core.android.spotify.model.ext.SpotifySearchType
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
-import com.example.spotifysearch.domain.model.SpotifySearchResult
-import com.example.spotifysearch.domain.repo.ISpotifySearchRepo
+import com.example.spotify.search.domain.model.SpotifySearchResult
+import com.example.spotify.search.domain.repo.ISpotifySearchRepo
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 

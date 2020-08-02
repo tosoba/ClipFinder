@@ -1,4 +1,4 @@
-package com.example.spotifysearch.data
+package com.example.spotify.search.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -12,8 +12,8 @@ import com.example.spotifyapi.models.Artist
 import com.example.spotifyapi.models.Playlist
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.domain
-import com.example.spotifysearch.domain.model.SpotifySearchResult
-import com.example.spotifysearch.domain.repo.ISpotifySearchRepo
+import com.example.spotify.search.domain.model.SpotifySearchResult
+import com.example.spotify.search.domain.repo.ISpotifySearchRepo
 import io.reactivex.Single
 
 class SpotifySearchRepoImpl(
