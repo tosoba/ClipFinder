@@ -2,6 +2,8 @@ package com.example.spotify.artist.data
 
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.mapper.db
+import com.example.core.android.spotify.mapper.domain
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.ext.isPresent
 import com.example.core.model.Paged

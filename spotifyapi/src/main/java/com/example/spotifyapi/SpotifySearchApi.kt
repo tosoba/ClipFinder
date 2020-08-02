@@ -11,15 +11,11 @@ import retrofit2.http.Query
 
 interface SpotifySearchApi {
     @GET("search")
-    fun searchAll(
+    fun search(
         @Header("Authorization") authorization: String,
         @Query("q") query: String,
-        @Query("type") type: String = ALL_SEARCH_TYPES,
+        @Query("type") type: String,
         @Query("offset") offset: Int = SpotifyDefaults.OFFSET,
         @Query("limit") limit: Int = SpotifyDefaults.LIMIT
     ): Single<NetworkResponse<SearchAllResponse, SpotifyErrorResponse>>
-
-    companion object {
-        private const val ALL_SEARCH_TYPES = "album,artist,playlist,track"
-    }
 }

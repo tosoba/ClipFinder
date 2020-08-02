@@ -2,20 +2,6 @@ package com.example.spotifyapi.model
 
 import com.google.gson.annotations.SerializedName
 
-class SearchAllResponse(
-    @SerializedName("albums")
-    val albumsResult: AlbumsResult?,
-
-    @SerializedName("artists")
-    val artistsResult: ArtistsResult?,
-
-    @SerializedName("playlists")
-    val playlistsResult: PlaylistsResult?,
-
-    @SerializedName("tracks")
-    val tracksResult: TracksResult?
-)
-
 class TracksOnlyResponse(val tracks: List<TrackApiModel>)
 
 class SimilarTracksResponse(val tracks: List<SimilarTrackApiModel>)

@@ -29,31 +29,6 @@ class SpotifyRemoteRepo(
                 .mapToResource(UserApiModel::domain)
         }
 
-    override fun searchAll(
-        query: String,
-        offset: Int
-    ): Single<Resource<SearchAllEntity>> = withTokenSingle { token ->
-        api.searchAll(authorization = getAccessTokenHeader(token), query = query, offset = offset)
-            .mapToResource {
-                SearchAllEntity(
-                    albums = albumsResult?.items?.map(AlbumApiModel::domain)
-                        ?: emptyList(),
-                    artists = artistsResult?.items?.map(ArtistApiModel::domain)
-                        ?: emptyList(),
-                    playlists = playlistsResult?.items?.map(PlaylistApiModel::domain)
-                        ?: emptyList(),
-                    tracks = tracksResult?.items?.map(TrackApiModel::domain)
-                        ?: emptyList(),
-                    totalItems = arrayOf(
-                        albumsResult?.totalItems ?: 0,
-                        artistsResult?.totalItems ?: 0,
-                        playlistsResult?.totalItems ?: 0,
-                        tracksResult?.totalItems ?: 0
-                    ).max() ?: 0
-                )
-            }
-    }
-
     override fun getPlaylistsForCategory(
         categoryId: String,
         offset: Int

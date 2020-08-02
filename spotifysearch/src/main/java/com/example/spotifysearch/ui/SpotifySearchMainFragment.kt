@@ -1,4 +1,4 @@
-package com.example.spotifysearch
+package com.example.spotifysearch.ui
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -14,6 +14,7 @@ import com.example.core.android.util.ext.setHeight
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.spotifysearch.R
 import com.example.spotifysearch.databinding.FragmentSpotifySearchMainBinding
 import org.koin.android.ext.android.inject
 

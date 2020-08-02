@@ -10,8 +10,6 @@ interface ISpotifyRemoteDataStore {
 
     val currentUser: Single<Resource<UserEntity>>
 
-    fun searchAll(query: String, offset: Int): Single<Resource<SearchAllEntity>>
-
     fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<Page<PlaylistEntity>>>
 
     fun getPlaylistTracks(playlistId: String, userId: String, offset: Int): Single<Resource<Page<TrackEntity>>>

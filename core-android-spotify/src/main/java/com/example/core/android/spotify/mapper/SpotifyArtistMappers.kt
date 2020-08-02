@@ -1,4 +1,4 @@
-package com.example.spotify.artist.data
+package com.example.core.android.spotify.mapper
 
 import com.example.db.model.spotify.ArtistDbModel
 import com.example.spotifyapi.models.Artist

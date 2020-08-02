@@ -18,8 +18,8 @@ import com.example.spotify.category.ui.SpotifyCategoryFragment
 import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotifyfavourites.SpotifyFavouritesMainNavHostFragment
 import com.example.spotify.playlist.ui.SpotifyPlaylistFragment
-import com.example.spotifysearch.SpotifySearchMainFragment
-import com.example.spotifysearch.SpotifySearchFragment
+import com.example.spotifysearch.ui.SpotifySearchMainFragment
+import com.example.spotifysearch.ui.SpotifySearchFragment
 import com.example.spotifytrackvideos.TrackVideosFragment
 import com.example.youtubefavourites.VideosFavouritesFragment
 import com.example.youtubesearch.VideosSearchFragment

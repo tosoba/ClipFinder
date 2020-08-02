@@ -16,15 +16,6 @@ interface SpotifyApi {
         @Query("ids") ids: String
     ): Single<NetworkResponse<TracksOnlyResponse, SpotifyErrorResponse>>
 
-    @GET("search")
-    fun searchAll(
-        @Header("Authorization") authorization: String,
-        @Query("q") query: String,
-        @Query("type") type: String = ALL_SEARCH_TYPES,
-        @Query("offset") offset: Int = SpotifyDefaults.OFFSET,
-        @Query("limit") limit: Int = SpotifyDefaults.LIMIT
-    ): Single<NetworkResponse<SearchAllResponse, SpotifyErrorResponse>>
-
     @GET("browse/categories/{category_id}/playlists")
     fun getPlaylistsForCategory(
         @Header("Authorization") authorization: String,

@@ -6,16 +6,17 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
+import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.core.android.di.epoxyModule
 import com.example.spotify.album.di.spotifyAlbumModule
+import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotifyapi.di.spotifyApiModule
-import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
+import com.example.spotifysearch.di.spotifySearchModule
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
@@ -66,11 +67,14 @@ class ClipFinderApp : Application() {
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
-                appModule, epoxyModule, databaseModule, apiModule, repoModule,
-                soundCloudModule, spotifyModule, spotifyCoreAndroidModule, videosModule,
+                databaseModule, apiModule, repoModule,
+                soundCloudModule, spotifyModule, videosModule,
                 viewModelsModule,
+
+                appModule, epoxyModule,
                 spotifyApiModule,
-                spotifyDashboardModule, spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule
+                spotifyCoreAndroidModule,
+                spotifyDashboardModule, spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule, spotifySearchModule
             ))
         }
     }
