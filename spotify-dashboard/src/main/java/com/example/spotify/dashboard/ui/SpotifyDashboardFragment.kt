@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.example.core.ext.castAs
 import com.example.core.android.TopTrackItemBindingModel_
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.HasMainToolbar
@@ -22,9 +20,9 @@ import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
+import com.example.core.ext.castAs
 import com.example.spotify.dashboard.R
 import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
-import kotlinx.android.synthetic.main.fragment_spotify_dashboard.*
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationCapable {
@@ -33,7 +31,8 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
-    override val toolbar: Toolbar get() = dashboard_toolbar
+    private lateinit var binding: FragmentSpotifyDashboardBinding
+    override val toolbar: Toolbar get() = binding.dashboardToolbar
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
@@ -113,15 +112,14 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSpotifyDashboardBinding>(
-        inflater, R.layout.fragment_spotify_dashboard, container, false
-    ).apply {
+    ): View? = FragmentSpotifyDashboardBinding.inflate(inflater, container, false).apply {
         requireActivity().castAs<AppCompatActivity>()?.apply {
             setSupportActionBar(dashboardToolbar)
             showDrawerHamburger()
         }
         mainContentFragment?.disablePlayButton()
         dashboardRecyclerView.setController(epoxyController)
+        binding = this
     }.root
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

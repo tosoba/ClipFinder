@@ -1,35 +1,7 @@
-<layout>
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="view"
-            type="com.example.spotifyaccount.top.AccountTopView" />
-    </data>
-
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".spotify.account.top.AccountTopFragment">
-
-        <TextView
-            style="@style/EmptyListTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/need_to_login_to_see_top_tracks_and_artists"
-            android:visibility="@{((!safeUnbox(view.state.tracksLoadingInProgress) &amp;&amp; !safeUnbox(view.state.artistsLoadingInProgress) &amp;&amp; !safeUnbox(view.state.userLoggedIn) &amp;&amp; view.state.topTracks.size() == 0 &amp;&amp; view.state.artists.size() == 0) ? View.VISIBLE : View.GONE) }" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/account_top_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adapter="@{view.artistsAndTracksAdapter}"
-            android:visibility="@{(view.state.topTracks.size() > 0 &amp;&amp; view.state.artists.size() > 0) ? View.VISIBLE : View.GONE}" />
-
-    </FrameLayout>
-
-</layout>
-
+<com.airbnb.epoxy.EpoxyRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/spotify_account_top_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />

@@ -14,9 +14,10 @@ import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
+import com.example.spotify.search.di.spotifySearchModule
+import com.example.spotifyaccount.top.di.spotifyAccountTopModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
-import com.example.spotify.search.di.spotifySearchModule
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
@@ -74,7 +75,9 @@ class ClipFinderApp : Application() {
                 appModule, epoxyModule,
                 spotifyApiModule,
                 spotifyCoreAndroidModule,
-                spotifyDashboardModule, spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule, spotifySearchModule
+                spotifyDashboardModule, spotifySearchModule,
+                spotifyAccountTopModule,
+                spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule
             ))
         }
     }

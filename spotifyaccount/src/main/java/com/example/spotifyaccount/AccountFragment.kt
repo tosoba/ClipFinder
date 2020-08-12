@@ -18,7 +18,7 @@ import com.example.core.ext.castAs
 import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
-import com.example.spotifyaccount.top.AccountTopFragment
+import com.example.spotifyaccount.top.ui.AccountTopFragment
 import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : Fragment(R.layout.fragment_account), HasMainToolbar {
