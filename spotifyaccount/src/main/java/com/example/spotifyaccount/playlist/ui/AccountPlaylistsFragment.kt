@@ -10,11 +10,14 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.largeTextCenter
+import com.example.core.android.model.Initial
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.spotifyLoginController
 import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.spotifyaccount.R
 import com.example.spotifyaccount.databinding.FragmentAccountPlaylistsBinding
 import org.koin.android.ext.android.inject
 
@@ -29,10 +32,18 @@ class AccountPlaylistsFragment : BaseMvRxFragment(), NavigationCapable {
     private val epoxyController: TypedEpoxyController<AccountPlaylistState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        //TODO: user login required text + login button
         injectedItemListController(
             AccountPlaylistState::playlists,
             loadMore = viewModel::loadPlaylists,
+            shouldOverrideBuildModels = { (userLoggedIn, playlists) ->
+                !userLoggedIn && playlists.status is Initial
+            },
+            overrideBuildModels = {
+                largeTextCenter {
+                    id("spotify-account-playlists-user-not-logged-in")
+                    text(getString(R.string.spotify_login_required))
+                }
+            },
             reloadClicked = viewModel::loadPlaylists,
             buildItem = { playlist ->
                 playlist.clickableListItem {

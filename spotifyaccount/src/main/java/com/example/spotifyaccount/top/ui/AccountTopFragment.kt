@@ -39,7 +39,7 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
 
             if (!userLoggedIn && tracks.status is Initial && artists.status is Initial) {
                 largeTextCenter {
-                    id("user-not-logged-in")
+                    id("spotify-account-top-user-not-logged-in")
                     text(getString(R.string.spotify_login_required))
                 }
             } else {

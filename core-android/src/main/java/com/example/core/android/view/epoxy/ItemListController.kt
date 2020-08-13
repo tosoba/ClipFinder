@@ -21,13 +21,15 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.inj
     prop: KProperty1<S, L>,
     headerText: String? = null,
     noinline loadMore: (() -> Unit)? = null,
+    noinline shouldOverrideBuildModels: (S) -> Boolean = { false },
+    noinline overrideBuildModels: (TypedEpoxyController<S>.(S) -> Unit)? = null,
     crossinline reloadClicked: () -> Unit,
     crossinline buildItem: (I) -> EpoxyModel<*>
 ): TypedEpoxyController<S> {
     val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
     val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
     return itemListController(
-        builder, differ, prop, headerText, loadMore, reloadClicked, buildItem
+        builder, differ, prop, headerText, loadMore, shouldOverrideBuildModels, overrideBuildModels, reloadClicked, buildItem
     )
 }
 
@@ -37,6 +39,8 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
     prop: KProperty1<S, L>,
     headerText: String? = null,
     noinline loadMore: (() -> Unit)? = null,
+    noinline shouldOverrideBuildModels: (S) -> Boolean = { false },
+    noinline overrideBuildModels: (TypedEpoxyController<S>.(S) -> Unit)? = null,
     crossinline reloadClicked: () -> Unit,
     crossinline buildItem: (I) -> EpoxyModel<*>
 ): TypedEpoxyController<S> = object : TypedEpoxyController<S>(modelBuildingHandler, diffingHandler) {
@@ -44,6 +48,11 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
     //TODO: consistent and nice looking spacing between items
     override fun buildModels(data: S) {
         if (view == null || isRemoving) return
+
+        if (shouldOverrideBuildModels(data) && overrideBuildModels != null) {
+            overrideBuildModels(data)
+            return
+        }
 
         if (headerText != null) headerItem {
             id("items-header")
@@ -70,9 +79,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
             if (items is PagedDataList<*> && items.canLoadMore && loadMore != null) {
                 loadingIndicator {
                     id("loading-indicator-more-items") //TODO: maybe use a different indicator for loading more
-                    onBind { _, _, _ ->
-                        loadMore()
-                    }
+                    onBind { _, _, _ -> loadMore() }
                 }
             }
         }
