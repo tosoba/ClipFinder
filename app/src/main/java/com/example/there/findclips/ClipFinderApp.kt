@@ -16,6 +16,7 @@ import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotify.search.di.spotifySearchModule
 import com.example.spotifyaccount.playlist.di.spotifyAccountPlaylistsModule
+import com.example.spotifyaccount.saved.di.spotifyAccountSavedModule
 import com.example.spotifyaccount.top.di.spotifyAccountTopModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
@@ -77,7 +78,7 @@ class ClipFinderApp : Application() {
                 spotifyApiModule,
                 spotifyCoreAndroidModule,
                 spotifyDashboardModule, spotifySearchModule,
-                spotifyAccountTopModule, spotifyAccountPlaylistsModule,
+                spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
                 spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule
             ))
         }

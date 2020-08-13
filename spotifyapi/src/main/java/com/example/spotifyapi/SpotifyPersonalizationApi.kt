@@ -3,9 +3,7 @@ package com.example.spotifyapi
 import com.example.core.SpotifyDefaults
 import com.example.core.retrofit.NetworkResponse
 import com.example.spotifyapi.model.SpotifyErrorResponse
-import com.example.spotifyapi.models.ArtistsResult
-import com.example.spotifyapi.models.PlaylistsResult
-import com.example.spotifyapi.models.TracksResult
+import com.example.spotifyapi.models.*
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -32,4 +30,18 @@ interface SpotifyPersonalizationApi {
         @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
         @Query("offset") offset: Int = SpotifyDefaults.OFFSET
     ): Single<NetworkResponse<PlaylistsResult, SpotifyErrorResponse>>
+
+    @GET("me/tracks")
+    fun getCurrentUsersSavedTracks(
+        @Header("Authorization") authorization: String,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET
+    ): Single<NetworkResponse<SavedTracksResult, SpotifyErrorResponse>>
+
+    @GET("me/albums")
+    fun getCurrentUsersSavedAlbums(
+        @Header("Authorization") authorization: String,
+        @Query("limit") limit: Int = SpotifyDefaults.LIMIT,
+        @Query("offset") offset: Int = SpotifyDefaults.OFFSET
+    ): Single<NetworkResponse<SavedAlbumsResult, SpotifyErrorResponse>>
 }

@@ -1,6 +1,7 @@
 package com.example.spotifyapi.models
 
 import com.example.spotifyapi.model.PagedResponse
+import com.example.spotifyapi.model.SpotifyErrorApiModel
 import com.google.gson.annotations.SerializedName
 
 class ExternalUrl(val name: String, val url: String)
@@ -102,25 +103,25 @@ data class SearchAllResponse(
     @SerializedName("tracks") val tracksResult: TracksResult?
 )
 
-class AlbumsResult(
+data class AlbumsResult(
     override val items: List<Album>,
     override val offset: Int,
     @SerializedName("total") override val totalItems: Int
 ) : PagedResponse<Album>
 
-class ArtistsResult(
+data class ArtistsResult(
     override val items: List<Artist>,
     override val offset: Int,
     @SerializedName("total") override val totalItems: Int
 ) : PagedResponse<Artist>
 
-class PlaylistsResult(
+data class PlaylistsResult(
     override val items: List<Playlist>,
     override val offset: Int,
     @SerializedName("total") override val totalItems: Int
 ) : PagedResponse<Playlist>
 
-class TracksResult(
+data class TracksResult(
     override val items: List<Track>,
     override val offset: Int,
     @SerializedName("total") override val totalItems: Int
@@ -131,3 +132,17 @@ data class PlaylistTracksResponse(
     override val offset: Int,
     @SerializedName("total") override val totalItems: Int
 ) : PagedResponse<SavedTrack>
+
+data class SavedTracksResult(
+    override val items: List<SavedTrack>,
+    override val offset: Int,
+    @SerializedName("total") override val totalItems: Int
+) : PagedResponse<SavedTrack>
+
+data class SavedAlbumsResult(
+    override val items: List<SavedAlbum>,
+    override val offset: Int,
+    @SerializedName("total") override val totalItems: Int
+) : PagedResponse<SavedAlbum>
+
+data class SpotifyErrorResponse(val error: SpotifyErrorApiModel)

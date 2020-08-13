@@ -17,7 +17,7 @@ import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStateP
 import com.example.core.ext.castAs
 import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.ui.AccountPlaylistsFragment
-import com.example.spotifyaccount.saved.AccountSavedFragment
+import com.example.spotifyaccount.saved.ui.AccountSavedFragment
 import com.example.spotifyaccount.top.ui.AccountTopFragment
 
 class AccountFragment : Fragment(R.layout.fragment_account), HasMainToolbar {
