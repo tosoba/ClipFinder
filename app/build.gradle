@@ -93,7 +93,7 @@ dependencies {
     implementation project(':soundcloudplaylist')
     implementation project(':soundcloudrepo')
     implementation project(':soundcloudtrackvideos')
-    implementation project(':spotifyaccount')
+    implementation project(':spotify-account')
     implementation project(':spotify-album')
     implementation project(':spotifyapi')
     implementation project(':spotify-artist')

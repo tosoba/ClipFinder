@@ -11,7 +11,7 @@ import com.example.soundclouddashboard.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudfavourites.SoundCloudFavouritesNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
-import com.example.spotifyaccount.AccountNavHostFragment
+import com.example.spotify.account.SpotifyAccountNavHostFragment
 import com.example.spotify.album.ui.SpotifyAlbumFragment
 import com.example.spotify.artist.ui.SpotifyArtistFragment
 import com.example.spotify.category.ui.SpotifyCategoryFragment
@@ -29,7 +29,7 @@ object FragmentFactory : IFragmentFactory {
     override val newSpotifyDashboardNavHostFragment: Fragment
         get() = SpotifyDashboardNavHostFragment()
     override val newSpotifyAccountNavHostFragment: Fragment
-        get() = AccountNavHostFragment()
+        get() = SpotifyAccountNavHostFragment()
     override val newSpotifyFavouritesMainNavHostFragment: Fragment
         get() = SpotifyFavouritesMainNavHostFragment()
 

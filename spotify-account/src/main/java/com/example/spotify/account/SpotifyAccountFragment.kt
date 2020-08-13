@@ -1,0 +1,68 @@
+package com.example.spotify.account
+
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import com.example.core.android.base.fragment.HasMainToolbar
+import com.example.core.android.base.handler.NavigationDrawerController
+import com.example.core.android.util.ext.mainContentFragment
+import com.example.core.android.util.ext.showDrawerHamburger
+import com.example.core.android.view.binding.viewBinding
+import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.example.core.ext.castAs
+import com.example.spotify.account.databinding.FragmentSpotifyAccountBinding
+import com.example.spotify.account.playlist.ui.SpotifyAccountPlaylistsFragment
+import com.example.spotify.account.saved.ui.SpotifyAccountSavedFragment
+import com.example.spotify.account.top.ui.SpotifyAccountTopFragment
+
+class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
+
+    private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)
+    override val toolbar: Toolbar get() = binding.accountToolbar
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mainContentFragment?.disablePlayButton()
+        with(binding) {
+            requireActivity().castAs<AppCompatActivity>()?.apply {
+                setSupportActionBar(accountToolbar)
+                showDrawerHamburger()
+            }
+            val titledFragments: Array<Pair<String, Fragment>> = arrayOf(
+                getString(R.string.playlists) to SpotifyAccountPlaylistsFragment(),
+                getString(R.string.saved) to SpotifyAccountSavedFragment(),
+                getString(R.string.top) to SpotifyAccountTopFragment()
+            )
+            accountViewPager.adapter = TitledCustomCurrentStatePagerAdapter(
+                childFragmentManager, titledFragments
+            )
+            accountViewPager.offscreenPageLimit = titledFragments.size - 1
+            accountTabLayout.setupWithViewPager(accountViewPager)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (toolbar.menu?.size() == 0) {
+            activity?.castAs<AppCompatActivity>()?.setSupportActionBar(toolbar)
+        }
+    }
+
+    override fun onOptionsItemSelected(
+        item: MenuItem
+    ): Boolean = if (
+        item.itemId == android.R.id.home
+        && parentFragment?.childFragmentManager?.backStackEntryCount == 0
+    ) {
+        activity?.castAs<NavigationDrawerController>()?.openDrawer()
+        true
+    } else false
+}

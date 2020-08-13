@@ -15,9 +15,9 @@ import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotify.search.di.spotifySearchModule
-import com.example.spotifyaccount.playlist.di.spotifyAccountPlaylistsModule
-import com.example.spotifyaccount.saved.di.spotifyAccountSavedModule
-import com.example.spotifyaccount.top.di.spotifyAccountTopModule
+import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
+import com.example.spotify.account.saved.di.spotifyAccountSavedModule
+import com.example.spotify.account.top.di.spotifyAccountTopModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
