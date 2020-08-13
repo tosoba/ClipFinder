@@ -19,7 +19,6 @@ import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.example.spotifytrackvideos.track.TrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.wada811.lifecycledispose.disposeOnDestroy
-import kotlinx.android.synthetic.main.fragment_track_videos.*
 
 class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
@@ -82,7 +81,7 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
             trackVideosViewpager.offscreenPageLimit = pagerAdapter.count - 1
             trackVideosViewpager.addOnPageChangeListener(object : OnPageChangeListener {
                 override fun onPageSelected(position: Int) {
-                    track_videos_tab_layout?.getTabAt(position)?.select()
+                    trackVideosTabLayout.getTabAt(position)?.select()
                     withCurrentTrack { updateCurrentFragment(it) }
                 }
             })
