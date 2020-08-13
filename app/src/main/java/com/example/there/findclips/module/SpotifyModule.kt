@@ -1,5 +1,6 @@
 package com.example.there.findclips.module
 
+import com.example.spotifyaccount.playlist.domain.usecase.GetCurrentUsersPlaylists
 import com.example.there.domain.usecase.spotify.*
 import org.koin.dsl.module
 
@@ -8,7 +9,6 @@ val spotifyModule = module {
     factory { GetArtists(get(), get()) }
     factory { GetAudioFeatures(get(), get()) }
     factory { GetCurrentUser(get(), get()) }
-    factory { GetCurrentUsersPlaylists(get(), get()) }
     factory { GetCurrentUsersSavedAlbums(get(), get()) }
     factory { GetCurrentUsersSavedTracks(get(), get()) }
     factory { GetSimilarTracks(get(), get()) }

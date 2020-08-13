@@ -5,7 +5,7 @@ import com.example.core.android.model.PagedDataList
 import com.example.core.android.model.spotify.Artist
 import com.example.core.android.model.spotify.Track
 
-data class AccountTopViewState(
+data class AccountTopState(
     val userLoggedIn: Boolean = false,
     val topTracks: PagedDataList<Track> = PagedDataList(),
     val artists: PagedDataList<Artist> = PagedDataList()

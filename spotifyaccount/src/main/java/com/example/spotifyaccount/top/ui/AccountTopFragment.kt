@@ -32,7 +32,7 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
     private lateinit var binding: FragmentAccountTopBinding
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<AccountTopViewState> { (userLoggedIn, tracks, artists) ->
+        injectedTypedController<AccountTopState> { (userLoggedIn, tracks, artists) ->
             fun <Item> Collection<Item>.column(
                 buildItem: (Item) -> EpoxyModel<*>
             ): Column = Column(map(buildItem))
@@ -78,10 +78,9 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentAccountTopBinding.inflate(inflater, container, false).also {
-        binding = it
-    }.root
-
+    ): View? = FragmentAccountTopBinding.inflate(inflater, container, false)
+        .also { binding = it }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.spotifyAccountTopRecyclerView.setController(epoxyController)

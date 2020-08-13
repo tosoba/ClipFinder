@@ -19,11 +19,11 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
 class AccountTopViewModel(
-    initialState: AccountTopViewState,
+    initialState: AccountTopState,
     private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
     private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists,
     context: Context
-) : MvRxViewModel<AccountTopViewState>(initialState) {
+) : MvRxViewModel<AccountTopState>(initialState) {
 
     init {
         handleConnectivityChanges(context)
@@ -41,7 +41,7 @@ class AccountTopViewModel(
             getCurrentUsersTopTracks(applySchedulers = false, args = tracks.offset)
                 .mapData { tracks -> tracks.map(TrackEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(AccountTopViewState::topTracks) { copy(topTracks = it) }
+                .updateWithPagedResource(AccountTopState::topTracks) { copy(topTracks = it) }
         }
     }
 
@@ -50,7 +50,7 @@ class AccountTopViewModel(
             getCurrentUsersTopArtists(applySchedulers = false, args = artists.offset)
                 .mapData { artists -> artists.map(ArtistEntity::ui) }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(AccountTopViewState::artists) { copy(artists = it) }
+                .updateWithPagedResource(AccountTopState::artists) { copy(artists = it) }
         }
     }
 
@@ -70,10 +70,10 @@ class AccountTopViewModel(
             .disposeOnClear()
     }
 
-    companion object : MvRxViewModelFactory<AccountTopViewModel, AccountTopViewState> {
+    companion object : MvRxViewModelFactory<AccountTopViewModel, AccountTopState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: AccountTopViewState
+            state: AccountTopState
         ): AccountTopViewModel {
             val getCurrentUsersTopTracks: GetCurrentUsersTopTracks by viewModelContext.activity.inject()
             val getCurrentUsersTopArtists: GetCurrentUsersTopArtists by viewModelContext.activity.inject()

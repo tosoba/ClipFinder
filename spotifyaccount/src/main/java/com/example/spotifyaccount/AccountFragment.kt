@@ -16,7 +16,7 @@ import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.core.ext.castAs
 import com.example.spotifyaccount.databinding.FragmentAccountBinding
-import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
+import com.example.spotifyaccount.playlist.ui.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.ui.AccountTopFragment
 
