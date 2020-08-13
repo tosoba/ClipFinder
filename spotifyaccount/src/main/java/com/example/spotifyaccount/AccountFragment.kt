@@ -19,12 +19,11 @@ import com.example.spotifyaccount.databinding.FragmentAccountBinding
 import com.example.spotifyaccount.playlist.AccountPlaylistsFragment
 import com.example.spotifyaccount.saved.AccountSavedFragment
 import com.example.spotifyaccount.top.ui.AccountTopFragment
-import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : Fragment(R.layout.fragment_account), HasMainToolbar {
 
     private val binding: FragmentAccountBinding by viewBinding(FragmentAccountBinding::bind)
-    override val toolbar: Toolbar get() = account_toolbar
+    override val toolbar: Toolbar get() = binding.accountToolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()

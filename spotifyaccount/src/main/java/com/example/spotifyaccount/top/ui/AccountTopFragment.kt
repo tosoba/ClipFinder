@@ -5,19 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Initial
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.spotifyLoginController
-import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
@@ -31,7 +29,7 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
 
     private val viewModel: AccountTopViewModel by fragmentViewModel()
 
-    private val binding: FragmentAccountTopBinding by viewBinding(FragmentAccountTopBinding::bind)
+    private lateinit var binding: FragmentAccountTopBinding
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<AccountTopViewState> { (userLoggedIn, tracks, artists) ->
@@ -40,7 +38,10 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
             ): Column = Column(map(buildItem))
 
             if (!userLoggedIn && tracks.status is Initial && artists.status is Initial) {
-
+                largeTextCenter {
+                    id("user-not-logged-in")
+                    text(getString(R.string.spotify_login_required))
+                }
             } else {
                 pagedDataListCarouselWithHeader(
                     requireContext(),
@@ -74,6 +75,13 @@ class AccountTopFragment : BaseMvRxFragment(), NavigationCapable {
             }
         }
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = FragmentAccountTopBinding.inflate(inflater, container, false).also {
+        binding = it
+    }.root
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.spotifyAccountTopRecyclerView.setController(epoxyController)
