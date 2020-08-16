@@ -15,7 +15,7 @@ import com.example.core.android.model.Initial
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.show
-import com.example.core.android.util.ext.spotifyLoginController
+import com.example.core.android.util.ext.spotifyAuthController
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
@@ -90,7 +90,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireNotNull(spotifyLoginController)
+        requireNotNull(spotifyAuthController)
             .isLoggedIn
             .observe(this, Observer { userLoggedIn ->
                 viewModel.setUserLoggedIn(userLoggedIn)

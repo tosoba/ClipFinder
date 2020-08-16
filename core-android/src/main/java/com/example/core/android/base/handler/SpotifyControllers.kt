@@ -16,8 +16,9 @@ interface SpotifyTrackChangeHandler {
     fun onTrackChanged(trackId: String)
 }
 
-interface SpotifyLoginController {
+interface SpotifyAuthController {
     val isLoggedIn: LiveData<Boolean>
     var onLoginSuccessful: (() -> Unit)?
     fun showLoginDialog()
+    fun logOut()
 }

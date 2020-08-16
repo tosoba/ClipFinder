@@ -7,6 +7,7 @@ import com.example.core.android.model.Data
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
 import com.example.core.android.model.PagedDataList
+import com.example.core.ext.castAs
 import com.example.core.model.Paged
 import com.example.core.model.Resource
 import io.reactivex.Observable
@@ -44,8 +45,10 @@ open class MvRxViewModel<S : MvRxState>(
                 is Resource.Success -> setState {
                     stateReducer(currentValueOf(prop).copyWithNewValue(it.data))
                 }
-                is Resource.Error<T, *> -> setState {
-                    stateReducer(currentValueOf(prop).copyWithError(it.error))
+                is Resource.Error<T, *> -> {
+                    it.error?.castAs<Throwable>()?.let(onError)
+                        ?: Timber.wtf("Unknown error")
+                    setState { stateReducer(currentValueOf(prop).copyWithError(it.error)) }
                 }
             }
         }, {
@@ -66,10 +69,14 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> stateReducer(
                         currentValueOf(prop)
                             .copyWithNewValue(it.data))
-                    is Resource.Error<T, *> -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithError(it.error)
-                    )
+                    is Resource.Error<T, *> -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        stateReducer(
+                            currentValueOf(prop)
+                                .copyWithError(it.error)
+                        )
+                    }
                 }
             }
         }, {
@@ -94,12 +101,15 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> stateReducer(
                         currentValueOf(prop)
                             .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
-
                     )
-                    is Resource.Error<*, *> -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithError(it.error)
-                    )
+                    is Resource.Error<Paged<C>, *> -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        stateReducer(
+                            currentValueOf(prop)
+                                .copyWithError(it.error)
+                        )
+                    }
                 }
             }
         }, {
@@ -121,10 +131,14 @@ open class MvRxViewModel<S : MvRxState>(
                         currentValueOf(prop)
                             .copyWithNewItems(it.data)
                     )
-                    is Resource.Error<List<T>, *> -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithError(it.error)
-                    )
+                    is Resource.Error<List<T>, *> -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        stateReducer(
+                            currentValueOf(prop)
+                                .copyWithError(it.error)
+                        )
+                    }
                 }
             }
         }, {
@@ -146,10 +160,14 @@ open class MvRxViewModel<S : MvRxState>(
                         currentValueOf(prop)
                             .copyWithNewItems(it.data)
                     )
-                    is Resource.Error<List<T>, *> -> stateReducer(
-                        currentValueOf(prop)
-                            .copyWithError(it.error)
-                    )
+                    is Resource.Error<List<T>, *> -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        stateReducer(
+                            currentValueOf(prop)
+                                .copyWithError(it.error)
+                        )
+                    }
                 }
             }
         }, {

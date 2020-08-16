@@ -67,7 +67,7 @@ class MainActivity :
     YoutubePlayerController,
     SpotifyTrackChangeHandler,
     BackPressedWithNoPreviousStateController,
-    SpotifyLoginController,
+    SpotifyAuthController,
     ConnectivitySnackbarHost,
     NavigationDrawerController,
     ToolbarController,
@@ -165,7 +165,7 @@ class MainActivity :
     private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
         object : OnNavigationDrawerClosedListerner {
             override fun onDrawerClosed(drawerView: View) {
-                if (isPlayerLoggedIn) logOutPlayer()
+                if (isPlayerLoggedIn) logOut()
                 main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
             }
         }
@@ -534,9 +534,10 @@ class MainActivity :
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }.positiveText(getString(R.string.ok))
+                }
+                .positiveText(getString(R.string.ok))
                 .build()
-                .apply { show() }
+                .apply(MaterialDialog::show)
         }
     }
 
@@ -581,7 +582,7 @@ class MainActivity :
             .negativeText(R.string.cancel)
             .onPositive { _, _ -> openLoginWindow() }
             .build()
-            .apply { show() }
+            .apply(MaterialDialog::show)
     }
 
     private fun setupNavigationFromSimilarTracks() {
@@ -592,7 +593,7 @@ class MainActivity :
         }
     }
 
-    private fun logOutPlayer() {
+    override fun logOut() {
         spotifyPlayerFragment?.logOutPlayer()
     }
 
@@ -660,9 +661,8 @@ class MainActivity :
         val query = intent.getStringExtra(SearchManager.QUERY)
         if (query.isNullOrBlank()) return
 
-        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE).run {
-            saveRecentQuery(query, null)
-        }
+        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE)
+            .run { saveRecentQuery(query, null) }
 
         searchViewMenuItem?.collapseActionView()
 

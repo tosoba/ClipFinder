@@ -1,21 +1,24 @@
 package com.example.spotify.account.playlist.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.example.core.android.LargeTextCenterBindingModel_
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Initial
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.show
-import com.example.core.android.util.ext.spotifyLoginController
+import com.example.core.android.util.ext.spotifyAuthController
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.account.R
 import com.example.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
@@ -39,10 +42,13 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment(), NavigationCapable {
                 !userLoggedIn && playlists.status is Initial
             },
             overrideBuildModels = {
-                largeTextCenter {
-                    id("spotify-account-playlists-user-not-logged-in")
-                    text(getString(R.string.spotify_login_required))
-                }
+                LargeTextCenterBindingModel_()
+                    .id("spotify-account-playlists-user-not-logged-in")
+                    .text(getString(R.string.spotify_login_required))
+                    .spanSizeOverride { _, _, _ ->
+                        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+                    }
+                    .addTo(this)
             },
             reloadClicked = viewModel::loadPlaylists,
             buildItem = { playlist ->
@@ -55,7 +61,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment(), NavigationCapable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireNotNull(spotifyLoginController)
+        requireNotNull(spotifyAuthController)
             .isLoggedIn
             .observe(this, Observer { userLoggedIn ->
                 viewModel.setUserLoggedIn(userLoggedIn)
@@ -65,7 +71,10 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment(), NavigationCapable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSpotifyAccountPlaylistsBinding.inflate(inflater, container, false)
-        .also { binding = it }
+        .apply {
+            spotifyAccountPlaylistsRecyclerView.layoutManager = layoutManagerFor(resources.configuration.orientation)
+            binding = this
+        }
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -73,4 +82,14 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment(), NavigationCapable {
     }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.spotifyAccountPlaylistsRecyclerView.layoutManager = layoutManagerFor(newConfig.orientation)
+    }
+
+    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
+        context,
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+    )
 }

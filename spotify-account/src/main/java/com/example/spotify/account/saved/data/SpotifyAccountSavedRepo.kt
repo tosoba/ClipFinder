@@ -20,7 +20,7 @@ class SpotifyAccountSavedRepo(
 
     override fun getCurrentUsersSavedTracks(
         offset: Int
-    ): Single<Resource<Paged<List<TrackEntity>>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<TrackEntity>>>> = auth.withTokenSingle(true) { token ->
         personalizationApi.getCurrentUsersSavedTracks(
             authorization = token,
             offset = offset
@@ -35,7 +35,7 @@ class SpotifyAccountSavedRepo(
 
     override fun getCurrentUsersSavedAlbums(
         offset: Int
-    ): Single<Resource<Paged<List<AlbumEntity>>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<AlbumEntity>>>> = auth.withTokenSingle(true) { token ->
         personalizationApi.getCurrentUsersSavedAlbums(
             authorization = token,
             offset = offset

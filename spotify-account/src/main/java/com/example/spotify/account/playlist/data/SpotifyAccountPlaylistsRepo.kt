@@ -19,7 +19,7 @@ class SpotifyAccountPlaylistsRepo(
 
     override fun getCurrentUsersPlaylists(
         offset: Int
-    ): Single<Resource<Paged<List<PlaylistEntity>>>> = auth.withTokenSingle { token ->
+    ): Single<Resource<Paged<List<PlaylistEntity>>>> = auth.withTokenSingle(true) { token ->
         personalizationApi.getCurrentUsersPlaylists(authorization = token, offset = offset)
             .mapToResource {
                 Paged(
