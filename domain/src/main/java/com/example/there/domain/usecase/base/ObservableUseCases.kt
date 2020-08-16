@@ -1,9 +1,6 @@
 package com.example.there.domain.usecase.base
 
-import com.example.core.ext.RetryStrategy
-import com.example.core.ext.retry
-import com.example.core.ext.RxSchedulers
-import com.example.core.ext.applySchedulers
+import com.example.core.ext.*
 import io.reactivex.Observable
 
 abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
@@ -11,8 +8,10 @@ abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
 
     operator fun invoke(
         applySchedulers: Boolean = true,
+        timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Observable<Result> = result
+        .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let { retry(strategy) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
@@ -23,8 +22,10 @@ abstract class ObservableUseCaseWithArgs<Args, Result>(private val schedulers: R
     operator fun invoke(
         args: Args,
         applySchedulers: Boolean = true,
+        timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Observable<Result> = run(args)
+        .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let { retry(strategy) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }

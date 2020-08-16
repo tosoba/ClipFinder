@@ -2,6 +2,7 @@ package com.example.core.ext
 
 import io.reactivex.*
 import io.reactivex.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 fun <T> Maybe<T>.isPresent(): Single<Boolean> = map { true }
     .defaultIfEmpty(false)
@@ -35,3 +36,9 @@ fun Completable.applySchedulers(
     schedulers: RxSchedulers
 ): Completable = subscribeOn(schedulers.subscribeOnScheduler)
     .observeOn(schedulers.observeOnScheduler)
+
+class Timeout(val limit: Long, val unit: TimeUnit) {
+    companion object {
+        val DEFAULT = Timeout(5, TimeUnit.SECONDS)
+    }
+}

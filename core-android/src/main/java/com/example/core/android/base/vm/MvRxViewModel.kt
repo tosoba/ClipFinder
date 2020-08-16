@@ -3,12 +3,12 @@ package com.example.core.android.base.vm
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.withState
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import com.example.core.android.model.Data
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
 import com.example.core.android.model.PagedDataList
+import com.example.core.model.Paged
+import com.example.core.model.Resource
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -21,7 +21,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<T>.update(
         prop: KProperty1<S, Data<T>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, this@MvRxViewModel.javaClass.simpleName.toString()) },
         stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -35,7 +35,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<Resource<T>>.updateWithSingleResource(
         prop: KProperty1<S, Data<T>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, this@MvRxViewModel.javaClass.simpleName.toString()) },
         stateReducer: S.(Data<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -56,7 +56,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<Resource<T>>.updateNullableWithSingleResource(
         prop: KProperty1<S, Data<T?>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, this@MvRxViewModel.javaClass.simpleName.toString()) },
         stateReducer: S.(Data<T?>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -80,7 +80,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <C : Collection<I>, I> Single<Resource<Paged<C>>>.updateWithPagedResource(
         prop: KProperty1<S, PagedDataList<I>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, this@MvRxViewModel.javaClass.simpleName.toString()) },
         shouldClear: Boolean = false,
         stateReducer: S.(PagedDataList<I>) -> S
     ): Disposable {
@@ -110,7 +110,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Single<Resource<List<T>>>.updateWithResource(
         prop: KProperty1<S, DataList<T>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, this@MvRxViewModel.javaClass.simpleName.toString()) },
         stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }
@@ -135,7 +135,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun <T> Observable<Resource<List<T>>>.updateWithResource(
         prop: KProperty1<S, DataList<T>>,
-        onError: (Throwable) -> Unit = Timber::e,
+        onError: (Throwable) -> Unit = { Timber.e(it, javaClass.simpleName.toString()) },
         stateReducer: S.(DataList<T>) -> S
     ): Disposable {
         setState { stateReducer(currentValueOf(prop).copyWithLoadingInProgress) }

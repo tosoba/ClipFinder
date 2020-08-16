@@ -26,21 +26,22 @@ fun Context.pxToDp(
     px: Float
 ): Float = px / (resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
-val Context.screenOrientation: Int get() = resources.configuration.orientation
+val Context.screenOrientation: Int
+    get() = resources.configuration.orientation
 
-val Context.screenHeight: Int get() = resources.configuration.screenHeightDp
+val Context.screenHeight: Int
+    get() = resources.configuration.screenHeightDp
 
 val Context.notificationManager: NotificationManagerCompat
     get() = NotificationManagerCompat.from(this)
 
-inline fun Context.registerReceiverFor(
-    filter: IntentFilter, crossinline onReceive: (Context?, Intent?) -> Unit
-): BroadcastReceiver {
-    val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) = onReceive(context, intent)
-    }
-    registerReceiver(receiver, filter)
-    return receiver
+inline fun Context.createAndRegisterReceiverFor(
+    filter: IntentFilter,
+    crossinline onReceive: (Context?, Intent?) -> Unit
+): BroadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) = onReceive(context, intent)
+}.also {
+    registerReceiver(it, filter)
 }
 
 @get:SuppressLint("MissingPermission")
@@ -48,25 +49,29 @@ val Context.networkConnectivity: Connectivity
     get() {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = connectivityManager.activeNetworkInfo
-        return if (activeNetwork != null && activeNetwork.isConnected) Connectivity.fromNetworkType(activeNetwork.type)
-        else Connectivity.OFFLINE
+        return if (activeNetwork != null && activeNetwork.isConnected) {
+            Connectivity.fromNetworkType(activeNetwork.type)
+        } else {
+            Connectivity.OFFLINE
+        }
     }
 
-val Context.isConnected: Boolean get() = networkConnectivity != Connectivity.OFFLINE
+val Context.isConnected: Boolean
+    get() = networkConnectivity != Connectivity.OFFLINE
 
-fun Context.isPermissionGranted(
-    permission: String
-) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+fun Context.isGranted(permission: String) = ContextCompat
+    .checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
 @SuppressLint("MissingPermission")
 fun Context.observeNetworkConnectivity(
     connectedOnly: Boolean = true,
     onNext: (com.github.pwittchen.reactivenetwork.library.rx2.Connectivity) -> Unit
 ): Disposable = ReactiveNetwork.observeNetworkConnectivity(this)
+    .onErrorReturn { com.github.pwittchen.reactivenetwork.library.rx2.Connectivity.state(NetworkInfo.State.DISCONNECTED).build() }
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
     .run {
         if (connectedOnly) filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
         else this
     }
-    .subscribe { onNext(it) }
+    .subscribe(onNext)

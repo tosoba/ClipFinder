@@ -18,9 +18,6 @@ import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
-import com.example.core.android.spotify.api.SpotifyAuth
-import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.core.ext.castAs
 import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.fragment.BaseVMFragment
 import com.example.core.android.base.fragment.ISpotifyPlayerFragment
@@ -29,9 +26,12 @@ import com.example.core.android.base.handler.SpotifyTrackChangeHandler
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.core.android.util.PendingIntents
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.onSeekBarProgressChangeListener
+import com.example.core.ext.castAs
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -43,7 +43,8 @@ import me.bogerchan.niervisualizer.renderer.IRenderer
 import org.koin.android.ext.android.inject
 import kotlin.math.pow
 
-class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class),
+class SpotifyPlayerFragment :
+    BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlayerViewModel::class),
     ISpotifyPlayerFragment,
     Player.NotificationCallback,
     Player.OperationCallback {
@@ -389,24 +390,24 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
     private fun initSpotifyPlayer() {
         with(applicationContext) {
             receivers.addAll(
-                registerReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
                     spotifyPlayer?.setConnectivityStatus(
                         this@SpotifyPlayerFragment, applicationContext.networkConnectivity)
                 },
-                registerReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
                     viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
                     stopPlayback()
                 },
-                registerReceiverFor(IntentFilter(ACTION_PAUSE_PLAYBACK)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ACTION_PAUSE_PLAYBACK)) { _, _ ->
                     spotifyPlayer?.pause(loggerSpotifyPlayerOperationCallback)
                 },
-                registerReceiverFor(IntentFilter(ACTION_RESUME_PLAYBACK)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ACTION_RESUME_PLAYBACK)) { _, _ ->
                     spotifyPlayer?.resume(loggerSpotifyPlayerOperationCallback)
                 },
-                registerReceiverFor(IntentFilter(ACTION_PREV_TRACK)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ACTION_PREV_TRACK)) { _, _ ->
                     spotifyPlayer?.skipToPrevious(loggerSpotifyPlayerOperationCallback)
                 },
-                registerReceiverFor(IntentFilter(ACTION_NEXT_TRACK)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(ACTION_NEXT_TRACK)) { _, _ ->
                     spotifyPlayer?.skipToNext(loggerSpotifyPlayerOperationCallback)
                 }
             )
@@ -425,7 +426,7 @@ class SpotifyPlayerFragment : BaseVMFragment<SpotifyPlayerViewModel>(SpotifyPlay
         playback_seek_bar?.progress = 0
         spotifyPlayer?.playUri(loggerSpotifyPlayerOperationCallback, uri, 0, 0)
 
-        if (context?.isPermissionGranted(Manifest.permission.RECORD_AUDIO) == true) {
+        if (context?.isGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
 
             //TODO: implement a mechanism which will return the surface views surrounding circular image views in fragments like the playlist fragment etc

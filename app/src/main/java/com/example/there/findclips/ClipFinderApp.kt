@@ -9,19 +9,20 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
+import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
+import com.example.spotify.account.saved.di.spotifyAccountSavedModule
+import com.example.spotify.account.top.di.spotifyAccountTopModule
 import com.example.spotify.album.di.spotifyAlbumModule
 import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotify.category.di.spotifyCategoryModule
 import com.example.spotify.dashboard.di.spotifyDashboardModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotify.search.di.spotifySearchModule
-import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
-import com.example.spotify.account.saved.di.spotifyAccountSavedModule
-import com.example.spotify.account.top.di.spotifyAccountTopModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.squareup.leakcanary.LeakCanary
+import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -35,6 +36,7 @@ class ClipFinderApp : Application() {
 //        initLeakCanary()
 //        initNotifications()
         initKoin()
+        RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
 
         ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
 
