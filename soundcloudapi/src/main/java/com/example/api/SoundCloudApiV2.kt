@@ -9,7 +9,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SoundCloudApiV2 {
-    @GET("selections")
+    @GET("mixed-selections")
     fun discover(
         @Query("client_id") clientId: String = SoundCloudAuth.key,
         @Query("app_locale") locale: String = "us"

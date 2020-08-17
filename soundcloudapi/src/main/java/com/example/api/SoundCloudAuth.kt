@@ -1,5 +1,5 @@
 package com.example.api
 
 object SoundCloudAuth {
-    const val key = "ZlszkiBH5xW8a8131srowVikrbbWTuug"
+    const val key = "hIPEn7gq4BV984x4wFRRG3sLWLmjemuP"
 }
