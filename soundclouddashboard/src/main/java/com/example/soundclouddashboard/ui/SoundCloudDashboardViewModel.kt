@@ -1,10 +1,12 @@
-package com.example.soundclouddashboard
+package com.example.soundclouddashboard.ui
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.mapper.soundcloud.ui
 import com.example.core.android.model.Loading
+import com.example.soundclouddashboard.SoundCloudDashboardViewState
+import com.example.soundclouddashboard.SoundCloudPlaylists
 import com.example.there.domain.usecase.soundcloud.DiscoverSoundCloud
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject

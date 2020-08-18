@@ -7,7 +7,7 @@ import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.spotify.*
 import com.example.core.android.model.videos.VideoPlaylist
-import com.example.soundclouddashboard.SoundCloudDashboardNavHostFragment
+import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudfavourites.SoundCloudFavouritesNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment

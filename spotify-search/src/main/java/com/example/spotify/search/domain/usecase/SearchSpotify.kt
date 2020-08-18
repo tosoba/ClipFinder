@@ -1,6 +1,6 @@
 package com.example.spotify.search.domain.usecase
 
-import com.example.core.android.spotify.model.ext.SpotifySearchType
+import com.example.core.android.spotify.model.SpotifySearchType
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
 import com.example.spotify.search.domain.model.SpotifySearchResult

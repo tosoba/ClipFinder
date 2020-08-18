@@ -87,7 +87,7 @@ dependencies {
     implementation project(':itemlist')
     implementation project(':main')
     implementation project(':settings')
-    implementation project(':soundcloudapi')
+    implementation project(':soundcloud-api')
     implementation project(':soundclouddashboard')
     implementation project(':soundcloudfavourites')
     implementation project(':soundcloudplaylist')

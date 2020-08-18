@@ -2,8 +2,8 @@ package com.clipfinder.soundcloud.api
 
 import com.clipfinder.soundcloud.api.model.DiscoverResponse
 import com.clipfinder.soundcloud.api.model.SoundCloudRelatedTracksResponse
+import com.clipfinder.soundcloud.api.model.TrackEntity
 import com.clipfinder.soundcloud.api.model.front.SoundCloudFrontResponse
-import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path

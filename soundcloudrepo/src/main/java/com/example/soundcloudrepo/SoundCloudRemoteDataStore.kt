@@ -5,12 +5,12 @@ import com.clipfinder.soundcloud.api.SoundCloudApiV2
 import com.clipfinder.soundcloud.api.model.SoundCloudPlaylistApiModel
 import com.clipfinder.soundcloud.api.model.SoundCloudSystemPlaylistApiModel
 import com.clipfinder.soundcloud.api.model.SoundCloudTrack
+import com.clipfinder.soundcloud.api.model.TrackEntity
 import com.example.soundcloudrepo.mapper.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.ISoundCloudRemoteDataStore
 import com.vpaliy.soundcloud.SoundCloudService
-import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 
 class SoundCloudRemoteDataStore(

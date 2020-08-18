@@ -28,7 +28,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation project(':domain')
-    implementation project(':soundcloudapi')
+    implementation project(':soundcloud-api')
 
     implementation rootProject.ext.rxJava
 

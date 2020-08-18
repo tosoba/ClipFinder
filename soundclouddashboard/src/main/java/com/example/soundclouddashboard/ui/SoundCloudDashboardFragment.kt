@@ -1,4 +1,4 @@
-package com.example.soundclouddashboard
+package com.example.soundclouddashboard.ui
 
 import android.os.Bundle
 import android.view.*
@@ -27,6 +27,7 @@ import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.withModelsFrom
 import com.example.core.android.view.epoxy.Column
+import com.example.soundclouddashboard.SoundCloudDashboardViewState
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
 import org.koin.android.ext.android.inject

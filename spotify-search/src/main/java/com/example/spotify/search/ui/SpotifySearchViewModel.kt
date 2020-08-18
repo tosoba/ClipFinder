@@ -5,7 +5,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Loading
-import com.example.core.android.spotify.model.ext.SpotifySearchType
+import com.example.core.android.spotify.model.SpotifySearchType
 import com.example.core.model.Resource
 import com.example.spotify.search.domain.model.SpotifySearchResult
 import com.example.spotify.search.domain.usecase.SearchSpotify

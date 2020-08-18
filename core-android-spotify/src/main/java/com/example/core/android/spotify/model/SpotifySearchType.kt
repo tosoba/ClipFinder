@@ -1,4 +1,4 @@
-package com.example.core.android.spotify.model.ext
+package com.example.core.android.spotify.model
 
 enum class SpotifySearchType(val value: String) {
     ALBUM("album"), ARTIST("artist"), PLAYLIST("playlist"), TRACK("track");
