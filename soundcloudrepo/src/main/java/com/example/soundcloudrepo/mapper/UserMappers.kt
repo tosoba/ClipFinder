@@ -1,9 +1,9 @@
 package com.example.soundcloudrepo.mapper
 
-import com.example.api.model.SoundCloudUserApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudUser
 import com.example.there.domain.entity.soundcloud.SoundCloudUserEntity
 
-val SoundCloudUserApiModel.domain: SoundCloudUserEntity
+val SoundCloudUser.domain: SoundCloudUserEntity
     get() = SoundCloudUserEntity(
             avatarUrl = avatarUrl,
             firstName = firstName,

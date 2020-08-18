@@ -1,4 +1,4 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -45,7 +45,7 @@ class SoundCloudPlaylistApiModel(
 
     val uri: String,
 
-    val user: SoundCloudUserApiModel,
+    val user: SoundCloudUser,
 
     @SerializedName("user_id")
     val userId: Int

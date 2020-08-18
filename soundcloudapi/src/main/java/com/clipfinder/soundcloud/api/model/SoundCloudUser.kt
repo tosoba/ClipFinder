@@ -1,8 +1,8 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
-class SoundCloudUserApiModel(
+class SoundCloudUser(
     @SerializedName("avatar_url")
     val avatarUrl: String,
 

@@ -5,7 +5,7 @@ import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import io.reactivex.Single
 
 interface ISoundCloudRemoteDataStore {
-    val discover: Single<SoundCloudDiscoverEntity>
+    val mixedSelections: Single<SoundCloudDiscoverEntity>
     fun getTracksFromPlaylist(id: String): Single<List<SoundCloudTrackEntity>>
     fun getTracks(ids: List<String>): Single<List<SoundCloudTrackEntity>>
     fun getSimilarTracks(id: String): Single<List<SoundCloudTrackEntity>>

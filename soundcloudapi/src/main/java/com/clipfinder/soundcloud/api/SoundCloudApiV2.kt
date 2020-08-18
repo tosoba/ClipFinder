@@ -1,7 +1,8 @@
-package com.example.api
+package com.clipfinder.soundcloud.api
 
-import com.example.api.model.DiscoverResponse
-import com.example.api.model.SoundCloudRelatedTracksResponse
+import com.clipfinder.soundcloud.api.model.DiscoverResponse
+import com.clipfinder.soundcloud.api.model.SoundCloudRelatedTracksResponse
+import com.clipfinder.soundcloud.api.model.front.SoundCloudFrontResponse
 import com.vpaliy.soundcloud.model.TrackEntity
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -9,8 +10,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface SoundCloudApiV2 {
+    @GET("front")
+    fun front(
+        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("app_locale") locale: String = "us"
+    ): Single<SoundCloudFrontResponse>
+
     @GET("mixed-selections")
-    fun discover(
+    fun mixedSelections(
         @Query("client_id") clientId: String = SoundCloudAuth.key,
         @Query("app_locale") locale: String = "us"
     ): Single<DiscoverResponse>

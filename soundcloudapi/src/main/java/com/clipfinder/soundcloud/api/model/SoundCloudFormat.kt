@@ -1,8 +1,8 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
-class Format(
+class SoundCloudFormat(
     val protocol: String?,
 
     @SerializedName("mime_type")

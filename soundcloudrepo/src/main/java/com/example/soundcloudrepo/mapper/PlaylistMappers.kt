@@ -1,8 +1,8 @@
 package com.example.soundcloudrepo.mapper
 
-import com.example.api.model.SoundCloudPlaylistApiModel
-import com.example.api.model.SoundCloudSystemPlaylistApiModel
-import com.example.api.model.SoundCloudTrackIdApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudPlaylistApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudSystemPlaylistApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudTrackId
 import com.example.there.domain.entity.soundcloud.SoundCloudPlaylistEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudSystemPlaylistEntity
 
@@ -41,5 +41,5 @@ val SoundCloudSystemPlaylistApiModel.domain: SoundCloudSystemPlaylistEntity
             shortTitle = shortTitle,
             title = title,
             trackingFeatureName = trackingFeatureName,
-            tracks = tracks.map(SoundCloudTrackIdApiModel::domain)
+            tracks = tracks.map(SoundCloudTrackId::domain)
     )

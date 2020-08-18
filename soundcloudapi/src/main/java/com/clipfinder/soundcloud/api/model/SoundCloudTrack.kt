@@ -1,8 +1,8 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
-class SoundCloudTrackApiModel(
+class SoundCloudTrack(
     @SerializedName("full_duration")
     val fullDuration: Int,
 
@@ -13,7 +13,7 @@ class SoundCloudTrackApiModel(
 
     val description: String,
 
-    val media: Media,
+    val media: SoundCloudMedia,
 
     val title: String,
 
@@ -84,6 +84,5 @@ class SoundCloudTrackApiModel(
     @SerializedName("permalink_url")
     val permalinkUrl: String,
 
-    @SerializedName("user")
-    val user: SoundCloudUserApiModel
+    val user: SoundCloudUser
 )

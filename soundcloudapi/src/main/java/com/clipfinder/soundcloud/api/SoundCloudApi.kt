@@ -1,6 +1,6 @@
-package com.example.api
+package com.clipfinder.soundcloud.api
 
-import com.example.api.model.SoundCloudTrackApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudTrack
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,5 +11,5 @@ interface SoundCloudApi {
     fun getTracksFromPlaylist(
         @Path("id") id: String,
         @Query("client_id") clientId: String = SoundCloudAuth.key
-    ): Single<List<SoundCloudTrackApiModel>>
+    ): Single<List<SoundCloudTrack>>
 }

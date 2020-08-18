@@ -1,9 +1,9 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
-class TranscodingsItem(
+class SoundCloudTranscodingsItem(
     val duration: Int,
     val snipped: Boolean,
-    val format: Format,
+    val format: SoundCloudFormat,
     val preset: String,
     val url: String,
     val quality: String

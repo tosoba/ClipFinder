@@ -1,4 +1,4 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,7 +7,7 @@ class DiscoverResponse(
 )
 
 class SoundCloudRelatedTracksResponse(
-    val collection: List<SoundCloudTrackApiModel>?,
+    val collection: List<SoundCloudTrack>?,
 
     @SerializedName("next_href")
     val nextHref: String

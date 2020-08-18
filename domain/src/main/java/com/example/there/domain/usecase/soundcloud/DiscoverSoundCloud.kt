@@ -10,5 +10,5 @@ class DiscoverSoundCloud(
     schedulers: RxSchedulers,
     private val remote: ISoundCloudRemoteDataStore
 ) : SingleUseCase<SoundCloudDiscoverEntity>(schedulers) {
-    override val result: Single<SoundCloudDiscoverEntity> get() = remote.discover
+    override val result: Single<SoundCloudDiscoverEntity> get() = remote.mixedSelections
 } 

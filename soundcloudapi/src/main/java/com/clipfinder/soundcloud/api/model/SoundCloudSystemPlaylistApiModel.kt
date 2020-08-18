@@ -1,4 +1,4 @@
-package com.example.api.model
+package com.clipfinder.soundcloud.api.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -32,5 +32,5 @@ class SoundCloudSystemPlaylistApiModel(
     @SerializedName("tracking_feature_name")
     val trackingFeatureName: String,
 
-    val tracks: List<SoundCloudTrackIdApiModel>
+    val tracks: List<SoundCloudTrackId>
 )

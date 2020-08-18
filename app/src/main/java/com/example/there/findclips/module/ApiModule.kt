@@ -1,8 +1,8 @@
 package com.example.there.findclips.module
 
-import com.example.api.SoundCloudApi
-import com.example.api.SoundCloudApiV2
-import com.example.api.SoundCloudAuth
+import com.clipfinder.soundcloud.api.SoundCloudApi
+import com.clipfinder.soundcloud.api.SoundCloudApiV2
+import com.clipfinder.soundcloud.api.SoundCloudAuth
 import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
 import com.example.spotifyapi.SpotifyApi

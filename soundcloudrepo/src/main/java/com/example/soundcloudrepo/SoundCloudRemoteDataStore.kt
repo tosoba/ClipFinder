@@ -1,10 +1,10 @@
 package com.example.soundcloudrepo
 
-import com.example.api.SoundCloudApi
-import com.example.api.SoundCloudApiV2
-import com.example.api.model.SoundCloudPlaylistApiModel
-import com.example.api.model.SoundCloudSystemPlaylistApiModel
-import com.example.api.model.SoundCloudTrackApiModel
+import com.clipfinder.soundcloud.api.SoundCloudApi
+import com.clipfinder.soundcloud.api.SoundCloudApiV2
+import com.clipfinder.soundcloud.api.model.SoundCloudPlaylistApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudSystemPlaylistApiModel
+import com.clipfinder.soundcloud.api.model.SoundCloudTrack
 import com.example.soundcloudrepo.mapper.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -19,8 +19,8 @@ class SoundCloudRemoteDataStore(
     private val service: SoundCloudService
 ) : ISoundCloudRemoteDataStore {
 
-    override val discover: Single<SoundCloudDiscoverEntity>
-        get() = apiV2.discover().map { response ->
+    override val mixedSelections: Single<SoundCloudDiscoverEntity>
+        get() = apiV2.mixedSelections().map { response ->
             SoundCloudDiscoverEntity(
                 playlists = response.collection.map {
                     it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
@@ -35,7 +35,7 @@ class SoundCloudRemoteDataStore(
     override fun getTracksFromPlaylist(
         id: String
     ): Single<List<SoundCloudTrackEntity>> = api.getTracksFromPlaylist(id)
-        .map { it.map(SoundCloudTrackApiModel::domain) }
+        .map { it.map(SoundCloudTrack::domain) }
 
     override fun getTracks(
         ids: List<String>
@@ -47,7 +47,7 @@ class SoundCloudRemoteDataStore(
     ): Single<List<SoundCloudTrackEntity>> = apiV2.getRelatedTracks(id)
         .map {
             it.collection?.run {
-                map(SoundCloudTrackApiModel::domain)
+                map(SoundCloudTrack::domain)
             } ?: run {
                 emptyList<SoundCloudTrackEntity>()
             }

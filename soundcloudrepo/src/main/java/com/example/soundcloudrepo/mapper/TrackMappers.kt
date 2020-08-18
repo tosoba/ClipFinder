@@ -1,17 +1,17 @@
 package com.example.soundcloudrepo.mapper
 
-import com.example.api.SoundCloudAuth
-import com.example.api.model.SoundCloudTrackApiModel
-import com.example.api.model.SoundCloudTrackIdApiModel
+import com.clipfinder.soundcloud.api.SoundCloudAuth
+import com.clipfinder.soundcloud.api.model.SoundCloudTrack
+import com.clipfinder.soundcloud.api.model.SoundCloudTrackId
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackIdEntity
 import com.vpaliy.soundcloud.model.TrackEntity
 
-val SoundCloudTrackIdApiModel.domain: SoundCloudTrackIdEntity
+val SoundCloudTrackId.domain: SoundCloudTrackIdEntity
     get() = SoundCloudTrackIdEntity(id, kind)
 
-val SoundCloudTrackIdEntity.data: SoundCloudTrackIdApiModel
-    get() = SoundCloudTrackIdApiModel(id, kind)
+val SoundCloudTrackIdEntity.data: SoundCloudTrackId
+    get() = SoundCloudTrackId(id, kind)
 
 val TrackEntity.domain: SoundCloudTrackEntity
     get() = SoundCloudTrackEntity(
@@ -31,7 +31,7 @@ val TrackEntity.domain: SoundCloudTrackEntity
             waveformUrl = waveform_url
     )
 
-val SoundCloudTrackApiModel.domain: SoundCloudTrackEntity
+val SoundCloudTrack.domain: SoundCloudTrackEntity
     get() = SoundCloudTrackEntity(
             id = id.toString(),
             title = title,
