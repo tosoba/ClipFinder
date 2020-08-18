@@ -9,6 +9,7 @@ import com.bumptech.glide.request.target.ViewTarget
 import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
+import com.example.soundclouddashboard.di.soundCloudDashboardModule
 import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
 import com.example.spotify.account.saved.di.spotifyAccountSavedModule
 import com.example.spotify.account.top.di.spotifyAccountTopModule
@@ -81,7 +82,8 @@ class ClipFinderApp : Application() {
                 spotifyCoreAndroidModule,
                 spotifyDashboardModule, spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
-                spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule
+                spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule,
+                soundCloudDashboardModule
             ))
         }
     }
