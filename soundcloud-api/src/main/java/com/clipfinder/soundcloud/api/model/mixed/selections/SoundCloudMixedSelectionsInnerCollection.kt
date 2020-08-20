@@ -1,20 +1,21 @@
 package com.clipfinder.soundcloud.api.model.mixed.selections
 
+import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylist
 import com.clipfinder.soundcloud.api.model.SoundCloudUser
 import com.google.gson.annotations.SerializedName
 
 data class SoundCloudMixedSelectionsInnerCollection(
     @SerializedName("artwork_url")
-    val artworkUrl: String,
+    override val artworkUrl: String?,
     @SerializedName("calculated_artwork_url")
     val calculatedArtworkUrl: String,
     @SerializedName("created_at")
-    val createdAt: String,
+    override val createdAt: String,
     val description: String,
     @SerializedName("display_date")
     val displayDate: String,
-    val duration: Int,
-    val id: Int,
+    override val duration: Int,
+    override val id: Int,
     @SerializedName("is_album")
     val isAlbum: Boolean,
     @SerializedName("is_public")
@@ -25,7 +26,7 @@ data class SoundCloudMixedSelectionsInnerCollection(
     @SerializedName("last_updated")
     val lastUpdated: String,
     @SerializedName("likes_count")
-    val likesCount: Int,
+    override val likesCount: Int,
     @SerializedName("managed_by_feeds")
     val managedByFeeds: Boolean,
     val permalink: String,
@@ -33,7 +34,7 @@ data class SoundCloudMixedSelectionsInnerCollection(
     val permalinkUrl: String,
     val `public`: Boolean,
     @SerializedName("published_at")
-    val publishedAt: String,
+    override val publishedAt: String?,
     @SerializedName("reposts_count")
     val repostsCount: Int,
     @SerializedName("set_type")
@@ -43,9 +44,9 @@ data class SoundCloudMixedSelectionsInnerCollection(
     val shortDescription: String,
     @SerializedName("short_title")
     val shortTitle: String,
-    val title: String,
+    override val title: String,
     @SerializedName("track_count")
-    val trackCount: Int,
+    override val trackCount: Int,
     @SerializedName("tracking_feature_name")
     val trackingFeatureName: String,
     val tracks: List<SoundCloudMixedSelectionTrack>,
@@ -53,5 +54,5 @@ data class SoundCloudMixedSelectionsInnerCollection(
     val urn: String,
     val user: SoundCloudUser,
     @SerializedName("user_id")
-    val userId: Int
-)
+    override val userId: Int
+) : ISoundCloudPlaylist
