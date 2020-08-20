@@ -27,6 +27,11 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation project(':core')
+    implementation project(':core-soundcloud')
+    implementation project(':core-android')
+
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'

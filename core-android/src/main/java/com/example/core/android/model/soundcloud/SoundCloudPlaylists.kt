@@ -13,9 +13,12 @@ import kotlinx.android.parcel.Parcelize
 sealed class BaseSoundCloudPlaylist : Parcelable, NamedImageListItem {
     abstract val artworkUrl: String?
     abstract val title: String
-    override val name: String get() = title
-    override val foregroundDrawableId: Int get() = R.drawable.sound_cloud_foreground_ripple
-    override val imageViewSrc: ImageViewSrc get() = ImageViewSrc.with(artworkUrl, R.drawable.playlist_placeholder)
+    override val name: String
+        get() = title
+    override val foregroundDrawableId: Int
+        get() = R.drawable.sound_cloud_foreground_ripple
+    override val imageViewSrc: ImageViewSrc
+        get() = ImageViewSrc.with(artworkUrl, R.drawable.playlist_placeholder)
 }
 
 @Parcelize
@@ -69,7 +72,8 @@ data class SoundCloudSystemPlaylist(
     override val title: String,
     val trackIds: List<Int>
 ) : BaseSoundCloudPlaylist(), IdentifiableNamedObservableListItem<String> {
-    override val name: String get() = super.name
+    override val name: String
+        get() = super.name
 }
 
 fun SoundCloudSystemPlaylist.clickableListItem(

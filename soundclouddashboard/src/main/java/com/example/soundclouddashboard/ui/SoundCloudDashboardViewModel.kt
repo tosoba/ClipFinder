@@ -16,18 +16,11 @@ import java.util.concurrent.TimeUnit
 
 class SoundCloudDashboardViewModel(
     initialState: SoundCloudDashboardViewState,
-    private val discoverSoundCloud: DiscoverSoundCloud,
-    getClientId: GetClientId
+    private val discoverSoundCloud: DiscoverSoundCloud
 ) : MvRxViewModel<SoundCloudDashboardViewState>(initialState) {
 
     init {
         loadPlaylists()
-
-        getClientId(applySchedulers = false, timeout = Timeout(15, TimeUnit.SECONDS))
-            .subscribe { t1, t2 ->
-                t1 to t2
-            }
-            .disposeOnClear()
     }
 
     fun loadPlaylists() = withState { state ->
@@ -46,11 +39,11 @@ class SoundCloudDashboardViewModel(
 
     companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardViewState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SoundCloudDashboardViewState
+            viewModelContext: ViewModelContext,
+            state: SoundCloudDashboardViewState
         ): SoundCloudDashboardViewModel {
             val discoverSoundCloud: DiscoverSoundCloud by viewModelContext.activity.inject()
-            val getClientId: GetClientId by viewModelContext.activity.inject()
-            return SoundCloudDashboardViewModel(state, discoverSoundCloud, getClientId)
+            return SoundCloudDashboardViewModel(state, discoverSoundCloud)
         }
     }
 }
