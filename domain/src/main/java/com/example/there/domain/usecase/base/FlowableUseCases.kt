@@ -12,7 +12,7 @@ abstract class FlowableUseCase<Result>(private val schedulers: RxSchedulers) {
         strategy: RetryStrategy? = null
     ): Flowable<Result> = result
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
@@ -26,6 +26,6 @@ abstract class FlowableUseCaseWithArgs<Args, Result>(private val schedulers: RxS
         strategy: RetryStrategy? = null
     ): Flowable<Result> = run(args)
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }

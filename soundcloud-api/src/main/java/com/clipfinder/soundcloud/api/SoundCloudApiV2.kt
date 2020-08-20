@@ -2,6 +2,7 @@ package com.clipfinder.soundcloud.api
 
 import com.clipfinder.soundcloud.api.model.DiscoverResponse
 import com.clipfinder.soundcloud.api.model.SoundCloudRelatedTracksResponse
+import com.clipfinder.soundcloud.api.model.SoundCloudTrack
 import com.clipfinder.soundcloud.api.model.TrackEntity
 import com.clipfinder.soundcloud.api.model.front.SoundCloudFrontResponse
 import io.reactivex.Single
@@ -27,7 +28,7 @@ interface SoundCloudApiV2 {
         @Query("ids") ids: String,
         @Query("client_id") clientId: String = SoundCloudAuth.key,
         @Query("app_locale") locale: String = "us"
-    ): Single<List<TrackEntity>>
+    ): Single<List<SoundCloudTrack>>
 
     @GET("tracks/{id}/related")
     fun getRelatedTracks(

@@ -12,7 +12,7 @@ abstract class CompletableUseCase(private val schedulers: RxSchedulers) {
         strategy: RetryStrategy? = null
     ): Completable = result
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
@@ -26,6 +26,6 @@ abstract class CompletableUseCaseWithArgs<Args>(private val schedulers: RxSchedu
         strategy: RetryStrategy? = null
     ): Completable = run(args)
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }

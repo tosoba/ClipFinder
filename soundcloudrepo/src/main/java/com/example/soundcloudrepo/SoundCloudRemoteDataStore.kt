@@ -5,7 +5,6 @@ import com.clipfinder.soundcloud.api.SoundCloudApiV2
 import com.clipfinder.soundcloud.api.model.SoundCloudPlaylistApiModel
 import com.clipfinder.soundcloud.api.model.SoundCloudSystemPlaylistApiModel
 import com.clipfinder.soundcloud.api.model.SoundCloudTrack
-import com.clipfinder.soundcloud.api.model.TrackEntity
 import com.example.soundcloudrepo.mapper.domain
 import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
@@ -40,7 +39,7 @@ class SoundCloudRemoteDataStore(
     override fun getTracks(
         ids: List<String>
     ): Single<List<SoundCloudTrackEntity>> = apiV2.getTracks(ids.joinToString(separator = ","))
-        .map { it.map(TrackEntity::domain) }
+        .map { it.map(SoundCloudTrack::domain) }
 
     override fun getSimilarTracks(
         id: String

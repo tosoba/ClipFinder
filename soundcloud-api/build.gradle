@@ -6,6 +6,7 @@ dependencies {
 
     implementation project(':core')
     implementation project(':domain')
+    implementation project(':core-soundcloud')
 
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter

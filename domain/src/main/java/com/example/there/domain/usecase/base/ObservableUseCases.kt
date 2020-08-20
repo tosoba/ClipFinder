@@ -12,7 +12,7 @@ abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
         strategy: RetryStrategy? = null
     ): Observable<Result> = result
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
@@ -26,6 +26,6 @@ abstract class ObservableUseCaseWithArgs<Args, Result>(private val schedulers: R
         strategy: RetryStrategy? = null
     ): Observable<Result> = run(args)
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(strategy) } ?: this }
+        .run { strategy?.let { retry(it) } ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }

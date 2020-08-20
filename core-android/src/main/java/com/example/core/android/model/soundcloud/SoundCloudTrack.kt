@@ -18,7 +18,7 @@ data class SoundCloudTrack(
     val title: String,
     val artworkUrl: String?,
     val description: String?,
-    val duration: String,
+    val duration: Int,
     val genre: String?,
     val tags: String?,
     val streamUrl: String?,

@@ -1,5 +1,6 @@
 package com.clipfinder.soundcloud.api.model
 
+import com.clipfinder.core.soundcloud.model.ISoundCloudTrack
 import com.google.gson.annotations.SerializedName
 
 class SoundCloudTrack(
@@ -11,30 +12,30 @@ class SoundCloudTrack(
     @SerializedName("created_at")
     val createdAt: String,
 
-    val description: String,
+    override val description: String,
 
     val media: SoundCloudMedia,
 
-    val title: String,
+    override val title: String,
 
-    val duration: Int,
+    override val duration: Int,
 
     @SerializedName("has_downloads_left")
     val hasDownloadsLeft: Boolean,
 
     @SerializedName("artwork_url")
-    val artworkUrl: String?,
+    override val artworkUrl: String?,
 
     val public: Boolean,
 
     val streamable: Boolean,
 
     @SerializedName("tag_list")
-    val tagList: String,
+    override val tags: String,
 
-    val genre: String,
+    override val genre: String,
 
-    val id: Int,
+    override val id: Int,
 
     @SerializedName("reposts_count")
     val repostsCount: Int,
@@ -77,12 +78,18 @@ class SoundCloudTrack(
     val monetizationModel: String,
 
     @SerializedName("waveform_url")
-    val waveformUrl: String,
+    override val waveformUrl: String,
 
     val permalink: String,
 
     @SerializedName("permalink_url")
     val permalinkUrl: String,
 
-    val user: SoundCloudUser
-)
+    val user: SoundCloudUser,
+
+    @SerializedName("download_url")
+    override val downloadUrl: String?,
+
+    @SerializedName("stream_url")
+    override val streamUrl: String?
+) : ISoundCloudTrack
