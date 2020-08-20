@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
+import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
@@ -83,6 +84,7 @@ class ClipFinderApp : Application() {
                 spotifyDashboardModule, spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
                 spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule,
+                soundCloudCoreAndroidModule,
                 soundCloudDashboardModule
             ))
         }

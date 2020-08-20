@@ -2,6 +2,7 @@ package com.example.core.android.model.soundcloud
 
 import android.os.Parcelable
 import android.view.View
+import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylist
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
 import com.example.core.android.util.list.IdentifiableNamedObservableListItem
@@ -20,15 +21,30 @@ sealed class BaseSoundCloudPlaylist : Parcelable, NamedImageListItem {
 @Parcelize
 data class SoundCloudPlaylist(
     override val artworkUrl: String?,
-    val createdAt: String,
-    val duration: Int,
+    override val createdAt: String,
+    override val duration: Int,
     override val id: Int,
-    val likesCount: Int,
-    val publishedAt: String?,
+    override val likesCount: Int,
+    override val publishedAt: String?,
     override val title: String,
-    val trackCount: Int,
-    val userId: Int
-) : BaseSoundCloudPlaylist(), IdentifiableNamedObservableListItem<Int> {
+    override val trackCount: Int,
+    override val userId: Int
+) : ISoundCloudPlaylist,
+    BaseSoundCloudPlaylist(),
+    IdentifiableNamedObservableListItem<Int> {
+
+    constructor(other: ISoundCloudPlaylist) : this(
+        other.artworkUrl,
+        other.createdAt,
+        other.duration,
+        other.id,
+        other.likesCount,
+        other.publishedAt,
+        other.title,
+        other.trackCount,
+        other.userId
+    )
+
     override val name: String get() = super.name
 }
 

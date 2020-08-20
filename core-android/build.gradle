@@ -50,8 +50,9 @@ dependencies {
     implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
     implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
-    implementation project(':domain')
     implementation project(':core')
+    implementation project(':core-soundcloud')
+    implementation project(':domain')
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
     testImplementation 'junit:junit:4.12'

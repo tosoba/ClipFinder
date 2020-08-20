@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val soundCloudDashboardModule = module {
     single { GetClientId(get(), get()) }
 
-    single { SoundCloudDashboardRepo(get()) } bind ISoundCloudDashboardRepo::class
+    single { SoundCloudDashboardRepo(get(), get()) } bind ISoundCloudDashboardRepo::class
 }

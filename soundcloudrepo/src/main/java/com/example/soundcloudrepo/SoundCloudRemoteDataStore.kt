@@ -19,17 +19,7 @@ class SoundCloudRemoteDataStore(
 ) : ISoundCloudRemoteDataStore {
 
     override val mixedSelections: Single<SoundCloudDiscoverEntity>
-        get() = apiV2.mixedSelections().map { response ->
-            SoundCloudDiscoverEntity(
-                playlists = response.collection.map {
-                    it.playlists?.map(SoundCloudPlaylistApiModel::domain) ?: emptyList()
-                }.flatten(),
-                systemPlaylists = response.collection.map {
-                    it.systemPlaylists?.map(SoundCloudSystemPlaylistApiModel::domain)
-                        ?: emptyList()
-                }.flatten()
-            )
-        }
+        get() = Single.just(SoundCloudDiscoverEntity(emptyList(), emptyList()))
 
     override fun getTracksFromPlaylist(
         id: String

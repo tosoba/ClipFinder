@@ -3,7 +3,6 @@ package com.example.soundcloudrepo.mapper
 import com.clipfinder.soundcloud.api.SoundCloudAuth
 import com.clipfinder.soundcloud.api.model.SoundCloudTrack
 import com.clipfinder.soundcloud.api.model.SoundCloudTrackId
-import com.clipfinder.soundcloud.api.model.TrackEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackIdEntity
 

@@ -39,7 +39,10 @@ dependencies {
 
     implementation project(':domain')
     implementation project(':core')
+    implementation project(':core-soundcloud')
     implementation project(':core-android')
+    implementation project(':core-android-soundcloud')
+    implementation project(':soundcloud-api')
 
     implementation rootProject.ext.rxJava
 
