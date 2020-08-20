@@ -14,7 +14,7 @@ class SoundCloudPlaylistApiModel(
 
     val duration: Int,
 
-    val id: Int,
+    val id: String,
 
     @SerializedName("is_album")
     val isAlbum: Boolean,

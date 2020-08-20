@@ -24,9 +24,9 @@ sealed class BaseSoundCloudPlaylist : Parcelable, NamedImageListItem {
 @Parcelize
 data class SoundCloudPlaylist(
     override val artworkUrl: String?,
-    override val createdAt: String,
+    override val createdAt: String?,
     override val duration: Int,
-    override val id: Int,
+    override val id: String,
     override val likesCount: Int,
     override val publishedAt: String?,
     override val title: String,
@@ -34,7 +34,7 @@ data class SoundCloudPlaylist(
     override val userId: Int
 ) : ISoundCloudPlaylist,
     BaseSoundCloudPlaylist(),
-    IdentifiableNamedObservableListItem<Int> {
+    IdentifiableNamedObservableListItem<String> {
 
     constructor(other: ISoundCloudPlaylist) : this(
         other.artworkUrl,

@@ -1,49 +1,60 @@
 package com.example.soundclouddashboard.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.soundcloud.ui
 import com.example.core.android.model.Loading
-import com.example.core.ext.Timeout
-import com.example.soundclouddashboard.SoundCloudDashboardViewState
-import com.example.soundclouddashboard.SoundCloudPlaylists
-import com.example.soundclouddashboard.domain.usecase.GetClientId
-import com.example.there.domain.usecase.soundcloud.DiscoverSoundCloud
+import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.util.ext.observeNetworkConnectivity
+import com.example.soundclouddashboard.domain.usecase.GetMixedSelections
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
-import java.util.concurrent.TimeUnit
 
 class SoundCloudDashboardViewModel(
-    initialState: SoundCloudDashboardViewState,
-    private val discoverSoundCloud: DiscoverSoundCloud
-) : MvRxViewModel<SoundCloudDashboardViewState>(initialState) {
+    initialState: SoundCloudDashboardState,
+    private val getMixedSelections: GetMixedSelections,
+    context: Context
+) : MvRxViewModel<SoundCloudDashboardState>(initialState) {
 
     init {
-        loadPlaylists()
+        loadSelections()
+        handleConnectivityChanges(context)
     }
 
-    fun loadPlaylists() = withState { state ->
-        if (state.playlists.status is Loading) return@withState
+    fun loadSelections() = withState { (currentSelections) ->
+        if (currentSelections.status is Loading) return@withState
 
-        discoverSoundCloud(applySchedulers = false)
-            .map { discoverEntity ->
-                SoundCloudPlaylists(
-                    discoverEntity.playlists.map { it.ui }.sortedBy { it.name },
-                    discoverEntity.systemPlaylists.map { it.ui }.sortedBy { it.name }
-                )
+        getMixedSelections(applySchedulers = false)
+            .map { resource ->
+                resource.map { selections ->
+                    selections.map { SoundCloudPlaylistSelection(it) }
+                }
             }
             .subscribeOn(Schedulers.io())
-            .update(SoundCloudDashboardViewState::playlists) { copy(playlists = it) }
+            .updateWithResource(SoundCloudDashboardState::selections) { copy(selections = it) }
     }
 
-    companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardViewState> {
+    @SuppressLint("MissingPermission")
+    private fun handleConnectivityChanges(context: Context) {
+        context
+            .observeNetworkConnectivity {
+                withState { (selections) ->
+                    if (selections.isEmptyAndLastLoadingFailedWithNetworkError()) loadSelections()
+                }
+            }
+            .disposeOnClear()
+    }
+
+    companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardState> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: SoundCloudDashboardViewState
+            state: SoundCloudDashboardState
         ): SoundCloudDashboardViewModel {
-            val discoverSoundCloud: DiscoverSoundCloud by viewModelContext.activity.inject()
-            return SoundCloudDashboardViewModel(state, discoverSoundCloud)
+            val getMixedSelections: GetMixedSelections by viewModelContext.activity.inject()
+            return SoundCloudDashboardViewModel(state, getMixedSelections, viewModelContext.app())
         }
     }
 }

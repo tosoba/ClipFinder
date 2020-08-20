@@ -27,7 +27,6 @@ import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.withModelsFrom
 import com.example.core.android.view.epoxy.Column
-import com.example.soundclouddashboard.SoundCloudDashboardViewState
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import kotlinx.android.synthetic.main.fragment_sound_cloud_dashboard.*
 import org.koin.android.ext.android.inject
@@ -38,30 +37,25 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     private val viewModel: SoundCloudDashboardViewModel by fragmentViewModel()
 
-    override val toolbar: Toolbar get() = sound_cloud_dashboard_toolbar
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent(viewModel::loadPlaylists) {
-            withState(viewModel) { it.playlists.loadingFailed }
-        }
-    }
+    private lateinit var binding: FragmentSoundCloudDashboardBinding
+    override val toolbar: Toolbar get() = binding.soundCloudDashboardToolbar
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<SoundCloudDashboardViewState> { state ->
-            when (state.playlists.status) {
+        injectedTypedController<SoundCloudDashboardState> { (selections) ->
+            when (selections.status) {
                 is Loading -> loadingIndicator {
                     id("loading-indicator")
                 }
 
-                is LoadedSuccessfully -> {
+                is LoadedSuccessfully -> selections.value.forEach { selection ->
                     headerItem {
-                        id("playlists-header")
-                        text("Playlists")
+                        id("${selection.id}-header")
+                        text(selection.title)
                     }
 
                     carousel {
-                        id("playlists")
-                        withModelsFrom(state.playlists.value.regular.chunked(2)) { chunk ->
+                        id("${selection.id}-playlists")
+                        withModelsFrom(selection.playlists.chunked(2)) { chunk ->
                             Column(chunk.map { playlist ->
                                 playlist.clickableListItem {
                                     navHostFragment?.showFragment(
@@ -72,30 +66,11 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                             })
                         }
                     }
-
-                    headerItem {
-                        id("system-playlists-header")
-                        text("System Playlists")
-                    }
-
-                    carousel {
-                        id("system-playlists")
-                        withModelsFrom(state.playlists.value.system.chunked(2)) { chunk ->
-                            Column(chunk.map { playlist ->
-                                playlist.clickableListItem {
-                                    navHostFragment?.showFragment(
-                                        fragmentFactory.newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist),
-                                        true
-                                    )
-                                }
-                            })
-                        }
-                    }
                 }
 
                 is LoadingFailed<*> -> reloadControl {
                     id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadPlaylists() })
+                    onReloadClicked(View.OnClickListener { viewModel.loadSelections() })
                     message("Error occurred lmao") //TODO: better error msg
                 }
             }
@@ -107,8 +82,6 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         setHasOptionsMenu(true)
     }
 
-    override fun invalidate() = withState(viewModel, epoxyController::setData)
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSoundCloudDashboardBinding.inflate(inflater, container, false)
@@ -119,8 +92,11 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
             }
             soundCloudDashboardRecyclerView.setController(epoxyController)
             mainContentFragment?.disablePlayButton()
+            binding = this
         }
         .root
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (toolbar.menu?.size() == 0) {
@@ -135,9 +111,4 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
     } else false
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
 }

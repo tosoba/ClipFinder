@@ -2,9 +2,9 @@ package com.clipfinder.core.soundcloud.model
 
 interface ISoundCloudPlaylist {
     val artworkUrl: String?
-    val createdAt: String
+    val createdAt: String?
     val duration: Int
-    val id: Int
+    val id: String
     val likesCount: Int
     val publishedAt: String?
     val title: String

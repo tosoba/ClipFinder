@@ -5,7 +5,7 @@ data class SoundCloudPlaylistEntity(
     val createdAt: String,
     val displayDate: String,
     val duration: Int,
-    val id: Int,
+    val id: String,
     val isAlbum: Boolean,
     val kind: String,
     val likesCount: Int,

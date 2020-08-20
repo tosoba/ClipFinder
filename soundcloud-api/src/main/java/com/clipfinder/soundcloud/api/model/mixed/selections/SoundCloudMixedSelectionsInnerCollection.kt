@@ -8,14 +8,14 @@ data class SoundCloudMixedSelectionsInnerCollection(
     @SerializedName("artwork_url")
     override val artworkUrl: String?,
     @SerializedName("calculated_artwork_url")
-    val calculatedArtworkUrl: String,
+    val calculatedArtworkUrl: String?,
     @SerializedName("created_at")
-    override val createdAt: String,
+    override val createdAt: String?,
     val description: String,
     @SerializedName("display_date")
-    val displayDate: String,
+    val displayDate: String?,
     override val duration: Int,
-    override val id: Int,
+    override val id: String,
     @SerializedName("is_album")
     val isAlbum: Boolean,
     @SerializedName("is_public")
