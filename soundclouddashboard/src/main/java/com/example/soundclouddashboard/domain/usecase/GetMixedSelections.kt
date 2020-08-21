@@ -2,6 +2,7 @@ package com.example.soundclouddashboard.domain.usecase
 
 import com.clipfinder.core.android.soundcloud.preferences.SoundCloudPreferences
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylistSelection
+import com.clipfinder.core.soundcloud.usecase.GetClientId
 import com.clipfinder.soundcloud.api.SoundCloudAuth
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource

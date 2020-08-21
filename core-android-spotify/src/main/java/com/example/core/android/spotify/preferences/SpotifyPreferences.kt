@@ -59,8 +59,11 @@ class SpotifyPreferences(context: Context) {
             }
         }
 
-    val countryObservable: Observable<String> get() = countryRx.asObservable()
-    val localeObservable: Observable<String> get() = languageRx.asObservable()
+    val countryObservable: Observable<String>
+        get() = countryRx.asObservable()
+
+    val localeObservable: Observable<String>
+        get() = languageRx.asObservable()
 
     init {
         preferences = PreferenceManager.getDefaultSharedPreferences(context).apply {
