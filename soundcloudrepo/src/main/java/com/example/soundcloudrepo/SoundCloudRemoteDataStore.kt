@@ -2,11 +2,8 @@ package com.example.soundcloudrepo
 
 import com.clipfinder.soundcloud.api.SoundCloudApi
 import com.clipfinder.soundcloud.api.SoundCloudApiV2
-import com.clipfinder.soundcloud.api.model.SoundCloudPlaylistApiModel
-import com.clipfinder.soundcloud.api.model.SoundCloudSystemPlaylistApiModel
 import com.clipfinder.soundcloud.api.model.SoundCloudTrack
 import com.example.soundcloudrepo.mapper.domain
-import com.example.there.domain.entity.soundcloud.SoundCloudDiscoverEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.repo.soundcloud.ISoundCloudRemoteDataStore
 import com.vpaliy.soundcloud.SoundCloudService
@@ -17,9 +14,6 @@ class SoundCloudRemoteDataStore(
     private val api: SoundCloudApi,
     private val service: SoundCloudService
 ) : ISoundCloudRemoteDataStore {
-
-    override val mixedSelections: Single<SoundCloudDiscoverEntity>
-        get() = Single.just(SoundCloudDiscoverEntity(emptyList(), emptyList()))
 
     override fun getTracksFromPlaylist(
         id: String
