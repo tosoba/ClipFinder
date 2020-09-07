@@ -15,7 +15,7 @@ data class Playlist(
     override val id: String,
     override val name: String,
     val iconUrl: String,
-    val userId: String,
+    val userId: String?,
     val uri: String
 ) : Parcelable, NamedImageListItem, IdentifiableNamedObservableListItem<String> {
     override val foregroundDrawableId: Int get() = R.drawable.spotify_foreground_ripple

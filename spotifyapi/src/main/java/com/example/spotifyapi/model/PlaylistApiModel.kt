@@ -12,7 +12,7 @@ class PlaylistApiModel(
 
     val name: String,
 
-    val owner: StringIdModel,
+    val owner: StringIdModel?,
 
     val uri: String
 )

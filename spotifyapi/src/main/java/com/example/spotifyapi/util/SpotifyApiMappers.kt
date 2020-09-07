@@ -33,7 +33,7 @@ val SimplePlaylist.domain: PlaylistEntity
         id = id,
         name = name,
         iconUrl = images.firstIconUrlOrDefault,
-        userId = owner.id,
+        userId = owner?.id,
         uri = uri
     )
 

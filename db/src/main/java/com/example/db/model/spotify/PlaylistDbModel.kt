@@ -15,7 +15,7 @@ data class PlaylistDbModel(
 
     val name: String,
 
-    val owner: String,
+    val owner: String?,
 
     val uri: String
 )

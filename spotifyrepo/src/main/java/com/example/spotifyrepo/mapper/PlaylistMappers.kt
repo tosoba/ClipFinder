@@ -29,6 +29,6 @@ val PlaylistApiModel.domain: PlaylistEntity
         id = id,
         name = name,
         iconUrl = icons.firstIconUrlOrDefault,
-        userId = owner.id,
+        userId = owner?.id,
         uri = uri
     )
