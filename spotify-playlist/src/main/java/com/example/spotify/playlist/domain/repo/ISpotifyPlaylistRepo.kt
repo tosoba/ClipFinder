@@ -6,5 +6,5 @@ import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.Single
 
 interface ISpotifyPlaylistRepo {
-    fun getPlaylistTracks(playlistId: String, userId: String, offset: Int): Single<Resource<Paged<List<TrackEntity>>>>
+    fun getPlaylistTracks(playlistId: String, offset: Int): Single<Resource<Paged<List<TrackEntity>>>>
 }

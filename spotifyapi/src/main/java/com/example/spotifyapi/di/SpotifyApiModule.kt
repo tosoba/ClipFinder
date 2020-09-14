@@ -38,6 +38,7 @@ val spotifyApiModule = module {
     single { spotifyRetrofit<SpotifyArtistsApi>() }
     single { spotifyRetrofit<SpotifyBrowseApi>() }
     single { spotifyRetrofit<SpotifyPersonalizationApi>() }
+    single { spotifyRetrofit<SpotifyPlaylistsApi>() }
     single { spotifyRetrofit<SpotifySearchApi>() }
     single { spotifyRetrofit<SpotifyTracksApi>() }
     single { spotifyRetrofit<SpotifyUsersApi>() }

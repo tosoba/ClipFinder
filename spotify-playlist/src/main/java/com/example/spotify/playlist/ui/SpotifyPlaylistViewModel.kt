@@ -43,7 +43,7 @@ class SpotifyPlaylistViewModel(
 
     fun loadTracks() = withState { (playlist, tracks) ->
         if (tracks.status is Loading) return@withState
-        val args = GetPlaylistTracks.Args(playlist.id, playlist.userId, tracks.offset)
+        val args = GetPlaylistTracks.Args(playlist.id, tracks.offset)
         getPlaylistTracks(args = args, applySchedulers = false)
             .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
             .subscribeOn(Schedulers.io())

@@ -13,13 +13,12 @@ class GetPlaylistTracks(
     private val repo: ISpotifyPlaylistRepo
 ) : SingleUseCaseWithArgs<GetPlaylistTracks.Args, Resource<Paged<List<TrackEntity>>>>(schedulers) {
 
-    class Args(val playlistId: String, val userId: String, val offset: Int)
+    class Args(val playlistId: String, val offset: Int)
 
     override fun run(
         args: Args
     ): Single<Resource<Paged<List<TrackEntity>>>> = repo.getPlaylistTracks(
         args.playlistId,
-        args.userId,
         args.offset
     )
 }
