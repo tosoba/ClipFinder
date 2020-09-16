@@ -63,7 +63,7 @@ class SpotifyArtistViewModel(
     }
 
     fun loadAlbumsFromArtist(artistId: String, shouldClear: Boolean = false) = withState { state ->
-        if (state.albums.status is Loading) return@withState
+        if (!state.albums.shouldLoad) return@withState
 
         val args = GetAlbumsFromArtist.Args(
             artistId = artistId,

@@ -27,22 +27,22 @@ class SpotifySearchViewModel(
     }
 
     fun searchAlbums() = withState {
-        if (it.albums.status is Loading) return@withState
+        if (!it.albums.shouldLoad) return@withState
         search(SearchSpotify.Args.More(it.query, it.albums.offset, SpotifySearchType.ALBUM))
     }
 
     fun searchArtists() = withState {
-        if (it.artists.status is Loading) return@withState
+        if (!it.artists.shouldLoad) return@withState
         search(SearchSpotify.Args.More(it.query, it.artists.offset, SpotifySearchType.ARTIST))
     }
 
     fun searchPlaylists() = withState {
-        if (it.playlists.status is Loading) return@withState
+        if (!it.playlists.shouldLoad) return@withState
         search(SearchSpotify.Args.More(it.query, it.playlists.offset, SpotifySearchType.PLAYLIST))
     }
 
     fun searchTracks() = withState {
-        if (it.tracks.status is Loading) return@withState
+        if (!it.tracks.shouldLoad) return@withState
         search(SearchSpotify.Args.More(it.query, it.tracks.offset, SpotifySearchType.TRACK))
     }
 

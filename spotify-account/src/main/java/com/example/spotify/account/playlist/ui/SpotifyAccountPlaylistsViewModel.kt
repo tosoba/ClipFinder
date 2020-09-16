@@ -33,9 +33,9 @@ class SpotifyAccountPlaylistsViewModel(
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
 
     fun loadPlaylists() = withState { (userLoggedIn, playlists) ->
-        if (userLoggedIn) playlists.ifNotLoadingAndNotAllLoaded {
+        if (userLoggedIn && playlists.shouldLoad) {
             getCurrentUsersPlaylists(applySchedulers = false, args = playlists.offset)
-                .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
+                .mapData { newPlaylists -> newPlaylists.map(PlaylistEntity::ui) }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountPlaylistState::playlists) { copy(playlists = it) }
         }

@@ -129,7 +129,7 @@ inline fun <Value, Item> EpoxyController.pagedDataListCarouselWithHeader(
                         .message(context.getString(R.string.error_occurred))
                         .onReloadClicked(View.OnClickListener { loadItems() })
                 )
-                else -> if (data.canLoadMore) listOf(
+                else -> if (data.shouldLoad) listOf(
                     LoadingIndicatorBindingModel_()
                         .id("loading-more-$idSuffix")
                         .onBind { _, _, _ -> loadItems() }

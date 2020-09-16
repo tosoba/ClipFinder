@@ -43,9 +43,9 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() = withState { (categories) ->
-        categories.ifNotLoadingAndNotAllLoaded {
+        if (categories.shouldLoad) {
             getCategories(applySchedulers = false, args = categories.offset)
-                .mapData { categories -> categories.map(CategoryEntity::ui) }
+                .mapData { newCategories -> newCategories.map(CategoryEntity::ui) }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyDashboardState::categories) {
                     copy(categories = it)
@@ -54,7 +54,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadFeaturedPlaylists() = withState { (_, featuredPlaylists) ->
-        featuredPlaylists.ifNotLoadingAndNotAllLoaded {
+        if (featuredPlaylists.shouldLoad) {
             getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
                 .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
                 .subscribeOn(Schedulers.io())
@@ -65,7 +65,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadDailyViralTracks() = withState { (_, _, topTracks) ->
-        topTracks.ifNotLoadingAndNotAllLoaded {
+        if (topTracks.shouldLoad) {
             getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
                 .mapData { tracks -> tracks.map { TopTrack(it.position, it.track.ui) } }
                 .subscribeOn(Schedulers.io())
@@ -74,7 +74,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadNewReleases() = withState { (_, _, _, newReleases) ->
-        newReleases.ifNotLoadingAndNotAllLoaded {
+        if (newReleases.shouldLoad) {
             getNewReleases(applySchedulers = false, args = newReleases.offset)
                 .mapData { listPage -> listPage.map(AlbumEntity::ui) }
                 .subscribeOn(Schedulers.io())

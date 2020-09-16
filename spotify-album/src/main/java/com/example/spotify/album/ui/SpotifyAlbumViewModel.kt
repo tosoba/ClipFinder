@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.model.Paged
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.core.android.base.vm.MvRxViewModel
@@ -55,14 +54,12 @@ class SpotifyAlbumViewModel(
     }
 
     fun loadTracksFromAlbum(albumId: String) = withState { state ->
-        if (state.tracks.status is Loading) return@withState
+        if (!state.tracks.shouldLoad) return@withState
 
-        getTracksFromAlbum(
-            args = GetTracksFromAlbum.Args(albumId, state.tracks.offset),
-            applySchedulers = false
-        ).mapData { tracksPage: Paged<List<TrackEntity>> ->
-            tracksPage.map(TrackEntity::ui)
-        }.subscribeOn(Schedulers.io())
+        val args = GetTracksFromAlbum.Args(albumId, state.tracks.offset)
+        getTracksFromAlbum(args = args, applySchedulers = false)
+            .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
+            .subscribeOn(Schedulers.io())
             .updateWithPagedResource(SpotifyAlbumViewState::tracks) { copy(tracks = it) }
     }
 

@@ -37,18 +37,18 @@ class SpotifyAccountTopViewModel(
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
 
     fun loadTracks() = withState { (userLoggedIn, tracks) ->
-        if (userLoggedIn) tracks.ifNotLoadingAndNotAllLoaded {
+        if (userLoggedIn && tracks.shouldLoad) {
             getCurrentUsersTopTracks(applySchedulers = false, args = tracks.offset)
-                .mapData { tracks -> tracks.map(TrackEntity::ui) }
+                .mapData { newTracks -> newTracks.map(TrackEntity::ui) }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountTopState::topTracks) { copy(topTracks = it) }
         }
     }
 
     fun loadArtists() = withState { (userLoggedIn, _, artists) ->
-        if (userLoggedIn) artists.ifNotLoadingAndNotAllLoaded {
+        if (userLoggedIn && artists.shouldLoad) {
             getCurrentUsersTopArtists(applySchedulers = false, args = artists.offset)
-                .mapData { artists -> artists.map(ArtistEntity::ui) }
+                .mapData { newArtists -> newArtists.map(ArtistEntity::ui) }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountTopState::artists) { copy(artists = it) }
         }

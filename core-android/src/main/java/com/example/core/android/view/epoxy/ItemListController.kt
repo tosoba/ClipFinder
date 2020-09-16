@@ -76,7 +76,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
                 buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this)
             }
 
-            if (items is PagedDataList<*> && items.canLoadMore && loadMore != null) {
+            if (items is PagedDataList<*> && items.shouldLoad && loadMore != null) {
                 loadingIndicator {
                     id("loading-indicator-more-items") //TODO: maybe use a different indicator for loading more
                     onBind { _, _, _ -> loadMore() }
