@@ -1,3 +1,5 @@
+include ':spotify-api'
+include ':spotify-api'
 include ':core-android-soundcloud'
 include ':core-youtube'
 include ':core-soundcloud'
