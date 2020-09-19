@@ -30,7 +30,7 @@ data class InlineResponse2007(
     val href: String? = null,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<TrackObject>? = null,
+    val items: List<TrackOrEpisodeObject>? = null,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
     val limit: Int? = null,

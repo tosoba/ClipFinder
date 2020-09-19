@@ -32,6 +32,6 @@ data class PlaylistTrackObject(
     val isLocal: Boolean? = null,
     /* Information about the track or episode. */
     @Json(name = "track")
-    val track: TrackObject? = null
+    val track: TrackOrEpisodeObject? = null
 )
 

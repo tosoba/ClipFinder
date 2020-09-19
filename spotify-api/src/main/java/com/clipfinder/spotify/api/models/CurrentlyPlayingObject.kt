@@ -34,7 +34,7 @@ data class CurrentlyPlayingObject(
     val isPlaying: Boolean? = null,
     /* The currently playing track or episode. Can be null. */
     @Json(name = "item")
-    val item: TrackObject? = null,
+    val item: TrackOrEpisodeObject? = null,
     /* Progress into the currently playing track or episode. Can be null. */
     @Json(name = "progress_ms")
     val progressMs: Int? = null,
