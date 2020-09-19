@@ -25,16 +25,16 @@ import com.squareup.moshi.Json
 
 data class SearchResponseObject(
     @Json(name = "album")
-    val album: InlineResponse2001? = null,
+    val album: SimplifiedAlbumsPagingObject? = null,
     @Json(name = "artist")
     val artist: SearchResponseObjectArtist? = null,
     @Json(name = "playlist")
-    val playlist: InlineResponse2008? = null,
+    val playlist: SimplifiedPlaylistsPagingObject? = null,
     @Json(name = "track")
-    val track: InlineResponse200? = null,
+    val track: TracksPagingObject? = null,
     @Json(name = "show")
     val show: SearchResponseObjectShow? = null,
     @Json(name = "episode")
-    val episode: InlineResponse2009? = null
+    val episode: SimplifiedEpisodesPagingObject? = null
 )
 

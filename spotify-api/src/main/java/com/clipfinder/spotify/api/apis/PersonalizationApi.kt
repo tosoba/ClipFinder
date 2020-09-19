@@ -1,6 +1,6 @@
 package com.clipfinder.spotify.api.apis
 
-import com.clipfinder.spotify.api.models.InlineResponse2005
+import com.clipfinder.spotify.api.models.TracksPagingObject
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -20,9 +20,9 @@ interface PersonalizationApi {
      * @param limit The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example: limit&#x3D;2 (optional)
      * @param offset The index of the first entity to return. Default: 0 (i.e., the first track). Use with limit to get the next set of entities. (optional)
      * @param timeRange Over what time frame the affinities are computed. Valid values: long_term (calculated from several years of data and including all new data as it becomes available), medium_term (approximately last 6 months), short_term (approximately last 4 weeks). Default: medium_term (optional)
-     * @return [Call]<[InlineResponse2005]>
+     * @return [Call]<[TracksPagingObject]>
      */
     @GET("me/top/{type}")
-    fun endpointGetUsersTopArtistsAndTracks(@Header("Authorization") authorization: String, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Call<InlineResponse2005>
+    fun endpointGetUsersTopArtistsAndTracks(@Header("Authorization") authorization: String, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Call<TracksPagingObject>
 
 }

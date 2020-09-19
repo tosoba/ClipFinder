@@ -23,6 +23,6 @@ data class FeaturedPlaylistObject(
     @Json(name = "message")
     val message: String? = null,
     @Json(name = "playlists")
-    val playlists: InlineResponse2008? = null
+    val playlists: SimplifiedPlaylistsPagingObject? = null
 )
 

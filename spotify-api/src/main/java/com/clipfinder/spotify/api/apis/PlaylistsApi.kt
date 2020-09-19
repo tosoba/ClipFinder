@@ -66,10 +66,10 @@ interface PlaylistsApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. Private playlists are only retrievable for the current user and requires the playlist-read-private scope to have been authorized by the user. Note that this scope alone will not return collaborative playlists, even though they are always private. Collaborative playlists are only retrievable for the current user and requires the playlist-read-collaborative scope to have been authorized by the user.
      * @param limit The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100.000. Use with limit to get the next set of playlists. (optional)
-     * @return [Call]<[InlineResponse2008]>
+     * @return [Call]<[SimplifiedPlaylistsPagingObject]>
      */
     @GET("me/playlists")
-    fun endpointGetAListOfCurrentUsersPlaylists(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<InlineResponse2008>
+    fun endpointGetAListOfCurrentUsersPlaylists(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<SimplifiedPlaylistsPagingObject>
 
     /**
      * Get a List of a User&#39;s Playlists
@@ -82,10 +82,10 @@ interface PlaylistsApi {
      * @param userId The user’s Spotify user ID.
      * @param limit The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100.000. Use with limit to get the next set of playlists. (optional)
-     * @return [Call]<[InlineResponse2008]>
+     * @return [Call]<[SimplifiedPlaylistsPagingObject]>
      */
     @GET("users/{user_id}/playlists")
-    fun endpointGetListUsersPlaylists(@Header("Authorization") authorization: String, @Path("user_id") userId: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<InlineResponse2008>
+    fun endpointGetListUsersPlaylists(@Header("Authorization") authorization: String, @Path("user_id") userId: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<SimplifiedPlaylistsPagingObject>
 
     /**
      * Get a Playlist
@@ -132,10 +132,10 @@ interface PlaylistsApi {
      * @param limit The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. (optional)
      * @param offset The index of the first item to return. Default: 0 (the first object). (optional)
      * @param additionalTypes A comma-separated list of item types that your client supports besides the default track type. Valid types are: track and episode. Note: This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. In addition to providing this parameter, make sure that your client properly handles cases of new types in the future by checking against the type field of each object. (optional)
-     * @return [Call]<[InlineResponse2007]>
+     * @return [Call]<[TrackOrEpisodePagingObject]>
      */
     @GET("playlists/{playlist_id}/tracks")
-    fun endpointGetPlaylistsTracks(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("market") market: String, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Call<InlineResponse2007>
+    fun endpointGetPlaylistsTracks(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("market") market: String, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Call<TrackOrEpisodePagingObject>
 
     /**
      * Remove Items from a Playlist

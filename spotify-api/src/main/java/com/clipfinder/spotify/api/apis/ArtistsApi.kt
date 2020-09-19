@@ -2,7 +2,7 @@ package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.ArtistObject
 import com.clipfinder.spotify.api.models.ArtistsObject
-import com.clipfinder.spotify.api.models.InlineResponse2001
+import com.clipfinder.spotify.api.models.SimplifiedAlbumsPagingObject
 import com.clipfinder.spotify.api.models.TracksObject
 import retrofit2.Call
 import retrofit2.http.GET
@@ -38,10 +38,10 @@ interface ArtistsApi {
      * @param market Synonym for country. An ISO 3166-1 alpha-2 country code or the string from_token. Supply this parameter to limit the response to one particular geographical market. For example, for albums available in Sweden: market&#x3D;SE. If not given, results will be returned for all markets and you are likely to get duplicate results per album, one for each market in which the album is available! (optional)
      * @param limit The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50. For example: limit&#x3D;2 (optional)
      * @param offset The index of the first album to return. Default: 0 (i.e., the first album). Use with limit to get the next set of albums. (optional)
-     * @return [Call]<[InlineResponse2001]>
+     * @return [Call]<[SimplifiedAlbumsPagingObject]>
      */
     @GET("artists/{id}/albums")
-    fun endpointGetAnArtistsAlbums(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("include_groups") includeGroups: String? = null, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<InlineResponse2001>
+    fun endpointGetAnArtistsAlbums(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("include_groups") includeGroups: String? = null, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<SimplifiedAlbumsPagingObject>
 
     /**
      * Get an Artist&#39;s Related Artists

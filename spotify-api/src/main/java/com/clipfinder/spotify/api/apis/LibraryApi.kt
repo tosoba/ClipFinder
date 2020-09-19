@@ -1,9 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.IdsBody
-import com.clipfinder.spotify.api.models.InlineResponse2002
-import com.clipfinder.spotify.api.models.InlineResponse2003
-import com.clipfinder.spotify.api.models.InlineResponse2004
+import com.clipfinder.spotify.api.models.AlbumsPagingObject
+import com.clipfinder.spotify.api.models.ShowsPagingObject
+import com.clipfinder.spotify.api.models.SavedTracksPagingObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -61,10 +61,10 @@ interface LibraryApi {
      * @param limit The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. (optional)
      * @param market An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. (optional)
-     * @return [Call]<[InlineResponse2002]>
+     * @return [Call]<[AlbumsPagingObject]>
      */
     @GET("me/albums")
-    fun endpointGetUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<InlineResponse2002>
+    fun endpointGetUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<AlbumsPagingObject>
 
     /**
      * Get User&#39;s Saved Shows
@@ -76,10 +76,10 @@ interface LibraryApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been isued on behalf of the user. The user-libary-read scope must have been authorised by the user.
      * @param limit The maximum number of shows to return. Default: 20. Minimum: 1. Maximum: 50 (optional)
      * @param offset The index of the first show to return. Default: 0 (the first object). Use with limit to get the next set of shows. (optional)
-     * @return [Call]<[InlineResponse2003]>
+     * @return [Call]<[ShowsPagingObject]>
      */
     @GET("me/shows")
-    fun endpointGetUsersSavedShows(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null): Call<InlineResponse2003>
+    fun endpointGetUsersSavedShows(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null): Call<ShowsPagingObject>
 
     /**
      * Get User&#39;s Saved Tracks
@@ -92,10 +92,10 @@ interface LibraryApi {
      * @param limit The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. (optional)
      * @param market An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. (optional)
-     * @return [Call]<[InlineResponse2004]>
+     * @return [Call]<[SavedTracksPagingObject]>
      */
     @GET("me/tracks")
-    fun endpointGetUsersSavedTracks(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<InlineResponse2004>
+    fun endpointGetUsersSavedTracks(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<SavedTracksPagingObject>
 
     /**
      * Remove Albums for Current User

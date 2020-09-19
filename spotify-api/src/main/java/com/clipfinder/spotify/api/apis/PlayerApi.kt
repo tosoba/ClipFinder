@@ -61,10 +61,10 @@ interface PlayerApi {
      * @param limit The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param after A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified. (optional)
      * @param before A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified. (optional)
-     * @return [Call]<[InlineResponse2006]>
+     * @return [Call]<[PlayHistoryPagingObject]>
      */
     @GET("me/player/recently-played")
-    fun endpointGetRecentlyPlayed(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("after") after: Int? = null, @Query("before") before: Int? = null): Call<InlineResponse2006>
+    fun endpointGetRecentlyPlayed(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("after") after: Int? = null, @Query("before") before: Int? = null): Call<PlayHistoryPagingObject>
 
     /**
      * Get the User&#39;s Currently Playing Track

@@ -2,7 +2,7 @@ package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.AlbumObject
 import com.clipfinder.spotify.api.models.AlbumsObject
-import com.clipfinder.spotify.api.models.InlineResponse200
+import com.clipfinder.spotify.api.models.TracksPagingObject
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -37,10 +37,10 @@ interface AlbumsApi {
      * @param limit The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first track to return. Default: 0 (the first object). Use with limit to get the next set of tracks. (optional)
      * @param market An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. (optional)
-     * @return [Call]<[InlineResponse200]>
+     * @return [Call]<[TracksPagingObject]>
      */
     @GET("albums/{id}/tracks")
-    fun endpointGetAnAlbumsTracks(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<InlineResponse200>
+    fun endpointGetAnAlbumsTracks(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<TracksPagingObject>
 
     /**
      * Get Multiple Albums

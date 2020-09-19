@@ -18,8 +18,8 @@ import com.squareup.moshi.Json
  * @param albums
  */
 
-data class NewReleasesObject(
+data class NewReleases(
     @Json(name = "albums")
-    val albums: InlineResponse2001? = null
+    val albums: SimplifiedAlbumsPagingObject? = null
 )
 

@@ -18,8 +18,8 @@ import com.squareup.moshi.Json
  * @param playlists
  */
 
-data class PlaylistPagingObject(
+data class SimplifiedPlaylists(
     @Json(name = "playlists")
-    val playlists: InlineResponse2008? = null
+    val playlists: SimplifiedPlaylistsPagingObject? = null
 )
 

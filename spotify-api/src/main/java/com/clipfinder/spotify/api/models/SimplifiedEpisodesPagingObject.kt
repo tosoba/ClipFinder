@@ -24,13 +24,13 @@ import com.squareup.moshi.Json
  * @param total The total number of items available to return.
  */
 
-data class InlineResponse2003(
+data class SimplifiedEpisodesPagingObject(
     /* A link to the Web API endpoint returning the full result of the request */
     @Json(name = "href")
     val href: String? = null,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<SavedShowObject>? = null,
+    val items: List<SimplifiedEpisodeObject>? = null,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
     val limit: Int? = null,

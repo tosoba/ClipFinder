@@ -20,10 +20,10 @@ interface BrowseApi {
      * @param country A country: an ISO 3166-1 alpha-2 country code. Provide this parameter to ensure that the category exists for a particular country. (optional)
      * @param limit The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first item to return. Default: 0 (the first object). Use with limit to get the next set of items. (optional)
-     * @return [Call]<[PlaylistPagingObject]>
+     * @return [Call]<[SimplifiedPlaylists]>
      */
     @GET("browse/categories/{category_id}/playlists")
-    fun endpointGetACategoriesPlaylists(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<PlaylistPagingObject>
+    fun endpointGetACategoriesPlaylists(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<SimplifiedPlaylists>
 
     /**
      * Get a Category
@@ -87,10 +87,10 @@ interface BrowseApi {
      * @param country A country: an ISO 3166-1 alpha-2 country code. Provide this parameter if you want the list of returned items to be relevant to a particular country. If omitted, the returned items will be relevant to all countries. (optional)
      * @param limit The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. (optional)
      * @param offset The index of the first item to return. Default: 0 (the first object). Use with limit to get the next set of items. (optional)
-     * @return [Call]<[NewReleasesObject]>
+     * @return [Call]<[NewReleases]>
      */
     @GET("browse/new-releases")
-    fun endpointGetNewReleases(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<NewReleasesObject>
+    fun endpointGetNewReleases(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<NewReleases>
 
     /**
      * Get Recommendation Genres
