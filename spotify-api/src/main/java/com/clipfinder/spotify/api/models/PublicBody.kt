@@ -19,7 +19,7 @@ import com.squareup.moshi.Json
  * @param public Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.
  */
 
-data class InlineObject2(
+data class PublicBody(
     /* Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope. */
     @Json(name = "public")
     val public: Boolean? = null

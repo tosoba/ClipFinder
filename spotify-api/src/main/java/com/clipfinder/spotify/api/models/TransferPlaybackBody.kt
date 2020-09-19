@@ -20,7 +20,7 @@ import com.squareup.moshi.Json
  * @param play true: ensure playback happens on new device. false or not provided: keep the current playback state.
  */
 
-data class InlineObject5(
+data class TransferPlaybackBody(
     /* A JSON array containing the ID of the device on which playback should be started/transferred. For example:{device_ids:[\"74ASZWbe4lXaubB36ztrGX\"]} Note: Although an array is accepted, only a single device_id is currently supported. Supplying more than one will return 400 Bad Request */
     @Json(name = "device_ids")
     val deviceIds: List<String>,

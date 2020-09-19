@@ -22,7 +22,7 @@ import com.squareup.moshi.Json
  * @param description Value for playlist description as displayed in Spotify Clients and in the Web API.
  */
 
-data class InlineObject10(
+data class PlaylistDetailsBody(
     /* The new name for the playlist, for example \"My New Playlist Title\" */
     @Json(name = "name")
     val name: String? = null,

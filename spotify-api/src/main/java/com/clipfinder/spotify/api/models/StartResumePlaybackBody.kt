@@ -22,7 +22,7 @@ import com.squareup.moshi.Json
  * @param positionMs Indicates from what position to start playback. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.
  */
 
-data class InlineObject6(
+data class StartResumePlaybackBody(
     /* Spotify URI of the context to play. Valid contexts are albums, artists, playlists. Example: {\"context_uri\": \"spotify:album:1Je1IMUlBXcx1Fz0WE7oPT\"} */
     @Json(name = "context_uri")
     val contextUri: String? = null,

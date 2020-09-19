@@ -1,9 +1,8 @@
 package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.FollowingArtistsObject
-import com.clipfinder.spotify.api.models.InlineObject
-import com.clipfinder.spotify.api.models.InlineObject1
-import com.clipfinder.spotify.api.models.InlineObject2
+import com.clipfinder.spotify.api.models.IdsBody
+import com.clipfinder.spotify.api.models.PublicBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -48,12 +47,12 @@ interface FollowApi {
      * @param authorization A valid user access token or your client credentials. Requires the user-follow-modify scope.
      * @param type The ID type: either artist or user.
      * @param ids A comma-separated list of the artist or the user Spotify IDs. For example: ids&#x3D;74ASZWbe4lXaubB36ztrGX,08td7MxkoHQkXnWAYD8d6Q. A maximum of 50 IDs can be sent in one request.
-     * @param inlineObject
+     * @param idsBody
      * @param contentMinusType Required if IDs are passed in the request body, otherwise ignored. The content type of the request body: application/json (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("me/following")
-    fun endpointFollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String, @Body inlineObject: InlineObject, @Header("Content-Type") contentMinusType: String): Call<Unit>
+    fun endpointFollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Body idsBody: IdsBody? = null, @Header("Content-Type") contentMinusType: String): Call<Unit>
 
     /**
      * Follow a Playlist
@@ -65,11 +64,11 @@ interface FollowApi {
      * @param authorization A valid user access token or your client credentials. Requires the user-follow-modify scope.
      * @param contentMinusType The content type of the request body: application/json
      * @param playlistId The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.
-     * @param inlineObject2  (optional)
+     * @param publicBody  (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/followers")
-    fun endpointFollowPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body inlineObject2: InlineObject2? = null): Call<Unit>
+    fun endpointFollowPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body publicBody: PublicBody? = null): Call<Unit>
 
     /**
      * Get User&#39;s Followed Artists
@@ -98,11 +97,11 @@ interface FollowApi {
      * @param type The ID type: either artist or user.
      * @param ids A comma-separated list of the artist or the user Spotify IDs. For example: ids&#x3D;74ASZWbe4lXaubB36ztrGX,08td7MxkoHQkXnWAYD8d6Q. A maximum of 50 IDs can be sent in one request.
      * @param contentMinusType Required if IDs are passed in the request body, otherwise ignored. The content type of the request body: application/json. (optional)
-     * @param inlineObject1  (optional)
+     * @param idsBody  (optional)
      * @return [Call]<[Unit]>
      */
     @DELETE("me/following")
-    fun endpointUnfollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String, @Body inlineObject1: InlineObject1? = null): Call<Unit>
+    fun endpointUnfollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
 
     /**
      * Unfollow Playlist

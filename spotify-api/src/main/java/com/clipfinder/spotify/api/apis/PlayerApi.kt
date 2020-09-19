@@ -178,11 +178,11 @@ interface PlayerApi {
      *
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been issued on behalf of a user. The access token must have the user-modify-playback-state scope authorized in order to control playback.
      * @param deviceId The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. (optional)
-     * @param inlineObject6  (optional)
+     * @param startResumePlaybackBody  (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/play")
-    fun endpointStartAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null, @Body inlineObject6: InlineObject6? = null): Call<Unit>
+    fun endpointStartAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null, @Body startResumePlaybackBody: StartResumePlaybackBody? = null): Call<Unit>
 
     /**
      * Toggle Shuffle For User’s Playback
@@ -207,10 +207,10 @@ interface PlayerApi {
      *  - 0: Unexpected error
      *
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been issued on behalf of a user. The access token must have the user-modify-playback-state scope authorized in order to control playback.
-     * @param inlineObject5
+     * @param transferPlaybackBody
      * @return [Call]<[Unit]>
      */
     @PUT("me/player")
-    fun endpointTransferAUsersPlayback(@Header("Authorization") authorization: String, @Body inlineObject5: InlineObject5): Call<Unit>
+    fun endpointTransferAUsersPlayback(@Header("Authorization") authorization: String, @Body transferPlaybackBody: TransferPlaybackBody): Call<Unit>
 
 }

@@ -1,6 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
-import com.clipfinder.spotify.api.models.*
+import com.clipfinder.spotify.api.models.IdsBody
+import com.clipfinder.spotify.api.models.InlineResponse2002
+import com.clipfinder.spotify.api.models.InlineResponse2003
+import com.clipfinder.spotify.api.models.InlineResponse2004
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -104,11 +107,11 @@ interface LibraryApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. Modification of the current user’s “Your Music” collection requires authorization of the user-library-modify scope.
      * @param ids A comma-separated list of the Spotify IDs. For example: ids&#x3D;4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M. Maximum: 50 IDs.
      * @param contentMinusType Required if the IDs are passed in the request body, otherwise ignored. The content type of the request body: application/json (optional)
-     * @param inlineObject4  (optional)
+     * @param idsBody  (optional)
      * @return [Call]<[Unit]>
      */
     @DELETE("me/albums")
-    fun endpointRemoveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String, @Body inlineObject4: InlineObject4? = null): Call<Unit>
+    fun endpointRemoveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
 
     /**
      * Remove User&#39;s Saved Tracks
@@ -150,11 +153,11 @@ interface LibraryApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. Modification of the current user’s “Your Music” collection requires authorization of the user-library-modify scope.
      * @param ids A comma-separated list of the Spotify IDs. For example: ids&#x3D;4iV5W9uYEdYUVa79Axb7Rh,1301WleyT98MSxVHPZCA6M. Maximum: 50 IDs.
      * @param contentMinusType Required if the IDs are passed in the request body, otherwise ignored. The content type of the request body: application/json (optional)
-     * @param inlineObject3  (optional)
+     * @param idsBody  (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("me/albums")
-    fun endpointSaveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String, @Body inlineObject3: InlineObject3? = null): Call<Unit>
+    fun endpointSaveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
 
     /**
      * Save Shows for Current User

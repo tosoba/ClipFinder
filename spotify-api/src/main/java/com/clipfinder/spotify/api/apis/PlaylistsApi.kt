@@ -17,11 +17,11 @@ interface PlaylistsApi {
      * @param playlistId The Spotify ID for the playlist.
      * @param uris A comma-separated list of Spotify URIs to add, can be track or episode URIs. For example: uris&#x3D;spotify:track:4iV5W9uYEdYUVa79Axb7Rh, spotify:track:1301WleyT98MSxVHPZCA6M, spotify:episode:512ojhOuo1ktJprKbVcKyQ A maximum of 100 items can be added in one request. Note: it is likely that passing a large number of item URIs as a query parameter will exceed the maximum length of the request URI. When adding a large number of items, it is recommended to pass them in the request body, see below. (optional)
      * @param position The position to insert the items, a zero-based index. For example, to insert the items in the first position: position&#x3D;0; to insert the items in the third position: position&#x3D;2 . If omitted, the items will be appended to the playlist. Items are added in the order they are listed in the query string or request body. (optional)
-     * @param inlineObject8  (optional)
+     * @param urisPositionBody  (optional)
      * @return [Call]<[SnapshotIdObject]>
      */
     @POST("playlists/{playlist_id}/tracks")
-    fun endpointAddTracksToPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Query("position") position: Int? = null, @Body inlineObject8: InlineObject8? = null): Call<SnapshotIdObject>
+    fun endpointAddTracksToPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Query("position") position: Int? = null, @Body urisPositionBody: UrisPositionBody? = null): Call<SnapshotIdObject>
 
     /**
      * Change a Playlist&#39;s Details
@@ -33,11 +33,11 @@ interface PlaylistsApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been issued on behalf of the user. Changing a public playlist for a user requires authorization of the playlist-modify-public scope; changing a private playlist requires the playlist-modify-private scope. See Using Scopes.
      * @param contentMinusType The content type of the request body: application/json
      * @param playlistId The Spotify ID for the playlist.
-     * @param inlineObject10  (optional)
+     * @param playlistDetailsBody  (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}")
-    fun endpointChangePlaylistDetails(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body inlineObject10: InlineObject10? = null): Call<Unit>
+    fun endpointChangePlaylistDetails(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body playlistDetailsBody: PlaylistDetailsBody? = null): Call<Unit>
 
     /**
      * Create a Playlist
@@ -50,11 +50,11 @@ interface PlaylistsApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been issued on behalf of the user. Creating a public playlist for a user requires authorization of the playlist-modify-public scope; creating a private playlist requires the playlist-modify-private scope. See Using Scopes.
      * @param contentMinusType The content type of the request body: application/json
      * @param userId The user’s Spotify user ID.
-     * @param inlineObject11
+     * @param playlistDetailsBody
      * @return [Call]<[PlaylistObject]>
      */
     @POST("users/{user_id}/playlists")
-    fun endpointCreatePlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("user_id") userId: String, @Body inlineObject11: InlineObject11): Call<PlaylistObject>
+    fun endpointCreatePlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("user_id") userId: String, @Body playlistDetailsBody: PlaylistDetailsBody): Call<PlaylistObject>
 
     /**
      * Get a List of Current User&#39;s Playlists
@@ -147,11 +147,11 @@ interface PlaylistsApi {
      * @param authorization A valid access token from the Spotify Accounts service: see the Web API Authorization Guide for details. The access token must have been issued on behalf of the user. Removing items from a user’s public playlist requires authorization of the playlist-modify-public scope; removing items from a private playlist requires the playlist-modify-private scope. See Using Scopes.
      * @param contentMinusType The content type of the request body: application/json
      * @param playlistId The Spotify ID for the playlist.
-     * @param inlineObject9
+     * @param removeTracksBody
      * @return [Call]<[SnapshotIdObject]>
      */
     @DELETE("playlists/{playlist_id}/tracks")
-    fun endpointRemoveTracksPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body inlineObject9: InlineObject9): Call<SnapshotIdObject>
+    fun endpointRemoveTracksPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body removeTracksBody: RemoveTracksBody): Call<SnapshotIdObject>
 
     /**
      * Replace a Playlist&#39;s Items
@@ -164,11 +164,11 @@ interface PlaylistsApi {
      * @param contentMinusType if URIs are passed in the request body, otherwise ignored._ The content type of the request body: application/json
      * @param playlistId The Spotify ID for the playlist.
      * @param uris A comma-separated list of Spotify URIs to set, can be track or episode URIs. For example: uris&#x3D;spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:track:1301WleyT98MSxVHPZCA6M,spotify:episode:512ojhOuo1ktJprKbVcKyQ A maximum of 100 items can be set in one request. (optional)
-     * @param inlineObject7  (optional)
+     * @param urisBody  (optional)
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/tracks")
-    fun endpointReplacePlaylistsTracks(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Body inlineObject7: InlineObject7? = null): Call<Unit>
+    fun endpointReplacePlaylistsTracks(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Body urisBody: UrisBody? = null): Call<Unit>
 
     /**
      * Upload a Custom Playlist Cover Image
