@@ -2,7 +2,10 @@ package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.AlbumObject
 import com.clipfinder.spotify.api.models.AlbumsObject
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.TracksPagingObject
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,7 +26,7 @@ interface AlbumsApi {
      * @return [Call]<[AlbumObject]>
      */
     @GET("albums/{id}")
-    fun endpointGetAnAlbum(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Call<AlbumObject>
+    fun endpointGetAnAlbum(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumObject, ErrorResponse>>
 
     /**
      * Get an Album&#39;s Tracks
@@ -40,7 +43,7 @@ interface AlbumsApi {
      * @return [Call]<[TracksPagingObject]>
      */
     @GET("albums/{id}/tracks")
-    fun endpointGetAnAlbumsTracks(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<TracksPagingObject>
+    fun endpointGetAnAlbumsTracks(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Albums
@@ -55,6 +58,6 @@ interface AlbumsApi {
      * @return [Call]<[AlbumsObject]>
      */
     @GET("albums")
-    fun endpointGetMultipleAlbums(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Call<AlbumsObject>
+    fun endpointGetMultipleAlbums(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumsObject, ErrorResponse>>
 
 }

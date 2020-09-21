@@ -1,8 +1,11 @@
 package com.clipfinder.spotify.api.apis
 
-import com.clipfinder.spotify.api.models.SimplifiedEpisodesPagingObject
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.ShowObject
 import com.clipfinder.spotify.api.models.ShowsObject
+import com.clipfinder.spotify.api.models.SimplifiedEpisodesPagingObject
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,7 +26,7 @@ interface ShowsApi {
      * @return [Call]<[ShowObject]>
      */
     @GET("shows/{id}")
-    fun endpointGetAShow(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Call<ShowObject>
+    fun endpointGetAShow(@Header("Authorization") authorizatio: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowObject, ErrorResponse>>
 
     /**
      * Get a Show&#39;s Episodes
@@ -40,7 +43,7 @@ interface ShowsApi {
      * @return [Call]<[SimplifiedEpisodesPagingObject]>
      */
     @GET("shows/{id}/episodes")
-    fun endpointGetAShowsEpisodes(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<SimplifiedEpisodesPagingObject>
+    fun endpointGetAShowsEpisodes(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedEpisodesPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Shows
@@ -55,6 +58,6 @@ interface ShowsApi {
      * @return [Call]<[ShowsObject]>
      */
     @GET("shows")
-    fun endpointGetMultipleShows(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Call<ShowsObject>
+    fun endpointGetMultipleShows(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
 
 }

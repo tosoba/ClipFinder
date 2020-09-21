@@ -1,9 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
-import com.clipfinder.spotify.api.models.IdsBody
-import com.clipfinder.spotify.api.models.AlbumsPagingObject
-import com.clipfinder.spotify.api.models.ShowsPagingObject
-import com.clipfinder.spotify.api.models.SavedTracksPagingObject
+import com.clipfinder.spotify.api.models.*
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Completable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -20,7 +20,7 @@ interface LibraryApi {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("me/albums/contains")
-    fun endpointCheckUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("ids") ids: String): Call<List<Boolean>>
+    fun endpointCheckUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Check User&#39;s Saved Shows
@@ -34,7 +34,7 @@ interface LibraryApi {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("me/shows/contains")
-    fun endpointCheckUsersSavedShows(@Header("Authorization") authorization: String, @Query("ids") ids: String): Call<List<Boolean>>
+    fun endpointCheckUsersSavedShows(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Check User&#39;s Saved Tracks
@@ -48,7 +48,7 @@ interface LibraryApi {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("me/tracks/contains")
-    fun endpointCheckUsersSavedTracks(@Header("Authorization") authorization: String, @Query("ids") ids: String): Call<List<Boolean>>
+    fun endpointCheckUsersSavedTracks(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Get User&#39;s Saved Albums
@@ -64,7 +64,7 @@ interface LibraryApi {
      * @return [Call]<[AlbumsPagingObject]>
      */
     @GET("me/albums")
-    fun endpointGetUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<AlbumsPagingObject>
+    fun endpointGetUsersSavedAlbums(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<AlbumsPagingObject, ErrorResponse>>
 
     /**
      * Get User&#39;s Saved Shows
@@ -79,7 +79,7 @@ interface LibraryApi {
      * @return [Call]<[ShowsPagingObject]>
      */
     @GET("me/shows")
-    fun endpointGetUsersSavedShows(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null): Call<ShowsPagingObject>
+    fun endpointGetUsersSavedShows(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<ShowsPagingObject, ErrorResponse>>
 
     /**
      * Get User&#39;s Saved Tracks
@@ -95,7 +95,7 @@ interface LibraryApi {
      * @return [Call]<[SavedTracksPagingObject]>
      */
     @GET("me/tracks")
-    fun endpointGetUsersSavedTracks(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Call<SavedTracksPagingObject>
+    fun endpointGetUsersSavedTracks(@Header("Authorization") authorization: String, @Query("limit") limit: String? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SavedTracksPagingObject, ErrorResponse>>
 
     /**
      * Remove Albums for Current User
@@ -111,7 +111,7 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @DELETE("me/albums")
-    fun endpointRemoveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
+    fun endpointRemoveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Completable
 
     /**
      * Remove User&#39;s Saved Tracks
@@ -126,7 +126,7 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @DELETE("me/shows")
-    fun endpointRemoveShowsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Call<Unit>
+    fun endpointRemoveShowsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Completable
 
     /**
      * Remove User&#39;s Saved Tracks
@@ -141,7 +141,7 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @DELETE("me/tracks")
-    fun endpointRemoveTracksUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String): Call<Unit>
+    fun endpointRemoveTracksUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String): Completable
 
     /**
      * Save Albums for Current User
@@ -157,7 +157,7 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/albums")
-    fun endpointSaveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
+    fun endpointSaveAlbumsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Completable
 
     /**
      * Save Shows for Current User
@@ -171,7 +171,7 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/shows")
-    fun endpointSaveShowsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String): Call<Unit>
+    fun endpointSaveShowsUser(@Header("Authorization") authorization: String, @Query("ids") ids: String): Completable
 
     /**
      * Save Tracks for User
@@ -186,6 +186,6 @@ interface LibraryApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/tracks")
-    fun endpointSaveTracksUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String): Call<Unit>
+    fun endpointSaveTracksUser(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String): Completable
 
 }

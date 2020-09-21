@@ -1,8 +1,12 @@
 package com.clipfinder.spotify.api.apis
 
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.FollowingArtistsObject
 import com.clipfinder.spotify.api.models.IdsBody
 import com.clipfinder.spotify.api.models.PublicBody
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Completable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -20,7 +24,7 @@ interface FollowApi {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("me/following/contains")
-    fun endpointCheckCurrentUserFollows(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String): Call<List<Boolean>>
+    fun endpointCheckCurrentUserFollows(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Check if Users Follow a Playlist
@@ -35,7 +39,7 @@ interface FollowApi {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("playlists/{playlist_id}/followers/contains")
-    fun endpointCheckIfUserFollowsPlaylist(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("ids") ids: String): Call<List<Boolean>>
+    fun endpointCheckIfUserFollowsPlaylist(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Follow Artists or Users
@@ -52,7 +56,7 @@ interface FollowApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/following")
-    fun endpointFollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Body idsBody: IdsBody? = null, @Header("Content-Type") contentMinusType: String): Call<Unit>
+    fun endpointFollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Body idsBody: IdsBody? = null, @Header("Content-Type") contentMinusType: String): Completable
 
     /**
      * Follow a Playlist
@@ -68,7 +72,7 @@ interface FollowApi {
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/followers")
-    fun endpointFollowPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body publicBody: PublicBody? = null): Call<Unit>
+    fun endpointFollowPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body publicBody: PublicBody? = null): Completable
 
     /**
      * Get User&#39;s Followed Artists
@@ -84,7 +88,7 @@ interface FollowApi {
      * @return [Call]<[FollowingArtistsObject]>
      */
     @GET("me/following")
-    fun endpointGetFollowed(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("limit") limit: String? = null, @Query("after") after: String? = null): Call<FollowingArtistsObject>
+    fun endpointGetFollowed(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("limit") limit: String? = null, @Query("after") after: String? = null): Single<NetworkResponse<FollowingArtistsObject, ErrorResponse>>
 
     /**
      * Unfollow Artists or Users
@@ -101,7 +105,7 @@ interface FollowApi {
      * @return [Call]<[Unit]>
      */
     @DELETE("me/following")
-    fun endpointUnfollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Call<Unit>
+    fun endpointUnfollowArtistsUsers(@Header("Authorization") authorization: String, @Query("type") type: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Completable
 
     /**
      * Unfollow Playlist
@@ -115,6 +119,6 @@ interface FollowApi {
      * @return [Call]<[Unit]>
      */
     @DELETE("playlists/{playlist_id}/followers")
-    fun endpointUnfollowPlaylist(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String): Call<Unit>
+    fun endpointUnfollowPlaylist(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String): Completable
 
 }

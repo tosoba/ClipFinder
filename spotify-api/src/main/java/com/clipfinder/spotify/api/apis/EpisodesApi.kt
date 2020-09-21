@@ -2,6 +2,9 @@ package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.EpisodeObject
 import com.clipfinder.spotify.api.models.EpisodesObject
+import com.clipfinder.spotify.api.models.ErrorResponse
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -22,7 +25,7 @@ interface EpisodesApi {
      * @return [Call]<[EpisodeObject]>
      */
     @GET("episodes/{id}")
-    fun endpointGetAnEpisode(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Call<EpisodeObject>
+    fun endpointGetAnEpisode(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodeObject, ErrorResponse>>
 
     /**
      * Get Multiple Episodes
@@ -37,6 +40,6 @@ interface EpisodesApi {
      * @return [Call]<[EpisodesObject]>
      */
     @GET("episodes")
-    fun endpointGetMultipleEpisodes(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Call<EpisodesObject>
+    fun endpointGetMultipleEpisodes(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodesObject, ErrorResponse>>
 
 }

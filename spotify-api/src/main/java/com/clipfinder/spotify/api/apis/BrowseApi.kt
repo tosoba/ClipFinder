@@ -1,6 +1,8 @@
 package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.*
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,7 +25,7 @@ interface BrowseApi {
      * @return [Call]<[SimplifiedPlaylists]>
      */
     @GET("browse/categories/{category_id}/playlists")
-    fun endpointGetACategoriesPlaylists(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<SimplifiedPlaylists>
+    fun endpointGetACategoriesPlaylists(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedPlaylists, ErrorResponse>>
 
     /**
      * Get a Category
@@ -39,7 +41,7 @@ interface BrowseApi {
      * @return [Call]<[CategoryObject]>
      */
     @GET("browse/categories/{category_id}")
-    fun endpointGetACategory(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null): Call<CategoryObject>
+    fun endpointGetACategory(@Header("Authorization") authorization: String, @Path("category_id") categoryId: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null): Single<NetworkResponse<CategoryObject, ErrorResponse>>
 
     /**
      * Get All Categories
@@ -56,7 +58,7 @@ interface BrowseApi {
      * @return [Call]<[CategoriesObject]>
      */
     @GET("browse/categories")
-    fun endpointGetCategories(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<CategoriesObject>
+    fun endpointGetCategories(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<CategoriesObject, ErrorResponse>>
 
     /**
      * Get All Featured Playlists
@@ -74,7 +76,7 @@ interface BrowseApi {
      * @return [Call]<[FeaturedPlaylistObject]>
      */
     @GET("browse/featured-playlists")
-    fun endpointGetFeaturedPlaylists(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null, @Query("timestamp") timestamp: Int? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<FeaturedPlaylistObject>
+    fun endpointGetFeaturedPlaylists(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("locale") locale: String? = null, @Query("timestamp") timestamp: Int? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<FeaturedPlaylistObject, ErrorResponse>>
 
     /**
      * Get All New Releases
@@ -90,7 +92,7 @@ interface BrowseApi {
      * @return [Call]<[NewReleases]>
      */
     @GET("browse/new-releases")
-    fun endpointGetNewReleases(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Call<NewReleases>
+    fun endpointGetNewReleases(@Header("Authorization") authorization: String, @Query("country") country: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<NewReleases, ErrorResponse>>
 
     /**
      * Get Recommendation Genres
@@ -103,7 +105,7 @@ interface BrowseApi {
      * @return [Call]<[GenreSeedsObject]>
      */
     @GET("recommendations/available-genre-seeds")
-    fun endpointGetRecommendationGenres(@Header("Authorization") authorization: String): Call<GenreSeedsObject>
+    fun endpointGetRecommendationGenres(@Header("Authorization") authorization: String): Single<NetworkResponse<GenreSeedsObject, ErrorResponse>>
 
     /**
      * Get Recommendations
@@ -124,6 +126,6 @@ interface BrowseApi {
      * @return [Call]<[RecommendationsResponseObject]>
      */
     @GET("recommendations")
-    fun endpointGetRecommendations(@Header("Authorization") authorization: String, @Query("seed_artists") seedArtists: String, @Query("seed_genres") seedGenres: String, @Query("seed_tracks") seedTracks: String, @Query("limit") limit: Int? = null, @Query("market") market: String? = null, @Query("min_*") minStar: java.math.BigDecimal? = null, @Query("max_*") maxStar: java.math.BigDecimal? = null, @Query("target_*") targetStar: java.math.BigDecimal? = null): Call<RecommendationsResponseObject>
+    fun endpointGetRecommendations(@Header("Authorization") authorization: String, @Query("seed_artists") seedArtists: String, @Query("seed_genres") seedGenres: String, @Query("seed_tracks") seedTracks: String, @Query("limit") limit: Int? = null, @Query("market") market: String? = null, @Query("min_*") minStar: java.math.BigDecimal? = null, @Query("max_*") maxStar: java.math.BigDecimal? = null, @Query("target_*") targetStar: java.math.BigDecimal? = null): Single<NetworkResponse<RecommendationsResponseObject, ErrorResponse>>
 
 }

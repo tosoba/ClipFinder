@@ -1,6 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.SearchResponseObject
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -24,6 +27,6 @@ interface SearchApi {
      * @return [Call]<[SearchResponseObject]>
      */
     @GET("search")
-    fun endpointSearch(@Header("Authorization") authorization: String, @Query("q") q: String, @Query("type") type: String, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("include_external") includeExternal: String? = null): Call<SearchResponseObject>
+    fun endpointSearch(@Header("Authorization") authorization: String, @Query("q") q: String, @Query("type") type: String, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("include_external") includeExternal: String? = null): Single<NetworkResponse<SearchResponseObject, ErrorResponse>>
 
 }

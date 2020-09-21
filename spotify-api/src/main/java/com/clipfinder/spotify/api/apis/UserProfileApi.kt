@@ -1,7 +1,10 @@
 package com.clipfinder.spotify.api.apis
 
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.PrivateUserObject
 import com.clipfinder.spotify.api.models.PublicUserObject
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -19,7 +22,7 @@ interface UserProfileApi {
      * @return [Call]<[PrivateUserObject]>
      */
     @GET("me")
-    fun endpointGetCurrentUsersProfile(@Header("Authorization") authorization: String): Call<PrivateUserObject>
+    fun endpointGetCurrentUsersProfile(@Header("Authorization") authorization: String): Single<NetworkResponse<PrivateUserObject, ErrorResponse>>
 
     /**
      * Get a User&#39;s Profile
@@ -33,6 +36,6 @@ interface UserProfileApi {
      * @return [Call]<[PublicUserObject]>
      */
     @GET("users/{user_id}")
-    fun endpointGetUsersProfile(@Header("Authorization") authorization: String, @Path("user_id") userId: String): Call<PublicUserObject>
+    fun endpointGetUsersProfile(@Header("Authorization") authorization: String, @Path("user_id") userId: String): Single<NetworkResponse<PublicUserObject, ErrorResponse>>
 
 }

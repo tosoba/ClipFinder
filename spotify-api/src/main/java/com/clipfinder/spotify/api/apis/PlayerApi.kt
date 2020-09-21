@@ -1,6 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.*
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Completable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -18,7 +21,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @POST("me/player/queue")
-    fun endpointAddToQueue(@Header("Authorization") authorization: String, @Query("uri") uri: String, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointAddToQueue(@Header("Authorization") authorization: String, @Query("uri") uri: String, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Get a User&#39;s Available Devices
@@ -31,7 +34,7 @@ interface PlayerApi {
      * @return [Call]<[DevicesObject]>
      */
     @GET("me/player/devices")
-    fun endpointGetAUsersAvailableDevices(@Header("Authorization") authorization: String): Call<DevicesObject>
+    fun endpointGetAUsersAvailableDevices(@Header("Authorization") authorization: String): Single<NetworkResponse<DevicesObject, ErrorResponse>>
 
     /**
      * Get Information About The User&#39;s Current Playback
@@ -47,7 +50,7 @@ interface PlayerApi {
      * @return [Call]<[CurrentPlaybackObject]>
      */
     @GET("me/player")
-    fun endpointGetInformationAboutTheUsersCurrentPlayback(@Header("Authorization") authorization: String, @Query("market") market: String? = null, @Query("additional_types") additionalTypes: String? = null): Call<CurrentPlaybackObject>
+    fun endpointGetInformationAboutTheUsersCurrentPlayback(@Header("Authorization") authorization: String, @Query("market") market: String? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<CurrentPlaybackObject, ErrorResponse>>
 
     /**
      * Get Current User&#39;s Recently Played Tracks
@@ -64,7 +67,7 @@ interface PlayerApi {
      * @return [Call]<[PlayHistoryPagingObject]>
      */
     @GET("me/player/recently-played")
-    fun endpointGetRecentlyPlayed(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("after") after: Int? = null, @Query("before") before: Int? = null): Call<PlayHistoryPagingObject>
+    fun endpointGetRecentlyPlayed(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("after") after: Int? = null, @Query("before") before: Int? = null): Single<NetworkResponse<PlayHistoryPagingObject, ErrorResponse>>
 
     /**
      * Get the User&#39;s Currently Playing Track
@@ -80,7 +83,7 @@ interface PlayerApi {
      * @return [Call]<[CurrentlyPlayingObject]>
      */
     @GET("me/player/currently-playing")
-    fun endpointGetTheUsersCurrentlyPlayingTrack(@Header("Authorization") authorization: String, @Query("market") market: String, @Query("additional_types") additionalTypes: String? = null): Call<CurrentlyPlayingObject>
+    fun endpointGetTheUsersCurrentlyPlayingTrack(@Header("Authorization") authorization: String, @Query("market") market: String, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<CurrentlyPlayingObject, ErrorResponse>>
 
     /**
      * Pause a User&#39;s Playback
@@ -94,7 +97,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/pause")
-    fun endpointPauseAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointPauseAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Seek To Position In Currently Playing Track
@@ -109,7 +112,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/seek")
-    fun endpointSeekToPositionInCurrentlyPlayingTrack(@Header("Authorization") authorization: String, @Query("position_ms") positionMs: Int, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointSeekToPositionInCurrentlyPlayingTrack(@Header("Authorization") authorization: String, @Query("position_ms") positionMs: Int, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Set Repeat Mode On User’s Playback
@@ -124,7 +127,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/repeat")
-    fun endpointSetRepeatModeOnUsersPlayback(@Header("Authorization") authorization: String, @Query("state") state: String, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointSetRepeatModeOnUsersPlayback(@Header("Authorization") authorization: String, @Query("state") state: String, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Set Volume For User&#39;s Playback
@@ -139,7 +142,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/volume")
-    fun endpointSetVolumeForUsersPlayback(@Header("Authorization") authorization: String, @Query("volume_percent") volumePercent: Int, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointSetVolumeForUsersPlayback(@Header("Authorization") authorization: String, @Query("volume_percent") volumePercent: Int, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Skip User’s Playback To Next Track
@@ -153,7 +156,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @POST("me/player/next")
-    fun endpointSkipUsersPlaybackToNextTrack(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointSkipUsersPlaybackToNextTrack(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Skip User’s Playback To Previous Track
@@ -167,7 +170,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @POST("me/player/previous")
-    fun endpointSkipUsersPlaybackToPreviousTrack(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointSkipUsersPlaybackToPreviousTrack(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Start/Resume a User&#39;s Playback
@@ -182,7 +185,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/play")
-    fun endpointStartAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null, @Body startResumePlaybackBody: StartResumePlaybackBody? = null): Call<Unit>
+    fun endpointStartAUsersPlayback(@Header("Authorization") authorization: String, @Query("device_id") deviceId: String? = null, @Body startResumePlaybackBody: StartResumePlaybackBody? = null): Completable
 
     /**
      * Toggle Shuffle For User’s Playback
@@ -197,7 +200,7 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player/shuffle")
-    fun endpointToggleShuffleForUsersPlayback(@Header("Authorization") authorization: String, @Query("state") state: Boolean, @Query("device_id") deviceId: String? = null): Call<Unit>
+    fun endpointToggleShuffleForUsersPlayback(@Header("Authorization") authorization: String, @Query("state") state: Boolean, @Query("device_id") deviceId: String? = null): Completable
 
     /**
      * Transfer a User&#39;s Playback
@@ -211,6 +214,6 @@ interface PlayerApi {
      * @return [Call]<[Unit]>
      */
     @PUT("me/player")
-    fun endpointTransferAUsersPlayback(@Header("Authorization") authorization: String, @Body transferPlaybackBody: TransferPlaybackBody): Call<Unit>
+    fun endpointTransferAUsersPlayback(@Header("Authorization") authorization: String, @Body transferPlaybackBody: TransferPlaybackBody): Completable
 
 }

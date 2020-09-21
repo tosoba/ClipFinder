@@ -1,6 +1,9 @@
 package com.clipfinder.spotify.api.apis
 
+import com.clipfinder.spotify.api.models.ErrorResponse
 import com.clipfinder.spotify.api.models.TracksPagingObject
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -23,6 +26,6 @@ interface PersonalizationApi {
      * @return [Call]<[TracksPagingObject]>
      */
     @GET("me/top/{type}")
-    fun endpointGetUsersTopArtistsAndTracks(@Header("Authorization") authorization: String, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Call<TracksPagingObject>
+    fun endpointGetUsersTopArtistsAndTracks(@Header("Authorization") authorization: String, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
 
 }

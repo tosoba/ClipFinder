@@ -1,6 +1,8 @@
 package com.clipfinder.spotify.api.apis
 
 import com.clipfinder.spotify.api.models.*
+import com.example.core.retrofit.NetworkResponse
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -20,7 +22,7 @@ interface TracksApi {
      * @return [Call]<[AudioAnalysisObject]>
      */
     @GET("audio-analysis/{id}")
-    fun endpointGetAudioAnalysis(@Header("Authorization") authorization: String, @Path("id") id: String): Call<AudioAnalysisObject>
+    fun endpointGetAudioAnalysis(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<AudioAnalysisObject, ErrorResponse>>
 
     /**
      * Get Audio Features for a Track
@@ -34,7 +36,7 @@ interface TracksApi {
      * @return [Call]<[AudioFeaturesObject]>
      */
     @GET("audio-features/{id}")
-    fun endpointGetAudioFeatures(@Header("Authorization") authorization: String, @Path("id") id: String): Call<AudioFeaturesObject>
+    fun endpointGetAudioFeatures(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<AudioFeaturesObject, ErrorResponse>>
 
     /**
      * Get Audio Features for Several Tracks
@@ -48,7 +50,7 @@ interface TracksApi {
      * @return [Call]<[AudioFeaturesArrayObject]>
      */
     @GET("audio-features")
-    fun endpointGetSeveralAudioFeatures(@Header("Authorization") authorization: String, @Query("ids") ids: String): Call<AudioFeaturesArrayObject>
+    fun endpointGetSeveralAudioFeatures(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<AudioFeaturesArrayObject, ErrorResponse>>
 
     /**
      * Get Several Tracks
@@ -63,7 +65,7 @@ interface TracksApi {
      * @return [Call]<[TracksObject]>
      */
     @GET("tracks")
-    fun endpointGetSeveralTracks(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Call<TracksObject>
+    fun endpointGetSeveralTracks(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<TracksObject, ErrorResponse>>
 
     /**
      * Get a Track
@@ -78,6 +80,6 @@ interface TracksApi {
      * @return [Call]<[TrackObject]>
      */
     @GET("tracks/{id}")
-    fun endpointGetTrack(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Call<TrackObject>
+    fun endpointGetTrack(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<TrackObject, ErrorResponse>>
 
 }
