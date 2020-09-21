@@ -43,7 +43,7 @@ interface ShowsApi {
      * @return [Call]<[SimplifiedEpisodesPagingObject]>
      */
     @GET("shows/{id}/episodes")
-    fun endpointGetAShowsEpisodes(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedEpisodesPagingObject, ErrorResponse>>
+    fun endpointGetAShowsEpisodes(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedEpisodesPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Shows
@@ -58,6 +58,6 @@ interface ShowsApi {
      * @return [Call]<[ShowsObject]>
      */
     @GET("shows")
-    fun endpointGetMultipleShows(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
+    fun endpointGetMultipleShows(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
 
 }

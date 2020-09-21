@@ -22,7 +22,7 @@ interface UserProfileApi {
      * @return [Call]<[PrivateUserObject]>
      */
     @GET("me")
-    fun endpointGetCurrentUsersProfile(@Header("Authorization") authorization: String): Single<NetworkResponse<PrivateUserObject, ErrorResponse>>
+    fun endpointGetCurrentUsersProfile(@Header("Authorization") authorization: String? = null): Single<NetworkResponse<PrivateUserObject, ErrorResponse>>
 
     /**
      * Get a User&#39;s Profile
@@ -36,6 +36,6 @@ interface UserProfileApi {
      * @return [Call]<[PublicUserObject]>
      */
     @GET("users/{user_id}")
-    fun endpointGetUsersProfile(@Header("Authorization") authorization: String, @Path("user_id") userId: String): Single<NetworkResponse<PublicUserObject, ErrorResponse>>
+    fun endpointGetUsersProfile(@Header("Authorization") authorization: String? = null, @Path("user_id") userId: String): Single<NetworkResponse<PublicUserObject, ErrorResponse>>
 
 }

@@ -22,7 +22,7 @@ interface ArtistsApi {
      * @return [Call]<[ArtistObject]>
      */
     @GET("artists/{id}")
-    fun endpointGetAnArtist(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<ArtistObject, ErrorResponse>>
+    fun endpointGetAnArtist(@Header("Authorization") authorization: String? = null, @Path("id") id: String): Single<NetworkResponse<ArtistObject, ErrorResponse>>
 
     /**
      * Get an Artist&#39;s Albums
@@ -40,7 +40,7 @@ interface ArtistsApi {
      * @return [Call]<[SimplifiedAlbumsPagingObject]>
      */
     @GET("artists/{id}/albums")
-    fun endpointGetAnArtistsAlbums(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("include_groups") includeGroups: String? = null, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedAlbumsPagingObject, ErrorResponse>>
+    fun endpointGetAnArtistsAlbums(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("include_groups") includeGroups: String? = null, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedAlbumsPagingObject, ErrorResponse>>
 
     /**
      * Get an Artist&#39;s Related Artists
@@ -54,7 +54,7 @@ interface ArtistsApi {
      * @return [Call]<[ArtistsObject]>
      */
     @GET("artists/{id}/related-artists")
-    fun endpointGetAnArtistsRelatedArtists(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<ArtistsObject, ErrorResponse>>
+    fun endpointGetAnArtistsRelatedArtists(@Header("Authorization") authorization: String? = null, @Path("id") id: String): Single<NetworkResponse<ArtistsObject, ErrorResponse>>
 
     /**
      * Get an Artist&#39;s Top Tracks
@@ -69,7 +69,7 @@ interface ArtistsApi {
      * @return [Call]<[TracksObject]>
      */
     @GET("artists/{id}/top-tracks")
-    fun endpointGetAnArtistsTopTracks(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String): Single<NetworkResponse<TracksObject, ErrorResponse>>
+    fun endpointGetAnArtistsTopTracks(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String): Single<NetworkResponse<TracksObject, ErrorResponse>>
 
     /**
      * Get Multiple Artists
@@ -83,6 +83,6 @@ interface ArtistsApi {
      * @return [Call]<[ArtistsObject]>
      */
     @GET("artists")
-    fun endpointGetMultipleArtists(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<ArtistsObject, ErrorResponse>>
+    fun endpointGetMultipleArtists(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String): Single<NetworkResponse<ArtistsObject, ErrorResponse>>
 
 }

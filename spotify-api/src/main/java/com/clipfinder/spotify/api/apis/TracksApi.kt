@@ -22,7 +22,7 @@ interface TracksApi {
      * @return [Call]<[AudioAnalysisObject]>
      */
     @GET("audio-analysis/{id}")
-    fun endpointGetAudioAnalysis(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<AudioAnalysisObject, ErrorResponse>>
+    fun endpointGetAudioAnalysis(@Header("Authorization") authorization: String? = null, @Path("id") id: String): Single<NetworkResponse<AudioAnalysisObject, ErrorResponse>>
 
     /**
      * Get Audio Features for a Track
@@ -36,7 +36,7 @@ interface TracksApi {
      * @return [Call]<[AudioFeaturesObject]>
      */
     @GET("audio-features/{id}")
-    fun endpointGetAudioFeatures(@Header("Authorization") authorization: String, @Path("id") id: String): Single<NetworkResponse<AudioFeaturesObject, ErrorResponse>>
+    fun endpointGetAudioFeatures(@Header("Authorization") authorization: String? = null, @Path("id") id: String): Single<NetworkResponse<AudioFeaturesObject, ErrorResponse>>
 
     /**
      * Get Audio Features for Several Tracks
@@ -50,7 +50,7 @@ interface TracksApi {
      * @return [Call]<[AudioFeaturesArrayObject]>
      */
     @GET("audio-features")
-    fun endpointGetSeveralAudioFeatures(@Header("Authorization") authorization: String, @Query("ids") ids: String): Single<NetworkResponse<AudioFeaturesArrayObject, ErrorResponse>>
+    fun endpointGetSeveralAudioFeatures(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String): Single<NetworkResponse<AudioFeaturesArrayObject, ErrorResponse>>
 
     /**
      * Get Several Tracks
@@ -65,7 +65,7 @@ interface TracksApi {
      * @return [Call]<[TracksObject]>
      */
     @GET("tracks")
-    fun endpointGetSeveralTracks(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<TracksObject, ErrorResponse>>
+    fun endpointGetSeveralTracks(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<TracksObject, ErrorResponse>>
 
     /**
      * Get a Track
@@ -80,6 +80,6 @@ interface TracksApi {
      * @return [Call]<[TrackObject]>
      */
     @GET("tracks/{id}")
-    fun endpointGetTrack(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<TrackObject, ErrorResponse>>
+    fun endpointGetTrack(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<TrackObject, ErrorResponse>>
 
 }

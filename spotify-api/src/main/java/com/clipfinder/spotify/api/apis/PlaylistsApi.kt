@@ -24,7 +24,7 @@ interface PlaylistsApi {
      * @return [Call]<[SnapshotIdObject]>
      */
     @POST("playlists/{playlist_id}/tracks")
-    fun endpointAddTracksToPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Query("position") position: Int? = null, @Body urisPositionBody: UrisPositionBody? = null): Single<NetworkResponse<SnapshotIdObject, ErrorResponse>>
+    fun endpointAddTracksToPlaylist(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Query("position") position: Int? = null, @Body urisPositionBody: UrisPositionBody? = null): Single<NetworkResponse<SnapshotIdObject, ErrorResponse>>
 
     /**
      * Change a Playlist&#39;s Details
@@ -40,7 +40,7 @@ interface PlaylistsApi {
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}")
-    fun endpointChangePlaylistDetails(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body playlistDetailsBody: PlaylistDetailsBody? = null): Completable
+    fun endpointChangePlaylistDetails(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body playlistDetailsBody: PlaylistDetailsBody? = null): Completable
 
     /**
      * Create a Playlist
@@ -57,7 +57,7 @@ interface PlaylistsApi {
      * @return [Call]<[PlaylistObject]>
      */
     @POST("users/{user_id}/playlists")
-    fun endpointCreatePlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("user_id") userId: String, @Body playlistDetailsBody: PlaylistDetailsBody): Single<NetworkResponse<PlaylistObject, ErrorResponse>>
+    fun endpointCreatePlaylist(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("user_id") userId: String, @Body playlistDetailsBody: PlaylistDetailsBody): Single<NetworkResponse<PlaylistObject, ErrorResponse>>
 
     /**
      * Get a List of Current User&#39;s Playlists
@@ -72,7 +72,7 @@ interface PlaylistsApi {
      * @return [Call]<[SimplifiedPlaylistsPagingObject]>
      */
     @GET("me/playlists")
-    fun endpointGetAListOfCurrentUsersPlaylists(@Header("Authorization") authorization: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedPlaylistsPagingObject, ErrorResponse>>
+    fun endpointGetAListOfCurrentUsersPlaylists(@Header("Authorization") authorization: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedPlaylistsPagingObject, ErrorResponse>>
 
     /**
      * Get a List of a User&#39;s Playlists
@@ -88,7 +88,7 @@ interface PlaylistsApi {
      * @return [Call]<[SimplifiedPlaylistsPagingObject]>
      */
     @GET("users/{user_id}/playlists")
-    fun endpointGetListUsersPlaylists(@Header("Authorization") authorization: String, @Path("user_id") userId: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedPlaylistsPagingObject, ErrorResponse>>
+    fun endpointGetListUsersPlaylists(@Header("Authorization") authorization: String? = null, @Path("user_id") userId: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null): Single<NetworkResponse<SimplifiedPlaylistsPagingObject, ErrorResponse>>
 
     /**
      * Get a Playlist
@@ -105,7 +105,7 @@ interface PlaylistsApi {
      * @return [Call]<[PlaylistObject]>
      */
     @GET("playlists/{playlist_id}")
-    fun endpointGetPlaylist(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("fields") fields: String? = null, @Query("market") market: String? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<PlaylistObject, ErrorResponse>>
+    fun endpointGetPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("fields") fields: String? = null, @Query("market") market: String? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<PlaylistObject, ErrorResponse>>
 
     /**
      * Get a Playlist Cover Image
@@ -119,7 +119,7 @@ interface PlaylistsApi {
      * @return [Call]<[List<ImageObject>]>
      */
     @GET("playlists/{playlist_id}/images")
-    fun endpointGetPlaylistCover(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String): Single<NetworkResponse<List<ImageObject>, ErrorResponse>>
+    fun endpointGetPlaylistCover(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String): Single<NetworkResponse<List<ImageObject>, ErrorResponse>>
 
     /**
      * Get a Playlist&#39;s Items
@@ -138,7 +138,7 @@ interface PlaylistsApi {
      * @return [Call]<[TrackOrEpisodePagingObject]>
      */
     @GET("playlists/{playlist_id}/tracks")
-    fun endpointGetPlaylistsTracks(@Header("Authorization") authorization: String, @Path("playlist_id") playlistId: String, @Query("market") market: String, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<TrackOrEpisodePagingObject, ErrorResponse>>
+    fun endpointGetPlaylistsTracks(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("market") market: String, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<TrackOrEpisodePagingObject, ErrorResponse>>
 
     /**
      * Remove Items from a Playlist
@@ -154,7 +154,7 @@ interface PlaylistsApi {
      * @return [Call]<[SnapshotIdObject]>
      */
     @DELETE("playlists/{playlist_id}/tracks")
-    fun endpointRemoveTracksPlaylist(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body removeTracksBody: RemoveTracksBody): Single<NetworkResponse<SnapshotIdObject, ErrorResponse>>
+    fun endpointRemoveTracksPlaylist(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body removeTracksBody: RemoveTracksBody): Single<NetworkResponse<SnapshotIdObject, ErrorResponse>>
 
     /**
      * Replace a Playlist&#39;s Items
@@ -171,7 +171,7 @@ interface PlaylistsApi {
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/tracks")
-    fun endpointReplacePlaylistsTracks(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Body urisBody: UrisBody? = null): Completable
+    fun endpointReplacePlaylistsTracks(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Query("uris") uris: String? = null, @Body urisBody: UrisBody? = null): Completable
 
     /**
      * Upload a Custom Playlist Cover Image
@@ -186,5 +186,5 @@ interface PlaylistsApi {
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/images")
-    fun endpointUploadCustomPlaylistCover(@Header("Authorization") authorization: String, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String): Completable
+    fun endpointUploadCustomPlaylistCover(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String): Completable
 }

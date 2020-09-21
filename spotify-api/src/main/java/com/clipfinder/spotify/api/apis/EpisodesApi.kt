@@ -25,7 +25,7 @@ interface EpisodesApi {
      * @return [Call]<[EpisodeObject]>
      */
     @GET("episodes/{id}")
-    fun endpointGetAnEpisode(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodeObject, ErrorResponse>>
+    fun endpointGetAnEpisode(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodeObject, ErrorResponse>>
 
     /**
      * Get Multiple Episodes
@@ -40,6 +40,6 @@ interface EpisodesApi {
      * @return [Call]<[EpisodesObject]>
      */
     @GET("episodes")
-    fun endpointGetMultipleEpisodes(@Header("Authorization") authorization: String, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodesObject, ErrorResponse>>
+    fun endpointGetMultipleEpisodes(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodesObject, ErrorResponse>>
 
 }
