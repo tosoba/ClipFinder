@@ -81,6 +81,8 @@ dependencies {
 
     implementation project(':core')
     implementation project(':core-soundcloud')
+    implementation project(':core-spotify')
+    implementation project(':core-youtube')
     implementation project(':core-android')
     implementation project(':core-android-soundcloud')
     implementation project(':core-android-spotify')
