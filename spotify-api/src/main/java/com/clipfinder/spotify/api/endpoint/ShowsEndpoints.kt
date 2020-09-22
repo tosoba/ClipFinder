@@ -26,7 +26,7 @@ interface ShowsEndpoints {
      * @return [Call]<[ShowObject]>
      */
     @GET("shows/{id}")
-    fun endpointGetAShow(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowObject, ErrorResponse>>
+    fun getAShow(@Header("Authorization") authorization: String, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowObject, ErrorResponse>>
 
     /**
      * Get a Show&#39;s Episodes
@@ -43,7 +43,7 @@ interface ShowsEndpoints {
      * @return [Call]<[SimplifiedEpisodesPagingObject]>
      */
     @GET("shows/{id}/episodes")
-    fun endpointGetAShowsEpisodes(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedEpisodesPagingObject, ErrorResponse>>
+    fun getAShowsEpisodes(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedEpisodesPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Shows
@@ -58,6 +58,6 @@ interface ShowsEndpoints {
      * @return [Call]<[ShowsObject]>
      */
     @GET("shows")
-    fun endpointGetMultipleShows(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
+    fun getMultipleShows(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
 
 }

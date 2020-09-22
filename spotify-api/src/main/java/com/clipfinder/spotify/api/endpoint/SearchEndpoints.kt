@@ -27,6 +27,6 @@ interface SearchEndpoints {
      * @return [Call]<[SearchResponseObject]>
      */
     @GET("search")
-    fun endpointSearch(@Header("Authorization") authorization: String? = null, @Query("q") q: String, @Query("type") type: String, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("include_external") includeExternal: String? = null): Single<NetworkResponse<SearchResponseObject, ErrorResponse>>
+    fun search(@Header("Authorization") authorization: String? = null, @Query("q") q: String, @Query("type") type: String, @Query("market") market: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("include_external") includeExternal: String? = null): Single<NetworkResponse<SearchResponseObject, ErrorResponse>>
 
 }

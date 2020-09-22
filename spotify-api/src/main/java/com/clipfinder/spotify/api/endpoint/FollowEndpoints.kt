@@ -24,7 +24,7 @@ interface FollowEndpoints {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("me/following/contains")
-    fun endpointCheckCurrentUserFollows(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
+    fun checkCurrentUserFollows(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Check if Users Follow a Playlist
@@ -39,7 +39,7 @@ interface FollowEndpoints {
      * @return [Call]<[List<Boolean>]>
      */
     @GET("playlists/{playlist_id}/followers/contains")
-    fun endpointCheckIfUserFollowsPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
+    fun checkIfUserFollowsPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("ids") ids: String): Single<NetworkResponse<List<Boolean>, ErrorResponse>>
 
     /**
      * Follow Artists or Users
@@ -56,7 +56,7 @@ interface FollowEndpoints {
      * @return [Call]<[Unit]>
      */
     @PUT("me/following")
-    fun endpointFollowArtistsUsers(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String? = null, @Body idsBody: IdsBody? = null, @Header("Content-Type") contentMinusType: String): Completable
+    fun followArtistsUsers(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String? = null, @Body idsBody: IdsBody? = null, @Header("Content-Type") contentMinusType: String): Completable
 
     /**
      * Follow a Playlist
@@ -72,7 +72,7 @@ interface FollowEndpoints {
      * @return [Call]<[Unit]>
      */
     @PUT("playlists/{playlist_id}/followers")
-    fun endpointFollowPlaylist(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body publicBody: PublicBody? = null): Completable
+    fun followPlaylist(@Header("Authorization") authorization: String? = null, @Header("Content-Type") contentMinusType: String, @Path("playlist_id") playlistId: String, @Body publicBody: PublicBody? = null): Completable
 
     /**
      * Get User&#39;s Followed Artists
@@ -88,7 +88,7 @@ interface FollowEndpoints {
      * @return [Call]<[FollowingArtistsObject]>
      */
     @GET("me/following")
-    fun endpointGetFollowed(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("limit") limit: String? = null, @Query("after") after: String? = null): Single<NetworkResponse<FollowingArtistsObject, ErrorResponse>>
+    fun getFollowed(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("limit") limit: String? = null, @Query("after") after: String? = null): Single<NetworkResponse<FollowingArtistsObject, ErrorResponse>>
 
     /**
      * Unfollow Artists or Users
@@ -105,7 +105,7 @@ interface FollowEndpoints {
      * @return [Call]<[Unit]>
      */
     @DELETE("me/following")
-    fun endpointUnfollowArtistsUsers(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Completable
+    fun unfollowArtistsUsers(@Header("Authorization") authorization: String? = null, @Query("type") type: String, @Query("ids") ids: String? = null, @Header("Content-Type") contentMinusType: String, @Body idsBody: IdsBody? = null): Completable
 
     /**
      * Unfollow Playlist
@@ -119,6 +119,6 @@ interface FollowEndpoints {
      * @return [Call]<[Unit]>
      */
     @DELETE("playlists/{playlist_id}/followers")
-    fun endpointUnfollowPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String): Completable
+    fun unfollowPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String): Completable
 
 }

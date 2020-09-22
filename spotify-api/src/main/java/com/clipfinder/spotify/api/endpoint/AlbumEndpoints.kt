@@ -26,7 +26,7 @@ interface AlbumEndpoints {
      * @return [Call]<[AlbumObject]>
      */
     @GET("albums/{id}")
-    fun endpointGetAnAlbum(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumObject, ErrorResponse>>
+    fun getAnAlbum(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumObject, ErrorResponse>>
 
     /**
      * Get an Album&#39;s Tracks
@@ -43,7 +43,7 @@ interface AlbumEndpoints {
      * @return [Call]<[TracksPagingObject]>
      */
     @GET("albums/{id}/tracks")
-    fun endpointGetAnAlbumsTracks(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
+    fun getAnAlbumsTracks(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Albums
@@ -58,6 +58,6 @@ interface AlbumEndpoints {
      * @return [Call]<[AlbumsObject]>
      */
     @GET("albums")
-    fun endpointGetMultipleAlbums(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumsObject, ErrorResponse>>
+    fun getMultipleAlbums(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumsObject, ErrorResponse>>
 
 }

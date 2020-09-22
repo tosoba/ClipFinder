@@ -26,6 +26,6 @@ interface PersonalizationEndpoints {
      * @return [Call]<[TracksPagingObject]>
      */
     @GET("me/top/{type}")
-    fun endpointGetUsersTopArtistsAndTracks(@Header("Authorization") authorization: String? = null, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
+    fun getUsersTopArtistsAndTracks(@Header("Authorization") authorization: String? = null, @Path("type") type: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("time_range") timeRange: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
 
 }
