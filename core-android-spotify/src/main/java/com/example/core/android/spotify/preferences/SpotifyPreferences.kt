@@ -3,14 +3,15 @@ package com.example.core.android.spotify.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.clipfinder.core.spotify.provider.AccessTokenProvider
+import com.clipfinder.core.spotify.token.AccessTokenHolder
+import com.clipfinder.core.spotify.token.RefreshTokenHolder
 import com.example.core.SpotifyDefaults
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
 
-class SpotifyPreferences(context: Context) : AccessTokenProvider {
+class SpotifyPreferences(context: Context) : AccessTokenHolder, RefreshTokenHolder {
 
     private val preferences: SharedPreferences
     private val rxPreferences: RxSharedPreferences
@@ -34,6 +35,16 @@ class SpotifyPreferences(context: Context) : AccessTokenProvider {
             if (value == null) return
             with(preferences.edit()) {
                 putString(PREF_KEY_TOKEN, value)
+                apply()
+            }
+        }
+
+    override var refreshToken: String?
+        get() = preferences.getString(PREF_KEY_REFRESH_TOKEN, null)
+        set(value) {
+            if (value == null) return
+            with(preferences.edit()) {
+                putString(PREF_KEY_REFRESH_TOKEN, value)
                 apply()
             }
         }
@@ -99,6 +110,7 @@ class SpotifyPreferences(context: Context) : AccessTokenProvider {
 
     companion object {
         private const val PREF_KEY_TOKEN = "PREF_KEY_TOKEN"
+        private const val PREF_KEY_REFRESH_TOKEN = "PREF_KEY_REFRESH_TOKEN"
 
         private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
         private const val PREF_KEY_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_ACCESS_TOKEN_TIMESTAMP"
