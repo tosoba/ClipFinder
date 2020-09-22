@@ -1,9 +1,9 @@
 package com.clipfinder.spotify.api.infrastructure
 
-import com.clipfinder.spotify.api.models.EpisodeObject
-import com.clipfinder.spotify.api.models.TrackObject
-import com.clipfinder.spotify.api.models.TrackOrEpisodeObject
-import com.clipfinder.spotify.api.models.TrackOrEpisodeType
+import com.clipfinder.spotify.api.model.EpisodeObject
+import com.clipfinder.spotify.api.model.TrackObject
+import com.clipfinder.spotify.api.model.TrackOrEpisodeObject
+import com.clipfinder.spotify.api.model.TrackOrEpisodeType
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
