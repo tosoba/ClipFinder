@@ -52,9 +52,9 @@ internal class RxSealedCallAdapter<T : Any, U : Any>(
         })
         .run {
             when {
-                isFlowable -> this.toFlowable(BackpressureStrategy.LATEST)
-                isSingle -> this.singleOrError()
-                isMaybe -> this.singleElement()
+                isFlowable -> toFlowable(BackpressureStrategy.LATEST)
+                isSingle -> singleOrError()
+                isMaybe -> singleElement()
                 else -> this
             }
         }
