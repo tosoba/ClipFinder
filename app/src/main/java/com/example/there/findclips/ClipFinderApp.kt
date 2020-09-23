@@ -8,6 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.example.core.android.di.epoxyModule
+import com.example.core.android.di.networkingModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.soundclouddashboard.di.soundCloudDashboardModule
@@ -42,7 +43,9 @@ class ClipFinderApp : Application() {
 
         ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
 
-        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
     }
 
     override fun onTerminate() {
@@ -78,7 +81,7 @@ class ClipFinderApp : Application() {
                 soundCloudModule, spotifyModule, videosModule,
                 viewModelsModule,
 
-                appModule, epoxyModule,
+                appModule, epoxyModule, networkingModule,
                 spotifyApiModule,
                 spotifyCoreAndroidModule,
                 spotifyDashboardModule, spotifySearchModule,
