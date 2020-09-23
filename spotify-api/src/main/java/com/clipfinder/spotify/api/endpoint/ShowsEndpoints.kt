@@ -59,5 +59,4 @@ interface ShowsEndpoints {
      */
     @GET("shows")
     fun getMultipleShows(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<ShowsObject, ErrorResponse>>
-
 }

@@ -37,5 +37,4 @@ interface UserProfileEndpoints {
      */
     @GET("users/{user_id}")
     fun getUsersProfile(@Header("Authorization") authorization: String? = null, @Path("user_id") userId: String): Single<NetworkResponse<PublicUserObject, ErrorResponse>>
-
 }

@@ -81,5 +81,4 @@ interface TracksEndpoints {
      */
     @GET("tracks/{id}")
     fun getTrack(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("market") market: String? = null): Single<NetworkResponse<TrackObject, ErrorResponse>>
-
 }

@@ -215,5 +215,4 @@ interface PlayerEndpoints {
      */
     @PUT("me/player")
     fun transferAUsersPlayback(@Header("Authorization") authorization: String? = null, @Body transferPlaybackBody: TransferPlaybackBody): Completable
-
 }

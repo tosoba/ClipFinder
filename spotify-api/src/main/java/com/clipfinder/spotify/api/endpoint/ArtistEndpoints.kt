@@ -84,5 +84,4 @@ interface ArtistEndpoints {
      */
     @GET("artists")
     fun getMultipleArtists(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String): Single<NetworkResponse<ArtistsObject, ErrorResponse>>
-
 }

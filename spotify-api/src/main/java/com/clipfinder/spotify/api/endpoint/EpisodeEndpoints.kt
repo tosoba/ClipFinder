@@ -41,5 +41,4 @@ interface EpisodeEndpoints {
      */
     @GET("episodes")
     fun getMultipleEpisodes(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<EpisodesObject, ErrorResponse>>
-
 }

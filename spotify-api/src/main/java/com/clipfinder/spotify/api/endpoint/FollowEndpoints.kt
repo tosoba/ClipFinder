@@ -120,5 +120,4 @@ interface FollowEndpoints {
      */
     @DELETE("playlists/{playlist_id}/followers")
     fun unfollowPlaylist(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String): Completable
-
 }

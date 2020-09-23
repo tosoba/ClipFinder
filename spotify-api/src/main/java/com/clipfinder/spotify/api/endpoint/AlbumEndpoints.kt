@@ -59,5 +59,4 @@ interface AlbumEndpoints {
      */
     @GET("albums")
     fun getMultipleAlbums(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Query("market") market: String? = null): Single<NetworkResponse<AlbumsObject, ErrorResponse>>
-
 }

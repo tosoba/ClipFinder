@@ -187,5 +187,4 @@ interface LibraryEndpoints {
      */
     @PUT("me/tracks")
     fun saveTracksUser(@Header("Authorization") authorization: String? = null, @Query("ids") ids: String, @Header("Content-Type") contentMinusType: String): Completable
-
 }

@@ -15,7 +15,6 @@ class ApiKeyAuth(
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
-
         if ("query" == location) {
             var newQuery = request.url.toUri().query
             val paramValue = "$paramName=$apiKey"
