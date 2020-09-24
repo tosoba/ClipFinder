@@ -39,6 +39,7 @@ dependencies {
     implementation project(':db')
     implementation project(':domain')
     implementation project(':core')
+    implementation project(':core-spotify')
     implementation project(':core-android')
     implementation project(':core-android-spotify')
     implementation project(':spotifyapi')
