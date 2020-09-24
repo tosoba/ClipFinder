@@ -8,7 +8,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface AuthEndpoints {
-    @POST("/api/token")
+    @POST("/token")
     @FormUrlEncoded
     fun refreshToken(
         @Field("grant_type") grantType: GrantType,
