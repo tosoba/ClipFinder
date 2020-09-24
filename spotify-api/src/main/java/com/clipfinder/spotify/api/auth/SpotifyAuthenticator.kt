@@ -1,8 +1,7 @@
 package com.clipfinder.spotify.api.auth
 
 import com.clipfinder.core.spotify.auth.SpotifyAuthData
-import com.clipfinder.core.spotify.token.AccessTokenHolder
-import com.clipfinder.core.spotify.token.RefreshTokenHolder
+import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.AuthEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import okhttp3.Authenticator
@@ -10,15 +9,14 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 
-class SpotifyPublicAuthenticator(
-    private val accessTokenHolder: AccessTokenHolder,
-    private val refreshTokenHolder: RefreshTokenHolder,
+class SpotifyAuthenticator(
+    private val tokensHolder: SpotifyTokensHolder,
     private val auth: AuthEndpoints
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         val refreshTokenResponse = auth.refreshToken(
             grantType = GrantType.REFRESH_TOKEN,
-            refreshToken = requireNotNull(refreshTokenHolder.refreshToken),
+            refreshToken = tokensHolder.refreshToken,
             clientId = SpotifyAuthData.CLIENT_ID
         ).execute()
 
@@ -31,8 +29,10 @@ class SpotifyPublicAuthenticator(
             "RefreshToken response body is null."
         }
 
-        accessTokenHolder.token = responseBody.accessToken
-        refreshTokenHolder.refreshToken = responseBody.refreshToken
+        tokensHolder.setTokens(
+            accessToken = responseBody.accessToken,
+            refreshToken = responseBody.refreshToken
+        )
 
         return response.request.newBuilder()
             .header("Authorization", "Bearer ${responseBody.accessToken}")
