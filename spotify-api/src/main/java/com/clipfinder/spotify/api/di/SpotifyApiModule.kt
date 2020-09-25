@@ -25,34 +25,32 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 
 val spotifyApiModule = module {
-    val moshi = Moshi.Builder()
-        .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-        .add(OffsetDateTimeAdapter())
-        .add(LocalDateTimeAdapter())
-        .add(LocalDateAdapter())
-        .add(UUIDAdapter())
-        .add(ByteArrayAdapter())
-        .add(KotlinJsonAdapterFactory())
-        .add(
-            PolymorphicJsonAdapterFactory
-                .of(TrackOrEpisodeObject::class.java, "type")
-                .withSubtype(TrackObject::class.java, TrackOrEpisodeType.track.name)
-                .withSubtype(EpisodeObject::class.java, TrackOrEpisodeType.episode.name)
-        )
-        .build()
-
-    val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BASIC
-    }
+    val moshiConverterFactory = MoshiConverterFactory.create(
+        Moshi.Builder()
+            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
+            .add(OffsetDateTimeAdapter())
+            .add(LocalDateTimeAdapter())
+            .add(LocalDateAdapter())
+            .add(UUIDAdapter())
+            .add(ByteArrayAdapter())
+            .add(KotlinJsonAdapterFactory())
+            .add(
+                PolymorphicJsonAdapterFactory
+                    .of(TrackOrEpisodeObject::class.java, "type")
+                    .withSubtype(TrackObject::class.java, TrackOrEpisodeType.track.name)
+                    .withSubtype(EpisodeObject::class.java, TrackOrEpisodeType.episode.name)
+            )
+            .build()
+    )
 
     single {
         Retrofit.Builder()
             .baseUrl("https://accounts.spotify.com/api/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(get<ScalarsConverterFactory>())
+            .addConverterFactory(moshiConverterFactory)
             .client(
                 OkHttpClient.Builder()
-                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(get<HttpLoggingInterceptor>())
                     .addInterceptor(get<ConnectivityInterceptor>())
                     .build()
             )
@@ -62,13 +60,13 @@ val spotifyApiModule = module {
 
     fun <T> Scope.clientFor(endpointsClass: Class<T>) = Retrofit.Builder()
         .baseUrl("https://api.spotify.com/v1/")
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(RxSealedCallAdapterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(get<ScalarsConverterFactory>())
+        .addConverterFactory(moshiConverterFactory)
+        .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
+        .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
         .client(
             OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
+                .addInterceptor(get<HttpLoggingInterceptor>())
                 .addInterceptor(get<CacheInterceptor>())
                 .authenticator(SpotifyAuthenticator(get(), get()))
                 .build()
