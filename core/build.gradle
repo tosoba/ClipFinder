@@ -10,6 +10,9 @@ dependencies {
     implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
 
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 

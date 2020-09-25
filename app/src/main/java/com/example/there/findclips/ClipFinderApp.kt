@@ -8,7 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.example.core.android.di.epoxyModule
-import com.example.core.android.di.networkingModule
+import com.example.core.android.di.coreAndroidNetworkingModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.soundclouddashboard.di.soundCloudDashboardModule
@@ -81,7 +81,7 @@ class ClipFinderApp : Application() {
                 soundCloudModule, spotifyModule, videosModule,
                 viewModelsModule,
 
-                appModule, epoxyModule, networkingModule,
+                appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyApiModule,
                 spotifyCoreAndroidModule,
                 spotifyDashboardModule, spotifySearchModule,
