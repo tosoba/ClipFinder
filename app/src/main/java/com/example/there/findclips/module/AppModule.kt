@@ -27,8 +27,6 @@ val appModule = module {
         }
     }
 
-    single { Cache(androidContext().cacheDir, 10 * 1000 * 1000) }
-
     single(named("onlineCacheInterceptor")) { onlineCacheInterceptor() }
     single(named("offlineCacheInterceptor")) {
         offlineCacheInterceptor { androidContext().isConnected }
