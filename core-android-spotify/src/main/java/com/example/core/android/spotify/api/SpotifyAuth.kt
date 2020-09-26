@@ -1,6 +1,7 @@
 package com.example.core.android.spotify.api
 
 import android.util.Base64
+import com.clipfinder.core.spotify.auth.ISpotifyAuth
 import com.clipfinder.spotify.api.endpoint.AuthEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.example.core.android.spotify.api.ext.accessToken
@@ -22,8 +23,9 @@ class SpotifyAuth(
     private val preferences: SpotifyPreferences,
     private val authEndpoints: AuthEndpoints,
     private val rxSchedulers: RxSchedulers
-) {
-    fun authorize(): Completable = Single.just(preferences.hasTokens)
+) : ISpotifyAuth {
+
+    override fun authorize(): Completable = Single.just(preferences.hasTokens)
         .flatMapCompletable { hasTokens ->
             if (hasTokens) Completable.complete()
             else authEndpoints
@@ -38,7 +40,7 @@ class SpotifyAuth(
                 .toCompletable()
         }
 
-    fun requirePrivateAuthorized(): Completable = Single
+    override fun requirePrivateAuthorized(): Completable = Single
         .just(preferences.hasTokens && preferences.tokensPrivate)
         .flatMapCompletable { privateAuthorized ->
             if (privateAuthorized) Completable.complete()
