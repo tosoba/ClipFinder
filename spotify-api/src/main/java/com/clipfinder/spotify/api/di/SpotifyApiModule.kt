@@ -48,6 +48,8 @@ val spotifyApiModule = module {
             .baseUrl("https://accounts.spotify.com/api/")
             .addConverterFactory(get<ScalarsConverterFactory>())
             .addConverterFactory(moshiConverterFactory)
+            .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
+            .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(get<HttpLoggingInterceptor>())

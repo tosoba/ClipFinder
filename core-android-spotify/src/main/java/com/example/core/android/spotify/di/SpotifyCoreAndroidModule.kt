@@ -10,5 +10,5 @@ import org.koin.dsl.module
 
 val spotifyCoreAndroidModule = module {
     single { SpotifyPreferences(androidContext()) } binds arrayOf(AccessTokenHolder::class, SpotifyTokensHolder::class)
-    single { SpotifyAuth(get(), get()) }
+    single { SpotifyAuth(get(), get(), get(), get()) }
 }

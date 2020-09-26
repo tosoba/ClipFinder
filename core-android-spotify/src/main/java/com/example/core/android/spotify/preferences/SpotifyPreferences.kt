@@ -38,14 +38,17 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
             "RefreshToken is null."
         }
 
-    override val isPrivate: Boolean
-        get() = preferences.getBoolean(PREF_KEY_IS_TOKEN_PRIVATE, false)
+    override val tokensPrivate: Boolean
+        get() = preferences.getBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, false)
+
+    val hasTokens: Boolean
+        get() = preferences.contains(PREF_KEY_TOKEN)
 
     override fun setTokens(accessToken: String, refreshToken: String, private: Boolean?) {
         with(preferences.edit()) {
             putString(PREF_KEY_TOKEN, accessToken)
             putString(PREF_KEY_REFRESH_TOKEN, refreshToken)
-            if (private != null) putBoolean(PREF_KEY_IS_TOKEN_PRIVATE, private)
+            if (private != null) putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, private)
             apply()
         }
     }
@@ -112,7 +115,7 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
     companion object {
         private const val PREF_KEY_TOKEN = "PREF_KEY_TOKEN"
         private const val PREF_KEY_REFRESH_TOKEN = "PREF_KEY_REFRESH_TOKEN"
-        private const val PREF_KEY_IS_TOKEN_PRIVATE = "PREF_KEY_IS_TOKEN_PRIVATE"
+        private const val PREF_KEY_ARE_TOKENS_PRIVATE = "PREF_KEY_IS_TOKEN_PRIVATE"
 
         private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
         private const val PREF_KEY_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_ACCESS_TOKEN_TIMESTAMP"

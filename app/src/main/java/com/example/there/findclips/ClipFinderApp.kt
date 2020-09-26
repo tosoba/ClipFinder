@@ -82,7 +82,7 @@ class ClipFinderApp : Application() {
                 viewModelsModule,
 
                 appModule, epoxyModule, coreAndroidNetworkingModule,
-                spotifyApiModule,
+                spotifyApiModule, com.clipfinder.spotify.api.di.spotifyApiModule,
                 spotifyCoreAndroidModule,
                 spotifyDashboardModule, spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,

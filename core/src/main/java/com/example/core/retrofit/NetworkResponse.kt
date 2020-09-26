@@ -41,11 +41,20 @@ fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccessOrThrow(
     finisher: T.() -> R
 ): Single<R> = map(throwingResourceMapper(finisher))
 
+fun <T : Any, E : Any> Single<NetworkResponse<T, E>>.successOrThrow(): Single<T> = map { response ->
+    when (response) {
+        is NetworkResponse.Success -> response.body
+        is NetworkResponse.NetworkError -> throw response.error
+        is NetworkResponse.ServerError -> throw ThrowableServerError(response)
+        is NetworkResponse.DifferentError -> throw response.error
+    }
+}
+
 private fun <T : Any, E : Any, R> throwingResourceMapper(
     finisher: T.() -> R
 ): (NetworkResponse<T, E>) -> R = { response ->
     when (response) {
-        is NetworkResponse.Success -> Resource.Success(response.body.finisher()).data
+        is NetworkResponse.Success -> response.body.finisher()
         is NetworkResponse.NetworkError -> throw response.error
         is NetworkResponse.ServerError -> throw ThrowableServerError(response)
         is NetworkResponse.DifferentError -> throw response.error
