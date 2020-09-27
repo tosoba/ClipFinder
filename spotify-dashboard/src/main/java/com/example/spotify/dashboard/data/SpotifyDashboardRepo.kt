@@ -1,5 +1,7 @@
 package com.example.spotify.dashboard.data
 
+import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
@@ -12,11 +14,9 @@ import com.example.spotifyapi.SpotifyChartsApi
 import com.example.spotifyapi.SpotifyTracksApi
 import com.example.spotifyapi.models.SimpleAlbum
 import com.example.spotifyapi.models.SimplePlaylist
-import com.example.spotifyapi.models.SpotifyCategory
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.domain
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Single
@@ -26,24 +26,22 @@ class SpotifyDashboardRepo(
     private val auth: SpotifyAuth,
     private val tracksApi: SpotifyTracksApi,
     private val chartsApi: SpotifyChartsApi,
-    private val browseApi: SpotifyBrowseApi
+    private val browseApi: SpotifyBrowseApi,
+    private val browse: BrowseEndpoints
 ) : ISpotifyDashboardRepo {
 
     override fun getCategories(
         offset: Int
-    ): Single<Resource<Paged<List<CategoryEntity>>>> = auth.withTokenSingle { token ->
-        browseApi.getCategories(
-            authorization = token,
-            offset = offset,
-            country = preferences.country,
-            locale = preferences.locale
-        ).mapToResource {
-            Paged(
-                contents = items.map(SpotifyCategory::domain),
-                offset = result.offset + SpotifyDefaults.LIMIT,
-                total = result.total
-            )
-        }
+    ): Single<Resource<Paged<List<ICategory>>>> = browse.getCategories(
+        offset = offset,
+        country = preferences.country,
+        locale = preferences.locale
+    ).mapToResource {
+        Paged<List<ICategory>>(
+            contents = categories.items,
+            offset = categories.offset + SpotifyDefaults.LIMIT,
+            total = categories.total
+        )
     }
 
     override fun getFeaturedPlaylists(

@@ -8,8 +8,5 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface ISpotifyCategoryRepo {
-    fun deleteCategory(category: CategoryEntity): Completable
     fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<Paged<List<PlaylistEntity>>>>
-    fun insertCategory(category: CategoryEntity): Completable
-    fun isCategorySaved(categoryId: String): Single<Boolean>
 }

@@ -23,9 +23,9 @@ import com.example.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
-class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPreviousStateOnBackPressed {
+class SpotifyArtistFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val argArtist: Artist by args()
 
@@ -45,7 +45,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
                 { withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) } }
             ) { album ->
                 album.clickableListItem {
-                    show { newSpotifyAlbumFragment(album) }
+                    show { factory.newSpotifyAlbumFragment(album) }
                 }
             }
 
@@ -67,7 +67,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), NavigationCapable, GoesToPrevi
                 { withCurrentArtistId { viewModel.loadTopTracksFromArtist(it) } }
             ) { topTrack ->
                 topTrack.clickableListItem {
-                    show { newSpotifyTrackVideosFragment(topTrack) }
+                    show { factory.newSpotifyTrackVideosFragment(topTrack) }
                 }
             }
         }

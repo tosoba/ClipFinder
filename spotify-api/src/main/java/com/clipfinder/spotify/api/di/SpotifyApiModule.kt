@@ -57,7 +57,7 @@ val spotifyApiModule = module {
                     .build()
             )
             .build()
-            .create(AuthEndpoints::class.java)
+            .create(TokenEndpoints::class.java)
     }
 
     fun <T> Scope.clientFor(endpointsClass: Class<T>) = Retrofit.Builder()

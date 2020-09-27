@@ -9,5 +9,5 @@ data class ErrorObject(override val message: String, val status: Int) : Throwabl
 data class AuthErrorObject(
     val error: String,
     @Json(name = "error_description")
-    val errorDescription: String
-) : Throwable("$error : $errorDescription")
+    val errorDescription: String?
+) : Throwable("$error : ${errorDescription ?: "No description."}")

@@ -14,7 +14,6 @@ interface IFragmentFactory {
 
     fun newSpotifyAlbumFragment(album: Album): Fragment
     fun newSpotifyArtistFragment(artist: Artist): Fragment
-    fun newSpotifyCategoryFragment(category: Category): Fragment
     fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment
     fun newSpotifyTrackVideosFragment(track: Track): Fragment
 

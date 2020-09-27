@@ -24,7 +24,7 @@ import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBind
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
-class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
+class SoundCloudPlaylistFragment : BaseMvRxFragment() {
 
     //TODO: async subscribe showing Toasts when toggling favourite state
 
@@ -36,11 +36,11 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
             "Tracks",
             reloadClicked = viewModel::loadData
         ) {
-            it.clickableListItem { show { newSoundCloudTrackVideosFragment(it) } }
+            it.clickableListItem { show { factory.newSoundCloudTrackVideosFragment(it) } }
         }
     }
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: SoundCloudPlaylistViewModel by fragmentViewModel()
 

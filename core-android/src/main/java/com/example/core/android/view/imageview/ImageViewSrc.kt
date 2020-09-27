@@ -6,7 +6,9 @@ interface ImageViewSrc {
     val errorPlaceholder: Int
 
     companion object {
-        fun with(iconUrl: String?, loadingPlaceholder: Int, errorPlaceholder: Int): ImageViewSrc = object : ImageViewSrc {
+        fun with(
+            iconUrl: String?, loadingPlaceholder: Int, errorPlaceholder: Int
+        ): ImageViewSrc = object : ImageViewSrc {
             override val loadingPlaceholder: Int
                 get() = loadingPlaceholder
             override val errorPlaceholder: Int

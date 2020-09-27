@@ -9,11 +9,11 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.TopTrackItemBindingModel_
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
 import com.example.core.android.model.spotify.clickableListItem
-import com.example.core.android.util.ext.NavigationCapable
+import com.example.core.android.spotify.model.clickableListItem
+import com.example.core.android.spotify.navigation.ISpotifyDashboardNavDestinations
 import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
@@ -25,9 +25,9 @@ import com.example.spotify.dashboard.R
 import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import org.koin.android.ext.android.inject
 
-class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationCapable {
+class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
-    override val factory: IFragmentFactory by inject()
+    private val navDestinations: ISpotifyDashboardNavDestinations by inject()
 
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
@@ -50,7 +50,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             ) { chunk ->
                 chunk.column { category ->
                     category.clickableListItem {
-                        show { newSpotifyCategoryFragment(category) }
+                        show { navDestinations.newSpotifyCategoryFragment(category) }
                     }
                 }
             }
@@ -65,7 +65,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             ) { chunk ->
                 chunk.column { playlist ->
                     playlist.clickableListItem {
-                        show { newSpotifyPlaylistFragment(playlist) }
+                        show { navDestinations.newSpotifyPlaylistFragment(playlist) }
                     }
                 }
             }
@@ -80,7 +80,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
             ) { chunk ->
                 chunk.column { album ->
                     album.clickableListItem {
-                        show { newSpotifyAlbumFragment(album) }
+                        show { navDestinations.newSpotifyAlbumFragment(album) }
                     }
                 }
             }
@@ -98,7 +98,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar, NavigationC
                         .id(topTrack.track.id)
                         .track(topTrack)
                         .itemClicked(View.OnClickListener {
-                            show { newSpotifyTrackVideosFragment(topTrack.track) }
+                            show { navDestinations.newSpotifyTrackVideosFragment(topTrack.track) }
                         })
                 }
             }

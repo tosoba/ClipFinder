@@ -3,22 +3,17 @@ package com.example.spotify.category.data
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.ext.isPresent
 import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
-import com.example.db.CategoryDao
 import com.example.spotify.category.domain.repo.ISpotifyCategoryRepo
 import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.util.domain
-import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import io.reactivex.Completable
 import io.reactivex.Single
 
 class SpotifyCategoryRepo(
-    private val categoryDao: CategoryDao,
     private val browseApi: SpotifyBrowseApi,
     private val auth: SpotifyAuth,
     private val preferences: SpotifyPreferences
@@ -41,16 +36,4 @@ class SpotifyCategoryRepo(
             )
         }
     }
-
-    override fun deleteCategory(category: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.delete(category.db)
-    }
-
-    override fun insertCategory(category: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.insert(category.db)
-    }
-
-    override fun isCategorySaved(categoryId: String): Single<Boolean> = categoryDao
-        .findById(categoryId)
-        .isPresent()
 }

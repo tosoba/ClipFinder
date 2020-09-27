@@ -8,6 +8,7 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.core.android.model.spotify.TopTrack
+import com.example.core.android.spotify.model.Category
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
@@ -17,7 +18,6 @@ import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
 import com.example.spotify.dashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -45,7 +45,7 @@ class SpotifyDashboardViewModel(
     fun loadCategories() = withState { (categories) ->
         if (categories.shouldLoad) {
             getCategories(applySchedulers = false, args = categories.offset)
-                .mapData { newCategories -> newCategories.map(CategoryEntity::ui) }
+                .mapData { newCategories -> newCategories.map { Category(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyDashboardState::categories) {
                     copy(categories = it)

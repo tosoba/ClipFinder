@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class CategoriesObject(
     @Json(name = "categories")
-    val categories: CategoriesObjectCategories? = null
+    val categories: CategoriesObjectCategories
 )
 

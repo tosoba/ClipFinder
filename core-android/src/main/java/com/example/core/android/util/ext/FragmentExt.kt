@@ -58,16 +58,11 @@ val Fragment.navHostFragment: BaseNavHostFragment?
 val Fragment.mainContentFragment: IMainContentFragment?
     get() = findAncestorFragmentOfType()
 
-//TODO: use this for navigation
-interface NavigationCapable {
-    val factory: IFragmentFactory
-}
-
 inline fun <T> T.show(
     addToBackStack: Boolean = true,
-    getFragment: IFragmentFactory.() -> Fragment
-) where T : Fragment, T : NavigationCapable {
-    navHostFragment?.showFragment(factory.getFragment(), addToBackStack)
+    getFragment: () -> Fragment
+) where T : Fragment {
+    navHostFragment?.showFragment(getFragment(), addToBackStack)
 }
 
 fun Fragment.reloadingConnectivityComponent(

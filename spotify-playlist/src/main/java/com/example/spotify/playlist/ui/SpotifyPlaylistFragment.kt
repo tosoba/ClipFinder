@@ -24,7 +24,7 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_playlist.*
 import org.koin.android.ext.android.inject
 
-class SpotifyPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
+class SpotifyPlaylistFragment : BaseMvRxFragment() {
 
     private val playlist: Playlist by args()
 
@@ -35,11 +35,11 @@ class SpotifyPlaylistFragment : BaseMvRxFragment(), NavigationCapable {
             loadMore = viewModel::loadTracks,
             reloadClicked = viewModel::loadTracks
         ) {
-            it.clickableListItem { show { newSpotifyTrackVideosFragment(it) } }
+            it.clickableListItem { show { factory.newSpotifyTrackVideosFragment(it) } }
         }
     }
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: SpotifyPlaylistViewModel by fragmentViewModel()
 

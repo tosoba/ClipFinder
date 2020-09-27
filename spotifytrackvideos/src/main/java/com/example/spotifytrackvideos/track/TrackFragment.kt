@@ -18,7 +18,6 @@ import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.model.spotify.infoItem
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
-import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
 import com.example.core.android.util.ext.show
@@ -35,9 +34,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
 import org.koin.android.ext.android.inject
 
-class TrackFragment : BaseMvRxFragment(), NavigationCapable {
+class TrackFragment : BaseMvRxFragment() {
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: TrackViewModel by fragmentViewModel()
     private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
@@ -63,7 +62,7 @@ class TrackFragment : BaseMvRxFragment(), NavigationCapable {
                 }
 
                 is LoadedSuccessfully -> album.value?.let {
-                    it.infoItem { show { newSpotifyAlbumFragment(it) } }
+                    it.infoItem { show { factory.newSpotifyAlbumFragment(it) } }
                         .addTo(this)
                 }
             }

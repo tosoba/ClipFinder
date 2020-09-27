@@ -12,7 +12,7 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
     viewModel { MainViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { SpotifyFavouritesViewModel(get(), get(), get(), get()) }
     viewModel { VideosFavouritesViewModel(get(), get()) }
     viewModel { VideosSearchViewModel(get(), get(), get(), get()) }
     viewModel { SpotifyPlayerViewModel() }

@@ -23,9 +23,9 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_album.*
 import org.koin.android.ext.android.inject
 
-class SpotifyAlbumFragment : BaseMvRxFragment(), NavigationCapable {
+class SpotifyAlbumFragment : BaseMvRxFragment() {
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
 
@@ -41,7 +41,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment(), NavigationCapable {
                 { viewModel.loadAlbumsArtists(album.artists.map { it.id }) }
             ) { artist ->
                 artist.clickableListItem {
-                    show { newSpotifyArtistFragment(artist) }
+                    show { factory.newSpotifyArtistFragment(artist) }
                 }
             }
 

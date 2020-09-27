@@ -8,11 +8,17 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseVMFragment
-import com.example.core.android.model.spotify.*
+import com.example.core.android.model.spotify.Album
+import com.example.core.android.model.spotify.Artist
+import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.model.spotify.Track
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import com.example.itemlist.spotify.*
+import com.example.itemlist.spotify.SpotifyAlbumsFragment
+import com.example.itemlist.spotify.SpotifyArtistsFragment
+import com.example.itemlist.spotify.SpotifyPlaylistsFragment
+import com.example.itemlist.spotify.SpotifyTracksFragment
 import com.example.spotifyfavourites.R
 import com.example.spotifyfavourites.databinding.FragmentSpotifyFavouritesBinding
 import com.google.android.material.tabs.TabLayout
@@ -53,17 +59,6 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                 refreshData = { fragment ->
                     viewModel.viewState.value?.let {
                         fragment.updateItems(it.artists)
-                    }
-                }
-            },
-            BaseListFragment.newInstance<SpotifyCategoriesFragment, Category>(
-                getString(R.string.no_favourite_categories_added_yet),
-                getString(R.string.browse_for_categories),
-                viewModel.viewState.value?.categories
-            ).apply {
-                refreshData = { fragment ->
-                    viewModel.viewState.value?.let {
-                        fragment.updateItems(it.categories)
                     }
                 }
             },
@@ -128,7 +123,6 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
             when (fragment) {
                 is SpotifyAlbumsFragment -> fragment.updateItems(it.albums)
                 is SpotifyArtistsFragment -> fragment.updateItems(it.artists)
-                is SpotifyCategoriesFragment -> fragment.updateItems(it.categories)
                 is SpotifyPlaylistsFragment -> fragment.updateItems(it.playlists)
                 is SpotifyTracksFragment -> fragment.updateItems(it.tracks)
             }

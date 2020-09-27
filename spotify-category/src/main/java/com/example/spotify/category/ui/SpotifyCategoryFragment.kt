@@ -7,14 +7,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.model.spotify.Category
 import com.example.core.android.model.spotify.clickableGridListItem
-import com.example.core.android.util.ext.*
+import com.example.core.android.spotify.model.Category
+import com.example.core.android.util.ext.loadBackgroundGradient
+import com.example.core.android.util.ext.mainContentFragment
+import com.example.core.android.util.ext.setupWithBackNavigation
+import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.category.R
 import com.example.spotify.category.databinding.FragmentSpotifyCategoryBinding
@@ -22,9 +24,9 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
 
-class SpotifyCategoryFragment : BaseMvRxFragment(), NavigationCapable {
+class SpotifyCategoryFragment : BaseMvRxFragment() {
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 
@@ -36,7 +38,7 @@ class SpotifyCategoryFragment : BaseMvRxFragment(), NavigationCapable {
             loadMore = loadPlaylists,
             reloadClicked = loadPlaylists
         ) {
-            it.clickableGridListItem { show { newSpotifyPlaylistFragment(it) } }
+            it.clickableGridListItem { show { factory.newSpotifyPlaylistFragment(it) } }
         }
     }
 
@@ -52,7 +54,6 @@ class SpotifyCategoryFragment : BaseMvRxFragment(), NavigationCapable {
     ): View? = FragmentSpotifyCategoryBinding.inflate(inflater, container, false).apply {
         mainContentFragment?.disablePlayButton()
         category = this@SpotifyCategoryFragment.category
-        categoryFavouriteFab.setOnClickListener { viewModel.toggleCategoryFavouriteState() }
         categoryToolbarGradientBackgroundView
             .loadBackgroundGradient(this@SpotifyCategoryFragment.category.iconUrl)
             .disposeOnDestroy(this@SpotifyCategoryFragment)
@@ -63,19 +64,6 @@ class SpotifyCategoryFragment : BaseMvRxFragment(), NavigationCapable {
         }
         categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
     }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.selectSubscribe(this, SpotifyCategoryViewState::isSavedAsFavourite) {
-            category_favourite_fab?.setImageDrawable(
-                ContextCompat.getDrawable(
-                    view.context,
-                    if (it.value) R.drawable.delete else R.drawable.favourite
-                )
-            )
-            category_favourite_fab?.hideAndShow()
-        }
-    }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)

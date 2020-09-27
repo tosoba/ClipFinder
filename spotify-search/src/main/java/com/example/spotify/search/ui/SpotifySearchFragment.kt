@@ -11,7 +11,6 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
 import com.example.core.android.model.spotify.*
-import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
@@ -53,12 +52,10 @@ class SpotifySearchFragment : BaseMvRxFragment() {
             arguments = Bundle().apply { putString(MvRx.KEY_ARG, query) }
         }
 
-        abstract class BaseListFragment<I> :
-            ItemListFragment<SpotifySearchViewState>(),
-            NavigationCapable {
+        abstract class BaseListFragment<I> : ItemListFragment<SpotifySearchViewState>() {
 
             protected val viewModel: SpotifySearchViewModel by parentFragmentViewModel()
-            override val factory: IFragmentFactory by inject()
+            protected val factory: IFragmentFactory by inject()
 
             protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
 

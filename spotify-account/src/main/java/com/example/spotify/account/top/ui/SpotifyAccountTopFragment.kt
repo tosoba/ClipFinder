@@ -13,7 +13,6 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Initial
 import com.example.core.android.model.spotify.clickableListItem
-import com.example.core.android.util.ext.NavigationCapable
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.spotifyAuthController
 import com.example.core.android.view.epoxy.Column
@@ -23,9 +22,9 @@ import com.example.spotify.account.R
 import com.example.spotify.account.databinding.FragmentSpotifyAccountTopBinding
 import org.koin.android.ext.android.inject
 
-class SpotifyAccountTopFragment : BaseMvRxFragment(), NavigationCapable {
+class SpotifyAccountTopFragment : BaseMvRxFragment() {
 
-    override val factory: IFragmentFactory by inject()
+    private val factory: IFragmentFactory by inject()
 
     private val viewModel: SpotifyAccountTopViewModel by fragmentViewModel()
 
@@ -53,7 +52,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment(), NavigationCapable {
                 ) { chunk ->
                     chunk.column { artist ->
                         artist.clickableListItem {
-                            show { newSpotifyArtistFragment(artist) }
+                            show { factory.newSpotifyArtistFragment(artist) }
                         }
                     }
                 }
@@ -68,7 +67,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment(), NavigationCapable {
                 ) { chunk ->
                     chunk.column { track ->
                         track.clickableListItem {
-                            show { newSpotifyTrackVideosFragment(track) }
+                            show { factory.newSpotifyTrackVideosFragment(track) }
                         }
                     }
                 }
