@@ -14,8 +14,7 @@ class GetCategories(
     private val auth: ISpotifyAuth,
     private val repo: ISpotifyDashboardRepo
 ) : SingleUseCaseWithArgs<Int, Resource<Paged<List<ICategory>>>>(schedulers) {
-    override fun run(
-        args: Int
-    ): Single<Resource<Paged<List<ICategory>>>> = auth.authorize()
+    override fun run(args: Int): Single<Resource<Paged<List<ICategory>>>> = auth
+        .authorize()
         .andThen(repo.getCategories(offset = args))
 }

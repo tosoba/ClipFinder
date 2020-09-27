@@ -44,11 +44,19 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
     val hasTokens: Boolean
         get() = preferences.contains(PREF_KEY_TOKEN)
 
-    override fun setTokens(accessToken: String, refreshToken: String, private: Boolean?) {
+    override fun setPrivateTokens(accessToken: String, refreshToken: String) {
         with(preferences.edit()) {
             putString(PREF_KEY_TOKEN, accessToken)
             putString(PREF_KEY_REFRESH_TOKEN, refreshToken)
-            if (private != null) putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, private)
+            putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, true)
+            apply()
+        }
+    }
+
+    override fun setToken(accessToken: String) {
+        with(preferences.edit()) {
+            putString(PREF_KEY_TOKEN, accessToken)
+            putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, true)
             apply()
         }
     }

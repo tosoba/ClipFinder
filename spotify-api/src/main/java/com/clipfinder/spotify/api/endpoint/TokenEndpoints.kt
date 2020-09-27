@@ -14,6 +14,7 @@ interface TokenEndpoints {
     @POST("token")
     @FormUrlEncoded
     fun getTokens(
+        @Header("Authorization") authorization: String? = null,
         @Field("grant_type") grantType: GrantType,
         @Field("refresh_token") refreshToken: String? = null,
         @Field("client_id") clientId: String? = null

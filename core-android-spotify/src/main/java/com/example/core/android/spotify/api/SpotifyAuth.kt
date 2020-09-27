@@ -2,13 +2,13 @@ package com.example.core.android.spotify.api
 
 import android.util.Base64
 import com.clipfinder.core.spotify.auth.ISpotifyAuth
+import com.clipfinder.core.spotify.auth.SpotifyAuthData
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.example.core.android.spotify.api.ext.accessToken
 import com.example.core.android.spotify.api.ext.domain
 import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.ext.RxSchedulers
 import com.example.core.retrofit.mapSuccessOrThrow
 import com.example.core.retrofit.successOrThrow
 import com.example.spotifyapi.SpotifyAccountsApi
@@ -19,19 +19,19 @@ import io.reactivex.Single
 class SpotifyAuth(
     private val accountsApi: SpotifyAccountsApi,
     private val preferences: SpotifyPreferences,
-    private val tokenEndpoints: TokenEndpoints,
-    private val rxSchedulers: RxSchedulers
+    private val tokenEndpoints: TokenEndpoints
 ) : ISpotifyAuth {
 
     override fun authorize(): Completable = Single.just(preferences.hasTokens)
         .flatMapCompletable { hasTokens ->
             if (hasTokens) Completable.complete()
             else tokenEndpoints
-                .getTokens(grantType = GrantType.CLIENT_CREDENTIALS)
-                .subscribeOn(rxSchedulers.io)
+                .getTokens(
+                    authorization = "Basic ${Base64.encodeToString("${SpotifyAuthData.CLIENT_ID}:${SpotifyAuthData.CLIENT_SECRET}".toByteArray(), Base64.NO_WRAP)}",
+                    grantType = GrantType.CLIENT_CREDENTIALS
+                )
                 .successOrThrow()
-                .observeOn(rxSchedulers.main)
-                .doOnSuccess { preferences.setTokens(it.accessToken, it.refreshToken) }
+                .doOnSuccess { preferences.setToken(it.accessToken) }
                 .toCompletable()
         }
 

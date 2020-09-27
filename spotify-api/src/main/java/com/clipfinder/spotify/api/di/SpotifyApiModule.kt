@@ -3,6 +3,7 @@ package com.clipfinder.spotify.api.di
 import com.clipfinder.spotify.api.auth.SpotifyAuthenticator
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.infrastructure.*
+import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.TrackObject
 import com.clipfinder.spotify.api.model.TrackOrEpisodeObject
@@ -60,6 +61,8 @@ val spotifyApiModule = module {
             .create(TokenEndpoints::class.java)
     }
 
+    single { TokenInterceptor(get()) }
+
     fun <T> Scope.clientFor(endpointsClass: Class<T>) = Retrofit.Builder()
         .baseUrl("https://api.spotify.com/v1/")
         .addConverterFactory(get<ScalarsConverterFactory>())
@@ -70,6 +73,7 @@ val spotifyApiModule = module {
             OkHttpClient.Builder()
                 .addInterceptor(get<HttpLoggingInterceptor>())
                 .addInterceptor(get<CacheInterceptor>())
+                .addInterceptor(get<TokenInterceptor>())
                 .authenticator(SpotifyAuthenticator(get(), get()))
                 .build()
         )

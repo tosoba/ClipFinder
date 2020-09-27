@@ -12,7 +12,9 @@ sealed class NetworkResponse<out T : Any, out E : Any> {
     data class DifferentError(val error: Throwable) : NetworkResponse<Nothing, Nothing>()
 }
 
-class ThrowableServerError(val error: NetworkResponse.ServerError<*>) : Throwable()
+class ThrowableServerError(
+    val error: NetworkResponse.ServerError<*>
+) : Throwable("${error.code ?: "No error code"} : ${error.body ?: "No error body."}")
 
 fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapToResource(
     mapBody: T.() -> R
