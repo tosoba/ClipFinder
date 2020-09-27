@@ -47,14 +47,6 @@ class SpotifyAuth(
             else Completable.error(UnauthorizedException())
         }
 
-    fun <T> withTokenObservable(
-        private: Boolean = false,
-        block: (String) -> Observable<T>
-    ): Observable<T> = preferences
-        .run { if (private) userPrivateAccessToken else accessToken }
-        .observable
-        .run { if (private) flatMapValidElseThrow(block) else loadIfNeededThenFlatMapValid(block) }
-
     fun <T> withTokenSingle(
         private: Boolean = false,
         block: (String) -> Single<T>
@@ -62,19 +54,6 @@ class SpotifyAuth(
         .run { if (private) userPrivateAccessToken else accessToken }
         .single
         .run { if (private) flatMapValidElseThrow(block) else loadIfNeededThenFlatMapValid(block) }
-
-    private fun <T> Observable<SpotifyPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
-        block: (String) -> Observable<T>
-    ): Observable<T> = flatMap { saved ->
-        when (saved) {
-            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block("Bearer ${saved.token}")
-            else -> accountsApi.accessToken
-                .toObservable()
-                .mapSuccessOrThrow(AccessTokenApiModel::domain)
-                .doOnNext { preferences.accessToken = it }
-                .flatMap { block("Bearer ${it.token}") }
-        }
-    }
 
     private fun <T> Single<SpotifyPreferences.SavedAccessTokenEntity>.loadIfNeededThenFlatMapValid(
         block: (String) -> Single<T>
@@ -85,18 +64,6 @@ class SpotifyAuth(
                 .mapSuccessOrThrow(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }
                 .flatMap { block("Bearer ${it.token}") }
-        }
-    }
-
-    private fun <T> Observable<SpotifyPreferences.SavedAccessTokenEntity>.flatMapValidElseThrow(
-        block: (String) -> Observable<T>
-    ): Observable<T> = flatMap { saved ->
-        when (saved) {
-            is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block("Bearer ${saved.token}")
-            is SpotifyPreferences.SavedAccessTokenEntity.NoValue -> Observable
-                .error(IllegalStateException("No private access token granted."))
-            is SpotifyPreferences.SavedAccessTokenEntity.Invalid -> Observable
-                .error(AccessTokenExpiredException())
         }
     }
 

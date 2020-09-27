@@ -11,6 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
+import com.clipfinder.core.spotify.model.ICategory
 import com.squareup.moshi.Json
 
 /**
@@ -24,15 +25,14 @@ import com.squareup.moshi.Json
 data class CategoryObject(
     /* A link to the Web API endpoint returning full details of the category. */
     @Json(name = "href")
-    val href: String? = null,
+    override val href: String,
     /* The category icon, in various sizes. */
     @Json(name = "icons")
-    val icons: List<ImageObject>? = null,
+    override val icons: List<ImageObject>,
     /* The Spotify category ID of the category. */
     @Json(name = "id")
-    val id: String? = null,
+    override val id: String,
     /* The name of the category. */
     @Json(name = "name")
-    val name: String? = null
-)
-
+    override val name: String
+) : ICategory
