@@ -2,9 +2,7 @@ package com.example.spotify.category.domain.repo
 
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.there.domain.entity.spotify.CategoryEntity
 import com.example.there.domain.entity.spotify.PlaylistEntity
-import io.reactivex.Completable
 import io.reactivex.Single
 
 interface ISpotifyCategoryRepo {

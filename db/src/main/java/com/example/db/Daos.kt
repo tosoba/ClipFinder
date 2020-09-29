@@ -44,15 +44,6 @@ interface ArtistDao : BaseDao<ArtistDbModel> {
 }
 
 @Dao
-interface CategoryDao : BaseDao<CategoryDbModel> {
-    @Query("SELECT * FROM categories")
-    fun findAll(): Flowable<List<CategoryDbModel>>
-
-    @Query("SELECT * FROM categories WHERE id = :id")
-    fun findById(id: String): Maybe<CategoryDbModel>
-}
-
-@Dao
 interface SpotifyPlaylistDao : BaseDao<PlaylistDbModel> {
     @Query("SELECT * FROM spotify_playlists")
     fun findAll(): Flowable<List<PlaylistDbModel>>

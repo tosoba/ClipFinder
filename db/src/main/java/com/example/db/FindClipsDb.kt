@@ -13,7 +13,6 @@ import com.example.db.model.videos.VideoSearchDbModel
         entities = [
             AlbumDbModel::class,
             ArtistDbModel::class,
-            CategoryDbModel::class,
             PlaylistDbModel::class,
             TrackDbModel::class,
             VideoDbModel::class,
@@ -32,7 +31,6 @@ import com.example.db.model.videos.VideoSearchDbModel
 abstract class FindClipsDb : RoomDatabase() {
     abstract fun albumDao(): AlbumDao
     abstract fun artistDao(): ArtistDao
-    abstract fun categoryDao(): CategoryDao
     abstract fun spotifyPlaylistDao(): SpotifyPlaylistDao
     abstract fun trackDao(): TrackDao
     abstract fun videoDao(): VideoDao

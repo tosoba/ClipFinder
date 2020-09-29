@@ -10,7 +10,6 @@ val databaseModule = module {
     }
     factory { get<FindClipsDb>().albumDao() }
     factory { get<FindClipsDb>().artistDao() }
-    factory { get<FindClipsDb>().categoryDao() }
     factory { get<FindClipsDb>().spotifyPlaylistDao() }
     factory { get<FindClipsDb>().trackDao() }
     factory { get<FindClipsDb>().videoDao() }

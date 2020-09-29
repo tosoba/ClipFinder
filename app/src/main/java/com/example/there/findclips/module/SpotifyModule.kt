@@ -17,8 +17,6 @@ val spotifyModule = module {
 
     factory { GetFavouriteArtists(get(), get()) }
 
-    factory { GetFavouriteCategories(get(), get()) }
-
     factory { GetFavouriteSpotifyPlaylists(get(), get()) }
     factory { InsertSpotifyPlaylist(get(), get()) }
     factory { IsSpotifyPlaylistSaved(get(), get()) }

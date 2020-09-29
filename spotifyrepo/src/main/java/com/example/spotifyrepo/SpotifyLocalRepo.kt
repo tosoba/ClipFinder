@@ -1,11 +1,20 @@
 package com.example.spotifyrepo
 
 import com.example.core.ext.isPresent
-import com.example.db.*
-import com.example.db.model.spotify.*
+import com.example.db.AlbumDao
+import com.example.db.ArtistDao
+import com.example.db.SpotifyPlaylistDao
+import com.example.db.TrackDao
+import com.example.db.model.spotify.AlbumDbModel
+import com.example.db.model.spotify.ArtistDbModel
+import com.example.db.model.spotify.PlaylistDbModel
+import com.example.db.model.spotify.TrackDbModel
 import com.example.spotifyrepo.mapper.db
 import com.example.spotifyrepo.mapper.domain
-import com.example.there.domain.entity.spotify.*
+import com.example.there.domain.entity.spotify.AlbumEntity
+import com.example.there.domain.entity.spotify.ArtistEntity
+import com.example.there.domain.entity.spotify.PlaylistEntity
+import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.repo.spotify.ISpotifyLocalRepo
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -14,7 +23,6 @@ import io.reactivex.Single
 class SpotifyLocalRepo(
     private val albumDao: AlbumDao,
     private val artistDao: ArtistDao,
-    private val categoryDao: CategoryDao,
     private val spotifyPlaylistDao: SpotifyPlaylistDao,
     private val trackDao: TrackDao
 ) : ISpotifyLocalRepo {
@@ -24,9 +32,6 @@ class SpotifyLocalRepo(
 
     override val favouriteArtists: Flowable<List<ArtistEntity>>
         get() = artistDao.findAll().map { it.map(ArtistDbModel::domain) }
-
-    override val favouriteCategories: Flowable<List<CategoryEntity>>
-        get() = categoryDao.findAll().map { it.map(CategoryDbModel::domain) }
 
     override val favouritePlaylists: Flowable<List<PlaylistEntity>>
         get() = spotifyPlaylistDao.findAll().map { it.map(PlaylistDbModel::domain) }
@@ -40,10 +45,6 @@ class SpotifyLocalRepo(
 
     override fun insertArtist(artist: ArtistEntity): Completable = Completable.fromCallable {
         artistDao.insert(artist.db)
-    }
-
-    override fun insertCategory(category: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.insert(category.db)
     }
 
     override fun insertPlaylist(playlist: PlaylistEntity): Completable = Completable.fromCallable {
@@ -62,10 +63,6 @@ class SpotifyLocalRepo(
         artistId: String
     ): Single<Boolean> = artistDao.findById(artistId).isPresent()
 
-    override fun isCategorySaved(
-        categoryId: String
-    ): Single<Boolean> = artistDao.findById(categoryId).isPresent()
-
     override fun isPlaylistSaved(
         playlistId: String
     ): Single<Boolean> = spotifyPlaylistDao.findById(playlistId).isPresent()
@@ -80,10 +77,6 @@ class SpotifyLocalRepo(
 
     override fun deleteArtist(artist: ArtistEntity): Completable = Completable.fromCallable {
         artistDao.delete(artist.db)
-    }
-
-    override fun deleteCategory(category: CategoryEntity): Completable = Completable.fromCallable {
-        categoryDao.delete(category.db)
     }
 
     override fun deletePlaylist(playlist: PlaylistEntity): Completable = Completable.fromCallable {
