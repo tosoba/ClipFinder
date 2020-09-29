@@ -15,9 +15,11 @@ import com.example.core.android.model.Loading
 import com.example.core.android.model.LoadingFailed
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.model.spotify.infoItem
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
 import com.example.core.android.util.ext.show
@@ -36,7 +38,7 @@ import org.koin.android.ext.android.inject
 
 class TrackFragment : BaseMvRxFragment() {
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: TrackViewModel by fragmentViewModel()
     private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()

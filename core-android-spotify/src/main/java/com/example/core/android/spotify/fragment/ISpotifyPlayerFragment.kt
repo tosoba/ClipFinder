@@ -1,8 +1,9 @@
-package com.example.core.android.base.fragment
+package com.example.core.android.spotify.fragment
 
+import com.example.core.android.base.fragment.IPlayerFragment
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Playlist
 
 interface ISpotifyPlayerFragment: IPlayerFragment {
     val isPlayerLoggedIn: Boolean

@@ -36,8 +36,6 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     protected abstract val defaultHeaderText: String
 
-    protected val fragmentFactory: IFragmentFactory by inject()
-
     private var currentHeaderDecoration: RecyclerView.ItemDecoration? = null
 
     private var xmlHeaderText: String? = null

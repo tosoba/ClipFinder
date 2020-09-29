@@ -7,7 +7,7 @@ import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.mapper.videos.domain
 import com.example.core.android.mapper.videos.ui
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.spotify.User
 import com.example.core.android.model.videos.Video

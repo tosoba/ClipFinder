@@ -9,6 +9,7 @@ import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.core.android.model.spotify.TopTrack
 import com.example.core.android.spotify.model.Category
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
@@ -18,7 +19,6 @@ import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
 import com.example.spotify.dashboard.domain.usecase.GetNewReleases
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.PlaylistEntity
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
@@ -56,7 +56,7 @@ class SpotifyDashboardViewModel(
     fun loadFeaturedPlaylists() = withState { (_, featuredPlaylists) ->
         if (featuredPlaylists.shouldLoad) {
             getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
-                .mapData { playlists -> playlists.map(PlaylistEntity::ui) }
+                .mapData { playlists -> playlists.map { Playlist(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyDashboardState::featuredPlaylists) {
                     copy(featuredPlaylists = it)

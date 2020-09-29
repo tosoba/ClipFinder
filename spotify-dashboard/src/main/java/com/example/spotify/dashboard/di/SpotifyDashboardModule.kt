@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val spotifyDashboardModule = module {
     single { GetCategories(get(), get(), get()) }
-    single { GetFeaturedPlaylists(get(), get()) }
+    single { GetFeaturedPlaylists(get(), get(), get()) }
     single { GetNewReleases(get(), get()) }
     single { GetDailyViralTracks(get(), get()) }
 

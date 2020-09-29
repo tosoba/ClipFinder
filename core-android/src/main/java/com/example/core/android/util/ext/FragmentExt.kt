@@ -9,14 +9,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.mvrx.*
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment
 import com.example.core.android.base.handler.BackPressedWithNoPreviousStateController
 import com.example.core.android.base.handler.ConnectivitySnackbarHost
-import com.example.core.android.base.handler.SpotifyAuthController
-import com.example.core.android.base.handler.SpotifyPlayerController
 import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.ext.castAs
 import java.util.*
@@ -24,9 +21,6 @@ import kotlin.reflect.KClass
 
 val Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
     get() = activity as? BackPressedWithNoPreviousStateController
-
-val Fragment.spotifyAuthController: SpotifyAuthController?
-    get() = activity as? SpotifyAuthController
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
     mainHintText: String,
@@ -81,17 +75,6 @@ fun Fragment.reloadingConnectivityComponent(
         activity?.startActivity(Intent(Settings.ACTION_SETTINGS))
     }
 })
-
-fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> Unit) {
-    mainContentFragment?.enablePlayButton {
-        val playerController = activity?.castAs<SpotifyPlayerController>()
-        if (playerController?.isPlayerLoggedIn == true) playerController.playClicked()
-        else activity?.castAs<SpotifyAuthController>()?.let {
-            it.showLoginDialog()
-            it.onLoginSuccessful = { playerController?.playClicked() }
-        }
-    }
-}
 
 inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmentViewModel(
     viewModelClass: KClass<VM> = VM::class,

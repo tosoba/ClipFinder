@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.model.spotify.clickableGridListItem
+import com.example.core.android.spotify.model.clickableGridListItem
 import com.example.core.android.spotify.model.Category
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.loadBackgroundGradient
 import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.setupWithBackNavigation
@@ -26,7 +27,7 @@ import org.koin.android.ext.android.inject
 
 class SpotifyCategoryFragment : BaseMvRxFragment() {
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 

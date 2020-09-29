@@ -7,11 +7,11 @@ import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.videos.VideoPlaylist
 import com.example.core.android.spotify.model.Category
-import com.example.core.android.spotify.navigation.ISpotifyDashboardNavDestinations
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudfavourites.SoundCloudFavouritesNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
@@ -32,7 +32,7 @@ import com.example.youtubevideoplaylist.VideoPlaylistFragment
 
 object FragmentFactory :
     IFragmentFactory,
-    ISpotifyDashboardNavDestinations {
+    ISpotifyFragmentsFactory {
 
     override val newSpotifyDashboardNavHostFragment: Fragment
         get() = SpotifyDashboardNavHostFragment()

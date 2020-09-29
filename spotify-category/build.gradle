@@ -44,6 +44,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':itemlist')
     implementation project(':spotifyapi')
+    implementation project(':spotify-api')
 
     implementation rootProject.ext.rxJava
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'

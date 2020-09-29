@@ -5,14 +5,13 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.category.domain.usecase.GetPlaylistsForCategory
-import com.example.there.domain.entity.spotify.PlaylistEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -38,7 +37,7 @@ class SpotifyCategoryViewModel(
             offset = if (shouldClear) 0 else state.playlists.offset
         )
         getPlaylistsForCategory(args)
-            .mapData { playlistsPage -> playlistsPage.map(PlaylistEntity::ui) }
+            .mapData { playlistsPage -> playlistsPage.map { Playlist(it) } }
             .subscribeOn(Schedulers.io())
             .updateWithPagedResource(SpotifyCategoryViewState::playlists, shouldClear = shouldClear) {
                 copy(playlists = it)

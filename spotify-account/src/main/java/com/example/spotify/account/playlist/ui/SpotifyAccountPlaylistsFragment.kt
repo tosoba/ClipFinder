@@ -13,11 +13,11 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.LargeTextCenterBindingModel_
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.Initial
-import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.ext.spotifyAuthController
+import com.example.core.android.spotify.model.clickableListItem
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
-import com.example.core.android.util.ext.spotifyAuthController
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.account.R
 import com.example.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
@@ -25,7 +25,7 @@ import org.koin.android.ext.android.inject
 
 class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: SpotifyAccountPlaylistsViewModel by fragmentViewModel()
 

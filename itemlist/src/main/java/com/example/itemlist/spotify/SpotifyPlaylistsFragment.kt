@@ -1,17 +1,21 @@
 package com.example.itemlist.spotify
 
 import androidx.fragment.app.Fragment
-import com.example.core.android.BR
-import com.example.core.android.R
+import com.example.core.android.spotify.BR
+import com.example.core.android.spotify.R
 import com.example.core.android.base.fragment.BaseListFragment
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.list.IdentifiableObservableListItem
 import com.example.core.android.util.list.ObservableSortedList
 import com.example.core.android.view.recyclerview.binder.ItemBinder
 import com.example.core.android.view.recyclerview.binder.ItemBinderBase
 import com.example.core.android.view.recyclerview.item.ListItemView
+import org.koin.android.ext.android.inject
 
 class SpotifyPlaylistsFragment : BaseListFragment<Playlist>() {
+
+    private val fragmentFactory: ISpotifyFragmentsFactory by inject()
 
     override val defaultHeaderText: String = "Playlists"
 

@@ -4,7 +4,7 @@ import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.PagedDataList
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 
 data class SpotifySearchViewState(

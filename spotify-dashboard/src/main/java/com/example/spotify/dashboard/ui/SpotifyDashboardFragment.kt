@@ -13,7 +13,7 @@ import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
 import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.navigation.ISpotifyDashboardNavDestinations
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
@@ -27,7 +27,7 @@ import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
-    private val navDestinations: ISpotifyDashboardNavDestinations by inject()
+    private val navDestinations: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 

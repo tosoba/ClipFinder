@@ -11,6 +11,9 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
 import com.example.core.android.model.spotify.*
+import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.clickableListItem
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
@@ -55,7 +58,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         abstract class BaseListFragment<I> : ItemListFragment<SpotifySearchViewState>() {
 
             protected val viewModel: SpotifySearchViewModel by parentFragmentViewModel()
-            protected val factory: IFragmentFactory by inject()
+            protected val factory: ISpotifyFragmentsFactory by inject()
 
             protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
 

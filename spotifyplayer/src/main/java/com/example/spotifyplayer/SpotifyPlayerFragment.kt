@@ -20,11 +20,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
 import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.fragment.BaseVMFragment
-import com.example.core.android.base.fragment.ISpotifyPlayerFragment
+import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.example.core.android.base.handler.SlidingPanelController
-import com.example.core.android.base.handler.SpotifyTrackChangeHandler
+import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.notification.PlaybackNotification

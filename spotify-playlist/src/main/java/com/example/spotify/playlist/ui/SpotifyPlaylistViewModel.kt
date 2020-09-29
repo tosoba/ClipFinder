@@ -8,13 +8,12 @@ import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.domain
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Data
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.spotify.playlist.domain.usecase.GetPlaylistTracks

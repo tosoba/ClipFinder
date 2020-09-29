@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.activity.BaseVMActivity
 import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.fragment.*
@@ -27,11 +26,16 @@ import com.example.core.android.base.handler.*
 import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
 import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.controller.SpotifyAuthController
+import com.example.core.android.spotify.controller.SpotifyPlayerController
+import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
+import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
+import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnNavigationDrawerClosedListerner
@@ -73,7 +77,7 @@ class MainActivity :
     ToolbarController,
     IntentProvider {
 
-    private val fragmentFactory: IFragmentFactory by inject()
+    private val fragmentFactory: ISpotifyFragmentsFactory by inject()
 
     override val slidingPanel: SlidingUpPanelLayout? get() = sliding_layout
 
@@ -566,8 +570,10 @@ class MainActivity :
 
     override fun onLoginFailed(error: Error?) {
         Log.e("ERR", "onLoginFailed")
-        Toast.makeText(this, "Login failed: ${error?.name
-            ?: "error unknown"}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Login failed: ${
+            error?.name
+                ?: "error unknown"
+        }", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTemporaryError() {

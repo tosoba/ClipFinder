@@ -13,6 +13,8 @@ import com.example.core.android.TrackPopularityItemBindingModel_
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
@@ -25,7 +27,7 @@ import org.koin.android.ext.android.inject
 
 class SpotifyAlbumFragment : BaseMvRxFragment() {
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
 

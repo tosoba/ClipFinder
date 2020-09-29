@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.*
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.playlist.PlaylistViewState
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.playlist.R
@@ -39,7 +41,7 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
         }
     }
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val viewModel: SpotifyPlaylistViewModel by fragmentViewModel()
 

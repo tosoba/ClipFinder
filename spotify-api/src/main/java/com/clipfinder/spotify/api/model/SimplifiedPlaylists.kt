@@ -20,6 +20,5 @@ import com.squareup.moshi.Json
 
 data class SimplifiedPlaylists(
     @Json(name = "playlists")
-    val playlists: SimplifiedPlaylistsPagingObject? = null
+    val playlists: SimplifiedPlaylistsPagingObject
 )
-

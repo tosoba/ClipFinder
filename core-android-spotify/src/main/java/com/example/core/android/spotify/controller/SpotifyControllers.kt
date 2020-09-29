@@ -1,9 +1,9 @@
-package com.example.core.android.base.handler
+package com.example.core.android.spotify.controller
 
 import androidx.lifecycle.LiveData
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Playlist
 import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Playlist
 
 interface SpotifyPlayerController {
     val isPlayerLoggedIn: Boolean

@@ -14,6 +14,7 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.core.android.model.spotify.Artist
 import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
@@ -25,7 +26,7 @@ import org.koin.android.ext.android.inject
 
 class SpotifyArtistFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
 
-    private val factory: IFragmentFactory by inject()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val argArtist: Artist by args()
 

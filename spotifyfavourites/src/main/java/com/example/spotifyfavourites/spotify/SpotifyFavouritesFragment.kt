@@ -10,7 +10,7 @@ import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseVMFragment
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.Playlist
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
@@ -62,7 +62,7 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                     }
                 }
             },
-            BaseListFragment.newInstance<SpotifyPlaylistsFragment, Playlist>(
+            BaseListFragment.newInstance<SpotifyPlaylistsFragment, com.example.core.android.spotify.model.Playlist>(
                 getString(R.string.no_favourite_playlists_added_yet),
                 getString(R.string.browse_for_playlists),
                 viewModel.viewState.value?.playlists

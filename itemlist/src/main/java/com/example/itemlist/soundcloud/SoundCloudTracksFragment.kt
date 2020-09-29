@@ -3,6 +3,7 @@ package com.example.itemlist.soundcloud
 import androidx.fragment.app.Fragment
 import com.example.core.android.BR
 import com.example.core.android.R
+import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.util.list.IdentifiableNamedObservableListItem
@@ -10,8 +11,11 @@ import com.example.core.android.util.list.ObservableSortedList
 import com.example.core.android.view.recyclerview.binder.ItemBinder
 import com.example.core.android.view.recyclerview.binder.ItemBinderBase
 import com.example.core.android.view.recyclerview.item.ListItemView
+import org.koin.android.ext.android.inject
 
 class SoundCloudTracksFragment : BaseListFragment<SoundCloudTrack>() {
+
+    private val fragmentFactory : IFragmentFactory by inject()
 
     override val defaultHeaderText: String = "Tracks"
 

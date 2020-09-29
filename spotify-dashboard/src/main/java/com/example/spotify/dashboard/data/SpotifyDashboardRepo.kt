@@ -1,6 +1,7 @@
 package com.example.spotify.dashboard.data
 
 import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
 import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -13,11 +14,9 @@ import com.example.spotifyapi.SpotifyBrowseApi
 import com.example.spotifyapi.SpotifyChartsApi
 import com.example.spotifyapi.SpotifyTracksApi
 import com.example.spotifyapi.models.SimpleAlbum
-import com.example.spotifyapi.models.SimplePlaylist
 import com.example.spotifyapi.models.Track
 import com.example.spotifyapi.util.domain
 import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.PlaylistEntity
 import com.example.there.domain.entity.spotify.TopTrackEntity
 import io.reactivex.Single
 
@@ -27,12 +26,12 @@ class SpotifyDashboardRepo(
     private val tracksApi: SpotifyTracksApi,
     private val chartsApi: SpotifyChartsApi,
     private val browseApi: SpotifyBrowseApi,
-    private val browse: BrowseEndpoints
+    private val browseEndpoints: BrowseEndpoints
 ) : ISpotifyDashboardRepo {
 
     override fun getCategories(
         offset: Int
-    ): Single<Resource<Paged<List<ICategory>>>> = browse.getCategories(
+    ): Single<Resource<Paged<List<ICategory>>>> = browseEndpoints.getCategories(
         offset = offset,
         country = preferences.country,
         locale = preferences.locale
@@ -46,16 +45,13 @@ class SpotifyDashboardRepo(
 
     override fun getFeaturedPlaylists(
         offset: Int
-    ): Single<Resource<Paged<List<PlaylistEntity>>>> = auth.withTokenSingle { token ->
-        browseApi.getFeaturedPlaylists(
-            authorization = token,
-            offset = offset,
-            country = preferences.country,
-            locale = preferences.locale
-        )
-    }.mapToResource {
-        Paged(
-            contents = items.map(SimplePlaylist::domain),
+    ): Single<Resource<Paged<List<ISpotifySimplePlaylist>>>> = browseEndpoints.getFeaturedPlaylists(
+        offset = offset,
+        country = preferences.country,
+        locale = preferences.locale
+    ).mapToResource {
+        Paged<List<ISpotifySimplePlaylist>>(
+            contents = playlists.items,
             offset = playlists.offset + SpotifyDefaults.LIMIT,
             total = playlists.total
         )

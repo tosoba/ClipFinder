@@ -38,7 +38,15 @@ dependencies {
 
     implementation project(':domain')
     implementation project(':core')
+    implementation project(':core-spotify')
     implementation project(':core-android')
+    implementation project(':core-android-spotify')
+
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-core-ext:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "org.koin:koin-androidx-ext:$koin_version"
 
     implementation rootProject.ext.rxJava
 

@@ -11,6 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
+import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
 import com.squareup.moshi.Json
 
 /**
@@ -32,30 +33,29 @@ import com.squareup.moshi.Json
 
 data class SimplifiedPlaylistObject(
     @Json(name = "collaborative")
-    val collaborative: Boolean? = null,
+    val collaborative: Boolean,
     @Json(name = "description")
-    val description: String? = null,
+    override val description: String? = null,
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     @Json(name = "href")
-    val href: String? = null,
+    override val href: String,
     @Json(name = "id")
-    val id: String? = null,
+    override val id: String,
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    override val images: List<ImageObject>,
     @Json(name = "name")
-    val name: String? = null,
+    override val name: String,
     @Json(name = "owner")
-    val owner: PublicUserObject? = null,
+    val owner: PublicUserObject,
     @Json(name = "public")
     val public: Boolean? = null,
     @Json(name = "snapshot_id")
-    val snapshotId: String? = null,
+    val snapshotId: String,
     @Json(name = "tracks")
-    val tracks: PlaylistTracksInfo? = null,
+    val tracks: PlaylistTracksInfo,
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     @Json(name = "uri")
-    val uri: String? = null
-)
-
+    override val uri: String
+) : ISpotifySimplePlaylist
