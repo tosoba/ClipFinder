@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.args
 import com.example.core.android.base.IFragmentFactory
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.dpToPx
 import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.setHeight
@@ -33,10 +34,11 @@ class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main
         mainContentFragment?.disablePlayButton()
         with(binding) {
             val fragmentFactory: IFragmentFactory by inject()
+            val spotifyFragmentsFactory: ISpotifyFragmentsFactory by inject()
             val adapter = CustomCurrentStatePagerAdapter(
                 childFragmentManager,
                 arrayOf(
-                    fragmentFactory.newSpotifySearchFragment(query),
+                    spotifyFragmentsFactory.newSpotifySearchFragment(query),
                     fragmentFactory.newVideosSearchFragment(query)
                 )
             )

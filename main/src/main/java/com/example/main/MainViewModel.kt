@@ -7,11 +7,11 @@ import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.mapper.videos.domain
 import com.example.core.android.mapper.videos.ui
 import com.example.core.android.model.spotify.Album
-import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.model.spotify.User
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.spotify.model.Playlist
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.entity.videos.VideoPlaylistEntity
 import com.example.there.domain.usecase.base.CompletableUseCaseWithArgs
@@ -94,20 +94,6 @@ class MainViewModel(
     fun clearAllVideoSearchData() {
         deleteAllVideoSearchData().subscribeAndDisposeOnCleared()
     }
-
-    fun togglePlaylistFavouriteState(
-        playlist: Playlist,
-        onPlaylistAdded: () -> Unit,
-        onPlaylistDeleted: () -> Unit
-    ) = toggleItemFavouriteState(
-        playlist.domain,
-        playlist.id,
-        isSpotifyPlaylistSaved,
-        insertSpotifyPlaylist,
-        deleteSpotifyPlaylist,
-        onPlaylistAdded,
-        onPlaylistDeleted
-    )
 
     fun toggleTrackFavouriteState(
         track: Track,

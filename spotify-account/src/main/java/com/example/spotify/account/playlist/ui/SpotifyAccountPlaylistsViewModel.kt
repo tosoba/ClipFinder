@@ -5,14 +5,13 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Initial
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.account.playlist.domain.usecase.GetCurrentUsersPlaylists
-import com.example.there.domain.entity.spotify.PlaylistEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -35,7 +34,7 @@ class SpotifyAccountPlaylistsViewModel(
     fun loadPlaylists() = withState { (userLoggedIn, playlists) ->
         if (userLoggedIn && playlists.shouldLoad) {
             getCurrentUsersPlaylists(applySchedulers = false, args = playlists.offset)
-                .mapData { newPlaylists -> newPlaylists.map(PlaylistEntity::ui) }
+                .mapData { newPlaylists -> newPlaylists.map { Playlist(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountPlaylistState::playlists) { copy(playlists = it) }
         }

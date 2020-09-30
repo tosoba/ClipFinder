@@ -97,7 +97,7 @@ class SpotifySearchViewModel(
                                 artists.copyWithNewItems(newItems.map(ArtistEntity::ui), offset, total)
                             } ?: artists,
                             playlists = searchResult.playlists?.let { (newItems, offset, total) ->
-                                playlists.copyWithNewItems(newItems.map(PlaylistEntity::ui), offset, total)
+                                playlists //TODO: fix after plugging in new search endpoint
                             } ?: playlists,
                             tracks = searchResult.tracks?.let { (newItems, offset, total) ->
                                 tracks.copyWithNewItems(newItems.map(TrackEntity::ui), offset, total)

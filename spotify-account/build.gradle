@@ -45,6 +45,7 @@ dependencies {
     implementation project(':core-android-spotify')
     implementation project(':itemlist')
     implementation project(':spotifyapi')
+    implementation project(':spotify-api')
 
     implementation rootProject.ext.rxJava
 

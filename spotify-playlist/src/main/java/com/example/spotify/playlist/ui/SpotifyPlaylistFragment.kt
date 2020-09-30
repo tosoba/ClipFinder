@@ -57,7 +57,7 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
     ).apply {
         enableSpotifyPlayButton { loadPlaylist(this@SpotifyPlaylistFragment.playlist) }
         playlist = this@SpotifyPlaylistFragment.playlist
-        playlistFavouriteFab.setOnClickListener { viewModel.togglePlaylistFavouriteState() }
+        playlistFavouriteFab.setOnClickListener { }
         playlistToolbarGradientBackgroundView
             .loadBackgroundGradient(this@SpotifyPlaylistFragment.playlist.iconUrl)
             .disposeOnDestroy(this@SpotifyPlaylistFragment)

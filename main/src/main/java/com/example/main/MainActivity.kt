@@ -240,7 +240,6 @@ class MainActivity :
         viewModel.viewState.playerState.get()?.let { playerState ->
             when (playerState) {
                 PlayerState.VIDEO -> addVideoToFavourites()
-                PlayerState.PLAYLIST -> togglePlaylistFavouriteState()
                 PlayerState.TRACK -> toggleTrackFavouriteState()
                 PlayerState.ALBUM -> toggleAlbumFavouriteState()
                 else -> return@OnClickListener
@@ -727,16 +726,6 @@ class MainActivity :
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-    }
-
-    private fun togglePlaylistFavouriteState() {
-        spotifyPlayerFragment?.lastPlayedPlaylist?.let {
-            viewModel.togglePlaylistFavouriteState(
-                it,
-                { Toast.makeText(this, "${it.name} added to favourite playlists.", Toast.LENGTH_SHORT).show() },
-                { Toast.makeText(this, "${it.name} deleted from favourite playlists.", Toast.LENGTH_SHORT).show() }
-            )
-        }
     }
 
     private fun toggleTrackFavouriteState() {

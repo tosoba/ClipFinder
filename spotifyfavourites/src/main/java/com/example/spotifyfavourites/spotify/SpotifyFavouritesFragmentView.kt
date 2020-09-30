@@ -16,6 +16,5 @@ class SpotifyFavouritesFragmentView(
 class SpotifyFavouritesFragmentViewState(
     val albums: ArrayList<Album> = ArrayList(),
     val artists: ArrayList<Artist> = ArrayList(),
-    val playlists: ArrayList<com.example.core.android.spotify.model.Playlist> = ArrayList(),
     val tracks: ArrayList<Track> = ArrayList()
 )

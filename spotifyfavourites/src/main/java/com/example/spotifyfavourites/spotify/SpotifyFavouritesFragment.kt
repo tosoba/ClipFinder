@@ -10,7 +10,6 @@ import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseVMFragment
 import com.example.core.android.model.spotify.Album
 import com.example.core.android.model.spotify.Artist
-import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.model.spotify.Track
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
@@ -59,17 +58,6 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
                 refreshData = { fragment ->
                     viewModel.viewState.value?.let {
                         fragment.updateItems(it.artists)
-                    }
-                }
-            },
-            BaseListFragment.newInstance<SpotifyPlaylistsFragment, com.example.core.android.spotify.model.Playlist>(
-                getString(R.string.no_favourite_playlists_added_yet),
-                getString(R.string.browse_for_playlists),
-                viewModel.viewState.value?.playlists
-            ).apply {
-                refreshData = { fragment ->
-                    viewModel.viewState.value?.let {
-                        fragment.updateItems(it.playlists)
                     }
                 }
             },
@@ -123,7 +111,6 @@ class SpotifyFavouritesFragment : BaseVMFragment<SpotifyFavouritesViewModel>(Spo
             when (fragment) {
                 is SpotifyAlbumsFragment -> fragment.updateItems(it.albums)
                 is SpotifyArtistsFragment -> fragment.updateItems(it.artists)
-                is SpotifyPlaylistsFragment -> fragment.updateItems(it.playlists)
                 is SpotifyTracksFragment -> fragment.updateItems(it.tracks)
             }
         }
