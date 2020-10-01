@@ -11,7 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
-import com.clipfinder.core.spotify.model.IImage
+import com.clipfinder.core.spotify.model.ISpotifyImage
 import com.squareup.moshi.Json
 
 /**
@@ -31,4 +31,4 @@ data class ImageObject(
     /* The image width in pixels. If unknown: null or not returned. */
     @Json(name = "width")
     override val width: Int? = null
-) : IImage
+) : ISpotifyImage

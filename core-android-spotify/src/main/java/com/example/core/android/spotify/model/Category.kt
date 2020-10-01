@@ -3,7 +3,7 @@ package com.example.core.android.spotify.model
 import android.os.Parcelable
 import android.view.View
 import com.clipfinder.core.spotify.ext.firstImageUrl
-import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.core.spotify.model.ISpotifyCategory
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
 import com.example.core.android.util.list.IdentifiableNamedObservableListItem
@@ -17,12 +17,12 @@ data class Category(
     override val name: String,
     override val icons: List<Image>,
     override val href: String
-) : ICategory,
+) : ISpotifyCategory,
     Parcelable,
     NamedImageListItem,
     IdentifiableNamedObservableListItem<String> {
 
-    constructor(other: ICategory) : this(
+    constructor(other: ISpotifyCategory) : this(
         other.id,
         other.name,
         other.icons.map { Image(it) },

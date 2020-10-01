@@ -1,7 +1,7 @@
 package com.example.spotify.dashboard.domain.usecase
 
 import com.clipfinder.core.spotify.auth.ISpotifyAuth
-import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.core.spotify.model.ISpotifyCategory
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Paged
 import com.example.core.model.Resource
@@ -13,8 +13,8 @@ class GetCategories(
     schedulers: RxSchedulers,
     private val auth: ISpotifyAuth,
     private val repo: ISpotifyDashboardRepo
-) : SingleUseCaseWithArgs<Int, Resource<Paged<List<ICategory>>>>(schedulers) {
-    override fun run(args: Int): Single<Resource<Paged<List<ICategory>>>> = auth
+) : SingleUseCaseWithArgs<Int, Resource<Paged<List<ISpotifyCategory>>>>(schedulers) {
+    override fun run(args: Int): Single<Resource<Paged<List<ISpotifyCategory>>>> = auth
         .authorize()
         .andThen(repo.getCategories(offset = args))
 }

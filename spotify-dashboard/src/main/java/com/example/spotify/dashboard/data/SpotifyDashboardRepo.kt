@@ -1,6 +1,6 @@
 package com.example.spotify.dashboard.data
 
-import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.core.spotify.model.ISpotifyCategory
 import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
 import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.example.core.SpotifyDefaults
@@ -31,12 +31,12 @@ class SpotifyDashboardRepo(
 
     override fun getCategories(
         offset: Int
-    ): Single<Resource<Paged<List<ICategory>>>> = browseEndpoints.getCategories(
+    ): Single<Resource<Paged<List<ISpotifyCategory>>>> = browseEndpoints.getCategories(
         offset = offset,
         country = preferences.country,
         locale = preferences.locale
     ).mapToResource {
-        Paged<List<ICategory>>(
+        Paged<List<ISpotifyCategory>>(
             contents = categories.items,
             offset = categories.offset + SpotifyDefaults.LIMIT,
             total = categories.total

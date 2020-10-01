@@ -11,7 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
-import com.clipfinder.core.spotify.model.ICategory
+import com.clipfinder.core.spotify.model.ISpotifyCategory
 import com.squareup.moshi.Json
 
 /**
@@ -35,4 +35,4 @@ data class CategoryObject(
     /* The name of the category. */
     @Json(name = "name")
     override val name: String
-) : ICategory
+) : ISpotifyCategory
