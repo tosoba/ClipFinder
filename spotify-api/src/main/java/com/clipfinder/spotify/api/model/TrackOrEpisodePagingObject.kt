@@ -27,24 +27,24 @@ import com.squareup.moshi.Json
 data class TrackOrEpisodePagingObject(
     /* A link to the Web API endpoint returning the full result of the request */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<TrackOrEpisodeObject>? = null,
+    val items: List<TrackOrEpisodeObject>,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
-    val limit: Int? = null,
+    val limit: Int,
     /* URL to the next page of items. ( null if none) */
     @Json(name = "next")
     val next: String? = null,
     /* The offset of the items returned (as set in the query or by default) */
     @Json(name = "offset")
-    val offset: Int? = null,
+    val offset: Int,
     /* URL to the previous page of items. ( null if none) */
     @Json(name = "previous")
     val previous: String? = null,
     /* The total number of items available to return. */
     @Json(name = "total")
-    val total: Int? = null
+    val total: Int
 )
 

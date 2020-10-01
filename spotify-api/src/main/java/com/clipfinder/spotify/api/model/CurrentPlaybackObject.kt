@@ -28,22 +28,22 @@ import com.squareup.moshi.Json
 
 data class CurrentPlaybackObject(
     @Json(name = "timestamp")
-    val timestamp: java.time.OffsetDateTime? = null,
+    val timestamp: java.time.OffsetDateTime,
     @Json(name = "device")
-    val device: DeviceObject? = null,
+    val device: DeviceObject,
     @Json(name = "progress_ms")
-    val progressMs: Int? = null,
+    val progressMs: Int,
     @Json(name = "is_playing")
-    val isPlaying: Boolean? = null,
+    val isPlaying: Boolean,
     @Json(name = "currently_playing_type")
-    val currentlyPlayingType: String? = null,
+    val currentlyPlayingType: String,
     @Json(name = "item")
-    val item: TrackOrEpisodeObject? = null,
+    val item: TrackOrEpisodeObject,
     @Json(name = "shuffle_state")
-    val shuffleState: Boolean? = null,
+    val shuffleState: Boolean,
     @Json(name = "repeat_state")
-    val repeatState: String? = null,
+    val repeatState: String,
     @Json(name = "context")
-    val context: ContextObject? = null
+    val context: ContextObject
 )
 

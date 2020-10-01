@@ -21,6 +21,6 @@ import com.squareup.moshi.Json
 data class DevicesObject(
     /* A list of 0..n Device objects */
     @Json(name = "devices")
-    val devices: List<DeviceObject>? = null
+    val devices: List<DeviceObject>
 )
 

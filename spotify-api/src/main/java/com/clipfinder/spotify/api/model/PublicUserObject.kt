@@ -30,23 +30,23 @@ data class PublicUserObject(
     @Json(name = "display_name")
     val displayName: String? = null,
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     @Json(name = "followers")
-    val followers: FollowersObject? = null,
+    val followers: FollowersObject,
     /* A link to the Web API endpoint for this user. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify user ID for this user. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The user’s profile image. */
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    val images: List<ImageObject>,
     /* The object type: “user” */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for this user. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

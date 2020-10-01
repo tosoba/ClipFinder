@@ -22,11 +22,11 @@ import com.squareup.moshi.Json
 
 data class PlayHistoryObject(
     @Json(name = "context")
-    val context: ContextObject? = null,
+    val context: ContextObject,
     /* The date and time the track was played. */
     @Json(name = "played_at")
-    val playedAt: java.time.OffsetDateTime? = null,
+    val playedAt: java.time.OffsetDateTime,
     @Json(name = "track")
-    val track: SimplifiedTrackObject? = null
+    val track: SimplifiedTrackObject
 )
 

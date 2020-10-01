@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class ErrorResponseObject(
     @Json(name = "error")
-    val error: ErrorDetailsObject? = null
+    val error: ErrorDetailsObject
 )
 

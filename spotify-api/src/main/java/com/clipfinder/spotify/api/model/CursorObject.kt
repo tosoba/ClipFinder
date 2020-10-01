@@ -22,6 +22,6 @@ import com.squareup.moshi.Json
 data class CursorObject(
     /* The cursor to use as key to find the next page of items. */
     @Json(name = "after")
-    val after: String? = null
+    val after: String
 )
 

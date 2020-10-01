@@ -28,24 +28,24 @@ import com.squareup.moshi.Json
 data class DeviceObject(
     /* The device ID. This may be null. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* If this device is the currently active device. */
     @Json(name = "is_active")
-    val isActive: Boolean? = null,
+    val isActive: Boolean,
     /* If this device is currently in a private session. */
     @Json(name = "is_private_session")
-    val isPrivateSession: Boolean? = null,
+    val isPrivateSession: Boolean,
     /* Whether controlling this device is restricted. At present if this is “true” then no Web API commands will be accepted by this device. */
     @Json(name = "is_restricted")
-    val isRestricted: Boolean? = null,
+    val isRestricted: Boolean,
     /* The name of the device. */
     @Json(name = "name")
-    val name: String? = null,
+    val name: String,
     /* Device type, such as “computer”, “smartphone” or “speaker”. */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The current volume in percent. This may be null. */
     @Json(name = "volume_percent")
-    val volumePercent: Int? = null
+    val volumePercent: Int
 )
 

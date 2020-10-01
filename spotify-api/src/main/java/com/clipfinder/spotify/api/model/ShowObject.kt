@@ -36,50 +36,50 @@ import com.squareup.moshi.Json
 data class ShowObject(
     /* A list of the countries in which the show can be played, identified by their ISO 3166-1 alpha-2 code. */
     @Json(name = "available_markets")
-    val availableMarkets: List<String>? = null,
+    val availableMarkets: List<String>,
     /* The copyright statements of the show. */
     @Json(name = "copyrights")
-    val copyrights: List<CopyrightObject>? = null,
+    val copyrights: List<CopyrightObject>,
     /* A description of the show. */
     @Json(name = "description")
-    val description: String? = null,
+    val description: String,
     /* A list of the show’s episodes. */
     @Json(name = "episodes")
-    val episodes: List<SimplifiedEpisodeObject>? = null,
+    val episodes: List<SimplifiedEpisodeObject>,
     /* Whether or not the show has explicit content (true = yes it does; false = no it does not OR unknown). */
     @Json(name = "explicit")
-    val explicit: Boolean? = null,
+    val explicit: Boolean,
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the show. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify ID for the show. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The cover art for the show in various sizes, widest first. */
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    val images: List<ImageObject>,
     /* True if all of the show’s episodes are hosted outside of Spotify’s CDN. This field might be null in some cases. */
     @Json(name = "is_externally_hosted")
     val isExternallyHosted: Boolean? = null,
     /* A list of the languages used in the show, identified by their ISO 639 code. */
     @Json(name = "languages")
-    val languages: List<String>? = null,
+    val languages: List<String>,
     /* The media type of the show. */
     @Json(name = "media_type")
-    val mediaType: String? = null,
+    val mediaType: String,
     /* The name of the episode. */
     @Json(name = "name")
-    val name: String? = null,
+    val name: String,
     /* The publisher of the show. */
     @Json(name = "publisher")
-    val publisher: String? = null,
+    val publisher: String,
     /* The object type: “show”. */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the show. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

@@ -23,9 +23,9 @@ import com.squareup.moshi.Json
 data class ResumePointObject(
     /* Whether or not the episode has been fully played by the user. */
     @Json(name = "fully_played")
-    val fullyPlayed: Boolean? = null,
+    val fullyPlayed: Boolean,
     /* The user’s most recent position in the episode in milliseconds. */
     @Json(name = "resume_position_ms")
-    val resumePositionMs: Int? = null
+    val resumePositionMs: Int
 )
 

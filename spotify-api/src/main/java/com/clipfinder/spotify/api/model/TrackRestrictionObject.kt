@@ -22,6 +22,6 @@ import com.squareup.moshi.Json
 data class TrackRestrictionObject(
     /* The reason why a track is not available. */
     @Json(name = "reason")
-    val reason: String? = null
+    val reason: String
 )
 

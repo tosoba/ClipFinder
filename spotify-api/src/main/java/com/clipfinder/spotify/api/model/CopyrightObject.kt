@@ -23,9 +23,9 @@ import com.squareup.moshi.Json
 data class CopyrightObject(
     /* The copyright text for this album. */
     @Json(name = "text")
-    val text: String? = null,
+    val text: String,
     /* The type of copyright: C = the copyright, P = the sound recording (performance) copyright. */
     @Json(name = "type")
-    val type: String? = null
+    val type: String
 )
 

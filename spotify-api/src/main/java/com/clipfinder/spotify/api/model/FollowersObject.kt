@@ -26,6 +26,6 @@ data class FollowersObject(
     val href: String? = null,
     /* The total number of followers. */
     @Json(name = "total")
-    val total: Int? = null
+    val total: Int
 )
 

@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class ArtistsObject(
     @Json(name = "artists")
-    val artists: List<ArtistObject>? = null
+    val artists: List<ArtistObject>
 )
 

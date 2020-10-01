@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class EpisodesObject(
     @Json(name = "episodes")
-    val episodes: List<EpisodeObject>? = null
+    val episodes: List<EpisodeObject>
 )
 

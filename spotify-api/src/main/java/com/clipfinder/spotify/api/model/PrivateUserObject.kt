@@ -31,34 +31,34 @@ import com.squareup.moshi.Json
 data class PrivateUserObject(
     /* The country of the user, as set in the user’s account profile. An ISO 3166-1 alpha-2 country code. This field is only available when the current user has granted access to the user-read-private scope. */
     @Json(name = "country")
-    val country: String? = null,
+    val country: String,
     /* The name displayed on the user’s profile. null if not available. */
     @Json(name = "display_name")
     val displayName: String? = null,
     /* The user’s email address, as entered by the user when creating their account. Important! This email address is unverified; there is no proof that it actually belongs to the user. This field is only available when the current user has granted access to the user-read-email scope. */
     @Json(name = "email")
-    val email: String? = null,
+    val email: String,
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     @Json(name = "followers")
-    val followers: FollowersObject? = null,
+    val followers: FollowersObject,
     /* A link to the Web API endpoint for this user. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify user ID for the user. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The user’s profile image. */
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    val images: List<ImageObject>,
     /* The user’s Spotify subscription level: “premium”, “free”, etc. (The subscription level “open” can be considered the same as “free”.) This field is only available when the current user has granted access to the user-read-private scope. */
     @Json(name = "product")
-    val product: String? = null,
+    val product: String,
     /* The object type: “user” */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the user. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

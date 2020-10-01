@@ -27,21 +27,21 @@ import com.squareup.moshi.Json
 data class RecommendationSeedObject(
     /* The number of tracks available after min_* and max_* filters have been applied. */
     @Json(name = "afterFilteringSize")
-    val afterFilteringSize: Int? = null,
+    val afterFilteringSize: Int,
     /* The number of tracks available after relinking for regional availability. */
     @Json(name = "afterRelinkingSize")
-    val afterRelinkingSize: Int? = null,
+    val afterRelinkingSize: Int,
     /* A link to the full track or artist data for this seed. For tracks this will be a link to a Track Object. For artists a link to an Artist Object. For genre seeds, this value will be null. */
     @Json(name = "href")
     val href: String? = null,
     /* The id used to select this seed. This will be the same as the string used in the seed_artists, seed_tracks or seed_genres parameter. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The number of recommended tracks available for this seed. */
     @Json(name = "initialPoolSize")
-    val initialPoolSize: Int? = null,
+    val initialPoolSize: Int,
     /* The entity type of this seed. One of artist, track or genre. */
     @Json(name = "type")
-    val type: String? = null
+    val type: String
 )
 

@@ -41,52 +41,52 @@ data class SimplifiedEpisodeObject(
     val audioPreviewUrl: String? = null,
     /* A description of the episode. */
     @Json(name = "description")
-    val description: String? = null,
+    val description: String,
     /* The episode length in milliseconds. */
     @Json(name = "duration_ms")
-    val durationMs: Int? = null,
+    val durationMs: Int,
     /* Whether or not the episode has explicit content (true = yes it does; false = no it does not OR unknown). */
     @Json(name = "explicit")
-    val explicit: Boolean? = null,
+    val explicit: Boolean,
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the episode. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify ID for the episode. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The cover art for the episode in various sizes, widest first. */
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    val images: List<ImageObject>,
     /* True if the episode is hosted outside of Spotify’s CDN. */
     @Json(name = "is_externally_hosted")
-    val isExternallyHosted: Boolean? = null,
+    val isExternallyHosted: Boolean,
     /* True if the episode is playable in the given market. Otherwise false. */
     @Json(name = "is_playable")
-    val isPlayable: Boolean? = null,
+    val isPlayable: Boolean,
     /* Note: This field is deprecated and might be removed in the future. Please use the languages field instead. The language used in the episode, identified by a ISO 639 code. */
     @Json(name = "language")
-    val language: String? = null,
+    val language: String,
     /* A list of the languages used in the episode, identified by their ISO 639 code. */
     @Json(name = "languages")
-    val languages: List<String>? = null,
+    val languages: List<String>,
     /* The name of the episode. */
     @Json(name = "name")
-    val name: String? = null,
+    val name: String,
     /* The date the episode was first released, for example \"1981-12-15\". Depending on the precision, it might be shown as \"1981\" or \"1981-12\". */
     @Json(name = "release_date")
-    val releaseDate: String? = null,
+    val releaseDate: String,
     /* The precision with which release_date value is known: \"year\", \"month\", or \"day\". */
     @Json(name = "release_date_precision")
-    val releaseDatePrecision: String? = null,
+    val releaseDatePrecision: String,
     @Json(name = "resume_point")
-    val resumePoint: ResumePointObject? = null,
+    val resumePoint: ResumePointObject,
     /* The object type: “episode”. */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the episode. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

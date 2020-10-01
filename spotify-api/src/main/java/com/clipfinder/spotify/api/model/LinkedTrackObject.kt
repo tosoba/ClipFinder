@@ -25,18 +25,18 @@ import com.squareup.moshi.Json
 
 data class LinkedTrackObject(
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the track. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify ID for the track. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The object type: \"track\". */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the track. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

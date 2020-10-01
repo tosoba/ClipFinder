@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class NewReleases(
     @Json(name = "albums")
-    val albums: SimplifiedAlbumsPagingObject? = null
+    val albums: SimplifiedAlbumsPagingObject
 )
 

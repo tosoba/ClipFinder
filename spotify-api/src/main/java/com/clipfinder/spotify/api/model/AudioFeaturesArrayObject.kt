@@ -20,6 +20,6 @@ import com.squareup.moshi.Json
 
 data class AudioFeaturesArrayObject(
     @Json(name = "audio_features")
-    val audioFeatures: List<AudioFeaturesObject>? = null
+    val audioFeatures: List<AudioFeaturesObject>
 )
 

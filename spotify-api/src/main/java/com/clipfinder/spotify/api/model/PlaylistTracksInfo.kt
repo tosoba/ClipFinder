@@ -24,6 +24,6 @@ data class PlaylistTracksInfo(
     @Json(name = "href")
     val href: String? = null,
     @Json(name = "total")
-    val total: Int? = null
+    val total: Int
 )
 

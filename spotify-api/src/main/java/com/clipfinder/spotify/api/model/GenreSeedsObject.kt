@@ -21,6 +21,6 @@ import com.squareup.moshi.Json
 
 data class GenreSeedsObject(
     @Json(name = "genres")
-    val genres: List<String>? = null
+    val genres: List<String>
 )
 

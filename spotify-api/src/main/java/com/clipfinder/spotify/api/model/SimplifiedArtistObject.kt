@@ -26,21 +26,21 @@ import com.squareup.moshi.Json
 
 data class SimplifiedArtistObject(
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the artist. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The Spotify ID for the artist. */
     @Json(name = "id")
-    val id: String? = null,
+    val id: String,
     /* The name of the artist. */
     @Json(name = "name")
-    val name: String? = null,
+    val name: String,
     /* The object type: \"artist\" */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the artist. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

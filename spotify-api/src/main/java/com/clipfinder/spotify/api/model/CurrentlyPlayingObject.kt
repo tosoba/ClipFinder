@@ -25,21 +25,21 @@ import com.squareup.moshi.Json
 
 data class CurrentlyPlayingObject(
     @Json(name = "context")
-    val context: ContextObject? = null,
+    val context: ContextObject,
     /* The object type of the currently playing item. Can be one of track, episode, ad or unknown. */
     @Json(name = "currently_playing_type")
-    val currentlyPlayingType: String? = null,
+    val currentlyPlayingType: String,
     /* If something is currently playing, return true. */
     @Json(name = "is_playing")
-    val isPlaying: Boolean? = null,
+    val isPlaying: Boolean,
     /* The currently playing track or episode. Can be null. */
     @Json(name = "item")
-    val item: TrackOrEpisodeObject? = null,
+    val item: TrackOrEpisodeObject,
     /* Progress into the currently playing track or episode. Can be null. */
     @Json(name = "progress_ms")
-    val progressMs: Int? = null,
+    val progressMs: Int,
     /* Unix Millisecond Timestamp when data was fetched */
     @Json(name = "timestamp")
-    val timestamp: Int? = null
+    val timestamp: Int
 )
 

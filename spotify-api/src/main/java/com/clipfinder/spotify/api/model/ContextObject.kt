@@ -24,15 +24,15 @@ import com.squareup.moshi.Json
 
 data class ContextObject(
     @Json(name = "external_urls")
-    val externalUrls: Any? = null,
+    val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the track. */
     @Json(name = "href")
-    val href: String? = null,
+    val href: String,
     /* The object type, e.g. “artist”, “playlist”, “album”. */
     @Json(name = "type")
-    val type: String? = null,
+    val type: String,
     /* The Spotify URI for the context. */
     @Json(name = "uri")
-    val uri: String? = null
+    val uri: String
 )
 

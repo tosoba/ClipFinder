@@ -29,9 +29,9 @@ data class PlaylistTrackObject(
     val addedBy: PublicUserObject? = null,
     /* Whether this track or episode is a local file or not. */
     @Json(name = "is_local")
-    val isLocal: Boolean? = null,
+    val isLocal: Boolean,
     /* Information about the track or episode. */
     @Json(name = "track")
-    val track: TrackOrEpisodeObject? = null
+    val track: TrackOrEpisodeObject
 )
 

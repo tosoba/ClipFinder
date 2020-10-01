@@ -22,9 +22,9 @@ import com.squareup.moshi.Json
 data class RecommendationsResponseObject(
     /* An array of recommendation seed objects. */
     @Json(name = "seeds")
-    val seeds: List<RecommendationSeedObject>? = null,
+    val seeds: List<RecommendationSeedObject>,
     /* An array of track object (simplified) ordered according to the parameters supplied. */
     @Json(name = "tracks")
-    val tracks: List<SimplifiedTrackObject>? = null
+    val tracks: List<SimplifiedTrackObject>
 )
 

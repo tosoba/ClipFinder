@@ -22,6 +22,6 @@ import com.squareup.moshi.Json
 data class SnapshotIdObject(
     /* The snapshot_id can be used to identify your playlist version in future requests. */
     @Json(name = "snapshot_id")
-    val snapshotId: String? = null
+    val snapshotId: String
 )
 
