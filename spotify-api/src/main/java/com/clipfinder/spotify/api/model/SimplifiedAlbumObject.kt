@@ -11,6 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
+import com.clipfinder.core.spotify.model.ISpotifyAlbum
 import com.squareup.moshi.Json
 
 /**
@@ -34,10 +35,10 @@ data class SimplifiedAlbumObject(
     val albumGroup: String,
     /* The type of the album: one of “album”, “single”, or “compilation”. */
     @Json(name = "album_type")
-    val albumType: String,
+    override val albumType: String,
     /* The artists of the album. Each artist object includes a link in href to more detailed information about the artist. */
     @Json(name = "artists")
-    val artists: List<SimplifiedArtistObject>,
+    override val artists: List<SimplifiedArtistObject>,
     /* The markets in which the album is available: ISO 3166-1 alpha-2 country codes. Note that an album is considered available in a market when at least 1 of its tracks is available in that market. */
     @Json(name = "available_markets")
     val availableMarkets: List<String>,
@@ -45,21 +46,21 @@ data class SimplifiedAlbumObject(
     val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the album. */
     @Json(name = "href")
-    val href: String,
+    override val href: String,
     /* The Spotify ID for the album. */
     @Json(name = "id")
-    val id: String,
+    override val id: String,
     /* The cover art for the album in various sizes, widest first. */
     @Json(name = "images")
-    val images: List<ImageObject>,
+    override val images: List<ImageObject>,
     /* The name of the album. In case of an album takedown, the value may be an empty string. */
     @Json(name = "name")
-    val name: String,
+    override val name: String,
     /* The object type: “album” */
     @Json(name = "type")
     val type: String,
     /* The Spotify URI for the album. */
     @Json(name = "uri")
     val uri: String
-)
+) : ISpotifyAlbum
 

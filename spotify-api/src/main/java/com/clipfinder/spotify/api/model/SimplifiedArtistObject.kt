@@ -12,6 +12,7 @@
 package com.clipfinder.spotify.api.model
 
 
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedArtist
 import com.squareup.moshi.Json
 
 /**
@@ -29,18 +30,18 @@ data class SimplifiedArtistObject(
     val externalUrls: Any,
     /* A link to the Web API endpoint providing full details of the artist. */
     @Json(name = "href")
-    val href: String,
+    override val href: String,
     /* The Spotify ID for the artist. */
     @Json(name = "id")
-    val id: String,
+    override val id: String,
     /* The name of the artist. */
     @Json(name = "name")
-    val name: String,
+    override val name: String,
     /* The object type: \"artist\" */
     @Json(name = "type")
     val type: String,
     /* The Spotify URI for the artist. */
     @Json(name = "uri")
     val uri: String
-)
+) : ISpotifySimplifiedArtist
 
