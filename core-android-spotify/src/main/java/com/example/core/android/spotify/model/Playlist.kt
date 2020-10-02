@@ -3,7 +3,7 @@ package com.example.core.android.spotify.model
 import android.os.Parcelable
 import android.view.View
 import com.clipfinder.core.spotify.ext.firstImageUrl
-import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedPlaylist
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
 import com.example.core.android.spotify.GridPlaylistItemBindingModel_
@@ -21,11 +21,11 @@ data class Playlist(
     override val description: String?,
     override val images: List<Image>
 ) : Parcelable,
-    ISpotifySimplePlaylist,
+    ISpotifySimplifiedPlaylist,
     NamedImageListItem,
     IdentifiableNamedObservableListItem<String> {
 
-    constructor(other: ISpotifySimplePlaylist) : this(
+    constructor(other: ISpotifySimplifiedPlaylist) : this(
         other.id, other.name, other.uri, other.href, other.description, other.images.map { Image(it) }
     )
 

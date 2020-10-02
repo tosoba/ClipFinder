@@ -1,6 +1,6 @@
 package com.clipfinder.core.spotify.model
 
-interface ISpotifySimplePlaylist {
+interface ISpotifySimplifiedPlaylist {
     val href: String
     val description: String?
     val id: String

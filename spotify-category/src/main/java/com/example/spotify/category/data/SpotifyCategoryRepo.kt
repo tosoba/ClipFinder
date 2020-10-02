@@ -1,6 +1,6 @@
 package com.example.spotify.category.data
 
-import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedPlaylist
 import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
@@ -18,12 +18,12 @@ class SpotifyCategoryRepo(
     override fun getPlaylistsForCategory(
         categoryId: String,
         offset: Int
-    ): Single<Resource<Paged<List<ISpotifySimplePlaylist>>>> = browseEndpoints.getACategoriesPlaylists(
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = browseEndpoints.getACategoriesPlaylists(
         categoryId = categoryId,
         offset = offset,
         country = preferences.country
     ).mapToResource {
-        Paged<List<ISpotifySimplePlaylist>>(
+        Paged<List<ISpotifySimplifiedPlaylist>>(
             contents = playlists.items,
             offset = playlists.offset + SpotifyDefaults.LIMIT,
             total = playlists.total

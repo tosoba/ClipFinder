@@ -1,6 +1,6 @@
 package com.example.spotify.account.playlist.data
 
-import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedPlaylist
 import com.clipfinder.spotify.api.endpoint.PlaylistsEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Paged
@@ -15,10 +15,10 @@ class SpotifyAccountPlaylistsRepo(
 
     override fun getCurrentUsersPlaylists(
         offset: Int
-    ): Single<Resource<Paged<List<ISpotifySimplePlaylist>>>> = playlistsEndpoints
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = playlistsEndpoints
         .getAListOfCurrentUsersPlaylists(offset = offset)
         .mapToResource {
-            Paged<List<ISpotifySimplePlaylist>>(
+            Paged<List<ISpotifySimplifiedPlaylist>>(
                 contents = items,
                 offset = offset + SpotifyDefaults.LIMIT,
                 total = total

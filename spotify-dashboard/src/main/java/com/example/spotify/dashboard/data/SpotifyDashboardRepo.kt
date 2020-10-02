@@ -1,7 +1,7 @@
 package com.example.spotify.dashboard.data
 
 import com.clipfinder.core.spotify.model.ISpotifyCategory
-import com.clipfinder.core.spotify.model.ISpotifySimplePlaylist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedPlaylist
 import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -45,12 +45,12 @@ class SpotifyDashboardRepo(
 
     override fun getFeaturedPlaylists(
         offset: Int
-    ): Single<Resource<Paged<List<ISpotifySimplePlaylist>>>> = browseEndpoints.getFeaturedPlaylists(
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = browseEndpoints.getFeaturedPlaylists(
         offset = offset,
         country = preferences.country,
         locale = preferences.locale
     ).mapToResource {
-        Paged<List<ISpotifySimplePlaylist>>(
+        Paged<List<ISpotifySimplifiedPlaylist>>(
             contents = playlists.items,
             offset = playlists.offset + SpotifyDefaults.LIMIT,
             total = playlists.total
