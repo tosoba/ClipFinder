@@ -4,9 +4,9 @@ import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.Data
 import com.example.core.android.model.DataList
 import com.example.core.android.model.PagedDataList
-import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.Track
 
 data class SpotifyArtistViewState(
     val artists: DataList<Artist> = DataList(),

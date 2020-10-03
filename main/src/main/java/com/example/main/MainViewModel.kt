@@ -2,12 +2,11 @@ package com.example.main
 
 import android.util.Log
 import com.example.core.android.base.vm.BaseViewModel
-import com.example.core.android.mapper.spotify.domain
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.mapper.videos.domain
 import com.example.core.android.mapper.videos.ui
-import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.model.spotify.User
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist

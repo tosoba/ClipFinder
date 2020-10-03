@@ -8,10 +8,9 @@ import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.domain
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.*
-import com.example.core.android.model.spotify.Artist
+import com.example.core.android.spotify.model.Artist
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.spotify.artist.domain.usecase.*
 import com.example.there.domain.entity.spotify.AlbumEntity

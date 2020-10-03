@@ -9,10 +9,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 interface ISpotifyArtistRepo {
-    fun deleteArtist(artist: ArtistEntity): Completable
     fun getAlbumsFromArtist(artistId: String, offset: Int): Single<Resource<Paged<List<AlbumEntity>>>>
     fun getRelatedArtists(artistId: String): Single<Resource<List<ArtistEntity>>>
     fun getTopTracksFromArtist(artistId: String): Single<Resource<List<TrackEntity>>>
-    fun insertArtist(artist: ArtistEntity): Completable
-    fun isArtistSaved(artistId: String): Single<Boolean>
 }

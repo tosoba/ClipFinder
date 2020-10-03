@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
-import com.example.core.android.model.spotify.TopTrack
+import com.example.core.android.spotify.model.TopTrack
 import com.example.core.android.spotify.model.Category
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences

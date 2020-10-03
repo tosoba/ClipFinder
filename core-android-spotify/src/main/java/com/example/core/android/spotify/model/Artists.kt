@@ -1,7 +1,10 @@
-package com.example.core.android.model.spotify
+package com.example.core.android.spotify.model
 
 import android.os.Parcelable
 import android.view.View
+import com.clipfinder.core.spotify.ext.firstImageUrl
+import com.clipfinder.core.spotify.model.ISpotifyArtist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedArtist
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
 import com.example.core.android.util.list.IdentifiableNamedObservableListItem
@@ -13,10 +16,20 @@ import kotlinx.android.parcel.Parcelize
 data class Artist(
     override val id: String,
     override val name: String,
-    val popularity: Int,
+    override val href: String,
+    override val popularity: Int,
+    override val images: List<Image>
+) : Parcelable,
+    ISpotifyArtist,
+    NamedImageListItem,
+    IdentifiableNamedObservableListItem<String> {
+
     val iconUrl: String
-) : Parcelable, NamedImageListItem, IdentifiableNamedObservableListItem<String> {
-    override val foregroundDrawableId: Int get() = R.drawable.spotify_foreground_ripple
+        get() = images.firstImageUrl()
+
+    override val foregroundDrawableId: Int
+        get() = R.drawable.spotify_foreground_ripple
+
     override val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc.with(iconUrl, R.drawable.artist_placeholder, R.drawable.error_placeholder)
 }
@@ -34,4 +47,9 @@ fun Artist.clickableListItem(
     .itemClicked(View.OnClickListener { itemClicked() })
 
 @Parcelize
-data class SimpleArtist(val id: String, val name: String) : Parcelable
+data class SimpleArtist(
+    override val id: String,
+    override val name: String,
+    override val href: String
+) : Parcelable,
+    ISpotifySimplifiedArtist

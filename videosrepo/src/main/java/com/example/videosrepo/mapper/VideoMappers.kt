@@ -1,6 +1,5 @@
 package com.example.videosrepo.mapper
 
-import com.example.db.model.videos.VideoDbModel
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.videosrepo.util.urlHigh
 import com.example.youtubeapi.model.VideoApiModel
@@ -17,38 +16,6 @@ val VideoApiModel.domain: VideoEntity
         thumbnailUrl = snippet.thumbnails.urlHigh,
         duration = convertDuration(contentDetails.duration),
         viewCount = BigInteger.valueOf(statistics.viewCount?.toLong() ?: 0)
-    )
-
-val VideoDbModel.domain: VideoEntity
-    get() = VideoEntity(
-        id = id,
-        channelId = channelId,
-        title = title,
-        description = description,
-        publishedAt = publishedAt,
-        thumbnailUrl = thumbnailUrl,
-        duration = duration,
-        viewCount = BigInteger.valueOf(viewCount),
-        channelThumbnailUrl = channelThumbnailUrl,
-        playlistId = playlistId,
-        query = query,
-        relatedVideoId = relatedVideoId
-    )
-
-val VideoEntity.db: VideoDbModel
-    get() = VideoDbModel(
-        id = id,
-        channelId = channelId,
-        title = title,
-        description = description,
-        publishedAt = publishedAt,
-        thumbnailUrl = thumbnailUrl,
-        duration = duration,
-        viewCount = viewCount.toLong(),
-        channelThumbnailUrl = channelThumbnailUrl ?: "",
-        playlistId = playlistId,
-        query = query,
-        relatedVideoId = relatedVideoId
     )
 
 private val Long.timeString: String

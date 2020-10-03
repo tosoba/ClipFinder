@@ -7,12 +7,9 @@ import android.view.ViewGroup
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.*
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
-import com.example.core.android.model.spotify.*
-import com.example.core.android.spotify.model.Playlist
-import com.example.core.android.spotify.model.clickableListItem
+import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show

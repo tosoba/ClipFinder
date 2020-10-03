@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import com.example.core.android.BR
 import com.example.core.android.R
 import com.example.core.android.base.fragment.BaseListFragment
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.list.IdentifiableObservableListItem
 import com.example.core.android.util.list.ObservableSortedList

@@ -6,17 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.*
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.headerItem
 import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.android.loadingIndicator
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.LoadingFailed
-import com.example.core.android.model.spotify.Track
-import com.example.core.android.model.spotify.clickableListItem
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.model.spotify.infoItem
+import com.example.core.android.spotify.model.Track
+import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
@@ -58,7 +55,7 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        track?.let { viewModel.loadAlbum(it.albumId) }
+                        track?.let { viewModel.loadAlbum(it.album.id) }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }

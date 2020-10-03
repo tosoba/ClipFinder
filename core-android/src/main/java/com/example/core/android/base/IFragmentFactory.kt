@@ -10,15 +10,12 @@ import com.example.core.android.model.videos.VideoPlaylist
 interface IFragmentFactory {
     val newSpotifyDashboardNavHostFragment: Fragment
     val newSpotifyAccountNavHostFragment: Fragment
-    val newSpotifyFavouritesMainNavHostFragment: Fragment
 
     fun newVideosSearchFragment(query: String): Fragment
     fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): Fragment
     fun newVideoPlaylistFragment(videoPlaylist: VideoPlaylist, thumbnailUrls: Array<String>): Fragment
-    val newVideosFavouritesFragment: Fragment
 
     val newSoundCloudDashboardNavHostFragment: Fragment
-    val newSoundCloudFavouritesNavHostFragment: Fragment
 
     fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment
     fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment

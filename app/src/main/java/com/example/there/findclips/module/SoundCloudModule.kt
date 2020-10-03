@@ -7,8 +7,4 @@ val soundCloudModule = module {
     factory { GetSimilarTracks(get(), get()) }
     factory { GetTracks(get(), get()) }
     factory { GetTracksFromPlaylist(get(), get()) }
-    factory { GetFavouriteSoundCloudTracks(get(), get()) }
-    factory { InsertSoundCloudTrack(get(), get()) }
-    factory { IsSoundCloudTrackSaved(get(), get()) }
-    factory { DeleteSoundCloudTrack(get(), get()) }
 }

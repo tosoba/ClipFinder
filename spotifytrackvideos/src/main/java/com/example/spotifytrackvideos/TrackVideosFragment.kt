@@ -11,9 +11,12 @@ import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.core.android.base.trackvideos.TrackVideosViewState
-import com.example.core.android.model.spotify.Track
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
-import com.example.core.android.util.ext.*
+import com.example.core.android.spotify.model.Track
+import com.example.core.android.util.ext.backPressedWithNoPreviousStateController
+import com.example.core.android.util.ext.hideAndShow
+import com.example.core.android.util.ext.loadBackgroundGradient
+import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
@@ -21,7 +24,9 @@ import com.example.spotifytrackvideos.track.TrackFragment
 import com.example.youtubesearch.VideosSearchFragment
 import com.wada811.lifecycledispose.disposeOnDestroy
 
-class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
+class TrackVideosFragment :
+    BaseMvRxFragment(),
+    GoesToPreviousStateOnBackPressed {
 
     private val viewModel: TrackVideosViewModel by fragmentViewModel()
 
@@ -91,7 +96,7 @@ class TrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed
                 requireActivity() as? AppCompatActivity,
                 ::onBackPressed
             )
-            trackFavouriteFab.setOnClickListener { viewModel.toggleTrackFavouriteState() }
+            trackFavouriteFab.setOnClickListener { }
         }.root
     }
 

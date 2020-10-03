@@ -9,11 +9,11 @@
 
         <import type="androidx.lifecycle.MutableLiveData" />
 
-        <import type="com.example.core.android.model.spotify.Track" />
+        <import type="com.example.core.android.spotify.model.Track" />
 
         <variable
             name="track"
-            type="MutableLiveData&lt;Track&gt;" />
+            type="com.example.core.android.spotify.model.Track" />
     </data>
 
     <com.example.core.android.view.coordinator.NestedCoordinatorLayout

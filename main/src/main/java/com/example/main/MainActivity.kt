@@ -25,8 +25,8 @@ import com.example.core.android.base.fragment.*
 import com.example.core.android.base.handler.*
 import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.soundcloud.SoundCloudTrack
-import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
 import com.example.core.android.spotify.api.SpotifyAuth

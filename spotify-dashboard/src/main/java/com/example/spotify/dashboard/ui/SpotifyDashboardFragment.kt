@@ -11,7 +11,6 @@ import com.airbnb.mvrx.withState
 import com.example.core.android.TopTrackItemBindingModel_
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
-import com.example.core.android.model.spotify.clickableListItem
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.mainContentFragment

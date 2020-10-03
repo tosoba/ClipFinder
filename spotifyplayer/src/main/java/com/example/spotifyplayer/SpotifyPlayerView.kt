@@ -3,9 +3,9 @@ package com.example.spotifyplayer
 import android.view.View
 import android.widget.SeekBar
 import androidx.databinding.ObservableField
-import com.example.core.android.model.spotify.Album
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Track
 import com.spotify.sdk.android.player.Metadata
 import com.spotify.sdk.android.player.PlaybackState
 

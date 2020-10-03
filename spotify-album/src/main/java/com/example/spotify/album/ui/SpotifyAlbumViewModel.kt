@@ -7,13 +7,12 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.domain
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Data
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
-import com.example.core.android.model.spotify.Album
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
 import com.example.there.domain.entity.spotify.ArtistEntity

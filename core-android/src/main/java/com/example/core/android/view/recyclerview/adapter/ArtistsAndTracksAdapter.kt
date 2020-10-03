@@ -7,15 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.core.android.R
 import com.example.core.android.databinding.HeaderItemBinding
 import com.example.core.android.databinding.RecyclerViewListItemBinding
-import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.makeItemBinding
 import com.example.core.android.view.recyclerview.BindingViewHolder
 import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
 
 class ArtistsAndTracksAdapter(
-    private val artistsRecyclerViewItemView: RecyclerViewItemView<Artist>,
-    private val tracksRecyclerViewItemView: RecyclerViewItemView<Track>
+    private val artistsRecyclerViewItemView: RecyclerViewItemView<com.example.core.android.spotify.model.Artist>,
+    private val tracksRecyclerViewItemView: RecyclerViewItemView<com.example.core.android.spotify.model.Track>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = viewTypes[position]

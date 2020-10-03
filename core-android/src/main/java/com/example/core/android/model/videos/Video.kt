@@ -33,7 +33,8 @@ data class Video(
     val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc.with(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
 
-    val details: String get() = "$publishedAgo • ${viewCount.formattedString} views"
+    val details: String
+        get() = "$publishedAgo • ${viewCount.formattedString} views"
 
     private val publishedAgo: String
         get() {

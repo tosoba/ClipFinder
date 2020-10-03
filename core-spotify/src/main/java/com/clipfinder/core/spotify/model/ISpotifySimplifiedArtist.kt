@@ -5,3 +5,8 @@ interface ISpotifySimplifiedArtist {
     val name: String
     val href: String
 }
+
+interface ISpotifyArtist : ISpotifySimplifiedArtist {
+    val images: List<ISpotifyImage>
+    val popularity: Int
+}

@@ -10,9 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
 import com.example.core.android.TrackPopularityItemBindingModel_
-import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.model.spotify.Album
-import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*

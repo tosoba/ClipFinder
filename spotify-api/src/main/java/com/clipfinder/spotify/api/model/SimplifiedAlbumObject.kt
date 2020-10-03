@@ -11,7 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
-import com.clipfinder.core.spotify.model.ISpotifyAlbum
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.squareup.moshi.Json
 
 /**
@@ -61,6 +61,6 @@ data class SimplifiedAlbumObject(
     val type: String,
     /* The Spotify URI for the album. */
     @Json(name = "uri")
-    val uri: String
-) : ISpotifyAlbum
+    override val uri: String
+) : ISpotifySimplifiedAlbum
 

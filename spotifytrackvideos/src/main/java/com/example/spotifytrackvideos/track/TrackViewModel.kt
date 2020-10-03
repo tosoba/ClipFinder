@@ -5,11 +5,10 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.model.mapData
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.domain
 import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
-import com.example.core.android.model.spotify.Track
+import com.example.core.android.spotify.model.Track
 import com.example.there.domain.entity.spotify.AlbumEntity
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity

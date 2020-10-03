@@ -10,10 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
-import com.example.core.android.model.spotify.Artist
-import com.example.core.android.model.spotify.clickableListItem
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader

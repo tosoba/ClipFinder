@@ -5,26 +5,14 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.trackvideos.BaseTrackVideosViewModel
 import com.example.core.android.base.trackvideos.TrackVideosViewState
 import com.example.core.android.model.soundcloud.SoundCloudTrack
-import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
-import com.example.there.domain.usecase.soundcloud.DeleteSoundCloudTrack
-import com.example.there.domain.usecase.soundcloud.InsertSoundCloudTrack
-import com.example.there.domain.usecase.soundcloud.IsSoundCloudTrackSaved
-import org.koin.android.ext.android.inject
 
 class SoundCloudTrackVideosViewModel(
-    initialState: TrackVideosViewState<SoundCloudTrack>,
-    insertSoundCloudTrack: InsertSoundCloudTrack,
-    isSoundCloudTrackSaved: IsSoundCloudTrackSaved,
-    deleteSoundCloudTrack: DeleteSoundCloudTrack
-) : BaseTrackVideosViewModel<SoundCloudTrack, SoundCloudTrackEntity>(
-    initialState, insertSoundCloudTrack, deleteSoundCloudTrack, isSoundCloudTrackSaved
-) {
+    initialState: TrackVideosViewState<SoundCloudTrack>
+) : BaseTrackVideosViewModel<SoundCloudTrack>(initialState) {
     companion object : MvRxViewModelFactory<SoundCloudTrackVideosViewModel, TrackVideosViewState<SoundCloudTrack>> {
-        override fun create(viewModelContext: ViewModelContext, state: TrackVideosViewState<SoundCloudTrack>): SoundCloudTrackVideosViewModel? {
-            val insertSoundCloudTrack: InsertSoundCloudTrack by viewModelContext.activity.inject()
-            val isSoundCloudTrackSaved: IsSoundCloudTrackSaved by viewModelContext.activity.inject()
-            val deleteSoundCloudTrack: DeleteSoundCloudTrack by viewModelContext.activity.inject()
-            return SoundCloudTrackVideosViewModel(state, insertSoundCloudTrack, isSoundCloudTrackSaved, deleteSoundCloudTrack)
-        }
+        override fun create(
+            viewModelContext: ViewModelContext,
+            state: TrackVideosViewState<SoundCloudTrack>
+        ): SoundCloudTrackVideosViewModel? = SoundCloudTrackVideosViewModel(state)
     }
 }

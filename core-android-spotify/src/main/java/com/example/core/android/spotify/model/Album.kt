@@ -1,7 +1,9 @@
-package com.example.core.android.model.spotify
+package com.example.core.android.spotify.model
 
 import android.os.Parcelable
 import android.view.View
+import com.clipfinder.core.spotify.ext.firstImageUrl
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.example.core.android.AlbumInfoItemBindingModel_
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
@@ -14,11 +16,19 @@ import kotlinx.android.parcel.Parcelize
 data class Album(
     override val id: String,
     override val name: String,
-    val artists: List<SimpleArtist>,
-    val albumType: String,
-    val iconUrl: String,
-    val uri: String
-) : Parcelable, NamedImageListItem, IdentifiableNamedObservableListItem<String> {
+    override val artists: List<SimpleArtist>,
+    override val albumType: String,
+    override val uri: String,
+    override val href: String,
+    override val images: List<Image>
+) : Parcelable,
+    ISpotifySimplifiedAlbum,
+    NamedImageListItem,
+    IdentifiableNamedObservableListItem<String> {
+
+    val iconUrl: String
+        get() = images.firstImageUrl()
+
     override val imageViewSrc: ImageViewSrc
         get() = ImageViewSrc.with(iconUrl, R.drawable.album_placeholder, R.drawable.error_placeholder)
 
