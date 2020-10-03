@@ -18,16 +18,12 @@ import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class SpotifyArtistViewModel(
     initialState: SpotifyArtistViewState,
     private val getAlbumsFromArtist: GetAlbumsFromArtist,
     private val getTopTracksFromArtist: GetTopTracksFromArtist,
     private val getRelatedArtists: GetRelatedArtists,
-    private val insertArtist: InsertArtist,
-    private val deleteArtist: DeleteArtist,
-    private val isArtistSaved: IsArtistSaved,
     private val preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<SpotifyArtistViewState>(initialState) {
@@ -58,7 +54,6 @@ class SpotifyArtistViewModel(
         loadAlbumsFromArtist(artist.id, shouldClear = clearAlbums)
         loadTopTracksFromArtist(artist.id)
         loadRelatedArtists(artist.id)
-        loadArtistFavouriteState()
     }
 
     fun loadAlbumsFromArtist(artistId: String, shouldClear: Boolean = false) = withState { state ->
@@ -92,45 +87,6 @@ class SpotifyArtistViewModel(
             .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
             .updateWithResource(SpotifyArtistViewState::relatedArtists) { copy(relatedArtists = it) }
-    }
-
-    fun toggleArtistFavouriteState() = withState { state ->
-        state.artists.value.lastOrNull()?.let {
-            if (state.isSavedAsFavourite.value) deleteFavouriteArtist(it)
-            else addFavouriteArtist(it)
-        }
-    }
-
-    private fun addFavouriteArtist(artist: Artist) {
-        insertArtist(artist.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) }
-            }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
-    }
-
-    private fun deleteFavouriteArtist(artist: Artist) {
-        deleteArtist(artist.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) }
-            }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
-    }
-
-    private fun loadArtistFavouriteState() = withState { state ->
-        if (state.isSavedAsFavourite.status is Loading) return@withState
-
-        isArtistSaved(args = state.artists.value.last().id, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .update(SpotifyArtistViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
     }
 
     private fun handlePreferencesChanges() {
@@ -169,18 +125,12 @@ class SpotifyArtistViewModel(
             val getAlbumsFromArtist: GetAlbumsFromArtist by viewModelContext.activity.inject()
             val getTopTracksFromArtist: GetTopTracksFromArtist by viewModelContext.activity.inject()
             val getRelatedArtists: GetRelatedArtists by viewModelContext.activity.inject()
-            val insertArtist: InsertArtist by viewModelContext.activity.inject()
-            val deleteArtist: DeleteArtist by viewModelContext.activity.inject()
-            val isArtistSaved: IsArtistSaved by viewModelContext.activity.inject()
             val spotifyPreferences: SpotifyPreferences by viewModelContext.activity.inject()
             return SpotifyArtistViewModel(
                 state,
                 getAlbumsFromArtist,
                 getTopTracksFromArtist,
                 getRelatedArtists,
-                insertArtist,
-                deleteArtist,
-                isArtistSaved,
                 spotifyPreferences,
                 viewModelContext.app()
             )

@@ -25,8 +25,6 @@ import com.example.core.android.base.fragment.*
 import com.example.core.android.base.handler.*
 import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.soundcloud.SoundCloudTrack
-import com.example.core.android.spotify.model.Album
-import com.example.core.android.spotify.model.Track
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
 import com.example.core.android.spotify.api.SpotifyAuth
@@ -34,10 +32,15 @@ import com.example.core.android.spotify.controller.SpotifyAuthController
 import com.example.core.android.spotify.controller.SpotifyPlayerController
 import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
 import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.*
+import com.example.core.android.util.ext.dpToPx
+import com.example.core.android.util.ext.screenHeight
+import com.example.core.android.util.ext.screenOrientation
+import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.OnNavigationDrawerClosedListerner
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.SpotifyTracksFragment
@@ -48,7 +51,6 @@ import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
 import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
-import com.example.youtubeaddvideo.AddVideoViewState
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.authentication.AuthenticationClient
@@ -221,11 +223,6 @@ class MainActivity :
                 startActivity(this)
             }
 
-            R.id.drawer_action_remove_video_search_data -> {
-                viewModel.clearAllVideoSearchData()
-                Toast.makeText(this, "Video cache cleared", Toast.LENGTH_SHORT).show()
-            }
-
             R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
 
             R.id.drawer_action_logout -> main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
@@ -237,14 +234,7 @@ class MainActivity :
     }
 
     private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
-        viewModel.viewState.playerState.get()?.let { playerState ->
-            when (playerState) {
-                PlayerState.VIDEO -> addVideoToFavourites()
-                PlayerState.TRACK -> toggleTrackFavouriteState()
-                PlayerState.ALBUM -> toggleAlbumFavouriteState()
-                else -> return@OnClickListener
-            }
-        }
+
     }
 
     private val fadeOnClickListener = View.OnClickListener {
@@ -612,16 +602,6 @@ class MainActivity :
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
 
-    private fun addVideoToFavourites() {
-        youtubePlayerFragment?.lastPlayedVideo?.let {
-            viewModel.loadFavouriteVideoPlaylists()
-            addVideoDialogFragment = AddVideoDialogFragment().apply {
-                state = AddVideoViewState(viewModel.viewState.favouriteVideoPlaylists)
-                show(childFragmentManager, TAG_ADD_VIDEO)
-            }
-        }
-    }
-
     @Suppress("UNCHECKED_CAST")
     private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
         viewModel.viewState.isLoggedIn.observe({ this }) { isLoggedIn ->
@@ -631,13 +611,10 @@ class MainActivity :
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
             when ((observable as ObservableField<PlayerState>).get()!!) {
                 PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let {
-                    viewModel.updateTrackFavouriteState(it)
                 }
                 PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let {
-                    viewModel.updatePlaylistFavouriteState(it)
                 }
                 PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let {
-                    viewModel.updateAlbumFavouriteState(it)
                 }
                 else -> viewModel.viewState.itemFavouriteState.set(false)
             }
@@ -726,26 +703,6 @@ class MainActivity :
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-    }
-
-    private fun toggleTrackFavouriteState() {
-        spotifyPlayerFragment?.lastPlayedTrack?.let {
-            viewModel.toggleTrackFavouriteState(
-                it,
-                { Toast.makeText(this, "${it.name} added to favourite tracks.", Toast.LENGTH_SHORT).show() },
-                { Toast.makeText(this, "${it.name} deleted from favourite tracks.", Toast.LENGTH_SHORT).show() }
-            )
-        }
-    }
-
-    private fun toggleAlbumFavouriteState() {
-        spotifyPlayerFragment?.lastPlayedAlbum?.let {
-            viewModel.toggleAlbumFavouriteState(
-                it,
-                { Toast.makeText(this, "${it.name} added to favourite albums.", Toast.LENGTH_SHORT).show() },
-                { Toast.makeText(this, "${it.name} deleted from favourite albums.", Toast.LENGTH_SHORT).show() }
-            )
-        }
     }
 
     companion object {

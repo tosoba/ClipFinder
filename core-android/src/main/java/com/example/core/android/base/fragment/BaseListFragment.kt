@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.android.R
-import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.databinding.FragmentListBinding
 import com.example.core.android.util.ext.navHostFragment
 import com.example.core.android.util.ext.putArguments
@@ -26,7 +25,6 @@ import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
 import com.example.core.android.view.recyclerview.listener.ClickHandler
 import com.example.core.android.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import kotlinx.android.synthetic.main.fragment_list.*
-import org.koin.android.ext.android.inject
 
 abstract class BaseListFragment<T : Parcelable> : Fragment() {
 

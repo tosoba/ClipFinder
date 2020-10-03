@@ -12,6 +12,7 @@ import com.airbnb.mvrx.*
 import com.example.core.android.TrackPopularityItemBindingModel_
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
@@ -66,7 +67,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     ).apply {
         album = this@SpotifyAlbumFragment.album
         enableSpotifyPlayButton { loadAlbum(this@SpotifyAlbumFragment.album) }
-        albumFavouriteFab.setOnClickListener { viewModel.toggleAlbumFavouriteState() }
+        albumFavouriteFab.setOnClickListener { }
         albumToolbarGradientBackgroundView
             .loadBackgroundGradient(this@SpotifyAlbumFragment.album.iconUrl)
             .disposeOnDestroy(this@SpotifyAlbumFragment)

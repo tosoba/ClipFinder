@@ -16,20 +16,17 @@ import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.playlist.domain.usecase.GetPlaylistTracks
 import com.example.there.domain.entity.spotify.TrackEntity
-import com.example.there.domain.usecase.spotify.IsSpotifyPlaylistSaved
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
 class SpotifyPlaylistViewModel(
     initialState: PlaylistViewState<Playlist, Track>,
     private val getPlaylistTracks: GetPlaylistTracks,
-    private val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved,
     context: Context
 ) : MvRxViewModel<PlaylistViewState<Playlist, Track>>(initialState) {
 
     init {
         loadTracks()
-        loadPlaylistFavouriteState()
         handleConnectivityChanges(context)
     }
 
@@ -41,15 +38,6 @@ class SpotifyPlaylistViewModel(
             .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
             .subscribeOn(Schedulers.io())
             .updateWithPagedResource(PlaylistViewState<Playlist, Track>::tracks) { copy(tracks = it) }
-    }
-
-    private fun loadPlaylistFavouriteState() = withState { (playlist, _, isSavedAsFavourite) ->
-        if (isSavedAsFavourite.status is Loading) return@withState
-        isSpotifyPlaylistSaved(playlist.id)
-            .subscribeOn(Schedulers.io())
-            .update(PlaylistViewState<Playlist, Track>::isSavedAsFavourite) {
-                copy(isSavedAsFavourite = it)
-            }
     }
 
     @SuppressLint("MissingPermission")
@@ -67,11 +55,9 @@ class SpotifyPlaylistViewModel(
             state: PlaylistViewState<Playlist, Track>
         ): SpotifyPlaylistViewModel {
             val getPlaylistTracks: GetPlaylistTracks by viewModelContext.activity.inject()
-            val isSpotifyPlaylistSaved: IsSpotifyPlaylistSaved by viewModelContext.activity.inject()
             return SpotifyPlaylistViewModel(
                 state,
                 getPlaylistTracks,
-                isSpotifyPlaylistSaved,
                 viewModelContext.app()
             )
         }

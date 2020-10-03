@@ -29,9 +29,6 @@ class SpotifyAlbumViewModel(
     initialState: SpotifyAlbumViewState,
     private val getArtists: GetArtists,
     private val getTracksFromAlbum: GetTracksFromAlbum,
-    private val insertAlbum: InsertAlbum,
-    private val deleteAlbum: DeleteAlbum,
-    private val isAlbumSaved: IsAlbumSaved,
     context: Context
 ) : MvRxViewModel<SpotifyAlbumViewState>(initialState) {
 
@@ -39,7 +36,6 @@ class SpotifyAlbumViewModel(
         val album = initialState.album
         loadAlbumsArtists(artistIds = album.artists.map { it.id })
         loadTracksFromAlbum(albumId = album.id)
-        loadAlbumFavouriteState(album)
         handleConnectivityChanges(context)
     }
 
@@ -62,43 +58,6 @@ class SpotifyAlbumViewModel(
             .updateWithPagedResource(SpotifyAlbumViewState::tracks) { copy(tracks = it) }
     }
 
-    fun toggleAlbumFavouriteState() = withState { state ->
-        if (state.isSavedAsFavourite.value) deleteFavouriteAlbum(state.album)
-        else addFavouriteAlbum(state.album)
-    }
-
-    private fun addFavouriteAlbum(album: Album) {
-        insertAlbum(album.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                setState { copy(isSavedAsFavourite = Data(true, LoadedSuccessfully)) }
-            }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
-    }
-
-    private fun deleteFavouriteAlbum(album: Album) {
-        deleteAlbum(album.domain, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .subscribe({
-                setState { copy(isSavedAsFavourite = Data(false, LoadedSuccessfully)) }
-            }, {
-                setState { copy(isSavedAsFavourite = isSavedAsFavourite.copyWithError(it)) }
-                Timber.e(it)
-            })
-            .disposeOnClear()
-    }
-
-    private fun loadAlbumFavouriteState(album: Album) = withState { state ->
-        if (state.isSavedAsFavourite.status is Loading) return@withState
-
-        isAlbumSaved(album.id)
-            .subscribeOn(Schedulers.io())
-            .update(SpotifyAlbumViewState::isSavedAsFavourite) { copy(isSavedAsFavourite = it) }
-    }
-
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.observeNetworkConnectivity {
@@ -118,16 +77,10 @@ class SpotifyAlbumViewModel(
         ): SpotifyAlbumViewModel {
             val getArtists: GetArtists by viewModelContext.activity.inject()
             val getTracksFromAlbum: GetTracksFromAlbum by viewModelContext.activity.inject()
-            val insertAlbum: InsertAlbum by viewModelContext.activity.inject()
-            val deleteAlbum: DeleteAlbum by viewModelContext.activity.inject()
-            val isAlbumSaved: IsAlbumSaved by viewModelContext.activity.inject()
             return SpotifyAlbumViewModel(
                 state,
                 getArtists,
                 getTracksFromAlbum,
-                insertAlbum,
-                deleteAlbum,
-                isAlbumSaved,
                 viewModelContext.app()
             )
         }

@@ -106,7 +106,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPress
         return binding.apply {
             lifecycleOwner = this@SpotifyArtistFragment
             this.artist = artist
-            artistFavouriteFab.setOnClickListener { viewModel.toggleArtistFavouriteState() }
+            artistFavouriteFab.setOnClickListener {  }
             artistToolbar.setupWithBackNavigation(
                 requireActivity() as AppCompatActivity,
                 ::onBackPressed

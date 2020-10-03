@@ -34,7 +34,8 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
 
     private var lastTrack: SoundCloudTrack? = null
 
-    override val playerView: View? get() = this.view
+    override val playerView: View?
+        get() = this.view
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

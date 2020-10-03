@@ -15,6 +15,7 @@ import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.injectedItemListController
@@ -73,8 +74,10 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
             this,
             PlaylistViewState<Playlist, Track>::isSavedAsFavourite
         ) {
-            playlist_favourite_fab?.setImageDrawable(ContextCompat.getDrawable(view.context,
-                if (it.value) R.drawable.delete else R.drawable.favourite))
+            playlist_favourite_fab?.setImageDrawable(
+                ContextCompat.getDrawable(view.context,
+                if (it.value) R.drawable.delete else R.drawable.favourite)
+            )
             playlist_favourite_fab?.hideAndShow()
         }
     }
