@@ -25,7 +25,7 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     private val fragmentFactory: IFragmentFactory by inject()
 
-    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user, R.id.action_favorites)
+    private val itemIds: Array<Int> = arrayOf(R.id.action_dashboard, R.id.action_user)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         if (item.itemId == main_bottom_navigation_view.selectedItemId) {
@@ -44,8 +44,7 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
             childFragmentManager,
             arrayOf(
                 fragmentFactory.newSpotifyDashboardNavHostFragment,
-                fragmentFactory.newSpotifyAccountNavHostFragment,
-                fragmentFactory.newSpotifyFavouritesMainNavHostFragment
+                fragmentFactory.newSpotifyAccountNavHostFragment
             )
         )
     }

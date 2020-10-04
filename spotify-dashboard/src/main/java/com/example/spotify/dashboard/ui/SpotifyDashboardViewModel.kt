@@ -5,20 +5,17 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
-import com.example.core.android.spotify.model.TopTrack
-import com.example.core.android.spotify.model.Category
-import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
+import com.example.core.model.mapIndexed
 import com.example.spotify.dashboard.domain.usecase.GetCategories
 import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
 import com.example.spotify.dashboard.domain.usecase.GetNewReleases
-import com.example.there.domain.entity.spotify.AlbumEntity
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
@@ -67,16 +64,22 @@ class SpotifyDashboardViewModel(
     fun loadDailyViralTracks() = withState { (_, _, topTracks) ->
         if (topTracks.shouldLoad) {
             getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
-                .mapData { tracks -> tracks.map { TopTrack(it.position, it.track.ui) } }
+                .mapData { tracks ->
+                    tracks.mapIndexed { index, track ->
+                        TopTrack(topTracks.offset + index, Track(track))
+                    }
+                }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
+                .updateWithPagedResource(SpotifyDashboardState::topTracks) {
+                    copy(topTracks = it)
+                }
         }
     }
 
     fun loadNewReleases() = withState { (_, _, _, newReleases) ->
         if (newReleases.shouldLoad) {
             getNewReleases(applySchedulers = false, args = newReleases.offset)
-                .mapData { listPage -> listPage.map(AlbumEntity::ui) }
+                .mapData { listPage -> listPage.map { Album(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyDashboardState::newReleases) {
                     copy(newReleases = it)

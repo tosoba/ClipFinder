@@ -43,7 +43,6 @@ dependencies {
     implementation project(':core-spotify')
     implementation project(':core-android')
     implementation project(':core-android-spotify')
-    implementation project(':itemlist')
     implementation project(':spotifyapi')
     implementation project(':spotify-api')
 

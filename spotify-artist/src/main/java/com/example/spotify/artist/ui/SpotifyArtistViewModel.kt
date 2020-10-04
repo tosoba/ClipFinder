@@ -4,18 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.model.DataList
+import com.example.core.android.model.Loading
+import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
-import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
-import com.example.core.android.model.*
-import com.example.core.android.spotify.model.Artist
-import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.spotify.artist.domain.usecase.*
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
+import com.example.spotify.artist.domain.usecase.GetAlbumsFromArtist
+import com.example.spotify.artist.domain.usecase.GetRelatedArtists
+import com.example.spotify.artist.domain.usecase.GetTopTracksFromArtist
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -64,7 +66,7 @@ class SpotifyArtistViewModel(
             offset = if (shouldClear) 0 else state.albums.offset
         )
         getAlbumsFromArtist(args = args, applySchedulers = false)
-            .mapData { albums -> albums.map(AlbumEntity::ui) }
+            .mapData { albums -> albums.map { Album(it) } }
             .subscribeOn(Schedulers.io())
             .updateWithPagedResource(SpotifyArtistViewState::albums, shouldClear = shouldClear) {
                 copy(albums = it)
@@ -75,7 +77,7 @@ class SpotifyArtistViewModel(
         if (state.topTracks.status is Loading) return@withState
 
         getTopTracksFromArtist(args = artistId, applySchedulers = false)
-            .mapData { tracks -> tracks.map(TrackEntity::ui).sortedBy { it.name } }
+            .mapData { tracks -> tracks.map { Track(it) }.sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
             .updateWithResource(SpotifyArtistViewState::topTracks) { copy(topTracks = it) }
     }
@@ -84,9 +86,11 @@ class SpotifyArtistViewModel(
         if (state.relatedArtists.status is Loading) return@withState
 
         getRelatedArtists(args = artistId, applySchedulers = false)
-            .mapData { artists -> artists.map(ArtistEntity::ui).sortedBy { it.name } }
+            .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyArtistViewState::relatedArtists) { copy(relatedArtists = it) }
+            .updateWithResource(SpotifyArtistViewState::relatedArtists) {
+                copy(relatedArtists = it)
+            }
     }
 
     private fun handlePreferencesChanges() {
@@ -103,18 +107,20 @@ class SpotifyArtistViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context.observeNetworkConnectivity {
-            withState { (artists, albums, topTracks, relatedArtists) ->
-                artists.value.lastOrNull()?.id?.let {
-                    if (albums.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadAlbumsFromArtist(it)
-                    if (topTracks.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadTopTracksFromArtist(it)
-                    if (relatedArtists.isEmptyAndLastLoadingFailedWithNetworkError())
-                        loadRelatedArtists(it)
+        context
+            .observeNetworkConnectivity {
+                withState { (artists, albums, topTracks, relatedArtists) ->
+                    artists.value.lastOrNull()?.id?.let {
+                        if (albums.isEmptyAndLastLoadingFailedWithNetworkError())
+                            loadAlbumsFromArtist(it)
+                        if (topTracks.isEmptyAndLastLoadingFailedWithNetworkError())
+                            loadTopTracksFromArtist(it)
+                        if (relatedArtists.isEmptyAndLastLoadingFailedWithNetworkError())
+                            loadRelatedArtists(it)
+                    }
                 }
             }
-        }.disposeOnClear()
+            .disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyArtistViewModel, SpotifyArtistViewState> {

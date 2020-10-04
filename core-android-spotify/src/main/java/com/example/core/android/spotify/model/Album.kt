@@ -26,6 +26,16 @@ data class Album(
     NamedImageListItem,
     IdentifiableNamedObservableListItem<String> {
 
+    constructor(other: ISpotifySimplifiedAlbum) : this(
+        other.id,
+        other.name,
+        other.artists.map { SimpleArtist(it) },
+        other.albumType,
+        other.uri,
+        other.href,
+        other.images.map { Image(it) }
+    )
+
     val iconUrl: String
         get() = images.firstImageUrl()
 

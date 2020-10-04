@@ -1,62 +1,44 @@
 package com.example.spotify.artist.data
 
+import com.clipfinder.core.spotify.model.ISpotifyArtist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
+import com.clipfinder.core.spotify.model.ISpotifyTrack
+import com.clipfinder.spotify.api.endpoint.ArtistEndpoints
 import com.example.core.SpotifyDefaults
-import com.example.core.android.spotify.api.SpotifyAuth
-import com.example.core.android.spotify.mapper.domain
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
 import com.example.spotify.artist.domain.repo.ISpotifyArtistRepo
-import com.example.spotifyapi.SpotifyArtistsApi
-import com.example.spotifyapi.models.Artist
-import com.example.spotifyapi.models.SimpleAlbum
-import com.example.spotifyapi.models.Track
-import com.example.spotifyapi.util.domain
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.Single
 
 class SpotifyArtistRepo(
-    private val artistsApi: SpotifyArtistsApi,
-    private val auth: SpotifyAuth,
+    private val artistEndpoints: ArtistEndpoints,
     private val preferences: SpotifyPreferences
 ) : ISpotifyArtistRepo {
 
     override fun getAlbumsFromArtist(
-        artistId: String,
-        offset: Int
-    ): Single<Resource<Paged<List<AlbumEntity>>>> = auth.withTokenSingle { token ->
-        artistsApi.getArtistsAlbums(
-            authorization = token,
-            id = artistId,
-            offset = offset
-        ).mapToResource {
-            Paged(
-                contents = items.map(SimpleAlbum::domain),
+        artistId: String, offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = artistEndpoints
+        .getAnArtistsAlbums(id = artistId, offset = offset)
+        .mapToResource {
+            Paged<List<ISpotifySimplifiedAlbum>>(
+                contents = items,
                 offset = this.offset + SpotifyDefaults.LIMIT,
                 total = total
             )
         }
-    }
 
     override fun getRelatedArtists(
         artistId: String
-    ): Single<Resource<List<ArtistEntity>>> = auth.withTokenSingle { token ->
-        artistsApi.getArtistsRelatedArtists(
-            authorization = token,
-            id = artistId
-        ).mapToResource { result.map(Artist::domain) }
-    }
+    ): Single<Resource<List<ISpotifyArtist>>> = artistEndpoints
+        .getAnArtistsRelatedArtists(id = artistId)
+        .mapToResource { artists }
+
 
     override fun getTopTracksFromArtist(
         artistId: String
-    ): Single<Resource<List<TrackEntity>>> = auth.withTokenSingle { token ->
-        artistsApi.getArtistsTopTracks(
-            authorization = token,
-            id = artistId,
-            country = preferences.country
-        ).mapToResource { result.map(Track::domain) }
-    }
+    ): Single<Resource<List<ISpotifyTrack>>> = artistEndpoints
+        .getAnArtistsTopTracks(id = artistId, market = preferences.country)
+        .mapToResource { tracks }
 }

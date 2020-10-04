@@ -6,16 +6,13 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
-import com.example.core.android.model.Loading
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
-import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.playlist.domain.usecase.GetPlaylistTracks
-import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -35,18 +32,22 @@ class SpotifyPlaylistViewModel(
 
         val args = GetPlaylistTracks.Args(playlist.id, tracks.offset)
         getPlaylistTracks(args = args, applySchedulers = false)
-            .mapData { tracksPage -> tracksPage.map(TrackEntity::ui) }
+            .mapData { tracksPage -> tracksPage.map { Track(it) } }
             .subscribeOn(Schedulers.io())
-            .updateWithPagedResource(PlaylistViewState<Playlist, Track>::tracks) { copy(tracks = it) }
+            .updateWithPagedResource(PlaylistViewState<Playlist, Track>::tracks) {
+                copy(tracks = it)
+            }
     }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context.observeNetworkConnectivity {
-            withState { (_, tracks) ->
-                if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadTracks()
+        context
+            .observeNetworkConnectivity {
+                withState { (_, tracks) ->
+                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadTracks()
+                }
             }
-        }.disposeOnClear()
+            .disposeOnClear()
     }
 
     companion object : MvRxViewModelFactory<SpotifyPlaylistViewModel, PlaylistViewState<Playlist, Track>> {

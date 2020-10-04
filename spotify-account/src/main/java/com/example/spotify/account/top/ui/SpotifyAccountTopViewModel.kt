@@ -5,16 +5,15 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Initial
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.account.top.domain.usecase.GetCurrentUsersTopArtists
 import com.example.spotify.account.top.domain.usecase.GetCurrentUsersTopTracks
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -39,7 +38,7 @@ class SpotifyAccountTopViewModel(
     fun loadTracks() = withState { (userLoggedIn, tracks) ->
         if (userLoggedIn && tracks.shouldLoad) {
             getCurrentUsersTopTracks(applySchedulers = false, args = tracks.offset)
-                .mapData { newTracks -> newTracks.map(TrackEntity::ui) }
+                .mapData { newTracks -> newTracks.map { Track(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountTopState::topTracks) { copy(topTracks = it) }
         }
@@ -48,7 +47,7 @@ class SpotifyAccountTopViewModel(
     fun loadArtists() = withState { (userLoggedIn, _, artists) ->
         if (userLoggedIn && artists.shouldLoad) {
             getCurrentUsersTopArtists(applySchedulers = false, args = artists.offset)
-                .mapData { newArtists -> newArtists.map(ArtistEntity::ui) }
+                .mapData { newArtists -> newArtists.map { Artist(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountTopState::artists) { copy(artists = it) }
         }

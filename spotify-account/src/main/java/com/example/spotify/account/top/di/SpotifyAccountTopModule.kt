@@ -8,8 +8,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val spotifyAccountTopModule = module {
-    single { GetCurrentUsersTopArtists(get(), get()) }
-    single { GetCurrentUsersTopTracks(get(), get()) }
+    single { GetCurrentUsersTopArtists(get(), get(), get()) }
+    single { GetCurrentUsersTopTracks(get(), get(), get()) }
 
-    single { SpotifyAccountTopRepo(get(), get()) } bind ISpotifyAccountTopRepo::class
+    single { SpotifyAccountTopRepo(get()) } bind ISpotifyAccountTopRepo::class
 }

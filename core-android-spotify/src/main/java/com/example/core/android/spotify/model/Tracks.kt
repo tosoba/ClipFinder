@@ -28,6 +28,18 @@ data class Track(
     IdentifiableNamedObservableListItem<String>,
     IdentifiableNumberedObservableListItem<String> {
 
+    constructor(other: ISpotifyTrack) : this(
+        other.id,
+        other.name,
+        other.artists.map { Artist(it) },
+        other.popularity,
+        other.trackNumber,
+        other.uri,
+        other.durationMs,
+        Album(other.album),
+        other.previewUrl
+    )
+
     val iconUrl: String
         get() = album.iconUrl
 

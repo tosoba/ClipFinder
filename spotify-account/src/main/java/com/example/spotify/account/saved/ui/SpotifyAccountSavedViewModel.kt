@@ -5,16 +5,15 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Initial
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedAlbums
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedTracks
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.TrackEntity
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -39,7 +38,7 @@ class SpotifyAccountSavedViewModel(
     fun loadTracks() = withState { (userLoggedIn, tracks) ->
         if (userLoggedIn && tracks.shouldLoad) {
             getCurrentUsersSavedTracks(applySchedulers = false, args = tracks.offset)
-                .mapData { newTracks -> newTracks.map(TrackEntity::ui) }
+                .mapData { newTracks -> newTracks.map { Track(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountSavedState::tracks) { copy(tracks = it) }
         }
@@ -48,7 +47,7 @@ class SpotifyAccountSavedViewModel(
     fun loadAlbums() = withState { (userLoggedIn, _, albums) ->
         if (userLoggedIn && albums.shouldLoad) {
             getCurrentUsersSavedAlbums(applySchedulers = false, args = albums.offset)
-                .mapData { newAlbums -> newAlbums.map(AlbumEntity::ui) }
+                .mapData { newAlbums -> newAlbums.map { Album(it) } }
                 .subscribeOn(Schedulers.io())
                 .updateWithPagedResource(SpotifyAccountSavedState::albums) { copy(albums = it) }
         }

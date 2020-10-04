@@ -3,7 +3,6 @@ package com.example.spotify.search.ui
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.Loading
 import com.example.core.android.spotify.model.SpotifySearchType
 import com.example.core.model.Resource
@@ -87,22 +86,24 @@ class SpotifySearchViewModel(
             .subscribeOn(Schedulers.io())
             .subscribe({
                 when (it) {
-                    is Resource.Success<SpotifySearchResult> -> setState {
-                        val searchResult = it.data
-                        copy(
-                            albums = searchResult.albums?.let { (newItems, offset, total) ->
-                                albums.copyWithNewItems(newItems.map(AlbumEntity::ui), offset, total)
-                            } ?: albums,
-                            artists = searchResult.artists?.let { (newItems, offset, total) ->
-                                artists.copyWithNewItems(newItems.map(ArtistEntity::ui), offset, total)
-                            } ?: artists,
-                            playlists = searchResult.playlists?.let { (newItems, offset, total) ->
-                                playlists //TODO: fix after plugging in new search endpoint
-                            } ?: playlists,
-                            tracks = searchResult.tracks?.let { (newItems, offset, total) ->
-                                tracks.copyWithNewItems(newItems.map(TrackEntity::ui), offset, total)
-                            } ?: tracks
-                        )
+                    is Resource.Success<SpotifySearchResult> -> {
+//                        setState {
+//                            val searchResult = it.data
+//                            copy(
+//                                albums = searchResult.albums?.let { (newItems, offset, total) ->
+//                                    albums.copyWithNewItems(newItems.map(AlbumEntity::ui), offset, total)
+//                                } ?: albums,
+//                                artists = searchResult.artists?.let { (newItems, offset, total) ->
+//                                    artists.copyWithNewItems(newItems.map(ArtistEntity::ui), offset, total)
+//                                } ?: artists,
+//                                playlists = searchResult.playlists?.let { (newItems, offset, total) ->
+//                                    playlists //TODO: fix after plugging in new search endpoint
+//                                } ?: playlists,
+//                                tracks = searchResult.tracks?.let { (newItems, offset, total) ->
+//                                    tracks.copyWithNewItems(newItems.map(TrackEntity::ui), offset, total)
+//                                } ?: tracks
+//                            )
+//                        }
                     }
                     is Resource.Error<SpotifySearchResult, *> -> setErrorState(args, it.error)
                 }

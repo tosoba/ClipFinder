@@ -12,8 +12,3 @@ data class TrackEntity(
     val uri: String,
     val durationMs: Int
 )
-
-data class TopTrackEntity(
-    val position: Int,
-    val track: TrackEntity
-)

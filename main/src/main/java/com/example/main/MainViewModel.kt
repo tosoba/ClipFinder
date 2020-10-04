@@ -1,7 +1,6 @@
 package com.example.main
 
 import com.example.core.android.base.vm.BaseViewModel
-import com.example.core.android.mapper.spotify.ui
 import com.example.core.android.model.spotify.User
 import com.example.there.domain.entity.spotify.TrackEntity
 import com.example.there.domain.usecase.spotify.GetCurrentUser
@@ -15,9 +14,9 @@ class MainViewModel(
     val drawerViewState = DrawerHeaderViewState()
 
     fun loadSimilarTracks(trackId: String) {
-        getSimilarTracks(trackId)
-            .takeSuccessOnly()
-            .subscribeAndDisposeOnCleared({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
+//        getSimilarTracks(trackId)
+//            .takeSuccessOnly()
+//            .subscribeAndDisposeOnCleared({ viewState.similarTracks.value = it.map(TrackEntity::ui) }, ::onError)
     }
 
     fun loadCurrentUser() {

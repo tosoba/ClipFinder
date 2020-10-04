@@ -138,7 +138,7 @@ interface PlaylistsEndpoints {
      * @return [Call]<[TrackOrEpisodePagingObject]>
      */
     @GET("playlists/{playlist_id}/tracks")
-    fun getPlaylistsTracks(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("market") market: String, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<TrackOrEpisodePagingObject, ErrorResponse>>
+    fun getPlaylistsTracks(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("market") market: String? = null, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<TrackOrEpisodePagingObject, ErrorResponse>>
 
     /**
      * Remove Items from a Playlist

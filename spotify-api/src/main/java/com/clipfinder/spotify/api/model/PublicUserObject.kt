@@ -32,7 +32,7 @@ data class PublicUserObject(
     @Json(name = "external_urls")
     val externalUrls: Any,
     @Json(name = "followers")
-    val followers: FollowersObject,
+    val followers: FollowersObject? = null,
     /* A link to the Web API endpoint for this user. */
     @Json(name = "href")
     val href: String,

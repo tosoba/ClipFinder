@@ -32,7 +32,7 @@ import com.squareup.moshi.Json
 data class SimplifiedAlbumObject(
     /* The field is present when getting an artist’s albums. Possible values are “album”, “single”, “compilation”, “appears_on”. Compare to album_type this field represents relationship between the artist and the album. */
     @Json(name = "album_group")
-    val albumGroup: String,
+    val albumGroup: String? = null,
     /* The type of the album: one of “album”, “single”, or “compilation”. */
     @Json(name = "album_type")
     override val albumType: String,

@@ -13,7 +13,7 @@
 
         <variable
             name="track"
-            type="com.example.core.android.spotify.model.Track" />
+            type="MutableLiveData&lt;Track&gt;" />
     </data>
 
     <com.example.core.android.view.coordinator.NestedCoordinatorLayout

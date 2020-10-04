@@ -12,10 +12,11 @@ import com.example.core.android.loadingIndicator
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.LoadingFailed
-import com.example.core.android.spotify.model.Track
-import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
+import com.example.core.android.spotify.model.Track
+import com.example.core.android.spotify.model.clickableListItem
+import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
@@ -55,7 +56,9 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        track?.let { viewModel.loadAlbum(it.album.id) }
+                        track?.let {
+//                            viewModel.loadAlbum(it.album.id)
+                        }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
@@ -71,7 +74,11 @@ class TrackFragment : BaseMvRxFragment() {
                 artists,
                 R.string.artists,
                 "track-artists",
-                { track?.let { track -> viewModel.loadArtists(track.artists.map { it.id }) } }
+                {
+                    track?.let { track ->
+//                    viewModel.loadArtists(track.artists.map { it.id })
+                    }
+                }
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
@@ -83,7 +90,11 @@ class TrackFragment : BaseMvRxFragment() {
                 similarTracks,
                 R.string.similar_tracks,
                 "similar-tracks",
-                { track?.let { track -> viewModel.loadSimilarTracks(track) } },
+                {
+                    track?.let { track ->
+//                    viewModel.loadSimilarTracks(track)
+                    }
+                },
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->
@@ -104,7 +115,9 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadingFailed<*> -> reloadControl {
                     id("audio-features-reload-control")
                     onReloadClicked { _ ->
-                        track?.let { track -> viewModel.loadAudioFeatures(track) }
+                        track?.let { track ->
+//                            viewModel.loadAudioFeatures(track)
+                        }
                     }
                     message("Error occurred lmao") //TODO: error msg
                 }

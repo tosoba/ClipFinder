@@ -7,7 +7,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val spotifyPlaylistModule = module {
-    single { GetPlaylistTracks(get(), get()) }
+    single { GetPlaylistTracks(get(), get(), get()) }
 
-    single { SpotifyPlaylistRepo(get(), get()) } bind ISpotifyPlaylistRepo::class
+    single { SpotifyPlaylistRepo(get()) } bind ISpotifyPlaylistRepo::class
 }

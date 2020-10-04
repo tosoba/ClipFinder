@@ -42,7 +42,7 @@ dependencies {
     implementation project(':core-android-spotify')
     implementation project(':domain')
     implementation project(':itemlist')
-    implementation project(':spotifyapi')
+    implementation project(':spotify-api')
 
     implementation rootProject.ext.rxJava
     implementation 'com.github.wada811:LifecycleDispose:2.0.3'

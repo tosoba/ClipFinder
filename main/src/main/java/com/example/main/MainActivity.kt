@@ -37,10 +37,7 @@ import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.dpToPx
-import com.example.core.android.util.ext.screenHeight
-import com.example.core.android.util.ext.screenOrientation
-import com.example.core.android.util.ext.showDrawerHamburger
+import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnNavigationDrawerClosedListerner
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.example.itemlist.spotify.SpotifyTracksFragment
@@ -289,8 +286,6 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.clearAllVideoSearchData()
-
         initViewBindings()
         setupNavigationFromSimilarTracks()
 
@@ -506,32 +501,12 @@ class MainActivity :
 
     override fun addVideoToPlaylist(playlist: VideoPlaylist) {
         youtubePlayerFragment?.lastPlayedVideo?.let {
-            viewModel.addVideoToPlaylist(it, playlist) {
-                Toast.makeText(this, "Video added to playlist: ${playlist.name}.", Toast.LENGTH_SHORT).show()
-            }
+
         }
     }
 
     override fun showNewPlaylistDialog() {
-        youtubePlayerFragment?.lastPlayedVideo?.let {
-            MaterialDialog.Builder(this)
-                .title(getString(R.string.new_playlist))
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.playlist_name), "") { _, input ->
-                    val newPlaylistName = input.trim().toString()
-                    addVideoDialogFragment?.dismiss()
-                    viewModel.addVideoPlaylistWithVideo(VideoPlaylist(name = newPlaylistName), video = it) {
-                        Toast.makeText(
-                            this,
-                            "Video added to playlist: $newPlaylistName.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-                .positiveText(getString(R.string.ok))
-                .build()
-                .apply(MaterialDialog::show)
-        }
+
     }
 
     override val providedIntent: Intent

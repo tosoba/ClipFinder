@@ -9,9 +9,4 @@
         android:icon="@drawable/user"
         android:title="@string/user" />
 
-    <item
-        android:id="@+id/action_favorites"
-        android:icon="@drawable/favourites"
-        android:title="@string/favourites" />
-
 </menu>

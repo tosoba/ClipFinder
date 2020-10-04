@@ -11,5 +11,6 @@ class GetArtists(
     schedulers: RxSchedulers,
     private val remote: ISpotifyRemoteDataStore
 ) : SingleUseCaseWithArgs<List<String>, Resource<List<ArtistEntity>>>(schedulers) {
-    override fun run(args: List<String>): Single<Resource<List<ArtistEntity>>> = remote.getArtists(artistIds = args)
+    override fun run(args: List<String>): Single<Resource<List<ArtistEntity>>> = remote
+        .getArtists(artistIds = args)
 }

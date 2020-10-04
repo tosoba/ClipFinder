@@ -4,10 +4,4 @@
         android:id="@+id/sound_cloud_action_dashboard"
         android:icon="@drawable/dashboard"
         android:title="@string/dashboard" />
-
-    <item
-        android:id="@+id/sound_cloud_action_favorites"
-        android:icon="@drawable/favourites"
-        android:title="@string/favourites" />
-
 </menu>

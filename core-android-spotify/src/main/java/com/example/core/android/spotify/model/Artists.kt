@@ -24,6 +24,10 @@ data class Artist(
     NamedImageListItem,
     IdentifiableNamedObservableListItem<String> {
 
+    constructor(other: ISpotifyArtist) : this(
+        other.id, other.name, other.href, other.popularity, other.images.map { Image(it) }
+    )
+
     val iconUrl: String
         get() = images.firstImageUrl()
 
@@ -52,4 +56,6 @@ data class SimpleArtist(
     override val name: String,
     override val href: String
 ) : Parcelable,
-    ISpotifySimplifiedArtist
+    ISpotifySimplifiedArtist {
+    constructor(other: ISpotifySimplifiedArtist) : this(other.id, other.name, other.href)
+}
