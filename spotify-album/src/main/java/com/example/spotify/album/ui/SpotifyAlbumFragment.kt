@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.airbnb.mvrx.*
-import com.example.core.android.TrackPopularityItemBindingModel_
+import com.example.core.android.spotify.TrackPopularityItemBindingModel_
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.model.clickableListItem

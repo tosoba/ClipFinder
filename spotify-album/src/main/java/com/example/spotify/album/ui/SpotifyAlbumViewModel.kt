@@ -17,10 +17,7 @@ import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
 import com.example.there.domain.entity.spotify.ArtistEntity
 import com.example.there.domain.entity.spotify.TrackEntity
-import com.example.there.domain.usecase.spotify.DeleteAlbum
 import com.example.there.domain.usecase.spotify.GetArtists
-import com.example.there.domain.usecase.spotify.InsertAlbum
-import com.example.there.domain.usecase.spotify.IsAlbumSaved
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 import timber.log.Timber

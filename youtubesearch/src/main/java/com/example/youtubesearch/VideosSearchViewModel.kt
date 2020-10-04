@@ -49,9 +49,7 @@ class VideosSearchViewModel(
         viewState.videos.addAll(mapped.map { video ->
             VideoItemView(
                 video = video,
-                onRemoveBtnClickListener = if (withRemoveOption) View.OnClickListener {
-                    viewState.videos.removeAll { it.video == video }
-                } else null
+                onRemoveBtnClickListener = null
             )
         })
 

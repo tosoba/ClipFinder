@@ -4,9 +4,9 @@ import android.os.Parcelable
 import android.view.View
 import com.clipfinder.core.spotify.ext.firstImageUrl
 import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
-import com.example.core.android.AlbumInfoItemBindingModel_
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
+import com.example.core.android.spotify.AlbumInfoItemBindingModel_
 import com.example.core.android.util.list.IdentifiableNamedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem

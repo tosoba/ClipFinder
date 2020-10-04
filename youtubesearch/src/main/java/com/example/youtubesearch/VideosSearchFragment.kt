@@ -119,8 +119,6 @@ class VideosSearchFragment :
         if (it.containsKey(ARG_QUERY)) {
             query = it.getString(ARG_QUERY)!!
         } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
-            val videoPlaylist = it.getParcelable<VideoPlaylist>(ARG_VIDEO_PLAYLIST)!!
-            viewModel.getFavouriteVideosFromPlaylist(videoPlaylist)
         }
     }
 
