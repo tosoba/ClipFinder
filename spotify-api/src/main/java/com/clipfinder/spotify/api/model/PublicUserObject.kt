@@ -41,7 +41,7 @@ data class PublicUserObject(
     val id: String,
     /* The user’s profile image. */
     @Json(name = "images")
-    val images: List<ImageObject>,
+    val images: List<ImageObject>? = null,
     /* The object type: “user” */
     @Json(name = "type")
     val type: String,

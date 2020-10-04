@@ -56,7 +56,7 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
     override fun setToken(accessToken: String) {
         with(preferences.edit()) {
             putString(PREF_KEY_TOKEN, accessToken)
-            putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, true)
+            putBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, false)
             apply()
         }
     }

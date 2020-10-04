@@ -32,10 +32,10 @@ data class ArtistObject(
     @Json(name = "external_urls")
     val externalUrls: Any,
     @Json(name = "followers")
-    val followers: FollowersObject,
+    val followers: FollowersObject? = null,
     /* A list of the genres the artist is associated with. For example: \"Prog Rock\" , \"Post-Grunge\". (If not yet classified, the array is empty.) */
     @Json(name = "genres")
-    val genres: List<String>,
+    val genres: List<String>? = null,
     /* A link to the Web API endpoint providing full details of the artist. */
     @Json(name = "href")
     override val href: String,

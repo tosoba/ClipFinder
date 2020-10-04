@@ -41,7 +41,7 @@ data class PrivateUserObject(
     @Json(name = "external_urls")
     val externalUrls: Any,
     @Json(name = "followers")
-    val followers: FollowersObject,
+    val followers: FollowersObject? = null,
     /* A link to the Web API endpoint for this user. */
     @Json(name = "href")
     val href: String,
@@ -50,7 +50,7 @@ data class PrivateUserObject(
     val id: String,
     /* The user’s profile image. */
     @Json(name = "images")
-    val images: List<ImageObject>,
+    val images: List<ImageObject>? = null,
     /* The user’s Spotify subscription level: “premium”, “free”, etc. (The subscription level “open” can be considered the same as “free”.) This field is only available when the current user has granted access to the user-read-private scope. */
     @Json(name = "product")
     val product: String,

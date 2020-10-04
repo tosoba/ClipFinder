@@ -55,7 +55,7 @@ data class AlbumObject(
     val externalUrls: Any,
     /* A list of the genres used to classify the album. For example: “Prog Rock” , “Post-Grunge”. (If not yet classified, the array is empty.) */
     @Json(name = "genres")
-    val genres: List<String>,
+    val genres: List<String>? = null,
     /* A link to the Web API endpoint providing full details of the album. */
     @Json(name = "href")
     override val href: String,
