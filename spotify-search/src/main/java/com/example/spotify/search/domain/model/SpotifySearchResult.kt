@@ -1,14 +1,14 @@
 package com.example.spotify.search.domain.model
 
+import com.clipfinder.core.spotify.model.ISpotifyArtist
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedPlaylist
+import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.example.core.model.Paged
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.PlaylistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
 
 data class SpotifySearchResult(
-    val albums: Paged<List<AlbumEntity>>?,
-    val artists: Paged<List<ArtistEntity>>?,
-    val playlists: Paged<List<PlaylistEntity>>?,
-    val tracks: Paged<List<TrackEntity>>?
+    val albums: Paged<List<ISpotifySimplifiedAlbum>>?,
+    val artists: Paged<List<ISpotifyArtist>>?,
+    val playlists: Paged<List<ISpotifySimplifiedPlaylist>>?,
+    val tracks: Paged<List<ISpotifyTrack>>?
 )

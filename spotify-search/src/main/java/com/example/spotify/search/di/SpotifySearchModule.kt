@@ -7,6 +7,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val spotifySearchModule = module {
-    single { SearchSpotify(get(), get()) }
-    single { SpotifySearchRepoImpl(get(), get()) } bind ISpotifySearchRepo::class
+    single { SearchSpotify(get(), get(), get()) }
+    single { SpotifySearchRepoImpl(get()) } bind ISpotifySearchRepo::class
 }
