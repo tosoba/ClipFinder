@@ -51,7 +51,7 @@ fun Artist.clickableListItem(
     .itemClicked(View.OnClickListener { itemClicked() })
 
 @Parcelize
-data class SimpleArtist(
+data class SimplifiedArtist(
     override val id: String,
     override val name: String,
     override val href: String

@@ -15,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
 data class Track(
     override val id: String,
     override val name: String,
-    override val artists: List<Artist>,
+    override val artists: List<SimplifiedArtist>,
     override val popularity: Int,
     override val trackNumber: Int,
     override val uri: String,
@@ -31,7 +31,7 @@ data class Track(
     constructor(other: ISpotifyTrack) : this(
         other.id,
         other.name,
-        other.artists.map { Artist(it) },
+        other.artists.map { SimplifiedArtist(it) },
         other.popularity,
         other.trackNumber,
         other.uri,

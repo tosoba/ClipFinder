@@ -16,7 +16,7 @@ import kotlinx.android.parcel.Parcelize
 data class Album(
     override val id: String,
     override val name: String,
-    override val artists: List<SimpleArtist>,
+    override val artists: List<SimplifiedArtist>,
     override val albumType: String,
     override val uri: String,
     override val href: String,
@@ -29,7 +29,7 @@ data class Album(
     constructor(other: ISpotifySimplifiedAlbum) : this(
         other.id,
         other.name,
-        other.artists.map { SimpleArtist(it) },
+        other.artists.map { SimplifiedArtist(it) },
         other.albumType,
         other.uri,
         other.href,

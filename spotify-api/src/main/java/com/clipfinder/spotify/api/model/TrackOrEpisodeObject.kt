@@ -1,5 +1,6 @@
 package com.clipfinder.spotify.api.model
 
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedArtist
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.squareup.moshi.Json
 
@@ -38,7 +39,7 @@ data class TrackObject(
     override val album: SimplifiedAlbumObject,
     /* The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist. */
     @Json(name = "artists")
-    override val artists: List<ArtistObject>,
+    override val artists: List<ISpotifySimplifiedArtist>,
     /* A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code. */
     @Json(name = "available_markets")
     val availableMarkets: List<String>,

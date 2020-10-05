@@ -66,7 +66,7 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadedSuccessfully -> album.value?.let {
                     it.infoItem { show { factory.newSpotifyAlbumFragment(it) } }
                         .addTo(this)
-                }
+                } ?: Unit
             }
 
             dataListCarouselWithHeader(
