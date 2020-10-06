@@ -4,10 +4,6 @@ import io.reactivex.*
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-fun <T> Maybe<T>.isPresent(): Single<Boolean> = map { true }
-    .defaultIfEmpty(false)
-    .toSingle()
-
 fun Disposable.disposeIfNeeded() {
     if (!isDisposed) dispose()
 }
@@ -39,6 +35,6 @@ fun Completable.applySchedulers(
 
 class Timeout(val limit: Long, val unit: TimeUnit) {
     companion object {
-        val DEFAULT = Timeout(5, TimeUnit.SECONDS)
+        val DEFAULT = Timeout(15, TimeUnit.SECONDS)
     }
 }

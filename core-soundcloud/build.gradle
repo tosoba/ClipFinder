@@ -9,6 +9,7 @@ dependencies {
     implementation project(':domain')
 
     implementation rootProject.ext.rxJava
+    implementation rootProject.ext.retrofit
 }
 
 sourceCompatibility = "1.8"

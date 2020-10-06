@@ -10,7 +10,7 @@ import com.example.core.android.model.Loading
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.soundclouddashboard.domain.usecase.GetMixedSelections
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.android.ext.android.inject
 
 class SoundCloudDashboardViewModel(
@@ -28,12 +28,12 @@ class SoundCloudDashboardViewModel(
         if (currentSelections.status is Loading) return@withState
 
         getMixedSelections(applySchedulers = false)
+            .observeOn(AndroidSchedulers.mainThread())
             .map { resource ->
                 resource.map { selections ->
                     selections.map { SoundCloudPlaylistSelection(it) }
                 }
             }
-            .subscribeOn(Schedulers.io())
             .updateWithResource(SoundCloudDashboardState::selections) { copy(selections = it) }
     }
 

@@ -11,5 +11,6 @@ class GetClientId(
     private val preferences: ISoundCloudPreferences,
     rxSchedulers: RxSchedulers
 ) : SingleUseCase<String>(rxSchedulers) {
-    override val result: Single<String> get() = auth.clientId
+    override val result: Single<String>
+        get() = auth.clientId.doOnSuccess { preferences.clientId = it }
 }

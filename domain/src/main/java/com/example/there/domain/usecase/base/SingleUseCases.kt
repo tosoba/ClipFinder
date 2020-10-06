@@ -12,7 +12,7 @@ abstract class SingleUseCase<Result>(private val schedulers: RxSchedulers) {
         strategy: RetryStrategy? = null
     ): Single<Result> = result
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(it) } ?: this }
+        .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
@@ -26,6 +26,6 @@ abstract class SingleUseCaseWithArgs<Args, Res>(private val schedulers: RxSchedu
         strategy: RetryStrategy? = null
     ): Single<Res> = run(args)
         .timeout(timeout.limit, timeout.unit)
-        .run { strategy?.let { retry(it) } ?: this }
+        .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }

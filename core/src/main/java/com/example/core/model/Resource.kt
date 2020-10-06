@@ -11,6 +11,11 @@ sealed class Resource<out T> {
         is Success<T> -> Success(mapper(data))
         is Error<T, *> -> Error(error, data?.let { mapper(it) })
     }
+
+    companion object {
+        fun <T> success(data: T): Resource<T> = Success(data)
+        fun <E, T> error(error: E, data: T? = null): Resource<T> = Error(error, data)
+    }
 }
 
 fun <T, S> Single<Resource<T>>.mapData(mapper: (T) -> S): Single<Resource<S>> = map {
