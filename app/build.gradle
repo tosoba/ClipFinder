@@ -44,7 +44,6 @@ android {
         targetCompatibility 1.8
     }
 
-
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
