@@ -105,10 +105,7 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Error<Paged<C>, *> -> {
                         it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
-                        stateReducer(
-                            currentValueOf(prop)
-                                .copyWithError(it.error)
-                        )
+                        stateReducer(currentValueOf(prop).copyWithError(it.error))
                     }
                 }
             }

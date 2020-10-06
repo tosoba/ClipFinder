@@ -24,12 +24,12 @@ import com.squareup.moshi.Json
 data class ExternalIdObject(
     /* International Article Number */
     @Json(name = "ean")
-    val ean: String,
+    val ean: String? = null,
     /* International Standard Recording Code */
     @Json(name = "isrc")
-    val isrc: String,
+    val isrc: String? = null,
     /* Universal Product Code */
     @Json(name = "upc")
-    val upc: String
+    val upc: String? = null
 )
 

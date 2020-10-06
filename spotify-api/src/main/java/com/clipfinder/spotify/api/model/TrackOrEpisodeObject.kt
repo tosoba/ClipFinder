@@ -1,6 +1,5 @@
 package com.clipfinder.spotify.api.model
 
-import com.clipfinder.core.spotify.model.ISpotifySimplifiedArtist
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.squareup.moshi.Json
 
@@ -39,7 +38,7 @@ data class TrackObject(
     override val album: SimplifiedAlbumObject,
     /* The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist. */
     @Json(name = "artists")
-    override val artists: List<ISpotifySimplifiedArtist>,
+    override val artists: List<SimplifiedArtistObject>,
     /* A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code. */
     @Json(name = "available_markets")
     val availableMarkets: List<String>,
@@ -64,9 +63,9 @@ data class TrackObject(
     override val id: String,
     /* Part of the response when Track Relinking is applied. If true , the track is playable in the given market. Otherwise false. */
     @Json(name = "is_playable")
-    val isPlayable: Boolean,
+    val isPlayable: Boolean? = null,
     @Json(name = "linked_from")
-    val linkedFrom: LinkedTrackObject,
+    val linkedFrom: LinkedTrackObject? = null,
     /* The name of the track. */
     @Json(name = "name")
     override val name: String,
@@ -78,7 +77,7 @@ data class TrackObject(
     override val previewUrl: String? = null,
     /* Part of the response when Track Relinking is applied, the original track is not available in the given market, and Spotify did not have any tracks to relink it with. The track response will still contain metadata for the original track, and a restrictions object containing the reason why the track is not available: \"restrictions\" : {\"reason\" : \"market\"} */
     @Json(name = "restrictions")
-    val restrictions: List<TrackRestrictionObject>,
+    val restrictions: List<TrackRestrictionObject>? = null,
     /* The number of the track. If an album has several discs, the track number is the number on the specified disc. */
     @Json(name = "track_number")
     override val trackNumber: Int,

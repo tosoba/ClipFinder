@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
 import com.example.core.android.spotify.model.*
@@ -66,13 +67,14 @@ class SpotifyDashboardViewModel(
             getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
                 .mapData { tracks ->
                     tracks.mapIndexed { index, track ->
-                        TopTrack(topTracks.offset + index, Track(track))
+                        TopTrack(
+                            position = SpotifyDefaults.LIMIT * topTracks.offset + index + 1,
+                            track = Track(track)
+                        )
                     }
                 }
                 .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::topTracks) {
-                    copy(topTracks = it)
-                }
+                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
         }
     }
 
