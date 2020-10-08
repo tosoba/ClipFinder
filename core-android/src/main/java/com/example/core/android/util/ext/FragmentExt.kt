@@ -52,10 +52,7 @@ val Fragment.navHostFragment: BaseNavHostFragment?
 val Fragment.mainContentFragment: IMainContentFragment?
     get() = findAncestorFragmentOfType()
 
-inline fun <T> T.show(
-    addToBackStack: Boolean = true,
-    getFragment: () -> Fragment
-) where T : Fragment {
+inline fun <T> T.show(addToBackStack: Boolean = true, getFragment: () -> Fragment) where T : Fragment {
     navHostFragment?.showFragment(getFragment(), addToBackStack)
 }
 
@@ -63,9 +60,11 @@ fun Fragment.reloadingConnectivityComponent(
     reloadData: () -> Unit,
     isReloadNeeded: () -> Boolean
 ): ConnectivityComponent = ConnectivityComponent(object : ConnectivityComponent.Binder {
-    override val context: Context get() = this@reloadingConnectivityComponent.requireContext()
+    override val context: Context
+        get() = this@reloadingConnectivityComponent.requireContext()
 
-    override val snackbarParentView: View? get() = activity?.castAs<ConnectivitySnackbarHost>()?.snackbarParentView
+    override val snackbarParentView: View?
+        get() = activity?.castAs<ConnectivitySnackbarHost>()?.snackbarParentView
 
     override fun shouldReload(): Boolean = isReloadNeeded()
 
@@ -90,3 +89,7 @@ inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmen
             subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() })
         }
 }
+
+inline fun <reified F : Fragment> newFragmentWithMvRxArg(arg: Parcelable): F = F::class.java
+    .newInstance()
+    .apply { Bundle().apply { putParcelable(MvRx.KEY_ARG, arg) } }

@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.spotify.TrackPopularityItemBindingModel_
-import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
@@ -98,8 +101,6 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(album: Album) = SpotifyAlbumFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, album) }
-        }
+        fun new(album: Album): SpotifyAlbumFragment = newFragmentWithMvRxArg(album)
     }
 }

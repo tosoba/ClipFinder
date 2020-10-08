@@ -9,15 +9,14 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.mvrx.*
-import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.spotify.model.clickableGridListItem
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.spotify.model.Category
+import com.example.core.android.spotify.model.clickableGridListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.loadBackgroundGradient
-import com.example.core.android.util.ext.mainContentFragment
-import com.example.core.android.util.ext.setupWithBackNavigation
-import com.example.core.android.util.ext.show
+import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.spotify.category.R
 import com.example.spotify.category.databinding.FragmentSpotifyCategoryBinding
@@ -81,8 +80,6 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     )
 
     companion object {
-        fun newInstance(category: Category) = SpotifyCategoryFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, category) }
-        }
+        fun new(category: Category): SpotifyCategoryFragment = newFragmentWithMvRxArg(category)
     }
 }

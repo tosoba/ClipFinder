@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.MvRx
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.example.core.android.util.ext.newFragmentWithMvRxArg
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
@@ -42,7 +46,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
     }.root
 
     private inline fun <reified F : ItemListFragment<SpotifySearchViewState>> itemListFragment(): F {
-        return ItemListFragment.new(ItemListFragment.Args(3, 4, 5))
+        return newFragmentWithMvRxArg(ItemListFragment.Args(3, 4, 5))
     }
 
     override fun invalidate() = Unit

@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
+import com.example.core.android.util.ext.newFragmentWithMvRxArg
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.view.epoxy.injectedItemListController
 import com.example.soundcloudtrackvideos.R
@@ -51,10 +55,6 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(
-            track: SoundCloudTrack
-        ): SoundCloudTrackFragment = SoundCloudTrackFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
-        }
+        fun new(track: SoundCloudTrack): SoundCloudTrackFragment = newFragmentWithMvRxArg(track)
     }
 }

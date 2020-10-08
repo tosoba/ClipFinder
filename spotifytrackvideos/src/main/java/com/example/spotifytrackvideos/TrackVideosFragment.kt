@@ -8,15 +8,15 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.core.android.base.trackvideos.TrackVideosViewState
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.backPressedWithNoPreviousStateController
-import com.example.core.android.util.ext.hideAndShow
-import com.example.core.android.util.ext.loadBackgroundGradient
-import com.example.core.android.util.ext.setupWithBackNavigation
+import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
@@ -37,7 +37,7 @@ class TrackVideosFragment :
             fragmentManager = childFragmentManager,
             titledFragments = arrayOf(
                 getString(R.string.clips) to VideosSearchFragment.newInstanceWithQuery(argTrack.query),
-                getString(R.string.info) to TrackFragment.newInstanceWithTrack(argTrack)
+                getString(R.string.info) to TrackFragment.new(argTrack)
             )
         )
     }
@@ -114,8 +114,6 @@ class TrackVideosFragment :
     }
 
     companion object {
-        fun newInstance(track: Track) = TrackVideosFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
-        }
+        fun new(track: Track): TrackVideosFragment = newFragmentWithMvRxArg(track)
     }
 }

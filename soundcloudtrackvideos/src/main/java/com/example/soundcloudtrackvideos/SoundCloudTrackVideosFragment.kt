@@ -8,8 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import com.airbnb.mvrx.*
-import com.example.core.ext.castAs
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
 import com.example.core.android.base.handler.SoundCloudPlayerController
 import com.example.core.android.base.trackvideos.TrackVideosViewBinding
@@ -19,6 +21,7 @@ import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.example.core.ext.castAs
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
 import com.example.youtubesearch.VideosSearchFragment
@@ -50,7 +53,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
             fragmentManager = childFragmentManager,
             fragments = arrayOf(
                 VideosSearchFragment.newInstanceWithQuery(argTrack.title),
-                SoundCloudTrackFragment.newInstance(argTrack)
+                SoundCloudTrackFragment.new(argTrack)
             )
         )
     }
@@ -128,8 +131,6 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
     }
 
     companion object {
-        fun newInstance(track: SoundCloudTrack) = SoundCloudTrackVideosFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
-        }
+        fun new(track: SoundCloudTrack): SoundCloudTrackVideosFragment = newFragmentWithMvRxArg(track)
     }
 }

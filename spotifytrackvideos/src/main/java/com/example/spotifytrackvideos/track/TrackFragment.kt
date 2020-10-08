@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.headerItem
 import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.android.loadingIndicator
@@ -18,6 +21,7 @@ import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.example.core.android.util.ext.newFragmentWithMvRxArg
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.reloadingConnectivityComponent
 import com.example.core.android.util.ext.show
@@ -192,9 +196,7 @@ class TrackFragment : BaseMvRxFragment() {
     }
 
     companion object {
-        fun newInstanceWithTrack(track: Track): TrackFragment = TrackFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, track) }
-        }
+        fun new(track: Track): TrackFragment = newFragmentWithMvRxArg(track)
 
         private val audioFeaturesChartLabels = AudioFeaturesEntity::class.members.map { it.name }
     }

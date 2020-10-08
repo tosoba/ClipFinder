@@ -127,8 +127,6 @@ class SpotifyArtistFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPress
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun newInstance(artist: Artist) = SpotifyArtistFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, artist) }
-        }
+        fun new(artist: Artist): SpotifyArtistFragment = newFragmentWithMvRxArg(artist)
     }
 }

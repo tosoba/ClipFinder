@@ -53,10 +53,4 @@ abstract class ItemListFragment<S> : BaseMvRxFragment() {
         val spanCountLandscape: Int,
         val itemSpacingDp: Int
     ) : Parcelable
-
-    companion object {
-        inline fun <reified F : ItemListFragment<S>, S> new(args: Args): F = F::class.java
-            .newInstance()
-            .apply { arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, args) } }
-    }
 }

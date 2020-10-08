@@ -97,8 +97,6 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
     )
 
     companion object {
-        fun newInstance(playlist: Playlist) = SpotifyPlaylistFragment().apply {
-            arguments = Bundle().apply { putParcelable(MvRx.KEY_ARG, playlist) }
-        }
+        fun new(playlist: Playlist): SpotifyPlaylistFragment = newFragmentWithMvRxArg(playlist)
     }
 }

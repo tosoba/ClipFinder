@@ -36,11 +36,11 @@ object FragmentFactory :
     override val newSpotifyAccountNavHostFragment: Fragment
         get() = SpotifyAccountNavHostFragment()
 
-    override fun newSpotifyAlbumFragment(album: Album): Fragment = SpotifyAlbumFragment.newInstance(album)
-    override fun newSpotifyArtistFragment(artist: Artist): Fragment = SpotifyArtistFragment.newInstance(artist)
-    override fun newSpotifyCategoryFragment(category: Category): Fragment = SpotifyCategoryFragment.newInstance(category)
-    override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = SpotifyPlaylistFragment.newInstance(playlist)
-    override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.newInstance(track)
+    override fun newSpotifyAlbumFragment(album: Album): Fragment = SpotifyAlbumFragment.new(album)
+    override fun newSpotifyArtistFragment(artist: Artist): Fragment = SpotifyArtistFragment.new(artist)
+    override fun newSpotifyCategoryFragment(category: Category): Fragment = SpotifyCategoryFragment.new(category)
+    override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = SpotifyPlaylistFragment.new(playlist)
+    override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.new(track)
     override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)
     override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
 
@@ -53,5 +53,5 @@ object FragmentFactory :
 
     override fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
     override fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
-    override fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): Fragment = SoundCloudTrackVideosFragment.newInstance(track)
+    override fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): Fragment = SoundCloudTrackVideosFragment.new(track)
 }
