@@ -24,6 +24,7 @@ import com.example.spotify.search.di.spotifySearchModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
+import com.example.videosrepo.di.youtubeRepoModule
 import com.squareup.leakcanary.LeakCanary
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
@@ -87,8 +88,11 @@ class ClipFinderApp : Application() {
                 spotifyDashboardModule, spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
                 spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule,
+
                 soundCloudCoreAndroidModule,
-                soundCloudDashboardModule
+                soundCloudDashboardModule,
+
+                youtubeRepoModule
             ))
         }
     }
