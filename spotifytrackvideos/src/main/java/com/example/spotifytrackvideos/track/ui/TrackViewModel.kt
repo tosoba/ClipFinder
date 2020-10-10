@@ -37,13 +37,8 @@ class TrackViewModel(
         setState { copy(artists = DataList(), similarTracks = PagedDataList()) }
     }
 
-    fun loadAlbum(albumId: String) = withState { state ->
-        if (state.album.status is Loading) return@withState
-
-        getAlbum(args = albumId, applySchedulers = false)
-            .subscribeOn(Schedulers.io())
-            .mapData { Album(it) }
-            .updateNullableWithSingleResource(TrackViewState::album) { copy(album = it) }
+    fun loadAlbum(id: String) = loadNullable(TrackViewState::album, getAlbum::withId, id) {
+        copy(album = it)
     }
 
     fun loadArtists(artistIds: List<String>) = withState { state ->
@@ -105,3 +100,6 @@ class TrackViewModel(
         }
     }
 }
+
+private fun GetAlbum.withId(albumId: String) = this(applySchedulers = false, args = albumId)
+    .mapData { Album(it) }

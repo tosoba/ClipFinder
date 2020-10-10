@@ -10,16 +10,15 @@ import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkErro
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.core.model.map
-import com.example.core.model.mapData
-import com.example.core.model.mapIndexed
+import com.example.core.model.*
 import com.example.spotify.dashboard.domain.usecase.GetCategories
 import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
 import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
 import com.example.spotify.dashboard.domain.usecase.GetNewReleases
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class SpotifyDashboardViewModel(
     initialState: SpotifyDashboardState,
@@ -62,21 +61,8 @@ class SpotifyDashboardViewModel(
         }
     }
 
-    fun loadDailyViralTracks() = withState { (_, _, topTracks) ->
-        if (topTracks.shouldLoad) {
-            getDailyViralTracks(applySchedulers = false, args = topTracks.offset)
-                .mapData { tracks ->
-                    tracks.mapIndexed { index, track ->
-                        TopTrack(
-                            position = SpotifyDefaults.LIMIT * topTracks.offset + index + 1,
-                            track = Track(track)
-                        )
-                    }
-                }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::topTracks) { copy(topTracks = it) }
-        }
-    }
+    fun loadDailyViralTracks() =
+        load(SpotifyDashboardState::topTracks, getDailyViralTracks::intoState) { copy(topTracks = it) }
 
     fun loadNewReleases() = withState { (_, _, _, newReleases) ->
         if (newReleases.shouldLoad) {
@@ -121,21 +107,25 @@ class SpotifyDashboardViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: SpotifyDashboardState
-        ): SpotifyDashboardViewModel {
-            val getCategories: GetCategories by viewModelContext.activity.inject()
-            val getFeaturedPlaylists: GetFeaturedPlaylists by viewModelContext.activity.inject()
-            val getNewReleases: GetNewReleases by viewModelContext.activity.inject()
-            val getDailyViralTracks: GetDailyViralTracks by viewModelContext.activity.inject()
-            val preferences: SpotifyPreferences by viewModelContext.activity.inject()
-            return SpotifyDashboardViewModel(
-                state,
-                getCategories,
-                getFeaturedPlaylists,
-                getNewReleases,
-                getDailyViralTracks,
-                preferences,
-                viewModelContext.app()
-            )
-        }
+        ): SpotifyDashboardViewModel = SpotifyDashboardViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }
+
+private fun GetDailyViralTracks.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<TopTrack>>>> =
+    this(applySchedulers = false, args = state.topTracks.offset)
+        .mapData { tracks ->
+            tracks.mapIndexed { index, track ->
+                TopTrack(
+                    position = SpotifyDefaults.LIMIT * state.topTracks.offset + index + 1,
+                    track = Track(track)
+                )
+            }
+        }
