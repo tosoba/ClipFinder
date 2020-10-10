@@ -2,13 +2,17 @@ package com.example.spotifytrackvideos.track.ui
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.spotify.usecase.GetAlbum
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
+import com.example.core.android.model.Loading
+import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Track
-import com.example.spotifytrackvideos.track.domain.GetAlbum
+import com.example.core.model.mapData
 import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
+import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
 class TrackViewModel(
@@ -20,7 +24,7 @@ class TrackViewModel(
 ) : MvRxViewModel<TrackViewState>(initialState) {
 
     fun loadData(track: Track) {
-//        loadAlbum(track.albumId)
+        loadAlbum(track.album.id)
 //        loadArtists(artistIds = track.artists.map { it.id })
 //        loadSimilarTracks(track)
 //        loadAudioFeatures(track)
@@ -30,16 +34,14 @@ class TrackViewModel(
         setState { copy(artists = DataList(), similarTracks = DataList()) }
     }
 
-//    fun loadAlbum(albumId: String) = withState { state ->
-//        if (state.album.status is Loading) return@withState
-//
-//        getAlbum(args = albumId, applySchedulers = false)
-//            .subscribeOn(Schedulers.io())
-//            .mapData(AlbumEntity::ui)
-//            .updateNullableWithSingleResource(TrackViewState::album) {
-//                copy(album = it)
-//            }
-//    }
+    fun loadAlbum(albumId: String) = withState { state ->
+        if (state.album.status is Loading) return@withState
+
+        getAlbum(args = albumId, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .mapData { Album(it) }
+            .updateNullableWithSingleResource(TrackViewState::album) { copy(album = it) }
+    }
 //
 //    fun loadArtists(artistIds: List<String>) = withState { state ->
 //        if (state.artists.status is Loading) return@withState

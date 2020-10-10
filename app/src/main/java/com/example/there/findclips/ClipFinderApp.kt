@@ -7,8 +7,9 @@ import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
-import com.example.core.android.di.epoxyModule
+import com.clipfinder.core.spotify.di.spotifyCoreModule
 import com.example.core.android.di.coreAndroidNetworkingModule
+import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.soundclouddashboard.di.soundCloudDashboardModule
@@ -23,7 +24,6 @@ import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotify.search.di.spotifySearchModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
-import com.example.spotifytrackvideos.track.di.spotifyTrackModule
 import com.example.there.findclips.module.*
 import com.example.videosrepo.di.youtubeRepoModule
 import com.squareup.leakcanary.LeakCanary
@@ -85,10 +85,10 @@ class ClipFinderApp : Application() {
 
                 appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyApiModule, com.clipfinder.spotify.api.di.spotifyApiModule,
-                spotifyCoreAndroidModule,
+                spotifyCoreAndroidModule, spotifyCoreModule,
                 spotifyDashboardModule, spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
-                spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule, spotifyTrackModule,
+                spotifyAlbumModule, spotifyCategoryModule, spotifyPlaylistModule, spotifyArtistModule,
 
                 soundCloudCoreAndroidModule,
                 soundCloudDashboardModule,

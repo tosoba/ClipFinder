@@ -60,9 +60,7 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        track?.let {
-//                            viewModel.loadAlbum(it.album.id)
-                        }
+                        track?.let { viewModel.loadAlbum(it.album.id) }
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
