@@ -28,6 +28,7 @@ import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
+import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
@@ -83,16 +84,12 @@ class TrackFragment : BaseMvRxFragment() {
                 }
             }
 
-            dataListCarouselWithHeader(
+            pagedDataListCarouselWithHeader(
                 requireContext(),
                 similarTracks,
                 R.string.similar_tracks,
                 "similar-tracks",
-                {
-                    track?.let { track ->
-//                    viewModel.loadSimilarTracks(track)
-                    }
-                },
+                { track?.let(viewModel::loadSimilarTracks) },
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->

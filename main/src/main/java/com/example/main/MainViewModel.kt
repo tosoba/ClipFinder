@@ -3,7 +3,7 @@ package com.example.main
 import com.example.core.android.base.vm.BaseViewModel
 import com.example.core.android.model.spotify.User
 import com.example.there.domain.usecase.spotify.GetCurrentUser
-import com.example.there.domain.usecase.spotify.GetSimilarTracks
+import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 
 class MainViewModel(
     private val getSimilarTracks: GetSimilarTracks,

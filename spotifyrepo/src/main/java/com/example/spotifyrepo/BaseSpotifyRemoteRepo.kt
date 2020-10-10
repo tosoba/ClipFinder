@@ -6,7 +6,7 @@ import com.example.core.android.spotify.model.ext.observable
 import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.retrofit.NetworkResponse
-import com.example.core.retrofit.mapSuccessOrThrow
+import com.example.core.retrofit.mapSuccess
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import com.example.spotifyapi.model.PagedResponse
@@ -35,7 +35,7 @@ abstract class BaseSpotifyRemoteRepo(
             is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
             else -> accountsApi.accessToken
                 .toObservable()
-                .mapSuccessOrThrow(AccessTokenApiModel::domain)
+                .mapSuccess(AccessTokenApiModel::domain)
                 .doOnNext { preferences.accessToken = it }
                 .map { it.token }
                 .flatMap(block)
@@ -67,7 +67,7 @@ abstract class BaseSpotifyRemoteRepo(
         when (saved) {
             is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block(saved.token)
             else -> accountsApi.accessToken
-                .mapSuccessOrThrow(AccessTokenApiModel::domain)
+                .mapSuccess(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }
                 .map { it.token }
                 .flatMap(block)

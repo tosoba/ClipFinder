@@ -4,15 +4,17 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetAlbum
 import com.clipfinder.core.spotify.usecase.GetArtists
+import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
+import com.example.core.android.model.PagedDataList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
+import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
-import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -27,12 +29,12 @@ class TrackViewModel(
     fun loadData(track: Track) {
         loadAlbum(track.album.id)
         loadArtists(artistIds = track.artists.map { it.id })
-//        loadSimilarTracks(track)
+        loadSimilarTracks(track)
 //        loadAudioFeatures(track)
     }
 
     fun clear() {
-        setState { copy(artists = DataList(), similarTracks = DataList()) }
+        setState { copy(artists = DataList(), similarTracks = PagedDataList()) }
     }
 
     fun loadAlbum(albumId: String) = withState { state ->
@@ -52,15 +54,16 @@ class TrackViewModel(
             .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
             .updateWithResource(TrackViewState::artists) { copy(artists = it) }
     }
-//
-//    fun loadSimilarTracks(track: Track) = withState { state ->
-//        if (state.similarTracks.status is Loading) return@withState
-//
-//        getSimilarTracks(args = track.id, applySchedulers = false)
-//            .subscribeOn(Schedulers.io())
-//            .mapData { tracks -> tracks.map(TrackEntity::ui) }
-//            .updateWithResource(TrackViewState::similarTracks) { copy(similarTracks = it) }
-//    }
+
+    fun loadSimilarTracks(track: Track) = withState { state ->
+        if (state.similarTracks.status is Loading) return@withState
+
+        val args = GetSimilarTracks.Args(track.id, state.similarTracks.offset)
+        getSimilarTracks(args = args, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .mapData { tracks -> tracks.map { Track(it) } }
+            .updateWithPagedResource(TrackViewState::similarTracks) { copy(similarTracks = it) }
+    }
 //
 //    fun loadAudioFeatures(track: Track) {
 //        withState { state ->

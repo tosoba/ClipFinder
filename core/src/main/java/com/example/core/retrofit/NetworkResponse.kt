@@ -35,30 +35,33 @@ private fun <T : Any, E : Any, R> resourceMapper(
     }
 }
 
-fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapSuccessOrThrow(
+fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapSuccess(
     finisher: T.() -> R
-): Observable<R> = map(throwingResourceMapper(finisher))
-
-fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccessOrThrow(
-    finisher: T.() -> R
-): Single<R> = map(throwingResourceMapper(finisher))
-
-fun <T : Any, E : Any> Single<NetworkResponse<T, E>>.successOrThrow(): Single<T> = map { response ->
+): Observable<R> = flatMap { response ->
     when (response) {
-        is NetworkResponse.Success -> response.body
-        is NetworkResponse.NetworkError -> throw response.error
-        is NetworkResponse.ServerError -> throw ThrowableServerError(response)
-        is NetworkResponse.DifferentError -> throw response.error
+        is NetworkResponse.Success -> Observable.just(response.body.finisher())
+        is NetworkResponse.NetworkError -> Observable.error(response.error)
+        is NetworkResponse.ServerError -> Observable.error(ThrowableServerError(response))
+        is NetworkResponse.DifferentError -> Observable.error(response.error)
     }
 }
 
-private fun <T : Any, E : Any, R> throwingResourceMapper(
+fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccess(
     finisher: T.() -> R
-): (NetworkResponse<T, E>) -> R = { response ->
+): Single<R> = flatMap { response ->
     when (response) {
-        is NetworkResponse.Success -> response.body.finisher()
-        is NetworkResponse.NetworkError -> throw response.error
-        is NetworkResponse.ServerError -> throw ThrowableServerError(response)
-        is NetworkResponse.DifferentError -> throw response.error
+        is NetworkResponse.Success -> Single.just(response.body.finisher())
+        is NetworkResponse.NetworkError -> Single.error(response.error)
+        is NetworkResponse.ServerError -> Single.error(ThrowableServerError(response))
+        is NetworkResponse.DifferentError -> Single.error(response.error)
+    }
+}
+
+fun <T : Any, E : Any> Single<NetworkResponse<T, E>>.mapSuccess(): Single<T> = flatMap { response ->
+    when (response) {
+        is NetworkResponse.Success -> Single.just(response.body)
+        is NetworkResponse.NetworkError -> Single.error(response.error)
+        is NetworkResponse.ServerError -> Single.error(ThrowableServerError(response))
+        is NetworkResponse.DifferentError -> Single.error(response.error)
     }
 }

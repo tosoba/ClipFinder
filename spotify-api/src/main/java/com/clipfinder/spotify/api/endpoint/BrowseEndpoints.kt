@@ -126,5 +126,5 @@ interface BrowseEndpoints {
      * @return [Call]<[RecommendationsResponseObject]>
      */
     @GET("recommendations")
-    fun getRecommendations(@Header("Authorization") authorization: String? = null, @Query("seed_artists") seedArtists: String, @Query("seed_genres") seedGenres: String, @Query("seed_tracks") seedTracks: String, @Query("limit") limit: Int? = null, @Query("market") market: String? = null, @Query("min_*") minStar: java.math.BigDecimal? = null, @Query("max_*") maxStar: java.math.BigDecimal? = null, @Query("target_*") targetStar: java.math.BigDecimal? = null): Single<NetworkResponse<RecommendationsResponseObject, ErrorResponse>>
+    fun getRecommendations(@Header("Authorization") authorization: String? = null, @Query("seed_artists") seedArtists: String? = null, @Query("seed_genres") seedGenres: String? = null, @Query("seed_tracks") seedTracks: String? = null, @Query("limit") limit: Int? = null, @Query("market") market: String? = null, @Query("min_*") minStar: java.math.BigDecimal? = null, @Query("max_*") maxStar: java.math.BigDecimal? = null, @Query("target_*") targetStar: java.math.BigDecimal? = null): Single<NetworkResponse<RecommendationsResponseObject, ErrorResponse>>
 }

@@ -5,7 +5,7 @@ import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Resource
 import com.example.core.retrofit.ThrowableServerError
-import com.example.core.retrofit.mapSuccessOrThrow
+import com.example.core.retrofit.mapSuccess
 import com.example.core.retrofit.mapToResource
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.SpotifyApi
@@ -86,7 +86,7 @@ class SpotifyRemoteRepo(
         trackId: String
     ): Observable<Resource<List<TrackEntity>>> = withTokenObservable { token ->
         api.getSimilarTracks(authorization = getAccessTokenHeader(token), trackId = trackId)
-            .mapSuccessOrThrow {
+            .mapSuccess {
                 tracks.chunked(50).map {
                     it.joinToString(",") { track -> track.id }
                 }
@@ -151,7 +151,7 @@ class SpotifyRemoteRepo(
             authorization = getAccessTokenHeader(token),
             albumId = albumId,
             offset = offset
-        ).mapSuccessOrThrow {
+        ).mapSuccess {
             TrackIdsPage(
                 ids = items.joinToString(separator = ",") { it.id },
                 offset = offset,

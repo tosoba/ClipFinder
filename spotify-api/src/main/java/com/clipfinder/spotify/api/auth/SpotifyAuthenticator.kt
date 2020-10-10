@@ -6,7 +6,7 @@ import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
-import com.example.core.retrofit.successOrThrow
+import com.example.core.retrofit.mapSuccess
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
@@ -32,7 +32,7 @@ class SpotifyAuthenticator(
                 refreshToken = tokensHolder.refreshToken,
                 clientId = SpotifyAuthData.CLIENT_ID
             )
-            .successOrThrow()
+            .mapSuccess()
             .blockingGet()
 
         tokensHolder.setPrivateTokens(
@@ -51,7 +51,7 @@ class SpotifyAuthenticator(
                 authorization = "Basic ${Base64.encodeToString("${SpotifyAuthData.CLIENT_ID}:${SpotifyAuthData.CLIENT_SECRET}".toByteArray(), Base64.NO_WRAP)}",
                 grantType = GrantType.CLIENT_CREDENTIALS
             )
-            .successOrThrow()
+            .mapSuccess()
             .blockingGet()
 
         tokensHolder.setToken(tokenResponse.accessToken)

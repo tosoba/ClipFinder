@@ -6,7 +6,7 @@ import com.clipfinder.spotify.api.endpoint.TracksEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.core.retrofit.mapSuccessOrThrow
+import com.example.core.retrofit.mapSuccess
 import com.example.core.retrofit.mapToResource
 import com.example.spotify.album.domain.repo.ISpotifyAlbumRepo
 import io.reactivex.Single
@@ -20,7 +20,7 @@ class SpotifyAlbumRepo(
         albumId: String, offset: Int
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> = albumEndpoints
         .getAnAlbumsTracks(id = albumId, offset = offset)
-        .mapSuccessOrThrow {
+        .mapSuccess {
             Paged(
                 contents = items.joinToString(separator = ",") { it.id },
                 offset = offset,

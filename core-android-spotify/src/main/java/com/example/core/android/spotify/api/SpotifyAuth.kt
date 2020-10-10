@@ -9,8 +9,7 @@ import com.example.core.android.spotify.api.ext.accessToken
 import com.example.core.android.spotify.api.ext.domain
 import com.example.core.android.spotify.model.ext.single
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.retrofit.mapSuccessOrThrow
-import com.example.core.retrofit.successOrThrow
+import com.example.core.retrofit.mapSuccess
 import com.example.spotifyapi.SpotifyAccountsApi
 import com.example.spotifyapi.model.AccessTokenApiModel
 import io.reactivex.Completable
@@ -30,7 +29,7 @@ class SpotifyAuth(
                     authorization = "Basic ${Base64.encodeToString("${SpotifyAuthData.CLIENT_ID}:${SpotifyAuthData.CLIENT_SECRET}".toByteArray(), Base64.NO_WRAP)}",
                     grantType = GrantType.CLIENT_CREDENTIALS
                 )
-                .successOrThrow()
+                .mapSuccess()
                 .doOnSuccess { preferences.setToken(it.accessToken) }
                 .toCompletable()
         }
@@ -56,7 +55,7 @@ class SpotifyAuth(
         when (saved) {
             is SpotifyPreferences.SavedAccessTokenEntity.Valid -> block("Bearer ${saved.token}")
             else -> accountsApi.accessToken
-                .mapSuccessOrThrow(AccessTokenApiModel::domain)
+                .mapSuccess(AccessTokenApiModel::domain)
                 .doOnSuccess { preferences.accessToken = it }
                 .flatMap { block("Bearer ${it.token}") }
         }
