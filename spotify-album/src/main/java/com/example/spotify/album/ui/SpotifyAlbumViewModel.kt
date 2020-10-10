@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.spotify.usecase.GetArtists
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Loading
 import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
@@ -13,7 +14,6 @@ import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
-import com.example.there.domain.usecase.spotify.GetArtists
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -34,10 +34,10 @@ class SpotifyAlbumViewModel(
     fun loadAlbumsArtists(artistIds: List<String>) = withState { state ->
         if (state.artists.status is Loading) return@withState
 
-//        getArtists(args = artistIds, applySchedulers = false)
-//            .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
-//            .subscribeOn(Schedulers.io())
-//            .updateWithResource(SpotifyAlbumViewState::artists) { copy(artists = it) }
+        getArtists(args = artistIds, applySchedulers = false)
+            .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
+            .subscribeOn(Schedulers.io())
+            .updateWithResource(SpotifyAlbumViewState::artists) { copy(artists = it) }
     }
 
     fun loadTracksFromAlbum(albumId: String) = withState { state ->

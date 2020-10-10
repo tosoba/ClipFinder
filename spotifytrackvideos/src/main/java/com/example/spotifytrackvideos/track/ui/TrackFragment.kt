@@ -76,11 +76,7 @@ class TrackFragment : BaseMvRxFragment() {
                 artists,
                 R.string.artists,
                 "track-artists",
-                {
-                    track?.let { track ->
-//                    viewModel.loadArtists(track.artists.map { it.id })
-                    }
-                }
+                { track?.let { track -> viewModel.loadArtists(track.artists.map { it.id }) } }
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
@@ -190,7 +186,7 @@ class TrackFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     private fun loadData() {
-        track?.let { viewModel.loadData(it) }
+        track?.let(viewModel::loadData)
     }
 
     companion object {

@@ -3,13 +3,14 @@ package com.example.spotifytrackvideos.track.ui
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetAlbum
+import com.clipfinder.core.spotify.usecase.GetArtists
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
 import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.model.mapData
-import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +26,7 @@ class TrackViewModel(
 
     fun loadData(track: Track) {
         loadAlbum(track.album.id)
-//        loadArtists(artistIds = track.artists.map { it.id })
+        loadArtists(artistIds = track.artists.map { it.id })
 //        loadSimilarTracks(track)
 //        loadAudioFeatures(track)
     }
@@ -42,15 +43,15 @@ class TrackViewModel(
             .mapData { Album(it) }
             .updateNullableWithSingleResource(TrackViewState::album) { copy(album = it) }
     }
-//
-//    fun loadArtists(artistIds: List<String>) = withState { state ->
-//        if (state.artists.status is Loading) return@withState
-//
-//        getArtists(args = artistIds, applySchedulers = false)
-//            .subscribeOn(Schedulers.io())
-//            .mapData { artists -> artists.map(ArtistEntity::ui) }
-//            .updateWithResource(TrackViewState::artists) { copy(artists = it) }
-//    }
+
+    fun loadArtists(artistIds: List<String>) = withState { state ->
+        if (state.artists.status is Loading) return@withState
+
+        getArtists(args = artistIds, applySchedulers = false)
+            .subscribeOn(Schedulers.io())
+            .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
+            .updateWithResource(TrackViewState::artists) { copy(artists = it) }
+    }
 //
 //    fun loadSimilarTracks(track: Track) = withState { state ->
 //        if (state.similarTracks.status is Loading) return@withState

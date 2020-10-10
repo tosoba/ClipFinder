@@ -1,19 +1,19 @@
 package com.clipfinder.core.spotify.usecase
 
 import com.clipfinder.core.spotify.auth.ISpotifyAuth
-import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
+import com.clipfinder.core.spotify.model.ISpotifyArtist
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
 import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
 import io.reactivex.Single
 
-class GetAlbum(
+class GetArtists(
     schedulers: RxSchedulers,
     private val auth: ISpotifyAuth,
-    private val remote: ISpotifyRepo
-) : SingleUseCaseWithArgs<String, Resource<ISpotifySimplifiedAlbum>>(schedulers) {
-    override fun run(args: String): Single<Resource<ISpotifySimplifiedAlbum>> = auth
+    private val repo: ISpotifyRepo
+) : SingleUseCaseWithArgs<List<String>, Resource<List<ISpotifyArtist>>>(schedulers) {
+    override fun run(args: List<String>): Single<Resource<List<ISpotifyArtist>>> = auth
         .authorize()
-        .andThen(remote.getAlbum(id = args))
+        .andThen(repo.getArtists(ids = args))
 }

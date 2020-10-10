@@ -78,7 +78,7 @@ class TrackVideosFragment :
             trackVideosViewpager.addOnPageChangeListener(object : OnPageChangeListener {
                 override fun onPageSelected(position: Int) {
                     trackVideosTabLayout.getTabAt(position)?.select()
-                    withCurrentTrack { updateCurrentFragment(it) }
+                    withCurrentTrack(::updateCurrentFragment)
                 }
             })
             trackVideosTabLayout.setupWithViewPager(trackVideosViewpager)
