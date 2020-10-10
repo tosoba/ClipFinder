@@ -1,14 +1,11 @@
 package com.example.main
 
 import android.view.View
-import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableList
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.MutableLiveData
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.model.spotify.User
-import com.example.core.android.model.videos.VideoPlaylist
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
@@ -28,7 +25,6 @@ class MainViewState(
     val isLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false),
     val itemFavouriteState: ObservableField<Boolean> = ObservableField(false),
     val similarTracks: MutableLiveData<List<Track>> = MutableLiveData(),
-    val favouriteVideoPlaylists: ObservableList<VideoPlaylist> = ObservableArrayList(),
     val mainContent: ObservableField<MainContent> = ObservableField(MainContent.SPOTIFY)
 )
 

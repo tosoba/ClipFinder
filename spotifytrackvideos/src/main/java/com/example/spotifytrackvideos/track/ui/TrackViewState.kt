@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos.track
+package com.example.spotifytrackvideos.track.ui
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.Data

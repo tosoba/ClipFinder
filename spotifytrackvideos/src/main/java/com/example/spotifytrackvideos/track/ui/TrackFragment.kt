@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos.track
+package com.example.spotifytrackvideos.track.ui
 
 import android.graphics.Typeface
 import android.os.Bundle

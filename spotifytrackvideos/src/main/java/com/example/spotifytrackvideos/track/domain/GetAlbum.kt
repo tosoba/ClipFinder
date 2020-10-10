@@ -1,4 +1,4 @@
-package com.example.there.domain.usecase.spotify
+package com.example.spotifytrackvideos.track.domain
 
 import com.example.core.model.Resource
 import com.example.core.ext.RxSchedulers

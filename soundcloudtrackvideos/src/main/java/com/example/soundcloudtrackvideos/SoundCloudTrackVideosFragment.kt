@@ -69,23 +69,15 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_sound_cloud_track_videos,
             container,
             false
         )
-
-        viewModel.selectSubscribe(this, TrackVideosViewState<SoundCloudTrack>::isSavedAsFavourite) {
-            binding.soundCloudTrackFavouriteFab.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    if (it.value) R.drawable.delete else R.drawable.favourite
-                )
-            )
-            binding.soundCloudTrackFavouriteFab.hideAndShow()
-        }
 
         viewModel.selectSubscribe(this, TrackVideosViewState<SoundCloudTrack>::tracks) { tracks ->
             tracks.value.lastOrNull()?.let { track ->

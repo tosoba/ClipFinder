@@ -16,7 +16,5 @@ abstract class BaseTrackVideosViewModel<Track>(
         setState { copy(tracks = DataList(tracks.value.take(tracks.value.size - 1))) }
     }
 
-    fun updateTrack(track: Track) {
-        setState { copy(tracks = tracks.copyWithNewItems(track)) }
-    }
+    fun updateTrack(track: Track) = setState { copy(tracks = tracks.copyWithNewItems(track)) }
 }

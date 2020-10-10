@@ -1,24 +1,14 @@
-package com.example.spotifytrackvideos.track
+package com.example.spotifytrackvideos.track.ui
 
-import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.model.mapData
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
-import com.example.core.android.model.Loading
 import com.example.core.android.spotify.model.Track
-import com.example.there.domain.entity.spotify.AlbumEntity
-import com.example.there.domain.entity.spotify.ArtistEntity
-import com.example.there.domain.entity.spotify.TrackEntity
-import com.example.there.domain.usecase.spotify.GetAlbum
+import com.example.spotifytrackvideos.track.domain.GetAlbum
 import com.example.there.domain.usecase.spotify.GetArtists
 import com.example.there.domain.usecase.spotify.GetAudioFeatures
 import com.example.there.domain.usecase.spotify.GetSimilarTracks
-import com.github.mikephil.charting.data.RadarData
-import com.github.mikephil.charting.data.RadarDataSet
-import com.github.mikephil.charting.data.RadarEntry
-import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
 class TrackViewModel(

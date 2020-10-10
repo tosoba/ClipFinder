@@ -18,9 +18,6 @@ class TrackVideosViewBinding<Track>(
     val onFavouriteBtnClickListener: View.OnClickListener
 )
 
-data class TrackVideosViewState<Track>(
-    val tracks: DataList<Track> = DataList(),
-    val isSavedAsFavourite: Data<Boolean> = Data(false)
-) : MvRxState {
+data class TrackVideosViewState<Track>(val tracks: DataList<Track> = DataList()) : MvRxState {
     constructor(argTrack: Track) : this(DataList(listOf(argTrack)))
 }
