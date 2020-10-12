@@ -1,6 +1,5 @@
 package com.example.youtubesearch
 
-import android.view.View
 import com.example.core.android.base.vm.BaseVideosViewModel
 import com.example.core.android.mapper.videos.ui
 import com.example.core.android.view.recyclerview.item.VideoItemView
