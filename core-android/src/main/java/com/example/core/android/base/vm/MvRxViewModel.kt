@@ -1,11 +1,13 @@
 package com.example.core.android.base.vm
 
+import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.Data
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
 import com.example.core.android.model.PagedDataList
+import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.castAs
 import com.example.core.model.Paged
 import com.example.core.model.Resource
@@ -193,5 +195,9 @@ open class MvRxViewModel<S : MvRxState>(
 
     private fun log(error: Throwable) {
         Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
+    }
+
+    protected fun Context.handleConnectivityChanges(connectedOnly: Boolean = true, block: (state: S) -> Unit) {
+        observeNetworkConnectivity(connectedOnly) { withState(block) }.disposeOnClear()
     }
 }

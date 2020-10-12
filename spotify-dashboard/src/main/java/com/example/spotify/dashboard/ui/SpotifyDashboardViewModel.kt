@@ -9,7 +9,6 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.*
 import com.example.spotify.dashboard.domain.usecase.GetCategories
 import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
@@ -17,8 +16,9 @@ import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
 import com.example.spotify.dashboard.domain.usecase.GetNewReleases
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
+
+private typealias State = SpotifyDashboardState
 
 class SpotifyDashboardViewModel(
     initialState: SpotifyDashboardState,
@@ -39,40 +39,20 @@ class SpotifyDashboardViewModel(
         handleConnectivityChanges(context)
     }
 
-    fun loadCategories() = withState { (categories) ->
-        if (categories.shouldLoad) {
-            getCategories(applySchedulers = false, args = categories.offset)
-                .mapData { newCategories -> newCategories.map { Category(it) } }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::categories) {
-                    copy(categories = it)
-                }
-        }
+    fun loadCategories() {
+        load(State::categories, getCategories::intoState) { copy(categories = it) }
     }
 
-    fun loadFeaturedPlaylists() = withState { (_, featuredPlaylists) ->
-        if (featuredPlaylists.shouldLoad) {
-            getFeaturedPlaylists(applySchedulers = false, args = featuredPlaylists.offset)
-                .mapData { playlists -> playlists.map { Playlist(it) } }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::featuredPlaylists) {
-                    copy(featuredPlaylists = it)
-                }
-        }
+    fun loadFeaturedPlaylists() {
+        load(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
     }
 
-    fun loadDailyViralTracks() =
-        load(SpotifyDashboardState::topTracks, getDailyViralTracks::intoState) { copy(topTracks = it) }
+    fun loadDailyViralTracks() {
+        load(State::topTracks, getDailyViralTracks::intoState) { copy(topTracks = it) }
+    }
 
-    fun loadNewReleases() = withState { (_, _, _, newReleases) ->
-        if (newReleases.shouldLoad) {
-            getNewReleases(applySchedulers = false, args = newReleases.offset)
-                .mapData { listPage -> listPage.map { Album(it) } }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyDashboardState::newReleases) {
-                    copy(newReleases = it)
-                }
-        }
+    fun loadNewReleases() {
+        load(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
     }
 
     private fun handlePreferencesChanges() {
@@ -91,16 +71,12 @@ class SpotifyDashboardViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (categories, playlists, tracks, releases) ->
-                    if (categories.shouldLoadOnNetworkAvailable()) loadCategories()
-                    if (playlists.shouldLoadOnNetworkAvailable()) loadFeaturedPlaylists()
-                    if (tracks.shouldLoadOnNetworkAvailable()) loadDailyViralTracks()
-                    if (releases.shouldLoadOnNetworkAvailable()) loadNewReleases()
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
+            if (categories.shouldLoadOnNetworkAvailable()) loadCategories()
+            if (playlists.shouldLoadOnNetworkAvailable()) loadFeaturedPlaylists()
+            if (tracks.shouldLoadOnNetworkAvailable()) loadDailyViralTracks()
+            if (releases.shouldLoadOnNetworkAvailable()) loadNewReleases()
+        }
     }
 
     companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {
@@ -118,6 +94,18 @@ class SpotifyDashboardViewModel(
         )
     }
 }
+
+private fun GetCategories.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Category>>>> =
+    this(applySchedulers = false, args = state.categories.offset)
+        .mapData { categories -> categories.map { Category(it) } }
+
+private fun GetFeaturedPlaylists.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Playlist>>>> =
+    this(applySchedulers = false, args = state.featuredPlaylists.offset)
+        .mapData { playlists -> playlists.map { Playlist(it) } }
+
+private fun GetNewReleases.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Album>>>> =
+    this(applySchedulers = false, args = state.newReleases.offset)
+        .mapData { album -> album.map { Album(it) } }
 
 private fun GetDailyViralTracks.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<TopTrack>>>> =
     this(applySchedulers = false, args = state.topTracks.offset)
