@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Loading
-import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
@@ -55,9 +55,9 @@ class SpotifyAlbumViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (album, artists, tracks, _) ->
-                    if (artists.isEmptyAndLastLoadingFailedWithNetworkError())
+                    if (artists.shouldLoadOnNetworkAvailable())
                         loadAlbumsArtists(album.artists.map { it.id })
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError())
+                    if (tracks.shouldLoadOnNetworkAvailable())
                         loadTracksFromAlbum(album.id)
                 }
             }

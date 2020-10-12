@@ -14,7 +14,7 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.playlist.PlaylistView
 import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.lifecycle.ConnectivityComponent
-import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
@@ -47,7 +47,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     private val connectivityComponent: ConnectivityComponent by lazy {
         reloadingConnectivityComponent(viewModel::loadData) {
             withState(viewModel) { state ->
-                state.tracks.isEmptyAndLastLoadingFailedWithNetworkError()
+                state.tracks.shouldLoadOnNetworkAvailable()
             }
         }
     }

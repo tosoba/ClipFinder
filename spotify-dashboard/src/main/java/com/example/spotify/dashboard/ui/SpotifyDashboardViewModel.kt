@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
@@ -94,10 +94,10 @@ class SpotifyDashboardViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (categories, playlists, tracks, releases) ->
-                    if (categories.isEmptyAndLastLoadingFailedWithNetworkError()) loadCategories()
-                    if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadFeaturedPlaylists()
-                    if (tracks.isEmptyAndLastLoadingFailedWithNetworkError()) loadDailyViralTracks()
-                    if (releases.isEmptyAndLastLoadingFailedWithNetworkError()) loadNewReleases()
+                    if (categories.shouldLoadOnNetworkAvailable()) loadCategories()
+                    if (playlists.shouldLoadOnNetworkAvailable()) loadFeaturedPlaylists()
+                    if (tracks.shouldLoadOnNetworkAvailable()) loadDailyViralTracks()
+                    if (releases.shouldLoadOnNetworkAvailable()) loadNewReleases()
                 }
             }
             .disposeOnClear()

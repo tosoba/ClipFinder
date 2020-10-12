@@ -5,7 +5,7 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.observeNetworkConnectivity
@@ -56,7 +56,7 @@ class SpotifyCategoryViewModel(
     private fun handleConnectivityChanges(context: Context) {
         context.observeNetworkConnectivity {
             withState { (_, playlists) ->
-                if (playlists.isEmptyAndLastLoadingFailedWithNetworkError()) loadPlaylists()
+                if (playlists.shouldLoadOnNetworkAvailable()) loadPlaylists()
             }
         }.disposeOnClear()
     }

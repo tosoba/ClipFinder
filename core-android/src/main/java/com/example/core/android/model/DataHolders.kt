@@ -28,7 +28,7 @@ data class Data<Value>(
     )
 }
 
-fun <Holder : HoldsData<Collection<Value>>, Value> Holder.isEmptyAndLastLoadingFailedWithNetworkError(): Boolean {
+fun <Holder : HoldsData<Collection<Value>>, Value> Holder.shouldLoadOnNetworkAvailable(): Boolean {
     val stat = status
     return value.isEmpty() && stat is LoadingFailed<*> && (stat.error == null || stat.error is IOException)
 }

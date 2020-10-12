@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Loading
-import com.example.core.android.model.isEmptyAndLastLoadingFailedWithNetworkError
+import com.example.core.android.model.shouldLoadOnNetworkAvailable
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.soundclouddashboard.domain.usecase.GetMixedSelections
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -42,7 +42,7 @@ class SoundCloudDashboardViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (selections) ->
-                    if (selections.isEmptyAndLastLoadingFailedWithNetworkError()) loadSelections()
+                    if (selections.shouldLoadOnNetworkAvailable()) loadSelections()
                 }
             }
             .disposeOnClear()
