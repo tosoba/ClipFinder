@@ -12,6 +12,12 @@ dependencies {
 
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
     implementation 'com.google.http-client:google-http-client-gson:1.36.0'
+
+    implementation 'androidx.room:room-runtime:2.2.5'
+    implementation 'androidx.room:room-rxjava2:2.2.5'
+
+    def storeVersion = "4.0.0-beta01"
+    implementation "com.dropbox.mobile.store:store4:${storeVersion}"
 }
 
 sourceCompatibility = "1.8"
