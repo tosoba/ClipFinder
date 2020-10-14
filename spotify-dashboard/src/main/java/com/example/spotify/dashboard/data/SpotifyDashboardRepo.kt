@@ -7,7 +7,6 @@ import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
 import com.clipfinder.spotify.api.endpoint.TracksEndpoints
 import com.example.core.SpotifyDefaults
-import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Paged
 import com.example.core.model.Resource
@@ -18,7 +17,6 @@ import io.reactivex.Single
 
 class SpotifyDashboardRepo(
     private val preferences: SpotifyPreferences,
-    private val auth: SpotifyAuth,
     private val tracksEndpoints: TracksEndpoints,
     private val chartsApi: SpotifyChartsApi,
     private val browseEndpoints: BrowseEndpoints

@@ -15,9 +15,6 @@ dependencies {
 
     implementation 'androidx.room:room-runtime:2.2.5'
     implementation 'androidx.room:room-rxjava2:2.2.5'
-
-    def storeVersion = "4.0.0-beta01"
-    implementation "com.dropbox.mobile.store:store4:${storeVersion}"
 }
 
 sourceCompatibility = "1.8"

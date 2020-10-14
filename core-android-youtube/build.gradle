@@ -33,6 +33,8 @@ dependencies {
 
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-core-ext:$koin_version"
+    implementation "org.koin:koin-androidx-scope:$koin_version"
+    implementation "org.koin:koin-androidx-ext:$koin_version"
 
     implementation rootProject.ext.rxJava
 

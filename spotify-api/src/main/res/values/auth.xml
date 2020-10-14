@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spotify_client_id"></string>
+    <string name="spotify_client_secret"></string>
+    <string name="spotify_redirect_uri"></string>
+
+    <string-array name="spotify_scopes">
+        <item>user-read-email</item>
+        <item>user-read-private</item>
+        <item>user-library-read</item>
+        <item>user-top-read</item>
+        <item>playlist-read-collaborative</item>
+        <item>playlist-read-private</item>
+        <item>streaming</item>
+    </string-array>
+</resources>

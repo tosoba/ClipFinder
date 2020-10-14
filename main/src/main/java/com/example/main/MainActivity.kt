@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.text.InputType
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -27,7 +26,6 @@ import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
-import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.controller.SpotifyAuthController
 import com.example.core.android.spotify.controller.SpotifyPlayerController
 import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
@@ -535,8 +533,8 @@ class MainActivity :
     override fun onLoginFailed(error: Error?) {
         Log.e("ERR", "onLoginFailed")
         Toast.makeText(this, "Login failed: ${
-            error?.name
-                ?: "error unknown"
+        error?.name
+            ?: "error unknown"
         }", Toast.LENGTH_SHORT).show()
     }
 
@@ -568,12 +566,14 @@ class MainActivity :
     }
 
     private fun openLoginWindow() {
-        val request = AuthenticationRequest.Builder(
-            SpotifyAuth.ID,
-            AuthenticationResponse.Type.TOKEN,
-            SpotifyAuth.REDIRECT_URI
-        ).setScopes(SpotifyAuth.scopes).build()
-
+        val request = AuthenticationRequest
+            .Builder(
+                getString(R.string.spotify_client_id),
+                AuthenticationResponse.Type.TOKEN,
+                getString(R.string.spotify_redirect_uri)
+            )
+            .setScopes(resources.getStringArray(R.array.spotify_scopes))
+            .build()
         AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
     }
 
@@ -585,12 +585,9 @@ class MainActivity :
         }
         addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
             when ((observable as ObservableField<PlayerState>).get()!!) {
-                PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let {
-                }
-                PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let {
-                }
-                PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let {
-                }
+                PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let {}
+                PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let {}
+                PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let {}
                 else -> viewModel.viewState.itemFavouriteState.set(false)
             }
         })
@@ -683,6 +680,5 @@ class MainActivity :
     companion object {
         private const val minimumPlayerHeightDp = 120
         private const val LOGIN_REQUEST_CODE = 100
-        private const val TAG_ADD_VIDEO = "TAG_ADD_VIDEO"
     }
 }

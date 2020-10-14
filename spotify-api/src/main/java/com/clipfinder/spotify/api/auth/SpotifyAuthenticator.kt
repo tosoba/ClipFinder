@@ -1,7 +1,6 @@
 package com.clipfinder.spotify.api.auth
 
 import android.util.Base64
-import com.clipfinder.core.spotify.auth.SpotifyAuthData
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
@@ -13,9 +12,13 @@ import okhttp3.Response
 import okhttp3.Route
 
 class SpotifyAuthenticator(
+    private val clientId: String,
+    private val clientSecret: String,
     private val tokensHolder: SpotifyTokensHolder,
     private val tokenEndpoints: TokenEndpoints
 ) : Authenticator {
+    private val authorization: String
+        get() = "Basic ${Base64.encodeToString("${clientId}:${clientSecret}".toByteArray(), Base64.NO_WRAP)}"
 
     override fun authenticate(
         route: Route?, response: Response
@@ -30,7 +33,7 @@ class SpotifyAuthenticator(
             .getTokens(
                 grantType = GrantType.REFRESH_TOKEN,
                 refreshToken = tokensHolder.refreshToken,
-                clientId = SpotifyAuthData.CLIENT_ID
+                clientId = clientId
             )
             .mapSuccess()
             .blockingGet()
@@ -48,7 +51,7 @@ class SpotifyAuthenticator(
     private fun authenticatePublic(response: Response): Request? {
         val tokenResponse: TokensResponse = tokenEndpoints
             .getTokens(
-                authorization = "Basic ${Base64.encodeToString("${SpotifyAuthData.CLIENT_ID}:${SpotifyAuthData.CLIENT_SECRET}".toByteArray(), Base64.NO_WRAP)}",
+                authorization = authorization,
                 grantType = GrantType.CLIENT_CREDENTIALS
             )
             .mapSuccess()
