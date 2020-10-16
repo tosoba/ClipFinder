@@ -1,6 +1,7 @@
 package com.example.core.android.spotify.repo
 
 import com.clipfinder.core.spotify.model.ISpotifyArtist
+import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
@@ -44,4 +45,7 @@ class SpotifyRepo(
                 .mapToResource { Paged<List<ISpotifyTrack>>(tracks, offset + 1, chunks.size) }
         }
 
+    override fun getAudioFeatures(id: String): Single<Resource<ISpotifyAudioFeatures>> = tracksEndpoints
+        .getAudioFeatures(id = id)
+        .mapToResource { this }
 }

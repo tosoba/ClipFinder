@@ -110,9 +110,7 @@ class TrackFragment : BaseMvRxFragment() {
                 is LoadingFailed<*> -> reloadControl {
                     id("audio-features-reload-control")
                     onReloadClicked { _ ->
-                        track?.let { track ->
-//                            viewModel.loadAudioFeatures(track)
-                        }
+                        track?.let { track -> viewModel.loadAudioFeatures(track.id) }
                     }
                     message("Error occurred lmao") //TODO: error msg
                 }

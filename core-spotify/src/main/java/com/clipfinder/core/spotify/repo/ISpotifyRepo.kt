@@ -1,6 +1,7 @@
 package com.clipfinder.core.spotify.repo
 
 import com.clipfinder.core.spotify.model.ISpotifyArtist
+import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.example.core.model.Paged
@@ -11,4 +12,5 @@ interface ISpotifyRepo {
     fun getAlbum(id: String): Single<Resource<ISpotifySimplifiedAlbum>>
     fun getArtists(ids: List<String>): Single<Resource<List<ISpotifyArtist>>>
     fun getSimilarTracks(id: String, offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
+    fun getAudioFeatures(id: String): Single<Resource<ISpotifyAudioFeatures>>
 }

@@ -1,9 +1,11 @@
 package com.example.spotifytrackvideos.track.ui
 
+import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetAlbum
 import com.clipfinder.core.spotify.usecase.GetArtists
+import com.clipfinder.core.spotify.usecase.GetAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
@@ -14,7 +16,9 @@ import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.model.map
 import com.example.core.model.mapData
-import com.example.there.domain.usecase.spotify.GetAudioFeatures
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject
 
@@ -30,7 +34,7 @@ class TrackViewModel(
         loadAlbum(track.album.id)
         loadArtists(artistIds = track.artists.map { it.id })
         loadSimilarTracks(track)
-//        loadAudioFeatures(track)
+        loadAudioFeatures(track.id)
     }
 
     fun clear() {
@@ -59,36 +63,12 @@ class TrackViewModel(
             .mapData { tracks -> tracks.map { Track(it) } }
             .updateWithPagedResource(TrackViewState::similarTracks) { copy(similarTracks = it) }
     }
-//
-//    fun loadAudioFeatures(track: Track) {
-//        withState { state ->
-//            if (state.audioFeaturesChartData.status is Loading) return@withState
-//
-//            getAudioFeatures(args = track.domain, applySchedulers = false)
-//                .subscribeOn(Schedulers.io())
-//                .mapData {
-//                    val entries = listOf(
-//                        RadarEntry(it.acousticness),
-//                        RadarEntry(it.danceability),
-//                        RadarEntry(it.energy),
-//                        RadarEntry(it.instrumentalness),
-//                        RadarEntry(it.liveness),
-//                        RadarEntry(it.speechiness),
-//                        RadarEntry(it.valence)
-//                    )
-//                    RadarData(
-//                        RadarDataSet(entries, "Audio features")
-//                    ).apply {
-//                        setValueTextSize(12f)
-//                        setDrawValues(false)
-//                        setValueTextColor(Color.WHITE)
-//                    }
-//                }
-//                .updateNullableWithSingleResource(TrackViewState::audioFeaturesChartData) {
-//                    copy(audioFeaturesChartData = it)
-//                }
-//        }
-//    }
+
+    fun loadAudioFeatures(trackId: String) {
+        loadNullable(TrackViewState::audioFeaturesChartData, getAudioFeatures::withId, trackId) {
+            copy(audioFeaturesChartData = it)
+        }
+    }
 
     companion object : MvRxViewModelFactory<TrackViewModel, TrackViewState> {
         override fun create(viewModelContext: ViewModelContext, state: TrackViewState): TrackViewModel? {
@@ -103,3 +83,23 @@ class TrackViewModel(
 
 private fun GetAlbum.withId(albumId: String) = this(applySchedulers = false, args = albumId)
     .mapData { Album(it) }
+
+private fun GetAudioFeatures.withId(trackId: String) = this(applySchedulers = false, args = trackId)
+    .mapData {
+        val entries = listOf(
+            RadarEntry(it.acousticness.toFloat()),
+            RadarEntry(it.danceability.toFloat()),
+            RadarEntry(it.energy.toFloat()),
+            RadarEntry(it.instrumentalness.toFloat()),
+            RadarEntry(it.liveness.toFloat()),
+            RadarEntry(it.speechiness.toFloat()),
+            RadarEntry(it.valence.toFloat())
+        )
+        RadarData(
+            RadarDataSet(entries, "Audio features")
+        ).apply {
+            setValueTextSize(12f)
+            setDrawValues(false)
+            setValueTextColor(Color.WHITE)
+        }
+    }
