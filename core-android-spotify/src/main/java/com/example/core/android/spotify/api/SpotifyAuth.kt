@@ -4,6 +4,7 @@ import android.util.Base64
 import com.clipfinder.core.spotify.auth.ISpotifyAuth
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
+import com.clipfinder.spotify.api.model.TokensResponse
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.retrofit.mapSuccess
 import io.reactivex.Completable
@@ -24,8 +25,8 @@ class SpotifyAuth(
                     authorization = "Basic ${Base64.encodeToString("${clientId}:${clientSecret}".toByteArray(), Base64.NO_WRAP)}",
                     grantType = GrantType.CLIENT_CREDENTIALS
                 )
-                .mapSuccess()
-                .doOnSuccess { preferences.setToken(it.accessToken) }
+                .mapSuccess(TokensResponse::accessToken)
+                .doOnSuccess(preferences::setToken)
                 .toCompletable()
         }
 

@@ -12,6 +12,7 @@
 package com.clipfinder.spotify.api.model
 
 import com.squareup.moshi.Json
+import org.threeten.bp.OffsetDateTime
 
 /**
  *
@@ -28,7 +29,7 @@ import com.squareup.moshi.Json
 
 data class CurrentPlaybackObject(
     @Json(name = "timestamp")
-    val timestamp: java.time.OffsetDateTime,
+    val timestamp: OffsetDateTime,
     @Json(name = "device")
     val device: DeviceObject,
     @Json(name = "progress_ms")

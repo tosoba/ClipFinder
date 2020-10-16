@@ -63,6 +63,8 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-ext:$koin_version"
 
+    implementation 'org.threeten:threetenbp:1.4.5'
+
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.1.0"
 }
 

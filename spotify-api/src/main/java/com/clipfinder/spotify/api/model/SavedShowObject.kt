@@ -12,6 +12,7 @@
 package com.clipfinder.spotify.api.model
 
 import com.squareup.moshi.Json
+import org.threeten.bp.OffsetDateTime
 
 /**
  *
@@ -22,7 +23,7 @@ import com.squareup.moshi.Json
 data class SavedShowObject(
     /* The date and time the show was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object. */
     @Json(name = "added_at")
-    val addedAt: java.time.OffsetDateTime,
+    val addedAt: OffsetDateTime,
     @Json(name = "show")
     val show: SimplifiedShowObject
 )

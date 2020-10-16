@@ -12,6 +12,7 @@
 package com.clipfinder.spotify.api.model
 
 import com.squareup.moshi.Json
+import org.threeten.bp.OffsetDateTime
 
 /**
  *
@@ -24,7 +25,7 @@ import com.squareup.moshi.Json
 data class PlaylistTrackObject(
     /* The date and time the track or episode was added. Note that some very old playlists may return null in this field. */
     @Json(name = "added_at")
-    val addedAt: java.time.OffsetDateTime? = null,
+    val addedAt: OffsetDateTime? = null,
     @Json(name = "added_by")
     val addedBy: PublicUserObject? = null,
     /* Whether this track or episode is a local file or not. */

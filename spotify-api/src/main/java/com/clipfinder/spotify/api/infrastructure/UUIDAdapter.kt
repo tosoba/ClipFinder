@@ -4,7 +4,7 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.util.*
 
-class UUIDAdapter {
+object UUIDAdapter {
     @ToJson
     fun toJson(uuid: UUID) = uuid.toString()
 

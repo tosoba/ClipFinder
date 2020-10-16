@@ -58,11 +58,9 @@ val spotifyApiModule = module {
         MoshiConverterFactory.create(
             Moshi.Builder()
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-                .add(OffsetDateTimeAdapter())
-                .add(LocalDateTimeAdapter())
-                .add(LocalDateAdapter())
-                .add(UUIDAdapter())
-                .add(ByteArrayAdapter())
+                .add(OffsetDateTimeAdapter)
+                .add(UUIDAdapter)
+                .add(ByteArrayAdapter)
                 .add(KotlinJsonAdapterFactory())
                 .add(
                     PolymorphicJsonAdapterFactory

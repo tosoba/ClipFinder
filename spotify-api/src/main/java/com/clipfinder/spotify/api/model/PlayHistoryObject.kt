@@ -12,6 +12,7 @@
 package com.clipfinder.spotify.api.model
 
 import com.squareup.moshi.Json
+import org.threeten.bp.OffsetDateTime
 
 /**
  *
@@ -25,7 +26,7 @@ data class PlayHistoryObject(
     val context: ContextObject,
     /* The date and time the track was played. */
     @Json(name = "played_at")
-    val playedAt: java.time.OffsetDateTime,
+    val playedAt: OffsetDateTime,
     @Json(name = "track")
     val track: SimplifiedTrackObject
 )
