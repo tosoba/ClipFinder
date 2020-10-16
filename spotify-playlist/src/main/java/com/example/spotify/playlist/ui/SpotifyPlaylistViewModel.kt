@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.shouldLoadOnNetworkAvailable
+import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
@@ -44,7 +44,7 @@ class SpotifyPlaylistViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (_, tracks) ->
-                    if (tracks.shouldLoadOnNetworkAvailable()) loadTracks()
+                    if (tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
                 }
             }
             .disposeOnClear()

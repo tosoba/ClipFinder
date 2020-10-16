@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.shouldLoadOnNetworkAvailable
+import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.*
@@ -72,10 +72,10 @@ class SpotifyDashboardViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
-            if (categories.shouldLoadOnNetworkAvailable()) loadCategories()
-            if (playlists.shouldLoadOnNetworkAvailable()) loadFeaturedPlaylists()
-            if (tracks.shouldLoadOnNetworkAvailable()) loadDailyViralTracks()
-            if (releases.shouldLoadOnNetworkAvailable()) loadNewReleases()
+            if (categories.retryLoadItemsOnNetworkAvailable) loadCategories()
+            if (playlists.retryLoadItemsOnNetworkAvailable) loadFeaturedPlaylists()
+            if (tracks.retryLoadItemsOnNetworkAvailable) loadDailyViralTracks()
+            if (releases.retryLoadItemsOnNetworkAvailable) loadNewReleases()
         }
     }
 

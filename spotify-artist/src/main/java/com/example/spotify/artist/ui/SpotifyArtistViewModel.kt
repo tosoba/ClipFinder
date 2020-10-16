@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.DataList
 import com.example.core.android.model.Loading
-import com.example.core.android.model.shouldLoadOnNetworkAvailable
+import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
@@ -111,11 +111,11 @@ class SpotifyArtistViewModel(
             .observeNetworkConnectivity {
                 withState { (artists, albums, topTracks, relatedArtists) ->
                     artists.value.lastOrNull()?.id?.let {
-                        if (albums.shouldLoadOnNetworkAvailable())
+                        if (albums.retryLoadItemsOnNetworkAvailable)
                             loadAlbumsFromArtist(it)
-                        if (topTracks.shouldLoadOnNetworkAvailable())
+                        if (topTracks.retryLoadItemsOnNetworkAvailable)
                             loadTopTracksFromArtist(it)
-                        if (relatedArtists.shouldLoadOnNetworkAvailable())
+                        if (relatedArtists.retryLoadItemsOnNetworkAvailable)
                             loadRelatedArtists(it)
                     }
                 }

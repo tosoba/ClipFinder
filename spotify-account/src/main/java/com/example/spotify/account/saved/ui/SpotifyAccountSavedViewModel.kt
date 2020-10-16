@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Initial
-import com.example.core.android.model.shouldLoadOnNetworkAvailable
+import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
@@ -58,10 +58,10 @@ class SpotifyAccountSavedViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (userLoggedIn, tracks, albums) ->
-                    if (userLoggedIn && tracks.shouldLoadOnNetworkAvailable()) {
+                    if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) {
                         loadTracks()
                     }
-                    if (userLoggedIn && albums.shouldLoadOnNetworkAvailable()) {
+                    if (userLoggedIn && albums.retryLoadItemsOnNetworkAvailable) {
                         loadAlbums()
                     }
                 }

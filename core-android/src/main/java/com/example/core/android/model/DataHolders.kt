@@ -28,10 +28,14 @@ data class Data<Value>(
     )
 }
 
-fun <Holder : HoldsData<Collection<Value>>, Value> Holder.shouldLoadOnNetworkAvailable(): Boolean {
-    val stat = status
-    return value.isEmpty() && stat is LoadingFailed<*> && (stat.error == null || stat.error is IOException)
-}
+val <Holder : HoldsData<Value>, Value> Holder.retryLoadOnNetworkAvailable: Boolean
+    get() = with(status) { this is LoadingFailed<*> && (error == null || error is IOException) }
+
+
+val <Holder : HoldsData<Collection<Value>>, Value> Holder.retryLoadItemsOnNetworkAvailable: Boolean
+    get() = with(status) {
+        value.isEmpty() && this is LoadingFailed<*> && (error == null || error is IOException)
+    }
 
 data class DataList<Value>(
     override val value: Collection<Value> = emptyList(),

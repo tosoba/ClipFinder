@@ -6,16 +6,15 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.Loading
-import com.example.core.android.model.shouldLoadOnNetworkAvailable
+import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
-import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
+
+private typealias State = SpotifyAlbumViewState
 
 class SpotifyAlbumViewModel(
     initialState: SpotifyAlbumViewState,
@@ -25,58 +24,44 @@ class SpotifyAlbumViewModel(
 ) : MvRxViewModel<SpotifyAlbumViewState>(initialState) {
 
     init {
-        val album = initialState.album
-        loadAlbumsArtists(artistIds = album.artists.map { it.id })
-        loadTracksFromAlbum(albumId = album.id)
+        loadAlbumsArtists()
+        loadTracksFromAlbum()
         handleConnectivityChanges(context)
     }
 
-    fun loadAlbumsArtists(artistIds: List<String>) = withState { state ->
-        if (state.artists.status is Loading) return@withState
+    fun loadAlbumsArtists() = load(State::artists, getArtists::intoState) { copy(artists = it) }
 
-        getArtists(args = artistIds, applySchedulers = false)
-            .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyAlbumViewState::artists) { copy(artists = it) }
-    }
-
-    fun loadTracksFromAlbum(albumId: String) = withState { state ->
-        if (!state.tracks.shouldLoad) return@withState
-
-        val args = GetTracksFromAlbum.Args(albumId, state.tracks.offset)
-        getTracksFromAlbum(args = args, applySchedulers = false)
-            .mapData { tracksPage -> tracksPage.map { Track(it) } }
-            .subscribeOn(Schedulers.io())
-            .updateWithPagedResource(SpotifyAlbumViewState::tracks) { copy(tracks = it) }
-    }
+    fun loadTracksFromAlbum() = load(State::tracks, getTracksFromAlbum::intoState) { copy(tracks = it) }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (album, artists, tracks, _) ->
-                    if (artists.shouldLoadOnNetworkAvailable())
-                        loadAlbumsArtists(album.artists.map { it.id })
-                    if (tracks.shouldLoadOnNetworkAvailable())
-                        loadTracksFromAlbum(album.id)
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (_, artists, tracks) ->
+            if (artists.retryLoadItemsOnNetworkAvailable)
+                loadAlbumsArtists()
+            if (tracks.retryLoadItemsOnNetworkAvailable)
+                loadTracksFromAlbum()
+        }
     }
 
     companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, SpotifyAlbumViewState> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: SpotifyAlbumViewState
-        ): SpotifyAlbumViewModel {
-            val getArtists: GetArtists by viewModelContext.activity.inject()
-            val getTracksFromAlbum: GetTracksFromAlbum by viewModelContext.activity.inject()
-            return SpotifyAlbumViewModel(
-                state,
-                getArtists,
-                getTracksFromAlbum,
-                viewModelContext.app()
-            )
-        }
+        ): SpotifyAlbumViewModel = SpotifyAlbumViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }
+
+private fun GetArtists.intoState(
+    state: SpotifyAlbumViewState
+) = this(args = state.album.artists.map { it.id }, applySchedulers = false)
+    .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
+
+private fun GetTracksFromAlbum.intoState(
+    state: SpotifyAlbumViewState
+) = this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.offset), applySchedulers = false)
+    .mapData { tracksPage -> tracksPage.map { Track(it) } }
