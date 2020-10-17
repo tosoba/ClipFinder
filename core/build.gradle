@@ -2,7 +2,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation rootProject.ext.rxJava
     implementation rootProject.ext.retrofit
@@ -10,8 +10,8 @@ dependencies {
     implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
 
-    implementation "org.koin:koin-core:$koin_version"
-    implementation "org.koin:koin-core-ext:$koin_version"
+    implementation "org.koin:koin-core:$koinVersion"
+    implementation "org.koin:koin-core-ext:$koinVersion"
 
     implementation 'com.google.code.gson:gson:2.8.5'
 }

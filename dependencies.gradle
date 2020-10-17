@@ -1,5 +1,4 @@
 ext {
-
     // Android
     minSdkVersion = 19
     targetSdkVersion = 28
