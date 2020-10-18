@@ -48,8 +48,15 @@ dependencies {
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
     implementation 'com.google.http-client:google-http-client-gson:1.36.0'
 
+    implementation rootProject.ext.room
+    implementation 'androidx.room:room-rxjava2:2.0.0'
+
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.2"
+    implementation "com.squareup.moshi:moshi-adapters:1.9.2"
+
     def storeVersion = "4.0.0-beta01"
-    implementation "com.dropbox.mobile.store:store4:${storeVersion}"
+    implementation "com.dropbox.mobile.store:store-rx2:$storeVersion"
+    implementation "com.dropbox.mobile.store:store4:$storeVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

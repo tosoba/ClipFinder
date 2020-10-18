@@ -52,7 +52,7 @@ class TrackVideosFragment :
     ): View? {
         val binding = FragmentTrackVideosBinding.inflate(inflater, container, false)
 
-        val currentTrack = MutableLiveData<Track>(argTrack)
+        val currentTrack = MutableLiveData(argTrack)
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
             tracks.value.lastOrNull()?.let {
                 currentTrack.value = it
