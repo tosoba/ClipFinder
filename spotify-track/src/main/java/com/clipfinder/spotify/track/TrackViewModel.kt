@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos.track.ui
+package com.clipfinder.spotify.track
 
 import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
@@ -31,9 +31,10 @@ class TrackViewModel(
 ) : MvRxViewModel<TrackViewState>(initialState) {
 
     fun loadData(track: Track) {
+        setState { copy(track = track) }
         loadAlbum(track.album.id)
         loadArtists(artistIds = track.artists.map { it.id })
-        loadSimilarTracks(track)
+        loadSimilarTracks(track.id)
         loadAudioFeatures(track.id)
     }
 
@@ -54,10 +55,10 @@ class TrackViewModel(
             .updateWithResource(TrackViewState::artists) { copy(artists = it) }
     }
 
-    fun loadSimilarTracks(track: Track) = withState { state ->
+    fun loadSimilarTracks(trackId: String) = withState { state ->
         if (state.similarTracks.status is Loading) return@withState
 
-        val args = GetSimilarTracks.Args(track.id, state.similarTracks.offset)
+        val args = GetSimilarTracks.Args(trackId, state.similarTracks.offset)
         getSimilarTracks(args = args, applySchedulers = false)
             .subscribeOn(Schedulers.io())
             .mapData { tracks -> tracks.map { Track(it) } }
@@ -65,7 +66,7 @@ class TrackViewModel(
     }
 
     fun loadAudioFeatures(trackId: String) {
-        loadNullable(TrackViewState::audioFeaturesChartData, getAudioFeatures::withId, trackId) {
+        loadNullable(TrackViewState::audioFeaturesChartData, getAudioFeatures::forTrackWithId, trackId) {
             copy(audioFeaturesChartData = it)
         }
     }
@@ -84,7 +85,7 @@ class TrackViewModel(
 private fun GetAlbum.withId(albumId: String) = this(applySchedulers = false, args = albumId)
     .mapData { Album(it) }
 
-private fun GetAudioFeatures.withId(trackId: String) = this(applySchedulers = false, args = trackId)
+private fun GetAudioFeatures.forTrackWithId(trackId: String) = this(applySchedulers = false, args = trackId)
     .mapData {
         val entries = listOf(
             RadarEntry(it.acousticness.toFloat()),

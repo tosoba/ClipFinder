@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos.track.ui
+package com.clipfinder.spotify.track
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -6,24 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.airbnb.mvrx.BaseMvRxFragment
-import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.headerItem
-import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.android.loadingIndicator
+import com.example.core.android.model.Initial
 import com.example.core.android.model.LoadedSuccessfully
 import com.example.core.android.model.Loading
 import com.example.core.android.model.LoadingFailed
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
+import com.example.core.android.spotify.controller.SpotifyTrackController
+import com.example.core.android.spotify.fragment.ISpotifyTrackFragment
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.example.core.android.util.ext.findAncestorFragmentOfType
 import com.example.core.android.util.ext.newFragmentWithMvRxArg
-import com.example.core.android.util.ext.parentFragmentViewModel
-import com.example.core.android.util.ext.reloadingConnectivityComponent
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
@@ -32,36 +32,30 @@ import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
-import com.example.spotifytrackvideos.R
-import com.example.spotifytrackvideos.TrackVideosViewModel
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
 import org.koin.android.ext.android.inject
 
-class TrackFragment : BaseMvRxFragment() {
-
+class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: TrackViewModel by fragmentViewModel()
-    private val parentViewModel: TrackVideosViewModel by parentFragmentViewModel()
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<TrackViewState> { (album, artists, similarTracks, audioFeaturesChartData) ->
+        injectedTypedController<TrackViewState> { (track, album, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
             }
 
             when (album.status) {
-                is Loading -> loadingIndicator {
+                is Initial, Loading -> loadingIndicator {
                     id("loading-indicator-album")
                 }
 
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked(View.OnClickListener {
-                        track?.let { viewModel.loadAlbum(it.album.id) }
+                        viewModel.loadAlbum(track.album.id)
                     })
                     message("Error occurred lmao") //TODO: error msg
                 }
@@ -77,7 +71,7 @@ class TrackFragment : BaseMvRxFragment() {
                 artists,
                 R.string.artists,
                 "track-artists",
-                { track?.let { track -> viewModel.loadArtists(track.artists.map { it.id }) } }
+                { viewModel.loadArtists(track.artists.map { it.id }) }
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
@@ -89,11 +83,13 @@ class TrackFragment : BaseMvRxFragment() {
                 similarTracks,
                 R.string.similar_tracks,
                 "similar-tracks",
-                { track?.let(viewModel::loadSimilarTracks) },
+                { viewModel.loadSimilarTracks(track.id) },
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->
-                    track.clickableListItem { parentViewModel.updateTrack(track) }
+                    track.clickableListItem {
+                        findAncestorFragmentOfType<SpotifyTrackController>()?.updateTrack(track)
+                    }
                 })
             }
 
@@ -103,15 +99,13 @@ class TrackFragment : BaseMvRxFragment() {
             }
 
             when (audioFeaturesChartData.status) {
-                is Loading -> loadingIndicator {
+                is Initial, Loading -> loadingIndicator {
                     id("loading-indicator-audio-features")
                 }
 
                 is LoadingFailed<*> -> reloadControl {
                     id("audio-features-reload-control")
-                    onReloadClicked { _ ->
-                        track?.let { track -> viewModel.loadAudioFeatures(track.id) }
-                    }
+                    onReloadClicked { _ -> viewModel.loadAudioFeatures(track.id) }
                     message("Error occurred lmao") //TODO: error msg
                 }
 
@@ -120,10 +114,10 @@ class TrackFragment : BaseMvRxFragment() {
                     id("audio-features-radar-chart")
                     view(
                         RadarChartView(
-                            audioFeaturesChartData.value!!,
+                            requireNotNull(audioFeaturesChartData.value),
                             xAxisView = RadarChartAxisView(
                                 typeface = typeface,
-                                valueFormatter = IAxisValueFormatter { value, _ ->
+                                valueFormatter = { value, _ ->
                                     audioFeaturesChartLabels[value.toInt() % audioFeaturesChartLabels.size]
                                 }
                             ),
@@ -140,26 +134,9 @@ class TrackFragment : BaseMvRxFragment() {
         }
     }
 
-    //TODO: move this to viewState - since it won't get recreated
-    var track: Track? = null
-        set(value) {
-            if (field == value || value == null) return
-            field = value
-            viewModel.clear()
-            viewModel.loadData(value)
-        }
-
-    private val argTrack: Track by args()
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent(::loadData) {
-            withState(viewModel) {
-                it.album.status is LoadingFailed<*> ||
-                    it.artists.status is LoadingFailed<*> ||
-                    it.similarTracks.status is LoadingFailed<*> ||
-                    it.audioFeaturesChartData.status is LoadingFailed<*>
-            }
-        }
+    override fun onNewTrack(track: Track) {
+        viewModel.clear()
+        viewModel.loadData(track)
     }
 
     override fun onCreateView(
@@ -168,21 +145,7 @@ class TrackFragment : BaseMvRxFragment() {
         this.track_recycler_view.setController(epoxyController)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        track = argTrack
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
     override fun invalidate() = withState(viewModel, epoxyController::setData)
-
-    private fun loadData() {
-        track?.let(viewModel::loadData)
-    }
 
     companion object {
         fun new(track: Track): TrackFragment = newFragmentWithMvRxArg(track)

@@ -107,6 +107,7 @@ dependencies {
     implementation project(':spotifyrepo')
     implementation project(':spotify-search')
     implementation project(':spotifytrackvideos')
+    implementation project(':spotify-track')
     implementation project(':videosrepo')
     implementation project(':youtubeaddvideo')
     implementation project(':youtubeapi')

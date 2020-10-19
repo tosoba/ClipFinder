@@ -36,26 +36,12 @@ class VideosSearchFragment :
     BaseVMFragment<VideosSearchViewModel>(VideosSearchViewModel::class),
     IYoutubeSearchFragment {
 
-    override var query: String = ""
-        set(value) {
-            if (field == value) return
-            field = value
-            loadData()
-            viewModel.viewState.videos.clear()
-        }
-
     override val videosLoaded: Boolean get() = viewModel.viewState.videos.isNotEmpty()
 
     override val videos: List<Video> get() = viewModel.viewState.videos.map { it.video }
 
     private val onScrollListener: RecyclerView.OnScrollListener = EndlessRecyclerOnScrollListener {
         viewModel.searchVideosWithLastQuery()
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
-        reloadingConnectivityComponent(::loadData) {
-            query.isNotEmpty() && viewModel.viewState.videos.isEmpty()
-        }
     }
 
     private val view: VideosSearchView by lazy {
@@ -87,22 +73,19 @@ class VideosSearchFragment :
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding: FragmentVideosSearchBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_videos_search,
-            container,
-            false
-        )
-        return binding.apply {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? = FragmentVideosSearchBinding
+        .inflate(inflater, container, false)
+        .apply {
             videosSearchView = view
             videosRecyclerView.layoutManager = videosLayoutManager
-        }.root
-    }
+        }
+        .root
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initFromArguments()
+    override fun onNewQuery(query: String) {
+        viewModel.searchVideos(query)
+        viewModel.viewState.videos.clear()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -110,17 +93,6 @@ class VideosSearchFragment :
         updateRecyclerViewOnConfigChange()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
-
-    private fun initFromArguments() = arguments?.let {
-        if (it.containsKey(ARG_QUERY)) {
-            query = it.getString(ARG_QUERY)!!
-        } else if (it.containsKey(ARG_VIDEO_PLAYLIST)) {
-        }
-    }
 
     private fun updateRecyclerViewOnConfigChange() {
         val adapter = videos_recycler_view?.adapter
@@ -129,8 +101,6 @@ class VideosSearchFragment :
         videos_recycler_view?.adapter = adapter
         adapter?.notifyDataSetChanged()
     }
-
-    private fun loadData() = viewModel.searchVideos(query)
 
     companion object {
         private const val ARG_QUERY = "ARG_QUERY"

@@ -37,7 +37,7 @@ fun <I : Parcelable> BaseListFragment<I>.putArguments(
     arguments = args
 }
 
-private inline fun <reified T> Fragment.findAncestorFragmentOfType(): T? {
+inline fun <reified T> Fragment.findAncestorFragmentOfType(): T? {
     var ancestorFragment = parentFragment
     while (ancestorFragment != null) {
         if (ancestorFragment is T) return ancestorFragment

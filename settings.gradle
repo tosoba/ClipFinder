@@ -1,3 +1,4 @@
+include ':spotify-track'
 include ':core-android-youtube'
 include ':spotify-api'
 include ':spotify-api'

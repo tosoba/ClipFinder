@@ -1,16 +1,13 @@
 package com.example.there.findclips
 
 import androidx.fragment.app.Fragment
+import com.clipfinder.spotify.track.TrackFragment
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
-import com.example.core.android.spotify.model.Album
-import com.example.core.android.spotify.model.Artist
-import com.example.core.android.spotify.model.Playlist
-import com.example.core.android.spotify.model.Track
 import com.example.core.android.model.videos.VideoPlaylist
-import com.example.core.android.spotify.model.Category
+import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
@@ -43,6 +40,7 @@ object FragmentFactory :
     override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.new(track)
     override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)
     override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
+    override fun newSpotifyTrackFragment(track: Track): Fragment = TrackFragment.new(track)
 
     override fun newVideosSearchFragment(query: String): Fragment = VideosSearchFragment.newInstanceWithQuery(query)
     override fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): Fragment = VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist)

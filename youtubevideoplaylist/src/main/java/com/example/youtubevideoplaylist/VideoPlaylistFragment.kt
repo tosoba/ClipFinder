@@ -18,7 +18,6 @@ import com.example.core.android.view.viewflipper.PlaylistThumbnailFlipperAdapter
 import com.example.youtubevideoplaylist.databinding.FragmentVideoPlaylistBinding
 import org.koin.android.ext.android.inject
 
-
 class VideoPlaylistFragment : Fragment() {
 
     private val fragmentFactory: IFragmentFactory by inject()
@@ -41,15 +40,14 @@ class VideoPlaylistFragment : Fragment() {
     ).apply {
         view = VideoPlaylistView(
             VideoPlaylistViewState(playlist),
-            PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList()),
-            View.OnClickListener { _ ->
-                videoFragment?.let {
-                    if (it.videosLoaded) activity?.castAs<YoutubePlayerController>()
-                        ?.loadVideoPlaylist(playlist, it.videos)
-                    else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
-                }
+            PlaylistThumbnailFlipperAdapter(thumbnailUrls.toList())
+        ) { _ ->
+            videoFragment?.let {
+                if (it.videosLoaded) activity?.castAs<YoutubePlayerController>()
+                    ?.loadVideoPlaylist(playlist, it.videos)
+                else Toast.makeText(context, "Videos not loaded yet.", Toast.LENGTH_SHORT).show()
             }
-        )
+        }
         videoPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
     }.root
 

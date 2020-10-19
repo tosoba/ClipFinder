@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.BaseMvRxFragment
@@ -113,7 +112,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
 
     private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
         when (val currentFragment = pagerAdapter.currentFragment) {
-            is VideosSearchFragment -> currentFragment.query = newTrack.title
+            is VideosSearchFragment -> currentFragment.onNewQuery(newTrack.title)
             is SoundCloudTrackFragment -> currentFragment.track = newTrack
         }
     }

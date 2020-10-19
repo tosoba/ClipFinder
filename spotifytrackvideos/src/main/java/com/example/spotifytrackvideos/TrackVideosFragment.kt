@@ -6,29 +6,43 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.core.android.base.fragment.ISearchFragment
 import com.example.core.android.base.trackvideos.TrackVideosViewState
+import com.example.core.android.spotify.controller.SpotifyTrackController
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
+import com.example.core.android.spotify.fragment.ISpotifyTrackFragment
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.*
+import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.example.core.android.util.ext.backPressedWithNoPreviousStateController
+import com.example.core.android.util.ext.loadBackgroundGradient
+import com.example.core.android.util.ext.newFragmentWithMvRxArg
+import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
-import com.example.spotifytrackvideos.track.ui.TrackFragment
-import com.example.youtubesearch.VideosSearchFragment
 import com.wada811.lifecycledispose.disposeOnDestroy
+import org.koin.android.ext.android.inject
 
 class TrackVideosFragment :
     BaseMvRxFragment(),
-    GoesToPreviousStateOnBackPressed {
+    GoesToPreviousStateOnBackPressed,
+    SpotifyTrackController {
+
+    override fun updateTrack(track: Track) {
+        viewModel.updateTrack(track)
+    }
 
     private val viewModel: TrackVideosViewModel by fragmentViewModel()
+
+    private val fragmentFactory: IFragmentFactory by inject()
+    private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
 
     private val argTrack: Track by args()
 
@@ -36,8 +50,8 @@ class TrackVideosFragment :
         TitledCustomCurrentStatePagerAdapter(
             fragmentManager = childFragmentManager,
             titledFragments = arrayOf(
-                getString(R.string.clips) to VideosSearchFragment.newInstanceWithQuery(argTrack.query),
-                getString(R.string.info) to TrackFragment.new(argTrack)
+                getString(R.string.clips) to fragmentFactory.newVideosSearchFragment(argTrack.query),
+                getString(R.string.info) to spotifyFragmentFactory.newSpotifyTrackFragment(argTrack)
             )
         )
     }
@@ -98,8 +112,8 @@ class TrackVideosFragment :
 
     private fun updateCurrentFragment(newTrack: Track) {
         when (val currentFragment = pagerAdapter.currentFragment) {
-            is VideosSearchFragment -> currentFragment.query = newTrack.query
-            is TrackFragment -> currentFragment.track = newTrack
+            is ISearchFragment -> currentFragment.onNewQuery(newTrack.query)
+            is ISpotifyTrackFragment -> currentFragment.onNewTrack(newTrack)
         }
     }
 

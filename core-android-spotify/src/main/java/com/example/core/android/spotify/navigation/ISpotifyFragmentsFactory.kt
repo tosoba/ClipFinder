@@ -15,4 +15,5 @@ interface ISpotifyFragmentsFactory {
     fun newSpotifyCategoryFragment(category: Category): Fragment
     fun newSpotifySearchMainFragment(query: String): Fragment
     fun newSpotifySearchFragment(query: String): Fragment
+    fun newSpotifyTrackFragment(track: Track): Fragment
 }
