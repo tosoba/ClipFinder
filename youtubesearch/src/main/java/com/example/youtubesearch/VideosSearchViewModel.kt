@@ -42,7 +42,7 @@ class VideosSearchViewModel(
             )
     }
 
-    private fun updateVideos(videos: List<VideoEntity>, withRemoveOption: Boolean = false) {
+    private fun updateVideos(videos: List<VideoEntity>) {
         val mapped = videos.map(VideoEntity::ui)
 
         viewState.videos.addAll(mapped.map { video ->

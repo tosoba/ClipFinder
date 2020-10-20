@@ -1,7 +1,7 @@
 package com.clipfinder.core.android.youtube.api
 
 import com.clipfinder.core.youtube.ext.single
-import com.clipfinder.core.youtube.repo.IYoutubeApi
+import com.clipfinder.core.youtube.api.IYoutubeApi
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
 import io.reactivex.Single

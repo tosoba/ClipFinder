@@ -1,4 +1,4 @@
-package com.clipfinder.core.youtube.repo
+package com.clipfinder.core.youtube.api
 
 import com.google.api.services.youtube.model.SearchListResponse
 import io.reactivex.Single

@@ -7,7 +7,7 @@ import com.clipfinder.core.android.youtube.R
 import com.clipfinder.core.android.youtube.api.YoutubeApi
 import com.clipfinder.core.android.youtube.db.YoutubeDb
 import com.clipfinder.core.android.youtube.db.model.SearchResponseEntity
-import com.clipfinder.core.youtube.repo.IYoutubeApi
+import com.clipfinder.core.youtube.api.IYoutubeApi
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
@@ -18,6 +18,7 @@ import com.google.api.services.youtube.model.SearchListResponse
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.threeten.bp.OffsetDateTime
 
 typealias YoutubeSearchStore = Store<Pair<String, String?>, SearchListResponse>
 
@@ -51,7 +52,7 @@ val youtubeCoreAndroidModule = module {
                         dao.select(query, pageToken).map(SearchResponseEntity::content)
                     },
                     writer = { (query, pageToken), content ->
-                        dao.insert(SearchResponseEntity(query, pageToken, content))
+                        dao.insert(SearchResponseEntity(query, pageToken, content, OffsetDateTime.now()))
                     },
                     delete = { (query, pageToken) -> dao.delete(query, pageToken) },
                     deleteAll = dao::deleteAll

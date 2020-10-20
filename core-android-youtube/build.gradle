@@ -43,6 +43,8 @@ dependencies {
     }
     implementation "org.koin:koin-androidx-ext:$koinVersion"
 
+    implementation 'org.threeten:threetenbp:1.4.5'
+    
     implementation rootProject.ext.rxJava
 
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'

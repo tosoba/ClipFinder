@@ -57,9 +57,7 @@ class VideosSearchFragment :
                     override val itemViewBinder: ItemBinder<VideoItemView>
                         get() = ItemBinderBase(BR.videoView, R.layout.video_item)
                 },
-                ClickHandler {
-                    activity?.castAs<YoutubePlayerController>()?.loadVideo(video = it.video)
-                },
+                { activity?.castAs<YoutubePlayerController>()?.loadVideo(video = it.video) },
                 SeparatorDecoration(context!!, ResourcesCompat.getColor(resources, R.color.colorAccent, null), 2f),
                 onScrollListener
             )
