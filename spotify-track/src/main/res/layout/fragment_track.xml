@@ -1,6 +1,6 @@
 <com.airbnb.epoxy.EpoxyRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/track_recycler_view"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    tools:context="com.example.spotifytrackvideos.com.clipfinder.spotify.track.TrackFragment" />
+    tools:context="TrackFragment" />

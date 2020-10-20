@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -40,30 +41,26 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: TrackViewModel by fragmentViewModel()
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<TrackViewState> { (track, album, artists, similarTracks, audioFeaturesChartData) ->
+    private val epoxyController: TypedEpoxyController<TrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
+        injectedTypedController { (_, album, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
             }
 
             when (album.status) {
-                is Initial, Loading -> loadingIndicator {
-                    id("loading-indicator-album")
-                }
+                is Initial, Loading -> loadingIndicator { id("loading-indicator-album") }
 
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
-                    onReloadClicked(View.OnClickListener {
-                        viewModel.loadAlbum(track.album.id)
-                    })
+                    onReloadClicked { _ -> viewModel.loadAlbum() }
                     message("Error occurred lmao") //TODO: error msg
                 }
 
-                is LoadedSuccessfully -> album.value?.let {
+                is LoadedSuccessfully -> requireNotNull(album.value).let {
                     it.infoItem { show { factory.newSpotifyAlbumFragment(it) } }
                         .addTo(this)
-                } ?: Unit
+                }
             }
 
             dataListCarouselWithHeader(
@@ -71,7 +68,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 artists,
                 R.string.artists,
                 "track-artists",
-                { viewModel.loadArtists(track.artists.map { it.id }) }
+                viewModel::loadArtists
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
@@ -83,7 +80,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 similarTracks,
                 R.string.similar_tracks,
                 "similar-tracks",
-                { viewModel.loadSimilarTracks(track.id) },
+                viewModel::loadSimilarTracks,
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->
@@ -99,13 +96,11 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
             }
 
             when (audioFeaturesChartData.status) {
-                is Initial, Loading -> loadingIndicator {
-                    id("loading-indicator-audio-features")
-                }
+                is Initial, Loading -> loadingIndicator { id("loading-indicator-audio-features") }
 
                 is LoadingFailed<*> -> reloadControl {
                     id("audio-features-reload-control")
-                    onReloadClicked { _ -> viewModel.loadAudioFeatures(track.id) }
+                    onReloadClicked { _ -> viewModel.loadAudioFeatures() }
                     message("Error occurred lmao") //TODO: error msg
                 }
 
@@ -135,8 +130,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     }
 
     override fun onNewTrack(track: Track) {
-        viewModel.clear()
-        viewModel.loadData(track)
+        viewModel.onNewTrack(track)
     }
 
     override fun onCreateView(
