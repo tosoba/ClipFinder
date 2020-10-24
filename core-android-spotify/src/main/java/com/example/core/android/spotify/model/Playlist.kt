@@ -50,11 +50,11 @@ fun Playlist.clickableListItem(
     .loadingDrawableId(R.drawable.playlist_placeholder)
     .label(name)
     .showGradient(false)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
 
 fun Playlist.clickableGridListItem(
     itemClicked: () -> Unit
 ): GridPlaylistItemBindingModel_ = GridPlaylistItemBindingModel_()
     .id(id)
     .playlist(this)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }

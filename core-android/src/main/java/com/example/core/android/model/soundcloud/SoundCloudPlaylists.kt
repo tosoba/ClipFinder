@@ -61,7 +61,7 @@ fun SoundCloudPlaylist.clickableListItem(
     .fallbackDrawableId(R.drawable.playlist_placeholder)
     .loadingDrawableId(R.drawable.playlist_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
 
 @Parcelize
 data class SoundCloudSystemPlaylist(
@@ -86,4 +86,4 @@ fun SoundCloudSystemPlaylist.clickableListItem(
     .fallbackDrawableId(R.drawable.playlist_placeholder)
     .loadingDrawableId(R.drawable.playlist_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }

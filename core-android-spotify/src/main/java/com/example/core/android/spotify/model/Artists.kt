@@ -48,7 +48,7 @@ fun Artist.clickableListItem(
     .fallbackDrawableId(R.drawable.artist_placeholder)
     .loadingDrawableId(R.drawable.artist_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
 
 @Parcelize
 data class SimplifiedArtist(

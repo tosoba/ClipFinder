@@ -64,7 +64,7 @@ fun Track.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_
     .fallbackDrawableId(R.drawable.track_placeholder)
     .loadingDrawableId(R.drawable.track_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
 
 @Parcelize
 data class TopTrack(

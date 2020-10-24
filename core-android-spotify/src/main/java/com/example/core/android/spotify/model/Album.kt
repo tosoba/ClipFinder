@@ -55,7 +55,7 @@ fun Album.infoItem(
     .errorDrawableId(R.drawable.error_placeholder)
     .fallbackDrawableId(R.drawable.album_placeholder)
     .loadingDrawableId(R.drawable.album_placeholder)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
 
 fun Album.clickableListItem(
     itemClicked: () -> Unit
@@ -67,4 +67,4 @@ fun Album.clickableListItem(
     .fallbackDrawableId(R.drawable.album_placeholder)
     .loadingDrawableId(R.drawable.album_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }

@@ -49,4 +49,4 @@ fun Category.clickableListItem(
     .fallbackDrawableId(R.drawable.category_placeholder)
     .loadingDrawableId(R.drawable.category_placeholder)
     .label(name)
-    .itemClicked(View.OnClickListener { itemClicked() })
+    .itemClicked { _ -> itemClicked() }
