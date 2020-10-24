@@ -11,6 +11,8 @@ import android.net.NetworkInfo
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.spotify.sdk.android.player.Connectivity
@@ -62,12 +64,14 @@ val Context.isConnected: Boolean
 fun Context.isGranted(permission: String) = ContextCompat
     .checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
+private typealias RxConnectivity = com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
+
 @SuppressLint("MissingPermission")
 fun Context.observeNetworkConnectivity(
     connectedOnly: Boolean = true,
-    onNext: (com.github.pwittchen.reactivenetwork.library.rx2.Connectivity) -> Unit
+    onNext: (RxConnectivity) -> Unit
 ): Disposable = ReactiveNetwork.observeNetworkConnectivity(this)
-    .onErrorReturn { com.github.pwittchen.reactivenetwork.library.rx2.Connectivity.state(NetworkInfo.State.DISCONNECTED).build() }
+    .onErrorReturn { RxConnectivity.state(NetworkInfo.State.DISCONNECTED).build() }
     .subscribeOn(Schedulers.io())
     .observeOn(AndroidSchedulers.mainThread())
     .run {
@@ -75,3 +79,17 @@ fun Context.observeNetworkConnectivity(
         else this
     }
     .subscribe(onNext)
+
+inline fun <reified T : RoomDatabase> Context.buildRoom(
+    inMemory: Boolean = false,
+    name: String = T::class.java.simpleName,
+    noinline configure: (RoomDatabase.Builder<T>.() -> RoomDatabase.Builder<T>)? = null
+): T {
+    val builder = if (inMemory) {
+        Room.inMemoryDatabaseBuilder(this, T::class.java)
+    } else {
+        Room.databaseBuilder(this, T::class.java, name)
+    }
+    if (configure != null) builder.configure()
+    return builder.build()
+}

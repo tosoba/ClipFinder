@@ -9,9 +9,6 @@ import io.reactivex.Maybe
 
 @Dao
 interface SearchDao {
-    @Query("DELETE FROM search_response")
-    fun deleteAll(): Completable
-
     @Insert
     fun insert(responseEntity: SearchResponseEntity): Completable
 
@@ -20,4 +17,10 @@ interface SearchDao {
 
     @Query("DELETE FROM search_response WHERE `query`=:query AND (page_token=:pageToken OR (page_token IS NULL AND :pageToken IS NULL))")
     fun delete(query: String, pageToken: String?): Completable
+
+    @Query("DELETE FROM search_response")
+    fun deleteAll(): Completable
+
+    @Query("DELETE FROM search_response WHERE datetime(cached_at) < datetime('now', '-1 day')")
+    fun deleteExpired(): Completable
 }
