@@ -14,7 +14,7 @@ import com.example.core.android.base.fragment.ItemListFragment
 import com.example.core.android.model.HoldsData
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.newFragmentWithMvRxArg
+import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedItemListController
@@ -46,7 +46,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
     }.root
 
     private inline fun <reified F : ItemListFragment<SpotifySearchViewState>> itemListFragment(): F {
-        return newFragmentWithMvRxArg(ItemListFragment.Args(3, 4, 5))
+        return newMvRxFragmentWith(ItemListFragment.Args(3, 4, 5))
     }
 
     override fun invalidate() = Unit

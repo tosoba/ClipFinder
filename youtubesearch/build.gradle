@@ -44,10 +44,15 @@ dependencies {
     implementation project(':domain')
 
     implementation rootProject.ext.rxJava
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.airbnb.android:mvrx:1.0.2'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
+
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.airbnb.android:epoxy:3.7.0'
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'

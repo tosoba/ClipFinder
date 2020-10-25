@@ -24,7 +24,7 @@ import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.model.infoItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.findAncestorFragmentOfType
-import com.example.core.android.util.ext.newFragmentWithMvRxArg
+import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
@@ -142,7 +142,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun new(track: Track): TrackFragment = newFragmentWithMvRxArg(track)
+        fun new(track: Track): TrackFragment = newMvRxFragmentWith(track)
 
         private val audioFeaturesChartLabels = AudioFeaturesEntity::class.members.map { it.name }
     }

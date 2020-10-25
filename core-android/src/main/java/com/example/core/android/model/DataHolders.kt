@@ -47,7 +47,7 @@ data class DataList<Value>(
 
     override fun <E> copyWithError(error: E): DataList<Value> = copy(status = LoadingFailed(error))
 
-    fun copyWithNewItems(newItems: Collection<Value>): DataList<Value> = copy(
+    fun copyWithNewItems(newItems: Iterable<Value>): DataList<Value> = copy(
         value = value + newItems,
         status = LoadedSuccessfully
     )
@@ -58,14 +58,49 @@ data class DataList<Value>(
     )
 }
 
+interface HoldsPagedData<Item> : HoldsData<Collection<Item>> {
+    val shouldLoadMore: Boolean
+}
+
+data class PageTokenDataList<Value>(
+    val list: DataList<Value> = DataList(),
+    val nextPageToken: String? = null
+) : HoldsPagedData<Value> {
+
+    constructor(status: DataStatus) : this(list = DataList(status = status))
+
+    override val value: Collection<Value>
+        get() = list.value
+
+    override val status: DataStatus
+        get() = list.status
+
+    override val copyWithLoadingInProgress: PageTokenDataList<Value>
+        get() = copy(list = list.copy(status = Loading))
+
+    override fun <E> copyWithError(error: E): PageTokenDataList<Value> = copy(
+        list = list.copy(status = LoadingFailed(error))
+    )
+
+    override val shouldLoadMore: Boolean
+        get() = status !is Loading && (nextPageToken != null || value.isEmpty())
+
+    fun copyWithNewItems(
+        newItems: Iterable<Value>, nextPageToken: String?
+    ): PageTokenDataList<Value> = copy(
+        list = list.copyWithNewItems(newItems),
+        nextPageToken = nextPageToken
+    )
+}
+
 data class PagedDataList<Value>(
     override val value: Collection<Value> = emptyList(),
     override val status: DataStatus = Initial,
     val offset: Int = 0,
     val totalItems: Int = Integer.MAX_VALUE
-) : HoldsData<Collection<Value>> {
+) : HoldsPagedData<Value> {
 
-    val shouldLoad: Boolean
+    override val shouldLoadMore: Boolean
         get() = status !is Loading && offset < totalItems
 
     override val copyWithLoadingInProgress: PagedDataList<Value>
@@ -75,14 +110,8 @@ data class PagedDataList<Value>(
         status = LoadingFailed(error)
     )
 
-    fun copyWithNewItems(newItems: Collection<Value>, offset: Int): PagedDataList<Value> = copy(
-        value = value + newItems,
-        offset = offset,
-        status = LoadedSuccessfully
-    )
-
     fun copyWithNewItems(
-        newItems: Collection<Value>, offset: Int, totalItems: Int
+        newItems: Iterable<Value>, offset: Int, totalItems: Int
     ): PagedDataList<Value> = copy(
         value = value + newItems,
         offset = offset,

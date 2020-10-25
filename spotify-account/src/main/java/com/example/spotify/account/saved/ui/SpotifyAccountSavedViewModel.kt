@@ -36,7 +36,7 @@ class SpotifyAccountSavedViewModel(
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
 
     fun loadTracks() = withState { (userLoggedIn, tracks) ->
-        if (userLoggedIn && tracks.shouldLoad) {
+        if (userLoggedIn && tracks.shouldLoadMore) {
             getCurrentUsersSavedTracks(applySchedulers = false, args = tracks.offset)
                 .mapData { newTracks -> newTracks.map { Track(it) } }
                 .subscribeOn(Schedulers.io())
@@ -45,7 +45,7 @@ class SpotifyAccountSavedViewModel(
     }
 
     fun loadAlbums() = withState { (userLoggedIn, _, albums) ->
-        if (userLoggedIn && albums.shouldLoad) {
+        if (userLoggedIn && albums.shouldLoadMore) {
             getCurrentUsersSavedAlbums(applySchedulers = false, args = albums.offset)
                 .mapData { newAlbums -> newAlbums.map { Album(it) } }
                 .subscribeOn(Schedulers.io())

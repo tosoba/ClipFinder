@@ -22,7 +22,7 @@ import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.backPressedWithNoPreviousStateController
 import com.example.core.android.util.ext.loadBackgroundGradient
-import com.example.core.android.util.ext.newFragmentWithMvRxArg
+import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
@@ -118,6 +118,6 @@ class TrackVideosFragment :
     }
 
     companion object {
-        fun new(track: Track): TrackVideosFragment = newFragmentWithMvRxArg(track)
+        fun new(track: Track): TrackVideosFragment = newMvRxFragmentWith(track)
     }
 }

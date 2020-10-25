@@ -114,7 +114,6 @@ dependencies {
     implementation project(':youtubeplayer')
     implementation project(':youtuberelatedvideos')
     implementation project(':youtubesearch')
-    implementation project(':youtubevideoplaylist')
 
     implementation rootProject.ext.rxJava
 

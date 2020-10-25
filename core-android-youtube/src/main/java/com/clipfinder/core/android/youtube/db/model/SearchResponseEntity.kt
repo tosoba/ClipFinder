@@ -11,7 +11,7 @@ data class SearchResponseEntity(
     val query: String,
 
     @ColumnInfo(name = "page_token")
-    val pageToken: String?,
+    val pageToken: String? = null,
 
     val content: SearchListResponse,
 

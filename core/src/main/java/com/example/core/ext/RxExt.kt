@@ -1,6 +1,7 @@
 package com.example.core.ext
 
 import io.reactivex.*
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
@@ -38,3 +39,5 @@ class Timeout(val limit: Long, val unit: TimeUnit) {
         val DEFAULT = Timeout(15, TimeUnit.SECONDS)
     }
 }
+
+fun Disposable.addTo(compositeDisposable: CompositeDisposable): Boolean = compositeDisposable.add(this)

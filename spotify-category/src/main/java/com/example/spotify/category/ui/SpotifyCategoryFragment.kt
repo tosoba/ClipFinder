@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
@@ -25,12 +26,11 @@ import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
 
 class SpotifyCategoryFragment : BaseMvRxFragment() {
-
+    private val category: Category by args()
     private val factory: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyCategoryViewState> by lazy(LazyThreadSafetyMode.NONE) {
         val loadPlaylists = { viewModel.loadPlaylists() }
         injectedItemListController(
             SpotifyCategoryViewState::playlists,
@@ -42,8 +42,6 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
         }
     }
 
-    private val category: Category by args()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -51,19 +49,21 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyCategoryBinding.inflate(inflater, container, false).apply {
-        mainContentFragment?.disablePlayButton()
-        category = this@SpotifyCategoryFragment.category
-        categoryToolbarGradientBackgroundView
-            .loadBackgroundGradient(this@SpotifyCategoryFragment.category.iconUrl)
-            .disposeOnDestroy(this@SpotifyCategoryFragment)
-        categoryRecyclerView.apply {
-            setController(epoxyController)
-            layoutManager = layoutManagerFor(resources.configuration.orientation)
-            setItemSpacingDp(5)
+    ): View? = FragmentSpotifyCategoryBinding.inflate(inflater, container, false)
+        .apply {
+            mainContentFragment?.disablePlayButton()
+            category = this@SpotifyCategoryFragment.category
+            categoryToolbarGradientBackgroundView
+                .loadBackgroundGradient(this@SpotifyCategoryFragment.category.iconUrl)
+                .disposeOnDestroy(this@SpotifyCategoryFragment)
+            categoryRecyclerView.apply {
+                setController(epoxyController)
+                layoutManager = layoutManagerFor(resources.configuration.orientation)
+                setItemSpacingDp(5)
+            }
+            categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
         }
-        categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-    }.root
+        .root
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -80,6 +80,6 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     )
 
     companion object {
-        fun new(category: Category): SpotifyCategoryFragment = newFragmentWithMvRxArg(category)
+        fun new(category: Category): SpotifyCategoryFragment = newMvRxFragmentWith(category)
     }
 }

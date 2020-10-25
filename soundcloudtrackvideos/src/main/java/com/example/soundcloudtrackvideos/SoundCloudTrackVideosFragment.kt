@@ -23,7 +23,7 @@ import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAd
 import com.example.core.ext.castAs
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
-import com.example.youtubesearch.VideosSearchFragment
+import com.example.youtubesearch.YoutubeSearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
@@ -51,7 +51,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
         CustomCurrentStatePagerAdapter(
             fragmentManager = childFragmentManager,
             fragments = arrayOf(
-                VideosSearchFragment.newInstanceWithQuery(argTrack.title),
+                YoutubeSearchFragment.newInstanceWithQuery(argTrack.title),
                 SoundCloudTrackFragment.new(argTrack)
             )
         )
@@ -112,7 +112,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
 
     private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
         when (val currentFragment = pagerAdapter.currentFragment) {
-            is VideosSearchFragment -> currentFragment.onNewQuery(newTrack.title)
+            is YoutubeSearchFragment -> currentFragment.onNewQuery(newTrack.title)
             is SoundCloudTrackFragment -> currentFragment.track = newTrack
         }
     }
@@ -122,6 +122,6 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnB
     }
 
     companion object {
-        fun new(track: SoundCloudTrack): SoundCloudTrackVideosFragment = newFragmentWithMvRxArg(track)
+        fun new(track: SoundCloudTrack): SoundCloudTrackVideosFragment = newMvRxFragmentWith(track)
     }
 }

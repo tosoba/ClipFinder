@@ -30,7 +30,7 @@ class SpotifyCategoryViewModel(
     }
 
     fun loadPlaylists(shouldClear: Boolean = false) = withState { state ->
-        if (!state.playlists.shouldLoad) return@withState
+        if (!state.playlists.shouldLoadMore) return@withState
 
         val args = GetPlaylistsForCategory.Args(
             categoryId = state.category.id,

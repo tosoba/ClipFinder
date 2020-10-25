@@ -69,7 +69,8 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.1.0'
 
     implementation rootProject.ext.room
-    implementation 'androidx.room:room-rxjava2:2.0.0'
+    kapt "android.arch.persistence.room:compiler:2.0.0"
+    implementation 'androidx.room:room-rxjava2:2.2.5'
 
     implementation 'joda-time:joda-time:2.9.9'
     implementation 'androidx.palette:palette-ktx:1.0.0'

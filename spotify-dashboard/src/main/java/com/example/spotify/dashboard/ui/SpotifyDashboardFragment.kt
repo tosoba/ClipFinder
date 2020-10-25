@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -25,16 +26,15 @@ import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
-
     private val navDestinations: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
     private lateinit var binding: FragmentSpotifyDashboardBinding
-    override val toolbar: Toolbar get() = binding.dashboardToolbar
+    override val toolbar: Toolbar
+        get() = binding.dashboardToolbar
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
+    private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(LazyThreadSafetyMode.NONE) {
+        injectedTypedController { (categories, playlists, topTracks, newReleases) ->
             fun <Item> Collection<Item>.column(
                 buildItem: (Item) -> EpoxyModel<*>
             ): Column = Column(map(buildItem))
@@ -88,7 +88,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
-                "tracks",
+                "top-tracks",
                 viewModel::loadDailyViralTracks,
                 { it.chunked(2) }
             ) { chunk ->
@@ -96,9 +96,9 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     TopTrackItemBindingModel_()
                         .id(topTrack.track.id)
                         .track(topTrack)
-                        .itemClicked(View.OnClickListener {
+                        .itemClicked { _ ->
                             show { navDestinations.newSpotifyTrackVideosFragment(topTrack.track) }
-                        })
+                        }
                 }
             }
         }
@@ -111,15 +111,17 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyDashboardBinding.inflate(inflater, container, false).apply {
-        requireActivity().castAs<AppCompatActivity>()?.apply {
-            setSupportActionBar(dashboardToolbar)
-            showDrawerHamburger()
+    ): View? = FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
+        .apply {
+            requireActivity().castAs<AppCompatActivity>()?.apply {
+                setSupportActionBar(dashboardToolbar)
+                showDrawerHamburger()
+            }
+            mainContentFragment?.disablePlayButton()
+            dashboardRecyclerView.setController(epoxyController)
+            binding = this
         }
-        mainContentFragment?.disablePlayButton()
-        dashboardRecyclerView.setController(epoxyController)
-        binding = this
-    }.root
+        .root
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (toolbar.menu.size() == 0) {

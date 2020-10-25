@@ -1,7 +1,6 @@
 package com.example.core.android.view.epoxy
 
 import android.os.Handler
-import android.view.View
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
@@ -9,10 +8,7 @@ import com.airbnb.mvrx.MvRxState
 import com.example.core.android.di.EpoxyHandlerQualifier
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
-import com.example.core.android.model.HoldsData
-import com.example.core.android.model.Loading
-import com.example.core.android.model.LoadingFailed
-import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.*
 import com.example.core.android.reloadControl
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
@@ -68,7 +64,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
 
             is LoadingFailed<*> -> reloadControl {
                 id("reload-control")
-                onReloadClicked(View.OnClickListener { reloadClicked() })
+                onReloadClicked { _ -> reloadClicked() }
                 message("Error occurred lmao") //TODO: error msg
             }
         } else {
@@ -76,7 +72,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
                 buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this)
             }
 
-            if (items is PagedDataList<*> && items.shouldLoad && loadMore != null) {
+            if (loadMore != null && items is HoldsPagedData<*> && items.shouldLoadMore) {
                 loadingIndicator {
                     id("loading-indicator-more-items") //TODO: maybe use a different indicator for loading more
                     onBind { _, _, _ -> loadMore() }

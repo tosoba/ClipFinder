@@ -32,7 +32,7 @@ class SpotifyAccountPlaylistsViewModel(
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
 
     fun loadPlaylists() = withState { (userLoggedIn, playlists) ->
-        if (userLoggedIn && playlists.shouldLoad) {
+        if (userLoggedIn && playlists.shouldLoadMore) {
             getCurrentUsersPlaylists(applySchedulers = false, args = playlists.offset)
                 .mapData { newPlaylists -> newPlaylists.map { Playlist(it) } }
                 .subscribeOn(Schedulers.io())

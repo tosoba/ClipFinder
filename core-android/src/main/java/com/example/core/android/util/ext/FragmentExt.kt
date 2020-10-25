@@ -16,6 +16,7 @@ import com.example.core.android.base.handler.BackPressedWithNoPreviousStateContr
 import com.example.core.android.base.handler.ConnectivitySnackbarHost
 import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.ext.castAs
+import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -90,6 +91,17 @@ inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmen
         }
 }
 
-inline fun <reified F : Fragment> newFragmentWithMvRxArg(arg: Parcelable): F = F::class.java
+inline fun <reified F : Fragment> newMvRxFragmentWith(arg: Any): F = F::class.java
     .newInstance()
-    .apply { Bundle().apply { putParcelable(MvRx.KEY_ARG, arg) } }
+    .apply {
+        arguments = Bundle().apply {
+            when (arg) {
+                is Parcelable -> putParcelable(MvRx.KEY_ARG, arg)
+                is String -> putString(MvRx.KEY_ARG, arg)
+                is Int -> putInt(MvRx.KEY_ARG, arg)
+                is Double -> putDouble(MvRx.KEY_ARG, arg)
+                is Float -> putFloat(MvRx.KEY_ARG, arg)
+                else -> throw IllegalArgumentException("Invalid arg type.")
+            }
+        }
+    }

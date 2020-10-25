@@ -50,5 +50,5 @@ val youtubeCoreAndroidModule = module {
             )
             .build()
     }
-    single { YoutubeRepo(get(), get()) } bind IYoutubeRepo::class
+    single { YoutubeRepo(get(), get<YoutubeDb>().searchDao()) } bind IYoutubeRepo::class
 }

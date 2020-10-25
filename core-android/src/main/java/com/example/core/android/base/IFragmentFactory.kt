@@ -12,8 +12,6 @@ interface IFragmentFactory {
     val newSpotifyAccountNavHostFragment: Fragment
 
     fun newVideosSearchFragment(query: String): Fragment
-    fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): Fragment
-    fun newVideoPlaylistFragment(videoPlaylist: VideoPlaylist, thumbnailUrls: Array<String>): Fragment
 
     val newSoundCloudDashboardNavHostFragment: Fragment
 

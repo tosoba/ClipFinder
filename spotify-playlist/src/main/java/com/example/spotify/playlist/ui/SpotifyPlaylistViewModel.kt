@@ -28,7 +28,7 @@ class SpotifyPlaylistViewModel(
     }
 
     fun loadTracks() = withState { (playlist, tracks) ->
-        if (!tracks.shouldLoad) return@withState
+        if (!tracks.shouldLoadMore) return@withState
 
         val args = GetPlaylistTracks.Args(playlist.id, tracks.offset)
         getPlaylistTracks(args = args, applySchedulers = false)

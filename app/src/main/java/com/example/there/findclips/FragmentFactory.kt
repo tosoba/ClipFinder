@@ -6,7 +6,6 @@ import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
-import com.example.core.android.model.videos.VideoPlaylist
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
@@ -21,8 +20,7 @@ import com.example.spotify.playlist.ui.SpotifyPlaylistFragment
 import com.example.spotify.search.ui.SpotifySearchFragment
 import com.example.spotify.search.ui.SpotifySearchMainFragment
 import com.example.spotifytrackvideos.TrackVideosFragment
-import com.example.youtubesearch.VideosSearchFragment
-import com.example.youtubevideoplaylist.VideoPlaylistFragment
+import com.example.youtubesearch.YoutubeSearchFragment
 
 object FragmentFactory :
     IFragmentFactory,
@@ -42,9 +40,7 @@ object FragmentFactory :
     override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
     override fun newSpotifyTrackFragment(track: Track): Fragment = TrackFragment.new(track)
 
-    override fun newVideosSearchFragment(query: String): Fragment = VideosSearchFragment.newInstanceWithQuery(query)
-    override fun newVideosSearchFragment(videoPlaylist: VideoPlaylist): Fragment = VideosSearchFragment.newInstanceWithVideoPlaylist(videoPlaylist)
-    override fun newVideoPlaylistFragment(videoPlaylist: VideoPlaylist, thumbnailUrls: Array<String>): Fragment = VideoPlaylistFragment.newInstance(videoPlaylist, thumbnailUrls)
+    override fun newVideosSearchFragment(query: String): Fragment = YoutubeSearchFragment.newInstanceWithQuery(query)
 
     override val newSoundCloudDashboardNavHostFragment: Fragment
         get() = SoundCloudDashboardNavHostFragment()

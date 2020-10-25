@@ -143,7 +143,7 @@ open class MvRxViewModel<S : MvRxState>(
         shouldClear: Boolean = false,
         reducer: S.(PagedDataList<T>) -> S
     ) = withState { state ->
-        if (state.valueOf(prop).shouldLoad) {
+        if (state.valueOf(prop).shouldLoadMore) {
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
                 .updateWithPagedResource(prop, onError, shouldClear, reducer)

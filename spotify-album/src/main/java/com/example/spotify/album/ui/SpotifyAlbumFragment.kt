@@ -17,7 +17,7 @@ import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.loadBackgroundGradient
-import com.example.core.android.util.ext.newFragmentWithMvRxArg
+import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.dataListCarouselWithHeader
@@ -86,6 +86,6 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun new(album: Album): SpotifyAlbumFragment = newFragmentWithMvRxArg(album)
+        fun new(album: Album): SpotifyAlbumFragment = newMvRxFragmentWith(album)
     }
 }

@@ -97,6 +97,6 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
     )
 
     companion object {
-        fun new(playlist: Playlist): SpotifyPlaylistFragment = newFragmentWithMvRxArg(playlist)
+        fun new(playlist: Playlist): SpotifyPlaylistFragment = newMvRxFragmentWith(playlist)
     }
 }

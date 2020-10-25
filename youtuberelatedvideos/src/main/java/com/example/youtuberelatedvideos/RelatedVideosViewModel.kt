@@ -3,7 +3,6 @@ package com.example.youtuberelatedvideos
 import com.example.core.android.base.vm.BaseVideosViewModel
 import com.example.core.android.mapper.videos.ui
 import com.example.core.android.model.videos.Video
-import com.example.core.android.view.recyclerview.item.VideoItemView
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.usecase.videos.GetChannelsThumbnailUrls
 import com.example.there.domain.usecase.videos.SearchRelatedVideos
@@ -41,7 +40,7 @@ class RelatedVideosViewModel(
             .takeSuccessOnly()
             .subscribeAndDisposeOnCleared({ videos ->
                 val mapped = videos.map(VideoEntity::ui)
-                viewState.videos.addAll(mapped.map { VideoItemView(it, null) })
+                viewState.videos.addAll(mapped)
                 getChannelThumbnails(videos, onSuccess = {
                     it.forEach { (index, url) -> mapped.getOrNull(index)?.channelThumbnailUrl?.set(url) }
                 })
