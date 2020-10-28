@@ -34,6 +34,7 @@ import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
 import com.example.there.domain.entity.spotify.AudioFeaturesEntity
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
 import org.koin.android.ext.android.inject
 
@@ -42,7 +43,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val viewModel: TrackViewModel by fragmentViewModel()
 
     private val epoxyController: TypedEpoxyController<TrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController { (_, album, artists, similarTracks, audioFeaturesChartData) ->
+        injectedTypedController<TrackViewState> { (_, album, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
@@ -112,7 +113,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                             requireNotNull(audioFeaturesChartData.value),
                             xAxisView = RadarChartAxisView(
                                 typeface = typeface,
-                                valueFormatter = { value, _ ->
+                                valueFormatter = IAxisValueFormatter { value, _ ->
                                     audioFeaturesChartLabels[value.toInt() % audioFeaturesChartLabels.size]
                                 }
                             ),

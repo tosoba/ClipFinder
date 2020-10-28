@@ -2,6 +2,7 @@ package com.example.core.android.base.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.core.android.base.vm.BaseViewModel
 import com.example.core.ext.messageOrDefault
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -21,8 +22,8 @@ abstract class BaseVMActivity<T : BaseViewModel>(vmClass: KClass<T>) : AppCompat
     protected open fun T.onInitialized() = Unit
 
     protected open fun setupObservers() {
-        viewModel.errorState.observe(this) { error ->
+        viewModel.errorState.observe(this, Observer { error ->
             error?.let { Timber.e(javaClass.name ?: "Error", it.messageOrDefault()) }
-        }
+        })
     }
 }

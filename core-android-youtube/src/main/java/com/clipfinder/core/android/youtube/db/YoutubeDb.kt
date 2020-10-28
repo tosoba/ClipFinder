@@ -9,7 +9,7 @@ import com.clipfinder.core.android.youtube.db.model.SearchResponseEntity
 @Database(
     version = 1,
     exportSchema = false,
-    entities = [SearchResponseEntity::class],
+    entities = [SearchResponseEntity::class]
 )
 @TypeConverters(YoutubeDbConverters::class)
 abstract class YoutubeDb : RoomDatabase() {

@@ -13,10 +13,11 @@ class YoutubeRepo(
     private val searchStore: YoutubeSearchStore,
     private val searchDao: SearchDao
 ) : IYoutubeRepo {
+
     override fun search(query: String, pageToken: String?): Single<Resource<SearchListResponse>> = searchStore
         .getSingle(query to pageToken)
-        .map(Resource.Companion::success)
-        .onErrorReturn(Resource.Companion::error)
+        .map { Resource.success(it) }
+        .onErrorReturn { Resource.error(it) }
 
-    override fun clearExpired(): Completable = searchDao.deleteExpired()
+    override fun clearExpired(): Completable = Completable.fromAction(searchDao::deleteExpired)
 }

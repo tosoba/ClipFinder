@@ -34,7 +34,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         get() = binding.dashboardToolbar
 
     private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController { (categories, playlists, topTracks, newReleases) ->
+        injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
             fun <Item> Collection<Item>.column(
                 buildItem: (Item) -> EpoxyModel<*>
             ): Column = Column(map(buildItem))

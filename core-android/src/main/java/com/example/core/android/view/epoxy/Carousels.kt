@@ -119,7 +119,7 @@ inline fun <Value, Item> EpoxyController.pagedDataListCarouselWithHeader(
         }
     } else carousel {
         id(idSuffix)
-        withModelsFrom(
+        withModelsFrom<Item>(
             items = mapToItems(value),
             extraModels = when (status) {
                 is LoadingFailed<*> -> listOf(

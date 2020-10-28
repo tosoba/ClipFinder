@@ -18,6 +18,7 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
+import io.reactivex.Completable
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -29,7 +30,7 @@ val youtubeCoreAndroidModule = module {
     single<YouTube> { YouTube.Builder(NetHttpTransport(), GsonFactory(), null).build() }
     single { YoutubeApi(androidContext().getString(R.string.youtube_api_key), get()) } bind IYoutubeApi::class
     single { androidContext().buildRoom<YoutubeDb>() }
-    single<YoutubeSearchStore> {
+    single {
         val dao = get<YoutubeDb>().searchDao()
         StoreBuilder
             .from(
@@ -37,15 +38,24 @@ val youtubeCoreAndroidModule = module {
                     val (query, pageToken) = key
                     get<IYoutubeApi>().search(query, pageToken)
                 },
-                sourceOfTruth = SourceOfTruth.ofMaybe(
+                sourceOfTruth = SourceOfTruth.ofMaybe<Pair<String, String?>, SearchListResponse, SearchListResponse>(
                     reader = { (query, pageToken) ->
                         dao.select(query, pageToken).map(SearchResponseEntity::content)
                     },
                     writer = { (query, pageToken), content ->
-                        dao.insert(SearchResponseEntity(query, pageToken, content, OffsetDateTime.now()))
+                        Completable.fromAction {
+                            dao.insert(
+                                SearchResponseEntity(
+                                    query = query,
+                                    pageToken = pageToken,
+                                    content = content,
+                                    cachedAt = OffsetDateTime.now()
+                                )
+                            )
+                        }
                     },
-                    delete = { (query, pageToken) -> dao.delete(query, pageToken) },
-                    deleteAll = dao::deleteAll
+                    delete = { (query, pageToken) -> Completable.fromAction { dao.delete(query, pageToken) } },
+                    deleteAll = { Completable.fromAction(dao::deleteAll) }
                 )
             )
             .build()

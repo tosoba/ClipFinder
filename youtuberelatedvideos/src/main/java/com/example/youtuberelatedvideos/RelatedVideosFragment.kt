@@ -19,6 +19,7 @@ import com.example.core.android.view.recyclerview.decoration.SeparatorDecoration
 import com.example.core.android.view.recyclerview.item.ListItemView
 import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
 import com.example.core.android.view.recyclerview.item.RecyclerViewItemViewState
+import com.example.core.android.view.recyclerview.listener.ClickHandler
 import com.example.core.android.view.recyclerview.listener.EndlessRecyclerOnScrollListener
 import com.example.core.ext.castAs
 import com.example.youtuberelatedvideos.databinding.FragmentRelatedVideosBinding
@@ -38,7 +39,7 @@ class RelatedVideosFragment :
                 override val itemViewBinder: ItemBinder<Video>
                     get() = ItemBinderBase(BR.video, R.layout.video_item)
             },
-            { activity?.castAs<YoutubePlayerController>()?.loadVideo(it) },
+            ClickHandler { activity?.castAs<YoutubePlayerController>()?.loadVideo(it) },
             relatedVideosItemDecoration,
             onRelatedVideosScrollListener
         )

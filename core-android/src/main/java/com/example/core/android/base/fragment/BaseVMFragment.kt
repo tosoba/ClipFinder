@@ -26,10 +26,10 @@ abstract class BaseVMFragment<T : BaseViewModel>(vmClass: KClass<T>) : Fragment(
     protected open fun T.onInitialized() = Unit
 
     protected open fun setupObservers() {
-        viewModel.errorState.observe(viewLifecycleOwner) { error ->
+        viewModel.errorState.observe(viewLifecycleOwner, Observer { error ->
             error?.let {
                 Timber.e(javaClass.name ?: "BaseVMFragment error: ", it.messageOrDefault())
             }
-        }
+        })
     }
 }
