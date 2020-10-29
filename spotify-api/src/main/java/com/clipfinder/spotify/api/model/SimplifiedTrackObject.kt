@@ -58,9 +58,9 @@ data class SimplifiedTrackObject(
     val id: String,
     /* Part of the response when Track Relinking is applied. If true , the track is playable in the given market. Otherwise false. */
     @Json(name = "is_playable")
-    val isPlayable: Boolean,
+    val isPlayable: Boolean? = null,
     @Json(name = "linked_from")
-    val linkedFrom: LinkedTrackObject,
+    val linkedFrom: LinkedTrackObject? = null,
     /* The name of the track. */
     @Json(name = "name")
     val name: String,

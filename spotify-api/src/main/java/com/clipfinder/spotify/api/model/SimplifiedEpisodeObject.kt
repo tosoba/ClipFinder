@@ -64,7 +64,7 @@ data class SimplifiedEpisodeObject(
     val isExternallyHosted: Boolean,
     /* True if the episode is playable in the given market. Otherwise false. */
     @Json(name = "is_playable")
-    val isPlayable: Boolean,
+    val isPlayable: Boolean? = null,
     /* Note: This field is deprecated and might be removed in the future. Please use the languages field instead. The language used in the episode, identified by a ISO 639 code. */
     @Json(name = "language")
     val language: String,
