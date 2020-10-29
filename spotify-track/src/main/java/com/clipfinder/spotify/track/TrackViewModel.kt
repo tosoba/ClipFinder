@@ -36,7 +36,8 @@ class TrackViewModel(
         handleConnectivityChanges(context)
     }
 
-    fun onNewTrack(track: Track) {
+    fun onNewTrack(track: Track) = withState { (currentTrack) ->
+        if (currentTrack == track) return@withState
         setState { TrackViewState(track = track) }
         loadData()
     }
