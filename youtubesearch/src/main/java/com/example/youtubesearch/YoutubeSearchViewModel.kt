@@ -27,6 +27,7 @@ class YoutubeSearchViewModel(
 ) : MvRxViewModel<YoutubeSearchState>(initialState) {
 
     init {
+        search()
         handleConnectivityChanges(context)
     }
 
@@ -34,15 +35,16 @@ class YoutubeSearchViewModel(
 
     fun search() = searchVideos(shouldClear = false)
 
-    fun search(query: String) {
-        setState { copy(query = query) }
+    fun search(newQuery: String) = withState { (query) ->
+        if (newQuery == query) return@withState
+        setState { copy(query = newQuery) }
         searchVideos(shouldClear = true)
     }
 
     private fun searchVideos(shouldClear: Boolean = false) {
         if (shouldClear) clear.accept(Unit)
         withState { (query, videos) ->
-            if (shouldClear || videos.shouldLoadMore) return@withState
+            if (!shouldClear && !videos.shouldLoadMore) return@withState
 
             setState {
                 if (shouldClear) copy(videos = PageTokenDataList(status = Loading))

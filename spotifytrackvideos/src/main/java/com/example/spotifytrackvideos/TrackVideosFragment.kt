@@ -24,9 +24,9 @@ import com.example.core.android.util.ext.backPressedWithNoPreviousStateControlle
 import com.example.core.android.util.ext.loadBackgroundGradient
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
-import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
+import com.jakewharton.rxbinding2.support.v4.view.RxViewPager
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -37,7 +37,7 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
     private val fragmentFactory: IFragmentFactory by inject()
     private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
 
-    private val pagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val pagerAdapter: TitledCustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         TitledCustomCurrentStatePagerAdapter(
             fragmentManager = childFragmentManager,
             titledFragments = arrayOf(
@@ -78,15 +78,15 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
         return binding.apply {
             lifecycleOwner = this@TrackVideosFragment
             track = currentTrack
+
             trackVideosViewpager.adapter = pagerAdapter
             trackVideosViewpager.offscreenPageLimit = pagerAdapter.count - 1
-            trackVideosViewpager.addOnPageChangeListener(object : OnPageChangeListener {
-                override fun onPageSelected(position: Int) {
-                    trackVideosTabLayout.getTabAt(position)?.select()
-                    withCurrentTrack(::updateCurrentFragment)
-                }
-            })
+            RxViewPager.pageSelections(trackVideosViewpager)
+                .skipInitialValue()
+                .subscribe { withCurrentTrack(::updateCurrentFragment) }
+                .disposeOnDestroy(this@TrackVideosFragment)
             trackVideosTabLayout.setupWithViewPager(trackVideosViewpager)
+
             trackVideosToolbar.setupWithBackNavigation(
                 requireActivity() as? AppCompatActivity,
                 ::onBackPressed

@@ -39,23 +39,24 @@ class ClipFinderApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        initTimber()
 //        initLeakCanary()
 //        initNotifications()
         initKoin()
+
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
-
         Utils.init(this)
-
         ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(DebugTree())
-        }
     }
 
     override fun onTerminate() {
         stopService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
         super.onTerminate()
+    }
+
+    private fun initTimber() {
+        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
     }
 
     private fun initLeakCanary() {
