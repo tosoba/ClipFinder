@@ -27,6 +27,7 @@ import com.example.spotify.search.di.spotifySearchModule
 import com.example.spotifyapi.di.spotifyApiModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
+import com.github.mikephil.charting.utils.Utils
 import com.squareup.leakcanary.LeakCanary
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
@@ -38,11 +39,12 @@ class ClipFinderApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
 //        initLeakCanary()
 //        initNotifications()
         initKoin()
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
+
+        Utils.init(this)
 
         ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
 
