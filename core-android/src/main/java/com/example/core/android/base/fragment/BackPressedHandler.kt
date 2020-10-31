@@ -1,5 +1,5 @@
 package com.example.core.android.base.fragment
 
-interface GoesToPreviousStateOnBackPressed {
+interface BackPressedHandler {
     fun onBackPressed()
 }

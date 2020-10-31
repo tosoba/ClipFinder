@@ -315,7 +315,7 @@ class MainActivity :
 
             if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
                 currentFragment.topFragment?.let { topFragment ->
-                    if (topFragment is GoesToPreviousStateOnBackPressed) {
+                    if (topFragment is BackPressedHandler) {
                         topFragment.onBackPressed()
                         return
                     }

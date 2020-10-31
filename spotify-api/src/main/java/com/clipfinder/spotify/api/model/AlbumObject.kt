@@ -42,7 +42,7 @@ data class AlbumObject(
     override val albumType: String,
     /* The artists of the album. Each artist object includes a link in href to more detailed information about the artist. */
     @Json(name = "artists")
-    override val artists: List<ArtistObject>,
+    override val artists: List<SimplifiedArtistObject>,
     /* The markets in which the album is available: ISO 3166-1 alpha-2 country codes. Note that an album is considered available in a market when at least 1 of its tracks is available in that market. */
     @Json(name = "available_markets")
     val availableMarkets: List<String>,
@@ -82,7 +82,7 @@ data class AlbumObject(
     val releaseDatePrecision: String,
     /* The tracks of the album. */
     @Json(name = "tracks")
-    val tracks: List<SimplifiedTrackObject>,
+    val tracks: SimplifiedTracksPagingObject,
     /* The object type: “album” */
     @Json(name = "type")
     val type: String,

@@ -22,23 +22,25 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import org.koin.android.ext.android.get
 
+private typealias State = TrackViewState
+
 class TrackViewModel(
-    initialState: TrackViewState,
+    initialState: State,
     private val getAlbum: GetAlbum,
     private val getArtists: GetArtists,
     private val getSimilarTracks: GetSimilarTracks,
     private val getAudioFeatures: GetAudioFeatures,
     context: Context
-) : MvRxViewModel<TrackViewState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
 
     init {
         loadData()
         handleConnectivityChanges(context)
     }
 
-    fun onNewTrack(track: Track) = withState { (currentTrack) ->
-        if (currentTrack == track) return@withState
-        setState { TrackViewState(track = track) }
+    fun onNewTrack(newTrack: Track) = withState { (track) ->
+        if (track == newTrack) return@withState
+        setState { State(track = newTrack) }
         loadData()
     }
 
@@ -49,15 +51,15 @@ class TrackViewModel(
         loadAudioFeatures()
     }
 
-    fun loadAlbum() = loadNullable(TrackViewState::album, getAlbum::withState) { copy(album = it) }
+    fun loadAlbum() = loadNullable(State::album, getAlbum::withState) { copy(album = it) }
 
-    fun loadArtists() = load(TrackViewState::artists, getArtists::withState) { copy(artists = it) }
+    fun loadArtists() = load(State::artists, getArtists::withState) { copy(artists = it) }
 
-    fun loadSimilarTracks() =
-        load(TrackViewState::similarTracks, getSimilarTracks::withState) { copy(similarTracks = it) }
+    fun loadSimilarTracks() = load(State::similarTracks, getSimilarTracks::withState) { copy(similarTracks = it) }
 
-    fun loadAudioFeatures() =
-        loadNullable(TrackViewState::audioFeaturesChartData, getAudioFeatures::withState) { copy(audioFeaturesChartData = it) }
+    fun loadAudioFeatures() = loadNullable(State::audioFeaturesChartData, getAudioFeatures::withState) {
+        copy(audioFeaturesChartData = it)
+    }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
@@ -69,8 +71,8 @@ class TrackViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<TrackViewModel, TrackViewState> {
-        override fun create(viewModelContext: ViewModelContext, state: TrackViewState): TrackViewModel? = TrackViewModel(
+    companion object : MvRxViewModelFactory<TrackViewModel, State> {
+        override fun create(viewModelContext: ViewModelContext, state: State): TrackViewModel? = TrackViewModel(
             state,
             viewModelContext.activity.get(),
             viewModelContext.activity.get(),
@@ -81,20 +83,18 @@ class TrackViewModel(
     }
 }
 
-private fun GetAlbum.withState(state: TrackViewState) = this(applySchedulers = false, args = state.track.album.id)
+private fun GetAlbum.withState(state: State) = this(applySchedulers = false, args = state.track.album.id)
     .mapData { Album(it) }
 
-private fun GetArtists.withState(
-    state: TrackViewState
-) = this(applySchedulers = false, args = state.track.artists.map { it.id })
+private fun GetArtists.withState(state: State) = this(applySchedulers = false, args = state.track.artists.map { it.id })
     .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
 
 private fun GetSimilarTracks.withState(
-    state: TrackViewState
+    state: State
 ) = this(applySchedulers = false, args = GetSimilarTracks.Args(state.track.id, state.similarTracks.offset))
     .mapData { tracks -> tracks.map { Track(it) } }
 
-private fun GetAudioFeatures.withState(state: TrackViewState) = this(applySchedulers = false, args = state.track.id)
+private fun GetAudioFeatures.withState(state: State) = this(applySchedulers = false, args = state.track.id)
     .mapData {
         val entries = listOf(
             RadarEntry(it.acousticness.toFloat()),

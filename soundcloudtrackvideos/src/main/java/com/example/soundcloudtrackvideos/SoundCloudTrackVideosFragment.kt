@@ -11,7 +11,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.base.handler.SoundCloudPlayerController
 import com.example.core.android.base.trackvideos.TrackVideosViewBinding
 import com.example.core.android.base.trackvideos.TrackVideosViewState
@@ -28,7 +28,7 @@ import com.google.android.material.tabs.TabLayout
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
-class SoundCloudTrackVideosFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
+class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private val viewModel: SoundCloudTrackVideosViewModel by fragmentViewModel()
 

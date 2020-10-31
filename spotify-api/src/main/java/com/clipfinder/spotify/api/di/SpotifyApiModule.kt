@@ -1,11 +1,9 @@
 package com.clipfinder.spotify.api.di
 
 import com.clipfinder.spotify.api.R
-import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
-import com.clipfinder.spotify.api.adapter.NullToEmptyListJsonAdapter
+import com.clipfinder.spotify.api.adapter.*
 import com.clipfinder.spotify.api.auth.SpotifyAuthenticator
 import com.clipfinder.spotify.api.endpoint.*
-import com.clipfinder.spotify.api.infrastructure.*
 import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.TrackObject
@@ -63,7 +61,6 @@ val spotifyApiModule = module {
                 .add(OffsetDateTimeAdapter)
                 .add(UUIDAdapter)
                 .add(ByteArrayAdapter)
-                .add(NullToEmptyListJsonAdapter.FACTORY)
                 .add(BigDecimalAdapter)
                 .add(KotlinJsonAdapterFactory())
                 .add(

@@ -130,9 +130,7 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
         }
     }
 
-    override fun onNewTrack(track: Track) {
-        viewModel.onNewTrack(track)
-    }
+    override fun onNewTrack(track: Track) = viewModel.onNewTrack(track)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

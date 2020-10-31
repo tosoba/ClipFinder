@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.*
-import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
@@ -23,7 +23,7 @@ import com.example.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
-class SpotifyArtistFragment : BaseMvRxFragment(), GoesToPreviousStateOnBackPressed {
+class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private val factory: ISpotifyFragmentsFactory by inject()
 

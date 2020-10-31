@@ -12,7 +12,7 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.base.fragment.GoesToPreviousStateOnBackPressed
+import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.base.fragment.ISearchFragment
 import com.example.core.android.base.trackvideos.TrackVideosViewState
 import com.example.core.android.spotify.controller.SpotifyTrackController
@@ -30,21 +30,12 @@ import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
-class TrackVideosFragment :
-    BaseMvRxFragment(),
-    GoesToPreviousStateOnBackPressed,
-    SpotifyTrackController {
-
-    override fun updateTrack(track: Track) {
-        viewModel.updateTrack(track)
-    }
-
+class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrackController {
+    private val argTrack: Track by args()
     private val viewModel: TrackVideosViewModel by fragmentViewModel()
 
     private val fragmentFactory: IFragmentFactory by inject()
     private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
-
-    private val argTrack: Track by args()
 
     private val pagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         TitledCustomCurrentStatePagerAdapter(
@@ -78,8 +69,8 @@ class TrackVideosFragment :
             } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
         }
 
-        fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { state ->
-            state.tracks.value.lastOrNull()?.let(block)
+        fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { (tracks) ->
+            tracks.value.lastOrNull()?.let(block)
         }
 
         enableSpotifyPlayButton { withCurrentTrack(::loadTrack) }
@@ -109,6 +100,8 @@ class TrackVideosFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun invalidate() = Unit
+
+    override fun updateTrack(track: Track) = viewModel.updateTrack(track)
 
     private fun updateCurrentFragment(newTrack: Track) {
         when (val currentFragment = pagerAdapter.currentFragment) {

@@ -1,4 +1,4 @@
-package com.clipfinder.spotify.api.infrastructure
+package com.clipfinder.spotify.api.adapter
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
