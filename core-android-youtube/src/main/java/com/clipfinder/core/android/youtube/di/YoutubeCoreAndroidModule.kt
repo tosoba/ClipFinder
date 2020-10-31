@@ -27,7 +27,7 @@ import org.threeten.bp.OffsetDateTime
 typealias YoutubeSearchStore = Store<Pair<String, String?>, SearchListResponse>
 
 val youtubeCoreAndroidModule = module {
-    single<YouTube> { YouTube.Builder(NetHttpTransport(), GsonFactory(), null).build() }
+    single<YouTube> { YouTube.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), null).build() }
     single { YoutubeApi(androidContext().getString(R.string.youtube_api_key), get()) } bind IYoutubeApi::class
     single { androidContext().buildRoom<YoutubeDb>() }
     single {

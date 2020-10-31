@@ -4,7 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.youtube.ext.highUrl
+import com.clipfinder.core.youtube.ext.highestResUrl
+import com.clipfinder.core.youtube.ext.isValid
 import com.clipfinder.core.youtube.usecase.SearchVideos
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Loading
@@ -14,24 +15,27 @@ import com.example.core.android.model.videos.Video
 import com.example.core.ext.castAs
 import com.example.core.model.Resource
 import com.example.core.model.mapData
+import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import org.koin.android.ext.android.get
 import timber.log.Timber
 import java.math.BigInteger
 
+private typealias State = YoutubeSearchState
+
 class YoutubeSearchViewModel(
-    initialState: YoutubeSearchState,
+    initialState: State,
     private val searchVideos: SearchVideos,
     context: Context
-) : MvRxViewModel<YoutubeSearchState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
+
+    private val clear: PublishRelay<Unit> = PublishRelay.create()
 
     init {
         search()
         handleConnectivityChanges(context)
     }
-
-    private val clear: PublishRelay<Unit> = PublishRelay.create()
 
     fun search() = searchVideos(shouldClear = false)
 
@@ -84,10 +88,10 @@ class YoutubeSearchViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<YoutubeSearchViewModel, YoutubeSearchState> {
+    companion object : MvRxViewModelFactory<YoutubeSearchViewModel, State> {
         override fun create(
             viewModelContext: ViewModelContext,
-            state: YoutubeSearchState
+            state: State
         ): YoutubeSearchViewModel = YoutubeSearchViewModel(
             state,
             viewModelContext.activity.get(),
@@ -100,18 +104,21 @@ private fun SearchVideos.with(query: String, pageToken: String?) =
     this(applySchedulers = false, args = SearchVideos.Args(query, pageToken))
         .mapData { response ->
             Pair(
-                response.items?.map { result ->
-                    Video(
-                        id = result.id.videoId,
-                        channelId = result.id.channelId,
-                        title = result.snippet.title,
-                        description = result.snippet.description,
-                        publishedAt = result.snippet.publishedAt,
-                        thumbnailUrl = result.snippet.thumbnails.highUrl,
-                        duration = "",
-                        viewCount = BigInteger.ZERO
-                    )
-                } ?: emptyList(),
+                response.items
+                    ?.filter(SearchResult::isValid)
+                    ?.map { result ->
+                        Video(
+                            id = result.id.videoId,
+                            channelId = result.id.channelId,
+                            title = result.snippet.title,
+                            description = result.snippet.description,
+                            publishedAt = result.snippet.publishedAt,
+                            thumbnailUrl = result.snippet.thumbnails.highestResUrl,
+                            duration = "",
+                            viewCount = BigInteger.ZERO
+                        )
+                    }
+                    ?: emptyList(),
                 response.nextPageToken
             )
         }
