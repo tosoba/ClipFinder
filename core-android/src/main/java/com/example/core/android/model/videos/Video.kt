@@ -1,15 +1,16 @@
 package com.example.core.android.model.videos
 
 import android.os.Parcelable
+import android.view.View
 import androidx.databinding.ObservableField
-import com.example.core.ext.formattedString
-import com.example.core.ext.getPublishedAgoString
 import com.example.core.android.R
 import com.example.core.android.VideoItemBindingModel_
 import com.example.core.android.util.ext.standardMonths
 import com.example.core.android.util.ext.standardWeeks
 import com.example.core.android.util.ext.standardYears
 import com.example.core.android.view.imageview.ImageViewSrc
+import com.example.core.ext.formattedString
+import com.example.core.ext.getPublishedAgoString
 import kotlinx.android.parcel.Parcelize
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -18,7 +19,7 @@ import java.math.BigInteger
 @Parcelize
 data class Video(
     val id: String,
-    val channelId: String,
+    val channelId: String = "",
     val title: String,
     val description: String,
     val publishedAt: String,
@@ -56,7 +57,8 @@ data class Video(
 }
 
 fun Video.clickableListItem(
-    itemClicked: () -> Unit
-) : VideoItemBindingModel_ = VideoItemBindingModel_()
+    itemClicked: (View) -> Unit
+): VideoItemBindingModel_ = VideoItemBindingModel_()
     .id(id)
+    .itemClicked(itemClicked)
     .video(this)

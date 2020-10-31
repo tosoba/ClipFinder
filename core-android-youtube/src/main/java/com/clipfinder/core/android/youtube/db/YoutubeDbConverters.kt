@@ -3,8 +3,6 @@ package com.clipfinder.core.android.youtube.db
 import androidx.room.TypeConverter
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.model.SearchListResponse
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 

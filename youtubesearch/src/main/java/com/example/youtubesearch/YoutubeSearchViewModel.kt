@@ -109,7 +109,6 @@ private fun SearchVideos.with(query: String, pageToken: String?) =
                     ?.map { result ->
                         Video(
                             id = result.id.videoId,
-                            channelId = result.id.channelId,
                             title = result.snippet.title,
                             description = result.snippet.description,
                             publishedAt = result.snippet.publishedAt,

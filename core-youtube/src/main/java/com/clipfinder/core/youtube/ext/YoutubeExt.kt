@@ -14,7 +14,6 @@ private val fallbackURL: String
 
 val SearchResult.isValid: Boolean
     get() = id?.videoId != null
-        && id?.channelId != null
         && snippet?.title != null
         && snippet?.description != null
         && snippet?.publishedAt != null

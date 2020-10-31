@@ -66,6 +66,8 @@ dependencies {
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
     implementation 'com.google.http-client:google-http-client-gson:1.36.0'
 
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
     implementation rootProject.ext.room
     kapt "android.arch.persistence.room:compiler:2.0.0"
     implementation 'androidx.room:room-rxjava2:2.2.5'
