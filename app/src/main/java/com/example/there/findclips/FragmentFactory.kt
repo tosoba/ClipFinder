@@ -43,7 +43,7 @@ object FragmentFactory : IFragmentFactory, ISpotifyFragmentsFactory {
     override val newSoundCloudDashboardNavHostFragment: Fragment
         get() = SoundCloudDashboardNavHostFragment()
 
-    override fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
-    override fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment = SoundCloudPlaylistFragment.newInstance(playlist)
+    override fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment = SoundCloudPlaylistFragment.new(playlist)
+    override fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment = SoundCloudPlaylistFragment.new(playlist)
     override fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): Fragment = SoundCloudTrackVideosFragment.new(track)
 }

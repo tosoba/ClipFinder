@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.playlist.PlaylistView
 import com.example.core.android.base.playlist.PlaylistViewState
@@ -97,10 +100,6 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     }
 
     companion object {
-        fun newInstance(playlist: BaseSoundCloudPlaylist) = SoundCloudPlaylistFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(MvRx.KEY_ARG, playlist)
-            }
-        }
+        fun new(playlist: BaseSoundCloudPlaylist): SoundCloudPlaylistFragment = newMvRxFragmentWith(playlist)
     }
 }

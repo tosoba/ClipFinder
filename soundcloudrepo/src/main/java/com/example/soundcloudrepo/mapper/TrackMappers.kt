@@ -6,9 +6,6 @@ import com.clipfinder.soundcloud.api.model.SoundCloudTrackId
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackIdEntity
 
-val SoundCloudTrackId.domain: SoundCloudTrackIdEntity
-    get() = SoundCloudTrackIdEntity(id, kind)
-
 val SoundCloudTrackIdEntity.data: SoundCloudTrackId
     get() = SoundCloudTrackId(id, kind)
 
