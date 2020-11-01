@@ -61,22 +61,6 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
         }
     }
 
-    var accessToken: AccessTokenEntity?
-        get() {
-            val token = preferences.getString(PREF_KEY_ACCESS_TOKEN, null)
-            val timestamp = preferences.getLong(PREF_KEY_ACCESS_TOKEN_TIMESTAMP, 0L)
-            return if (token == null) null
-            else AccessTokenEntity(token, timestamp)
-        }
-        set(value) {
-            if (value == null) return
-            with(preferences.edit()) {
-                putString(PREF_KEY_ACCESS_TOKEN, value.token)
-                putLong(PREF_KEY_ACCESS_TOKEN_TIMESTAMP, value.timestamp)
-                apply()
-            }
-        }
-
     var userPrivateAccessToken: AccessTokenEntity?
         get() {
             val token = preferences.getString(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN, null)
@@ -124,9 +108,6 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
         private const val PREF_KEY_TOKEN = "PREF_KEY_TOKEN"
         private const val PREF_KEY_REFRESH_TOKEN = "PREF_KEY_REFRESH_TOKEN"
         private const val PREF_KEY_ARE_TOKENS_PRIVATE = "PREF_KEY_IS_TOKEN_PRIVATE"
-
-        private const val PREF_KEY_ACCESS_TOKEN = "PREF_KEY_ACCESS_TOKEN"
-        private const val PREF_KEY_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_ACCESS_TOKEN_TIMESTAMP"
 
         private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN"
         private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP"

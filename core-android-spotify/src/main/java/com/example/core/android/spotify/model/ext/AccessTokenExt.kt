@@ -11,10 +11,3 @@ val AccessTokenEntity?.single: Single<SpotifyPreferences.SavedAccessTokenEntity>
         !isValid -> Single.just(SpotifyPreferences.SavedAccessTokenEntity.Invalid)
         else -> Single.just(SpotifyPreferences.SavedAccessTokenEntity.Valid(token))
     }
-
-val AccessTokenEntity?.observable: Observable<SpotifyPreferences.SavedAccessTokenEntity>
-    get() = when {
-        this == null -> Observable.just(SpotifyPreferences.SavedAccessTokenEntity.NoValue)
-        !isValid -> Observable.just(SpotifyPreferences.SavedAccessTokenEntity.Invalid)
-        else -> Observable.just(SpotifyPreferences.SavedAccessTokenEntity.Valid(token))
-    }

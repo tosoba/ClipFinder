@@ -8,5 +8,4 @@ import io.reactivex.Single
 
 interface ISpotifyRemoteDataStore {
     val currentUser: Single<Resource<UserEntity>>
-    fun getAudioFeatures(trackEntity: TrackEntity): Single<Resource<AudioFeaturesEntity>>
 }

@@ -5,7 +5,7 @@ import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.clipfinder.core.spotify.token.AccessTokenHolder
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.example.core.android.spotify.R
-import com.example.core.android.spotify.api.SpotifyAuth
+import com.example.core.android.spotify.auth.SpotifyAuth
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.spotify.repo.SpotifyRepo
 import org.koin.android.ext.koin.androidContext

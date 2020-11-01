@@ -1,4 +1,4 @@
-package com.example.core.android.spotify.api
+package com.example.core.android.spotify.auth
 
 import android.util.Base64
 import com.clipfinder.core.spotify.auth.ISpotifyAuth
@@ -38,11 +38,4 @@ class SpotifyAuth(
         }
 
     class UnauthorizedException : Throwable("Private authorization is required.")
-
-    companion object {
-        private const val ID = "6dc5e6590b8b48c5bd73a64f6c206d8a"
-        private const val SECRET = "d5c30ea11b90401980c6ca37dc0512ba"
-
-        internal val clientDataHeader: String = "Basic ${Base64.encodeToString("$ID:$SECRET".toByteArray(), Base64.NO_WRAP)}"
-    }
 }

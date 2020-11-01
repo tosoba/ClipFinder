@@ -26,7 +26,6 @@ import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.spotify.api.SpotifyAuth
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.core.android.util.PendingIntents
 import com.example.core.android.util.ext.*
