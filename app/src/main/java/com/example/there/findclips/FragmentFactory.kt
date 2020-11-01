@@ -22,9 +22,7 @@ import com.example.spotify.search.ui.SpotifySearchMainFragment
 import com.example.spotifytrackvideos.TrackVideosFragment
 import com.example.youtubesearch.YoutubeSearchFragment
 
-object FragmentFactory :
-    IFragmentFactory,
-    ISpotifyFragmentsFactory {
+object FragmentFactory : IFragmentFactory, ISpotifyFragmentsFactory {
 
     override val newSpotifyDashboardNavHostFragment: Fragment
         get() = SpotifyDashboardNavHostFragment()

@@ -11,12 +11,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 val spotifyApiModule = module {
     single {
         retrofitWith(
-            url = spotifyChartsBaseUrl,
+            url = "https://spotifycharts.com/",
             client = get { parametersOf(emptyList<Interceptor>()) },
             converterFactory = ScalarsConverterFactory.create(),
             callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
         ).create(SpotifyChartsApi::class.java)
     }
 }
-
-private const val spotifyChartsBaseUrl: String = "https://spotifycharts.com/"

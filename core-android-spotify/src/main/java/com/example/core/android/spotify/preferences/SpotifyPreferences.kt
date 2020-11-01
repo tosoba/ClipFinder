@@ -11,7 +11,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
 
 class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
-
     private val preferences: SharedPreferences
     private val rxPreferences: RxSharedPreferences
 
@@ -96,12 +95,6 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
 
         countryRx = rxPreferences.getString(PREF_KEY_COUNTRY)
         languageRx = rxPreferences.getString(PREF_KEY_LANGUAGE)
-    }
-
-    sealed class SavedAccessTokenEntity {
-        class Valid(val token: String) : SavedAccessTokenEntity()
-        object Invalid : SavedAccessTokenEntity()
-        object NoValue : SavedAccessTokenEntity()
     }
 
     companion object {

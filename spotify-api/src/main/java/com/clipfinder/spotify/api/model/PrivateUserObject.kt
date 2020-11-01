@@ -11,6 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
+import com.clipfinder.core.spotify.model.ISpotifyPrivateUser
 import com.squareup.moshi.Json
 
 /**
@@ -34,7 +35,7 @@ data class PrivateUserObject(
     val country: String,
     /* The name displayed on the user’s profile. null if not available. */
     @Json(name = "display_name")
-    val displayName: String? = null,
+    override val displayName: String? = null,
     /* The user’s email address, as entered by the user when creating their account. Important! This email address is unverified; there is no proof that it actually belongs to the user. This field is only available when the current user has granted access to the user-read-email scope. */
     @Json(name = "email")
     val email: String,
@@ -47,10 +48,10 @@ data class PrivateUserObject(
     val href: String,
     /* The Spotify user ID for the user. */
     @Json(name = "id")
-    val id: String,
+    override val id: String,
     /* The user’s profile image. */
     @Json(name = "images")
-    val images: List<ImageObject>? = null,
+    override val images: List<ImageObject>? = null,
     /* The user’s Spotify subscription level: “premium”, “free”, etc. (The subscription level “open” can be considered the same as “free”.) This field is only available when the current user has granted access to the user-read-private scope. */
     @Json(name = "product")
     val product: String,
@@ -60,5 +61,4 @@ data class PrivateUserObject(
     /* The Spotify URI for the user. */
     @Json(name = "uri")
     val uri: String
-)
-
+) : ISpotifyPrivateUser

@@ -24,5 +24,5 @@ val spotifyCoreAndroidModule = module {
             get()
         )
     } bind ISpotifyAuth::class
-    single { SpotifyRepo(get(), get(), get(), get()) } bind ISpotifyRepo::class
+    single { SpotifyRepo(get(), get(), get(), get(), get()) } bind ISpotifyRepo::class
 }

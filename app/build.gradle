@@ -104,7 +104,6 @@ dependencies {
     implementation project(':spotify-dashboard')
     implementation project(':spotifyplayer')
     implementation project(':spotify-playlist')
-    implementation project(':spotifyrepo')
     implementation project(':spotify-search')
     implementation project(':spotifytrackvideos')
     implementation project(':spotify-track')

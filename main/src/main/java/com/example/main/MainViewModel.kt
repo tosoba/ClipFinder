@@ -1,9 +1,9 @@
 package com.example.main
 
+import com.clipfinder.core.spotify.usecase.GetCurrentUser
+import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.BaseViewModel
 import com.example.core.android.model.spotify.User
-import com.example.there.domain.usecase.spotify.GetCurrentUser
-import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 
 class MainViewModel(
     private val getSimilarTracks: GetSimilarTracks,
@@ -21,6 +21,17 @@ class MainViewModel(
     fun loadCurrentUser() {
         getCurrentUser()
             .takeSuccessOnly()
-            .subscribeAndDisposeOnCleared({ drawerViewState.user.set(User(it.name, it.iconUrl)) }, ::onError)
+            .subscribeAndDisposeOnCleared({
+                drawerViewState.user.set(
+                    User(
+                        it.displayName ?: "Unknown user",
+                        it.images?.firstOrNull()?.url ?: DEFAULT_SPOTIFY_USER_IMAGE_URL
+                    )
+                )
+            }, ::onError)
+    }
+
+    companion object {
+        private const val DEFAULT_SPOTIFY_USER_IMAGE_URL = "https://t.scdn.co/media/derived/r-b-274x274_fd56efa72f4f63764b011b68121581d8_0_0_274_274.jpg"
     }
 }

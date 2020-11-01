@@ -1,14 +1,8 @@
 package com.example.core.android.spotify.repo
 
-import com.clipfinder.core.spotify.model.ISpotifyArtist
-import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
-import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
-import com.clipfinder.core.spotify.model.ISpotifyTrack
+import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
-import com.clipfinder.spotify.api.endpoint.AlbumEndpoints
-import com.clipfinder.spotify.api.endpoint.ArtistEndpoints
-import com.clipfinder.spotify.api.endpoint.BrowseEndpoints
-import com.clipfinder.spotify.api.endpoint.TracksEndpoints
+import com.clipfinder.spotify.api.endpoint.*
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Paged
 import com.example.core.model.Resource
@@ -20,8 +14,12 @@ class SpotifyRepo(
     private val albumEndpoints: AlbumEndpoints,
     private val artistEndpoints: ArtistEndpoints,
     private val browseEndpoints: BrowseEndpoints,
-    private val tracksEndpoints: TracksEndpoints
+    private val tracksEndpoints: TracksEndpoints,
+    private val userProfileEndpoints: UserProfileEndpoints
 ) : ISpotifyRepo {
+
+    override val authorizedUser: Single<Resource<ISpotifyPrivateUser>>
+        get() = userProfileEndpoints.getCurrentUsersProfile().mapToResource { this }
 
     override fun getAlbum(id: String): Single<Resource<ISpotifySimplifiedAlbum>> = albumEndpoints
         .getAnAlbum(id = id)

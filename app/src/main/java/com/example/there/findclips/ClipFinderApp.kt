@@ -84,7 +84,7 @@ class ClipFinderApp : Application() {
             androidContext(this@ClipFinderApp)
             modules(listOf(
                 apiModule, repoModule,
-                soundCloudModule, spotifyModule, videosModule,
+                soundCloudModule, videosModule,
                 viewModelsModule,
 
                 appModule, epoxyModule, coreAndroidNetworkingModule,

@@ -54,7 +54,6 @@ dependencies {
     implementation project(':core-android-spotify')
     implementation project(':itemlist')
     implementation project(':spotifyapi')
-    implementation project(':spotifyrepo')
     implementation project(':spotifyplayer')
     implementation project(':soundcloudplayer')
     implementation project(':settings')

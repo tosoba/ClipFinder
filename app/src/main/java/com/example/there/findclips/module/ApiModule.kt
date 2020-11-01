@@ -3,9 +3,7 @@ package com.example.there.findclips.module
 import com.clipfinder.soundcloud.api.SoundCloudApi
 import com.clipfinder.soundcloud.api.SoundCloudApiV2
 import com.clipfinder.soundcloud.api.SoundCloudAuth
-import com.example.core.retrofit.interceptorWithHeaders
 import com.example.core.retrofit.retrofitWith
-import com.example.spotifyapi.SpotifyApi
 import com.example.youtubeapi.YoutubeApi
 import com.vpaliy.soundcloud.SoundCloud
 import okhttp3.Interceptor
@@ -14,22 +12,6 @@ import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 val apiModule = module {
-    single {
-        retrofitWith(
-            url = spotifyApiBaseUrl,
-            client = get {
-                parametersOf(
-                    listOf(
-                        interceptorWithHeaders(
-                            "Accept" to "application/json",
-                            "Content-Type" to "application/json"
-                        )
-                    )
-                )
-            }
-        ).create(SpotifyApi::class.java)
-    }
-
     single {
         retrofitWith(
             url = youtubeBaseUrl,
@@ -53,7 +35,6 @@ val apiModule = module {
     single { SoundCloud.create(SoundCloudAuth.key).createService(get()) }
 }
 
-private const val spotifyApiBaseUrl: String = "https://api.spotify.com/v1/"
 private const val youtubeBaseUrl: String = "https://www.googleapis.com/youtube/v3/"
 private const val soundCloudBaseUrlV2: String = "https://api-v2.soundcloud.com/"
 private const val soundCloudBaseUrl: String = "https://api.soundcloud.com/"

@@ -23,8 +23,10 @@ val appModule = module {
 
     factory<RxSchedulers> {
         object : RxSchedulers {
-            override val io: Scheduler get() = Schedulers.io()
-            override val main: Scheduler get() = AndroidSchedulers.mainThread()
+            override val io: Scheduler
+                get() = Schedulers.io()
+            override val main: Scheduler
+                get() = AndroidSchedulers.mainThread()
         }
     }
 
