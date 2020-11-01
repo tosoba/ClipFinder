@@ -19,16 +19,6 @@ interface YoutubeApi {
     ): Single<NetworkResponse<VideosResponse, YoutubeErrorResponse>>
 
     @GET("search")
-    fun searchVideos(
-        @Query("part") part: String = "snippet",
-        @Query("q") query: String,
-        @Query("type") type: String = "video",
-        @Query("maxResults") maxResults: String = "50",
-        @Query("pageToken") pageToken: String? = null,
-        @Query("key") key: String = YoutubeAuth.key
-    ): Single<NetworkResponse<VideosSearchResponse, YoutubeErrorResponse>>
-
-    @GET("search")
     fun searchRelatedVideos(
         @Query("part") part: String = "snippet",
         @Query("relatedToVideoId") toVideoId: String,

@@ -42,14 +42,6 @@ class VideosRemoteDataStore(private val api: YoutubeApi) : IVideosRemoteDataStor
         .toList()
         .map { Resource.Success(it) }
 
-    override fun getVideos(
-        query: String,
-        pageToken: String?
-    ): Single<Resource<Pair<String?, List<VideoEntity>>>> = api.searchVideos(
-        query = query,
-        pageToken = pageToken
-    ).mapToResourceWithPageTokenAndVideos()
-
     override fun getRelatedVideos(
         toVideoId: String,
         pageToken: String?
