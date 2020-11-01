@@ -9,6 +9,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
 import com.example.core.android.model.Initial
@@ -33,7 +34,6 @@ import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
-import com.example.there.domain.entity.spotify.AudioFeaturesEntity
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_track.view.*
 import org.koin.android.ext.android.inject
@@ -143,6 +143,6 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     companion object {
         fun new(track: Track): TrackFragment = newMvRxFragmentWith(track)
 
-        private val audioFeaturesChartLabels = AudioFeaturesEntity::class.members.map { it.name }
+        private val audioFeaturesChartLabels = ISpotifyAudioFeatures::class.members.map { it.name }
     }
 }

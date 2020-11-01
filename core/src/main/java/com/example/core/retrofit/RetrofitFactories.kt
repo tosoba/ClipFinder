@@ -25,12 +25,6 @@ fun retrofitWith(
     .baseUrl(url)
     .build()
 
-fun clientWithInterceptors(
-    vararg interceptors: Interceptor
-): OkHttpClient = OkHttpClient().newBuilder().apply {
-    interceptors.forEach { addInterceptor(it) }
-}.build()
-
 fun interceptorWithHeaders(
     vararg headers: Pair<String, String>
 ): Interceptor = Interceptor { chain ->
