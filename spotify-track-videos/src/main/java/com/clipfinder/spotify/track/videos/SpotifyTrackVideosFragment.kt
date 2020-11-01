@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos
+package com.clipfinder.spotify.track.videos
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.track.videos.databinding.FragmentSpotifyTrackVideosBinding
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.base.fragment.ISearchFragment
@@ -25,14 +26,13 @@ import com.example.core.android.util.ext.loadBackgroundGradient
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
-import com.example.spotifytrackvideos.databinding.FragmentTrackVideosBinding
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
-class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrackController {
+class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrackController {
     private val argTrack: Track by args()
-    private val viewModel: TrackVideosViewModel by fragmentViewModel()
+    private val viewModel: SpotifyTrackVideosViewModel by fragmentViewModel()
 
     private val fragmentFactory: IFragmentFactory by inject()
     private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
@@ -55,7 +55,7 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentTrackVideosBinding.inflate(inflater, container, false)
+        val binding = FragmentSpotifyTrackVideosBinding.inflate(inflater, container, false)
 
         val currentTrack = MutableLiveData(argTrack)
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
@@ -76,7 +76,7 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
         enableSpotifyPlayButton { withCurrentTrack(::loadTrack) }
 
         return binding.apply {
-            lifecycleOwner = this@TrackVideosFragment
+            lifecycleOwner = this@SpotifyTrackVideosFragment
             track = currentTrack
 
             trackVideosViewpager.adapter = pagerAdapter
@@ -84,7 +84,7 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
             RxViewPager.pageSelections(trackVideosViewpager)
                 .skipInitialValue()
                 .subscribe { withCurrentTrack(::updateCurrentFragment) }
-                .disposeOnDestroy(this@TrackVideosFragment)
+                .disposeOnDestroy(this@SpotifyTrackVideosFragment)
             trackVideosTabLayout.setupWithViewPager(trackVideosViewpager)
 
             trackVideosToolbar.setupWithBackNavigation(
@@ -111,6 +111,6 @@ class TrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, SpotifyTrack
     }
 
     companion object {
-        fun new(track: Track): TrackVideosFragment = newMvRxFragmentWith(track)
+        fun new(track: Track): SpotifyTrackVideosFragment = newMvRxFragmentWith(track)
     }
 }

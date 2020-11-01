@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context=".spotify.trackvideos.TrackVideosFragment">
+        tools:context="com.clipfinder.spotify.track.videos.SpotifyTrackVideosFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/track_videos_app_bar"

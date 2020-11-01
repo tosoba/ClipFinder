@@ -1,7 +1,7 @@
 package com.example.there.findclips
 
 import androidx.fragment.app.Fragment
-import com.clipfinder.spotify.track.TrackFragment
+import com.clipfinder.spotify.track.SpotifyTrackFragment
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
@@ -19,8 +19,8 @@ import com.example.spotify.dashboard.ui.SpotifyDashboardNavHostFragment
 import com.example.spotify.playlist.ui.SpotifyPlaylistFragment
 import com.example.spotify.search.ui.SpotifySearchFragment
 import com.example.spotify.search.ui.SpotifySearchMainFragment
-import com.example.spotifytrackvideos.TrackVideosFragment
-import com.example.youtubesearch.YoutubeSearchFragment
+import com.clipfinder.spotify.track.videos.SpotifyTrackVideosFragment
+import com.clipfinder.youtube.search.YoutubeSearchFragment
 
 object FragmentFactory : IFragmentFactory, ISpotifyFragmentsFactory {
 
@@ -33,10 +33,10 @@ object FragmentFactory : IFragmentFactory, ISpotifyFragmentsFactory {
     override fun newSpotifyArtistFragment(artist: Artist): Fragment = SpotifyArtistFragment.new(artist)
     override fun newSpotifyCategoryFragment(category: Category): Fragment = SpotifyCategoryFragment.new(category)
     override fun newSpotifyPlaylistFragment(playlist: Playlist): Fragment = SpotifyPlaylistFragment.new(playlist)
-    override fun newSpotifyTrackVideosFragment(track: Track): Fragment = TrackVideosFragment.new(track)
+    override fun newSpotifyTrackVideosFragment(track: Track): Fragment = SpotifyTrackVideosFragment.new(track)
     override fun newSpotifySearchMainFragment(query: String): Fragment = SpotifySearchMainFragment.newInstance(query)
     override fun newSpotifySearchFragment(query: String): Fragment = SpotifySearchFragment.newInstanceWithQuery(query)
-    override fun newSpotifyTrackFragment(track: Track): Fragment = TrackFragment.new(track)
+    override fun newSpotifyTrackFragment(track: Track): Fragment = SpotifyTrackFragment.new(track)
 
     override fun newVideosSearchFragment(query: String): Fragment = YoutubeSearchFragment.newInstanceWithQuery(query)
 

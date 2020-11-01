@@ -1,4 +1,4 @@
-package com.example.youtubesearch
+package com.clipfinder.youtube.search
 
 import android.content.res.Configuration
 import android.os.Bundle

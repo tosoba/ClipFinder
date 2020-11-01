@@ -23,7 +23,7 @@ import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAd
 import com.example.core.ext.castAs
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
-import com.example.youtubesearch.YoutubeSearchFragment
+import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*

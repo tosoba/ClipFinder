@@ -1,9 +1,7 @@
-package com.example.youtubesearch
+package com.clipfinder.youtube.search
 
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.DataList
 import com.example.core.android.model.PageTokenDataList
-import com.example.core.android.model.PagedDataList
 import com.example.core.android.model.videos.Video
 
 data class YoutubeSearchState(

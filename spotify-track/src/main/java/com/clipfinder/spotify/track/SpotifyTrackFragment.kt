@@ -35,15 +35,15 @@ import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import kotlinx.android.synthetic.main.fragment_track.view.*
+import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
 import org.koin.android.ext.android.inject
 
-class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
+class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
-    private val viewModel: TrackViewModel by fragmentViewModel()
+    private val viewModel: SpotifyTrackViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<TrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<TrackViewState> { (_, album, artists, similarTracks, audioFeaturesChartData) ->
+    private val epoxyController: TypedEpoxyController<SpotifyTrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
+        injectedTypedController<SpotifyTrackViewState> { (_, album, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
@@ -134,14 +134,14 @@ class TrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_track, container, false).apply {
+    ): View? = inflater.inflate(R.layout.fragment_spotify_track, container, false).apply {
         this.track_recycler_view.setController(epoxyController)
     }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun new(track: Track): TrackFragment = newMvRxFragmentWith(track)
+        fun new(track: Track): SpotifyTrackFragment = newMvRxFragmentWith(track)
 
         private val audioFeaturesChartLabels = ISpotifyAudioFeatures::class.members.map { it.name }
     }

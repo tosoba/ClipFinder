@@ -9,7 +9,7 @@ import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.github.mikephil.charting.data.RadarData
 
-data class TrackViewState(
+data class SpotifyTrackViewState(
     val track: Track,
     val album: Data<Album?> = Data(null),
     val artists: DataList<Artist> = DataList(),

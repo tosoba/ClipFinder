@@ -1,4 +1,4 @@
-package com.example.spotifytrackvideos
+package com.clipfinder.spotify.track.videos
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -6,13 +6,13 @@ import com.example.core.android.base.trackvideos.BaseTrackVideosViewModel
 import com.example.core.android.base.trackvideos.TrackVideosViewState
 import com.example.core.android.spotify.model.Track
 
-class TrackVideosViewModel(
+class SpotifyTrackVideosViewModel(
     initialState: TrackVideosViewState<Track>
 ) : BaseTrackVideosViewModel<Track>(initialState) {
-    companion object : MvRxViewModelFactory<TrackVideosViewModel, TrackVideosViewState<Track>> {
+    companion object : MvRxViewModelFactory<SpotifyTrackVideosViewModel, TrackVideosViewState<Track>> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: TrackVideosViewState<Track>
-        ): TrackVideosViewModel? = TrackVideosViewModel(state)
+        ): SpotifyTrackVideosViewModel? = SpotifyTrackVideosViewModel(state)
     }
 }

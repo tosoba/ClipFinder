@@ -22,9 +22,9 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import org.koin.android.ext.android.get
 
-private typealias State = TrackViewState
+private typealias State = SpotifyTrackViewState
 
-class TrackViewModel(
+class SpotifyTrackViewModel(
     initialState: State,
     private val getAlbum: GetAlbum,
     private val getArtists: GetArtists,
@@ -71,8 +71,8 @@ class TrackViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<TrackViewModel, State> {
-        override fun create(viewModelContext: ViewModelContext, state: State): TrackViewModel? = TrackViewModel(
+    companion object : MvRxViewModelFactory<SpotifyTrackViewModel, State> {
+        override fun create(viewModelContext: ViewModelContext, state: State): SpotifyTrackViewModel? = SpotifyTrackViewModel(
             state,
             viewModelContext.activity.get(),
             viewModelContext.activity.get(),
