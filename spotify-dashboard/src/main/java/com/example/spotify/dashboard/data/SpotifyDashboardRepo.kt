@@ -12,7 +12,7 @@ import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.core.retrofit.mapToResource
 import com.example.spotify.dashboard.domain.repo.ISpotifyDashboardRepo
-import com.example.spotifyapi.SpotifyChartsApi
+import com.clipfinder.spotify.api.charts.SpotifyChartsApi
 import io.reactivex.Single
 
 class SpotifyDashboardRepo(

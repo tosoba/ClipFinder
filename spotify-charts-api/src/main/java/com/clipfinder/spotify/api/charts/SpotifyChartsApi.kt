@@ -1,4 +1,4 @@
-package com.example.spotifyapi
+package com.clipfinder.spotify.api.charts
 
 import io.reactivex.Single
 import retrofit2.http.GET

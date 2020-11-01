@@ -1,14 +1,14 @@
-package com.example.spotifyapi.di
+package com.clipfinder.spotify.api.charts.di
 
 import com.example.core.retrofit.retrofitWith
-import com.example.spotifyapi.SpotifyChartsApi
+import com.clipfinder.spotify.api.charts.SpotifyChartsApi
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-val spotifyApiModule = module {
+val spotifyChartsApiModule = module {
     single {
         retrofitWith(
             url = "https://spotifycharts.com/",
