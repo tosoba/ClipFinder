@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.EpoxyVisibilityTracker
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
@@ -35,9 +36,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
-            fun <Item> Collection<Item>.column(
-                buildItem: (Item) -> EpoxyModel<*>
-            ): Column = Column(map(buildItem))
+            fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
             pagedDataListCarouselWithHeader(
                 requireContext(),
@@ -45,6 +44,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 R.string.categories,
                 "categories",
                 viewModel::loadCategories,
+                viewModel::clearCategoriesError,
                 { it.chunked(2) }
             ) { chunk ->
                 chunk.column { category ->
@@ -60,6 +60,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 R.string.featured_playlists,
                 "playlists",
                 viewModel::loadFeaturedPlaylists,
+                viewModel::clearFeaturedPlaylistsError,
                 { it.chunked(2) }
             ) { chunk ->
                 chunk.column { playlist ->
@@ -75,6 +76,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 R.string.new_releases,
                 "releases",
                 viewModel::loadNewReleases,
+                viewModel::clearNewReleasesError,
                 { it.chunked(2) }
             ) { chunk ->
                 chunk.column { album ->
@@ -89,7 +91,8 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 topTracks,
                 R.string.top_tracks,
                 "top-tracks",
-                viewModel::loadDailyViralTracks,
+                viewModel::loadViralTracks,
+                viewModel::clearViralTracksError,
                 { it.chunked(2) }
             ) { chunk ->
                 chunk.column { topTrack ->
@@ -119,6 +122,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
             }
             mainContentFragment?.disablePlayButton()
             dashboardRecyclerView.setController(epoxyController)
+            EpoxyVisibilityTracker().attach(dashboardRecyclerView)
             binding = this
         }
         .root

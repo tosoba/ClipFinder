@@ -48,6 +48,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
                     R.string.artists,
                     "top-artists",
                     viewModel::loadArtists,
+                    {},
                     { it.chunked(2) }
                 ) { chunk ->
                     chunk.column { artist ->
@@ -63,6 +64,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
                     R.string.track_videos,
                     "top-tracks",
                     viewModel::loadTracks,
+                    {},
                     { it.chunked(2) }
                 ) { chunk ->
                     chunk.column { track ->

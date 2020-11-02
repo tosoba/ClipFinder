@@ -36,10 +36,8 @@ class SpotifyAlbumViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (_, artists, tracks) ->
-            if (artists.retryLoadItemsOnNetworkAvailable)
-                loadAlbumsArtists()
-            if (tracks.retryLoadItemsOnNetworkAvailable)
-                loadTracksFromAlbum()
+            if (artists.retryLoadItemsOnNetworkAvailable) loadAlbumsArtists()
+            if (tracks.retryLoadItemsOnNetworkAvailable) loadTracksFromAlbum()
         }
     }
 

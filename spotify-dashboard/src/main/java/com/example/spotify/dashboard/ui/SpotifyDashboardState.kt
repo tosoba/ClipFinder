@@ -10,6 +10,6 @@ import com.example.core.android.spotify.model.TopTrack
 data class SpotifyDashboardState(
     val categories: PagedDataList<Category> = PagedDataList(),
     val featuredPlaylists: PagedDataList<Playlist> = PagedDataList(),
-    val topTracks: PagedDataList<TopTrack> = PagedDataList(),
+    val viralTracks: PagedDataList<TopTrack> = PagedDataList(),
     val newReleases: PagedDataList<Album> = PagedDataList()
 ) : MvRxState

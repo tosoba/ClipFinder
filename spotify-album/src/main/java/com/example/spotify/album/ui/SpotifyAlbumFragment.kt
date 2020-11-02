@@ -52,7 +52,8 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
                 tracks,
                 R.string.tracks,
                 "tracks",
-                viewModel::loadTracksFromAlbum
+                viewModel::loadTracksFromAlbum,
+                {}
             ) { track ->
                 TrackPopularityItemBindingModel_()
                     .id(track.id)

@@ -82,6 +82,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 R.string.similar_tracks,
                 "similar-tracks",
                 viewModel::loadSimilarTracks,
+                {},
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->

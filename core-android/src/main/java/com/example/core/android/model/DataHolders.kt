@@ -58,14 +58,15 @@ data class DataList<Value>(
     )
 }
 
-interface HoldsPagedData<Item> : HoldsData<Collection<Item>> {
+interface HoldsPagedData<Item, P : HoldsPagedData<Item, P>> : HoldsData<Collection<Item>> {
     val shouldLoadMore: Boolean
+    fun copyWithClearedError(): P
 }
 
 data class PageTokenDataList<Value>(
     val list: DataList<Value> = DataList(),
     val nextPageToken: String? = null
-) : HoldsPagedData<Value> {
+) : HoldsPagedData<Value, PageTokenDataList<Value>> {
 
     constructor(status: DataStatus) : this(list = DataList(status = status))
 
@@ -91,6 +92,10 @@ data class PageTokenDataList<Value>(
         list = list.copyWithNewItems(newItems),
         nextPageToken = nextPageToken
     )
+
+    override fun copyWithClearedError(): PageTokenDataList<Value> = copy(
+        list = list.copy(status = LoadedSuccessfully)
+    )
 }
 
 data class PagedDataList<Value>(
@@ -98,7 +103,7 @@ data class PagedDataList<Value>(
     override val status: DataStatus = Initial,
     val offset: Int = 0,
     val totalItems: Int = Integer.MAX_VALUE
-) : HoldsPagedData<Value> {
+) : HoldsPagedData<Value, PagedDataList<Value>> {
 
     override val shouldLoadMore: Boolean
         get() = status !is Loading && offset < totalItems
@@ -118,6 +123,8 @@ data class PagedDataList<Value>(
         status = LoadedSuccessfully,
         totalItems = totalItems
     )
+
+    override fun copyWithClearedError(): PagedDataList<Value> = copy(status = LoadedSuccessfully)
 }
 
 sealed class DataStatus

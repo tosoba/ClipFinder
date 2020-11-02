@@ -11,8 +11,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Initial
-import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.ext.spotifyAuthController
+import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
@@ -46,6 +46,7 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
                     R.string.albums,
                     "saved-albums",
                     viewModel::loadAlbums,
+                    {},
                     { it.chunked(2) }
                 ) { chunk ->
                     chunk.column { album ->
@@ -61,6 +62,7 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
                     R.string.tracks,
                     "saved-tracks",
                     viewModel::loadTracks,
+                    {},
                     { it.chunked(2) }
                 ) { chunk ->
                     chunk.column { track ->

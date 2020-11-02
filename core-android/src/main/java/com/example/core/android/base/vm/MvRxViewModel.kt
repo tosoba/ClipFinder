@@ -3,10 +3,7 @@ package com.example.core.android.base.vm
 import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.Data
-import com.example.core.android.model.DataList
-import com.example.core.android.model.Loading
-import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.*
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.castAs
 import com.example.core.model.Paged
@@ -189,6 +186,13 @@ open class MvRxViewModel<S : MvRxState>(
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
                 .updateNullableWithSingleResource(prop, onError, reducer)
         }
+    }
+
+    protected fun <I, P : HoldsPagedData<I, P>> clearErrorIn(
+        prop: KProperty1<S, P>,
+        reducer: S.(P) -> S
+    ) {
+        setState { reducer(valueOf(prop).copyWithClearedError()) }
     }
 
     private fun <T> S.valueOf(prop: KProperty1<S, T>): T = prop.get(this)

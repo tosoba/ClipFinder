@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.BaseMvRxFragment
+import com.airbnb.mvrx.args
+import com.airbnb.mvrx.fragmentViewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.clickableListItem
@@ -24,12 +27,9 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
 class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
-
-    private val factory: ISpotifyFragmentsFactory by inject()
-
     private val argArtist: Artist by args()
-
     private val viewModel: SpotifyArtistViewModel by fragmentViewModel()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         fun withCurrentArtistId(block: (String) -> Unit) = withState(viewModel) { (artists) ->
@@ -42,7 +42,8 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 albums,
                 R.string.albums,
                 "albums",
-                { withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) } }
+                { withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) } },
+                {}
             ) { album ->
                 album.clickableListItem {
                     show { factory.newSpotifyAlbumFragment(album) }
@@ -106,7 +107,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         return binding.apply {
             lifecycleOwner = this@SpotifyArtistFragment
             this.artist = artist
-            artistFavouriteFab.setOnClickListener {  }
+            artistFavouriteFab.setOnClickListener { }
             artistToolbar.setupWithBackNavigation(
                 requireActivity() as AppCompatActivity,
                 ::onBackPressed

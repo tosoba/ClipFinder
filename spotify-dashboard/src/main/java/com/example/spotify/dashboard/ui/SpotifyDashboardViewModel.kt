@@ -33,27 +33,33 @@ class SpotifyDashboardViewModel(
     init {
         loadCategories()
         loadFeaturedPlaylists()
-        loadDailyViralTracks()
+        loadViralTracks()
         loadNewReleases()
         handlePreferencesChanges()
         handleConnectivityChanges(context)
     }
 
-    fun loadCategories() {
-        load(State::categories, getCategories::intoState) { copy(categories = it) }
-    }
+    fun loadCategories() = load(State::categories, getCategories::intoState) { copy(categories = it) }
+
+    fun clearCategoriesError() = clearErrorIn(State::categories) { copy(categories = it) }
 
     fun loadFeaturedPlaylists() {
         load(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
     }
 
-    fun loadDailyViralTracks() {
-        load(State::topTracks, getDailyViralTracks::intoState) { copy(topTracks = it) }
+    fun clearFeaturedPlaylistsError() = clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+
+    fun loadViralTracks() {
+        load(State::viralTracks, getDailyViralTracks::intoState) { copy(viralTracks = it) }
     }
+
+    fun clearViralTracksError() = clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
 
     fun loadNewReleases() {
         load(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
     }
+
+    fun clearNewReleasesError() = clearErrorIn(State::newReleases) { copy(newReleases = it) }
 
     private fun handlePreferencesChanges() {
         Observable
@@ -74,7 +80,7 @@ class SpotifyDashboardViewModel(
         context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
             if (categories.retryLoadItemsOnNetworkAvailable) loadCategories()
             if (playlists.retryLoadItemsOnNetworkAvailable) loadFeaturedPlaylists()
-            if (tracks.retryLoadItemsOnNetworkAvailable) loadDailyViralTracks()
+            if (tracks.retryLoadItemsOnNetworkAvailable) loadViralTracks()
             if (releases.retryLoadItemsOnNetworkAvailable) loadNewReleases()
         }
     }
@@ -108,11 +114,11 @@ private fun GetNewReleases.intoState(state: SpotifyDashboardState): Single<Resou
         .mapData { album -> album.map { Album(it) } }
 
 private fun GetDailyViralTracks.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<TopTrack>>>> =
-    this(applySchedulers = false, args = state.topTracks.offset)
+    this(applySchedulers = false, args = state.viralTracks.offset)
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->
                 TopTrack(
-                    position = SpotifyDefaults.LIMIT * state.topTracks.offset + index + 1,
+                    position = SpotifyDefaults.LIMIT * state.viralTracks.offset + index + 1,
                     track = Track(track)
                 )
             }

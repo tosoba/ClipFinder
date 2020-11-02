@@ -85,19 +85,21 @@ inline fun <Item> EpoxyController.pagedDataListCarouselWithHeader(
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
     buildItem: (Item) -> EpoxyModel<*>
 ) {
     pagedDataListCarouselWithHeader(
-        context, data, headerRes, idSuffix, loadItems, { it }, buildItem
+        context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem
     )
 }
 
-inline fun <Value, Item> EpoxyController.pagedDataListCarouselWithHeader(
+inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedDataListCarouselWithHeader(
     context: Context,
-    data: HoldsPagedData<Value>,
+    data: HoldsPagedData<Value, P>,
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
     mapToItems: (Collection<Value>) -> Collection<Item>,
     buildItem: (Item) -> EpoxyModel<*>
 ) {
@@ -126,6 +128,9 @@ inline fun <Value, Item> EpoxyController.pagedDataListCarouselWithHeader(
                     ReloadControlBindingModel_()
                         .id("reload-control-$idSuffix")
                         .message(context.getString(R.string.error_occurred))
+                        .onVisibilityStateChanged { _, _, visibilityState ->
+                            if (visibilityState == VisibilityState.INVISIBLE) clearFailure()
+                        }
                         .onReloadClicked { _ -> loadItems() }
                 )
                 else -> if (data.shouldLoadMore) listOf(
