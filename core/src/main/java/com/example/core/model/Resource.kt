@@ -5,16 +5,16 @@ import io.reactivex.Single
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T) : Resource<T>()
-    data class Error<out T, out E>(val error: E, val data: T? = null) : Resource<T>()
+    data class Error<out T>(val error: Any, val data: T? = null) : Resource<T>()
 
     fun <S> map(mapper: (T) -> S): Resource<S> = when (this) {
         is Success<T> -> Success(mapper(data))
-        is Error<T, *> -> Error(error, data?.let { mapper(it) })
+        is Error<T> -> Error(error, data?.let { mapper(it) })
     }
 
     companion object {
         fun <T> success(data: T): Resource<T> = Success(data)
-        fun <E, T> error(error: E, data: T? = null): Resource<T> = Error(error, data)
+        fun <T> error(error: Any, data: T? = null): Resource<T> = Error(error, data)
     }
 }
 

@@ -39,27 +39,37 @@ class SpotifyDashboardViewModel(
         handleConnectivityChanges(context)
     }
 
-    fun loadCategories() = load(State::categories, getCategories::intoState) { copy(categories = it) }
+    fun loadCategories() {
+        load(State::categories, getCategories::intoState) { copy(categories = it) }
+    }
 
-    fun clearCategoriesError() = clearErrorIn(State::categories) { copy(categories = it) }
+    fun clearCategoriesError() {
+        clearErrorIn(State::categories) { copy(categories = it) }
+    }
 
     fun loadFeaturedPlaylists() {
         load(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
     }
 
-    fun clearFeaturedPlaylistsError() = clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+    fun clearFeaturedPlaylistsError() {
+        clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+    }
 
     fun loadViralTracks() {
         load(State::viralTracks, getDailyViralTracks::intoState) { copy(viralTracks = it) }
     }
 
-    fun clearViralTracksError() = clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
+    fun clearViralTracksError() {
+        clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
+    }
 
     fun loadNewReleases() {
         load(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
     }
 
-    fun clearNewReleasesError() = clearErrorIn(State::newReleases) { copy(newReleases = it) }
+    fun clearNewReleasesError() {
+        clearErrorIn(State::newReleases) { copy(newReleases = it) }
+    }
 
     private fun handlePreferencesChanges() {
         Observable
@@ -85,35 +95,34 @@ class SpotifyDashboardViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, SpotifyDashboardState> {
+    companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyDashboardState
+            context: ViewModelContext, state: State
         ): SpotifyDashboardViewModel = SpotifyDashboardViewModel(
             state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
+            context.activity.get(),
+            context.activity.get(),
+            context.activity.get(),
+            context.activity.get(),
+            context.activity.get(),
+            context.app()
         )
     }
 }
 
-private fun GetCategories.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Category>>>> =
+private fun GetCategories.intoState(state: State): Single<Resource<Paged<List<Category>>>> =
     this(applySchedulers = false, args = state.categories.offset)
         .mapData { categories -> categories.map { Category(it) } }
 
-private fun GetFeaturedPlaylists.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Playlist>>>> =
+private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
     this(applySchedulers = false, args = state.featuredPlaylists.offset)
         .mapData { playlists -> playlists.map { Playlist(it) } }
 
-private fun GetNewReleases.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<Album>>>> =
+private fun GetNewReleases.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
     this(applySchedulers = false, args = state.newReleases.offset)
         .mapData { album -> album.map { Album(it) } }
 
-private fun GetDailyViralTracks.intoState(state: SpotifyDashboardState): Single<Resource<Paged<List<TopTrack>>>> =
+private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<List<TopTrack>>>> =
     this(applySchedulers = false, args = state.viralTracks.offset)
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->

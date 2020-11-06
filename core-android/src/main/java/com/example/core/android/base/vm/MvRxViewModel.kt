@@ -44,8 +44,8 @@ open class MvRxViewModel<S : MvRxState>(
                 is Resource.Success -> setState {
                     reducer(valueOf(prop).copyWithNewValue(it.data))
                 }
-                is Resource.Error<T, *> -> {
-                    it.error?.castAs<Throwable>()?.let(onError)
+                is Resource.Error -> {
+                    it.error.castAs<Throwable>()?.let(onError)
                         ?: Timber.wtf("Unknown error")
                     setState { reducer(valueOf(prop).copyWithError(it.error)) }
                 }
@@ -66,8 +66,55 @@ open class MvRxViewModel<S : MvRxState>(
             setState {
                 when (it) {
                     is Resource.Success -> reducer(valueOf(prop).copyWithNewValue(it.data))
-                    is Resource.Error<T, *> -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
+                    is Resource.Error -> {
+                        it.error.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        reducer(valueOf(prop).copyWithError(it.error))
+                    }
+                }
+            }
+        }, {
+            setState { reducer(valueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
+    }
+
+    private fun <T> Single<Resource<T>>.updateLoadableWithResource(
+        prop: KProperty1<S, Loadable<T>>,
+        onError: (Throwable) -> Unit = ::log,
+        reducer: S.(Loadable<T>) -> S
+    ): Disposable {
+        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
+        return subscribe({
+            setState {
+                when (it) {
+                    is Resource.Success -> reducer(Ready(it.data))
+                    is Resource.Error -> {
+                        it.error.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        reducer(valueOf(prop).copyWithError(it.error))
+                    }
+                }
+            }
+        }, {
+            setState { reducer(valueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
+    }
+
+    protected fun <C : CopyableWithPaged<T, C>, T> Single<Resource<Paged<Iterable<T>>>>.updateLoadableWithPagedResource(
+        prop: KProperty1<S, Loadable<C>>,
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: Loadable<C>.() -> LoadingInProgress<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
+    ): Disposable {
+        setState { reducer(valueOf(prop).copyWithLoading()) }
+        return subscribe({
+            setState {
+                when (it) {
+                    is Resource.Success -> reducer(valueOf(prop).copyWithPaged(it.data))
+                    is Resource.Error -> {
+                        it.error.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -96,8 +143,8 @@ open class MvRxViewModel<S : MvRxState>(
                         valueOf(prop)
                             .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
                     )
-                    is Resource.Error<Paged<C>, *> -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
+                    is Resource.Error<Paged<C>> -> {
+                        it.error.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -119,8 +166,8 @@ open class MvRxViewModel<S : MvRxState>(
             setState {
                 when (it) {
                     is Resource.Success -> reducer(valueOf(prop).copyWithNewItems(it.data))
-                    is Resource.Error<C, *> -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
+                    is Resource.Error<C> -> {
+                        it.error.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
