@@ -67,7 +67,7 @@ class MainActivity :
     SoundCloudPlayerController,
     YoutubePlayerController,
     SpotifyTrackChangeHandler,
-    BackPressedWithNoPreviousStateController,
+    BackPressedController,
     SpotifyAuthController,
     ConnectivitySnackbarHost,
     NavigationDrawerController,
@@ -76,7 +76,8 @@ class MainActivity :
 
     private val fragmentFactory: ISpotifyFragmentsFactory by inject()
 
-    override val slidingPanel: SlidingUpPanelLayout? get() = sliding_layout
+    override val slidingPanel: SlidingUpPanelLayout?
+        get() = sliding_layout
 
     private val spotifyMainFragment: SpotifyMainFragment?
         get() = mainContentViewPagerAdapter.currentFragment as? SpotifyMainFragment
@@ -114,7 +115,7 @@ class MainActivity :
             else -> null
         }
 
-    private val view: MainView by lazy {
+    private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
         MainView(
             state = viewModel.viewState,
             onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
@@ -131,12 +132,11 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentFragments: Array<Fragment> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf<Fragment>(SpotifyMainFragment(), SoundCloudMainFragment())
-    }
-
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CustomCurrentStatePagerAdapter(supportFragmentManager, mainContentFragments)
+        CustomCurrentStatePagerAdapter(
+            supportFragmentManager,
+            arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
+        )
     }
 
     private var addVideoDialogFragment: AddVideoDialogFragment? = null
@@ -146,9 +146,8 @@ class MainActivity :
     }
 
     private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DataBindingUtil.inflate<DrawerHeaderBinding>(
+        DrawerHeaderBinding.inflate(
             LayoutInflater.from(this),
-            R.layout.drawer_header,
             binding.drawerNavigationView,
             false
         )
@@ -175,9 +174,8 @@ class MainActivity :
     private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
         when (it.itemId) {
             R.id.drawer_action_show_spotify_main -> {
-                spotifyMainFragment?.let {
-                    return@OnNavigationItemSelectedListener true
-                } ?: run { main_content_view_pager?.currentItem = 0 }
+                spotifyMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                    ?: run { main_content_view_pager?.currentItem = 0 }
 
                 viewModel.viewState.mainContent.set(MainContent.SPOTIFY)
 
@@ -228,15 +226,13 @@ class MainActivity :
         true
     }
 
-    private val onFavouriteBtnClickListener = View.OnClickListener { _ ->
+    private val onFavouriteBtnClickListener: View.OnClickListener = View.OnClickListener {}
 
-    }
-
-    private val fadeOnClickListener = View.OnClickListener {
+    private val fadeOnClickListener: View.OnClickListener = View.OnClickListener {
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
 
-    private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
+    private val slideListener: SlidingUpPanelLayout.PanelSlideListener = object : SlidingUpPanelLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
 
         override fun onPanelStateChanged(
@@ -248,8 +244,9 @@ class MainActivity :
             when (newState) {
                 SlidingUpPanelLayout.PanelState.DRAGGING -> {
                     youtubePlayerFragment?.onDragging()
-                    if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED)
+                    if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                         spotifyPlayerFragment?.onDragging()
+                    }
                 }
                 SlidingUpPanelLayout.PanelState.EXPANDED -> {
                     youtubePlayerFragment?.onExpanded()
@@ -277,8 +274,10 @@ class MainActivity :
 
     private var currentSlideOffset: Float = 0.0f
 
-    override val isLoggedIn: LiveData<Boolean> get() = viewModel.viewState.isLoggedIn
-    override val isPlayerLoggedIn: Boolean get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
+    override val isLoggedIn: LiveData<Boolean>
+        get() = viewModel.viewState.isLoggedIn
+    override val isPlayerLoggedIn: Boolean
+        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
     override var onLoginSuccessful: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -305,30 +304,28 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        (mainContentViewPagerAdapter.currentFragment as? IMainContentFragment)?.let {
-            val currentFragment = it.currentNavHostFragment
+        mainContentFragment?.let {
+            val currentNavHost = it.currentNavHostFragment
 
             if (sliding_layout?.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                 sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
                 return
             }
 
-            if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
-                currentFragment.topFragment?.let { topFragment ->
-                    if (topFragment is BackPressedHandler) {
+            if (currentNavHost != null && currentNavHost.childFragmentManager.backStackEntryCount > 0) {
+                when (val topFragment = currentNavHost.topFragment) {
+                    is BackPressedHandler -> {
                         topFragment.onBackPressed()
                         return
                     }
                 }
 
-                showMainToolbarOnBackPressed(currentFragment)
-                currentFragment.childFragmentManager.popBackStackImmediate()
+                showMainToolbarOnBackPressed(currentNavHost)
+                currentNavHost.childFragmentManager.popBackStackImmediate()
             } else {
                 super.onBackPressed()
             }
-        } ?: run {
-            super.onBackPressed()
-        }
+        } ?: run { super.onBackPressed() }
     }
 
     override fun onBackPressedWithNoPreviousState() {
@@ -345,10 +342,8 @@ class MainActivity :
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == LOGIN_REQUEST_CODE) {
-            val response: AuthenticationResponse = AuthenticationClient.getResponse(resultCode, data)
-
+            val response = AuthenticationClient.getResponse(resultCode, data)
             when (response.type) {
                 AuthenticationResponse.Type.TOKEN -> onSpotifyAuthenticationComplete(response.accessToken)
                 AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
@@ -396,7 +391,9 @@ class MainActivity :
             val currentTopFragment = it.currentNavHostFragment?.topFragment
             val mainToolbar = (currentTopFragment as? HasMainToolbar)?.toolbar
             setSupportActionBar(mainToolbar)
-            if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) showDrawerHamburger()
+            if (currentTopFragment?.childFragmentManager?.backStackEntryCount == 0) {
+                showDrawerHamburger()
+            }
         }
     }
 
@@ -532,10 +529,8 @@ class MainActivity :
 
     override fun onLoginFailed(error: Error?) {
         Log.e("ERR", "onLoginFailed")
-        Toast.makeText(this, "Login failed: ${
-        error?.name
-            ?: "error unknown"
-        }", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Login failed: ${error?.name ?: "error unknown"}", Toast.LENGTH_SHORT)
+            .show()
     }
 
     override fun onTemporaryError() {
@@ -659,10 +654,11 @@ class MainActivity :
         }
     }
 
-    private fun updateFavouriteBtnOnConfigChange(
-        newConfig: Configuration?
-    ) = if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) add_to_favourites_fab?.animate()?.alpha(0f)
-    else add_to_favourites_fab?.animate()?.alpha(1f)
+    private fun updateFavouriteBtnOnConfigChange(newConfig: Configuration?) {
+        add_to_favourites_fab
+            ?.animate()
+            ?.alpha(if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) 0f else 1f)
+    }
 
     private fun updateMainContentLayoutParams() = with(main_content_view_pager) {
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {

@@ -12,7 +12,7 @@ import com.airbnb.mvrx.*
 import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment
-import com.example.core.android.base.handler.BackPressedWithNoPreviousStateController
+import com.example.core.android.base.handler.BackPressedController
 import com.example.core.android.base.handler.ConnectivitySnackbarHost
 import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.ext.castAs
@@ -20,8 +20,8 @@ import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.reflect.KClass
 
-val Fragment.backPressedWithNoPreviousStateController: BackPressedWithNoPreviousStateController?
-    get() = activity as? BackPressedWithNoPreviousStateController
+val Fragment.backPressedController: BackPressedController?
+    get() = activity as? BackPressedController
 
 fun <I : Parcelable> BaseListFragment<I>.putArguments(
     mainHintText: String,

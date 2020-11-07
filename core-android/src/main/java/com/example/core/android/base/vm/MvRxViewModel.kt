@@ -45,7 +45,7 @@ open class MvRxViewModel<S : MvRxState>(
                     reducer(valueOf(prop).copyWithNewValue(it.data))
                 }
                 is Resource.Error -> {
-                    it.error.castAs<Throwable>()?.let(onError)
+                    it.error?.castAs<Throwable>()?.let(onError)
                         ?: Timber.wtf("Unknown error")
                     setState { reducer(valueOf(prop).copyWithError(it.error)) }
                 }
@@ -67,7 +67,7 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> reducer(valueOf(prop).copyWithNewValue(it.data))
                     is Resource.Error -> {
-                        it.error.castAs<Throwable>()?.let(onError)
+                        it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -90,7 +90,7 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> reducer(Ready(it.data))
                     is Resource.Error -> {
-                        it.error.castAs<Throwable>()?.let(onError)
+                        it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -114,7 +114,7 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> reducer(valueOf(prop).copyWithPaged(it.data))
                     is Resource.Error -> {
-                        it.error.castAs<Throwable>()?.let(onError)
+                        it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -144,7 +144,7 @@ open class MvRxViewModel<S : MvRxState>(
                             .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
                     )
                     is Resource.Error<Paged<C>> -> {
-                        it.error.castAs<Throwable>()?.let(onError)
+                        it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
@@ -167,7 +167,7 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> reducer(valueOf(prop).copyWithNewItems(it.data))
                     is Resource.Error<C> -> {
-                        it.error.castAs<Throwable>()?.let(onError)
+                        it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
                     }

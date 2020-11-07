@@ -12,26 +12,27 @@ import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.model.map
 import com.example.core.model.mapData
 import com.example.spotify.artist.domain.usecase.GetAlbumsFromArtist
 import com.example.spotify.artist.domain.usecase.GetRelatedArtists
 import com.example.spotify.artist.domain.usecase.GetTopTracksFromArtist
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
+
+private typealias State = SpotifyArtistViewState
 
 class SpotifyArtistViewModel(
-    initialState: SpotifyArtistViewState,
+    initialState: State,
     private val getAlbumsFromArtist: GetAlbumsFromArtist,
     private val getTopTracksFromArtist: GetTopTracksFromArtist,
     private val getRelatedArtists: GetRelatedArtists,
     private val preferences: SpotifyPreferences,
     context: Context
-) : MvRxViewModel<SpotifyArtistViewState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
 
     init {
-        loadData(initialState.artists.value.last())
+        loadData()
         handlePreferencesChanges()
         handleConnectivityChanges(context)
     }
@@ -42,104 +43,79 @@ class SpotifyArtistViewModel(
             return@withState
         }
 
-        val previousArtist = state.artists.value.elementAt(state.artists.value.size - 2)
         setState { copy(artists = DataList(artists.value.take(artists.value.size - 1))) }
-        loadData(previousArtist, clearAlbums = true)
+        loadData(clearAlbums = true)
     }
 
     fun updateArtist(artist: Artist) {
         setState { copy(artists = artists.copyWithNewItems(artist)) }
-        loadData(artist, clearAlbums = true)
+        loadData(clearAlbums = true)
     }
 
-    private fun loadData(artist: Artist, clearAlbums: Boolean = false) {
-        loadAlbumsFromArtist(artist.id, shouldClear = clearAlbums)
-        loadTopTracksFromArtist(artist.id)
-        loadRelatedArtists(artist.id)
+    private fun loadData(clearAlbums: Boolean = false) {
+        loadAlbumsFromArtist(shouldClear = clearAlbums)
+        loadTopTracksFromArtist()
+        loadRelatedArtists()
     }
 
-    fun loadAlbumsFromArtist(artistId: String, shouldClear: Boolean = false) = withState { state ->
+    fun loadAlbumsFromArtist(shouldClear: Boolean = false) = withState { state ->
         if (!state.albums.shouldLoadMore) return@withState
 
         val args = GetAlbumsFromArtist.Args(
-            artistId = artistId,
+            artistId = state.artists.value.last().id,
             offset = if (shouldClear) 0 else state.albums.offset
         )
         getAlbumsFromArtist(args = args, applySchedulers = false)
             .mapData { albums -> albums.map { Album(it) } }
             .subscribeOn(Schedulers.io())
-            .updateWithPagedResource(SpotifyArtistViewState::albums, shouldClear = shouldClear) {
-                copy(albums = it)
-            }
+            .updateWithPagedResource(State::albums, shouldClear = shouldClear) { copy(albums = it) }
     }
 
-    fun loadTopTracksFromArtist(artistId: String) = withState { state ->
+    fun loadTopTracksFromArtist() = withState { state ->
         if (state.topTracks.status is Loading) return@withState
 
-        getTopTracksFromArtist(args = artistId, applySchedulers = false)
+        getTopTracksFromArtist(args = state.artists.value.last().id, applySchedulers = false)
             .mapData { tracks -> tracks.map { Track(it) }.sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyArtistViewState::topTracks) { copy(topTracks = it) }
+            .updateWithResource(State::topTracks) { copy(topTracks = it) }
     }
 
-    fun loadRelatedArtists(artistId: String) = withState { state ->
+    fun loadRelatedArtists() = withState { state ->
         if (state.relatedArtists.status is Loading) return@withState
 
-        getRelatedArtists(args = artistId, applySchedulers = false)
+        getRelatedArtists(args = state.artists.value.last().id, applySchedulers = false)
             .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
             .subscribeOn(Schedulers.io())
-            .updateWithResource(SpotifyArtistViewState::relatedArtists) {
-                copy(relatedArtists = it)
-            }
+            .updateWithResource(State::relatedArtists) { copy(relatedArtists = it) }
     }
 
     private fun handlePreferencesChanges() {
         preferences.countryObservable
             .skip(1)
             .distinctUntilChanged()
-            .subscribe {
-                withState { (artists) ->
-                    artists.value.lastOrNull()?.let { loadAlbumsFromArtist(it.id) }
-                }
-            }
+            .subscribe { loadAlbumsFromArtist() }
             .disposeOnClear()
     }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (artists, albums, topTracks, relatedArtists) ->
-                    artists.value.lastOrNull()?.id?.let {
-                        if (albums.retryLoadItemsOnNetworkAvailable)
-                            loadAlbumsFromArtist(it)
-                        if (topTracks.retryLoadItemsOnNetworkAvailable)
-                            loadTopTracksFromArtist(it)
-                        if (relatedArtists.retryLoadItemsOnNetworkAvailable)
-                            loadRelatedArtists(it)
-                    }
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (_, albums, topTracks, relatedArtists) ->
+            if (albums.retryLoadItemsOnNetworkAvailable) loadAlbumsFromArtist()
+            if (topTracks.retryLoadItemsOnNetworkAvailable) loadTopTracksFromArtist()
+            if (relatedArtists.retryLoadItemsOnNetworkAvailable) loadRelatedArtists()
+        }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyArtistViewModel, SpotifyArtistViewState> {
+    companion object : MvRxViewModelFactory<SpotifyArtistViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyArtistViewState
-        ): SpotifyArtistViewModel? {
-            val getAlbumsFromArtist: GetAlbumsFromArtist by viewModelContext.activity.inject()
-            val getTopTracksFromArtist: GetTopTracksFromArtist by viewModelContext.activity.inject()
-            val getRelatedArtists: GetRelatedArtists by viewModelContext.activity.inject()
-            val spotifyPreferences: SpotifyPreferences by viewModelContext.activity.inject()
-            return SpotifyArtistViewModel(
-                state,
-                getAlbumsFromArtist,
-                getTopTracksFromArtist,
-                getRelatedArtists,
-                spotifyPreferences,
-                viewModelContext.app()
-            )
-        }
+            viewModelContext: ViewModelContext, state: State
+        ): SpotifyArtistViewModel = SpotifyArtistViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }

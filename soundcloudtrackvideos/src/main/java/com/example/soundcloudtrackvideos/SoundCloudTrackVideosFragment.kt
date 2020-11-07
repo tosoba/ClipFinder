@@ -88,7 +88,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
                 }
                 binding.executePendingBindings()
                 updateCurrentFragment(track)
-            } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+            } ?: backPressedController?.onBackPressedWithNoPreviousState()
         }
 
         mainContentFragment?.enablePlayButton {

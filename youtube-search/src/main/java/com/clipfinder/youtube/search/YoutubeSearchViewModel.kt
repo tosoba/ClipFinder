@@ -64,7 +64,7 @@ class YoutubeSearchViewModel(
                                 val (newVideos, nextPageToken) = it.data
                                 copy(videos = videos.copyWithNewItems(newVideos, nextPageToken))
                             }
-                            is Resource.Error<*, *> -> {
+                            is Resource.Error -> {
                                 it.error?.castAs<Throwable>()?.let(::onError)
                                     ?: Timber.wtf("Unknown error")
                                 copy(videos = videos.copyWithError(it))
@@ -90,8 +90,7 @@ class YoutubeSearchViewModel(
 
     companion object : MvRxViewModelFactory<YoutubeSearchViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: State
+            viewModelContext: ViewModelContext, state: State
         ): YoutubeSearchViewModel = YoutubeSearchViewModel(
             state,
             viewModelContext.activity.get(),

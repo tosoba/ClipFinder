@@ -1,5 +1,5 @@
 package com.example.core.android.base.handler
 
-interface BackPressedWithNoPreviousStateController {
+interface BackPressedController {
     fun onBackPressedWithNoPreviousState()
 }

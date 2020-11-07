@@ -93,13 +93,13 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun <T> Observable<Resource<T>>.takeSuccessOnly(
-        onError: ((Resource.Error<T, *>) -> Unit)? = {
+        onError: ((Resource.Error<T>) -> Unit)? = {
             Timber.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
         }
     ): Observable<T> = run {
         if (onError != null) {
             this.doOnNext {
-                if (it is Resource.Error<T, *>) onError(it)
+                if (it is Resource.Error<T>) onError(it)
             }
         } else this
     }.filter {
@@ -109,13 +109,13 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun <T> Flowable<Resource<T>>.takeSuccessOnly(
-        onError: ((Resource.Error<T, *>) -> Unit)? = {
+        onError: ((Resource.Error<T>) -> Unit)? = {
             Timber.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
         }
     ): Flowable<T> = run {
         if (onError != null) {
             this.doOnNext {
-                if (it is Resource.Error<T, *>) onError(it)
+                if (it is Resource.Error<T>) onError(it)
             }
         } else this
     }.filter {
@@ -125,13 +125,13 @@ open class BaseViewModel : ViewModel() {
     }
 
     fun <T> Single<Resource<T>>.takeSuccessOnly(
-        onError: ((Resource.Error<T, *>) -> Unit)? = {
+        onError: ((Resource.Error<T>) -> Unit)? = {
             Timber.e(javaClass.simpleName, it.error?.toString() ?: "Unknown error")
         }
     ): Maybe<T> = run {
         if (onError != null) {
             this.doOnSuccess {
-                if (it is Resource.Error<T, *>) onError(it)
+                if (it is Resource.Error<T>) onError(it)
             }
         } else this
     }.filter {

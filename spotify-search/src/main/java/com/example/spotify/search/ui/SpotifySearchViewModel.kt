@@ -8,7 +8,7 @@ import com.example.core.model.Resource
 import com.example.spotify.search.domain.model.SpotifySearchResult
 import com.example.spotify.search.domain.usecase.SearchSpotify
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 import timber.log.Timber
 
 class SpotifySearchViewModel(
@@ -98,7 +98,7 @@ class SpotifySearchViewModel(
                             } ?: tracks
                         )
                     }
-                    is Resource.Error<SpotifySearchResult, *> -> setErrorState(args, resource.error)
+                    is Resource.Error -> setErrorState(args, resource.error)
                 }
             }, {
                 setErrorState(args, it)
@@ -111,9 +111,6 @@ class SpotifySearchViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: SpotifySearchViewState
-        ): SpotifySearchViewModel {
-            val searchSpotify: SearchSpotify by viewModelContext.activity.inject()
-            return SpotifySearchViewModel(state, searchSpotify)
-        }
+        ): SpotifySearchViewModel = SpotifySearchViewModel(state, viewModelContext.activity.get())
     }
 }

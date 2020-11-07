@@ -21,7 +21,7 @@ import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.fragment.ISpotifyTrackFragment
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.backPressedWithNoPreviousStateController
+import com.example.core.android.util.ext.backPressedController
 import com.example.core.android.util.ext.loadBackgroundGradient
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
@@ -66,7 +66,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()
                 updateCurrentFragment(it)
-            } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+            } ?: backPressedController?.onBackPressedWithNoPreviousState()
         }
 
         fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { (tracks) ->

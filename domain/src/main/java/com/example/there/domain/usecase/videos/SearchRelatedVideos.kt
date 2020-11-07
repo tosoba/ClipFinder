@@ -28,7 +28,7 @@ class SearchRelatedVideos(
                     val (_, videos) = resource.data
                     Resource.Success(videos)
                 }
-                is Resource.Error<Pair<String?, List<VideoEntity>>, *> -> resource.map { it.second }
+                is Resource.Error<Pair<String?, List<VideoEntity>>> -> resource.map { it.second }
             }
         }
 

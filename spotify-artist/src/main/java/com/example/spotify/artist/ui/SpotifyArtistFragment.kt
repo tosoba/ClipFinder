@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
@@ -31,18 +31,14 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
     private val viewModel: SpotifyArtistViewModel by fragmentViewModel()
     private val factory: ISpotifyFragmentsFactory by inject()
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        fun withCurrentArtistId(block: (String) -> Unit) = withState(viewModel) { (artists) ->
-            artists.value.lastOrNull()?.id?.let(block)
-        }
-
+    private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
             pagedDataListCarouselWithHeader(
                 requireContext(),
                 albums,
                 R.string.albums,
                 "albums",
-                { withCurrentArtistId { viewModel.loadAlbumsFromArtist(it) } },
+                { viewModel.loadAlbumsFromArtist() },
                 {}
             ) { album ->
                 album.clickableListItem {
@@ -55,7 +51,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 relatedArtists,
                 R.string.related_artists,
                 "related-artists",
-                { withCurrentArtistId { viewModel.loadRelatedArtists(it) } }
+                viewModel::loadRelatedArtists
             ) { artist ->
                 artist.clickableListItem { viewModel.updateArtist(artist) }
             }
@@ -65,7 +61,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 topTracks,
                 R.string.top_tracks,
                 "top-tracks",
-                { withCurrentArtistId { viewModel.loadTopTracksFromArtist(it) } }
+                viewModel::loadTopTracksFromArtist
             ) { topTrack ->
                 topTrack.clickableListItem {
                     show { factory.newSpotifyTrackVideosFragment(topTrack) }
@@ -74,12 +70,8 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val binding: FragmentSpotifyArtistBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_spotify_artist, container, false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = FragmentSpotifyArtistBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {
             binding.artistFavouriteFab.setImageDrawable(
@@ -99,7 +91,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()
-            } ?: backPressedWithNoPreviousStateController?.onBackPressedWithNoPreviousState()
+            } ?: backPressedController?.onBackPressedWithNoPreviousState()
         }
 
         mainContentFragment?.disablePlayButton()
