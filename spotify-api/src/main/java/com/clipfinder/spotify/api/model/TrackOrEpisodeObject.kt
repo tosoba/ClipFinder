@@ -41,7 +41,7 @@ data class TrackObject(
     override val artists: List<SimplifiedArtistObject>,
     /* A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code. */
     @Json(name = "available_markets")
-    val availableMarkets: List<String>,
+    val availableMarkets: List<String>? = null,
     /* The disc number (usually 1 unless the album consists of more than one disc). */
     @Json(name = "disc_number")
     val discNumber: Int,

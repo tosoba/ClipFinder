@@ -45,7 +45,7 @@ data class AlbumObject(
     override val artists: List<SimplifiedArtistObject>,
     /* The markets in which the album is available: ISO 3166-1 alpha-2 country codes. Note that an album is considered available in a market when at least 1 of its tracks is available in that market. */
     @Json(name = "available_markets")
-    val availableMarkets: List<String>,
+    val availableMarkets: List<String>? = null,
     /* The copyright statements of the album. */
     @Json(name = "copyrights")
     val copyrights: List<CopyrightObject>,

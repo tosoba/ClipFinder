@@ -36,7 +36,7 @@ import com.squareup.moshi.Json
 data class ShowObject(
     /* A list of the countries in which the show can be played, identified by their ISO 3166-1 alpha-2 code. */
     @Json(name = "available_markets")
-    val availableMarkets: List<String>,
+    val availableMarkets: List<String>? = null,
     /* The copyright statements of the show. */
     @Json(name = "copyrights")
     val copyrights: List<CopyrightObject>,
