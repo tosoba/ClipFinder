@@ -97,15 +97,15 @@ class SpotifyDashboardViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyDashboardViewModel, State> {
         override fun create(
-            context: ViewModelContext, state: State
+            viewModelContext: ViewModelContext, state: State
         ): SpotifyDashboardViewModel = SpotifyDashboardViewModel(
             state,
-            context.activity.get(),
-            context.activity.get(),
-            context.activity.get(),
-            context.activity.get(),
-            context.activity.get(),
-            context.app()
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
         )
     }
 }

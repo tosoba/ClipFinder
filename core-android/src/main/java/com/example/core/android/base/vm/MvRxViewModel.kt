@@ -102,11 +102,28 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <C : CopyableWithPaged<T, C>, T> Single<Resource<Paged<Iterable<T>>>>.updateLoadableWithPagedResource(
-        prop: KProperty1<S, Loadable<C>>,
+    protected fun <C, T, I> loadPaged(
+        prop: KProperty1<S, DefaultLoadable<C>>,
+        action: (S) -> Single<Resource<Paged<I>>>,
+        subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: Loadable<C>.() -> LoadingInProgress<C> = { copyWithLoadingInProgress },
-        reducer: S.(Loadable<C>) -> S
+        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(DefaultLoadable<C>) -> S
+    ) where C : CopyableWithPaged<T, C>,
+            C : CompletionTrackable, I : Iterable<T> = withState { state ->
+        val current = state.valueOf(prop)
+        if (current !is DefaultInProgress && !current.value.completed) {
+            action(state)
+                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+                .updateLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
+        }
+    }
+
+    private fun <C : CopyableWithPaged<T, C>, T, I: Iterable<T>> Single<Resource<Paged<I>>>.updateLoadableWithPagedResource(
+        prop: KProperty1<S, DefaultLoadable<C>>,
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(DefaultLoadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
         return subscribe({
@@ -124,6 +141,13 @@ open class MvRxViewModel<S : MvRxState>(
             setState { reducer(valueOf(prop).copyWithError(it)) }
             onError(it)
         }).disposeOnClear()
+    }
+
+    protected fun <T> clearError(
+        prop: KProperty1<S, Loadable<T>>,
+        reducer: S.(Loadable<T>) -> S
+    ) {
+        setState { reducer(valueOf(prop).copyWithClearedError) }
     }
 
     protected fun <C : Collection<T>, T> Single<Resource<Paged<C>>>.updateWithPagedResource(

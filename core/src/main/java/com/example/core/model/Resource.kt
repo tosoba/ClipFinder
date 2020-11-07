@@ -9,7 +9,7 @@ sealed class Resource<out T> {
 
     fun <S> map(mapper: (T) -> S): Resource<S> = when (this) {
         is Success<T> -> Success(mapper(data))
-        is Error<T> -> Error(error, data?.let { mapper(it) })
+        is Error<T> -> Error(error, data?.let(mapper))
     }
 
     companion object {
