@@ -1,11 +1,5 @@
 package com.example.core.android.model
 
-interface BaseLoadable<out T, out L : BaseLoadable<T, L>> {
-    val copyWithLoadingInProgress: L
-    val copyWithClearedError: L
-    fun copyWithError(error: Any?): L
-}
-
 sealed class DefaultLoadable<out T> : HasValue<T>, BaseLoadable<T, DefaultLoadable<T>> {
     override val copyWithLoadingInProgress: DefaultLoadable<T>
         get() = if (this is DefaultInProgress) this else DefaultInProgress(value)

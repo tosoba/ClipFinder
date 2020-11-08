@@ -45,9 +45,7 @@ class SpotifyAccountPlaylistsViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (userLoggedIn, playlists) ->
-                    if (userLoggedIn && playlists.retryLoadItemsOnNetworkAvailable) {
-                        loadPlaylists()
-                    }
+                    if (userLoggedIn && playlists.retryLoadItemsOnNetworkAvailable) loadPlaylists()
                 }
             }
             .disposeOnClear()

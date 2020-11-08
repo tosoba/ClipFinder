@@ -58,12 +58,8 @@ class SpotifyAccountTopViewModel(
         context
             .observeNetworkConnectivity {
                 withState { (userLoggedIn, tracks, artists) ->
-                    if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) {
-                        loadTracks()
-                    }
-                    if (userLoggedIn && artists.retryLoadItemsOnNetworkAvailable) {
-                        loadArtists()
-                    }
+                    if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
+                    if (userLoggedIn && artists.retryLoadItemsOnNetworkAvailable) loadArtists()
                 }
             }
             .disposeOnClear()

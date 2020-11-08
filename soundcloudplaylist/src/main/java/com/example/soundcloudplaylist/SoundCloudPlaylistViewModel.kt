@@ -30,7 +30,7 @@ class SoundCloudPlaylistViewModel(
 
     fun loadData() = withState { state ->
         when (val playlist = state.playlist) {
-            is SoundCloudPlaylist -> loadTracksFromPlaylist(playlist.id.toString())
+            is SoundCloudPlaylist -> loadTracksFromPlaylist(playlist.id)
             is SoundCloudSystemPlaylist -> loadTracksWithIds(playlist.trackIds.map(Int::toString))
         }
     }

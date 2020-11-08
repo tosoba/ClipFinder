@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.*

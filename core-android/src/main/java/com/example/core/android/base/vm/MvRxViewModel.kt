@@ -4,6 +4,7 @@ import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.*
+import com.example.core.android.util.ext.copyWithPaged
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.castAs
 import com.example.core.model.Paged
