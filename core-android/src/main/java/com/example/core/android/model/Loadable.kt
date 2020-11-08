@@ -1,16 +1,12 @@
 package com.example.core.android.model
 
-interface HasValue<out T> {
-    val value: T
-}
-
-sealed class Loadable<out T> {
-    open val copyWithLoadingInProgress: LoadingInProgress<T>
+sealed class Loadable<out T> : BaseLoadable<T, Loadable<T>> {
+    override val copyWithLoadingInProgress: LoadingInProgress<T>
         get() = LoadingInProgress.WithoutValue
 
-    open fun copyWithError(error: Any?): Failed<T> = Failed.WithoutValue(error)
+    override fun copyWithError(error: Any?): Failed<T> = Failed.WithoutValue(error)
 
-    open val copyWithClearedError: Loadable<T>
+    override val copyWithClearedError: Loadable<T>
         get() = this
 }
 
@@ -19,7 +15,7 @@ object Empty : Loadable<Nothing>()
 sealed class LoadingInProgress<out T> : Loadable<T>() { //TODO: rename
     object WithoutValue : LoadingInProgress<Nothing>()
 
-    data class WithValue<T>(override val value: T) : LoadingInProgress<T>(), HasValue<T> {
+    data class WithValue<out T>(override val value: T) : LoadingInProgress<T>(), HasValue<T> {
         override val copyWithLoadingInProgress: WithValue<T>
             get() = this
 
@@ -27,7 +23,7 @@ sealed class LoadingInProgress<out T> : Loadable<T>() { //TODO: rename
     }
 }
 
-data class Ready<T>(override val value: T) : Loadable<T>(), HasValue<T> {
+data class Ready<out T>(override val value: T) : Loadable<T>(), HasValue<T> {
     override val copyWithLoadingInProgress: LoadingInProgress.WithValue<T>
         get() = LoadingInProgress.WithValue(value)
 
@@ -37,7 +33,7 @@ data class Ready<T>(override val value: T) : Loadable<T>(), HasValue<T> {
 sealed class Failed<out T> : Loadable<T>() {
     abstract val error: Any?
 
-    data class WithValue<T>(
+    data class WithValue<out T>(
         override val value: T,
         override val error: Any?
     ) : Failed<T>(),

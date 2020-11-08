@@ -143,9 +143,9 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <T> clearError(
-        prop: KProperty1<S, Loadable<T>>,
-        reducer: S.(Loadable<T>) -> S
+    protected fun <T, L : BaseLoadable<T, L>> clearError(
+        prop: KProperty1<S, L>,
+        reducer: S.(L) -> S
     ) {
         setState { reducer(valueOf(prop).copyWithClearedError) }
     }
