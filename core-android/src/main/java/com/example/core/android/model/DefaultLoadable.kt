@@ -20,4 +20,8 @@ data class DefaultInProgress<out T>(override val value: T) : DefaultLoadable<T>(
 
 data class DefaultReady<out T>(override val value: T) : DefaultLoadable<T>(), HasValue<T>
 
-data class DefaultFailed<out T>(override val value: T, val error: Any?) : DefaultLoadable<T>()
+data class DefaultFailed<out T>(
+    override val value: T,
+    override val error: Any?
+) : DefaultLoadable<T>(),
+    HasError

@@ -40,35 +40,35 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() {
-        load(State::categories, getCategories::intoState) { copy(categories = it) }
+        loadPaged(State::categories, getCategories::intoState) { copy(categories = it) }
     }
 
     fun clearCategoriesError() {
-        clearErrorIn(State::categories) { copy(categories = it) }
+        clearError(State::categories) { copy(categories = it) }
     }
 
     fun loadFeaturedPlaylists() {
-        load(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
+        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
     }
 
     fun clearFeaturedPlaylistsError() {
-        clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+        clearError(State::featuredPlaylists) { copy(featuredPlaylists = it) }
     }
 
     fun loadViralTracks() {
-        load(State::viralTracks, getDailyViralTracks::intoState) { copy(viralTracks = it) }
+        loadPaged(State::viralTracks, getDailyViralTracks::intoState) { copy(viralTracks = it) }
     }
 
     fun clearViralTracksError() {
-        clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
+        clearError(State::viralTracks) { copy(viralTracks = it) }
     }
 
     fun loadNewReleases() {
-        load(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
+        loadPaged(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
     }
 
     fun clearNewReleasesError() {
-        clearErrorIn(State::newReleases) { copy(newReleases = it) }
+        clearError(State::newReleases) { copy(newReleases = it) }
     }
 
     private fun handlePreferencesChanges() {
@@ -111,23 +111,23 @@ class SpotifyDashboardViewModel(
 }
 
 private fun GetCategories.intoState(state: State): Single<Resource<Paged<List<Category>>>> =
-    this(applySchedulers = false, args = state.categories.offset)
+    this(applySchedulers = false, args = state.categories.value.offset)
         .mapData { categories -> categories.map { Category(it) } }
 
 private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
-    this(applySchedulers = false, args = state.featuredPlaylists.offset)
+    this(applySchedulers = false, args = state.featuredPlaylists.value.offset)
         .mapData { playlists -> playlists.map { Playlist(it) } }
 
 private fun GetNewReleases.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
-    this(applySchedulers = false, args = state.newReleases.offset)
+    this(applySchedulers = false, args = state.newReleases.value.offset)
         .mapData { album -> album.map { Album(it) } }
 
 private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<List<TopTrack>>>> =
-    this(applySchedulers = false, args = state.viralTracks.offset)
+    this(applySchedulers = false, args = state.viralTracks.value.offset)
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->
                 TopTrack(
-                    position = SpotifyDefaults.LIMIT * state.viralTracks.offset + index + 1,
+                    position = SpotifyDefaults.LIMIT * state.viralTracks.value.offset + index + 1,
                     track = Track(track)
                 )
             }

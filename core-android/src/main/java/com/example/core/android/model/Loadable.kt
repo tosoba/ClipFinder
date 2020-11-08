@@ -37,7 +37,8 @@ sealed class Failed<out T> : Loadable<T>() {
         override val value: T,
         override val error: Any?
     ) : Failed<T>(),
-        HasValue<T> {
+        HasValue<T>,
+        HasError {
 
         override val copyWithClearedError: Ready<T>
             get() = Ready(value)
@@ -48,7 +49,7 @@ sealed class Failed<out T> : Loadable<T>() {
         override fun copyWithError(error: Any?): Failed<T> = WithValue(value, error)
     }
 
-    data class WithoutValue(override val error: Any?) : Failed<Nothing>() {
+    data class WithoutValue(override val error: Any?) : Failed<Nothing>(), HasError {
         override val copyWithLoadingInProgress: LoadingInProgress.WithoutValue
             get() = LoadingInProgress.WithoutValue
 

@@ -143,3 +143,68 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
         )
     }
 }
+
+inline fun <I> EpoxyController.pagedItemsListCarouselWithHeader(
+    context: Context,
+    data: DefaultLoadable<PagedItemsList<I>>,
+    @StringRes headerRes: Int,
+    idSuffix: String,
+    crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
+    buildItem: (I) -> EpoxyModel<*>
+) {
+    pagedItemsListCarouselWithHeader(
+        context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem
+    )
+}
+
+inline fun <T, I> EpoxyController.pagedItemsListCarouselWithHeader(
+    context: Context,
+    data: DefaultLoadable<PagedItemsList<T>>,
+    @StringRes headerRes: Int,
+    idSuffix: String,
+    crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
+    mapToItems: (Collection<T>) -> Collection<I>,
+    buildItem: (I) -> EpoxyModel<*>
+) {
+    headerItem {
+        id("header-$idSuffix")
+        text(context.getString(headerRes))
+    }
+
+    val value = data.value
+    if (value.items.isEmpty()) when (data) {
+        is DefaultInProgress -> loadingIndicator {
+            id("loading-indicator-$idSuffix")
+        }
+        is DefaultFailed -> reloadControl {
+            id("reload-control-$idSuffix")
+            onReloadClicked { _ -> loadItems() }
+            message(context.getString(R.string.error_occurred))
+        }
+    } else carousel {
+        id(idSuffix)
+        withModelsFrom<I>(
+            items = mapToItems(value.items),
+            extraModels = when (data) {
+                is LoadingFailed<*> -> listOf(
+                    ReloadControlBindingModel_()
+                        .id("reload-control-$idSuffix")
+                        .message(context.getString(R.string.error_occurred))
+                        .onVisibilityStateChanged { _, _, visibilityState ->
+                            if (visibilityState == VisibilityState.INVISIBLE) clearFailure()
+                        }
+                        .onReloadClicked { _ -> loadItems() }
+                )
+                else -> if (!data.value.completed) listOf(
+                    LoadingIndicatorBindingModel_()
+                        .id("loading-more-$idSuffix")
+                        .onBind { _, _, _ -> loadItems() }
+                ) else emptyList()
+            },
+            modelBuilder = buildItem
+        )
+    }
+}
+

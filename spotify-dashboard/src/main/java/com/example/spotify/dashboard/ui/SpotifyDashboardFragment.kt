@@ -20,7 +20,7 @@ import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
+import com.example.core.android.view.epoxy.pagedItemsListCarouselWithHeader
 import com.example.core.ext.castAs
 import com.example.spotify.dashboard.R
 import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
@@ -38,7 +38,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
             fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
-            pagedDataListCarouselWithHeader(
+            pagedItemsListCarouselWithHeader(
                 requireContext(),
                 categories,
                 R.string.categories,
@@ -54,7 +54,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedDataListCarouselWithHeader(
+            pagedItemsListCarouselWithHeader(
                 requireContext(),
                 playlists,
                 R.string.featured_playlists,
@@ -70,7 +70,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedDataListCarouselWithHeader(
+            pagedItemsListCarouselWithHeader(
                 requireContext(),
                 newReleases,
                 R.string.new_releases,
@@ -86,7 +86,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedDataListCarouselWithHeader(
+            pagedItemsListCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
@@ -134,8 +134,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (
-        item.itemId == android.R.id.home
-        && parentFragment?.childFragmentManager?.backStackEntryCount == 0
+        item.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0
     ) {
         activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
