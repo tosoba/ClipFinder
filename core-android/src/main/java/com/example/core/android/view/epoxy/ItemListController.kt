@@ -8,31 +8,18 @@ import com.airbnb.mvrx.MvRxState
 import com.example.core.android.di.EpoxyHandlerQualifier
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
-import com.example.core.android.model.*
+import com.example.core.android.model.HoldsData
+import com.example.core.android.model.HoldsPagedData
+import com.example.core.android.model.Loading
+import com.example.core.android.model.LoadingFailed
 import com.example.core.android.reloadControl
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
 
-inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.injectedItemListController(
-    prop: KProperty1<S, L>,
-    headerText: String? = null,
-    noinline loadMore: (() -> Unit)? = null,
-    noinline shouldOverrideBuildModels: (S) -> Boolean = { false },
-    noinline overrideBuildModels: (TypedEpoxyController<S>.(S) -> Unit)? = null,
-    crossinline reloadClicked: () -> Unit,
-    crossinline buildItem: (I) -> EpoxyModel<*>
-): TypedEpoxyController<S> {
-    val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
-    return itemListController(
-        builder, differ, prop, headerText, loadMore, shouldOverrideBuildModels, overrideBuildModels, reloadClicked, buildItem
-    )
-}
-
 inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.itemListController(
-    modelBuildingHandler: Handler,
-    diffingHandler: Handler,
     prop: KProperty1<S, L>,
+    modelBuildingHandler: Handler = get(EpoxyHandlerQualifier.BUILDER),
+    diffingHandler: Handler = get(EpoxyHandlerQualifier.DIFFER),
     headerText: String? = null,
     noinline loadMore: (() -> Unit)? = null,
     noinline shouldOverrideBuildModels: (S) -> Boolean = { false },

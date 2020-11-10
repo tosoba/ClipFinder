@@ -18,15 +18,13 @@ import com.example.core.android.spotify.ext.spotifyAuthController
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.core.android.view.epoxy.itemListController
 import com.example.spotify.account.R
 import com.example.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
-
     private val factory: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: SpotifyAccountPlaylistsViewModel by fragmentViewModel()
 
     private lateinit var binding: FragmentSpotifyAccountPlaylistsBinding
@@ -34,7 +32,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
     private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedItemListController(
+        itemListController(
             SpotifyAccountPlaylistState::playlists,
             loadMore = viewModel::loadPlaylists,
             shouldOverrideBuildModels = { (userLoggedIn, playlists) ->

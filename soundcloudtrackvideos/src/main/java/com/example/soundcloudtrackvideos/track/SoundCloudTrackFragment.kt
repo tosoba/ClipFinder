@@ -12,24 +12,25 @@ import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
-import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.core.android.view.epoxy.itemListController
 import com.example.soundcloudtrackvideos.R
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track.view.*
 
 class SoundCloudTrackFragment : BaseMvRxFragment() {
-
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
 
     //TODO: connectivityComponent
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedItemListController(
+        itemListController(
             SoundCloudTrackViewState::similarTracks,
-            "Similar tracks",
+            headerText = "Similar tracks",
             reloadClicked = { track?.id?.let { viewModel.loadSimilarTracks(it) } }
-        ) { it.clickableListItem { parentViewModel.updateTrack(it) } }
+        ) { track ->
+            track.clickableListItem { parentViewModel.updateTrack(track) }
+        }
     }
 
     private val argTrack: SoundCloudTrack by args()

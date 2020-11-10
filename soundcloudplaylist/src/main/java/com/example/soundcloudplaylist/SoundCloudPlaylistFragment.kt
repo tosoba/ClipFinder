@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
@@ -22,7 +23,7 @@ import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.core.android.view.epoxy.itemListController
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
@@ -33,13 +34,15 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        injectedItemListController(
+    private val epoxyController: TypedEpoxyController<PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>> by lazy(LazyThreadSafetyMode.NONE) {
+        itemListController(
             PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>::tracks,
-            "Tracks",
+            headerText = "Tracks",
             reloadClicked = viewModel::loadData
-        ) {
-            it.clickableListItem { show { factory.newSoundCloudTrackVideosFragment(it) } }
+        ) { track ->
+            track.clickableListItem {
+                show { factory.newSoundCloudTrackVideosFragment(track) }
+            }
         }
     }
 

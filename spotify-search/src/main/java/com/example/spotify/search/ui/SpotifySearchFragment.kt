@@ -17,7 +17,7 @@ import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.core.android.view.epoxy.itemListController
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.spotify.search.R
 import com.example.spotify.search.databinding.FragmentSpotifySearchBinding
@@ -25,25 +25,26 @@ import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
 
 class SpotifySearchFragment : BaseMvRxFragment() {
-
     private val viewModel: SpotifySearchViewModel by fragmentViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifySearchBinding.inflate(inflater, container, false).apply {
-        val adapter = TitledCustomCurrentStatePagerAdapter(
-            childFragmentManager,
-            arrayOf(
-                getString(R.string.albums) to itemListFragment<AlbumListFragment>(),
-                getString(R.string.artists) to itemListFragment<ArtistListFragment>(),
-                getString(R.string.playlists) to itemListFragment<PlaylistListFragment>(),
-                getString(R.string.tracks) to itemListFragment<TrackListFragment>()
+    ): View? = FragmentSpotifySearchBinding.inflate(inflater, container, false)
+        .apply {
+            val adapter = TitledCustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(
+                    getString(R.string.albums) to itemListFragment<AlbumListFragment>(),
+                    getString(R.string.artists) to itemListFragment<ArtistListFragment>(),
+                    getString(R.string.playlists) to itemListFragment<PlaylistListFragment>(),
+                    getString(R.string.tracks) to itemListFragment<TrackListFragment>()
+                )
             )
-        )
-        spotifyTabViewPager.offscreenPageLimit = adapter.count - 1
-        spotifyTabViewPager.adapter = adapter
-        spotifyTabLayout.setupWithViewPager(spotifyTabViewPager)
-    }.root
+            spotifyTabViewPager.offscreenPageLimit = adapter.count - 1
+            spotifyTabViewPager.adapter = adapter
+            spotifyTabLayout.setupWithViewPager(spotifyTabViewPager)
+        }
+        .root
 
     private inline fun <reified F : ItemListFragment<SpotifySearchViewState>> itemListFragment(): F {
         return newMvRxFragmentWith(ItemListFragment.Args(3, 4, 5))
@@ -57,16 +58,14 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         }
 
         abstract class BaseListFragment<I> : ItemListFragment<SpotifySearchViewState>() {
-
             protected val viewModel: SpotifySearchViewModel by parentFragmentViewModel()
             protected val factory: ISpotifyFragmentsFactory by inject()
-
             protected abstract val prop: KProperty1<SpotifySearchViewState, HoldsData<Collection<I>>>
 
             override val epoxyController: TypedEpoxyController<SpotifySearchViewState> by lazy(
                 LazyThreadSafetyMode.NONE
             ) {
-                injectedItemListController(
+                itemListController(
                     prop,
                     loadMore = search,
                     reloadClicked = search,
@@ -74,10 +73,9 @@ class SpotifySearchFragment : BaseMvRxFragment() {
                 )
             }
 
-            override fun invalidate() = withState(viewModel, epoxyController::setData)
-
             protected abstract fun buildItem(item: I): EpoxyModel<*>
             protected abstract val search: () -> Unit
+            override fun invalidate() = withState(viewModel, epoxyController::setData)
         }
 
         class AlbumListFragment : BaseListFragment<Album>() {

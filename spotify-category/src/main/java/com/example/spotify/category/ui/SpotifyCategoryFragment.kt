@@ -18,7 +18,7 @@ import com.example.core.android.spotify.model.Category
 import com.example.core.android.spotify.model.clickableGridListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.injectedItemListController
+import com.example.core.android.view.epoxy.itemListController
 import com.example.spotify.category.R
 import com.example.spotify.category.databinding.FragmentSpotifyCategoryBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
@@ -32,13 +32,15 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
 
     private val epoxyController: TypedEpoxyController<SpotifyCategoryViewState> by lazy(LazyThreadSafetyMode.NONE) {
         val loadPlaylists = { viewModel.loadPlaylists() }
-        injectedItemListController(
+        itemListController(
             SpotifyCategoryViewState::playlists,
-            getString(R.string.playlists),
+            headerText = getString(R.string.playlists),
             loadMore = loadPlaylists,
             reloadClicked = loadPlaylists
-        ) {
-            it.clickableGridListItem { show { factory.newSpotifyPlaylistFragment(it) } }
+        ) { playlist ->
+            playlist.clickableGridListItem {
+                show { factory.newSpotifyPlaylistFragment(playlist) }
+            }
         }
     }
 
