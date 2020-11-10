@@ -3,4 +3,4 @@
     android:id="@+id/dashboard_back_stack_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".spotify.dashboard.SpotifyDashboardNavHostFragment" />
+    tools:context="com.clipfinder.spotify.dashboard.SpotifyDashboardNavHostFragment" />

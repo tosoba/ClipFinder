@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 abstract class BaseNavHostFragment : Fragment() {
+    protected abstract val backStackLayoutId: Int
+    protected abstract val layoutId: Int
+    protected abstract val mainFragment: Fragment
 
     val topFragment: Fragment?
         get() = childFragmentManager.findFragmentById(backStackLayoutId)
-
-    protected abstract val backStackLayoutId: Int
-
-    protected abstract val layoutId: Int
-
-    protected abstract val mainFragment: Fragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

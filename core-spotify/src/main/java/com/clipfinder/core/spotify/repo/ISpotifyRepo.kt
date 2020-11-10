@@ -11,4 +11,8 @@ interface ISpotifyRepo {
     fun getSimilarTracks(id: String, offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getAudioFeatures(id: String): Single<Resource<ISpotifyAudioFeatures>>
     val authorizedUser: Single<Resource<ISpotifyPrivateUser>>
+    fun getCategories(offset: Int): Single<Resource<Paged<List<ISpotifyCategory>>>>
+    fun getFeaturedPlaylists(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
+    fun getDailyViralTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
+    fun getNewReleases(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
 }

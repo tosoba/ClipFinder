@@ -17,12 +17,9 @@ val spotifyCoreAndroidModule = module {
     single { SpotifyPreferences(androidContext()) } binds arrayOf(AccessTokenHolder::class, SpotifyTokensHolder::class)
     single {
         val context = androidContext()
-        SpotifyAuth(
-            context.getString(R.string.spotify_client_id),
-            context.getString(R.string.spotify_client_secret),
-            get(),
-            get()
-        )
+        val id = context.getString(R.string.spotify_client_id)
+        val secret = context.getString(R.string.spotify_client_secret)
+        SpotifyAuth(id, secret, get(), get())
     } bind ISpotifyAuth::class
-    single { SpotifyRepo(get(), get(), get(), get(), get()) } bind ISpotifyRepo::class
+    single { SpotifyRepo(get(), get(), get(), get(), get(), get(), get()) } bind ISpotifyRepo::class
 }

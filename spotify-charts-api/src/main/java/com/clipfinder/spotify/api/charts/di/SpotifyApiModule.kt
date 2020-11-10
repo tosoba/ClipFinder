@@ -1,7 +1,7 @@
 package com.clipfinder.spotify.api.charts.di
 
 import com.example.core.retrofit.retrofitWith
-import com.clipfinder.spotify.api.charts.SpotifyChartsApi
+import com.clipfinder.spotify.api.charts.ChartsEndpoints
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -15,6 +15,6 @@ val spotifyChartsApiModule = module {
             client = get { parametersOf(emptyList<Interceptor>()) },
             converterFactory = ScalarsConverterFactory.create(),
             callAdapterFactories = arrayOf(RxJava2CallAdapterFactory.create())
-        ).create(SpotifyChartsApi::class.java)
+        ).create(ChartsEndpoints::class.java)
     }
 }

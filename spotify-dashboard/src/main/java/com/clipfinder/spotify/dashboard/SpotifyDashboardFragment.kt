@@ -1,4 +1,4 @@
-package com.example.spotify.dashboard.ui
+package com.clipfinder.spotify.dashboard
 
 import android.os.Bundle
 import android.view.*
@@ -10,6 +10,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
 import com.example.core.android.spotify.TopTrackItemBindingModel_
@@ -22,8 +23,6 @@ import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.pagedItemsListCarouselWithHeader
 import com.example.core.ext.castAs
-import com.example.spotify.dashboard.R
-import com.example.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {

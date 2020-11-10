@@ -1,4 +1,4 @@
-package com.example.spotify.dashboard.ui
+package com.clipfinder.spotify.dashboard
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,10 +10,10 @@ import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.*
-import com.example.spotify.dashboard.domain.usecase.GetCategories
-import com.example.spotify.dashboard.domain.usecase.GetDailyViralTracks
-import com.example.spotify.dashboard.domain.usecase.GetFeaturedPlaylists
-import com.example.spotify.dashboard.domain.usecase.GetNewReleases
+import com.clipfinder.core.spotify.usecase.GetCategories
+import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
+import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
+import com.clipfinder.core.spotify.usecase.GetNewReleases
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.koin.android.ext.android.get

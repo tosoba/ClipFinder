@@ -1,4 +1,4 @@
-package com.example.spotify.dashboard.ui
+package com.clipfinder.spotify.dashboard
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.DefaultLoadable

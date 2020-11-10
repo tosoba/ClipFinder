@@ -28,14 +28,10 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
         set(value) = preferences.edit().putString(PREF_KEY_LANGUAGE, value).apply()
 
     override val token: String
-        get() = requireNotNull(preferences.getString(PREF_KEY_TOKEN, null)) {
-            "AccessToken is null."
-        }
+        get() = requireNotNull(preferences.getString(PREF_KEY_TOKEN, null)) { "AccessToken is null." }
 
     override val refreshToken: String
-        get() = requireNotNull(preferences.getString(PREF_KEY_REFRESH_TOKEN, null)) {
-            "RefreshToken is null."
-        }
+        get() = requireNotNull(preferences.getString(PREF_KEY_REFRESH_TOKEN, null)) { "RefreshToken is null." }
 
     override val tokensPrivate: Boolean
         get() = preferences.getBoolean(PREF_KEY_ARE_TOKENS_PRIVATE, false)
