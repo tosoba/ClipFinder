@@ -51,7 +51,9 @@ class SpotifyRepo(
         .getAudioFeatures(id = id)
         .mapToResource { this }
 
-    override fun getCategories(offset: Int): Single<Resource<Paged<List<ISpotifyCategory>>>> = browseEndpoints
+    override fun getCategories(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyCategory>>>> = browseEndpoints
         .getCategories(
             offset = offset,
             country = preferences.country,
@@ -65,7 +67,9 @@ class SpotifyRepo(
             )
         }
 
-    override fun getFeaturedPlaylists(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = browseEndpoints
+    override fun getFeaturedPlaylists(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = browseEndpoints
         .getFeaturedPlaylists(
             offset = offset,
             country = preferences.country,
@@ -79,7 +83,9 @@ class SpotifyRepo(
             )
         }
 
-    override fun getDailyViralTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>> = chartsEndpoints
+    override fun getDailyViralTracks(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = chartsEndpoints
         .getDailyViralTracks()
         .map { csv ->
             csv.split('\n')
@@ -100,13 +106,31 @@ class SpotifyRepo(
                 }
         }
 
-    override fun getNewReleases(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = browseEndpoints
+    override fun getNewReleases(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = browseEndpoints
         .getNewReleases(offset = offset)
         .mapToResource {
             Paged<List<ISpotifySimplifiedAlbum>>(
                 contents = albums.items,
                 offset = offset + SpotifyDefaults.LIMIT,
                 total = albums.total
+            )
+        }
+
+    override fun getPlaylistsForCategory(
+        categoryId: String, offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = browseEndpoints
+        .getACategoriesPlaylists(
+            categoryId = categoryId,
+            offset = offset,
+            country = preferences.country
+        )
+        .mapToResource {
+            Paged<List<ISpotifySimplifiedPlaylist>>(
+                contents = playlists.items,
+                offset = playlists.offset + SpotifyDefaults.LIMIT,
+                total = playlists.total
             )
         }
 }

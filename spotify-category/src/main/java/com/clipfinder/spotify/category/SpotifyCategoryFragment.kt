@@ -1,4 +1,4 @@
-package com.example.spotify.category.ui
+package com.clipfinder.spotify.category
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -14,13 +14,12 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.category.databinding.FragmentSpotifyCategoryBinding
 import com.example.core.android.spotify.model.Category
 import com.example.core.android.spotify.model.clickableGridListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.itemListController
-import com.example.spotify.category.R
-import com.example.spotify.category.databinding.FragmentSpotifyCategoryBinding
+import com.example.core.android.view.epoxy.pagedItemListController
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
@@ -30,12 +29,13 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<SpotifyCategoryViewState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by lazy(LazyThreadSafetyMode.NONE) {
         val loadPlaylists = { viewModel.loadPlaylists() }
-        itemListController(
-            SpotifyCategoryViewState::playlists,
+        pagedItemListController(
+            SpotifyCategoryState::playlists,
             headerText = getString(R.string.playlists),
             loadMore = loadPlaylists,
+            clearFailure = viewModel::clearPlaylistsError,
             reloadClicked = loadPlaylists
         ) { playlist ->
             playlist.clickableGridListItem {

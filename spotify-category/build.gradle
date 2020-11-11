@@ -47,6 +47,7 @@ dependencies {
     implementation project(':spotify-api')
 
     implementation rootProject.ext.rxJava
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
     implementation 'com.github.wada811:LifecycleDispose:2.0.3'
 

@@ -15,4 +15,5 @@ interface ISpotifyRepo {
     fun getFeaturedPlaylists(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
     fun getDailyViralTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getNewReleases(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
+    fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
 }

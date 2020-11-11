@@ -115,6 +115,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
         .apply {
+            binding = this
             requireActivity().castAs<AppCompatActivity>()?.apply {
                 setSupportActionBar(dashboardToolbar)
                 showDrawerHamburger()
@@ -122,7 +123,6 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
             mainContentFragment?.disablePlayButton()
             dashboardRecyclerView.setController(epoxyController)
             EpoxyVisibilityTracker().attach(dashboardRecyclerView)
-            binding = this
         }
         .root
 
