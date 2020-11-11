@@ -55,7 +55,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 is LoadingFailed<*> -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked { _ -> viewModel.loadAlbum() }
-                    message("Error occurred lmao") //TODO: error msg
+                    message(requireContext().getString(R.string.error_occurred))
                 }
 
                 is LoadedSuccessfully -> requireNotNull(album.value).let {
@@ -103,7 +103,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 is LoadingFailed<*> -> reloadControl {
                     id("audio-features-reload-control")
                     onReloadClicked { _ -> viewModel.loadAudioFeatures() }
-                    message("Error occurred lmao") //TODO: error msg
+                    message(requireContext().getString(R.string.error_occurred))
                 }
 
                 is LoadedSuccessfully -> radarChart {

@@ -7,10 +7,10 @@ import org.koin.dsl.module
 
 val epoxyModule = module {
     single(EpoxyHandlerQualifier.DIFFER) {
-        Handler(HandlerThread("epoxy-diffing-thread").apply { start() }.looper)
+        Handler(HandlerThread("epoxy-diffing-thread").apply(Thread::start).looper)
     }
     single(EpoxyHandlerQualifier.BUILDER) {
-        Handler(HandlerThread("epoxy-model-building-thread").apply { start() }.looper)
+        Handler(HandlerThread("epoxy-model-building-thread").apply(Thread::start).looper)
     }
 }
 
