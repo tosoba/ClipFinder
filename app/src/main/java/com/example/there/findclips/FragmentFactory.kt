@@ -12,7 +12,7 @@ import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
 import com.example.spotify.account.SpotifyAccountNavHostFragment
-import com.example.spotify.album.ui.SpotifyAlbumFragment
+import com.clipfinder.spotify.album.SpotifyAlbumFragment
 import com.example.spotify.artist.ui.SpotifyArtistFragment
 import com.clipfinder.spotify.category.SpotifyCategoryFragment
 import com.clipfinder.spotify.dashboard.SpotifyDashboardNavHostFragment

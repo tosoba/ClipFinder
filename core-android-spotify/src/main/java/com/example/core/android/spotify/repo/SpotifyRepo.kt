@@ -133,4 +133,27 @@ class SpotifyRepo(
                 total = playlists.total
             )
         }
+
+    override fun getTracksFromAlbum(
+        albumId: String, offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = albumEndpoints
+        .getAnAlbumsTracks(id = albumId, offset = offset)
+        .mapSuccess {
+            Paged(
+                contents = items.joinToString(separator = ",") { it.id },
+                offset = offset,
+                total = total
+            )
+        }
+        .flatMap { idsPage ->
+            tracksEndpoints
+                .getSeveralTracks(ids = idsPage.contents)
+                .mapToResource {
+                    Paged<List<ISpotifyTrack>>(
+                        contents = tracks,
+                        offset = idsPage.offset + SpotifyDefaults.LIMIT,
+                        total = idsPage.total
+                    )
+                }
+        }
 }

@@ -1,4 +1,4 @@
-package com.example.spotify.album.ui
+package com.clipfinder.spotify.album
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.DataList

@@ -20,7 +20,6 @@ import com.example.soundclouddashboard.di.soundCloudDashboardModule
 import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
 import com.example.spotify.account.saved.di.spotifyAccountSavedModule
 import com.example.spotify.account.top.di.spotifyAccountTopModule
-import com.example.spotify.album.di.spotifyAlbumModule
 import com.example.spotify.artist.di.spotifyArtistModule
 import com.example.spotify.playlist.di.spotifyPlaylistModule
 import com.example.spotify.search.di.spotifySearchModule
@@ -91,7 +90,7 @@ class ClipFinderApp : Application() {
                 spotifyCoreAndroidModule, spotifyCoreModule,
                 spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
-                spotifyAlbumModule, spotifyPlaylistModule, spotifyArtistModule,
+                spotifyPlaylistModule, spotifyArtistModule,
 
                 soundCloudCoreAndroidModule,
                 soundCloudDashboardModule,

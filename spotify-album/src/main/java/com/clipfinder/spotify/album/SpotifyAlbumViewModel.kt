@@ -1,4 +1,4 @@
-package com.example.spotify.album.ui
+package com.clipfinder.spotify.album
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,7 @@ import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.model.map
 import com.example.core.model.mapData
-import com.example.spotify.album.domain.usecase.GetTracksFromAlbum
+import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import org.koin.android.ext.android.get
 
 private typealias State = SpotifyAlbumViewState
