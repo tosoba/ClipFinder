@@ -29,11 +29,11 @@ data class Album(
     constructor(other: ISpotifySimplifiedAlbum) : this(
         other.id,
         other.name,
-        other.artists.map { SimplifiedArtist(it) },
+        other.artists.map(::SimplifiedArtist),
         other.albumType,
         other.uri,
         other.href,
-        other.images.map { Image(it) }
+        other.images.map(::Image)
     )
 
     val iconUrl: String

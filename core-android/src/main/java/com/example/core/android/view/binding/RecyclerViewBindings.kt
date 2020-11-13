@@ -9,12 +9,12 @@ import com.example.core.android.view.recyclerview.listener.LongClickHandler
 
 @BindingAdapter("itemDecoration")
 fun bindItemDecoration(recycler: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
-    decoration?.let { recycler.addItemDecoration(it) }
+    decoration?.let(recycler::addItemDecoration)
 }
 
 @BindingAdapter("onScrollListener")
 fun bindOnScrollListener(recycler: RecyclerView, listener: RecyclerView.OnScrollListener?) {
-    listener?.let { recycler.addOnScrollListener(it) }
+    listener?.let(recycler::addOnScrollListener)
 }
 
 @BindingAdapter("hasFixedSize")

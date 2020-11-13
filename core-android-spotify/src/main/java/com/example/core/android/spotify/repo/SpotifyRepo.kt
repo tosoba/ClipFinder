@@ -4,6 +4,7 @@ import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.clipfinder.spotify.api.charts.ChartsEndpoints
 import com.clipfinder.spotify.api.endpoint.*
+import com.clipfinder.spotify.api.model.TrackObject
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Paged
@@ -17,9 +18,11 @@ class SpotifyRepo(
     private val albumEndpoints: AlbumEndpoints,
     private val artistEndpoints: ArtistEndpoints,
     private val browseEndpoints: BrowseEndpoints,
+    private val chartsEndpoints: ChartsEndpoints,
+    private val playlistsEndpoints: PlaylistsEndpoints,
+    private val searchEndpoints: SearchEndpoints,
     private val tracksEndpoints: TracksEndpoints,
-    private val userProfileEndpoints: UserProfileEndpoints,
-    private val chartsEndpoints: ChartsEndpoints
+    private val userProfileEndpoints: UserProfileEndpoints
 ) : ISpotifyRepo {
 
     override val authorizedUser: Single<Resource<ISpotifyPrivateUser>>
@@ -155,5 +158,63 @@ class SpotifyRepo(
                         total = idsPage.total
                     )
                 }
+        }
+
+    override fun getAlbumsFromArtist(
+        artistId: String, offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = artistEndpoints
+        .getAnArtistsAlbums(id = artistId, offset = offset)
+        .mapToResource {
+            Paged<List<ISpotifySimplifiedAlbum>>(
+                contents = items,
+                offset = this.offset + SpotifyDefaults.LIMIT,
+                total = total
+            )
+        }
+
+    override fun getRelatedArtists(
+        artistId: String
+    ): Single<Resource<List<ISpotifyArtist>>> = artistEndpoints
+        .getAnArtistsRelatedArtists(id = artistId)
+        .mapToResource { artists }
+
+
+    override fun getTopTracksFromArtist(
+        artistId: String
+    ): Single<Resource<List<ISpotifyTrack>>> = artistEndpoints
+        .getAnArtistsTopTracks(id = artistId, market = preferences.country)
+        .mapToResource { tracks }
+
+    override fun search(
+        query: String, offset: Int, type: String
+    ): Single<Resource<SpotifySearchResult>> = searchEndpoints
+        .search(q = query, offset = offset, type = type)
+        .mapToResource {
+            SpotifySearchResult(
+                albums = album?.let {
+                    Paged<List<ISpotifySimplifiedAlbum>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
+                },
+                artists = artist?.let {
+                    Paged<List<ISpotifyArtist>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
+                },
+                playlists = playlist?.let {
+                    Paged<List<ISpotifySimplifiedPlaylist>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
+                },
+                tracks = track?.let {
+                    Paged<List<ISpotifyTrack>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
+                }
+            )
+        }
+
+    override fun getPlaylistTracks(
+        playlistId: String, offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = playlistsEndpoints
+        .getPlaylistsTracks(playlistId = playlistId, offset = offset)
+        .mapToResource {
+            Paged<List<ISpotifyTrack>>(
+                contents = items.filterIsInstance<TrackObject>(),
+                offset = offset + SpotifyDefaults.LIMIT,
+                total = total
+            )
         }
 }

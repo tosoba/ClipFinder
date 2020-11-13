@@ -25,7 +25,7 @@ data class Category(
     constructor(other: ISpotifyCategory) : this(
         other.id,
         other.name,
-        other.icons.map { Image(it) },
+        other.icons.map(::Image),
         other.href
     )
 

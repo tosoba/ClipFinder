@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.spotify.search.ui.SpotifySearchMainFragment">
+    tools:context="com.clipfinder.spotify.search.SpotifySearchMainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/search_app_bar_layout"

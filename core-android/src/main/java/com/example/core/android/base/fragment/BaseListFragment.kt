@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.android.R
 import com.example.core.android.databinding.FragmentListBinding
+import com.example.core.android.databinding.HeaderItemBinding
 import com.example.core.android.util.ext.navHostFragment
 import com.example.core.android.util.ext.putArguments
 import com.example.core.android.util.ext.screenOrientation
@@ -116,7 +117,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
 
     fun updateItems(items: List<T>, shouldRemove: Boolean = true) {
         if (shouldRemove) {
-            val toRemove = viewState.items.filter { !items.contains(it) }
+            val toRemove = viewState.items.filterNot(items::contains)
             viewState.items.removeAll(toRemove)
         }
         viewState.items.addAll(items)
@@ -130,13 +131,11 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     }
 
     private fun headerItemDecoration(): RecyclerView.ItemDecoration {
-        val binding = DataBindingUtil.inflate<com.example.core.android.databinding.HeaderItemBinding>(
-            LayoutInflater.from(context), R.layout.header_item, null, false
-        ).apply {
-            text = xmlHeaderText ?: defaultHeaderText
-            executePendingBindings()
-        }
-
+        val binding = HeaderItemBinding.inflate(LayoutInflater.from(context), null, false)
+            .apply {
+                text = xmlHeaderText ?: defaultHeaderText
+                executePendingBindings()
+            }
         currentHeaderDecoration = HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
         return currentHeaderDecoration!!
     }
@@ -153,7 +152,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     private fun updateRecyclerViewOnConfigChange() {
         list_fragment_recycler_view?.let { recyclerView ->
             if (viewState.shouldShowHeader) {
-                currentHeaderDecoration?.let { recyclerView.removeItemDecoration(it) }
+                currentHeaderDecoration?.let(recyclerView::removeItemDecoration)
                 recyclerView.addItemDecoration(headerItemDecoration())
             }
             recyclerView.layoutManager = GridLayoutManager(context, listColumnCount, RecyclerView.VERTICAL, false)
@@ -177,14 +176,5 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
         const val EXTRA_ADDITIONAL_HINT = "EXTRA_ADDITIONAL_HINT"
         const val EXTRA_ITEMS = "EXTRA_ITEMS"
         const val EXTRA_SHOULD_SHOW_HEADER = "SHOULD_SHOW_HEADER"
-
-        inline fun <reified F : BaseListFragment<I>, I : Parcelable> newInstance(
-            mainHintText: String,
-            additionalHintText: String,
-            items: ArrayList<I>?,
-            shouldShowHeader: Boolean = false
-        ): F = F::class.java.newInstance().apply {
-            putArguments(mainHintText, additionalHintText, items, shouldShowHeader)
-        }
     }
 }

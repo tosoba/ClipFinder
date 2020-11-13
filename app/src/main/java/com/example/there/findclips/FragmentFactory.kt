@@ -13,12 +13,12 @@ import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
 import com.example.spotify.account.SpotifyAccountNavHostFragment
 import com.clipfinder.spotify.album.SpotifyAlbumFragment
-import com.example.spotify.artist.ui.SpotifyArtistFragment
+import com.clipfinder.spotify.artist.SpotifyArtistFragment
 import com.clipfinder.spotify.category.SpotifyCategoryFragment
 import com.clipfinder.spotify.dashboard.SpotifyDashboardNavHostFragment
-import com.example.spotify.playlist.ui.SpotifyPlaylistFragment
-import com.example.spotify.search.ui.SpotifySearchFragment
-import com.example.spotify.search.ui.SpotifySearchMainFragment
+import com.clipfinder.spotify.playlist.SpotifyPlaylistFragment
+import com.clipfinder.spotify.search.SpotifySearchFragment
+import com.clipfinder.spotify.search.SpotifySearchMainFragment
 import com.clipfinder.spotify.track.videos.SpotifyTrackVideosFragment
 import com.clipfinder.youtube.search.YoutubeSearchFragment
 

@@ -57,9 +57,9 @@ class SpotifyAlbumViewModel(
 private fun GetArtists.intoState(
     state: SpotifyAlbumViewState
 ) = this(args = state.album.artists.map { it.id }, applySchedulers = false)
-    .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
+    .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
 private fun GetTracksFromAlbum.intoState(
     state: SpotifyAlbumViewState
 ) = this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.offset), applySchedulers = false)
-    .mapData { tracksPage -> tracksPage.map { Track(it) } }
+    .mapData { tracksPage -> tracksPage.map(::Track) }

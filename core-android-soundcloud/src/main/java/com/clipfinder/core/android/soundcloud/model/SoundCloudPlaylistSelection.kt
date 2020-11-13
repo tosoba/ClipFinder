@@ -11,11 +11,13 @@ data class SoundCloudPlaylistSelection(
     override val id: String,
     override val playlists: List<SoundCloudPlaylist>,
     override val title: String
-) : ISoundCloudPlaylistSelection, Parcelable {
+) : ISoundCloudPlaylistSelection,
+    Parcelable {
+
     constructor(other: ISoundCloudPlaylistSelection) : this(
         other.description,
         other.id,
-        other.playlists.map { SoundCloudPlaylist(it) },
+        other.playlists.map(::SoundCloudPlaylist),
         other.title
     )
 }

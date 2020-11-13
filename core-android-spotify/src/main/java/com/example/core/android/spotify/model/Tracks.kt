@@ -31,7 +31,7 @@ data class Track(
     constructor(other: ISpotifyTrack) : this(
         other.id,
         other.name,
-        other.artists.map { SimplifiedArtist(it) },
+        other.artists.map(::SimplifiedArtist),
         other.popularity,
         other.trackNumber,
         other.uri,

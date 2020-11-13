@@ -26,7 +26,7 @@ data class Playlist(
     IdentifiableNamedObservableListItem<String> {
 
     constructor(other: ISpotifySimplifiedPlaylist) : this(
-        other.id, other.name, other.uri, other.href, other.description, other.images.map { Image(it) }
+        other.id, other.name, other.uri, other.href, other.description, other.images.map(::Image)
     )
 
     override val foregroundDrawableId: Int

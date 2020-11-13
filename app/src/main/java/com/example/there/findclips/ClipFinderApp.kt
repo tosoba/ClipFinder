@@ -20,9 +20,6 @@ import com.example.soundclouddashboard.di.soundCloudDashboardModule
 import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
 import com.example.spotify.account.saved.di.spotifyAccountSavedModule
 import com.example.spotify.account.top.di.spotifyAccountTopModule
-import com.example.spotify.artist.di.spotifyArtistModule
-import com.example.spotify.playlist.di.spotifyPlaylistModule
-import com.example.spotify.search.di.spotifySearchModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.github.mikephil.charting.utils.Utils
@@ -88,9 +85,7 @@ class ClipFinderApp : Application() {
                 appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyChartsApiModule, spotifyApiModule,
                 spotifyCoreAndroidModule, spotifyCoreModule,
-                spotifySearchModule,
                 spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
-                spotifyPlaylistModule, spotifyArtistModule,
 
                 soundCloudCoreAndroidModule,
                 soundCloudDashboardModule,

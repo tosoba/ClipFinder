@@ -84,15 +84,15 @@ class SpotifyTrackViewModel(
 }
 
 private fun GetAlbum.withState(state: State) = this(applySchedulers = false, args = state.track.album.id)
-    .mapData { Album(it) }
+    .mapData(::Album)
 
 private fun GetArtists.withState(state: State) = this(applySchedulers = false, args = state.track.artists.map { it.id })
-    .mapData { artists -> artists.map { Artist(it) }.sortedBy { it.name } }
+    .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
 private fun GetSimilarTracks.withState(
     state: State
 ) = this(applySchedulers = false, args = GetSimilarTracks.Args(state.track.id, state.similarTracks.offset))
-    .mapData { tracks -> tracks.map { Track(it) } }
+    .mapData { tracks -> tracks.map(::Track) }
 
 private fun GetAudioFeatures.withState(state: State) = this(applySchedulers = false, args = state.track.id)
     .mapData {

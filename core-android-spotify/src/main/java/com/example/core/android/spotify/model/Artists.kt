@@ -25,7 +25,7 @@ data class Artist(
     IdentifiableNamedObservableListItem<String> {
 
     constructor(other: ISpotifyArtist) : this(
-        other.id, other.name, other.href, other.popularity, other.images.map { Image(it) }
+        other.id, other.name, other.href, other.popularity, other.images.map(::Image)
     )
 
     val iconUrl: String

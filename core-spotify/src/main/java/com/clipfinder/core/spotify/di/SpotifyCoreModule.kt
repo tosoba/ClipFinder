@@ -14,4 +14,10 @@ val spotifyCoreModule = module {
     single { GetNewReleases(get(), get(), get()) }
     single { GetDailyViralTracks(get(), get(), get()) }
     single { GetPlaylistsForCategory(get(), get(), get()) }
+    single { GetTracksFromAlbum(get(), get(), get()) }
+    single { GetAlbumsFromArtist(get(), get(), get()) }
+    single { GetRelatedArtists(get(), get(), get()) }
+    single { GetTopTracksFromArtist(get(), get(), get()) }
+    single { SearchSpotify(get(), get(), get()) }
+    single { GetPlaylistTracks(get(), get(), get()) }
 }
