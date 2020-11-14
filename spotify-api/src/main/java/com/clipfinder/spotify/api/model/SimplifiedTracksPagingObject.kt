@@ -1,5 +1,6 @@
 package com.clipfinder.spotify.api.model
 
+import com.example.core.model.IPagingObject
 import com.squareup.moshi.Json
 
 /**
@@ -19,7 +20,7 @@ data class SimplifiedTracksPagingObject(
     val href: String,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<SimplifiedTrackObject>,
+    override val items: List<SimplifiedTrackObject>,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
     val limit: Int,
@@ -28,11 +29,11 @@ data class SimplifiedTracksPagingObject(
     val next: String? = null,
     /* The offset of the items returned (as set in the query or by default) */
     @Json(name = "offset")
-    val offset: Int,
+    override val offset: Int,
     /* URL to the previous page of items. ( null if none) */
     @Json(name = "previous")
     val previous: String? = null,
     /* The total number of items available to return. */
     @Json(name = "total")
-    val total: Int
-)
+    override val total: Int
+) : IPagingObject<SimplifiedTrackObject>

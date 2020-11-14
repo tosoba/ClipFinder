@@ -42,4 +42,3 @@ data class PlayHistoryPagingObject(
     @Json(name = "total")
     val total: Int
 )
-

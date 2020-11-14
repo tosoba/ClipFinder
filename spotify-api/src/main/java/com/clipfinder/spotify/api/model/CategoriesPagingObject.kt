@@ -11,6 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
+import com.example.core.model.IPagingObject
 import com.squareup.moshi.Json
 
 /**
@@ -24,13 +25,13 @@ import com.squareup.moshi.Json
  * @param total The total number of items available to return.
  */
 
-data class CategoriesObjectCategories(
+data class CategoriesPagingObject(
     /* A link to the Web API endpoint returning the full result of the request */
     @Json(name = "href")
     val href: String,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<CategoryObject>,
+    override val items: List<CategoryObject>,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
     val limit: Int,
@@ -39,12 +40,11 @@ data class CategoriesObjectCategories(
     val next: String? = null,
     /* The offset of the items returned (as set in the query or by default) */
     @Json(name = "offset")
-    val offset: Int,
+    override val offset: Int,
     /* URL to the previous page of items. ( null if none) */
     @Json(name = "previous")
     val previous: String? = null,
     /* The total number of items available to return. */
     @Json(name = "total")
-    val total: Int
-)
-
+    override val total: Int
+) : IPagingObject<CategoryObject>

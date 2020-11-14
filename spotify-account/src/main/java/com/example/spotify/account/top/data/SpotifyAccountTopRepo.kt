@@ -7,6 +7,7 @@ import com.example.core.SpotifyDefaults
 import com.example.core.model.Paged
 import com.example.core.model.Resource
 import com.example.core.ext.mapToResource
+import com.example.core.ext.toPaged
 import com.example.spotify.account.top.domain.repo.ISpotifyAccountTopRepo
 import io.reactivex.Single
 
@@ -18,23 +19,11 @@ class SpotifyAccountTopRepo(
         offset: Int
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> = personalizationEndpoints
         .getUsersTopTracks(offset = offset)
-        .mapToResource {
-            Paged<List<ISpotifyTrack>>(
-                contents = items,
-                offset = offset + SpotifyDefaults.LIMIT,
-                total = total
-            )
-        }
+        .mapToResource { toPaged() }
 
     override fun getCurrentUsersTopArtists(
         offset: Int
     ): Single<Resource<Paged<List<ISpotifyArtist>>>> = personalizationEndpoints
         .getUsersTopArtists(offset = offset)
-        .mapToResource {
-            Paged<List<ISpotifyArtist>>(
-                contents = items,
-                offset = offset + SpotifyDefaults.LIMIT,
-                total = total
-            )
-        }
+        .mapToResource { toPaged() }
 }

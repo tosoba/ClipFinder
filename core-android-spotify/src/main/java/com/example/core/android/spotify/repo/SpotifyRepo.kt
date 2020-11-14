@@ -12,6 +12,7 @@ import com.example.core.model.Resource
 import com.example.core.ext.mapSuccess
 import com.example.core.ext.mapToResource
 import com.example.core.ext.resource
+import com.example.core.ext.toPaged
 import io.reactivex.Single
 
 class SpotifyRepo(
@@ -63,13 +64,7 @@ class SpotifyRepo(
             country = preferences.country,
             locale = preferences.locale
         )
-        .mapToResource {
-            Paged<List<ISpotifyCategory>>(
-                contents = categories.items,
-                offset = categories.offset + SpotifyDefaults.LIMIT,
-                total = categories.total
-            )
-        }
+        .mapToResource { categories.toPaged() }
 
     override fun getFeaturedPlaylists(
         offset: Int
@@ -79,13 +74,7 @@ class SpotifyRepo(
             country = preferences.country,
             locale = preferences.locale
         )
-        .mapToResource {
-            Paged<List<ISpotifySimplifiedPlaylist>>(
-                contents = playlists.items,
-                offset = playlists.offset + SpotifyDefaults.LIMIT,
-                total = playlists.total
-            )
-        }
+        .mapToResource { playlists.toPaged() }
 
     override fun getDailyViralTracks(
         offset: Int
@@ -113,13 +102,7 @@ class SpotifyRepo(
         offset: Int
     ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = browseEndpoints
         .getNewReleases(offset = offset)
-        .mapToResource {
-            Paged<List<ISpotifySimplifiedAlbum>>(
-                contents = albums.items,
-                offset = offset + SpotifyDefaults.LIMIT,
-                total = albums.total
-            )
-        }
+        .mapToResource { albums.toPaged() }
 
     override fun getPlaylistsForCategory(
         categoryId: String, offset: Int
@@ -129,13 +112,7 @@ class SpotifyRepo(
             offset = offset,
             country = preferences.country
         )
-        .mapToResource {
-            Paged<List<ISpotifySimplifiedPlaylist>>(
-                contents = playlists.items,
-                offset = playlists.offset + SpotifyDefaults.LIMIT,
-                total = playlists.total
-            )
-        }
+        .mapToResource { playlists.toPaged() }
 
     override fun getTracksFromAlbum(
         albumId: String, offset: Int
@@ -164,13 +141,7 @@ class SpotifyRepo(
         artistId: String, offset: Int
     ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = artistEndpoints
         .getAnArtistsAlbums(id = artistId, offset = offset)
-        .mapToResource {
-            Paged<List<ISpotifySimplifiedAlbum>>(
-                contents = items,
-                offset = this.offset + SpotifyDefaults.LIMIT,
-                total = total
-            )
-        }
+        .mapToResource { toPaged() }
 
     override fun getRelatedArtists(
         artistId: String
@@ -190,18 +161,10 @@ class SpotifyRepo(
         .search(q = query, offset = offset, type = type)
         .mapToResource {
             SpotifySearchResult(
-                albums = album?.let {
-                    Paged<List<ISpotifySimplifiedAlbum>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
-                },
-                artists = artist?.let {
-                    Paged<List<ISpotifyArtist>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
-                },
-                playlists = playlist?.let {
-                    Paged<List<ISpotifySimplifiedPlaylist>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
-                },
-                tracks = track?.let {
-                    Paged<List<ISpotifyTrack>>(it.items, it.offset + SpotifyDefaults.LIMIT, it.total)
-                }
+                albums = album?.toPaged(),
+                artists = artist?.toPaged(),
+                playlists = playlist?.toPaged(),
+                tracks = track?.toPaged()
             )
         }
 
