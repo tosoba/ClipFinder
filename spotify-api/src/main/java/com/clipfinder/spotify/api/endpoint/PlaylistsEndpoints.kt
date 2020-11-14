@@ -135,10 +135,10 @@ interface PlaylistsEndpoints {
      * @param limit The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. (optional)
      * @param offset The index of the first item to return. Default: 0 (the first object). (optional)
      * @param additionalTypes A comma-separated list of item types that your client supports besides the default track type. Valid types are: track and episode. Note: This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. In addition to providing this parameter, make sure that your client properly handles cases of new types in the future by checking against the type field of each object. (optional)
-     * @return [Call]<[TrackOrEpisodePagingObject]>
+     * @return [Call]<[PlaylistItemPagingObject]>
      */
     @GET("playlists/{playlist_id}/tracks")
-    fun getPlaylistsTracks(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("market") market: String? = null, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<TrackOrEpisodePagingObject, ErrorResponse>>
+    fun getPlaylistsTracks(@Header("Authorization") authorization: String? = null, @Path("playlist_id") playlistId: String, @Query("market") market: String? = null, @Query("fields") fields: String? = null, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("additional_types") additionalTypes: String? = null): Single<NetworkResponse<PlaylistItemPagingObject, ErrorResponse>>
 
     /**
      * Remove Items from a Playlist

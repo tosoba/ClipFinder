@@ -7,8 +7,8 @@ import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.TrackObject
-import com.clipfinder.spotify.api.model.TrackOrEpisodeObject
-import com.clipfinder.spotify.api.model.TrackOrEpisodeType
+import com.clipfinder.spotify.api.model.PlaylistItemObject
+import com.clipfinder.spotify.api.model.PlaylistItemType
 import com.example.core.android.interceptor.CacheInterceptor
 import com.example.core.android.interceptor.ConnectivityInterceptor
 import com.example.core.retrofit.RxSealedCallAdapterFactory
@@ -62,13 +62,13 @@ val spotifyApiModule = module {
                 .add(UUIDAdapter)
                 .add(ByteArrayAdapter)
                 .add(BigDecimalAdapter)
-                .add(KotlinJsonAdapterFactory())
                 .add(
                     PolymorphicJsonAdapterFactory
-                        .of(TrackOrEpisodeObject::class.java, "type")
-                        .withSubtype(TrackObject::class.java, TrackOrEpisodeType.track.name)
-                        .withSubtype(EpisodeObject::class.java, TrackOrEpisodeType.episode.name)
+                        .of(PlaylistItemObject::class.java, "type")
+                        .withSubtype(TrackObject::class.java, PlaylistItemType.track.name)
+                        .withSubtype(EpisodeObject::class.java, PlaylistItemType.episode.name)
                 )
+                .add(KotlinJsonAdapterFactory())
                 .build()
         )
     }

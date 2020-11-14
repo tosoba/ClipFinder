@@ -39,7 +39,7 @@ data class CurrentPlaybackObject(
     @Json(name = "currently_playing_type")
     val currentlyPlayingType: String,
     @Json(name = "item")
-    val item: TrackOrEpisodeObject,
+    val item: PlaylistItemObject,
     @Json(name = "shuffle_state")
     val shuffleState: Boolean,
     @Json(name = "repeat_state")

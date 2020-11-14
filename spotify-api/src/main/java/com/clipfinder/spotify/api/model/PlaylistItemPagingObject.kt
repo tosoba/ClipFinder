@@ -24,13 +24,13 @@ import com.squareup.moshi.Json
  * @param total The total number of items available to return.
  */
 
-data class TrackOrEpisodePagingObject(
+data class PlaylistItemPagingObject(
     /* A link to the Web API endpoint returning the full result of the request */
     @Json(name = "href")
     val href: String,
     /* The requested data. */
     @Json(name = "items")
-    val items: List<TrackOrEpisodeObject>,
+    val items: List<PlaylistItemObjectWrapper>,
     /* The maximum number of items in the response (as set in the query or by default). */
     @Json(name = "limit")
     val limit: Int,

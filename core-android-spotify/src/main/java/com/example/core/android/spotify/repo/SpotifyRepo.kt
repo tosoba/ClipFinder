@@ -4,7 +4,7 @@ import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.clipfinder.spotify.api.charts.ChartsEndpoints
 import com.clipfinder.spotify.api.endpoint.*
-import com.clipfinder.spotify.api.model.TrackObject
+import com.clipfinder.spotify.api.model.*
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Paged
@@ -34,7 +34,7 @@ class SpotifyRepo(
 
     override fun getArtists(ids: List<String>): Single<Resource<List<ISpotifyArtist>>> = artistEndpoints
         .getMultipleArtists(ids = ids.joinToString(separator = ","))
-        .mapToResource { artists }
+        .mapToResource(ArtistsObject::artists)
 
     override fun getSimilarTracks(
         id: String, offset: Int
@@ -176,14 +176,13 @@ class SpotifyRepo(
         artistId: String
     ): Single<Resource<List<ISpotifyArtist>>> = artistEndpoints
         .getAnArtistsRelatedArtists(id = artistId)
-        .mapToResource { artists }
-
+        .mapToResource(ArtistsObject::artists)
 
     override fun getTopTracksFromArtist(
         artistId: String
     ): Single<Resource<List<ISpotifyTrack>>> = artistEndpoints
         .getAnArtistsTopTracks(id = artistId, market = preferences.country)
-        .mapToResource { tracks }
+        .mapToResource(TracksObject::tracks)
 
     override fun search(
         query: String, offset: Int, type: String
@@ -212,7 +211,7 @@ class SpotifyRepo(
         .getPlaylistsTracks(playlistId = playlistId, offset = offset)
         .mapToResource {
             Paged<List<ISpotifyTrack>>(
-                contents = items.filterIsInstance<TrackObject>(),
+                contents = items.map(PlaylistItemObjectWrapper::track).filterIsInstance<TrackObject>(),
                 offset = offset + SpotifyDefaults.LIMIT,
                 total = total
             )

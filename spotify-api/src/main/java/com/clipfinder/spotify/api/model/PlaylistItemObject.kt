@@ -2,13 +2,24 @@ package com.clipfinder.spotify.api.model
 
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.squareup.moshi.Json
+import org.threeten.bp.OffsetDateTime
 
-sealed class TrackOrEpisodeObject(@Json(name = "type") val type: TrackOrEpisodeType)
+data class PlaylistItemObjectWrapper(
+    @Json(name = "added_at")
+    val addedAt: OffsetDateTime,
 
-enum class TrackOrEpisodeType {
-    track,
-    episode
-}
+    @Json(name = "added_by")
+    val addedBy: PublicUserObject? = null,
+
+    @Json(name = "is_local")
+    val isLocal: Boolean,
+
+    val track: PlaylistItemObject
+)
+
+sealed class PlaylistItemObject(@Json(name = "type") val type: PlaylistItemType)
+
+enum class PlaylistItemType { track, episode }
 
 /**
  *
@@ -84,7 +95,7 @@ data class TrackObject(
     /* The Spotify URI for the track. */
     @Json(name = "uri")
     override val uri: String
-) : TrackOrEpisodeObject(TrackOrEpisodeType.track),
+) : PlaylistItemObject(PlaylistItemType.track),
     ISpotifyTrack
 
 /**
@@ -162,4 +173,4 @@ data class EpisodeObject(
     /* The Spotify URI for the episode. */
     @Json(name = "uri")
     val uri: String
-) : TrackOrEpisodeObject(TrackOrEpisodeType.episode)
+) : PlaylistItemObject(PlaylistItemType.episode)

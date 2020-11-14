@@ -24,11 +24,22 @@ fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapToResource(
     mapBody: T.() -> R
 ): Single<Resource<R>> = map(resourceMapper(mapBody))
 
+fun <T : Any, E : Any> Single<NetworkResponse<T, E>>.mapToResource(): Single<Resource<T>> = map(resourceMapper())
+
 private fun <T : Any, E : Any, R> resourceMapper(
     mapBody: T.() -> R
 ): (NetworkResponse<T, E>) -> Resource<R> = { response ->
     when (response) {
         is NetworkResponse.Success -> Resource.Success(response.body.mapBody())
+        is NetworkResponse.ServerError -> Resource.Error(response.body)
+        is NetworkResponse.NetworkError -> Resource.Error(response.error)
+        is NetworkResponse.DifferentError -> Resource.Error(response.error)
+    }
+}
+
+private fun <T : Any, E : Any> resourceMapper(): (NetworkResponse<T, E>) -> Resource<T> = { response ->
+    when (response) {
+        is NetworkResponse.Success -> Resource.Success(response.body)
         is NetworkResponse.ServerError -> Resource.Error(response.body)
         is NetworkResponse.NetworkError -> Resource.Error(response.error)
         is NetworkResponse.DifferentError -> Resource.Error(response.error)
