@@ -1,9 +1,9 @@
 package com.example.videosrepo
 
 import com.example.core.model.Resource
-import com.example.core.retrofit.NetworkResponse
-import com.example.core.retrofit.mapSuccess
-import com.example.core.retrofit.mapToResource
+import com.example.core.model.NetworkResponse
+import com.example.core.ext.mapSuccess
+import com.example.core.ext.mapToResource
 import com.example.there.domain.entity.videos.VideoEntity
 import com.example.there.domain.repo.videos.IVideosRemoteDataStore
 import com.example.videosrepo.mapper.domain
@@ -28,7 +28,7 @@ class VideosRemoteDataStore(private val api: YoutubeApi) : IVideosRemoteDataStor
             }
         )
         .flatMap { (chunkIndex, vids) ->
-            api.loadChannelsInfo(ids = vids.joinToString(",") { it.channelId })
+            api.loadChannelsInfo(ids = vids.joinToString(",", transform = VideoEntity::channelId))
                 .toObservable()
                 .mapSuccess { channels.map { it.snippet.thumbnails.urlMedium } }
                 .concatMapIterable { it }

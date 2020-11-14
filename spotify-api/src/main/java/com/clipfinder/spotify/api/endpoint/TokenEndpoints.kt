@@ -3,7 +3,7 @@ package com.clipfinder.spotify.api.endpoint
 import com.clipfinder.spotify.api.model.AuthErrorObject
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import io.reactivex.Single
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

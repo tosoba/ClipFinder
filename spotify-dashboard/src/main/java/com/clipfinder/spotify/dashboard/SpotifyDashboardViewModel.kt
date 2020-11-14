@@ -14,6 +14,9 @@ import com.clipfinder.core.spotify.usecase.GetCategories
 import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
 import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
+import com.example.core.ext.map
+import com.example.core.ext.mapData
+import com.example.core.ext.mapIndexed
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.koin.android.ext.android.get

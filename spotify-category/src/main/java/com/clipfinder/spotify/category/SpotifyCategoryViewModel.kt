@@ -11,8 +11,8 @@ import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single

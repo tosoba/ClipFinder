@@ -9,8 +9,9 @@ import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.core.retrofit.mapSuccess
-import com.example.core.retrofit.mapToResource
+import com.example.core.ext.mapSuccess
+import com.example.core.ext.mapToResource
+import com.example.core.ext.resource
 import io.reactivex.Single
 
 class SpotifyRepo(
@@ -26,11 +27,11 @@ class SpotifyRepo(
 ) : ISpotifyRepo {
 
     override val authorizedUser: Single<Resource<ISpotifyPrivateUser>>
-        get() = userProfileEndpoints.getCurrentUsersProfile().mapToResource { this }
+        get() = userProfileEndpoints.getCurrentUsersProfile().resource
 
     override fun getAlbum(id: String): Single<Resource<ISpotifySimplifiedAlbum>> = albumEndpoints
         .getAnAlbum(id = id)
-        .mapToResource { this }
+        .resource
 
     override fun getArtists(ids: List<String>): Single<Resource<List<ISpotifyArtist>>> = artistEndpoints
         .getMultipleArtists(ids = ids.joinToString(separator = ","))
@@ -42,7 +43,7 @@ class SpotifyRepo(
         .getRecommendations(seedTracks = id, limit = 100)
         .mapSuccess {
             tracks.chunked(SpotifyDefaults.LIMIT)
-                .map { it.joinToString(",") { track -> track.id } }
+                .map { it.joinToString(",", transform = SimplifiedTrackObject::id) }
         }
         .flatMap { chunks ->
             val chunk = chunks[offset]
@@ -52,7 +53,7 @@ class SpotifyRepo(
 
     override fun getAudioFeatures(id: String): Single<Resource<ISpotifyAudioFeatures>> = tracksEndpoints
         .getAudioFeatures(id = id)
-        .mapToResource { this }
+        .resource
 
     override fun getCategories(
         offset: Int
@@ -98,8 +99,7 @@ class SpotifyRepo(
         }
         .flatMap { chunks ->
             val chunk = chunks[offset]
-            val trackIds = chunk.joinToString(",")
-            tracksEndpoints.getSeveralTracks(ids = trackIds)
+            tracksEndpoints.getSeveralTracks(ids = chunk.joinToString(","))
                 .mapToResource {
                     Paged<List<ISpotifyTrack>>(
                         contents = tracks,
@@ -143,7 +143,7 @@ class SpotifyRepo(
         .getAnAlbumsTracks(id = albumId, offset = offset)
         .mapSuccess {
             Paged(
-                contents = items.joinToString(separator = ",") { it.id },
+                contents = items.joinToString(separator = ",", transform = TrackObject::id),
                 offset = offset,
                 total = total
             )

@@ -4,7 +4,7 @@ import com.clipfinder.spotify.api.model.ErrorResponse
 import com.clipfinder.spotify.api.model.FollowingArtistsObject
 import com.clipfinder.spotify.api.model.IdsBody
 import com.clipfinder.spotify.api.model.PublicBody
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Call

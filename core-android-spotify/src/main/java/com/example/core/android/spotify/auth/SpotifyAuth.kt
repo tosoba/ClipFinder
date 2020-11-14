@@ -6,7 +6,7 @@ import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.retrofit.mapSuccess
+import com.example.core.ext.mapSuccess
 import io.reactivex.Completable
 import io.reactivex.Single
 

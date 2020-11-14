@@ -3,12 +3,10 @@ package com.clipfinder.spotify.api.endpoint
 import com.clipfinder.spotify.api.model.ArtistsPagingObject
 import com.clipfinder.spotify.api.model.ErrorResponse
 import com.clipfinder.spotify.api.model.TracksPagingObject
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PersonalizationEndpoints {

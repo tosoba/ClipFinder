@@ -15,8 +15,8 @@ import com.example.core.android.model.retryLoadOnNetworkAvailable
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry

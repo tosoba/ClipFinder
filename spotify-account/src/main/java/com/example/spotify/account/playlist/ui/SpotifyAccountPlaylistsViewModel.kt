@@ -9,8 +9,8 @@ import com.example.core.android.model.Initial
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.example.spotify.account.playlist.domain.usecase.GetCurrentUsersPlaylists
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject

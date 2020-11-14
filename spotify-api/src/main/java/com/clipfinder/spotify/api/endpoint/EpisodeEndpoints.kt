@@ -3,7 +3,7 @@ package com.clipfinder.spotify.api.endpoint
 import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.EpisodesObject
 import com.clipfinder.spotify.api.model.ErrorResponse
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET

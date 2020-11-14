@@ -6,6 +6,7 @@ enum class SpotifySearchType(val value: String) {
     override fun toString(): String = value
 
     companion object {
-        val ALL = values().joinToString(",") { it.value }
+        val ALL: String
+            get() = values().joinToString(",", transform = SpotifySearchType::value)
     }
 }

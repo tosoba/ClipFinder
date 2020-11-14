@@ -12,8 +12,8 @@ import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetAlbumsFromArtist
 import com.clipfinder.core.spotify.usecase.GetRelatedArtists
 import com.clipfinder.core.spotify.usecase.GetTopTracksFromArtist

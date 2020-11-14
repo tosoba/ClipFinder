@@ -5,7 +5,7 @@ import com.clipfinder.spotify.api.endpoint.PlaylistsEndpoints
 import com.example.core.SpotifyDefaults
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.core.retrofit.mapToResource
+import com.example.core.ext.mapToResource
 import com.example.spotify.account.playlist.domain.repo.ISpotifyAccountPlaylistsRepo
 import io.reactivex.Single
 

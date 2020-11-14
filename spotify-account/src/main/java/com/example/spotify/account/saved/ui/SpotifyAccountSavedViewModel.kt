@@ -10,8 +10,8 @@ import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedAlbums
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedTracks
 import io.reactivex.schedulers.Schedulers

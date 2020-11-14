@@ -14,7 +14,7 @@ import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.model.videos.Video
 import com.example.core.ext.castAs
 import com.example.core.model.Resource
-import com.example.core.model.mapData
+import com.example.core.ext.mapData
 import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy

@@ -5,7 +5,7 @@ import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
-import com.example.core.retrofit.mapSuccess
+import com.example.core.ext.mapSuccess
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response

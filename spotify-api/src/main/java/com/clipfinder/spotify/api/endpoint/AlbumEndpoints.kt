@@ -4,7 +4,7 @@ import com.clipfinder.spotify.api.model.AlbumObject
 import com.clipfinder.spotify.api.model.AlbumsObject
 import com.clipfinder.spotify.api.model.ErrorResponse
 import com.clipfinder.spotify.api.model.TracksPagingObject
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET

@@ -9,9 +9,8 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.inject

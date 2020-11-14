@@ -1,6 +1,6 @@
 package com.example.youtubeapi
 
-import com.example.core.retrofit.NetworkResponse
+import com.example.core.model.NetworkResponse
 import com.example.youtubeapi.model.ChannelsResponse
 import com.example.youtubeapi.model.VideosResponse
 import com.example.youtubeapi.model.VideosSearchResponse

@@ -9,8 +9,8 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
-import com.example.core.model.map
-import com.example.core.model.mapData
+import com.example.core.ext.map
+import com.example.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import org.koin.android.ext.android.get
 
