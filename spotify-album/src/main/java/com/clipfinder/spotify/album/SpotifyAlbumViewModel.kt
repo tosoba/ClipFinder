@@ -5,23 +5,24 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetArtists
+import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.SimplifiedArtist
 import com.example.core.android.spotify.model.Track
+import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.ext.map
 import com.example.core.ext.mapData
-import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import org.koin.android.ext.android.get
 
 private typealias State = SpotifyAlbumViewState
 
 class SpotifyAlbumViewModel(
-    initialState: SpotifyAlbumViewState,
+    initialState: State,
     private val getArtists: GetArtists,
     private val getTracksFromAlbum: GetTracksFromAlbum,
     context: Context
-) : MvRxViewModel<SpotifyAlbumViewState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
 
     init {
         loadAlbumsArtists()
@@ -29,9 +30,21 @@ class SpotifyAlbumViewModel(
         handleConnectivityChanges(context)
     }
 
-    fun loadAlbumsArtists() = load(State::artists, getArtists::intoState) { copy(artists = it) }
+    fun loadAlbumsArtists() {
+        loadCollection(State::artists, getArtists::intoState) { copy(artists = it) }
+    }
 
-    fun loadTracksFromAlbum() = load(State::tracks, getTracksFromAlbum::intoState) { copy(tracks = it) }
+    fun clearArtistsError() {
+        clearError(State::artists) { copy(artists = it) }
+    }
+
+    fun loadTracksFromAlbum() {
+        loadPaged(State::tracks, getTracksFromAlbum::intoState) { copy(tracks = it) }
+    }
+
+    fun clearTracksError() {
+        clearError(State::tracks) { copy(tracks = it) }
+    }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
@@ -41,10 +54,9 @@ class SpotifyAlbumViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, SpotifyAlbumViewState> {
+    companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyAlbumViewState
+            viewModelContext: ViewModelContext, state: State
         ): SpotifyAlbumViewModel = SpotifyAlbumViewModel(
             state,
             viewModelContext.activity.get(),
@@ -55,11 +67,11 @@ class SpotifyAlbumViewModel(
 }
 
 private fun GetArtists.intoState(
-    state: SpotifyAlbumViewState
-) = this(args = state.album.artists.map { it.id }, applySchedulers = false)
+    state: State
+) = this(args = state.album.artists.map(SimplifiedArtist::id), applySchedulers = false)
     .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
 private fun GetTracksFromAlbum.intoState(
-    state: SpotifyAlbumViewState
-) = this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.offset), applySchedulers = false)
+    state: State
+) = this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.value.offset), applySchedulers = false)
     .mapData { tracksPage -> tracksPage.map(::Track) }

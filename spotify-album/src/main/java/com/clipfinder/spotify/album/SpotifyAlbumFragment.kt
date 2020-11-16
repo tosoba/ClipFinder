@@ -11,6 +11,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.example.core.android.spotify.TrackPopularityItemBindingModel_
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.model.Album
@@ -20,10 +21,8 @@ import com.example.core.android.util.ext.loadBackgroundGradient
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
-import com.clipfinder.spotify.album.databinding.FragmentSpotifyAlbumBinding
+import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -34,25 +33,26 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
 
     private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAlbumViewState> { (_, artists, tracks) ->
-            dataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 artists,
                 R.string.artists,
                 "artists",
-                viewModel::loadAlbumsArtists
+                viewModel::loadAlbumsArtists,
+                viewModel::clearArtistsError
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
                 }
             }
 
-            pagedDataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 tracks,
                 R.string.tracks,
                 "tracks",
                 viewModel::loadTracksFromAlbum,
-                {}
+                viewModel::clearTracksError
             ) { track ->
                 TrackPopularityItemBindingModel_()
                     .id(track.id)
