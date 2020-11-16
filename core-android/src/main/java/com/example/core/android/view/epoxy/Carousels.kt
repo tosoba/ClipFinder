@@ -144,23 +144,21 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
     }
 }
 
-inline fun <I> EpoxyController.pagedItemsListCarouselWithHeader(
+inline fun <I> EpoxyController.itemsListCarouselWithHeader(
     context: Context,
-    data: DefaultLoadable<PagedItemsList<I>>,
+    data: DefaultLoadable<ItemsList<I>>,
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
     crossinline clearFailure: () -> Unit,
     buildItem: (I) -> EpoxyModel<*>
 ) {
-    pagedItemsListCarouselWithHeader(
-        context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem
-    )
+    itemsListCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
 }
 
-inline fun <T, I> EpoxyController.pagedItemsListCarouselWithHeader(
+inline fun <T, I> EpoxyController.itemsListCarouselWithHeader(
     context: Context,
-    loadable: DefaultLoadable<PagedItemsList<T>>,
+    loadable: DefaultLoadable<ItemsList<T>>,
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
@@ -186,7 +184,7 @@ inline fun <T, I> EpoxyController.pagedItemsListCarouselWithHeader(
         withModelsFrom<I>(
             items = mapToItems(value.items),
             extraModels = when (loadable) {
-                is DefaultFailed<*> -> listOf(
+                is DefaultFailed -> listOf(
                     ReloadControlBindingModel_()
                         .id("reload-control-$idSuffix")
                         .message(context.getString(R.string.error_occurred))
@@ -195,7 +193,7 @@ inline fun <T, I> EpoxyController.pagedItemsListCarouselWithHeader(
                         }
                         .onReloadClicked { _ -> loadItems() }
                 )
-                else -> if (!loadable.value.completed) listOf(
+                else -> if (value is CompletionTrackable && !value.completed) listOf(
                     LoadingIndicatorBindingModel_()
                         .id("loading-more-$idSuffix")
                         .onBind { _, _, _ -> loadItems() }

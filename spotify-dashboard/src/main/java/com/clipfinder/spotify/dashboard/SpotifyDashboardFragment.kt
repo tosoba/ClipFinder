@@ -21,7 +21,7 @@ import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.pagedItemsListCarouselWithHeader
+import com.example.core.android.view.epoxy.itemsListCarouselWithHeader
 import com.example.core.ext.castAs
 import org.koin.android.ext.android.inject
 
@@ -37,7 +37,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
             fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
-            pagedItemsListCarouselWithHeader(
+            itemsListCarouselWithHeader(
                 requireContext(),
                 categories,
                 R.string.categories,
@@ -53,7 +53,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedItemsListCarouselWithHeader(
+            itemsListCarouselWithHeader(
                 requireContext(),
                 playlists,
                 R.string.featured_playlists,
@@ -69,7 +69,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedItemsListCarouselWithHeader(
+            itemsListCarouselWithHeader(
                 requireContext(),
                 newReleases,
                 R.string.new_releases,
@@ -85,7 +85,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            pagedItemsListCarouselWithHeader(
+            itemsListCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
