@@ -9,10 +9,10 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import com.example.core.ext.map
 import com.example.core.ext.mapData
+import com.example.core.model.Paged
+import com.example.core.model.Resource
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
@@ -44,7 +44,7 @@ class SpotifyCategoryViewModel(
     }
 
     fun clearPlaylistsError() {
-        clearError(State::playlists) { copy(playlists = it) }
+        clearErrorIn(State::playlists) { copy(playlists = it) }
     }
 
     private fun handlePreferencesChanges() {

@@ -4,19 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.SpotifyDefaults
-import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
-import com.example.core.android.spotify.model.*
-import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.model.*
 import com.clipfinder.core.spotify.usecase.GetCategories
 import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
 import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
+import com.example.core.SpotifyDefaults
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.spotify.model.*
+import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.core.ext.mapIndexed
+import com.example.core.model.Paged
+import com.example.core.model.Resource
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.koin.android.ext.android.get
@@ -47,7 +48,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun clearCategoriesError() {
-        clearError(State::categories) { copy(categories = it) }
+        clearErrorIn(State::categories) { copy(categories = it) }
     }
 
     fun loadFeaturedPlaylists() {
@@ -55,7 +56,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun clearFeaturedPlaylistsError() {
-        clearError(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+        clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
     }
 
     fun loadViralTracks() {
@@ -63,7 +64,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun clearViralTracksError() {
-        clearError(State::viralTracks) { copy(viralTracks = it) }
+        clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
     }
 
     fun loadNewReleases() {
@@ -71,7 +72,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun clearNewReleasesError() {
-        clearError(State::newReleases) { copy(newReleases = it) }
+        clearErrorIn(State::newReleases) { copy(newReleases = it) }
     }
 
     private fun handlePreferencesChanges() {

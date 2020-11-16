@@ -35,7 +35,7 @@ class SpotifyAlbumViewModel(
     }
 
     fun clearArtistsError() {
-        clearError(State::artists) { copy(artists = it) }
+        clearErrorIn(State::artists) { copy(artists = it) }
     }
 
     fun loadTracksFromAlbum() {
@@ -43,7 +43,7 @@ class SpotifyAlbumViewModel(
     }
 
     fun clearTracksError() {
-        clearError(State::tracks) { copy(tracks = it) }
+        clearErrorIn(State::tracks) { copy(tracks = it) }
     }
 
     @SuppressLint("MissingPermission")

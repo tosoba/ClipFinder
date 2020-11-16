@@ -20,89 +20,6 @@ open class MvRxViewModel<S : MvRxState>(
     initialState: S, debugMode: Boolean = false
 ) : BaseMvRxViewModel<S>(initialState, debugMode) {
 
-    protected fun <T> Single<T>.update(
-        prop: KProperty1<S, Data<T>>,
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Data<T>) -> S
-    ): Disposable {
-        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({ data ->
-            setState { reducer(valueOf(prop).copyWithNewValue(data)) }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
-    protected fun <T> Single<Resource<T>>.updateWithSingleResource(
-        prop: KProperty1<S, Data<T>>,
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Data<T>) -> S
-    ): Disposable {
-        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            when (it) {
-                is Resource.Success -> setState {
-                    reducer(valueOf(prop).copyWithNewValue(it.data))
-                }
-                is Resource.Error -> {
-                    it.error?.castAs<Throwable>()?.let(onError)
-                        ?: Timber.wtf("Unknown error")
-                    setState { reducer(valueOf(prop).copyWithError(it.error)) }
-                }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
-    private fun <T> Single<Resource<T>>.updateNullableWithSingleResource(
-        prop: KProperty1<S, Data<T?>>,
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Data<T?>) -> S
-    ): Disposable {
-        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(valueOf(prop).copyWithNewValue(it.data))
-                    is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
-                    }
-                }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
-    private fun <T> Single<Resource<T>>.updateLoadableWithResource(
-        prop: KProperty1<S, Loadable<T>>,
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Loadable<T>) -> S
-    ): Disposable {
-        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(Ready(it.data))
-                    is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
-                    }
-                }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
     protected fun <C, T, I> loadPaged(
         prop: KProperty1<S, DefaultLoadable<C>>,
         action: (S) -> Single<Resource<Paged<I>>>,
@@ -118,22 +35,6 @@ open class MvRxViewModel<S : MvRxState>(
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
                 .updateLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
-        }
-    }
-
-    protected fun <T, C : Collection<T>> loadCollection(
-        prop: KProperty1<S, DefaultLoadable<C>>,
-        action: (S) -> Single<Resource<C>>,
-        subscribeOnScheduler: Scheduler? = Schedulers.io(),
-        onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
-    ) = withState { state ->
-        val loadable = state.valueOf(prop)
-        if (loadable !is DefaultInProgress) {
-            action(state)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
         }
     }
 
@@ -180,6 +81,22 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
+    protected fun <T, C : Collection<T>> loadCollection(
+        prop: KProperty1<S, DefaultLoadable<C>>,
+        action: (S) -> Single<Resource<C>>,
+        subscribeOnScheduler: Scheduler? = Schedulers.io(),
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(DefaultLoadable<C>) -> S
+    ) = withState { state ->
+        val loadable = state.valueOf(prop)
+        if (loadable !is DefaultInProgress) {
+            action(state)
+                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+                .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
+        }
+    }
+
     private fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
         prop: KProperty1<S, DefaultLoadable<C>>,
         onError: (Throwable) -> Unit = ::log,
@@ -202,13 +119,6 @@ open class MvRxViewModel<S : MvRxState>(
             setState { reducer(valueOf(prop).copyWithError(it)) }
             onError(it)
         }).disposeOnClear()
-    }
-
-    protected fun <T, L : BaseLoadable<T, L>> clearError(
-        prop: KProperty1<S, L>,
-        reducer: S.(L) -> S
-    ) {
-        setState { reducer(valueOf(prop).copyWithClearedError) }
     }
 
     protected fun <C : Collection<T>, T> Single<Resource<Paged<C>>>.updateWithPagedResource(
@@ -264,74 +174,68 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <C : Collection<T>, T> load(
-        prop: KProperty1<S, PagedDataList<T>>,
-        action: (S) -> Single<Resource<Paged<C>>>,
-        subscribeOnScheduler: Scheduler? = Schedulers.io(),
-        onError: (Throwable) -> Unit = ::log,
-        shouldClear: Boolean = false,
-        reducer: S.(PagedDataList<T>) -> S
-    ) = withState { state ->
-        if (state.valueOf(prop).shouldLoadMore) {
-            action(state)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateWithPagedResource(prop, onError, shouldClear, reducer)
-        }
-    }
-
-    protected fun <C : Collection<T>, T> load(
-        prop: KProperty1<S, DataList<T>>,
-        action: (S) -> Single<Resource<C>>,
-        subscribeOnScheduler: Scheduler? = Schedulers.io(),
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(DataList<T>) -> S
-    ) = withState { state ->
-        if (state.valueOf(prop).status !is Loading) {
-            action(state)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateWithResource(prop, onError, reducer)
-        }
-    }
-
-    protected fun <T> loadNullable(
-        prop: KProperty1<S, Data<T?>>,
+    protected fun <T> load(
+        prop: KProperty1<S, Loadable<T>>,
         action: (S) -> Single<Resource<T>>,
         subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Data<T?>) -> S) = withState { state ->
-        if (state.valueOf(prop).status !is Loading) {
+        reducer: S.(Loadable<T>) -> S) = withState { state ->
+        if (state.valueOf(prop) !is LoadingInProgress) {
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateNullableWithSingleResource(prop, onError, reducer)
+                .updateLoadableWithResource(prop, onError, reducer)
         }
     }
 
-    protected fun <T, Args> loadNullable(
-        prop: KProperty1<S, Data<T?>>,
+    protected fun <T, Args> load(
+        prop: KProperty1<S, Loadable<T>>,
         action: (Args) -> Single<Resource<T>>,
         args: Args,
         subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Data<T?>) -> S
+        reducer: S.(Loadable<T>) -> S
     ) = withState { state ->
-        if (state.valueOf(prop).status !is Loading) {
+        if (state.valueOf(prop) !is LoadingInProgress) {
             action(args)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateNullableWithSingleResource(prop, onError, reducer)
+                .updateLoadableWithResource(prop, onError, reducer)
         }
     }
 
-    protected fun <I, P : HoldsPagedData<I, P>> clearErrorIn(
-        prop: KProperty1<S, P>,
-        reducer: S.(P) -> S
-    ) {
-        setState { reducer(valueOf(prop).copyWithClearedError()) }
+    private fun <T> Single<Resource<T>>.updateLoadableWithResource(
+        prop: KProperty1<S, Loadable<T>>,
+        onError: (Throwable) -> Unit = ::log,
+        reducer: S.(Loadable<T>) -> S
+    ): Disposable {
+        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
+        return subscribe({
+            setState {
+                when (it) {
+                    is Resource.Success -> reducer(Ready(it.data))
+                    is Resource.Error -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        reducer(valueOf(prop).copyWithError(it.error))
+                    }
+                }
+            }
+        }, {
+            setState { reducer(valueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     private fun <T> S.valueOf(prop: KProperty1<S, T>): T = prop.get(this)
 
     private fun log(error: Throwable) {
         Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
+    }
+
+    protected fun <T, L : BaseLoadable<T, L>> clearErrorIn(
+        prop: KProperty1<S, L>,
+        reducer: S.(L) -> S
+    ) {
+        setState { reducer(valueOf(prop).copyWithClearedError) }
     }
 
     protected fun Context.handleConnectivityChanges(connectedOnly: Boolean = true, block: (state: S) -> Unit) {

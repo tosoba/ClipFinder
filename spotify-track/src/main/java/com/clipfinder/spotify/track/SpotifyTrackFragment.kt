@@ -12,10 +12,9 @@ import com.airbnb.mvrx.withState
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
-import com.example.core.android.model.Initial
-import com.example.core.android.model.LoadedSuccessfully
-import com.example.core.android.model.Loading
-import com.example.core.android.model.LoadingFailed
+import com.example.core.android.model.Failed
+import com.example.core.android.model.LoadingInProgress
+import com.example.core.android.model.Ready
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
 import com.example.core.android.spotify.controller.SpotifyTrackController
@@ -28,9 +27,8 @@ import com.example.core.android.util.ext.findAncestorFragmentOfType
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
-import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
+import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
@@ -49,40 +47,40 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 text("Album")
             }
 
-            when (album.status) {
-                is Initial, Loading -> loadingIndicator { id("loading-indicator-album") }
+            when (album) {
+                is LoadingInProgress -> loadingIndicator { id("loading-indicator-album") }
 
-                is LoadingFailed<*> -> reloadControl {
+                is Failed -> reloadControl {
                     id("albums-reload-control")
                     onReloadClicked { _ -> viewModel.loadAlbum() }
                     message(requireContext().getString(R.string.error_occurred))
                 }
 
-                is LoadedSuccessfully -> requireNotNull(album.value).let {
-                    it.infoItem { show { factory.newSpotifyAlbumFragment(it) } }
-                        .addTo(this)
-                }
+                is Ready -> album.value
+                    .infoItem { show { factory.newSpotifyAlbumFragment(album.value) } }
+                    .addTo(this)
             }
 
-            dataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 artists,
                 R.string.artists,
                 "track-artists",
-                viewModel::loadArtists
+                viewModel::loadArtists,
+                viewModel::clearArtistsError
             ) { artist ->
                 artist.clickableListItem {
                     show { factory.newSpotifyArtistFragment(artist) }
                 }
             }
 
-            pagedDataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 similarTracks,
                 R.string.similar_tracks,
                 "similar-tracks",
                 viewModel::loadSimilarTracks,
-                {},
+                viewModel::clearSimilarTracksError,
                 { it.chunked(2) }
             ) { chunk ->
                 Column(chunk.map { track ->
@@ -97,21 +95,21 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 text("Audio features")
             }
 
-            when (audioFeaturesChartData.status) {
-                is Initial, Loading -> loadingIndicator { id("loading-indicator-audio-features") }
+            when (audioFeaturesChartData) {
+                is LoadingInProgress -> loadingIndicator { id("loading-indicator-audio-features") }
 
-                is LoadingFailed<*> -> reloadControl {
+                is Failed -> reloadControl {
                     id("audio-features-reload-control")
                     onReloadClicked { _ -> viewModel.loadAudioFeatures() }
                     message(requireContext().getString(R.string.error_occurred))
                 }
 
-                is LoadedSuccessfully -> radarChart {
+                is Ready -> radarChart {
                     val typeface = Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf")
                     id("audio-features-radar-chart")
                     view(
                         RadarChartView(
-                            requireNotNull(audioFeaturesChartData.value),
+                            audioFeaturesChartData.value,
                             xAxisView = RadarChartAxisView(
                                 typeface = typeface,
                                 valueFormatter = IAxisValueFormatter { value, _ ->
@@ -135,9 +133,8 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_spotify_track, container, false).apply {
-        this.track_recycler_view.setController(epoxyController)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_spotify_track, container, false)
+        .apply { this.track_recycler_view.setController(epoxyController) }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
