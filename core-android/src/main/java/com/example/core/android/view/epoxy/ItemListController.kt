@@ -65,7 +65,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
     }
 }
 
-inline fun <S : MvRxState, L : DefaultLoadable<IL>, IL : ItemsList<I>, I> BaseMvRxFragment.pagedItemListController(
+inline fun <S : MvRxState, L : DefaultLoadable<Collection<I>>, I> BaseMvRxFragment.loadableCollectionController(
     prop: KProperty1<S, L>,
     modelBuildingHandler: Handler = get(EpoxyHandlerQualifier.BUILDER),
     diffingHandler: Handler = get(EpoxyHandlerQualifier.DIFFER),
@@ -95,7 +95,7 @@ inline fun <S : MvRxState, L : DefaultLoadable<IL>, IL : ItemsList<I>, I> BaseMv
 
         val loadable = prop.get(data)
         val value = loadable.value
-        if (value.items.isEmpty()) when (loadable) {
+        if (value.isEmpty()) when (loadable) {
             is DefaultInProgress<*> -> loadingIndicator { id("loading-indicator-items") }
             is DefaultFailed<*> -> reloadControl {
                 id("reload-control")
@@ -103,23 +103,22 @@ inline fun <S : MvRxState, L : DefaultLoadable<IL>, IL : ItemsList<I>, I> BaseMv
                 message(requireContext().getString(R.string.error_occurred))
             }
         } else {
-            value.items.forEach {
+            value.forEach {
                 buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this)
             }
 
-            when (loadable) {
-                is DefaultFailed<*> -> ReloadControlBindingModel_()
+            if (loadable is DefaultFailed<*>) {
+                ReloadControlBindingModel_()
                     .id("reload-control")
                     .message(requireContext().getString(R.string.error_occurred))
                     .onVisibilityStateChanged { _, _, visibilityState ->
                         if (visibilityState == VisibilityState.INVISIBLE) clearFailure()
                     }
                     .onReloadClicked { _ -> reloadClicked() }
-                else -> if (loadMore != null && value is CompletionTrackable && !value.completed) {
-                    loadingIndicator {
-                        id("loading-indicator-more-items")
-                        onBind { _, _, _ -> loadMore() }
-                    }
+            } else if (loadMore != null && value is CompletionTrackable && !value.completed) {
+                loadingIndicator {
+                    id("loading-indicator-more-items")
+                    onBind { _, _, _ -> loadMore() }
                 }
             }
         }

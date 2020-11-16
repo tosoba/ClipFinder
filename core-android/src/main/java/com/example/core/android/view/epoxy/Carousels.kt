@@ -110,11 +110,10 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
 
     val value = data.value
     val status = data.status
-    if (value.isEmpty()) when (status) {
-        is Loading -> loadingIndicator {
+    if (value.isEmpty()) {
+        if (status is Loading) loadingIndicator {
             id("loading-indicator-$idSuffix")
-        }
-        is LoadingFailed<*> -> reloadControl {
+        } else if (status is LoadingFailed<*>) reloadControl {
             id("reload-control-$idSuffix")
             onReloadClicked { _ -> loadItems() }
             message(context.getString(R.string.error_occurred))
@@ -123,8 +122,8 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
         id(idSuffix)
         withModelsFrom<Item>(
             items = mapToItems(value),
-            extraModels = when (status) {
-                is LoadingFailed<*> -> listOf(
+            extraModels = when {
+                status is LoadingFailed<*> -> listOf(
                     ReloadControlBindingModel_()
                         .id("reload-control-$idSuffix")
                         .message(context.getString(R.string.error_occurred))
@@ -133,32 +132,33 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
                         }
                         .onReloadClicked { _ -> loadItems() }
                 )
-                else -> if (data.shouldLoadMore) listOf(
+                data.shouldLoadMore -> listOf(
                     LoadingIndicatorBindingModel_()
                         .id("loading-more-$idSuffix")
                         .onBind { _, _, _ -> loadItems() }
-                ) else emptyList()
+                )
+                else -> emptyList()
             },
             modelBuilder = buildItem
         )
     }
 }
 
-inline fun <I> EpoxyController.itemsListCarouselWithHeader(
+inline fun <I> EpoxyController.loadableCarouselWithHeader(
     context: Context,
-    data: DefaultLoadable<ItemsList<I>>,
+    data: DefaultLoadable<Collection<I>>,
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
     crossinline clearFailure: () -> Unit,
     buildItem: (I) -> EpoxyModel<*>
 ) {
-    itemsListCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
+    loadableCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
 }
 
-inline fun <T, I> EpoxyController.itemsListCarouselWithHeader(
+inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
     context: Context,
-    loadable: DefaultLoadable<ItemsList<T>>,
+    loadable: DefaultLoadable<Collection<T>>,
     @StringRes headerRes: Int,
     idSuffix: String,
     crossinline loadItems: () -> Unit,
@@ -172,9 +172,10 @@ inline fun <T, I> EpoxyController.itemsListCarouselWithHeader(
     }
 
     val value = loadable.value
-    if (value.items.isEmpty()) when (loadable) {
-        is DefaultInProgress -> loadingIndicator { id("loading-indicator-$idSuffix") }
-        is DefaultFailed -> reloadControl {
+    if (value.isEmpty()) {
+        if (loadable is DefaultInProgress) loadingIndicator {
+            id("loading-indicator-$idSuffix")
+        } else if (loadable is DefaultFailed) reloadControl {
             id("reload-control-$idSuffix")
             onReloadClicked { _ -> loadItems() }
             message(context.getString(R.string.error_occurred))
@@ -182,9 +183,9 @@ inline fun <T, I> EpoxyController.itemsListCarouselWithHeader(
     } else carousel {
         id(idSuffix)
         withModelsFrom<I>(
-            items = mapToItems(value.items),
-            extraModels = when (loadable) {
-                is DefaultFailed -> listOf(
+            items = mapToItems(value),
+            extraModels = when {
+                loadable is DefaultFailed -> listOf(
                     ReloadControlBindingModel_()
                         .id("reload-control-$idSuffix")
                         .message(context.getString(R.string.error_occurred))
@@ -193,11 +194,12 @@ inline fun <T, I> EpoxyController.itemsListCarouselWithHeader(
                         }
                         .onReloadClicked { _ -> loadItems() }
                 )
-                else -> if (value is CompletionTrackable && !value.completed) listOf(
+                value is CompletionTrackable && !value.completed -> listOf(
                     LoadingIndicatorBindingModel_()
                         .id("loading-more-$idSuffix")
                         .onBind { _, _, _ -> loadItems() }
-                ) else emptyList()
+                )
+                else -> emptyList()
             },
             modelBuilder = buildItem
         )

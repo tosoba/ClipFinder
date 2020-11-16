@@ -1,9 +1,9 @@
 package com.example.core.android.model
 
 data class PageTokenItemsList<I>(
-    override val items: List<I> = emptyList(),
+    val items: List<I> = emptyList(),
     val nextPageToken: String? = null
-) : ItemsList<I>,
+) : Collection<I> by items,
     CompletionTrackable {
 
     override val completed: Boolean

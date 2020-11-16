@@ -7,8 +7,8 @@ import java.io.IOException
 val <L : BaseLoadable<T, L>, T> L.retryLoadOnNetworkAvailable: Boolean
     get() = this is HasError && (error == null || error is IOException)
 
-val <T : ItemsList<I>, I> DefaultLoadable<T>.retryLoadItemsOnNetworkAvailable: Boolean
-    get() = value.items.isEmpty() && this is HasError && (error == null || error is IOException)
+val <T : Collection<I>, I> DefaultLoadable<T>.retryLoadItemsOnNetworkAvailable: Boolean
+    get() = value.isEmpty() && this is HasError && (error == null || error is IOException)
 
 fun <T : CopyableWithPaged<I, T>, I, IT : Iterable<I>> DefaultLoadable<T>.copyWithPaged(
     paged: Paged<IT>
