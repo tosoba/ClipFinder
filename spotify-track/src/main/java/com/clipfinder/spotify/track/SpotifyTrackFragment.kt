@@ -9,6 +9,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
@@ -35,6 +36,8 @@ import com.example.core.android.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
 import org.koin.android.ext.android.inject
+import java.math.BigDecimal
+import kotlin.reflect.KCallable
 
 class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
@@ -141,6 +144,8 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     companion object {
         fun new(track: Track): SpotifyTrackFragment = newMvRxFragmentWith(track)
 
-        private val audioFeaturesChartLabels = ISpotifyAudioFeatures::class.members.map { it.name }
+        private val audioFeaturesChartLabels: List<String> = ISpotifyAudioFeatures::class
+            .decimalProps
+            .map(KCallable<BigDecimal>::name)
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.spotify.ext.decimalProps
+import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetAlbum
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetAudioFeatures
@@ -113,17 +115,11 @@ private fun GetSimilarTracks.withState(
 
 private fun GetAudioFeatures.withState(state: State) = this(applySchedulers = false, args = state.track.id)
     .mapData {
-        val entries = listOf(
-            RadarEntry(it.acousticness.toFloat()),
-            RadarEntry(it.danceability.toFloat()),
-            RadarEntry(it.energy.toFloat()),
-            RadarEntry(it.instrumentalness.toFloat()),
-            RadarEntry(it.liveness.toFloat()),
-            RadarEntry(it.speechiness.toFloat()),
-            RadarEntry(it.valence.toFloat())
-        )
         RadarData(
-            RadarDataSet(entries, "Audio features")
+            RadarDataSet(
+                ISpotifyAudioFeatures::class.decimalProps.map { prop -> RadarEntry(prop.get(it).toFloat()) },
+                "Audio features"
+            )
         ).apply {
             setValueTextSize(12f)
             setDrawValues(false)
