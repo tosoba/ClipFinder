@@ -105,7 +105,9 @@ class SpotifyTrackViewModel(
 private fun GetAlbum.withState(state: State) = this(applySchedulers = false, args = state.track.album.id)
     .mapData(::Album)
 
-private fun GetArtists.withState(state: State) = this(applySchedulers = false, args = state.track.artists.map(SimplifiedArtist::id))
+private fun GetArtists.withState(
+    state: State
+) = this(applySchedulers = false, args = state.track.artists.map(SimplifiedArtist::id))
     .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
 private fun GetSimilarTracks.withState(

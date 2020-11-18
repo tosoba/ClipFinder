@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -23,16 +24,12 @@ import com.example.spotify.account.databinding.FragmentSpotifyAccountSavedBindin
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountSavedFragment : BaseMvRxFragment() {
-
     private val factory: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: SpotifyAccountSavedViewModel by fragmentViewModel()
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyAccountSavedState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAccountSavedState> { (userLoggedIn, tracks, albums) ->
-            fun <Item> Collection<Item>.column(
-                buildItem: (Item) -> EpoxyModel<*>
-            ): Column = Column(map(buildItem))
+            fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
             if (!userLoggedIn && tracks.status is Initial && albums.status is Initial) {
                 largeTextCenter {

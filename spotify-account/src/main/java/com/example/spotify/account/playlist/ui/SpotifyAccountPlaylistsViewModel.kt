@@ -8,12 +8,11 @@ import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Initial
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Playlist
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.spotify.account.playlist.domain.usecase.GetCurrentUsersPlaylists
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class SpotifyAccountPlaylistsViewModel(
     initialState: SpotifyAccountPlaylistState,
@@ -42,22 +41,18 @@ class SpotifyAccountPlaylistsViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (userLoggedIn, playlists) ->
-                    if (userLoggedIn && playlists.retryLoadItemsOnNetworkAvailable) loadPlaylists()
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (userLoggedIn, playlists) ->
+            if (userLoggedIn && playlists.retryLoadItemsOnNetworkAvailable) loadPlaylists()
+        }
     }
 
     companion object : MvRxViewModelFactory<SpotifyAccountPlaylistsViewModel, SpotifyAccountPlaylistState> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyAccountPlaylistState
-        ): SpotifyAccountPlaylistsViewModel {
-            val getCurrentUsersPlaylists: GetCurrentUsersPlaylists by viewModelContext.activity.inject()
-            return SpotifyAccountPlaylistsViewModel(state, getCurrentUsersPlaylists, viewModelContext.app())
-        }
+            viewModelContext: ViewModelContext, state: SpotifyAccountPlaylistState
+        ): SpotifyAccountPlaylistsViewModel = SpotifyAccountPlaylistsViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }

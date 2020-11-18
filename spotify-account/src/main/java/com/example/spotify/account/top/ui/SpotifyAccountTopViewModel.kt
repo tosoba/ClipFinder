@@ -9,13 +9,12 @@ import com.example.core.android.model.Initial
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.spotify.account.top.domain.usecase.GetCurrentUsersTopArtists
 import com.example.spotify.account.top.domain.usecase.GetCurrentUsersTopTracks
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class SpotifyAccountTopViewModel(
     initialState: SpotifyAccountTopState,
@@ -55,29 +54,20 @@ class SpotifyAccountTopViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (userLoggedIn, tracks, artists) ->
-                    if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
-                    if (userLoggedIn && artists.retryLoadItemsOnNetworkAvailable) loadArtists()
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (userLoggedIn, tracks, artists) ->
+            if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
+            if (userLoggedIn && artists.retryLoadItemsOnNetworkAvailable) loadArtists()
+        }
     }
 
     companion object : MvRxViewModelFactory<SpotifyAccountTopViewModel, SpotifyAccountTopState> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyAccountTopState
-        ): SpotifyAccountTopViewModel {
-            val getCurrentUsersTopTracks: GetCurrentUsersTopTracks by viewModelContext.activity.inject()
-            val getCurrentUsersTopArtists: GetCurrentUsersTopArtists by viewModelContext.activity.inject()
-            return SpotifyAccountTopViewModel(
-                state,
-                getCurrentUsersTopTracks,
-                getCurrentUsersTopArtists,
-                viewModelContext.app()
-            )
-        }
+            viewModelContext: ViewModelContext, state: SpotifyAccountTopState
+        ): SpotifyAccountTopViewModel = SpotifyAccountTopViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }

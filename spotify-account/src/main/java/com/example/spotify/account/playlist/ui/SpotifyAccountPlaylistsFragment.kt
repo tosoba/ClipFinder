@@ -26,12 +26,9 @@ import org.koin.android.ext.android.inject
 class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyAccountPlaylistsViewModel by fragmentViewModel()
-
     private lateinit var binding: FragmentSpotifyAccountPlaylistsBinding
 
-    private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
+    private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by lazy(LazyThreadSafetyMode.NONE) {
         itemListController(
             SpotifyAccountPlaylistState::playlists,
             loadMore = viewModel::loadPlaylists,

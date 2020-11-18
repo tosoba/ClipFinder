@@ -21,7 +21,6 @@ import com.example.spotify.account.saved.ui.SpotifyAccountSavedFragment
 import com.example.spotify.account.top.ui.SpotifyAccountTopFragment
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
-
     private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)
     override val toolbar: Toolbar get() = binding.accountToolbar
 
@@ -56,11 +55,8 @@ class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasM
         }
     }
 
-    override fun onOptionsItemSelected(
-        item: MenuItem
-    ): Boolean = if (
-        item.itemId == android.R.id.home
-        && parentFragment?.childFragmentManager?.backStackEntryCount == 0
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (
+        item.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0
     ) {
         activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true

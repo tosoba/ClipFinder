@@ -23,18 +23,13 @@ import com.example.spotify.account.databinding.FragmentSpotifyAccountTopBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountTopFragment : BaseMvRxFragment() {
-
     private val factory: ISpotifyFragmentsFactory by inject()
-
     private val viewModel: SpotifyAccountTopViewModel by fragmentViewModel()
-
     private lateinit var binding: FragmentSpotifyAccountTopBinding
 
     private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAccountTopState> { (userLoggedIn, tracks, artists) ->
-            fun <Item> Collection<Item>.column(
-                buildItem: (Item) -> EpoxyModel<*>
-            ): Column = Column(map(buildItem))
+            fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
             if (!userLoggedIn && tracks.status is Initial && artists.status is Initial) {
                 largeTextCenter {

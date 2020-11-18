@@ -9,13 +9,12 @@ import com.example.core.android.model.Initial
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedAlbums
 import com.example.spotify.account.saved.domain.usecase.GetCurrentUsersSavedTracks
 import io.reactivex.schedulers.Schedulers
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class SpotifyAccountSavedViewModel(
     initialState: SpotifyAccountSavedState,
@@ -55,30 +54,20 @@ class SpotifyAccountSavedViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context
-            .observeNetworkConnectivity {
-                withState { (userLoggedIn, tracks, albums) ->
-                    if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
-                    if (userLoggedIn && albums.retryLoadItemsOnNetworkAvailable) loadAlbums()
-                }
-            }
-            .disposeOnClear()
+        context.handleConnectivityChanges { (userLoggedIn, tracks, albums) ->
+            if (userLoggedIn && tracks.retryLoadItemsOnNetworkAvailable) loadTracks()
+            if (userLoggedIn && albums.retryLoadItemsOnNetworkAvailable) loadAlbums()
+        }
     }
-
 
     companion object : MvRxViewModelFactory<SpotifyAccountSavedViewModel, SpotifyAccountSavedState> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifyAccountSavedState
-        ): SpotifyAccountSavedViewModel {
-            val getCurrentUsersSavedTracks: GetCurrentUsersSavedTracks by viewModelContext.activity.inject()
-            val getCurrentUsersSavedAlbums: GetCurrentUsersSavedAlbums by viewModelContext.activity.inject()
-            return SpotifyAccountSavedViewModel(
-                state,
-                getCurrentUsersSavedTracks,
-                getCurrentUsersSavedAlbums,
-                viewModelContext.app()
-            )
-        }
+            viewModelContext: ViewModelContext, state: SpotifyAccountSavedState
+        ): SpotifyAccountSavedViewModel = SpotifyAccountSavedViewModel(
+            state,
+            viewModelContext.activity.get(),
+            viewModelContext.activity.get(),
+            viewModelContext.app()
+        )
     }
 }
