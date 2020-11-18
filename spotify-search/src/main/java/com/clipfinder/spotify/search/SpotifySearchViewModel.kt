@@ -2,43 +2,48 @@ package com.clipfinder.spotify.search
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.spotify.model.*
-import com.example.core.model.Resource
 import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.usecase.SearchSpotify
+import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.model.DefaultLoadable
+import com.example.core.android.model.PagedItemsList
+import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Artist
+import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.Track
+import com.example.core.android.util.ext.copyWithPaged
+import com.example.core.ext.map
+import com.example.core.model.Resource
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 import timber.log.Timber
+import kotlin.reflect.KProperty1
 
 class SpotifySearchViewModel(
-    initialState: SpotifySearchViewState,
+    initialState: SpotifySearchState,
     private val searchSpotify: SearchSpotify
-) : MvRxViewModel<SpotifySearchViewState>(initialState) {
+) : MvRxViewModel<SpotifySearchState>(initialState) {
 
     init {
         search(SearchSpotify.Args.Initial(initialState.query))
     }
 
-    fun searchAlbums() = withState {
-        if (!it.albums.shouldLoadMore) return@withState
-        search(SearchSpotify.Args.More(it.query, it.albums.offset, SpotifySearchType.ALBUM))
-    }
+    fun searchAlbums() = searchIfNotCompleted(SpotifySearchState::albums)
+    fun clearAlbumsError() = clearErrorIn(SpotifySearchState::albums) { copy(albums = it) }
+    fun searchArtists() = searchIfNotCompleted(SpotifySearchState::artists)
+    fun clearArtistsError() = clearErrorIn(SpotifySearchState::artists) { copy(artists = it) }
+    fun searchPlaylists() = searchIfNotCompleted(SpotifySearchState::playlists)
+    fun clearPlaylistsError() = clearErrorIn(SpotifySearchState::playlists) { copy(playlists = it) }
+    fun searchTracks() = searchIfNotCompleted(SpotifySearchState::tracks)
+    fun clearTracksError() = clearErrorIn(SpotifySearchState::tracks) { copy(tracks = it) }
 
-    fun searchArtists() = withState {
-        if (!it.artists.shouldLoadMore) return@withState
-        search(SearchSpotify.Args.More(it.query, it.artists.offset, SpotifySearchType.ARTIST))
-    }
-
-    fun searchPlaylists() = withState {
-        if (!it.playlists.shouldLoadMore) return@withState
-        search(SearchSpotify.Args.More(it.query, it.playlists.offset, SpotifySearchType.PLAYLIST))
-    }
-
-    fun searchTracks() = withState {
-        if (!it.tracks.shouldLoadMore) return@withState
-        search(SearchSpotify.Args.More(it.query, it.tracks.offset, SpotifySearchType.TRACK))
+    private fun <T> searchIfNotCompleted(prop: KProperty1<SpotifySearchState, DefaultLoadable<PagedItemsList<T>>>) {
+        withState {
+            val value = prop.get(it).value
+            if (value.completed) return@withState
+            search(SearchSpotify.Args.More(it.query, value.offset, requireNotNull(searchTypes[prop])))
+        }
     }
 
     private fun search(args: SearchSpotify.Args) {
@@ -83,19 +88,19 @@ class SpotifySearchViewModel(
             .subscribe({ resource ->
                 when (resource) {
                     is Resource.Success<SpotifySearchResult> -> setState {
-                        val searchResult = resource.data
+                        val result = resource.data
                         copy(
-                            albums = searchResult.albums?.let { (newItems, offset, total) ->
-                                albums.copyWithNewItems(newItems.map(::Album), offset, total)
+                            albums = result.albums?.let {
+                                albums.copyWithPaged(it.map(::Album))
                             } ?: albums,
-                            artists = searchResult.artists?.let { (newItems, offset, total) ->
-                                artists.copyWithNewItems(newItems.map(::Artist), offset, total)
+                            artists = result.artists?.let {
+                                artists.copyWithPaged(it.map(::Artist))
                             } ?: artists,
-                            playlists = searchResult.playlists?.let { (newItems, offset, total) ->
-                                playlists.copyWithNewItems(newItems.map(::Playlist), offset, total)
+                            playlists = result.playlists?.let {
+                                playlists.copyWithPaged(it.map(::Playlist))
                             } ?: playlists,
-                            tracks = searchResult.tracks?.let { (newItems, offset, total) ->
-                                tracks.copyWithNewItems(newItems.map(::Track), offset, total)
+                            tracks = result.tracks?.let {
+                                tracks.copyWithPaged(it.map(::Track))
                             } ?: tracks
                         )
                     }
@@ -108,10 +113,16 @@ class SpotifySearchViewModel(
             .disposeOnClear()
     }
 
-    companion object : MvRxViewModelFactory<SpotifySearchViewModel, SpotifySearchViewState> {
+    companion object : MvRxViewModelFactory<SpotifySearchViewModel, SpotifySearchState> {
         override fun create(
-            viewModelContext: ViewModelContext,
-            state: SpotifySearchViewState
+            viewModelContext: ViewModelContext, state: SpotifySearchState
         ): SpotifySearchViewModel = SpotifySearchViewModel(state, viewModelContext.activity.get())
+
+        private val searchTypes: Map<KProperty1<SpotifySearchState, DefaultLoadable<PagedItemsList<*>>>, SpotifySearchType> = mapOf(
+            SpotifySearchState::albums to SpotifySearchType.ALBUM,
+            SpotifySearchState::artists to SpotifySearchType.ARTIST,
+            SpotifySearchState::playlists to SpotifySearchType.PLAYLIST,
+            SpotifySearchState::tracks to SpotifySearchType.TRACK
+        )
     }
 }

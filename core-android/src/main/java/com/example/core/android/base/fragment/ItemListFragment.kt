@@ -18,9 +18,7 @@ import kotlinx.android.synthetic.main.fragment_item_list.*
 import kotlinx.android.synthetic.main.fragment_item_list.view.*
 
 abstract class ItemListFragment<S> : BaseMvRxFragment() {
-
     private val passedArgs: Args by args()
-
     protected abstract val epoxyController: TypedEpoxyController<S>
 
     override fun onCreateView(

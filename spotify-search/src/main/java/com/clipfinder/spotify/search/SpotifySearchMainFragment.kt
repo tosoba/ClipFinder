@@ -5,15 +5,11 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.args
 import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchMainBinding
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.dpToPx
-import com.example.core.android.util.ext.mainContentFragment
-import com.example.core.android.util.ext.setHeight
-import com.example.core.android.util.ext.setupWithBackNavigation
+import com.example.core.android.util.ext.*
 import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import org.koin.android.ext.android.get
@@ -30,13 +26,11 @@ class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()
         with(binding) {
-            val fragmentFactory: IFragmentFactory = get()
-            val spotifyFragmentsFactory: ISpotifyFragmentsFactory = get()
             val adapter = CustomCurrentStatePagerAdapter(
                 childFragmentManager,
                 arrayOf(
-                    spotifyFragmentsFactory.newSpotifySearchFragment(query),
-                    fragmentFactory.newVideosSearchFragment(query)
+                    get<ISpotifyFragmentsFactory>().newSpotifySearchFragment(query),
+                    get<IFragmentFactory>().newVideosSearchFragment(query)
                 )
             )
             searchFragmentViewPager.adapter = adapter
@@ -61,8 +55,6 @@ class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main
     companion object {
         private val itemIds: Array<Int> = arrayOf(R.id.action_spotify, R.id.action_videos)
 
-        fun newInstance(query: String) = SpotifySearchMainFragment().apply {
-            arguments = Bundle().apply { putString(MvRx.KEY_ARG, query) }
-        }
+        fun newInstance(query: String): SpotifySearchMainFragment = newMvRxFragmentWith(query)
     }
 }
