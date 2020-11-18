@@ -227,9 +227,7 @@ open class MvRxViewModel<S : MvRxState>(
 
     private fun <T> S.valueOf(prop: KProperty1<S, T>): T = prop.get(this)
 
-    private fun log(error: Throwable) {
-        Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
-    }
+    protected fun log(error: Throwable) = Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
 
     protected fun <T, L : BaseLoadable<T, L>> clearErrorIn(
         prop: KProperty1<S, L>,

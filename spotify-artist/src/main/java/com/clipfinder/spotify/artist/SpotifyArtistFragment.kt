@@ -13,15 +13,14 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.dataListCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.pagedDataListCarouselWithHeader
-import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
+import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -32,35 +31,37 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
-            pagedDataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 albums,
                 R.string.albums,
                 "albums",
                 { viewModel.loadAlbumsFromArtist() },
-                {}
+                viewModel::clearAlbumsError
             ) { album ->
                 album.clickableListItem {
                     show { factory.newSpotifyAlbumFragment(album) }
                 }
             }
 
-            dataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 relatedArtists,
                 R.string.related_artists,
                 "related-artists",
-                viewModel::loadRelatedArtists
+                viewModel::loadRelatedArtists,
+                viewModel::clearTopTracksError
             ) { artist ->
                 artist.clickableListItem { viewModel.updateArtist(artist) }
             }
 
-            dataListCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
                 "top-tracks",
-                viewModel::loadTopTracksFromArtist
+                viewModel::loadTopTracksFromArtist,
+                viewModel::clearRelatedArtistsError
             ) { topTrack ->
                 topTrack.clickableListItem {
                     show { factory.newSpotifyTrackVideosFragment(topTrack) }
@@ -84,7 +85,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
 
         val artist = MutableLiveData<Artist>(argArtist)
         viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
-            artists.value.lastOrNull()?.let {
+            artists.lastOrNull()?.let {
                 artist.value = it
                 binding.artistToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
@@ -99,10 +100,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
             lifecycleOwner = this@SpotifyArtistFragment
             this.artist = artist
             artistFavouriteFab.setOnClickListener { }
-            artistToolbar.setupWithBackNavigation(
-                requireActivity() as AppCompatActivity,
-                ::onBackPressed
-            )
+            artistToolbar.setupWithBackNavigation(requireActivity() as AppCompatActivity, ::onBackPressed)
             artistRecyclerView.setController(epoxyController)
         }.root
     }

@@ -13,8 +13,8 @@ import com.example.core.android.model.PageTokenDataList
 import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.model.videos.Video
 import com.example.core.ext.castAs
-import com.example.core.model.Resource
 import com.example.core.ext.mapData
+import com.example.core.model.Resource
 import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
@@ -65,7 +65,7 @@ class YoutubeSearchViewModel(
                                 copy(videos = videos.copyWithNewItems(newVideos, nextPageToken))
                             }
                             is Resource.Error -> {
-                                it.error?.castAs<Throwable>()?.let(::onError)
+                                it.error?.castAs<Throwable>()?.let(::log)
                                     ?: Timber.wtf("Unknown error")
                                 copy(videos = videos.copyWithError(it))
                             }
@@ -73,13 +73,11 @@ class YoutubeSearchViewModel(
                     }
                 }, {
                     setState { copy(videos = videos.copyWithError(it)) }
-                    onError(it)
+                    log(it)
                 })
                 .disposeOnClear()
         }
     }
-
-    private fun onError(error: Throwable) = Timber.e(error, javaClass.simpleName.toString())
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {

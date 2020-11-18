@@ -4,21 +4,28 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.spotify.usecase.GetAlbumsFromArtist
+import com.clipfinder.core.spotify.usecase.GetRelatedArtists
+import com.clipfinder.core.spotify.usecase.GetTopTracksFromArtist
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.DataList
-import com.example.core.android.model.Loading
-import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.model.DefaultInProgress
+import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.android.util.ext.copyWithPaged
+import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
+import com.example.core.ext.castAs
 import com.example.core.ext.map
 import com.example.core.ext.mapData
-import com.clipfinder.core.spotify.usecase.GetAlbumsFromArtist
-import com.clipfinder.core.spotify.usecase.GetRelatedArtists
-import com.clipfinder.core.spotify.usecase.GetTopTracksFromArtist
+import com.example.core.model.Resource
+import com.jakewharton.rxrelay2.PublishRelay
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
+import timber.log.Timber
 
 private typealias State = SpotifyArtistViewState
 
@@ -31,6 +38,8 @@ class SpotifyArtistViewModel(
     context: Context
 ) : MvRxViewModel<State>(initialState) {
 
+    private val clear: PublishRelay<Unit> = PublishRelay.create()
+
     init {
         loadData()
         handlePreferencesChanges()
@@ -38,17 +47,17 @@ class SpotifyArtistViewModel(
     }
 
     fun onBackPressed() = withState { state ->
-        if (state.artists.value.size < 2) {
-            setState { copy(artists = DataList(emptyList())) }
+        if (state.artists.size < 2) {
+            setState { copy(artists = emptyList()) }
             return@withState
         }
 
-        setState { copy(artists = DataList(artists.value.take(artists.value.size - 1))) }
+        setState { copy(artists = artists.dropLast(1)) }
         loadData(clearAlbums = true)
     }
 
     fun updateArtist(artist: Artist) {
-        setState { copy(artists = artists.copyWithNewItems(artist)) }
+        setState { copy(artists = artists + artist) }
         loadData(clearAlbums = true)
     }
 
@@ -58,35 +67,61 @@ class SpotifyArtistViewModel(
         loadRelatedArtists()
     }
 
-    fun loadAlbumsFromArtist(shouldClear: Boolean = false) = withState { state ->
-        if (!state.albums.shouldLoadMore) return@withState
+    fun loadAlbumsFromArtist(shouldClear: Boolean = false) {
+        if (shouldClear) clear.accept(Unit)
+        withState { state ->
+            if (state.albums.value.completed && !shouldClear) return@withState
 
-        val args = GetAlbumsFromArtist.Args(
-            artistId = state.artists.value.last().id,
-            offset = if (shouldClear) 0 else state.albums.offset
-        )
-        getAlbumsFromArtist(args = args, applySchedulers = false)
-            .mapData { albums -> albums.map(::Album) }
-            .subscribeOn(Schedulers.io())
-            .updateWithPagedResource(State::albums, shouldClear = shouldClear) { copy(albums = it) }
+            setState {
+                if (shouldClear) copy(albums = DefaultInProgress(PagedItemsList()))
+                else copy(albums = albums.copyWithLoadingInProgress)
+            }
+
+            val args = GetAlbumsFromArtist.Args(
+                artistId = state.artists.last().id,
+                offset = if (shouldClear) 0 else state.albums.value.offset
+            )
+            getAlbumsFromArtist(args = args, applySchedulers = false)
+                .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
+                .mapData { albums -> albums.map(::Album) }
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    setState {
+                        when (it) {
+                            is Resource.Success -> copy(albums = albums.copyWithPaged(it.data))
+                            is Resource.Error -> {
+                                it.error?.castAs<Throwable>()?.let(::log)
+                                    ?: Timber.wtf("Unknown error")
+                                copy(albums = albums.copyWithError(it))
+                            }
+                        }
+                    }
+                }, {
+                    setState { copy(albums = albums.copyWithError(it)) }
+                    log(it)
+                })
+                .disposeOnClear()
+        }
     }
 
-    fun loadTopTracksFromArtist() = withState { state ->
-        if (state.topTracks.status is Loading) return@withState
-
-        getTopTracksFromArtist(args = state.artists.value.last().id, applySchedulers = false)
-            .mapData { tracks -> tracks.map(::Track).sortedBy(Track::name) }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(State::topTracks) { copy(topTracks = it) }
+    fun clearAlbumsError() {
+        clearErrorIn(State::albums) { copy(albums = it) }
     }
 
-    fun loadRelatedArtists() = withState { state ->
-        if (state.relatedArtists.status is Loading) return@withState
+    fun loadTopTracksFromArtist() {
+        loadCollection(State::topTracks, getTopTracksFromArtist::intoState) { copy(topTracks = it) }
+    }
 
-        getRelatedArtists(args = state.artists.value.last().id, applySchedulers = false)
-            .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
-            .subscribeOn(Schedulers.io())
-            .updateWithResource(State::relatedArtists) { copy(relatedArtists = it) }
+    fun clearTopTracksError() {
+        clearErrorIn(State::topTracks) { copy(topTracks = it) }
+    }
+
+    fun loadRelatedArtists() {
+        loadCollection(State::relatedArtists, getRelatedArtists::intoState) { copy(relatedArtists = it) }
+    }
+
+    fun clearRelatedArtistsError() {
+        clearErrorIn(State::relatedArtists) { copy(relatedArtists = it) }
     }
 
     private fun handlePreferencesChanges() {
@@ -119,3 +154,13 @@ class SpotifyArtistViewModel(
         )
     }
 }
+
+private fun GetTopTracksFromArtist.intoState(
+    state: State
+): Single<Resource<List<Track>>> = this(applySchedulers = false, args = state.artists.last().id)
+    .mapData { tracks -> tracks.map(::Track).sortedBy(Track::name) }
+
+private fun GetRelatedArtists.intoState(
+    state: State
+): Single<Resource<List<Artist>>> = this(applySchedulers = false, args = state.artists.last().id)
+    .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
