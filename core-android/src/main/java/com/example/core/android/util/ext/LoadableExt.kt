@@ -13,3 +13,7 @@ val <T : Collection<I>, I> DefaultLoadable<T>.retryLoadItemsOnNetworkAvailable: 
 fun <T : CopyableWithPaged<I, T>, I, IT : Iterable<I>> DefaultLoadable<T>.copyWithPaged(
     paged: Paged<IT>
 ): DefaultLoadable<T> = DefaultReady(value.copyWithPaged(paged))
+
+fun <T : CopyableWithPaged<I, T>, I, IT : Iterable<I>> HasValue<T>.copyWithPaged(
+    paged: Paged<IT>
+): Loadable<T> = Ready(value.copyWithPaged(paged))

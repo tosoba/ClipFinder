@@ -34,8 +34,55 @@ open class MvRxViewModel<S : MvRxState>(
         if (loadable !is DefaultInProgress && !loadable.value.completed) {
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
+                .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
         }
+    }
+
+    protected fun <C, T, I, Args> loadPagedNoDefault(
+        prop: KProperty1<S, Loadable<C>>,
+        action: (S, Args) -> Single<Resource<Paged<I>>>,
+        args: Args,
+        subscribeOnScheduler: Scheduler? = Schedulers.io(),
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        newCopyableWithPaged: (Paged<I>) -> C,
+        reducer: S.(Loadable<C>) -> S
+    ) where C : CopyableWithPaged<T, C>,
+            C : CompletionTrackable,
+            I : Iterable<T> = withState { state ->
+        val loadable = state.valueOf(prop)
+        if (loadable is LoadingInProgress || loadable.castAs<HasValue<C>>()?.value?.completed == true) return@withState
+        action(state, args)
+            .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+            .updateLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
+    }
+
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateLoadableWithPagedResource(
+        prop: KProperty1<S, Loadable<C>>,
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        newCopyableWithPaged: (Paged<I>) -> C,
+        reducer: S.(Loadable<C>) -> S
+    ): Disposable {
+        setState { reducer(valueOf(prop).copyWithLoading()) }
+        return subscribe({
+            setState {
+                when (it) {
+                    is Resource.Success -> reducer(
+                        valueOf(prop).castAs<HasValue<C>>()?.copyWithPaged(it.data)
+                            ?: Ready(newCopyableWithPaged(it.data))
+                    )
+                    is Resource.Error -> {
+                        it.error?.castAs<Throwable>()?.let(onError)
+                            ?: Timber.wtf("Unknown error")
+                        reducer(valueOf(prop).copyWithError(it.error))
+                    }
+                }
+            }
+        }, {
+            setState { reducer(valueOf(prop).copyWithError(it)) }
+            onError(it)
+        }).disposeOnClear()
     }
 
     protected fun <C, T, I, Args> loadPaged(
@@ -53,11 +100,11 @@ open class MvRxViewModel<S : MvRxState>(
         if (loadable !is DefaultInProgress && !loadable.value.completed) {
             action(state, args)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
+                .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
         }
     }
 
-    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateLoadableWithPagedResource(
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateDefaultLoadableWithPagedResource(
         prop: KProperty1<S, DefaultLoadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
@@ -93,11 +140,11 @@ open class MvRxViewModel<S : MvRxState>(
         if (loadable !is DefaultInProgress) {
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
+                .updateDefaultLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
         }
     }
 
-    private fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
+    private fun <T, C : Collection<T>> Single<Resource<C>>.updateDefaultLoadableWithCollectionResource(
         prop: KProperty1<S, DefaultLoadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
