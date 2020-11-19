@@ -26,6 +26,7 @@ import org.koin.android.ext.android.inject
 class SpotifyAccountSavedFragment : BaseMvRxFragment() {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyAccountSavedViewModel by fragmentViewModel()
+    private lateinit var binding: FragmentSpotifyAccountSavedBinding
 
     private val epoxyController: TypedEpoxyController<SpotifyAccountSavedState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAccountSavedState> { (userLoggedIn, tracks, albums) ->
@@ -72,7 +73,12 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
         }
     }
 
-    private lateinit var binding: FragmentSpotifyAccountSavedBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireNotNull(spotifyAuthController)
+            .isLoggedIn
+            .observe(this, Observer { userLoggedIn -> viewModel.setUserLoggedIn(userLoggedIn) })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -85,13 +91,4 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
     }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireNotNull(spotifyAuthController)
-            .isLoggedIn
-            .observe(this, Observer { userLoggedIn ->
-                viewModel.setUserLoggedIn(userLoggedIn)
-            })
-    }
 }

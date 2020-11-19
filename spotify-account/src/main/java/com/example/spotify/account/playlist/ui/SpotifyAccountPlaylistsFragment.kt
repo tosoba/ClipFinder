@@ -32,9 +32,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
         itemListController(
             SpotifyAccountPlaylistState::playlists,
             loadMore = viewModel::loadPlaylists,
-            shouldOverrideBuildModels = { (userLoggedIn, playlists) ->
-                !userLoggedIn && playlists.status is Initial
-            },
+            shouldOverrideBuildModels = { (userLoggedIn, playlists) -> !userLoggedIn && playlists.status is Initial },
             overrideBuildModels = {
                 LargeTextCenterBindingModel_()
                     .id("spotify-account-playlists-user-not-logged-in")
@@ -57,9 +55,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
         super.onCreate(savedInstanceState)
         requireNotNull(spotifyAuthController)
             .isLoggedIn
-            .observe(this, Observer { userLoggedIn ->
-                viewModel.setUserLoggedIn(userLoggedIn)
-            })
+            .observe(this, Observer { userLoggedIn -> viewModel.setUserLoggedIn(userLoggedIn) })
     }
 
     override fun onCreateView(
@@ -75,12 +71,12 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
         binding.spotifyAccountPlaylistsRecyclerView.setController(epoxyController)
     }
 
-    override fun invalidate() = withState(viewModel, epoxyController::setData)
-
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         binding.spotifyAccountPlaylistsRecyclerView.layoutManager = layoutManagerFor(newConfig.orientation)
     }
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
         context,

@@ -33,52 +33,6 @@ inline fun <T> CarouselModelBuilder.withModelsFrom(
     models(items.map(modelBuilder) + extraModels)
 }
 
-inline fun <Item> EpoxyController.dataListCarouselWithHeader(
-    context: Context,
-    data: DataList<Item>,
-    @StringRes headerRes: Int,
-    idSuffix: String,
-    crossinline loadItems: () -> Unit,
-    buildItem: (Item) -> EpoxyModel<*>
-) {
-    dataListCarouselWithHeader(
-        context, data, headerRes, idSuffix, loadItems, { it }, buildItem
-    )
-}
-
-inline fun <Value, Item> EpoxyController.dataListCarouselWithHeader(
-    context: Context,
-    data: DataList<Value>,
-    @StringRes headerRes: Int,
-    idSuffix: String,
-    crossinline loadItems: () -> Unit,
-    mapToItems: (Collection<Value>) -> Collection<Item>,
-    buildItem: (Item) -> EpoxyModel<*>
-) {
-    headerItem {
-        id("header-$idSuffix")
-        text(context.getString(headerRes))
-    }
-
-    val (value, status) = data
-    when (status) {
-        is Loading -> loadingIndicator {
-            id("loading-indicator-$idSuffix")
-        }
-
-        is LoadingFailed<*> -> reloadControl {
-            id("reload-control-$idSuffix")
-            onReloadClicked { _ -> loadItems() }
-            message(context.getString(R.string.error_occurred))
-        }
-
-        is LoadedSuccessfully -> carousel {
-            id(idSuffix)
-            withModelsFrom(mapToItems(value), buildItem)
-        }
-    }
-}
-
 inline fun <Item> EpoxyController.pagedDataListCarouselWithHeader(
     context: Context,
     data: PagedDataList<Item>,

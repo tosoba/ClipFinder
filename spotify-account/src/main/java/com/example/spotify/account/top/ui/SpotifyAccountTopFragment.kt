@@ -72,6 +72,13 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireNotNull(spotifyAuthController)
+            .isLoggedIn
+            .observe(this, Observer { userLoggedIn -> viewModel.setUserLoggedIn(userLoggedIn) })
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = FragmentSpotifyAccountTopBinding.inflate(inflater, container, false)
@@ -83,13 +90,4 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
     }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireNotNull(spotifyAuthController)
-            .isLoggedIn
-            .observe(this, Observer { userLoggedIn ->
-                viewModel.setUserLoggedIn(userLoggedIn)
-            })
-    }
 }

@@ -41,9 +41,7 @@ inline fun <S : MvRxState, L : HoldsData<Collection<I>>, I> BaseMvRxFragment.ite
 
         val items = prop.get(data)
         if (items.value.isEmpty()) when (items.status) {
-            is Loading -> loadingIndicator {
-                id("loading-indicator-items")
-            }
+            is Loading -> loadingIndicator { id("loading-indicator-items") }
 
             is LoadingFailed<*> -> reloadControl {
                 id("reload-control")
@@ -103,9 +101,7 @@ inline fun <S : MvRxState, L : DefaultLoadable<Collection<I>>, I> BaseMvRxFragme
                 message(requireContext().getString(R.string.error_occurred))
             }
         } else {
-            value.forEach {
-                buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this)
-            }
+            value.forEach { buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this) }
 
             if (loadable is DefaultFailed<*>) {
                 ReloadControlBindingModel_()
