@@ -17,7 +17,7 @@ import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.loadableCollectionController
+import com.example.core.android.view.epoxy.defaultLoadableCollectionController
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
@@ -61,7 +61,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
             protected abstract val clearError: () -> Unit
 
             override val epoxyController: TypedEpoxyController<SpotifySearchState> by lazy(LazyThreadSafetyMode.NONE) {
-                loadableCollectionController(
+                defaultLoadableCollectionController(
                     prop,
                     loadMore = search,
                     reloadClicked = search,

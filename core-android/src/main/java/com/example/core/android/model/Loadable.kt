@@ -16,19 +16,19 @@ object Empty : WithoutValue()
 
 interface LoadingInProgress
 object LoadingFirst : WithoutValue(), LoadingInProgress
-data class LoadingNext<out T>(override val value: T) : WithValue<T>(), HasValue<T>, LoadingInProgress {
+data class LoadingNext<out T>(override val value: T) : WithValue<T>(), LoadingInProgress {
     override val copyWithLoadingInProgress: Loadable<T> get() = this
     override val copyWithClearedError: Loadable<T> get() = this
     override fun copyWithError(error: Any?): FailedNext<T> = FailedNext(value, error)
 }
 
-data class Ready<out T>(override val value: T) : Loadable<T>(), HasValue<T> {
+data class Ready<out T>(override val value: T) : WithValue<T>() {
     override val copyWithLoadingInProgress: LoadingNext<T> get() = LoadingNext(value)
     override val copyWithClearedError: Loadable<T> get() = this
     override fun copyWithError(error: Any?): FailedNext<T> = FailedNext(value, error)
 }
 
-data class FailedNext<out T>(override val value: T, override val error: Any?) : WithValue<T>(), HasValue<T>, Failed {
+data class FailedNext<out T>(override val value: T, override val error: Any?) : WithValue<T>(), Failed {
     override val copyWithClearedError: Ready<T> get() = Ready(value)
     override val copyWithLoadingInProgress: Loadable<T> get() = LoadingNext(value)
     override fun copyWithError(error: Any?): FailedNext<T> = FailedNext(value, error)
