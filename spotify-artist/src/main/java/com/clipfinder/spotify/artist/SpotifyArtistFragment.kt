@@ -20,7 +20,7 @@ import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -31,7 +31,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 albums,
                 R.string.albums,
@@ -44,7 +44,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 relatedArtists,
                 R.string.related_artists,
@@ -55,7 +55,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 artist.clickableListItem { viewModel.updateArtist(artist) }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,

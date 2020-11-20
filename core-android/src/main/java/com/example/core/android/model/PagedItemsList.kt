@@ -10,6 +10,12 @@ data class PagedItemsList<I>(
     CompletionTrackable,
     CopyableWithPaged<I, PagedItemsList<I>> {
 
+    constructor(paged: Paged<List<I>>) : this(
+        items = paged.contents,
+        offset = paged.offset,
+        total = paged.total
+    )
+
     override val completed: Boolean
         get() = offset >= total
 

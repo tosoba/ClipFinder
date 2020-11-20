@@ -22,7 +22,7 @@ import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.setupWithBackNavigation
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -33,7 +33,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
 
     private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAlbumViewState> { (_, artists, tracks) ->
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 artists,
                 R.string.artists,
@@ -46,7 +46,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
                 }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 tracks,
                 R.string.tracks,

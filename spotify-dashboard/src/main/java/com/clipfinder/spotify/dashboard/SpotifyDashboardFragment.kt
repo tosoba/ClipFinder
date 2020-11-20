@@ -21,7 +21,7 @@ import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
 import com.example.core.ext.castAs
 import org.koin.android.ext.android.inject
 
@@ -30,14 +30,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
     private lateinit var binding: FragmentSpotifyDashboardBinding
-    override val toolbar: Toolbar
-        get() = binding.dashboardToolbar
+    override val toolbar: Toolbar get() = binding.dashboardToolbar
 
     private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
             fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 categories,
                 R.string.categories,
@@ -53,7 +52,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 playlists,
                 R.string.featured_playlists,
@@ -69,7 +68,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 newReleases,
                 R.string.new_releases,
@@ -85,7 +84,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            loadableCarouselWithHeader(
+            defaultLoadableCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,

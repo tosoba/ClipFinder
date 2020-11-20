@@ -10,9 +10,12 @@ import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
 import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
+import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable2
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.core.ext.mapIndexed
@@ -44,7 +47,7 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() {
-        loadPaged(State::categories, getCategories::intoState) { copy(categories = it) }
+        loadPagedNoDefault(State::categories, getCategories::intoState, ::PagedItemsList) { copy(categories = it) }
     }
 
     fun clearCategoriesError() {
@@ -92,7 +95,7 @@ class SpotifyDashboardViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
-            if (categories.retryLoadItemsOnNetworkAvailable) loadCategories()
+            if (categories.retryLoadItemsOnNetworkAvailable2) loadCategories()
             if (playlists.retryLoadItemsOnNetworkAvailable) loadFeaturedPlaylists()
             if (tracks.retryLoadItemsOnNetworkAvailable) loadViralTracks()
             if (releases.retryLoadItemsOnNetworkAvailable) loadNewReleases()
@@ -115,7 +118,7 @@ class SpotifyDashboardViewModel(
 }
 
 private fun GetCategories.intoState(state: State): Single<Resource<Paged<List<Category>>>> =
-    this(applySchedulers = false, args = state.categories.value.offset)
+    this(applySchedulers = false, args = state.categories.offset)
         .mapData { categories -> categories.map(::Category) }
 
 private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =

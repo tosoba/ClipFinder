@@ -98,7 +98,7 @@ inline fun <Value, Item, P : HoldsPagedData<Value, P>> EpoxyController.pagedData
     }
 }
 
-inline fun <I> EpoxyController.loadableCarouselWithHeader(
+inline fun <I> EpoxyController.defaultLoadableCarouselWithHeader(
     context: Context,
     data: DefaultLoadable<Collection<I>>,
     @StringRes headerRes: Int,
@@ -107,10 +107,10 @@ inline fun <I> EpoxyController.loadableCarouselWithHeader(
     crossinline clearFailure: () -> Unit,
     buildItem: (I) -> EpoxyModel<*>
 ) {
-    loadableCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
+    defaultLoadableCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
 }
 
-inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
+inline fun <T, I> EpoxyController.defaultLoadableCarouselWithHeader(
     context: Context,
     loadable: DefaultLoadable<Collection<T>>,
     @StringRes headerRes: Int,
@@ -159,4 +159,3 @@ inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
         )
     }
 }
-
