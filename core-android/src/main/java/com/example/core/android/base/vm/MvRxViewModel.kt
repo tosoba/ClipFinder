@@ -67,7 +67,7 @@ open class MvRxViewModel<S : MvRxState>(
         return subscribe({
             setState {
                 when (it) {
-                    is Resource.Success -> reducer(when (val loadable: Loadable<C> = valueOf(prop)) {
+                    is Resource.Success -> reducer(when (val loadable = valueOf(prop)) {
                         is WithValue -> loadable.copyWithPaged(it.data)
                         else -> Ready(newCopyableWithPaged(it.data))
                     })

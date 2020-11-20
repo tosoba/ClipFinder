@@ -14,7 +14,6 @@ import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable2
 import com.example.core.ext.map
 import com.example.core.ext.mapData
@@ -47,36 +46,33 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() {
-        loadPagedNoDefault(State::categories, getCategories::intoState, ::PagedItemsList) { copy(categories = it) }
-    }
-
-    fun clearCategoriesError() {
-        clearErrorIn(State::categories) { copy(categories = it) }
+        loadPagedNoDefault(State::categories, getCategories::intoState, ::PagedItemsList) {
+            copy(categories = it)
+        }
     }
 
     fun loadFeaturedPlaylists() {
-        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState) { copy(featuredPlaylists = it) }
-    }
-
-    fun clearFeaturedPlaylistsError() {
-        clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+        loadPagedNoDefault(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedItemsList) {
+            copy(featuredPlaylists = it)
+        }
     }
 
     fun loadViralTracks() {
-        loadPaged(State::viralTracks, getDailyViralTracks::intoState) { copy(viralTracks = it) }
-    }
-
-    fun clearViralTracksError() {
-        clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
+        loadPagedNoDefault(State::viralTracks, getDailyViralTracks::intoState, ::PagedItemsList) {
+            copy(viralTracks = it)
+        }
     }
 
     fun loadNewReleases() {
-        loadPaged(State::newReleases, getNewReleases::intoState) { copy(newReleases = it) }
+        loadPagedNoDefault(State::newReleases, getNewReleases::intoState, ::PagedItemsList) {
+            copy(newReleases = it)
+        }
     }
 
-    fun clearNewReleasesError() {
-        clearErrorIn(State::newReleases) { copy(newReleases = it) }
-    }
+    fun clearCategoriesError() = clearErrorIn(State::categories) { copy(categories = it) }
+    fun clearFeaturedPlaylistsError() = clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
+    fun clearViralTracksError() = clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
+    fun clearNewReleasesError() = clearErrorIn(State::newReleases) { copy(newReleases = it) }
 
     private fun handlePreferencesChanges() {
         Observable
@@ -96,9 +92,9 @@ class SpotifyDashboardViewModel(
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
             if (categories.retryLoadItemsOnNetworkAvailable2) loadCategories()
-            if (playlists.retryLoadItemsOnNetworkAvailable) loadFeaturedPlaylists()
-            if (tracks.retryLoadItemsOnNetworkAvailable) loadViralTracks()
-            if (releases.retryLoadItemsOnNetworkAvailable) loadNewReleases()
+            if (playlists.retryLoadItemsOnNetworkAvailable2) loadFeaturedPlaylists()
+            if (tracks.retryLoadItemsOnNetworkAvailable2) loadViralTracks()
+            if (releases.retryLoadItemsOnNetworkAvailable2) loadNewReleases()
         }
     }
 
@@ -122,19 +118,19 @@ private fun GetCategories.intoState(state: State): Single<Resource<Paged<List<Ca
         .mapData { categories -> categories.map(::Category) }
 
 private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
-    this(applySchedulers = false, args = state.featuredPlaylists.value.offset)
+    this(applySchedulers = false, args = state.featuredPlaylists.offset)
         .mapData { playlists -> playlists.map(::Playlist) }
 
 private fun GetNewReleases.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
-    this(applySchedulers = false, args = state.newReleases.value.offset)
+    this(applySchedulers = false, args = state.newReleases.offset)
         .mapData { album -> album.map(::Album) }
 
 private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<List<TopTrack>>>> =
-    this(applySchedulers = false, args = state.viralTracks.value.offset)
+    this(applySchedulers = false, args = state.viralTracks.offset)
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->
                 TopTrack(
-                    position = SpotifyDefaults.LIMIT * state.viralTracks.value.offset + index + 1,
+                    position = SpotifyDefaults.LIMIT * state.viralTracks.offset + index + 1,
                     track = Track(track)
                 )
             }

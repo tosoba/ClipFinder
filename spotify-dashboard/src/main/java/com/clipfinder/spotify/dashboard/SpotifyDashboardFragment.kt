@@ -20,7 +20,6 @@ import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.show
 import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
-import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.example.core.ext.castAs
@@ -53,7 +52,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 playlists,
                 R.string.featured_playlists,
@@ -69,7 +68,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 newReleases,
                 R.string.new_releases,
@@ -85,7 +84,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
