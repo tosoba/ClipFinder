@@ -1,5 +1,5 @@
 package com.example.core.android.model
 
-interface HasError {
+interface Failed {
     val error: Any?
 }

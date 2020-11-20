@@ -18,4 +18,4 @@ data class DefaultFailed<out T>(
     override val value: T,
     override val error: Any?
 ) : DefaultLoadable<T>(),
-    HasError
+    Failed

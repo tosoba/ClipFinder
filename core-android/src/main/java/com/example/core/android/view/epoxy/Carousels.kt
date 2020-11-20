@@ -127,9 +127,8 @@ inline fun <T, I> EpoxyController.defaultLoadableCarouselWithHeader(
 
     val value = loadable.value
     if (value.isEmpty()) {
-        if (loadable is DefaultInProgress) loadingIndicator {
-            id("loading-indicator-$idSuffix")
-        } else if (loadable is DefaultFailed) reloadControl {
+        if (loadable is DefaultInProgress) loadingIndicator { id("loading-indicator-$idSuffix") }
+        else if (loadable is DefaultFailed) reloadControl {
             id("reload-control-$idSuffix")
             onReloadClicked { _ -> loadItems() }
             message(context.getString(R.string.error_occurred))
@@ -157,5 +156,69 @@ inline fun <T, I> EpoxyController.defaultLoadableCarouselWithHeader(
             },
             modelBuilder = buildItem
         )
+    }
+}
+
+inline fun <I> EpoxyController.loadableCarouselWithHeader(
+    context: Context,
+    data: Loadable<Collection<I>>,
+    @StringRes headerRes: Int,
+    idSuffix: String,
+    crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
+    buildItem: (I) -> EpoxyModel<*>
+) {
+    loadableCarouselWithHeader(context, data, headerRes, idSuffix, loadItems, clearFailure, { it }, buildItem)
+}
+
+inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
+    context: Context,
+    loadable: Loadable<Collection<T>>,
+    @StringRes headerRes: Int,
+    idSuffix: String,
+    crossinline loadItems: () -> Unit,
+    crossinline clearFailure: () -> Unit,
+    mapToItems: (Collection<T>) -> Collection<I>,
+    buildItem: (I) -> EpoxyModel<*>
+) {
+    headerItem {
+        id("header-$idSuffix")
+        text(context.getString(headerRes))
+    }
+
+    when (loadable) {
+        is LoadingFirst -> loadingIndicator { id("loading-indicator-$idSuffix") }
+        is FailedFirst -> reloadControl {
+            id("reload-control-$idSuffix")
+            onReloadClicked { _ -> loadItems() }
+            message(context.getString(R.string.error_occurred))
+        }
+        is WithValue -> {
+            val collection = loadable.value
+            carousel {
+                id(idSuffix)
+                withModelsFrom<I>(
+                    items = mapToItems(collection),
+                    extraModels = when {
+                        loadable is FailedNext -> listOf(
+                            ReloadControlBindingModel_()
+                                .id("reload-control-$idSuffix")
+                                .message(context.getString(R.string.error_occurred))
+                                .onVisibilityStateChanged { _, _, visibilityState ->
+                                    if (visibilityState == VisibilityState.INVISIBLE) clearFailure()
+                                }
+                                .onReloadClicked { _ -> loadItems() }
+                        )
+                        collection is CompletionTrackable && !collection.completed -> listOf(
+                            LoadingIndicatorBindingModel_()
+                                .id("loading-more-$idSuffix")
+                                .onBind { _, _, _ -> loadItems() }
+                        )
+                        else -> emptyList()
+                    },
+                    modelBuilder = buildItem
+                )
+            }
+        }
     }
 }

@@ -50,7 +50,7 @@ open class MvRxViewModel<S : MvRxState>(
             C : CompletionTrackable,
             I : Iterable<T> = withState { state ->
         val loadable = state.valueOf(prop)
-        if (loadable is LoadingInProgress || loadable.castAs<HasValue<C>>()?.value?.completed == true) return@withState
+        if (loadable is LoadingInProgress || (loadable is WithValue && loadable.value.completed)) return@withState
         action(state)
             .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
             .updateLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
@@ -67,10 +67,10 @@ open class MvRxViewModel<S : MvRxState>(
         return subscribe({
             setState {
                 when (it) {
-                    is Resource.Success -> reducer(
-                        valueOf(prop).castAs<HasValue<C>>()?.copyWithPaged(it.data)
-                            ?: Ready(newCopyableWithPaged(it.data))
-                    )
+                    is Resource.Success -> reducer(when (val loadable: Loadable<C> = valueOf(prop)) {
+                        is WithValue -> loadable.copyWithPaged(it.data)
+                        else -> Ready(newCopyableWithPaged(it.data))
+                    })
                     is Resource.Error -> {
                         it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
