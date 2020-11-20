@@ -14,7 +14,7 @@ import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable2
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.core.ext.mapIndexed
@@ -46,25 +46,25 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() {
-        loadPagedNoDefault(State::categories, getCategories::intoState, ::PagedItemsList) {
+        loadPaged(State::categories, getCategories::intoState, ::PagedItemsList) {
             copy(categories = it)
         }
     }
 
     fun loadFeaturedPlaylists() {
-        loadPagedNoDefault(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedItemsList) {
+        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedItemsList) {
             copy(featuredPlaylists = it)
         }
     }
 
     fun loadViralTracks() {
-        loadPagedNoDefault(State::viralTracks, getDailyViralTracks::intoState, ::PagedItemsList) {
+        loadPaged(State::viralTracks, getDailyViralTracks::intoState, ::PagedItemsList) {
             copy(viralTracks = it)
         }
     }
 
     fun loadNewReleases() {
-        loadPagedNoDefault(State::newReleases, getNewReleases::intoState, ::PagedItemsList) {
+        loadPaged(State::newReleases, getNewReleases::intoState, ::PagedItemsList) {
             copy(newReleases = it)
         }
     }
@@ -91,10 +91,10 @@ class SpotifyDashboardViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (categories, playlists, tracks, releases) ->
-            if (categories.retryLoadItemsOnNetworkAvailable2) loadCategories()
-            if (playlists.retryLoadItemsOnNetworkAvailable2) loadFeaturedPlaylists()
-            if (tracks.retryLoadItemsOnNetworkAvailable2) loadViralTracks()
-            if (releases.retryLoadItemsOnNetworkAvailable2) loadNewReleases()
+            if (categories.retryLoadCollectionOnConnected) loadCategories()
+            if (playlists.retryLoadCollectionOnConnected) loadFeaturedPlaylists()
+            if (tracks.retryLoadCollectionOnConnected) loadViralTracks()
+            if (releases.retryLoadCollectionOnConnected) loadNewReleases()
         }
     }
 

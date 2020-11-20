@@ -29,7 +29,7 @@ import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
+import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.example.core.android.view.radarchart.RadarChartAxisView
 import com.example.core.android.view.radarchart.RadarChartView
 import com.example.core.android.view.radarchart.RadarMarkerView
@@ -64,7 +64,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                     .addTo(this)
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 artists,
                 R.string.artists,
@@ -77,7 +77,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                 }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 similarTracks,
                 R.string.similar_tracks,

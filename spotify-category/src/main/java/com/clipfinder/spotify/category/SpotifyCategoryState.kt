@@ -1,16 +1,15 @@
 package com.clipfinder.spotify.category
 
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.DefaultLoadable
-import com.example.core.android.model.DefaultReady
-import com.example.core.android.model.PagedDataList
+import com.example.core.android.model.Empty
+import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedItemsList
-import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Category
+import com.example.core.android.spotify.model.Playlist
 
 data class SpotifyCategoryState(
     val category: Category,
-    val playlists: DefaultLoadable<PagedItemsList<Playlist>> = DefaultReady(PagedItemsList())
+    val playlists: Loadable<PagedItemsList<Playlist>>
 ) : MvRxState {
-    constructor(category: Category) : this(category, DefaultReady(PagedItemsList()))
+    constructor(category: Category) : this(category, Empty)
 }

@@ -12,11 +12,13 @@ import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.SimplifiedArtist
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.util.ext.offset
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.android.util.ext.retryLoadOnNetworkAvailable
 import com.example.core.ext.map
 import com.example.core.ext.mapData
@@ -67,7 +69,7 @@ class SpotifyTrackViewModel(
     }
 
     fun loadSimilarTracks() {
-        loadPaged(State::similarTracks, getSimilarTracks::withState) { copy(similarTracks = it) }
+        loadPaged(State::similarTracks, getSimilarTracks::withState, ::PagedItemsList) { copy(similarTracks = it) }
     }
 
     fun clearSimilarTracksError() {
@@ -82,8 +84,8 @@ class SpotifyTrackViewModel(
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (_, album, artists, tracks, audioFeatures) ->
             if (album.retryLoadOnNetworkAvailable) loadAlbum()
-            if (artists.retryLoadItemsOnNetworkAvailable) loadArtists()
-            if (tracks.retryLoadItemsOnNetworkAvailable) loadSimilarTracks()
+            if (artists.retryLoadCollectionOnConnected) loadArtists()
+            if (tracks.retryLoadCollectionOnConnected) loadSimilarTracks()
             if (audioFeatures.retryLoadOnNetworkAvailable) loadAudioFeatures()
         }
     }
@@ -112,7 +114,7 @@ private fun GetArtists.withState(
 
 private fun GetSimilarTracks.withState(
     state: State
-) = this(applySchedulers = false, args = GetSimilarTracks.Args(state.track.id, state.similarTracks.value.offset))
+) = this(applySchedulers = false, args = GetSimilarTracks.Args(state.track.id, state.similarTracks.offset))
     .mapData { tracks -> tracks.map(::Track) }
 
 private fun GetAudioFeatures.withState(state: State) = this(applySchedulers = false, args = state.track.id)

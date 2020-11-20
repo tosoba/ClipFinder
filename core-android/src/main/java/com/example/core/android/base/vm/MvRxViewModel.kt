@@ -5,6 +5,7 @@ import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.*
 import com.example.core.android.util.ext.copyWithPaged
+import com.example.core.android.util.ext.isLoadingOrCompleted
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.castAs
 import com.example.core.model.Paged
@@ -21,24 +22,6 @@ open class MvRxViewModel<S : MvRxState>(
 ) : BaseMvRxViewModel<S>(initialState, debugMode) {
 
     protected fun <C, T, I> loadPaged(
-        prop: KProperty1<S, DefaultLoadable<C>>,
-        action: (S) -> Single<Resource<Paged<I>>>,
-        subscribeOnScheduler: Scheduler? = Schedulers.io(),
-        onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
-    ) where C : CopyableWithPaged<T, C>,
-            C : CompletionTrackable,
-            I : Iterable<T> = withState { state ->
-        val loadable = state.valueOf(prop)
-        if (loadable !is DefaultInProgress && !loadable.value.completed) {
-            action(state)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
-        }
-    }
-
-    protected fun <C, T, I> loadPagedNoDefault(
         prop: KProperty1<S, Loadable<C>>,
         action: (S) -> Single<Resource<Paged<I>>>,
         newCopyableWithPaged: (Paged<I>) -> C,
@@ -85,35 +68,39 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <C, T, I, Args> loadPaged(
-        prop: KProperty1<S, DefaultLoadable<C>>,
+        prop: KProperty1<S, Loadable<C>>,
         action: (S, Args) -> Single<Resource<Paged<I>>>,
         args: Args,
+        newCopyableWithPaged: (Paged<I>) -> C,
         subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
     ) where C : CopyableWithPaged<T, C>,
             C : CompletionTrackable,
             I : Iterable<T> = withState { state ->
         val loadable = state.valueOf(prop)
-        if (loadable !is DefaultInProgress && !loadable.value.completed) {
-            action(state, args)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, reducer)
-        }
+        if (loadable.isLoadingOrCompleted) return@withState
+        action(state, args)
+            .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+            .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
     }
 
     private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateDefaultLoadableWithPagedResource(
-        prop: KProperty1<S, DefaultLoadable<C>>,
+        prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        newCopyableWithPaged: (Paged<I>) -> C,
+        reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
         return subscribe({
             setState {
                 when (it) {
-                    is Resource.Success -> reducer(valueOf(prop).copyWithPaged(it.data))
+                    is Resource.Success -> reducer(when (val loadable = valueOf(prop)) {
+                        is WithValue -> loadable.copyWithPaged(it.data)
+                        else -> Ready(newCopyableWithPaged(it.data))
+                    })
                     is Resource.Error -> {
                         it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
@@ -128,32 +115,31 @@ open class MvRxViewModel<S : MvRxState>(
     }
 
     protected fun <T, C : Collection<T>> loadCollection(
-        prop: KProperty1<S, DefaultLoadable<C>>,
+        prop: KProperty1<S, Loadable<C>>,
         action: (S) -> Single<Resource<C>>,
         subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
     ) = withState { state ->
         val loadable = state.valueOf(prop)
-        if (loadable !is DefaultInProgress) {
-            action(state)
-                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-                .updateDefaultLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
-        }
+        if (loadable is LoadingInProgress) return@withState
+        action(state)
+            .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+            .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
     }
 
-    private fun <T, C : Collection<T>> Single<Resource<C>>.updateDefaultLoadableWithCollectionResource(
-        prop: KProperty1<S, DefaultLoadable<C>>,
+    private fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
+        prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
-        copyWithLoading: DefaultLoadable<C>.() -> DefaultLoadable<C> = { copyWithLoadingInProgress },
-        reducer: S.(DefaultLoadable<C>) -> S
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
         return subscribe({
             setState {
                 when (it) {
-                    is Resource.Success -> reducer(DefaultReady(it.data))
+                    is Resource.Success -> reducer(Ready(it.data))
                     is Resource.Error -> {
                         it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")

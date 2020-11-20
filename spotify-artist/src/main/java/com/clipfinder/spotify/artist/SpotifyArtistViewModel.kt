@@ -8,14 +8,18 @@ import com.clipfinder.core.spotify.usecase.GetAlbumsFromArtist
 import com.clipfinder.core.spotify.usecase.GetRelatedArtists
 import com.clipfinder.core.spotify.usecase.GetTopTracksFromArtist
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.DefaultInProgress
+import com.example.core.android.model.LoadingFirst
 import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.Ready
+import com.example.core.android.model.WithValue
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.copyWithPaged
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.util.ext.isLoadingOrCompleted
+import com.example.core.android.util.ext.offset
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.ext.castAs
 import com.example.core.ext.map
 import com.example.core.ext.mapData
@@ -69,17 +73,17 @@ class SpotifyArtistViewModel(
 
     fun loadAlbumsFromArtist(shouldClear: Boolean = false) {
         if (shouldClear) clear.accept(Unit)
-        withState { state ->
-            if (state.albums.value.completed && !shouldClear) return@withState
+        withState { (artists, currentAlbums) ->
+            if (currentAlbums.isLoadingOrCompleted && !shouldClear) return@withState
 
             setState {
-                if (shouldClear) copy(albums = DefaultInProgress(PagedItemsList()))
+                if (shouldClear) copy(albums = LoadingFirst)
                 else copy(albums = albums.copyWithLoadingInProgress)
             }
 
             val args = GetAlbumsFromArtist.Args(
-                artistId = state.artists.last().id,
-                offset = if (shouldClear) 0 else state.albums.value.offset
+                artistId = artists.last().id,
+                offset = if (shouldClear) 0 else currentAlbums.offset
             )
             getAlbumsFromArtist(args = args, applySchedulers = false)
                 .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
@@ -88,7 +92,10 @@ class SpotifyArtistViewModel(
                 .subscribe({
                     setState {
                         when (it) {
-                            is Resource.Success -> copy(albums = albums.copyWithPaged(it.data))
+                            is Resource.Success -> copy(albums = when (albums) {
+                                is WithValue -> albums.copyWithPaged(it.data)
+                                else -> Ready(PagedItemsList(it.data))
+                            })
                             is Resource.Error -> {
                                 it.error?.castAs<Throwable>()?.let(::log)
                                     ?: Timber.wtf("Unknown error")
@@ -104,25 +111,17 @@ class SpotifyArtistViewModel(
         }
     }
 
-    fun clearAlbumsError() {
-        clearErrorIn(State::albums) { copy(albums = it) }
-    }
-
     fun loadTopTracksFromArtist() {
         loadCollection(State::topTracks, getTopTracksFromArtist::intoState) { copy(topTracks = it) }
-    }
-
-    fun clearTopTracksError() {
-        clearErrorIn(State::topTracks) { copy(topTracks = it) }
     }
 
     fun loadRelatedArtists() {
         loadCollection(State::relatedArtists, getRelatedArtists::intoState) { copy(relatedArtists = it) }
     }
 
-    fun clearRelatedArtistsError() {
-        clearErrorIn(State::relatedArtists) { copy(relatedArtists = it) }
-    }
+    fun clearAlbumsError() = clearErrorIn(State::albums) { copy(albums = it) }
+    fun clearTopTracksError() = clearErrorIn(State::topTracks) { copy(topTracks = it) }
+    fun clearRelatedArtistsError() = clearErrorIn(State::relatedArtists) { copy(relatedArtists = it) }
 
     private fun handlePreferencesChanges() {
         preferences.countryObservable
@@ -135,9 +134,9 @@ class SpotifyArtistViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (_, albums, topTracks, relatedArtists) ->
-            if (albums.retryLoadItemsOnNetworkAvailable) loadAlbumsFromArtist()
-            if (topTracks.retryLoadItemsOnNetworkAvailable) loadTopTracksFromArtist()
-            if (relatedArtists.retryLoadItemsOnNetworkAvailable) loadRelatedArtists()
+            if (albums.retryLoadCollectionOnConnected) loadAlbumsFromArtist()
+            if (topTracks.retryLoadCollectionOnConnected) loadTopTracksFromArtist()
+            if (relatedArtists.retryLoadCollectionOnConnected) loadRelatedArtists()
         }
     }
 

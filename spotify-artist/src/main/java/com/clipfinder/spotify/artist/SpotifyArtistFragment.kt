@@ -15,12 +15,13 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.example.core.android.base.fragment.BackPressedHandler
+import com.example.core.android.model.WithValue
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.defaultLoadableCarouselWithHeader
+import com.example.core.android.view.epoxy.loadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -31,7 +32,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 albums,
                 R.string.albums,
@@ -44,7 +45,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 relatedArtists,
                 R.string.related_artists,
@@ -55,7 +56,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 artist.clickableListItem { viewModel.updateArtist(artist) }
             }
 
-            defaultLoadableCarouselWithHeader(
+            loadableCarouselWithHeader(
                 requireContext(),
                 topTracks,
                 R.string.top_tracks,
@@ -74,6 +75,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         val binding = FragmentSpotifyArtistBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {
+            if (it !is WithValue) return@selectSubscribe
             binding.artistFavouriteFab.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),

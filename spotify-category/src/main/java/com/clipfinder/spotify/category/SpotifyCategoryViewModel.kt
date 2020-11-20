@@ -6,9 +6,11 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.util.ext.offset
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.core.model.Paged
@@ -39,7 +41,8 @@ class SpotifyCategoryViewModel(
         loadPaged(
             State::playlists,
             { state, args -> getPlaylistsForCategory.intoState(state, args) },
-            args = shouldClear
+            shouldClear,
+            ::PagedItemsList
         ) { copy(playlists = it) }
     }
 
@@ -59,7 +62,7 @@ class SpotifyCategoryViewModel(
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (_, playlists) ->
-            if (playlists.retryLoadItemsOnNetworkAvailable) loadPlaylists()
+            if (playlists.retryLoadCollectionOnConnected) loadPlaylists()
         }
     }
 
@@ -68,7 +71,7 @@ class SpotifyCategoryViewModel(
     ): Single<Resource<Paged<List<Playlist>>>> {
         val args = GetPlaylistsForCategory.Args(
             categoryId = state.category.id,
-            offset = if (shouldClear) 0 else state.playlists.value.offset
+            offset = if (shouldClear) 0 else state.playlists.offset
         )
         return this(applySchedulers = false, args = args)
             .mapData { playlistsPage -> playlistsPage.map(::Playlist) }

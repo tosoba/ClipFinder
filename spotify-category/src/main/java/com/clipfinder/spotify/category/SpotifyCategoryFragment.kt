@@ -19,7 +19,7 @@ import com.example.core.android.spotify.model.Category
 import com.example.core.android.spotify.model.clickableGridListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.defaultLoadableCollectionController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
@@ -31,7 +31,7 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
 
     private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by lazy(LazyThreadSafetyMode.NONE) {
         val loadPlaylists = { viewModel.loadPlaylists() }
-        defaultLoadableCollectionController(
+        loadableCollectionController(
             SpotifyCategoryState::playlists,
             headerText = getString(R.string.playlists),
             loadMore = loadPlaylists,
