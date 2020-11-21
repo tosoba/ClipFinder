@@ -1,4 +1,4 @@
-package com.example.spotify.account.playlist.ui
+package com.example.spotify.account.playlist
 
 import android.content.res.Configuration
 import android.os.Bundle

@@ -1,9 +1,10 @@
-package com.example.spotify.account.playlist.ui
+package com.example.spotify.account.playlist
 
 import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersPlaylists
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Empty
 import com.example.core.android.model.Loadable
@@ -15,7 +16,6 @@ import com.example.core.ext.map
 import com.example.core.ext.mapData
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.spotify.account.playlist.domain.usecase.GetCurrentUsersPlaylists
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1

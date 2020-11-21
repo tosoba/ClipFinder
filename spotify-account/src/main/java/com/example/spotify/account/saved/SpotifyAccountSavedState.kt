@@ -1,4 +1,4 @@
-package com.example.spotify.account.saved.ui
+package com.example.spotify.account.saved
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.Empty

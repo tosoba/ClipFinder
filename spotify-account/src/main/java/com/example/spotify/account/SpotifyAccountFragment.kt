@@ -16,9 +16,9 @@ import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.core.ext.castAs
 import com.example.spotify.account.databinding.FragmentSpotifyAccountBinding
-import com.example.spotify.account.playlist.ui.SpotifyAccountPlaylistsFragment
-import com.example.spotify.account.saved.ui.SpotifyAccountSavedFragment
-import com.example.spotify.account.top.ui.SpotifyAccountTopFragment
+import com.example.spotify.account.playlist.SpotifyAccountPlaylistsFragment
+import com.example.spotify.account.saved.SpotifyAccountSavedFragment
+import com.example.spotify.account.top.SpotifyAccountTopFragment
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
     private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)

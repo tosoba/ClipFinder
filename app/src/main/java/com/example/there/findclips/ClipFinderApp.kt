@@ -17,9 +17,6 @@ import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.soundclouddashboard.di.soundCloudDashboardModule
-import com.example.spotify.account.playlist.di.spotifyAccountPlaylistsModule
-import com.example.spotify.account.saved.di.spotifyAccountSavedModule
-import com.example.spotify.account.top.di.spotifyAccountTopModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.github.mikephil.charting.utils.Utils
@@ -60,18 +57,17 @@ class ClipFinderApp : Application() {
 
     private fun initNotifications() {
         startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager::class.java)
-                .createNotificationChannel(
-                    NotificationChannel(
-                        PlaybackNotification.CHANNEL_ID,
-                        getString(R.string.channel_name),
-                        NotificationManager.IMPORTANCE_DEFAULT
-                    ).apply {
-                        description = getString(R.string.channel_description)
-                    }
-                )
-        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(
+                NotificationChannel(
+                    PlaybackNotification.CHANNEL_ID,
+                    getString(R.string.channel_name),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = getString(R.string.channel_description)
+                }
+            )
     }
 
     private fun initKoin() {
@@ -85,7 +81,6 @@ class ClipFinderApp : Application() {
                 appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyChartsApiModule, spotifyApiModule,
                 spotifyCoreAndroidModule, spotifyCoreModule,
-                spotifyAccountTopModule, spotifyAccountPlaylistsModule, spotifyAccountSavedModule,
 
                 soundCloudCoreAndroidModule,
                 soundCloudDashboardModule,

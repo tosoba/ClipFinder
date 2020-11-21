@@ -7,12 +7,12 @@ import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.model.*
 import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import com.example.core.ext.mapSuccess
 import com.example.core.ext.mapToResource
 import com.example.core.ext.resource
 import com.example.core.ext.toPaged
+import com.example.core.model.Paged
+import com.example.core.model.Resource
 import io.reactivex.Single
 
 class SpotifyRepo(
@@ -21,6 +21,8 @@ class SpotifyRepo(
     private val artistEndpoints: ArtistEndpoints,
     private val browseEndpoints: BrowseEndpoints,
     private val chartsEndpoints: ChartsEndpoints,
+    private val libraryEndpoints: LibraryEndpoints,
+    private val personalizationEndpoints: PersonalizationEndpoints,
     private val playlistsEndpoints: PlaylistsEndpoints,
     private val searchEndpoints: SearchEndpoints,
     private val tracksEndpoints: TracksEndpoints,
@@ -179,4 +181,34 @@ class SpotifyRepo(
                 total = total
             )
         }
+
+    override fun getCurrentUsersTopTracks(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = personalizationEndpoints
+        .getUsersTopTracks(offset = offset)
+        .mapToResource { toPaged() }
+
+    override fun getCurrentUsersTopArtists(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyArtist>>>> = personalizationEndpoints
+        .getUsersTopArtists(offset = offset)
+        .mapToResource { toPaged() }
+
+    override fun getCurrentUsersSavedTracks(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = libraryEndpoints
+        .getUsersSavedTracks(offset = offset)
+        .mapToResource { toPaged(mapItems = SavedTrackObject::track) }
+
+    override fun getCurrentUsersSavedAlbums(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = libraryEndpoints
+        .getUsersSavedAlbums(offset = offset)
+        .mapToResource { toPaged(mapItems = SavedAlbumObject::album) }
+
+    override fun getCurrentUsersPlaylists(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = playlistsEndpoints
+        .getAListOfCurrentUsersPlaylists(offset = offset)
+        .mapToResource { toPaged() }
 }
