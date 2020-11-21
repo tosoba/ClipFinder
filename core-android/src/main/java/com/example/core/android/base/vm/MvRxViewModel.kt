@@ -5,7 +5,7 @@ import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.*
 import com.example.core.android.util.ext.copyWithPaged
-import com.example.core.android.util.ext.isLoadingOrCompleted
+import com.example.core.android.util.ext.loadingOrCompleted
 import com.example.core.android.util.ext.observeNetworkConnectivity
 import com.example.core.ext.castAs
 import com.example.core.model.Paged
@@ -47,17 +47,14 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
-        return subscribe({
+        return subscribe({ resource ->
             setState {
-                when (it) {
-                    is Resource.Success -> reducer(when (val loadable = valueOf(prop)) {
-                        is WithValue -> loadable.copyWithPaged(it.data)
-                        else -> Ready(newCopyableWithPaged(it.data))
-                    })
+                when (resource) {
+                    is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
                     is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
+                        resource.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
+                        reducer(valueOf(prop).copyWithError(resource.error))
                     }
                 }
             }
@@ -65,6 +62,15 @@ open class MvRxViewModel<S : MvRxState>(
             setState { reducer(valueOf(prop).copyWithError(it)) }
             onError(it)
         }).disposeOnClear()
+    }
+
+    protected fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> S.copyWithPaged(
+        paged: Paged<I>,
+        prop: KProperty1<S, Loadable<C>>,
+        newCopyableWithPaged: (Paged<I>) -> C
+    ): Loadable<C> = when (val loadable = valueOf(prop)) {
+        is WithValue -> loadable.copyWithPaged(paged)
+        else -> Ready(newCopyableWithPaged(paged))
     }
 
     protected fun <C, T, I, Args> loadPaged(
@@ -80,7 +86,7 @@ open class MvRxViewModel<S : MvRxState>(
             C : CompletionTrackable,
             I : Iterable<T> = withState { state ->
         val loadable = state.valueOf(prop)
-        if (loadable.isLoadingOrCompleted) return@withState
+        if (loadable.loadingOrCompleted) return@withState
         action(state, args)
             .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
             .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
@@ -94,17 +100,14 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
-        return subscribe({
+        return subscribe({ resource ->
             setState {
-                when (it) {
-                    is Resource.Success -> reducer(when (val loadable = valueOf(prop)) {
-                        is WithValue -> loadable.copyWithPaged(it.data)
-                        else -> Ready(newCopyableWithPaged(it.data))
-                    })
+                when (resource) {
+                    is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
                     is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
+                        resource.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
+                        reducer(valueOf(prop).copyWithError(resource.error))
                     }
                 }
             }

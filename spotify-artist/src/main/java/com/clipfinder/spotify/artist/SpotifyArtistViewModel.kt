@@ -17,7 +17,7 @@ import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.copyWithPaged
-import com.example.core.android.util.ext.isLoadingOrCompleted
+import com.example.core.android.util.ext.loadingOrCompleted
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.ext.castAs
@@ -74,7 +74,7 @@ class SpotifyArtistViewModel(
     fun loadAlbumsFromArtist(shouldClear: Boolean = false) {
         if (shouldClear) clear.accept(Unit)
         withState { (artists, currentAlbums) ->
-            if (currentAlbums.isLoadingOrCompleted && !shouldClear) return@withState
+            if (currentAlbums.loadingOrCompleted && !shouldClear) return@withState
 
             setState {
                 if (shouldClear) copy(albums = LoadingFirst)

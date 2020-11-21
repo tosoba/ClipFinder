@@ -26,5 +26,8 @@ fun <T : CopyableWithPaged<I, T>, I, IT : Iterable<I>> WithValue<T>.copyWithPage
     paged: Paged<IT>
 ): Loadable<T> = Ready(value.copyWithPaged(paged))
 
-val <T : CompletionTrackable> Loadable<T>.isLoadingOrCompleted: Boolean
-    get() = (this is WithValue && value.completed) || this is LoadingInProgress
+val <T : CompletionTrackable> Loadable<T>.completed: Boolean
+    get() = this is WithValue && value.completed
+
+val <T : CompletionTrackable> Loadable<T>.loadingOrCompleted: Boolean
+    get() = completed || this is LoadingInProgress

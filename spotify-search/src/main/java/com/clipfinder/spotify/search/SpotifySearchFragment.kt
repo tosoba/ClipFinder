@@ -11,13 +11,14 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchBinding
 import com.example.core.android.base.fragment.ItemListFragment
-import com.example.core.android.model.DefaultLoadable
+import com.example.core.android.model.Loadable
+import com.example.core.android.model.PagedItemsList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.defaultLoadableCollectionController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
@@ -56,12 +57,12 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         abstract class BaseListFragment<I> : ItemListFragment<SpotifySearchState>() {
             protected val viewModel: SpotifySearchViewModel by parentFragmentViewModel()
             protected val factory: ISpotifyFragmentsFactory by inject()
-            protected abstract val prop: KProperty1<SpotifySearchState, DefaultLoadable<Collection<I>>>
+            protected abstract val prop: KProperty1<SpotifySearchState, Loadable<Collection<I>>>
             protected abstract val search: () -> Unit
             protected abstract val clearError: () -> Unit
 
             override val epoxyController: TypedEpoxyController<SpotifySearchState> by lazy(LazyThreadSafetyMode.NONE) {
-                defaultLoadableCollectionController(
+                loadableCollectionController(
                     prop,
                     loadMore = search,
                     reloadClicked = search,
@@ -75,7 +76,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         }
 
         class AlbumListFragment : BaseListFragment<Album>() {
-            override val prop = SpotifySearchState::albums
+            override val prop: KProperty1<SpotifySearchState, Loadable<PagedItemsList<Album>>> = SpotifySearchState::albums
             override val search: () -> Unit get() = viewModel::searchAlbums
             override val clearError: () -> Unit get() = viewModel::clearAlbumsError
             override fun buildItem(item: Album): EpoxyModel<*> = item.clickableListItem {
@@ -84,7 +85,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         }
 
         class ArtistListFragment : BaseListFragment<Artist>() {
-            override val prop = SpotifySearchState::artists
+            override val prop: KProperty1<SpotifySearchState, Loadable<PagedItemsList<Artist>>> = SpotifySearchState::artists
             override val search: () -> Unit get() = viewModel::searchArtists
             override val clearError: () -> Unit get() = viewModel::clearArtistsError
             override fun buildItem(item: Artist): EpoxyModel<*> = item.clickableListItem {
@@ -93,7 +94,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         }
 
         class PlaylistListFragment : BaseListFragment<Playlist>() {
-            override val prop = SpotifySearchState::playlists
+            override val prop: KProperty1<SpotifySearchState, Loadable<PagedItemsList<Playlist>>> = SpotifySearchState::playlists
             override val search: () -> Unit get() = viewModel::searchPlaylists
             override val clearError: () -> Unit get() = viewModel::clearPlaylistsError
             override fun buildItem(item: Playlist): EpoxyModel<*> = item.clickableListItem {
@@ -102,7 +103,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
         }
 
         class TrackListFragment : BaseListFragment<Track>() {
-            override val prop = SpotifySearchState::tracks
+            override val prop: KProperty1<SpotifySearchState, Loadable<PagedItemsList<Track>>> = SpotifySearchState::tracks
             override val search: () -> Unit get() = viewModel::searchTracks
             override val clearError: () -> Unit get() = viewModel::clearTracksError
             override fun buildItem(item: Track): EpoxyModel<*> = item.clickableListItem {
