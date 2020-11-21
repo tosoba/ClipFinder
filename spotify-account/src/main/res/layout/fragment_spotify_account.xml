@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    tools:context="com.example.spotify.account.SpotifyAccountFragment">
+    tools:context="com.clipfinder.spotify.account.SpotifyAccountFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/account_app_bar_layout"

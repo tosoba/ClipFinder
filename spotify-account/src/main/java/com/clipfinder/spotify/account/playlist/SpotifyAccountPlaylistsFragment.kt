@@ -1,4 +1,4 @@
-package com.example.spotify.account.playlist
+package com.clipfinder.spotify.account.playlist
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -12,6 +12,8 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.account.R
+import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import com.example.core.android.LargeTextCenterBindingModel_
 import com.example.core.android.model.Empty
 import com.example.core.android.spotify.ext.spotifyAuthController
@@ -19,8 +21,6 @@ import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.loadableCollectionController
-import com.example.spotify.account.R
-import com.example.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {

@@ -1,4 +1,4 @@
-package com.example.spotify.account
+package com.clipfinder.spotify.account
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,6 +8,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
+import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
+import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
+import com.clipfinder.spotify.account.top.SpotifyAccountTopFragment
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
 import com.example.core.android.util.ext.mainContentFragment
@@ -15,10 +19,6 @@ import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import com.example.core.ext.castAs
-import com.example.spotify.account.databinding.FragmentSpotifyAccountBinding
-import com.example.spotify.account.playlist.SpotifyAccountPlaylistsFragment
-import com.example.spotify.account.saved.SpotifyAccountSavedFragment
-import com.example.spotify.account.top.SpotifyAccountTopFragment
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
     private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)

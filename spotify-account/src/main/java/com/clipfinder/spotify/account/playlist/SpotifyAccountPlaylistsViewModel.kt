@@ -1,4 +1,4 @@
-package com.example.spotify.account.playlist
+package com.clipfinder.spotify.account.playlist
 
 import android.annotation.SuppressLint
 import android.content.Context

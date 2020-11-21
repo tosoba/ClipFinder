@@ -1,4 +1,4 @@
-package com.example.spotify.account
+package com.clipfinder.spotify.account
 
 import androidx.fragment.app.Fragment
 import com.example.core.android.base.fragment.BaseNavHostFragment

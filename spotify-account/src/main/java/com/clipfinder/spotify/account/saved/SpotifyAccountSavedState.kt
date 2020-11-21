@@ -1,4 +1,4 @@
-package com.example.spotify.account.saved
+package com.clipfinder.spotify.account.saved
 
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.model.Empty

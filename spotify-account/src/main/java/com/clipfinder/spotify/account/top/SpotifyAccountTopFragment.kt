@@ -1,4 +1,4 @@
-package com.example.spotify.account.top
+package com.clipfinder.spotify.account.top
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,8 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.spotify.account.R
+import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountTopBinding
 import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Empty
 import com.example.core.android.spotify.ext.spotifyAuthController
@@ -19,8 +21,6 @@ import com.example.core.android.util.ext.show
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.loadableCarouselWithHeader
-import com.example.spotify.account.R
-import com.example.spotify.account.databinding.FragmentSpotifyAccountTopBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountTopFragment : BaseMvRxFragment() {

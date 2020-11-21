@@ -1,16 +1,16 @@
-package com.example.spotify.account.saved
+package com.clipfinder.spotify.account.top
 
 import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedAlbums
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedTracks
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopArtists
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopTracks
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Empty
 import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedList
-import com.example.core.android.spotify.model.Album
+import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
@@ -22,31 +22,31 @@ import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
 
-private typealias State = SpotifyAccountSavedState
+private typealias State = SpotifyAccountTopState
 
-class SpotifyAccountSavedViewModel(
-    initialState: SpotifyAccountSavedState,
-    private val getCurrentUsersSavedTracks: GetCurrentUsersSavedTracks,
-    private val getCurrentUsersSavedAlbums: GetCurrentUsersSavedAlbums,
+class SpotifyAccountTopViewModel(
+    initialState: State,
+    private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
+    private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists,
     context: Context
-) : MvRxViewModel<SpotifyAccountSavedState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
 
     init {
         handleConnectivityChanges(context)
-        subscribe { (userLoggedIn, tracks, albums) ->
+        subscribe { (userLoggedIn, tracks, artists) ->
             if (!userLoggedIn) return@subscribe
             if (tracks is Empty) loadTracks()
-            if (albums is Empty) loadAlbums()
+            if (artists is Empty) loadArtists()
         }.disposeOnClear()
     }
 
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
-    fun loadTracks() = loadPagedList(State::tracks, getCurrentUsersSavedTracks::intoState) { copy(tracks = it) }
-    fun clearTracksError() = clearErrorIn(State::tracks) { copy(tracks = it) }
-    fun loadAlbums() = loadPagedList(State::albums, getCurrentUsersSavedAlbums::intoState) { copy(albums = it) }
-    fun clearAlbumsError() = clearErrorIn(State::albums) { copy(albums = it) }
+    fun loadTracks() = load(State::topTracks, getCurrentUsersTopTracks::intoState) { copy(topTracks = it) }
+    fun clearTracksError() = clearErrorIn(State::topTracks) { copy(topTracks = it) }
+    fun loadArtists() = load(State::artists, getCurrentUsersTopArtists::intoState) { copy(artists = it) }
+    fun clearArtistsError() = clearErrorIn(State::artists) { copy(artists = it) }
 
-    private fun <I> loadPagedList(
+    private fun <I> load(
         prop: KProperty1<State, Loadable<PagedList<I>>>,
         action: (State) -> Single<Resource<Paged<List<I>>>>,
         reducer: State.(Loadable<PagedList<I>>) -> State
@@ -57,16 +57,16 @@ class SpotifyAccountSavedViewModel(
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context.handleConnectivityChanges { (userLoggedIn, tracks, albums) ->
+        context.handleConnectivityChanges { (userLoggedIn, tracks, artists) ->
             if (userLoggedIn && tracks.retryLoadCollectionOnConnected) loadTracks()
-            if (userLoggedIn && albums.retryLoadCollectionOnConnected) loadAlbums()
+            if (userLoggedIn && artists.retryLoadCollectionOnConnected) loadArtists()
         }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyAccountSavedViewModel, SpotifyAccountSavedState> {
+    companion object : MvRxViewModelFactory<SpotifyAccountTopViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifyAccountSavedState
-        ): SpotifyAccountSavedViewModel = SpotifyAccountSavedViewModel(
+            viewModelContext: ViewModelContext, state: State
+        ): SpotifyAccountTopViewModel = SpotifyAccountTopViewModel(
             state,
             viewModelContext.activity.get(),
             viewModelContext.activity.get(),
@@ -75,12 +75,12 @@ class SpotifyAccountSavedViewModel(
     }
 }
 
-internal fun GetCurrentUsersSavedTracks.intoState(
+internal fun GetCurrentUsersTopTracks.intoState(
     state: State
-): Single<Resource<Paged<List<Track>>>> = this(applySchedulers = false, args = state.tracks.offset)
+): Single<Resource<Paged<List<Track>>>> = this(applySchedulers = false, args = state.topTracks.offset)
     .mapData { newTracks -> newTracks.map(::Track) }
 
-internal fun GetCurrentUsersSavedAlbums.intoState(
+internal fun GetCurrentUsersTopArtists.intoState(
     state: State
-): Single<Resource<Paged<List<Album>>>> = this(applySchedulers = false, args = state.albums.offset)
-    .mapData { newAlbums -> newAlbums.map(::Album) }
+): Single<Resource<Paged<List<Artist>>>> = this(applySchedulers = false, args = state.artists.offset)
+    .mapData { newArtists -> newArtists.map(::Artist) }

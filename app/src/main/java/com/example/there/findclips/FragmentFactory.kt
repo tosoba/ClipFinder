@@ -1,7 +1,17 @@
 package com.example.there.findclips
 
 import androidx.fragment.app.Fragment
+import com.clipfinder.spotify.account.SpotifyAccountNavHostFragment
+import com.clipfinder.spotify.album.SpotifyAlbumFragment
+import com.clipfinder.spotify.artist.SpotifyArtistFragment
+import com.clipfinder.spotify.category.SpotifyCategoryFragment
+import com.clipfinder.spotify.dashboard.SpotifyDashboardNavHostFragment
+import com.clipfinder.spotify.playlist.SpotifyPlaylistFragment
+import com.clipfinder.spotify.search.SpotifySearchFragment
+import com.clipfinder.spotify.search.SpotifySearchMainFragment
 import com.clipfinder.spotify.track.SpotifyTrackFragment
+import com.clipfinder.spotify.track.videos.SpotifyTrackVideosFragment
+import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
@@ -11,16 +21,6 @@ import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.soundclouddashboard.ui.SoundCloudDashboardNavHostFragment
 import com.example.soundcloudplaylist.SoundCloudPlaylistFragment
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosFragment
-import com.example.spotify.account.SpotifyAccountNavHostFragment
-import com.clipfinder.spotify.album.SpotifyAlbumFragment
-import com.clipfinder.spotify.artist.SpotifyArtistFragment
-import com.clipfinder.spotify.category.SpotifyCategoryFragment
-import com.clipfinder.spotify.dashboard.SpotifyDashboardNavHostFragment
-import com.clipfinder.spotify.playlist.SpotifyPlaylistFragment
-import com.clipfinder.spotify.search.SpotifySearchFragment
-import com.clipfinder.spotify.search.SpotifySearchMainFragment
-import com.clipfinder.spotify.track.videos.SpotifyTrackVideosFragment
-import com.clipfinder.youtube.search.YoutubeSearchFragment
 
 object FragmentFactory : IFragmentFactory, ISpotifyFragmentsFactory {
 
