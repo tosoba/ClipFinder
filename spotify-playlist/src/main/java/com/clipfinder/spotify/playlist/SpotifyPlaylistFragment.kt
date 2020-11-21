@@ -16,29 +16,29 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.playlist.databinding.FragmentSpotifyPlaylistBinding
-import com.example.core.android.base.playlist.PlaylistViewState
+import com.example.core.android.model.WithValue
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.model.Playlist
-import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_playlist.*
 import org.koin.android.ext.android.inject
 
 class SpotifyPlaylistFragment : BaseMvRxFragment() {
-    private val factory: ISpotifyFragmentsFactory by inject()
-    private val viewModel: SpotifyPlaylistViewModel by fragmentViewModel()
     private val playlist: Playlist by args()
+    private val viewModel: SpotifyPlaylistViewModel by fragmentViewModel()
+    private val factory: ISpotifyFragmentsFactory by inject()
 
-    private val epoxyController: TypedEpoxyController<PlaylistViewState<Playlist, Track>> by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
-            PlaylistViewState<Playlist, Track>::tracks,
+    private val epoxyController: TypedEpoxyController<SpotifyPlaylistState> by lazy(LazyThreadSafetyMode.NONE) {
+        loadableCollectionController(
+            SpotifyPlaylistState::tracks,
             headerText = getString(R.string.tracks),
             loadMore = viewModel::loadTracks,
-            reloadClicked = viewModel::loadTracks
+            reloadClicked = viewModel::loadTracks,
+            clearFailure = viewModel::clearTracksError
         ) { track ->
             track.clickableListItem {
                 show { factory.newSpotifyTrackVideosFragment(track) }
@@ -72,13 +72,13 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.selectSubscribe(
-            this,
-            PlaylistViewState<Playlist, Track>::isSavedAsFavourite
-        ) {
+        viewModel.selectSubscribe(this, SpotifyPlaylistState::isSavedAsFavourite) {
+            if (it !is WithValue) return@selectSubscribe
             playlist_favourite_fab?.setImageDrawable(
-                ContextCompat.getDrawable(view.context,
-                    if (it.value) R.drawable.delete else R.drawable.favourite)
+                ContextCompat.getDrawable(
+                    view.context,
+                    if (it.value) R.drawable.delete else R.drawable.favourite
+                )
             )
             playlist_favourite_fab?.hideAndShow()
         }

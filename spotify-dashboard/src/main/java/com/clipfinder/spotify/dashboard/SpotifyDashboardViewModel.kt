@@ -45,30 +45,10 @@ class SpotifyDashboardViewModel(
         handleConnectivityChanges(context)
     }
 
-    fun loadCategories() {
-        loadPaged(State::categories, getCategories::intoState, ::PagedList) {
-            copy(categories = it)
-        }
-    }
-
-    fun loadFeaturedPlaylists() {
-        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedList) {
-            copy(featuredPlaylists = it)
-        }
-    }
-
-    fun loadViralTracks() {
-        loadPaged(State::viralTracks, getDailyViralTracks::intoState, ::PagedList) {
-            copy(viralTracks = it)
-        }
-    }
-
-    fun loadNewReleases() {
-        loadPaged(State::newReleases, getNewReleases::intoState, ::PagedList) {
-            copy(newReleases = it)
-        }
-    }
-
+    fun loadCategories() = loadPaged(State::categories, getCategories::intoState, ::PagedList) { copy(categories = it) }
+    fun loadFeaturedPlaylists() = loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedList) { copy(featuredPlaylists = it) }
+    fun loadViralTracks() = loadPaged(State::viralTracks, getDailyViralTracks::intoState, ::PagedList) { copy(viralTracks = it) }
+    fun loadNewReleases() = loadPaged(State::newReleases, getNewReleases::intoState, ::PagedList) { copy(newReleases = it) }
     fun clearCategoriesError() = clearErrorIn(State::categories) { copy(categories = it) }
     fun clearFeaturedPlaylistsError() = clearErrorIn(State::featuredPlaylists) { copy(featuredPlaylists = it) }
     fun clearViralTracksError() = clearErrorIn(State::viralTracks) { copy(viralTracks = it) }
