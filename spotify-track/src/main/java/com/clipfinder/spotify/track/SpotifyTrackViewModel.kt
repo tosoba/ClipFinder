@@ -12,7 +12,7 @@ import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.SimplifiedArtist
@@ -69,7 +69,7 @@ class SpotifyTrackViewModel(
     }
 
     fun loadSimilarTracks() {
-        loadPaged(State::similarTracks, getSimilarTracks::withState, ::PagedItemsList) { copy(similarTracks = it) }
+        loadPaged(State::similarTracks, getSimilarTracks::withState, ::PagedList) { copy(similarTracks = it) }
     }
 
     fun clearSimilarTracksError() {

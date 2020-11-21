@@ -12,7 +12,7 @@ val <T : Collection<I>, I> Loadable<T>.retryLoadCollectionOnConnected: Boolean
         && this is Failed
         && (error == null || error is IOException)
 
-val <T : PagedItemsList<I>, I> Loadable<T>.offset: Int
+val <T : PagedList<I>, I> Loadable<T>.offset: Int
     get() = if (this is WithValue) value.offset else 0
 
 val <T : Collection<I>, I> DefaultLoadable<T>.retryLoadItemsOnNetworkAvailable: Boolean

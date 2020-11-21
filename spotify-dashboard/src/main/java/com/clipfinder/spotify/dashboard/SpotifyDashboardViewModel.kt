@@ -10,7 +10,7 @@ import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
 import com.example.core.SpotifyDefaults
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
@@ -46,25 +46,25 @@ class SpotifyDashboardViewModel(
     }
 
     fun loadCategories() {
-        loadPaged(State::categories, getCategories::intoState, ::PagedItemsList) {
+        loadPaged(State::categories, getCategories::intoState, ::PagedList) {
             copy(categories = it)
         }
     }
 
     fun loadFeaturedPlaylists() {
-        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedItemsList) {
+        loadPaged(State::featuredPlaylists, getFeaturedPlaylists::intoState, ::PagedList) {
             copy(featuredPlaylists = it)
         }
     }
 
     fun loadViralTracks() {
-        loadPaged(State::viralTracks, getDailyViralTracks::intoState, ::PagedItemsList) {
+        loadPaged(State::viralTracks, getDailyViralTracks::intoState, ::PagedList) {
             copy(viralTracks = it)
         }
     }
 
     fun loadNewReleases() {
-        loadPaged(State::newReleases, getNewReleases::intoState, ::PagedItemsList) {
+        loadPaged(State::newReleases, getNewReleases::intoState, ::PagedList) {
             copy(newReleases = it)
         }
     }

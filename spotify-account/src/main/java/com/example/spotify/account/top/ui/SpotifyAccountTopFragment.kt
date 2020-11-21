@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.airbnb.epoxy.EpoxyModel
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -27,15 +28,13 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAccountTopViewModel by fragmentViewModel()
     private lateinit var binding: FragmentSpotifyAccountTopBinding
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyAccountTopState> by lazy(LazyThreadSafetyMode.NONE) {
         injectedTypedController<SpotifyAccountTopState> { (userLoggedIn, tracks, artists) ->
             fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column = Column(map(buildItem))
 
-            if (!userLoggedIn && tracks is Empty && artists is Empty) {
-                largeTextCenter {
-                    id("spotify-account-top-user-not-logged-in")
-                    text(getString(R.string.spotify_login_required))
-                }
+            if (!userLoggedIn && tracks is Empty && artists is Empty) largeTextCenter {
+                id("spotify-account-top-user-not-logged-in")
+                text(getString(R.string.spotify_login_required))
             } else {
                 fun <T> chunkedIntoColumns(collection: Collection<T>): List<List<T>> = collection.chunked(2)
 

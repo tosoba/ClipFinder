@@ -7,7 +7,7 @@ import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.usecase.SearchSpotify
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Playlist
@@ -39,7 +39,7 @@ class SpotifySearchViewModel(
     fun searchTracks() = searchIfNotCompleted(SpotifySearchState::tracks)
     fun clearTracksError() = clearErrorIn(SpotifySearchState::tracks) { copy(tracks = it) }
 
-    private fun <T> searchIfNotCompleted(prop: KProperty1<SpotifySearchState, Loadable<PagedItemsList<T>>>) {
+    private fun <T> searchIfNotCompleted(prop: KProperty1<SpotifySearchState, Loadable<PagedList<T>>>) {
         withState {
             val items = prop.get(it)
             if (items.completed) return@withState
@@ -92,16 +92,16 @@ class SpotifySearchViewModel(
                         val result = resource.data
                         copy(
                             albums = result.albums?.let {
-                                copyWithPaged(it.map(::Album), SpotifySearchState::albums, ::PagedItemsList)
+                                copyWithPaged(it.map(::Album), SpotifySearchState::albums, ::PagedList)
                             } ?: albums,
                             artists = result.artists?.let {
-                                copyWithPaged(it.map(::Artist), SpotifySearchState::artists, ::PagedItemsList)
+                                copyWithPaged(it.map(::Artist), SpotifySearchState::artists, ::PagedList)
                             } ?: artists,
                             playlists = result.playlists?.let {
-                                copyWithPaged(it.map(::Playlist), SpotifySearchState::playlists, ::PagedItemsList)
+                                copyWithPaged(it.map(::Playlist), SpotifySearchState::playlists, ::PagedList)
                             } ?: playlists,
                             tracks = result.tracks?.let {
-                                copyWithPaged(it.map(::Track), SpotifySearchState::tracks, ::PagedItemsList)
+                                copyWithPaged(it.map(::Track), SpotifySearchState::tracks, ::PagedList)
                             } ?: tracks
                         )
                     }
@@ -119,7 +119,7 @@ class SpotifySearchViewModel(
             viewModelContext: ViewModelContext, state: SpotifySearchState
         ): SpotifySearchViewModel = SpotifySearchViewModel(state, viewModelContext.activity.get())
 
-        private val searchTypes: Map<KProperty1<SpotifySearchState, Loadable<PagedItemsList<*>>>, SpotifySearchType> = mapOf(
+        private val searchTypes: Map<KProperty1<SpotifySearchState, Loadable<PagedList<*>>>, SpotifySearchType> = mapOf(
             SpotifySearchState::albums to SpotifySearchType.ALBUM,
             SpotifySearchState::artists to SpotifySearchType.ARTIST,
             SpotifySearchState::playlists to SpotifySearchType.PLAYLIST,

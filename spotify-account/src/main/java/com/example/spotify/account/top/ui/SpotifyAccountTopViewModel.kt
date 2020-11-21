@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.Empty
 import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset
@@ -47,12 +47,12 @@ class SpotifyAccountTopViewModel(
     fun clearArtistsError() = clearErrorIn(State::artists) { copy(artists = it) }
 
     private fun <I> load(
-        prop: KProperty1<State, Loadable<PagedItemsList<I>>>,
+        prop: KProperty1<State, Loadable<PagedList<I>>>,
         action: (State) -> Single<Resource<Paged<List<I>>>>,
-        reducer: State.(Loadable<PagedItemsList<I>>) -> State
+        reducer: State.(Loadable<PagedList<I>>) -> State
     ) = withState { state ->
         if (!state.userLoggedIn) return@withState
-        loadPagedWith(state, prop, action, ::PagedItemsList, reducer = reducer)
+        loadPagedWith(state, prop, action, ::PagedList, reducer = reducer)
     }
 
     @SuppressLint("MissingPermission")

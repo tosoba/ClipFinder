@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.SimplifiedArtist
 import com.example.core.android.spotify.model.Track
@@ -40,7 +40,7 @@ class SpotifyAlbumViewModel(
     }
 
     fun loadTracksFromAlbum() {
-        loadPaged(State::tracks, getTracksFromAlbum::intoState, ::PagedItemsList) {
+        loadPaged(State::tracks, getTracksFromAlbum::intoState, ::PagedList) {
             copy(tracks = it)
         }
     }

@@ -9,7 +9,7 @@ import com.clipfinder.core.spotify.usecase.GetRelatedArtists
 import com.clipfinder.core.spotify.usecase.GetTopTracksFromArtist
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.LoadingFirst
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.model.Ready
 import com.example.core.android.model.WithValue
 import com.example.core.android.spotify.model.Album
@@ -94,7 +94,7 @@ class SpotifyArtistViewModel(
                         when (it) {
                             is Resource.Success -> copy(albums = when (albums) {
                                 is WithValue -> albums.copyWithPaged(it.data)
-                                else -> Ready(PagedItemsList(it.data))
+                                else -> Ready(PagedList(it.data))
                             })
                             is Resource.Error -> {
                                 it.error?.castAs<Throwable>()?.let(::log)

@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.PagedItemsList
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
@@ -42,7 +42,7 @@ class SpotifyCategoryViewModel(
             State::playlists,
             { state, args -> getPlaylistsForCategory.intoState(state, args) },
             shouldClear,
-            ::PagedItemsList
+            ::PagedList
         ) { copy(playlists = it) }
     }
 
