@@ -28,6 +28,10 @@ data class Ready<out T>(override val value: T) : WithValue<T>() {
     override fun copyWithError(error: Any?): FailedNext<T> = FailedNext(value, error)
 }
 
+interface Failed {
+    val error: Any?
+}
+
 data class FailedNext<out T>(override val value: T, override val error: Any?) : WithValue<T>(), Failed {
     override val copyWithClearedError: Ready<T> get() = Ready(value)
     override val copyWithLoadingInProgress: Loadable<T> get() = LoadingNext(value)
