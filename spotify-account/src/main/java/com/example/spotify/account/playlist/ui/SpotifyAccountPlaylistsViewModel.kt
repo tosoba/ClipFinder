@@ -5,50 +5,60 @@ import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.Initial
-import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
+import com.example.core.android.model.Empty
+import com.example.core.android.model.Loadable
+import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.util.ext.offset
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.ext.map
 import com.example.core.ext.mapData
+import com.example.core.model.Paged
+import com.example.core.model.Resource
 import com.example.spotify.account.playlist.domain.usecase.GetCurrentUsersPlaylists
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Single
 import org.koin.android.ext.android.get
+import kotlin.reflect.KProperty1
+
+private typealias State = SpotifyAccountPlaylistState
 
 class SpotifyAccountPlaylistsViewModel(
-    initialState: SpotifyAccountPlaylistState,
+    initialState: State,
     private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists,
     context: Context
-) : MvRxViewModel<SpotifyAccountPlaylistState>(initialState) {
+) : MvRxViewModel<State>(initialState) {
 
     init {
         handleConnectivityChanges(context)
         subscribe { (userLoggedIn, playlists) ->
             if (!userLoggedIn) return@subscribe
-            if (playlists.status is Initial) loadPlaylists()
+            if (playlists is Empty) loadPlaylists()
         }.disposeOnClear()
     }
 
     fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
+    fun loadPlaylists() = loadPagedList(State::playlists, getCurrentUsersPlaylists::intoState) { copy(playlists = it) }
+    fun clearPlaylistsError() = clearErrorIn(State::playlists) { copy(playlists = it) }
 
-    fun loadPlaylists() = withState { (userLoggedIn, playlists) ->
-        if (userLoggedIn && playlists.shouldLoadMore) {
-            getCurrentUsersPlaylists(applySchedulers = false, args = playlists.offset)
-                .mapData { newPlaylists -> newPlaylists.map(::Playlist) }
-                .subscribeOn(Schedulers.io())
-                .updateWithPagedResource(SpotifyAccountPlaylistState::playlists) { copy(playlists = it) }
-        }
+    private fun <I> loadPagedList(
+        prop: KProperty1<State, Loadable<PagedList<I>>>,
+        action: (State) -> Single<Resource<Paged<List<I>>>>,
+        reducer: State.(Loadable<PagedList<I>>) -> State
+    ) = withState { state ->
+        if (!state.userLoggedIn) return@withState
+        loadPagedWith(state, prop, action, ::PagedList, reducer = reducer)
     }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
         context.handleConnectivityChanges { (userLoggedIn, playlists) ->
-            if (userLoggedIn && playlists.retryLoadItemsOnNetworkAvailable) loadPlaylists()
+            if (userLoggedIn && playlists.retryLoadCollectionOnConnected) loadPlaylists()
         }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyAccountPlaylistsViewModel, SpotifyAccountPlaylistState> {
+    companion object : MvRxViewModelFactory<SpotifyAccountPlaylistsViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifyAccountPlaylistState
+            viewModelContext: ViewModelContext, state: State
         ): SpotifyAccountPlaylistsViewModel = SpotifyAccountPlaylistsViewModel(
             state,
             viewModelContext.activity.get(),
@@ -56,3 +66,8 @@ class SpotifyAccountPlaylistsViewModel(
         )
     }
 }
+
+internal fun GetCurrentUsersPlaylists.intoState(
+    state: State
+): Single<Resource<Paged<List<Playlist>>>> = this(applySchedulers = false, args = state.playlists.offset)
+    .mapData { newPlaylists -> newPlaylists.map(::Playlist) }

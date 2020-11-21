@@ -13,12 +13,12 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.LargeTextCenterBindingModel_
-import com.example.core.android.model.Initial
+import com.example.core.android.model.Empty
 import com.example.core.android.spotify.ext.spotifyAuthController
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.spotify.account.R
 import com.example.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import org.koin.android.ext.android.inject
@@ -29,10 +29,10 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
     private lateinit var binding: FragmentSpotifyAccountPlaylistsBinding
 
     private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
+        loadableCollectionController(
             SpotifyAccountPlaylistState::playlists,
             loadMore = viewModel::loadPlaylists,
-            shouldOverrideBuildModels = { (userLoggedIn, playlists) -> !userLoggedIn && playlists.status is Initial },
+            shouldOverrideBuildModels = { (userLoggedIn, playlists) -> !userLoggedIn && playlists is Empty },
             overrideBuildModels = {
                 LargeTextCenterBindingModel_()
                     .id("spotify-account-playlists-user-not-logged-in")
@@ -43,6 +43,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
                     .addTo(this)
             },
             reloadClicked = viewModel::loadPlaylists,
+            clearFailure = viewModel::clearPlaylistsError,
             buildItem = { playlist ->
                 playlist.clickableListItem {
                     show { factory.newSpotifyPlaylistFragment(playlist) }
