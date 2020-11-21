@@ -32,8 +32,23 @@ open class MvRxViewModel<S : MvRxState>(
     ) where C : CopyableWithPaged<T, C>,
             C : CompletionTrackable,
             I : Iterable<T> = withState { state ->
+        loadPagedWith(state, prop, action, newCopyableWithPaged, subscribeOnScheduler, onError, copyWithLoading, reducer)
+    }
+
+    protected fun <C, I, T> loadPagedWith(
+        state: S,
+        prop: KProperty1<S, Loadable<C>>,
+        action: (S) -> Single<Resource<Paged<I>>>,
+        newCopyableWithPaged: (Paged<I>) -> C,
+        subscribeOnScheduler: Scheduler? = Schedulers.io(),
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
+    ) where C : CopyableWithPaged<T, C>,
+            C : CompletionTrackable,
+            I : Iterable<T> {
         val loadable = state.valueOf(prop)
-        if (loadable is LoadingInProgress || (loadable is WithValue && loadable.value.completed)) return@withState
+        if (loadable.loadingOrCompleted) return
         action(state)
             .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
             .updateLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
