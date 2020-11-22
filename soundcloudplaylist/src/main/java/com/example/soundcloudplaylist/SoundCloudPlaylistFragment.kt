@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
@@ -15,30 +14,25 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.base.playlist.PlaylistView
-import com.example.core.android.base.playlist.PlaylistViewState
 import com.example.core.android.lifecycle.ConnectivityComponent
-import com.example.core.android.model.retryLoadItemsOnNetworkAvailable
 import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
-import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
-import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
 class SoundCloudPlaylistFragment : BaseMvRxFragment() {
+    private val playlist: BaseSoundCloudPlaylist by args()
+    private val viewModel: SoundCloudPlaylistViewModel by fragmentViewModel()
+    private val factory: IFragmentFactory by inject()
 
-    //TODO: async subscribe showing Toasts when toggling favourite state
-
-    override fun invalidate() = withState(viewModel, epoxyController::setData)
-
-    private val epoxyController: TypedEpoxyController<PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>> by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
-            PlaylistViewState<BaseSoundCloudPlaylist, SoundCloudTrack>::tracks,
+    private val epoxyController: TypedEpoxyController<SoundCloudPlaylistState> by lazy(LazyThreadSafetyMode.NONE) {
+        loadableCollectionController(
+            SoundCloudPlaylistState::tracks,
             headerText = "Tracks",
-            reloadClicked = viewModel::loadData
+            reloadClicked = viewModel::loadData,
+            clearFailure = viewModel::clearTracksError
         ) { track ->
             track.clickableListItem {
                 show { factory.newSoundCloudTrackVideosFragment(track) }
@@ -46,22 +40,16 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
         }
     }
 
-    private val factory: IFragmentFactory by inject()
-
-    private val viewModel: SoundCloudPlaylistViewModel by fragmentViewModel()
-
-    private val connectivityComponent: ConnectivityComponent by lazy {
+    private val connectivityComponent: ConnectivityComponent by lazy(LazyThreadSafetyMode.NONE) {
         reloadingConnectivityComponent(viewModel::loadData) {
             withState(viewModel) { state ->
-                state.tracks.retryLoadItemsOnNetworkAvailable
+                state.tracks.retryLoadCollectionOnConnected
             }
         }
     }
 
-    private val playlist: BaseSoundCloudPlaylist by args()
-
-    private val view: PlaylistView<BaseSoundCloudPlaylist> by lazy {
-        PlaylistView(
+    private val view: SoundCloudPlaylistView by lazy(LazyThreadSafetyMode.NONE) {
+        SoundCloudPlaylistView(
             playlist = playlist,
             onFavouriteBtnClickListener = View.OnClickListener {}
         )
@@ -74,33 +62,35 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSoundCloudPlaylistBinding>(
-        inflater, R.layout.fragment_sound_cloud_playlist, container, false
-    ).apply {
-        view = this@SoundCloudPlaylistFragment.view
-        playlist.artworkUrl?.let { url ->
-            soundCloudPlaylistToolbarGradientBackgroundView
-                .loadBackgroundGradient(url)
-                .disposeOnDestroy(this@SoundCloudPlaylistFragment)
+    ): View? = FragmentSoundCloudPlaylistBinding.inflate(inflater, container, false)
+        .apply {
+            view = this@SoundCloudPlaylistFragment.view
+            playlist.artworkUrl?.let { url ->
+                soundCloudPlaylistToolbarGradientBackgroundView
+                    .loadBackgroundGradient(url)
+                    .disposeOnDestroy(this@SoundCloudPlaylistFragment)
+            }
+            soundCloudPlaylistRecyclerView.apply {
+                setController(epoxyController)
+                layoutManager = GridLayoutManager(
+                    context,
+                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+                )
+                setItemSpacingDp(5)
+            }
+            soundCloudPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
+            mainContentFragment?.enablePlayButton { }
         }
-        soundCloudPlaylistRecyclerView.apply {
-            setController(epoxyController)
-            layoutManager = GridLayoutManager(
-                context,
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
-            )
-            setItemSpacingDp(5)
-        }
-        soundCloudPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-        mainContentFragment?.enablePlayButton { }
-    }.root
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
+        .root
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifecycle.addObserver(connectivityComponent)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = false
+
+    override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
         fun new(playlist: BaseSoundCloudPlaylist): SoundCloudPlaylistFragment = newMvRxFragmentWith(playlist)

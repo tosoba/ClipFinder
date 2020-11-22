@@ -13,7 +13,7 @@ import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
-import com.example.core.android.model.LoadingFailed
+import com.example.core.android.model.Failed
 import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.model.Ready
 import com.example.core.android.model.soundcloud.clickableListItem
@@ -62,7 +62,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     }
                 }
 
-                is LoadingFailed<*> -> reloadControl {
+                is Failed -> reloadControl {
                     id("reload-control")
                     onReloadClicked(View.OnClickListener { viewModel.loadSelections() })
                     message("Error occurred lmao") //TODO: better error msg

@@ -61,7 +61,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
             pagerAdapter = pagerAdapter,
             onPageChangeListener = onPageChangeListener,
             onTabSelectedListener = onTabSelectedListener,
-            onFavouriteBtnClickListener = View.OnClickListener { }
+            onFavouriteBtnClickListener = View.OnClickListener {}
         )
     }
 

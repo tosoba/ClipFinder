@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.example.core.android.base.playlist.PlaylistView&lt;com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist&gt;" />
+            type="com.example.soundcloudplaylist.SoundCloudPlaylistView" />
     </data>
 
     <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
