@@ -14,7 +14,6 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.lifecycle.ConnectivityComponent
 import com.example.core.android.model.soundcloud.BaseSoundCloudPlaylist
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.*
@@ -37,14 +36,6 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
         ) { track ->
             track.clickableListItem {
                 show { factory.newSoundCloudTrackVideosFragment(track) }
-            }
-        }
-    }
-
-    private val connectivityComponent: ConnectivityComponent by lazy(LazyThreadSafetyMode.NONE) {
-        reloadingConnectivityComponent(viewModel::loadData) {
-            withState(viewModel) { state ->
-                state.tracks.retryLoadCollectionOnConnected
             }
         }
     }
@@ -83,11 +74,6 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
             mainContentFragment?.enablePlayButton {}
         }
         .root
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        lifecycle.addObserver(connectivityComponent)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 

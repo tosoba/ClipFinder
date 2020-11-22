@@ -1,5 +1,7 @@
 package com.example.soundcloudplaylist
 
+import android.annotation.SuppressLint
+import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.example.core.android.base.vm.MvRxViewModel
@@ -8,6 +10,7 @@ import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.model.Ready
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
 import com.example.there.domain.usecase.soundcloud.GetTracks
 import com.example.there.domain.usecase.soundcloud.GetTracksFromPlaylist
@@ -18,11 +21,13 @@ import timber.log.Timber
 class SoundCloudPlaylistViewModel(
     initialState: SoundCloudPlaylistState,
     private val getTracksFromPlaylist: GetTracksFromPlaylist,
-    private val getTracks: GetTracks
+    private val getTracks: GetTracks,
+    context: Context
 ) : MvRxViewModel<SoundCloudPlaylistState>(initialState) {
 
     init {
         loadData()
+        handleConnectivityChanges(context)
     }
 
     fun loadData() = withState { state ->
@@ -49,7 +54,6 @@ class SoundCloudPlaylistViewModel(
 
     private fun loadTracksFromPlaylist(id: String) = withState { state ->
         if (state.tracks is LoadingInProgress) return@withState
-
         getTracksFromPlaylist(id, applySchedulers = false)
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -58,13 +62,21 @@ class SoundCloudPlaylistViewModel(
             )
     }
 
+    @SuppressLint("MissingPermission")
+    private fun handleConnectivityChanges(context: Context) {
+        context.handleConnectivityChanges { (_, tracks) ->
+            if (tracks.retryLoadCollectionOnConnected) loadData()
+        }
+    }
+
     companion object : MvRxViewModelFactory<SoundCloudPlaylistViewModel, SoundCloudPlaylistState> {
         override fun create(
             viewModelContext: ViewModelContext, state: SoundCloudPlaylistState
         ): SoundCloudPlaylistViewModel = SoundCloudPlaylistViewModel(
             state,
             viewModelContext.activity.get(),
-            viewModelContext.activity.get()
+            viewModelContext.activity.get(),
+            viewModelContext.app()
         )
     }
 }

@@ -1,11 +1,7 @@
 package com.example.core.android.util.ext
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.provider.Settings
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.mvrx.*
@@ -13,10 +9,6 @@ import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment
 import com.example.core.android.base.handler.BackPressedController
-import com.example.core.android.base.handler.ConnectivitySnackbarHost
-import com.example.core.android.lifecycle.ConnectivityComponent
-import com.example.core.ext.castAs
-import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -56,25 +48,6 @@ val Fragment.mainContentFragment: IMainContentFragment?
 inline fun <T> T.show(addToBackStack: Boolean = true, getFragment: () -> Fragment) where T : Fragment {
     navHostFragment?.showFragment(getFragment(), addToBackStack)
 }
-
-fun Fragment.reloadingConnectivityComponent(
-    reloadData: () -> Unit,
-    isReloadNeeded: () -> Boolean
-): ConnectivityComponent = ConnectivityComponent(object : ConnectivityComponent.Binder {
-    override val context: Context
-        get() = this@reloadingConnectivityComponent.requireContext()
-
-    override val snackbarParentView: View?
-        get() = activity?.castAs<ConnectivitySnackbarHost>()?.snackbarParentView
-
-    override fun shouldReload(): Boolean = isReloadNeeded()
-
-    override fun reload() = reloadData()
-
-    override fun openSettings() {
-        activity?.startActivity(Intent(Settings.ACTION_SETTINGS))
-    }
-})
 
 inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmentViewModel(
     viewModelClass: KClass<VM> = VM::class,
