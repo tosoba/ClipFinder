@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.base.handler.SoundCloudPlayerController
 import com.example.core.android.base.trackvideos.TrackVideosViewBinding
@@ -23,31 +23,28 @@ import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAd
 import com.example.core.ext.castAs
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
-import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.google.android.material.tabs.TabLayout
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
-
+    private val argTrack: SoundCloudTrack by args()
     private val viewModel: SoundCloudTrackVideosViewModel by fragmentViewModel()
 
-    private val argTrack: SoundCloudTrack by args()
-
-    private val onPageChangeListener = object : OnPageChangeListener {
+    private val onPageChangeListener: OnPageChangeListener = object : OnPageChangeListener {
         override fun onPageSelected(position: Int) {
             sound_cloud_track_videos_tab_layout?.getTabAt(position)?.select()
-            withCurrentTrack { updateCurrentFragment(it) }
+            withCurrentTrack(::updateCurrentFragment)
         }
     }
 
-    private val onTabSelectedListener = object : OnTabSelectedListener {
+    private val onTabSelectedListener: OnTabSelectedListener = object : OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.let { sound_cloud_track_videos_viewpager?.currentItem = it.position }
         }
     }
 
-    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy {
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CustomCurrentStatePagerAdapter(
             fragmentManager = childFragmentManager,
             fragments = arrayOf(
@@ -57,7 +54,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
         )
     }
 
-    private val view: TrackVideosViewBinding<SoundCloudTrack> by lazy {
+    private val view: TrackVideosViewBinding<SoundCloudTrack> by lazy(LazyThreadSafetyMode.NONE) {
         TrackVideosViewBinding(
             fragmentTabs = arrayOf("Clips", "Similar"),
             track = MutableLiveData<SoundCloudTrack>().apply { value = argTrack },
@@ -71,15 +68,10 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentSoundCloudTrackVideosBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_sound_cloud_track_videos,
-            container,
-            false
-        )
+        val binding = FragmentSoundCloudTrackVideosBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, TrackVideosViewState<SoundCloudTrack>::tracks) { tracks ->
-            tracks.value.lastOrNull()?.let { track ->
+            tracks.lastOrNull()?.let { track ->
                 view.track.value = track
                 track.artworkUrl?.let {
                     binding.soundCloudTrackVideosToolbarGradientBackgroundView
@@ -118,7 +110,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
     }
 
     private fun withCurrentTrack(block: (SoundCloudTrack) -> Unit) = withState(viewModel) { state ->
-        state.tracks.value.lastOrNull()?.let(block)
+        state.tracks.lastOrNull()?.let(block)
     }
 
     companion object {

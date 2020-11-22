@@ -5,8 +5,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.Data
-import com.example.core.android.model.DataList
 import com.google.android.material.tabs.TabLayout
 
 class TrackVideosViewBinding<Track>(
@@ -18,6 +16,6 @@ class TrackVideosViewBinding<Track>(
     val onFavouriteBtnClickListener: View.OnClickListener
 )
 
-data class TrackVideosViewState<Track>(val tracks: DataList<Track> = DataList()) : MvRxState {
-    constructor(argTrack: Track) : this(DataList(listOf(argTrack)))
+data class TrackVideosViewState<Track>(val tracks: List<Track>) : MvRxState {
+    constructor(argTrack: Track) : this(listOf(argTrack))
 }

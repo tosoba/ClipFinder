@@ -1,20 +1,19 @@
 package com.example.core.android.base.trackvideos
 
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.model.DataList
 
 abstract class BaseTrackVideosViewModel<Track>(
     initialState: TrackVideosViewState<Track>
 ) : MvRxViewModel<TrackVideosViewState<Track>>(initialState) {
 
+    fun updateTrack(track: Track) = setState { copy(tracks = tracks + track) }
+
     fun onBackPressed() = withState { state ->
-        if (state.tracks.value.size < 2) {
-            setState { copy(tracks = DataList(emptyList())) }
+        if (state.tracks.size < 2) {
+            setState { copy(tracks = emptyList()) }
             return@withState
         }
 
-        setState { copy(tracks = DataList(tracks.value.take(tracks.value.size - 1))) }
+        setState { copy(tracks = tracks.dropLast(1)) }
     }
-
-    fun updateTrack(track: Track) = setState { copy(tracks = tracks.copyWithNewItems(track)) }
 }

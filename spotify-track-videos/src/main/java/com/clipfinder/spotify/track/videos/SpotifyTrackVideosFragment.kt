@@ -59,7 +59,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
 
         val currentTrack = MutableLiveData(argTrack)
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
-            tracks.value.lastOrNull()?.let {
+            tracks.lastOrNull()?.let {
                 currentTrack.value = it
                 binding.trackVideosToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
@@ -70,7 +70,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
         }
 
         fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { (tracks) ->
-            tracks.value.lastOrNull()?.let(block)
+            tracks.lastOrNull()?.let(block)
         }
 
         enableSpotifyPlayButton { withCurrentTrack(::loadTrack) }
@@ -95,9 +95,9 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
         }.root
     }
 
-    override fun onBackPressed() = viewModel.onBackPressed()
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
+
+    override fun onBackPressed() = viewModel.onBackPressed()
 
     override fun invalidate() = Unit
 
