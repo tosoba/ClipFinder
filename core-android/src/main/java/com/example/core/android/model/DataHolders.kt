@@ -28,10 +28,6 @@ data class Data<Value>(
     )
 }
 
-val <Holder : HoldsData<Value>, Value> Holder.retryLoadOnNetworkAvailable: Boolean
-    get() = with(status) { this is LoadingFailed<*> && (error == null || error is IOException) }
-
-
 val <Holder : HoldsData<Collection<Value>>, Value> Holder.retryLoadItemsOnNetworkAvailable: Boolean
     get() = with(status) {
         value.isEmpty() && this is LoadingFailed<*> && (error == null || error is IOException)
@@ -61,41 +57,6 @@ data class DataList<Value>(
 interface HoldsPagedData<Item, P : HoldsPagedData<Item, P>> : HoldsData<Collection<Item>> {
     val shouldLoadMore: Boolean
     fun copyWithClearedError(): P
-}
-
-data class PageTokenDataList<Value>(
-    val list: DataList<Value> = DataList(),
-    val nextPageToken: String? = null
-) : HoldsPagedData<Value, PageTokenDataList<Value>> {
-
-    constructor(status: DataStatus) : this(list = DataList(status = status))
-
-    override val value: Collection<Value>
-        get() = list.value
-
-    override val status: DataStatus
-        get() = list.status
-
-    override val copyWithLoadingInProgress: PageTokenDataList<Value>
-        get() = copy(list = list.copy(status = Loading))
-
-    override fun <E> copyWithError(error: E): PageTokenDataList<Value> = copy(
-        list = list.copy(status = LoadingFailed(error))
-    )
-
-    override val shouldLoadMore: Boolean
-        get() = status !is Loading && (nextPageToken != null || value.isEmpty())
-
-    fun copyWithNewItems(
-        newItems: Iterable<Value>, nextPageToken: String?
-    ): PageTokenDataList<Value> = copy(
-        list = list.copyWithNewItems(newItems),
-        nextPageToken = nextPageToken
-    )
-
-    override fun copyWithClearedError(): PageTokenDataList<Value> = copy(
-        list = list.copy(status = LoadedSuccessfully)
-    )
 }
 
 data class PagedDataList<Value>(

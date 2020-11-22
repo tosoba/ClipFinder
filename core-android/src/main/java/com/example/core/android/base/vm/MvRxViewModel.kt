@@ -171,36 +171,6 @@ open class MvRxViewModel<S : MvRxState>(
         }).disposeOnClear()
     }
 
-    protected fun <C : Collection<T>, T> Single<Resource<Paged<C>>>.updateWithPagedResource(
-        prop: KProperty1<S, PagedDataList<T>>,
-        onError: (Throwable) -> Unit = ::log,
-        shouldClear: Boolean = false,
-        reducer: S.(PagedDataList<T>) -> S
-    ): Disposable {
-        setState {
-            if (shouldClear) reducer(PagedDataList(status = Loading))
-            else reducer(valueOf(prop).copyWithLoadingInProgress)
-        }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(
-                        valueOf(prop)
-                            .copyWithNewItems(it.data.contents, it.data.offset, it.data.total)
-                    )
-                    is Resource.Error<Paged<C>> -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
-                    }
-                }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
     protected fun <C : Collection<T>, T> Single<Resource<C>>.updateWithResource(
         prop: KProperty1<S, DataList<T>>,
         onError: (Throwable) -> Unit = ::log,

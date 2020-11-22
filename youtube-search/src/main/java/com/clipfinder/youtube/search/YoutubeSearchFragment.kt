@@ -17,7 +17,7 @@ import com.example.core.android.base.handler.YoutubePlayerController
 import com.example.core.android.model.videos.clickableListItem
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.screenOrientation
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.core.ext.castAs
 import kotlinx.android.synthetic.main.fragment_youtube_search.*
 import kotlinx.android.synthetic.main.fragment_youtube_search.view.*
@@ -26,11 +26,12 @@ class YoutubeSearchFragment : BaseMvRxFragment(), ISearchFragment {
     private val viewModel: YoutubeSearchViewModel by fragmentViewModel()
 
     private val epoxyController: TypedEpoxyController<YoutubeSearchState> by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
+        loadableCollectionController(
             YoutubeSearchState::videos,
             headerText = getString(R.string.videos),
             loadMore = viewModel::search,
-            reloadClicked = viewModel::search
+            reloadClicked = viewModel::search,
+            clearFailure = viewModel::clearVideosError
         ) { video ->
             video.clickableListItem {
                 activity?.castAs<YoutubePlayerController>()?.loadVideo(video)
