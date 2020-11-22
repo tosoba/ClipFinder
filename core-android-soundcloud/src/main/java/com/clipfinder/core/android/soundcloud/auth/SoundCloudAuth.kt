@@ -1,10 +1,10 @@
-package com.clipfinder.core.android.soundcloud.api
+package com.clipfinder.core.android.soundcloud.auth
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.clipfinder.core.soundcloud.api.ISoundCloudAuth
+import com.clipfinder.core.soundcloud.auth.ISoundCloudAuth
 import io.reactivex.Single
 
 class SoundCloudAuth(private val context: Context) : ISoundCloudAuth {

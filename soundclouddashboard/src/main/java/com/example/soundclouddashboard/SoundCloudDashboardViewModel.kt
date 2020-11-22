@@ -1,16 +1,18 @@
-package com.example.soundclouddashboard.ui
+package com.example.soundclouddashboard
 
 import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
+import com.clipfinder.core.soundcloud.usecase.GetMixedSelections
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.soundclouddashboard.domain.usecase.GetMixedSelections
+import com.example.core.ext.Timeout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.android.ext.android.get
+import java.util.concurrent.TimeUnit
 
 class SoundCloudDashboardViewModel(
     initialState: SoundCloudDashboardState,
@@ -25,11 +27,12 @@ class SoundCloudDashboardViewModel(
 
     fun loadSelections() = withState { (currentSelections) ->
         if (currentSelections is LoadingInProgress) return@withState
-
-        getMixedSelections(applySchedulers = false)
+        getMixedSelections(applySchedulers = false, timeout = Timeout(25L, TimeUnit.SECONDS))
             .observeOn(AndroidSchedulers.mainThread())
             .map { resource -> resource.map { selections -> selections.map(::SoundCloudPlaylistSelection) } }
-            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) { copy(selections = it) }
+            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) {
+                copy(selections = it)
+            }
     }
 
     @SuppressLint("MissingPermission")
@@ -43,9 +46,7 @@ class SoundCloudDashboardViewModel(
         override fun create(
             viewModelContext: ViewModelContext, state: SoundCloudDashboardState
         ): SoundCloudDashboardViewModel = SoundCloudDashboardViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.app()
+            state, viewModelContext.activity.get(), viewModelContext.app()
         )
     }
 }

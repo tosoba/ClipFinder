@@ -9,5 +9,5 @@ import org.koin.dsl.module
 
 val repoModule = module {
     single { VideosRemoteDataStore(get()) } bind IVideosRemoteDataStore::class
-    single { SoundCloudRemoteDataStore(get(), get(), get()) } bind ISoundCloudRemoteDataStore::class
+    single { SoundCloudRemoteDataStore(get(), get()) } bind ISoundCloudRemoteDataStore::class
 }

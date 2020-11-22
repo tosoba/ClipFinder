@@ -1,17 +1,15 @@
-package com.example.soundclouddashboard.domain.usecase
+package com.clipfinder.core.soundcloud.usecase
 
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylistSelection
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
-import com.clipfinder.core.soundcloud.usecase.AuthorizedSoundCloudUseCase
-import com.clipfinder.core.soundcloud.usecase.GetClientId
+import com.clipfinder.core.soundcloud.repo.ISoundCloudRepo
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
-import com.example.soundclouddashboard.domain.repo.ISoundCloudDashboardRepo
 import io.reactivex.Single
 
 class GetMixedSelections(
     getClientId: GetClientId,
-    private val repo: ISoundCloudDashboardRepo,
+    private val repo: ISoundCloudRepo,
     preferences: ISoundCloudPreferences,
     rxSchedulers: RxSchedulers
 ) : AuthorizedSoundCloudUseCase<Resource<List<ISoundCloudPlaylistSelection>>>(getClientId, preferences, rxSchedulers) {

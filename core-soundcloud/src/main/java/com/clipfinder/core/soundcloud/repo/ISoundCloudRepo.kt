@@ -1,8 +1,8 @@
-package com.example.soundclouddashboard.domain.repo
+package com.clipfinder.core.soundcloud.repo
 
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylistSelection
 import io.reactivex.Single
 
-interface ISoundCloudDashboardRepo {
+interface ISoundCloudRepo {
     fun mixedSelections(clientId: String): Single<List<ISoundCloudPlaylistSelection>>
 }

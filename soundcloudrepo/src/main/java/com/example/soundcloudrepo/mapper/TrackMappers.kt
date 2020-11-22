@@ -18,8 +18,11 @@ val SoundCloudTrack.domain: SoundCloudTrackEntity
         duration = duration,
         genre = genre,
         tags = tags,
-        streamUrl = if (uri.endsWith("stream")) "$uri?client_id=${SoundCloudAuth.key}"
-        else "$uri/stream?client_id=${SoundCloudAuth.key}",
+        streamUrl = if (uri.endsWith("stream")) {
+            "$uri?client_id=${SoundCloudAuth.key}"
+        } else {
+            "$uri/stream?client_id=${SoundCloudAuth.key}"
+        },
         downloadUrl = null,
         waveformUrl = waveformUrl
     )

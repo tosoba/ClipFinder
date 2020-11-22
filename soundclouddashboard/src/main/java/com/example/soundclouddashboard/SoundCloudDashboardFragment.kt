@@ -1,4 +1,4 @@
-package com.example.soundclouddashboard.ui
+package com.example.soundclouddashboard
 
 import android.os.Bundle
 import android.view.*

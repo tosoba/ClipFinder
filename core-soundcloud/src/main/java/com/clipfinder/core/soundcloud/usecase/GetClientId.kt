@@ -1,6 +1,6 @@
 package com.clipfinder.core.soundcloud.usecase
 
-import com.clipfinder.core.soundcloud.api.ISoundCloudAuth
+import com.clipfinder.core.soundcloud.auth.ISoundCloudAuth
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
 import com.example.core.ext.RxSchedulers
 import com.example.there.domain.usecase.base.SingleUseCase

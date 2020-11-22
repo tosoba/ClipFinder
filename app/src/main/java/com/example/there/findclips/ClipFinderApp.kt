@@ -8,6 +8,7 @@ import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.clipfinder.core.android.youtube.di.youtubeCoreAndroidModule
+import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
 import com.clipfinder.core.spotify.di.spotifyCoreModule
 import com.clipfinder.core.youtube.di.youtubeCoreModule
 import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
@@ -16,7 +17,6 @@ import com.example.core.android.di.coreAndroidNetworkingModule
 import com.example.core.android.di.epoxyModule
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.soundclouddashboard.di.soundCloudDashboardModule
 import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.github.mikephil.charting.utils.Utils
@@ -82,8 +82,7 @@ class ClipFinderApp : Application() {
                 spotifyChartsApiModule, spotifyApiModule,
                 spotifyCoreAndroidModule, spotifyCoreModule,
 
-                soundCloudCoreAndroidModule,
-                soundCloudDashboardModule,
+                soundCloudCoreAndroidModule, soundCloudCoreModule,
 
                 youtubeCoreModule, youtubeCoreAndroidModule
             ))

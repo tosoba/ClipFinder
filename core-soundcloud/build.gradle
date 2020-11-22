@@ -8,6 +8,10 @@ dependencies {
     implementation project(':core')
     implementation project(':domain')
 
+    implementation "org.koin:koin-core:$koinVersion"
+    implementation "org.koin:koin-core-ext:$koinVersion"
+    testImplementation "org.koin:koin-test:$koinVersion"
+
     implementation rootProject.ext.rxJava
     implementation rootProject.ext.retrofit
 }

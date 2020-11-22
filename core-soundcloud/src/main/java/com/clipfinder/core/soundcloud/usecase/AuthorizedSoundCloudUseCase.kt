@@ -2,32 +2,34 @@ package com.clipfinder.core.soundcloud.usecase
 
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
 import com.example.core.ext.RxSchedulers
+import com.example.core.ext.Timeout
 import com.example.there.domain.usecase.base.SingleUseCase
 import io.reactivex.Single
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 abstract class AuthorizedSoundCloudUseCase<T>(
     private val getClientId: GetClientId,
     private val preferences: ISoundCloudPreferences,
     private val rxSchedulers: RxSchedulers
 ) : SingleUseCase<T>(rxSchedulers) {
+
     override val result: Single<T>
         get() {
             val clientId = preferences.clientId
-            return if (clientId != null) {
-                getResourceWithClientId(clientId)
+            return when {
+                clientId != null -> getResourceWithClientId(clientId)
                     .subscribeOn(rxSchedulers.io)
                     .onErrorResumeNext {
                         if (it is HttpException && it.code() == 401) resourceWithNewClientId
                         else Single.error(it)
                     }
-            } else {
-                resourceWithNewClientId
+                else -> resourceWithNewClientId
             }
         }
 
     private val resourceWithNewClientId: Single<T>
-        get() = getClientId(applySchedulers = false)
+        get() = getClientId(applySchedulers = false, timeout = Timeout(25L, TimeUnit.SECONDS))
             .subscribeOn(rxSchedulers.main)
             .observeOn(rxSchedulers.io)
             .flatMap(::getResourceWithClientId)

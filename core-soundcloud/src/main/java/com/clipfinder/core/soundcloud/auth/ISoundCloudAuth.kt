@@ -1,4 +1,4 @@
-package com.clipfinder.core.soundcloud.api
+package com.clipfinder.core.soundcloud.auth
 
 import io.reactivex.Single
 

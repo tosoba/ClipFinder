@@ -20,6 +20,7 @@ import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.soundcloudplaylist.databinding.FragmentSoundCloudPlaylistBinding
+import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
 class SoundCloudPlaylistFragment : BaseMvRxFragment() {
@@ -79,7 +80,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
                 setItemSpacingDp(5)
             }
             soundCloudPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-            mainContentFragment?.enablePlayButton { }
+            mainContentFragment?.enablePlayButton {}
         }
         .root
 

@@ -1,4 +1,4 @@
-package com.example.soundclouddashboard.ui
+package com.example.soundclouddashboard
 
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
