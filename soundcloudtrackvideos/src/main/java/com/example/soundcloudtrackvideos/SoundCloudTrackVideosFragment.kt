@@ -57,7 +57,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
     private val view: TrackVideosViewBinding<SoundCloudTrack> by lazy(LazyThreadSafetyMode.NONE) {
         TrackVideosViewBinding(
             fragmentTabs = arrayOf("Clips", "Similar"),
-            track = MutableLiveData<SoundCloudTrack>().apply { value = argTrack },
+            track = MutableLiveData(argTrack),
             pagerAdapter = pagerAdapter,
             onPageChangeListener = onPageChangeListener,
             onTabSelectedListener = onTabSelectedListener,

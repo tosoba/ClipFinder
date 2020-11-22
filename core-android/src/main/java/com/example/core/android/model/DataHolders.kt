@@ -33,27 +33,6 @@ val <Holder : HoldsData<Collection<Value>>, Value> Holder.retryLoadItemsOnNetwor
         value.isEmpty() && this is LoadingFailed<*> && (error == null || error is IOException)
     }
 
-data class DataList<Value>(
-    override val value: Collection<Value> = emptyList(),
-    override val status: DataStatus = Initial
-) : HoldsData<Collection<Value>> {
-
-    override val copyWithLoadingInProgress: DataList<Value>
-        get() = copy(status = Loading)
-
-    override fun <E> copyWithError(error: E): DataList<Value> = copy(status = LoadingFailed(error))
-
-    fun copyWithNewItems(newItems: Iterable<Value>): DataList<Value> = copy(
-        value = value + newItems,
-        status = LoadedSuccessfully
-    )
-
-    fun copyWithNewItems(vararg newItems: Value): DataList<Value> = copy(
-        value = value + newItems,
-        status = LoadedSuccessfully
-    )
-}
-
 interface HoldsPagedData<Item, P : HoldsPagedData<Item, P>> : HoldsData<Collection<Item>> {
     val shouldLoadMore: Boolean
     fun copyWithClearedError(): P

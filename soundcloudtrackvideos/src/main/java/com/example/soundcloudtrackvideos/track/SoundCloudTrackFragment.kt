@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
@@ -12,28 +13,28 @@ import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.soundcloud.clickableListItem
 import com.example.core.android.util.ext.newMvRxFragmentWith
 import com.example.core.android.util.ext.parentFragmentViewModel
-import com.example.core.android.view.epoxy.itemListController
+import com.example.core.android.view.epoxy.loadableCollectionController
 import com.example.soundcloudtrackvideos.R
 import com.example.soundcloudtrackvideos.SoundCloudTrackVideosViewModel
 import kotlinx.android.synthetic.main.fragment_sound_cloud_track.view.*
 
 class SoundCloudTrackFragment : BaseMvRxFragment() {
+    private val argTrack: SoundCloudTrack by args()
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
 
     //TODO: connectivityComponent
 
-    private val epoxyController by lazy(LazyThreadSafetyMode.NONE) {
-        itemListController(
+    private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
+        loadableCollectionController(
             SoundCloudTrackViewState::similarTracks,
             headerText = "Similar tracks",
-            reloadClicked = { track?.id?.let { viewModel.loadSimilarTracks(it) } }
+            reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) },
+            clearFailure = viewModel::clearTracksError
         ) { track ->
             track.clickableListItem { parentViewModel.updateTrack(track) }
         }
     }
-
-    private val argTrack: SoundCloudTrack by args()
 
     var track: SoundCloudTrack? = null
         set(value) {
@@ -49,9 +50,8 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_sound_cloud_track, container, false).apply {
-        this.sound_cloud_track_recycler_view?.setController(epoxyController)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_sound_cloud_track, container, false)
+        .apply { this.sound_cloud_track_recycler_view?.setController(epoxyController) }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
