@@ -2,11 +2,7 @@ package com.example.soundclouddashboard.ui
 
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
-import com.example.core.android.model.Data
-import com.example.core.android.model.DataList
-import com.example.core.android.model.soundcloud.SoundCloudPlaylist
-import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.core.android.model.Empty
+import com.example.core.android.model.Loadable
 
-data class SoundCloudDashboardState(
-    val selections: DataList<SoundCloudPlaylistSelection> = DataList()
-) : MvRxState
+data class SoundCloudDashboardState(val selections: Loadable<List<SoundCloudPlaylistSelection>> = Empty) : MvRxState

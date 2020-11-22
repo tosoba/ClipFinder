@@ -147,7 +147,7 @@ open class MvRxViewModel<S : MvRxState>(
             .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
     }
 
-    private fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
+    protected fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
@@ -159,29 +159,6 @@ open class MvRxViewModel<S : MvRxState>(
                 when (it) {
                     is Resource.Success -> reducer(Ready(it.data))
                     is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
-                        reducer(valueOf(prop).copyWithError(it.error))
-                    }
-                }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
-    }
-
-    protected fun <C : Collection<T>, T> Single<Resource<C>>.updateWithResource(
-        prop: KProperty1<S, DataList<T>>,
-        onError: (Throwable) -> Unit = ::log,
-        reducer: S.(DataList<T>) -> S
-    ): Disposable {
-        setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(valueOf(prop).copyWithNewItems(it.data))
-                    is Resource.Error<C> -> {
                         it.error?.castAs<Throwable>()?.let(onError)
                             ?: Timber.wtf("Unknown error")
                         reducer(valueOf(prop).copyWithError(it.error))
