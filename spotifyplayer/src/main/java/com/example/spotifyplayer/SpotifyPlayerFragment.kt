@@ -20,9 +20,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
 import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.fragment.BaseVMFragment
-import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.example.core.android.base.handler.SlidingPanelController
 import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
+import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
@@ -434,21 +434,28 @@ class SpotifyPlayerFragment :
         }
     }
 
-    private fun notificationBuilder(
-        largeIcon: Bitmap?
-    ): NotificationCompat.Builder = NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
+    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat
+        .Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
         .setSmallIcon(R.drawable.play)
         .apply {
             val bigText = viewModel.playerState.playerMetadata?.currentTrack?.name
                 ?: viewModel.playerState.lastPlayedTrack?.name ?: "Unknown track"
-            if (largeIcon != null) setLargeIcon(largeIcon).setStyle(NotificationCompat.BigPictureStyle()
-                .bigLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
-                .bigPicture(largeIcon)
-                .setBigContentTitle(bigText)
-                .setSummaryText("${viewModel.playerState.playerMetadata?.currentTrack?.artistName
-                    ?: "Unknown artist"} - ${viewModel.playerState.playerMetadata?.currentTrack?.albumName
-                    ?: "Unknown album"}"))
-            else setContentText(bigText)
+            if (largeIcon != null) {
+                val style = NotificationCompat.BigPictureStyle()
+                    .bigLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
+                    .bigPicture(largeIcon)
+                    .setBigContentTitle(bigText)
+                    .setSummaryText("${
+                        viewModel.playerState.playerMetadata?.currentTrack?.artistName
+                            ?: "Unknown artist"
+                    } - ${
+                        viewModel.playerState.playerMetadata?.currentTrack?.albumName
+                            ?: "Unknown album"
+                    }")
+                setLargeIcon(largeIcon).setStyle(style)
+            } else {
+                setContentText(bigText)
+            }
         }
         .setContentTitle("ClipFinder")
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
