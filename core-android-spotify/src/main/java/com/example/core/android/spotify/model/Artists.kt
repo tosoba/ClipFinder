@@ -1,13 +1,11 @@
 package com.example.core.android.spotify.model
 
 import android.os.Parcelable
-import android.view.View
 import com.clipfinder.core.spotify.ext.firstImageUrl
 import com.clipfinder.core.spotify.model.ISpotifyArtist
 import com.clipfinder.core.spotify.model.ISpotifySimplifiedArtist
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
-import com.example.core.android.util.list.IdentifiableNamedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
@@ -21,8 +19,7 @@ data class Artist(
     override val images: List<Image>
 ) : Parcelable,
     ISpotifyArtist,
-    NamedImageListItem,
-    IdentifiableNamedObservableListItem<String> {
+    NamedImageListItem {
 
     constructor(other: ISpotifyArtist) : this(
         other.id, other.name, other.href, other.popularity, other.images.map(::Image)

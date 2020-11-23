@@ -1,11 +1,9 @@
 package com.example.core.android.model.soundcloud
 
 import android.os.Parcelable
-import android.view.View
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylist
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
-import com.example.core.android.util.list.IdentifiableNamedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
@@ -33,8 +31,7 @@ data class SoundCloudPlaylist(
     override val trackCount: Int,
     override val userId: Int
 ) : ISoundCloudPlaylist,
-    BaseSoundCloudPlaylist(),
-    IdentifiableNamedObservableListItem<String> {
+    BaseSoundCloudPlaylist() {
 
     constructor(other: ISoundCloudPlaylist) : this(
         other.artworkUrl,
@@ -67,11 +64,11 @@ fun SoundCloudPlaylist.clickableListItem(
 data class SoundCloudSystemPlaylist(
     override val artworkUrl: String?,
     val description: String,
-    override val id: String,
+    val id: String,
     val shortDescription: String,
     override val title: String,
     val trackIds: List<Int>
-) : BaseSoundCloudPlaylist(), IdentifiableNamedObservableListItem<String> {
+) : BaseSoundCloudPlaylist() {
     override val name: String
         get() = super.name
 }

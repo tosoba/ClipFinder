@@ -495,14 +495,10 @@ class MainActivity :
     }
 
     override fun addVideoToPlaylist(playlist: VideoPlaylist) {
-        youtubePlayerFragment?.lastPlayedVideo?.let {
-
-        }
+        youtubePlayerFragment?.lastPlayedVideo?.let {}
     }
 
-    override fun showNewPlaylistDialog() {
-
-    }
+    override fun showNewPlaylistDialog() {}
 
     override val providedIntent: Intent
         get() = Intent(this, MainActivity::class.java)

@@ -1,17 +1,15 @@
 package com.example.core.android.model.soundcloud
 
 import android.os.Parcelable
-import android.view.View
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
-import com.example.core.android.util.list.IdentifiableNamedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SoundCloudTrack(
-    override val id: String,
+    val id: String,
     val title: String,
     val artworkUrl: String?,
     val description: String?,
@@ -22,8 +20,7 @@ data class SoundCloudTrack(
     val downloadUrl: String?,
     val waveformUrl: String?
 ) : Parcelable,
-    NamedImageListItem,
-    IdentifiableNamedObservableListItem<String> {
+    NamedImageListItem {
 
     override val name: String
         get() = title

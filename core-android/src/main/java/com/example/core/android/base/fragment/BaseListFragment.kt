@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,9 +17,7 @@ import com.example.core.android.R
 import com.example.core.android.databinding.FragmentListBinding
 import com.example.core.android.databinding.HeaderItemBinding
 import com.example.core.android.util.ext.navHostFragment
-import com.example.core.android.util.ext.putArguments
 import com.example.core.android.util.ext.screenOrientation
-import com.example.core.android.util.list.ObservableSortedList
 import com.example.core.android.view.recyclerview.decoration.HeaderDecoration
 import com.example.core.android.view.recyclerview.item.ListItemView
 import com.example.core.android.view.recyclerview.item.RecyclerViewItemView
@@ -160,7 +159,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
     }
 
     class ViewState<T : Parcelable>(
-        val items: ObservableSortedList<T>,
+        val items: ObservableArrayList<T> = ObservableArrayList(),
         val mainHintText: ObservableField<String> = ObservableField(""),
         val additionalHintText: ObservableField<String> = ObservableField(""),
         var shouldShowHeader: Boolean = false

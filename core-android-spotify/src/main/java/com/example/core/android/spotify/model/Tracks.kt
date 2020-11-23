@@ -1,12 +1,9 @@
 package com.example.core.android.spotify.model
 
 import android.os.Parcelable
-import android.view.View
 import com.clipfinder.core.spotify.model.ISpotifyTrack
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
-import com.example.core.android.util.list.IdentifiableNamedObservableListItem
-import com.example.core.android.util.list.IdentifiableNumberedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
@@ -24,9 +21,7 @@ data class Track(
     override val previewUrl: String?
 ) : Parcelable,
     ISpotifyTrack,
-    NamedImageListItem,
-    IdentifiableNamedObservableListItem<String>,
-    IdentifiableNumberedObservableListItem<String> {
+    NamedImageListItem {
 
     constructor(other: ISpotifyTrack) : this(
         other.id,
@@ -42,9 +37,6 @@ data class Track(
 
     val iconUrl: String
         get() = album.iconUrl
-
-    override val number: Int
-        get() = trackNumber
 
     override val foregroundDrawableId: Int
         get() = R.drawable.spotify_foreground_ripple
@@ -67,15 +59,4 @@ fun Track.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_
     .itemClicked { _ -> itemClicked() }
 
 @Parcelize
-data class TopTrack(
-    val position: Int,
-    val track: Track
-) : Parcelable,
-    IdentifiableNumberedObservableListItem<String> {
-
-    override val id: String
-        get() = track.id
-
-    override val number: Int
-        get() = position
-}
+data class TopTrack(val position: Int, val track: Track) : Parcelable

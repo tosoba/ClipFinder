@@ -7,13 +7,13 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
 class OnPropertyChangedCallbackComponent(
-        private val observable: BaseObservable,
-        private val callback: Observable.OnPropertyChangedCallback
+    private val observable: BaseObservable,
+    private val callback: Observable.OnPropertyChangedCallback
 ) : LifecycleObserver {
 
     constructor(
-            observable: BaseObservable,
-            onPropertyChanged: (sender: Observable?, propertyId: Int) -> Unit
+        observable: BaseObservable,
+        onPropertyChanged: (sender: Observable?, propertyId: Int) -> Unit
     ) : this(observable, object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) = onPropertyChanged(sender, propertyId)
     })

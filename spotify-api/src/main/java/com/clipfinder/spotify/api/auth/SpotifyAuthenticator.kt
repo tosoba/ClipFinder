@@ -4,7 +4,6 @@ import android.util.Base64
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
-import com.clipfinder.spotify.api.model.TokensResponse
 import com.example.core.ext.mapSuccess
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -29,7 +28,7 @@ class SpotifyAuthenticator(
     }
 
     private fun authenticatePrivate(response: Response): Request? {
-        val tokenResponse: TokensResponse = tokenEndpoints
+        val tokenResponse = tokenEndpoints
             .getTokens(
                 grantType = GrantType.REFRESH_TOKEN,
                 refreshToken = tokensHolder.refreshToken,
@@ -49,17 +48,18 @@ class SpotifyAuthenticator(
     }
 
     private fun authenticatePublic(response: Response): Request? {
-        val tokenResponse: TokensResponse = tokenEndpoints
+        val accessToken = tokenEndpoints
             .getTokens(
                 authorization = authorization,
                 grantType = GrantType.CLIENT_CREDENTIALS
             )
             .mapSuccess()
             .blockingGet()
+            .accessToken
 
-        tokensHolder.setToken(tokenResponse.accessToken)
+        tokensHolder.setToken(accessToken)
 
-        return response.request.authorizedWith(tokenResponse.accessToken)
+        return response.request.authorizedWith(accessToken)
     }
 
     private fun Request.authorizedWith(accessToken: String): Request = newBuilder()

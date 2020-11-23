@@ -5,30 +5,13 @@ import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.mvrx.*
-import com.example.core.android.base.fragment.BaseListFragment
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment
 import com.example.core.android.base.handler.BackPressedController
-import java.util.*
 import kotlin.reflect.KClass
 
 val Fragment.backPressedController: BackPressedController?
     get() = activity as? BackPressedController
-
-fun <I : Parcelable> BaseListFragment<I>.putArguments(
-    mainHintText: String,
-    additionalHintText: String,
-    items: ArrayList<I>?,
-    shouldShowHeader: Boolean
-) {
-    val args = Bundle().apply {
-        putString(BaseListFragment.EXTRA_MAIN_HINT, mainHintText)
-        putString(BaseListFragment.EXTRA_ADDITIONAL_HINT, additionalHintText)
-        items?.let { putParcelableArrayList(BaseListFragment.EXTRA_ITEMS, it) }
-        putBoolean(BaseListFragment.EXTRA_SHOULD_SHOW_HEADER, shouldShowHeader)
-    }
-    arguments = args
-}
 
 inline fun <reified T> Fragment.findAncestorFragmentOfType(): T? {
     var ancestorFragment = parentFragment

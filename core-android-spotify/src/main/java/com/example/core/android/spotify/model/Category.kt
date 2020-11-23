@@ -1,12 +1,10 @@
 package com.example.core.android.spotify.model
 
 import android.os.Parcelable
-import android.view.View
 import com.clipfinder.core.spotify.ext.firstImageUrl
 import com.clipfinder.core.spotify.model.ISpotifyCategory
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
-import com.example.core.android.util.list.IdentifiableNamedObservableListItem
 import com.example.core.android.view.imageview.ImageViewSrc
 import com.example.core.android.view.recyclerview.item.NamedImageListItem
 import kotlinx.android.parcel.Parcelize
@@ -19,8 +17,7 @@ data class Category(
     override val href: String
 ) : ISpotifyCategory,
     Parcelable,
-    NamedImageListItem,
-    IdentifiableNamedObservableListItem<String> {
+    NamedImageListItem {
 
     constructor(other: ISpotifyCategory) : this(
         other.id,
