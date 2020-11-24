@@ -30,11 +30,12 @@
             android:launchMode="singleTop"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateAlwaysHidden">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -44,9 +45,7 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <activity
-            android:name="com.spotify.sdk.android.authentication.WebAuthResultActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -54,8 +53,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="callback"
-                    android:scheme="testschema" />
+                    android:host="com.example.there.findclips"
+                    android:path="/callaback"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
 
@@ -69,5 +69,4 @@
             android:parentActivityName="com.example.main.MainActivity"
             android:theme="@style/PreferenceScreen" />
     </application>
-
 </manifest>

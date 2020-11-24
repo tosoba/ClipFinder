@@ -1,7 +1,7 @@
 package com.example.core.android.spotify.auth
 
 import android.util.Base64
-import com.clipfinder.core.spotify.auth.ISpotifyAuth
+import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
@@ -10,12 +10,12 @@ import com.example.core.ext.mapSuccess
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class SpotifyAuth(
+class SpotifyAutoAuth(
     private val clientId: String,
     private val clientSecret: String,
     private val preferences: SpotifyPreferences,
     private val tokenEndpoints: TokenEndpoints
-) : ISpotifyAuth {
+) : ISpotifyAutoAuth {
 
     override fun authorize(): Completable = Single.just(preferences.hasTokens)
         .flatMapCompletable { hasTokens ->

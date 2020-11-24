@@ -16,18 +16,17 @@ class SpotifyAuthenticator(
     private val tokensHolder: SpotifyTokensHolder,
     private val tokenEndpoints: TokenEndpoints
 ) : Authenticator {
+
     private val authorization: String
         get() = "Basic ${Base64.encodeToString("${clientId}:${clientSecret}".toByteArray(), Base64.NO_WRAP)}"
 
-    override fun authenticate(
-        route: Route?, response: Response
-    ): Request? = if (tokensHolder.tokensPrivate) {
+    override fun authenticate(route: Route?, response: Response): Request = if (tokensHolder.tokensPrivate) {
         authenticatePrivate(response)
     } else {
         authenticatePublic(response)
     }
 
-    private fun authenticatePrivate(response: Response): Request? {
+    private fun authenticatePrivate(response: Response): Request {
         val tokenResponse = tokenEndpoints
             .getTokens(
                 grantType = GrantType.REFRESH_TOKEN,
@@ -47,7 +46,7 @@ class SpotifyAuthenticator(
         return response.request.authorizedWith(tokenResponse.accessToken)
     }
 
-    private fun authenticatePublic(response: Response): Request? {
+    private fun authenticatePublic(response: Response): Request {
         val accessToken = tokenEndpoints
             .getTokens(
                 authorization = authorization,

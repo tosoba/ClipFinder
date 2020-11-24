@@ -7,13 +7,11 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableField
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -26,6 +24,7 @@ import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
+import com.example.core.android.spotify.auth.SpotifyManualAuth
 import com.example.core.android.spotify.controller.SpotifyAuthController
 import com.example.core.android.spotify.controller.SpotifyPlayerController
 import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
@@ -44,19 +43,16 @@ import com.example.main.databinding.DrawerHeaderBinding
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.spotify.sdk.android.authentication.AuthenticationClient
-import com.spotify.sdk.android.authentication.AuthenticationRequest
-import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.spotify.sdk.android.player.ConnectionStateCallback
 import com.spotify.sdk.android.player.Error
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class MainActivity :
     BaseVMActivity<MainViewModel>(MainViewModel::class),
@@ -69,7 +65,6 @@ class MainActivity :
     SpotifyTrackChangeHandler,
     BackPressedController,
     SpotifyAuthController,
-    ConnectivitySnackbarHost,
     NavigationDrawerController,
     ToolbarController,
     IntentProvider {
@@ -108,13 +103,6 @@ class MainActivity :
         get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
             as? IRelatedVideosSearchFragment
 
-    override val snackbarParentView: View?
-        get() = when {
-            spotifyMainFragment != null -> findViewById(R.id.spotify_play_fab)
-            soundCloudMainFragment != null -> findViewById(R.id.sound_cloud_play_fab)
-            else -> null
-        }
-
     private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
         MainView(
             state = viewModel.viewState,
@@ -146,17 +134,13 @@ class MainActivity :
     }
 
     private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DrawerHeaderBinding.inflate(
-            LayoutInflater.from(this),
-            binding.drawerNavigationView,
-            false
-        )
+        DrawerHeaderBinding.inflate(LayoutInflater.from(this), binding.drawerNavigationView, false)
     }
 
     private val loginDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
         object : OnNavigationDrawerClosedListerner {
             override fun onDrawerClosed(drawerView: View) {
-                if (!isPlayerLoggedIn) openLoginWindow()
+                if (!isPlayerLoggedIn) startLoginActivity()
                 main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
             }
         }
@@ -165,7 +149,7 @@ class MainActivity :
     private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
         object : OnNavigationDrawerClosedListerner {
             override fun onDrawerClosed(drawerView: View) {
-                if (isPlayerLoggedIn) logOut()
+                if (isPlayerLoggedIn) logOutPlayer()
                 main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
             }
         }
@@ -232,7 +216,7 @@ class MainActivity :
         sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
     }
 
-    private val slideListener: SlidingUpPanelLayout.PanelSlideListener = object : SlidingUpPanelLayout.PanelSlideListener {
+    private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
         override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
 
         override fun onPanelStateChanged(
@@ -262,22 +246,22 @@ class MainActivity :
         }
     }
 
+    private var currentSlideOffset: Float = 0.0f
+
     private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
         (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt()
     }
     private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
         dpToPx(minimumPlayerHeightDp.toFloat()).toInt()
     }
+
     private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
         dpToPx(screenHeight.toFloat()).toInt()
     }
 
-    private var currentSlideOffset: Float = 0.0f
-
-    override val isLoggedIn: LiveData<Boolean>
-        get() = viewModel.viewState.isLoggedIn
-    override val isPlayerLoggedIn: Boolean
-        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
+    private val spotifyAuth: SpotifyManualAuth by inject()
+    override val isLoggedIn: LiveData<Boolean> get() = viewModel.viewState.isLoggedIn
+    override val isPlayerLoggedIn: Boolean get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
     override var onLoginSuccessful: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -343,11 +327,18 @@ class MainActivity :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == LOGIN_REQUEST_CODE) {
-            val response = AuthenticationClient.getResponse(resultCode, data)
-            when (response.type) {
-                AuthenticationResponse.Type.TOKEN -> onSpotifyAuthenticationComplete(response.accessToken)
-                AuthenticationResponse.Type.ERROR -> Log.e("ERR", "Auth error: " + response.error)
-                else -> Log.e("ERR", "Auth result: " + response.type)
+            fun onError(msg: String) = Timber.e(msg)
+            data?.let { intent ->
+                spotifyAuth.sendTokenRequestFrom(intent).subscribe({ (accessToken) ->
+                    Timber.tag("NLOG").e("SUCC")
+                    viewModel.loadCurrentUser()
+                    spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
+                }, {
+                    onError(it.message ?: "Unknown error.")
+                })
+            } ?: run {
+                onError(getString(R.string.failed_to_login))
+                Toast.makeText(this, R.string.failed_to_login, Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -520,17 +511,17 @@ class MainActivity :
     }
 
     override fun onConnectionMessage(message: String?) {
-        Log.e("onConnectionMessage: ", message ?: "Unknown connection message.")
+        Timber.tag("onConnectionMessage: ").e(message ?: "Unknown connection message.")
     }
 
     override fun onLoginFailed(error: Error?) {
-        Log.e("ERR", "onLoginFailed")
+        Timber.e("onLoginFailed")
         Toast.makeText(this, "Login failed: ${error?.name ?: "error unknown"}", Toast.LENGTH_SHORT)
             .show()
     }
 
     override fun onTemporaryError() {
-        Log.e("ERR", "onTemporaryError")
+        Timber.tag("ERR").e("onTemporaryError")
     }
 
     override fun showLoginDialog() {
@@ -539,9 +530,15 @@ class MainActivity :
             .content(R.string.playback_requires_login)
             .positiveText(R.string.login)
             .negativeText(R.string.cancel)
-            .onPositive { _, _ -> openLoginWindow() }
+            .onPositive { _, _ -> startLoginActivity() }
             .build()
             .apply(MaterialDialog::show)
+    }
+
+    private fun startLoginActivity() = startActivityForResult(spotifyAuth.authRequestIntent, LOGIN_REQUEST_CODE)
+
+    override fun logOutPlayer() {
+        spotifyPlayerFragment?.logOutPlayer()
     }
 
     private fun setupNavigationFromSimilarTracks() {
@@ -552,36 +549,12 @@ class MainActivity :
         }
     }
 
-    override fun logOut() {
-        spotifyPlayerFragment?.logOutPlayer()
-    }
-
-    private fun openLoginWindow() {
-        val request = AuthenticationRequest
-            .Builder(
-                getString(R.string.spotify_client_id),
-                AuthenticationResponse.Type.TOKEN,
-                getString(R.string.spotify_redirect_uri)
-            )
-            .setScopes(resources.getStringArray(R.array.spotify_scopes))
-            .build()
-        AuthenticationClient.openLoginActivity(this, LOGIN_REQUEST_CODE, request)
-    }
-
-    @Suppress("UNCHECKED_CAST")
     private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
         viewModel.viewState.isLoggedIn.observe({ this }) { isLoggedIn ->
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn!!
+            if (isLoggedIn == null) throw IllegalStateException()
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
         }
-        addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.playerState) { observable, _ ->
-            when ((observable as ObservableField<PlayerState>).get()!!) {
-                PlayerState.TRACK -> spotifyPlayerFragment?.lastPlayedTrack?.let {}
-                PlayerState.PLAYLIST -> spotifyPlayerFragment?.lastPlayedPlaylist?.let {}
-                PlayerState.ALBUM -> spotifyPlayerFragment?.lastPlayedAlbum?.let {}
-                else -> viewModel.viewState.itemFavouriteState.set(false)
-            }
-        })
     }
 
     private fun initViewBindings() {
@@ -593,13 +566,6 @@ class MainActivity :
         drawerHeaderBinding.viewState = viewModel.drawerViewState
         binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
         binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = false
-    }
-
-    private fun onSpotifyAuthenticationComplete(accessToken: String) {
-        appPreferences.userPrivateAccessToken = AccessTokenEntity(accessToken, System.currentTimeMillis())
-        viewModel.loadCurrentUser()
-
-        spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
     }
 
     private fun handleSearchIntent(intent: Intent) {

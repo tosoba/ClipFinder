@@ -2,7 +2,7 @@ package com.clipfinder.core.spotify.auth
 
 import io.reactivex.Completable
 
-interface ISpotifyAuth {
+interface ISpotifyAutoAuth {
     fun authorize(): Completable
     fun requirePrivateAuthorized(): Completable
 }
