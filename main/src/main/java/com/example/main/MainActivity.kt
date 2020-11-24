@@ -33,7 +33,6 @@ import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnNavigationDrawerClosedListerner
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
@@ -43,7 +42,6 @@ import com.example.main.databinding.DrawerHeaderBinding
 import com.example.main.soundcloud.SoundCloudMainFragment
 import com.example.main.spotify.SpotifyMainFragment
 import com.example.settings.SettingsActivity
-import com.example.youtubeaddvideo.AddVideoDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.player.ConnectionStateCallback
@@ -58,7 +56,6 @@ class MainActivity :
     BaseVMActivity<MainViewModel>(MainViewModel::class),
     ConnectionStateCallback,
     SlidingPanelController,
-    VideoPlaylistController,
     SpotifyPlayerController,
     SoundCloudPlayerController,
     YoutubePlayerController,
@@ -116,8 +113,6 @@ class MainActivity :
         )
     }
 
-    private val appPreferences: SpotifyPreferences by inject()
-
     private var searchViewMenuItem: MenuItem? = null
 
     private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
@@ -126,8 +121,6 @@ class MainActivity :
             arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
         )
     }
-
-    private var addVideoDialogFragment: AddVideoDialogFragment? = null
 
     private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
@@ -273,11 +266,6 @@ class MainActivity :
         addStatePropertyChangedCallbacks()
 
         checkPermissions()
-    }
-
-    override fun onDestroy() {
-        addVideoDialogFragment = null
-        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -485,14 +473,7 @@ class MainActivity :
         relatedVideosFragment?.searchRelatedVideos(videos.first())
     }
 
-    override fun addVideoToPlaylist(playlist: VideoPlaylist) {
-        youtubePlayerFragment?.lastPlayedVideo?.let {}
-    }
-
-    override fun showNewPlaylistDialog() {}
-
-    override val providedIntent: Intent
-        get() = Intent(this, MainActivity::class.java)
+    override val providedIntent: Intent get() = Intent(this, MainActivity::class.java)
 
     override fun onLoggedOut() {
         viewModel.viewState.isLoggedIn.value = false

@@ -111,7 +111,6 @@ dependencies {
     implementation project(':spotify-track-videos')
     implementation project(':spotify-track')
     implementation project(':videosrepo')
-    implementation project(':youtubeaddvideo')
     implementation project(':youtubeapi')
     implementation project(':youtubeplayer')
     implementation project(':youtuberelatedvideos')

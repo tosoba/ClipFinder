@@ -57,7 +57,6 @@ dependencies {
     implementation project(':spotifyplayer')
     implementation project(':soundcloudplayer')
     implementation project(':settings')
-    implementation project(':youtubeaddvideo')
     implementation project(':youtubeplayer')
     implementation project(':youtuberelatedvideos')
 
