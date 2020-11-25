@@ -1,7 +1,7 @@
 package com.clipfinder.spotify.api.charts.di
 
-import com.example.core.retrofit.retrofitWith
 import com.clipfinder.spotify.api.charts.ChartsEndpoints
+import com.example.core.retrofit.retrofitWith
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module

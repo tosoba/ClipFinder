@@ -25,17 +25,6 @@ fun retrofitWith(
     .baseUrl(url)
     .build()
 
-fun interceptorWithHeaders(
-    vararg headers: Pair<String, String>
-): Interceptor = Interceptor { chain ->
-    chain.proceed(chain.request()
-        .newBuilder()
-        .apply {
-            headers.forEach { (name, value) -> addHeader(name, value) }
-        }
-        .build())
-}
-
 fun onlineCacheInterceptor(maxAge: Long = 60 * 5) = Interceptor { chain ->
     val response = chain.proceed(chain.request())
     response.newBuilder()

@@ -1,14 +1,17 @@
 package com.clipfinder.spotify.api.di
 
 import com.clipfinder.spotify.api.R
-import com.clipfinder.spotify.api.adapter.*
+import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
+import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
+import com.clipfinder.spotify.api.adapter.OffsetDateTimeAdapter
+import com.clipfinder.spotify.api.adapter.UUIDAdapter
 import com.clipfinder.spotify.api.auth.SpotifyAuthenticator
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
-import com.clipfinder.spotify.api.model.TrackObject
 import com.clipfinder.spotify.api.model.PlaylistItemObject
 import com.clipfinder.spotify.api.model.PlaylistItemType
+import com.clipfinder.spotify.api.model.TrackObject
 import com.example.core.android.interceptor.CacheInterceptor
 import com.example.core.android.interceptor.ConnectivityInterceptor
 import com.example.core.retrofit.RxSealedCallAdapterFactory
@@ -16,6 +19,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -47,6 +51,7 @@ private inline fun <reified T> Scope.clientFor(): T = with(androidContext()) {
                         get()
                     )
                 )
+                .cache(get<Cache>())
                 .build()
         )
         .build()
