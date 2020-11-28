@@ -72,7 +72,7 @@
 
                 <fragment
                     android:id="@+id/related_videos_fragment"
-                    android:name="com.example.youtuberelatedvideos.RelatedVideosFragment"
+                    android:name="com.example.youtuberelatedvideos.YoutubeRelatedFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"

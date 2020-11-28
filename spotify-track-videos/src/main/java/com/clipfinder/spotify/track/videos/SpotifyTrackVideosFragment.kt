@@ -105,7 +105,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
 
     private fun updateCurrentFragment(newTrack: Track) {
         when (val currentFragment = pagerAdapter.currentFragment) {
-            is ISearchFragment -> currentFragment.onNewQuery(newTrack.query)
+            is ISearchFragment -> currentFragment.search(newTrack.query)
             is ISpotifyTrackFragment -> currentFragment.onNewTrack(newTrack)
         }
     }

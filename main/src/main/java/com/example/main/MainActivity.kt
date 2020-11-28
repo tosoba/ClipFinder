@@ -96,9 +96,9 @@ class MainActivity :
         get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
             as? SpotifyTracksFragment
 
-    private val relatedVideosFragment: IRelatedVideosSearchFragment?
+    private val relatedVideosFragment: ISearchFragment?
         get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
-            as? IRelatedVideosSearchFragment
+            as? ISearchFragment
 
     private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
         MainView(
@@ -455,7 +455,7 @@ class MainActivity :
         youtubePlayerFragment?.loadVideo(video)
         sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()
-        relatedVideosFragment?.searchRelatedVideos(video)
+        relatedVideosFragment?.search(video.id)
     }
 
     override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
@@ -470,7 +470,7 @@ class MainActivity :
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
         sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()
-        relatedVideosFragment?.searchRelatedVideos(videos.first())
+        relatedVideosFragment?.search(videos.first().id)
     }
 
     override val providedIntent: Intent get() = Intent(this, MainActivity::class.java)

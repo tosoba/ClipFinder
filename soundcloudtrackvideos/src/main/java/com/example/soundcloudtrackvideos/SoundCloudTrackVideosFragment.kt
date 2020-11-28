@@ -104,7 +104,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
 
     private fun updateCurrentFragment(newTrack: SoundCloudTrack) {
         when (val currentFragment = pagerAdapter.currentFragment) {
-            is YoutubeSearchFragment -> currentFragment.onNewQuery(newTrack.title)
+            is YoutubeSearchFragment -> currentFragment.search(newTrack.title)
             is SoundCloudTrackFragment -> currentFragment.track = newTrack
         }
     }

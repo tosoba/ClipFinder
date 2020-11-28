@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.core.android.view.recyclerview.BindingRecyclerViewAdapter
 import com.example.core.android.view.recyclerview.binder.ItemBinder
 import com.example.core.android.view.recyclerview.listener.ClickHandler
-import com.example.core.android.view.recyclerview.listener.LongClickHandler
 
 @BindingAdapter("itemDecoration")
 fun bindItemDecoration(recycler: RecyclerView, decoration: RecyclerView.ItemDecoration?) {
@@ -17,9 +16,6 @@ fun bindOnScrollListener(recycler: RecyclerView, listener: RecyclerView.OnScroll
     listener?.let(recycler::addOnScrollListener)
 }
 
-@BindingAdapter("hasFixedSize")
-fun bindHasFixedSize(recycler: RecyclerView, hasFixedSize: Boolean) = recycler.setHasFixedSize(hasFixedSize)
-
 @BindingAdapter("nestedScrollingIsEnabled")
 fun bindNestedScrolling(recycler: RecyclerView, nestedScrollingEnabled: Boolean) {
     recycler.isNestedScrollingEnabled = nestedScrollingEnabled
@@ -27,7 +23,6 @@ fun bindNestedScrolling(recycler: RecyclerView, nestedScrollingEnabled: Boolean)
 
 private const val KEY_ITEMS = -123
 private const val KEY_CLICK_HANDLER = -124
-private const val KEY_LONG_CLICK_HANDLER = -125
 
 @Suppress("UNCHECKED_CAST")
 @BindingAdapter("items")
@@ -48,17 +43,6 @@ fun <T> setHandler(recyclerView: RecyclerView, handler: ClickHandler<T>) {
         adapter.setClickHandler(handler)
     } else {
         recyclerView.setTag(KEY_CLICK_HANDLER, handler)
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-@BindingAdapter("longClickHandler")
-fun <T> setHandler(recyclerView: RecyclerView, handler: LongClickHandler<T>) {
-    val adapter = recyclerView.adapter as? BindingRecyclerViewAdapter<T>?
-    if (adapter != null) {
-        adapter.setLongClickHandler(handler)
-    } else {
-        recyclerView.setTag(KEY_LONG_CLICK_HANDLER, handler)
     }
 }
 
