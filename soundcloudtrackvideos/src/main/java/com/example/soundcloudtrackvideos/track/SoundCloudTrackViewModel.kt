@@ -28,6 +28,6 @@ class SoundCloudTrackViewModel(
     companion object : MvRxViewModelFactory<SoundCloudTrackViewModel, SoundCloudTrackViewState> {
         override fun create(
             viewModelContext: ViewModelContext, state: SoundCloudTrackViewState
-        ): SoundCloudTrackViewModel? = SoundCloudTrackViewModel(state, viewModelContext.activity.get())
+        ): SoundCloudTrackViewModel = SoundCloudTrackViewModel(state, viewModelContext.activity.get())
     }
 }

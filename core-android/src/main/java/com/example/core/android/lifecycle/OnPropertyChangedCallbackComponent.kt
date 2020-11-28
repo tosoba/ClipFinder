@@ -10,7 +10,6 @@ class OnPropertyChangedCallbackComponent(
     private val observable: BaseObservable,
     private val callback: Observable.OnPropertyChangedCallback
 ) : LifecycleObserver {
-
     constructor(
         observable: BaseObservable,
         onPropertyChanged: (sender: Observable?, propertyId: Int) -> Unit

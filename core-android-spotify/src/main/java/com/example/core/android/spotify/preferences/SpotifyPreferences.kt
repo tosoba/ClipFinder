@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.example.core.SpotifyDefaults
-import com.example.there.domain.entity.spotify.AccessTokenEntity
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
@@ -55,22 +54,6 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
             apply()
         }
     }
-
-    var userPrivateAccessToken: AccessTokenEntity?
-        get() {
-            val token = preferences.getString(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN, null)
-            val timestamp = preferences.getLong(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP, 0L)
-            return if (token == null) null
-            else AccessTokenEntity(token, timestamp)
-        }
-        set(value) {
-            if (value == null) return
-            with(preferences.edit()) {
-                putString(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN, value.token)
-                putLong(PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP, value.timestamp)
-                apply()
-            }
-        }
 
     val countryObservable: Observable<String>
         get() = countryRx.asObservable()

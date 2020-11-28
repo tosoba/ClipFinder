@@ -1,4 +1,4 @@
-package com.example.core.android.model.spotify
+package com.example.core.android.spotify.model
 
 import com.example.core.android.R
 import com.example.core.android.view.imageview.ImageViewSrc

@@ -5,7 +5,7 @@ import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.MutableLiveData
 import com.example.core.android.spotify.model.Track
-import com.example.core.android.model.spotify.User
+import com.example.core.android.spotify.model.User
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 

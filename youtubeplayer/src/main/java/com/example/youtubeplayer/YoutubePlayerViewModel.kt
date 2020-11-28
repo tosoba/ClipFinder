@@ -4,9 +4,7 @@ import com.example.core.android.base.vm.BaseViewModel
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
 
-
 class YoutubePlayerViewModel : BaseViewModel() {
-
     val playerState = YoutubePlayerState()
 
     fun onLoadVideo(video: Video) = with(playerState) {

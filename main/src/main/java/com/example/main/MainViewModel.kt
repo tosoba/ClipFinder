@@ -3,7 +3,7 @@ package com.example.main
 import com.clipfinder.core.spotify.usecase.GetCurrentUser
 import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.BaseViewModel
-import com.example.core.android.model.spotify.User
+import com.example.core.android.spotify.model.User
 
 class MainViewModel(
     private val getSimilarTracks: GetSimilarTracks,
