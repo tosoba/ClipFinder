@@ -5,7 +5,7 @@ import com.clipfinder.core.spotify.model.ISpotifyPrivateUser
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Resource
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.core.usecase.SingleUseCase
 import io.reactivex.Single
 
 class GetCurrentUser(

@@ -3,7 +3,7 @@ package com.clipfinder.core.soundcloud.usecase
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
 import com.example.core.ext.RxSchedulers
 import com.example.core.ext.Timeout
-import com.example.there.domain.usecase.base.SingleUseCase
+import com.example.core.usecase.SingleUseCase
 import io.reactivex.Single
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit

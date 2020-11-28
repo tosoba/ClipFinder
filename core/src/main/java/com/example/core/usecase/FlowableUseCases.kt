@@ -1,30 +1,30 @@
-package com.example.there.domain.usecase.base
+package com.example.core.usecase
 
 import com.example.core.ext.*
-import io.reactivex.Observable
+import io.reactivex.Flowable
 
-abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
-    protected abstract val result: Observable<Result>
+abstract class FlowableUseCase<Result>(private val schedulers: RxSchedulers) {
+    protected abstract val result: Flowable<Result>
 
     operator fun invoke(
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Observable<Result> = result
+    ): Flowable<Result> = result
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
-abstract class ObservableUseCaseWithArgs<Args, Result>(private val schedulers: RxSchedulers) {
-    protected abstract fun run(args: Args): Observable<Result>
+abstract class FlowableUseCaseWithArgs<Args, Result>(private val schedulers: RxSchedulers) {
+    protected abstract fun run(args: Args): Flowable<Result>
 
     operator fun invoke(
         args: Args,
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Observable<Result> = run(args)
+    ): Flowable<Result> = run(args)
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }

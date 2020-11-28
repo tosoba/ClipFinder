@@ -1,30 +1,30 @@
-package com.example.there.domain.usecase.base
+package com.example.core.usecase
 
 import com.example.core.ext.*
-import io.reactivex.Single
+import io.reactivex.Observable
 
-abstract class SingleUseCase<Result>(private val schedulers: RxSchedulers) {
-    protected abstract val result: Single<Result>
+abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
+    protected abstract val result: Observable<Result>
 
     operator fun invoke(
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Single<Result> = result
+    ): Observable<Result> = result
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
-abstract class SingleUseCaseWithArgs<Args, Res>(private val schedulers: RxSchedulers) {
-    protected abstract fun run(args: Args): Single<Res>
+abstract class ObservableUseCaseWithArgs<Args, Result>(private val schedulers: RxSchedulers) {
+    protected abstract fun run(args: Args): Observable<Result>
 
     operator fun invoke(
         args: Args,
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Single<Res> = run(args)
+    ): Observable<Result> = run(args)
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }

@@ -6,7 +6,7 @@ import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.example.core.ext.RxSchedulers
 import com.example.core.model.Paged
 import com.example.core.model.Resource
-import com.example.there.domain.usecase.base.SingleUseCaseWithArgs
+import com.example.core.usecase.SingleUseCaseWithArgs
 import io.reactivex.Single
 
 class GetCurrentUsersSavedAlbums(

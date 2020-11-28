@@ -1,4 +1,4 @@
-package com.example.there.domain.usecase.base
+package com.example.core.usecase
 
 import com.example.core.ext.*
 import io.reactivex.Completable

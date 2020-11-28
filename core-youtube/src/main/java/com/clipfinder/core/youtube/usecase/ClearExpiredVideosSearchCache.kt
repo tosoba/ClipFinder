@@ -2,7 +2,7 @@ package com.clipfinder.core.youtube.usecase
 
 import com.clipfinder.core.youtube.repo.IYoutubeRepo
 import com.example.core.ext.RxSchedulers
-import com.example.there.domain.usecase.base.CompletableUseCase
+import com.example.core.usecase.CompletableUseCase
 import io.reactivex.Completable
 
 class ClearExpiredVideosSearchCache(
