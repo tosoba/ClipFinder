@@ -37,7 +37,6 @@ class YoutubeRelatedViewModel(
     private val clear: PublishRelay<Unit> = PublishRelay.create()
 
     init {
-        search()
         handleConnectivityChanges(context)
     }
 
@@ -53,7 +52,7 @@ class YoutubeRelatedViewModel(
 
     private fun searchVideos(shouldClear: Boolean = false) {
         if (shouldClear) clear.accept(Unit)
-        withState { (query, videos) ->
+        withState { (videoId, videos) ->
             if (!shouldClear && videos.completed) return@withState
 
             setState {
@@ -61,7 +60,7 @@ class YoutubeRelatedViewModel(
                 else copy(videos = videos.copyWithLoadingInProgress)
             }
 
-            searchRelatedVideos.with(query, if (videos is WithValue) videos.value.nextPageToken else null)
+            searchRelatedVideos.with(requireNotNull(videoId), if (videos is WithValue) videos.value.nextPageToken else null)
                 .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
                 .subscribe({
                     setState {
