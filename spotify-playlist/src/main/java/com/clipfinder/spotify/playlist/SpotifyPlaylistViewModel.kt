@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.core.ext.map
-import com.example.core.ext.mapData
 import org.koin.android.ext.android.get
 
 private typealias State = SpotifyPlaylistState

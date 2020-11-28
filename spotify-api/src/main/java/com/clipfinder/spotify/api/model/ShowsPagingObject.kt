@@ -11,7 +11,7 @@
  */
 package com.clipfinder.spotify.api.model
 
-import com.example.core.model.IPagingObject
+import com.clipfinder.core.model.IPagingObject
 import com.squareup.moshi.Json
 
 /**

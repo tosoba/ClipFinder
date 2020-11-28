@@ -1,18 +1,18 @@
 package com.example.core.android.spotify.repo
 
+import com.clipfinder.core.SpotifyDefaults
+import com.clipfinder.core.ext.mapSuccess
+import com.clipfinder.core.ext.mapToResource
+import com.clipfinder.core.ext.resource
+import com.clipfinder.core.ext.toPaged
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import com.clipfinder.spotify.api.charts.ChartsEndpoints
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.model.*
-import com.example.core.SpotifyDefaults
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.ext.mapSuccess
-import com.example.core.ext.mapToResource
-import com.example.core.ext.resource
-import com.example.core.ext.toPaged
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import io.reactivex.Single
 
 class SpotifyRepo(

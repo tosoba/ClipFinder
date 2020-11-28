@@ -2,7 +2,7 @@ package com.example.core.android.base.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.core.model.Resource
+import com.clipfinder.core.model.Resource
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable

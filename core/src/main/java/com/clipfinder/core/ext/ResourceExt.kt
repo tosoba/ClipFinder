@@ -1,6 +1,6 @@
-package com.example.core.ext
+package com.clipfinder.core.ext
 
-import com.example.core.model.Resource
+import com.clipfinder.core.model.Resource
 import io.reactivex.Observable
 import io.reactivex.Single
 

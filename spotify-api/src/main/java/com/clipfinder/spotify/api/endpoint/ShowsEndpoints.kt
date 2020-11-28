@@ -1,10 +1,10 @@
 package com.clipfinder.spotify.api.endpoint
 
+import com.clipfinder.core.model.NetworkResponse
 import com.clipfinder.spotify.api.model.ErrorResponse
 import com.clipfinder.spotify.api.model.ShowObject
 import com.clipfinder.spotify.api.model.ShowsObject
 import com.clipfinder.spotify.api.model.SimplifiedEpisodesPagingObject
-import com.example.core.model.NetworkResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET

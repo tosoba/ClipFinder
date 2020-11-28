@@ -1,6 +1,6 @@
-package com.example.core.retrofit
+package com.clipfinder.core.retrofit
 
-import com.example.core.model.NetworkResponse
+import com.clipfinder.core.model.NetworkResponse
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.functions.Function

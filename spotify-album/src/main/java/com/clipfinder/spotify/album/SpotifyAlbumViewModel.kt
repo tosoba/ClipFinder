@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import com.example.core.android.base.vm.MvRxViewModel
@@ -13,10 +17,6 @@ import com.example.core.android.spotify.model.SimplifiedArtist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.core.ext.map
-import com.example.core.ext.mapData
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 

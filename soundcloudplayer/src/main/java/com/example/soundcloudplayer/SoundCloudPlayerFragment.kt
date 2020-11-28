@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.core.ext.castAs
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.fragment.ISoundCloudPlayerFragment
 import com.example.core.android.base.handler.SlidingPanelController
 import com.example.core.android.model.soundcloud.SoundCloudTrack

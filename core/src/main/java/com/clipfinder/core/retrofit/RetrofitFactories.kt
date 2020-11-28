@@ -1,4 +1,4 @@
-package com.example.core.retrofit
+package com.clipfinder.core.retrofit
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

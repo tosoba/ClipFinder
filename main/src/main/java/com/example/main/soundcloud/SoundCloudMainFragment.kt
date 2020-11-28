@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.core.ext.castAs
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment

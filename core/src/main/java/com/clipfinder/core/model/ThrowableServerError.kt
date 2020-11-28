@@ -1,4 +1,4 @@
-package com.example.core.model
+package com.clipfinder.core.model
 
 class ThrowableServerError(
     val error: NetworkResponse.ServerError<*>

@@ -10,6 +10,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
@@ -22,7 +23,6 @@ import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.loadableCarouselWithHeader
-import com.example.core.ext.castAs
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {

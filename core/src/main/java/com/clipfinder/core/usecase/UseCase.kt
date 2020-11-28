@@ -1,6 +1,6 @@
-package com.example.core.usecase
+package com.clipfinder.core.usecase
 
-import com.example.core.ext.*
+import com.clipfinder.core.ext.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable

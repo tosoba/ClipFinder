@@ -1,9 +1,9 @@
 package com.clipfinder.core.soundcloud.usecase
 
+import com.clipfinder.core.ext.RxSchedulers
 import com.clipfinder.core.soundcloud.auth.ISoundCloudAuth
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
-import com.example.core.ext.RxSchedulers
-import com.example.core.usecase.SingleUseCase
+import com.clipfinder.core.usecase.SingleUseCase
 import io.reactivex.Single
 
 class GetClientId(

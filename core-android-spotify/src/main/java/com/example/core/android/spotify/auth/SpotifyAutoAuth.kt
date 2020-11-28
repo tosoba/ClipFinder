@@ -1,12 +1,12 @@
 package com.example.core.android.spotify.auth
 
 import android.util.Base64
+import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
 import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.ext.mapSuccess
 import io.reactivex.Completable
 import io.reactivex.Single
 

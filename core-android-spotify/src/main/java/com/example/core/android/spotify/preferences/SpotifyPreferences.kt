@@ -3,8 +3,8 @@ package com.example.core.android.spotify.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.clipfinder.core.SpotifyDefaults
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
-import com.example.core.SpotifyDefaults
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
@@ -80,9 +80,6 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
         private const val PREF_KEY_TOKEN = "PREF_KEY_TOKEN"
         private const val PREF_KEY_REFRESH_TOKEN = "PREF_KEY_REFRESH_TOKEN"
         private const val PREF_KEY_ARE_TOKENS_PRIVATE = "PREF_KEY_IS_TOKEN_PRIVATE"
-
-        private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN"
-        private const val PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP = "PREF_KEY_USER_PRIVATE_ACCESS_TOKEN_TIMESTAMP"
 
         private const val PREF_KEY_COUNTRY = "Country"
         private const val PREF_KEY_LANGUAGE = "Language"

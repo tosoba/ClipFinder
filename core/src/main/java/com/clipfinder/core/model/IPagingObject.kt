@@ -1,4 +1,4 @@
-package com.example.core.model
+package com.clipfinder.core.model
 
 interface IPagingObject<out T : Any> {
     val items: List<T>

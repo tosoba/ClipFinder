@@ -8,6 +8,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.HasMainToolbar
 import com.example.core.android.base.handler.NavigationDrawerController
@@ -25,7 +26,6 @@ import com.example.core.android.view.epoxy.Column
 import com.example.core.android.view.epoxy.carousel
 import com.example.core.android.view.epoxy.injectedTypedController
 import com.example.core.android.view.epoxy.withModelsFrom
-import com.example.core.ext.castAs
 import com.example.soundclouddashboard.databinding.FragmentSoundCloudDashboardBinding
 import org.koin.android.ext.android.inject
 

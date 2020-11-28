@@ -3,7 +3,7 @@ package com.example.core.android.base.fragment
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.example.core.ext.messageOrDefault
+import com.clipfinder.core.ext.messageOrDefault
 import com.example.core.android.base.vm.BaseViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber

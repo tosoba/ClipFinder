@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
 import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
 import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
@@ -18,7 +19,6 @@ import com.example.core.android.util.ext.mainContentFragment
 import com.example.core.android.util.ext.showDrawerHamburger
 import com.example.core.android.view.binding.viewBinding
 import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
-import com.example.core.ext.castAs
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
     private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)

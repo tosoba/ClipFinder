@@ -1,8 +1,8 @@
 package com.clipfinder.core.spotify.repo
 
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.*
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import io.reactivex.Single
 
 interface ISpotifyRepo {

@@ -1,9 +1,9 @@
 package com.clipfinder.core.youtube.usecase
 
+import com.clipfinder.core.ext.RxSchedulers
+import com.clipfinder.core.model.Resource
+import com.clipfinder.core.usecase.SingleUseCaseWithArgs
 import com.clipfinder.core.youtube.repo.IYoutubeRepo
-import com.example.core.ext.RxSchedulers
-import com.example.core.model.Resource
-import com.example.core.usecase.SingleUseCaseWithArgs
 import com.google.api.services.youtube.model.SearchListResponse
 import io.reactivex.Single
 

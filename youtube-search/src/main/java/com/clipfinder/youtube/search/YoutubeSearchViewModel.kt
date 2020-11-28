@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.youtube.ext.highestResUrl
 import com.clipfinder.core.youtube.ext.isValid
 import com.clipfinder.core.youtube.usecase.SearchVideos
@@ -15,9 +18,6 @@ import com.example.core.android.model.WithValue
 import com.example.core.android.model.videos.Video
 import com.example.core.android.util.ext.completed
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.core.ext.castAs
-import com.example.core.ext.mapData
-import com.example.core.model.Resource
 import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy

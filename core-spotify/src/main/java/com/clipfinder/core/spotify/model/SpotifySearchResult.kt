@@ -1,6 +1,6 @@
 package com.clipfinder.core.spotify.model
 
-import com.example.core.model.Paged
+import com.clipfinder.core.model.Paged
 
 data class SpotifySearchResult(
     val albums: Paged<List<ISpotifySimplifiedAlbum>>?,

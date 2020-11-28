@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
-import com.example.core.ext.castAs
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.fragment.BaseVMFragment
 import com.example.core.android.base.fragment.IYoutubePlayerFragment
 import com.example.core.android.base.handler.SlidingPanelController

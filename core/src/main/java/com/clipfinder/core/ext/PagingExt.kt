@@ -1,8 +1,8 @@
-package com.example.core.ext
+package com.clipfinder.core.ext
 
-import com.example.core.SpotifyDefaults
-import com.example.core.model.IPagingObject
-import com.example.core.model.Paged
+import com.clipfinder.core.SpotifyDefaults
+import com.clipfinder.core.model.IPagingObject
+import com.clipfinder.core.model.Paged
 
 fun <T : Any> IPagingObject<T>.toPaged(
     extraOffset: Int = SpotifyDefaults.LIMIT

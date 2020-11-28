@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetAlbum
@@ -20,8 +22,6 @@ import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import com.example.core.android.util.ext.retryLoadOnNetworkAvailable
-import com.example.core.ext.map
-import com.example.core.ext.mapData
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry

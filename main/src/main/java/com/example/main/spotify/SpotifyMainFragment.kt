@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.IFragmentFactory
 import com.example.core.android.base.fragment.BaseNavHostFragment
 import com.example.core.android.base.fragment.IMainContentFragment
@@ -12,7 +13,6 @@ import com.example.core.android.base.handler.ToolbarController
 import com.example.core.android.util.ext.checkItem
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import com.example.core.ext.castAs
 import com.example.main.R
 import com.example.main.databinding.FragmentSpotifyMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView

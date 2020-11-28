@@ -1,10 +1,10 @@
 package com.clipfinder.spotify.api.auth
 
 import android.util.Base64
+import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
-import com.example.core.ext.mapSuccess
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response

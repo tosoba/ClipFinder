@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.example.core.android.base.vm.MvRxViewModel
 import com.example.core.android.model.PagedList
@@ -11,10 +15,6 @@ import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.core.ext.map
-import com.example.core.ext.mapData
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single

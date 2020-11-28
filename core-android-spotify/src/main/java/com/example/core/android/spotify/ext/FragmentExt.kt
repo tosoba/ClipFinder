@@ -1,10 +1,10 @@
 package com.example.core.android.spotify.ext
 
 import androidx.fragment.app.Fragment
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.spotify.controller.SpotifyAuthController
 import com.example.core.android.spotify.controller.SpotifyPlayerController
 import com.example.core.android.util.ext.mainContentFragment
-import com.example.core.ext.castAs
 
 val Fragment.spotifyAuthController: SpotifyAuthController?
     get() = activity as? SpotifyAuthController

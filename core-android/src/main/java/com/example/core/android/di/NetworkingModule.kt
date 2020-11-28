@@ -1,8 +1,8 @@
 package com.example.core.android.di
 
+import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.example.core.android.interceptor.CacheInterceptor
 import com.example.core.android.interceptor.ConnectivityInterceptor
-import com.example.core.retrofit.RxSealedCallAdapterFactory
 import okhttp3.Cache
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext

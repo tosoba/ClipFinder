@@ -1,6 +1,6 @@
-package com.example.core.ext
+package com.clipfinder.core.ext
 
-import com.example.core.model.Paged
+import com.clipfinder.core.model.Paged
 
 fun <T : Iterable<I>, S, I> Paged<T>.map(mapper: (I) -> S): Paged<List<S>> = Paged(
     contents.map(mapper),

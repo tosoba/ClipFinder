@@ -1,10 +1,10 @@
 package com.clipfinder.core.soundcloud.usecase
 
+import com.clipfinder.core.ext.RxSchedulers
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylistSelection
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
 import com.clipfinder.core.soundcloud.repo.ISoundCloudRepo
-import com.example.core.ext.RxSchedulers
-import com.example.core.model.Resource
 import io.reactivex.Single
 
 class GetMixedSelections(

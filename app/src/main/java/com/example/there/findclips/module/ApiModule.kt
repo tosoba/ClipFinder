@@ -1,9 +1,9 @@
 package com.example.there.findclips.module
 
+import com.clipfinder.core.retrofit.retrofitWith
 import com.clipfinder.soundcloud.api.SoundCloudApi
 import com.clipfinder.soundcloud.api.SoundCloudApiV2
 import com.clipfinder.soundcloud.api.SoundCloudAuth
-import com.example.core.retrofit.retrofitWith
 import com.vpaliy.soundcloud.SoundCloud
 import okhttp3.Interceptor
 import org.koin.core.parameter.parametersOf

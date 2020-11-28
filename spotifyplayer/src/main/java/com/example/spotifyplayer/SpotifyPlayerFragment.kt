@@ -18,6 +18,7 @@ import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
 import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.fragment.BaseVMFragment
 import com.example.core.android.base.handler.SlidingPanelController
@@ -30,7 +31,6 @@ import com.example.core.android.spotify.notification.PlaybackNotification
 import com.example.core.android.util.PendingIntents
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.onSeekBarProgressChangeListener
-import com.example.core.ext.castAs
 import com.example.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso

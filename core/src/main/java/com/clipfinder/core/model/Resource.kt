@@ -1,4 +1,4 @@
-package com.example.core.model
+package com.clipfinder.core.model
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T) : Resource<T>()

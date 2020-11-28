@@ -1,6 +1,6 @@
-package com.example.core.retrofit
+package com.clipfinder.core.retrofit
 
-import com.example.core.model.NetworkResponse
+import com.clipfinder.core.model.NetworkResponse
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Flowable
 import io.reactivex.Maybe

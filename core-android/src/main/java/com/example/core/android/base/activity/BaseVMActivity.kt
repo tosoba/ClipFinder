@@ -3,8 +3,8 @@ package com.example.core.android.base.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.clipfinder.core.ext.messageOrDefault
 import com.example.core.android.base.vm.BaseViewModel
-import com.example.core.ext.messageOrDefault
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import kotlin.reflect.KClass

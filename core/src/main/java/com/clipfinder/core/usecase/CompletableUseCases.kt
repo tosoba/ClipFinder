@@ -1,30 +1,30 @@
-package com.example.core.usecase
+package com.clipfinder.core.usecase
 
-import com.example.core.ext.*
-import io.reactivex.Single
+import com.clipfinder.core.ext.*
+import io.reactivex.Completable
 
-abstract class SingleUseCase<Result>(private val schedulers: RxSchedulers) {
-    protected abstract val result: Single<Result>
+abstract class CompletableUseCase(private val schedulers: RxSchedulers) {
+    protected abstract val result: Completable
 
     operator fun invoke(
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Single<Result> = result
+    ): Completable = result
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }
 }
 
-abstract class SingleUseCaseWithArgs<Args, Res>(private val schedulers: RxSchedulers) {
-    protected abstract fun run(args: Args): Single<Res>
+abstract class CompletableUseCaseWithArgs<Args>(private val schedulers: RxSchedulers) {
+    protected abstract fun run(args: Args): Completable
 
     operator fun invoke(
         args: Args,
         applySchedulers: Boolean = true,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
-    ): Single<Res> = run(args)
+    ): Completable = run(args)
         .timeout(timeout.limit, timeout.unit)
         .run { strategy?.let(::retry) ?: this }
         .run { if (applySchedulers) applySchedulers(schedulers) else this }

@@ -2,6 +2,8 @@ package com.clipfinder.spotify.search
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.usecase.SearchSpotify
@@ -14,8 +16,6 @@ import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.completed
 import com.example.core.android.util.ext.offset
-import com.example.core.ext.map
-import com.example.core.model.Resource
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 import timber.log.Timber

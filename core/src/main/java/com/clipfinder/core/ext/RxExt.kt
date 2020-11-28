@@ -1,4 +1,4 @@
-package com.example.core.ext
+package com.clipfinder.core.ext
 
 import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable

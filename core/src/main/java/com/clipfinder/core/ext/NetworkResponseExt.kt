@@ -1,8 +1,8 @@
-package com.example.core.ext
+package com.clipfinder.core.ext
 
-import com.example.core.model.NetworkResponse
-import com.example.core.model.Resource
-import com.example.core.model.ThrowableServerError
+import com.clipfinder.core.model.NetworkResponse
+import com.clipfinder.core.model.Resource
+import com.clipfinder.core.model.ThrowableServerError
 import io.reactivex.Observable
 import io.reactivex.Single
 

@@ -1,5 +1,6 @@
 package com.clipfinder.spotify.api.di
 
+import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.clipfinder.spotify.api.R
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
@@ -14,7 +15,6 @@ import com.clipfinder.spotify.api.model.PlaylistItemType
 import com.clipfinder.spotify.api.model.TrackObject
 import com.example.core.android.interceptor.CacheInterceptor
 import com.example.core.android.interceptor.ConnectivityInterceptor
-import com.example.core.retrofit.RxSealedCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter

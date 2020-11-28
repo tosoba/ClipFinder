@@ -12,12 +12,12 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.fragment.ISearchFragment
 import com.example.core.android.base.handler.YoutubePlayerController
 import com.example.core.android.model.videos.clickableListItem
 import com.example.core.android.util.ext.screenOrientation
 import com.example.core.android.view.epoxy.loadableCollectionController
-import com.example.core.ext.castAs
 import kotlinx.android.synthetic.main.fragment_youtube_related.*
 import kotlinx.android.synthetic.main.fragment_youtube_related.view.*
 

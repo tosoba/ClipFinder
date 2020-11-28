@@ -10,6 +10,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.clipfinder.core.ext.castAs
 import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.example.core.android.base.fragment.BackPressedHandler
 import com.example.core.android.base.handler.SoundCloudPlayerController
@@ -20,7 +21,6 @@ import com.example.core.android.util.ext.*
 import com.example.core.android.view.OnPageChangeListener
 import com.example.core.android.view.OnTabSelectedListener
 import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import com.example.core.ext.castAs
 import com.example.soundcloudtrackvideos.databinding.FragmentSoundCloudTrackVideosBinding
 import com.example.soundcloudtrackvideos.track.SoundCloudTrackFragment
 import com.google.android.material.tabs.TabLayout

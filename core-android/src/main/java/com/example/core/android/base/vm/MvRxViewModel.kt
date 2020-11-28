@@ -3,13 +3,13 @@ package com.example.core.android.base.vm
 import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.Resource
 import com.example.core.android.model.*
 import com.example.core.android.util.ext.copyWithPaged
 import com.example.core.android.util.ext.loadingOrCompleted
 import com.example.core.android.util.ext.observeNetworkConnectivity
-import com.example.core.ext.castAs
-import com.example.core.model.Paged
-import com.example.core.model.Resource
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
