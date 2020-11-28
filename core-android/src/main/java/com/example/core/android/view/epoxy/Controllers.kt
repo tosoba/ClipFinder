@@ -6,7 +6,7 @@ import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.di.EpoxyHandlerQualifier
+import com.example.core.android.di.EpoxyHandlerType
 import org.koin.android.ext.android.inject
 
 inline fun BaseMvRxFragment.asyncController(
@@ -21,8 +21,8 @@ inline fun BaseMvRxFragment.asyncController(
 inline fun <S : MvRxState> BaseMvRxFragment.injectedTypedController(
     crossinline build: EpoxyController.(S) -> Unit
 ): TypedEpoxyController<S> {
-    val builder by inject<Handler>(EpoxyHandlerQualifier.BUILDER)
-    val differ by inject<Handler>(EpoxyHandlerQualifier.DIFFER)
+    val builder by inject<Handler>(EpoxyHandlerType.BUILDER.qualifier)
+    val differ by inject<Handler>(EpoxyHandlerType.DIFFER.qualifier)
     return typedController(builder, differ, build)
 }
 

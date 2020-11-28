@@ -10,12 +10,18 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 class YoutubeRepo(
-    private val searchStore: YoutubeSearchStore,
+    private val querySearchStore: YoutubeSearchStore,
+    private val relatedSearchStore: YoutubeSearchStore,
     private val searchDao: SearchDao
 ) : IYoutubeRepo {
 
-    override fun search(query: String, pageToken: String?): Single<Resource<SearchListResponse>> = searchStore
+    override fun search(query: String, pageToken: String?): Single<Resource<SearchListResponse>> = querySearchStore
         .getSingle(query to pageToken)
+        .map { Resource.success(it) }
+        .onErrorReturn { Resource.error(it) }
+
+    override fun searchRelated(videoId: String, pageToken: String?): Single<Resource<SearchListResponse>> = relatedSearchStore
+        .getSingle(videoId to pageToken)
         .map { Resource.success(it) }
         .onErrorReturn { Resource.error(it) }
 

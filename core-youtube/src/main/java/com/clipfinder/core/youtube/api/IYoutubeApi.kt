@@ -5,4 +5,5 @@ import io.reactivex.Single
 
 interface IYoutubeApi {
     fun search(query: String, pageToken: String? = null): Single<SearchListResponse>
+    fun searchRelatedVideos(videoId: String, pageToken: String? = null): Single<SearchListResponse>
 }

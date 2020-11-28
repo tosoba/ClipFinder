@@ -7,15 +7,15 @@ import com.airbnb.epoxy.VisibilityState
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
 import com.example.core.android.*
-import com.example.core.android.di.EpoxyHandlerQualifier
+import com.example.core.android.di.EpoxyHandlerType
 import com.example.core.android.model.*
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
 
 inline fun <S : MvRxState, I> BaseMvRxFragment.loadableCollectionController(
     prop: KProperty1<S, Loadable<Collection<I>>>,
-    modelBuildingHandler: Handler = get(EpoxyHandlerQualifier.BUILDER),
-    diffingHandler: Handler = get(EpoxyHandlerQualifier.DIFFER),
+    modelBuildingHandler: Handler = get(EpoxyHandlerType.BUILDER.qualifier),
+    diffingHandler: Handler = get(EpoxyHandlerType.DIFFER.qualifier),
     headerText: String? = null,
     noinline loadMore: (() -> Unit)? = null,
     noinline shouldOverrideBuildModels: (S) -> Boolean = { false },

@@ -6,17 +6,19 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.api.services.youtube.model.SearchListResponse
 import org.threeten.bp.OffsetDateTime
-import java.util.*
 
 @Entity(
     tableName = "search_response",
-    indices = [Index(value = ["query", "page_token"], unique = true)]
+    indices = [
+        Index(value = ["query", "page_token"], unique = true),
+        Index(value = ["related_video_id", "page_token"], unique = true)
+    ]
 )
 data class SearchResponseEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
-    val query: String,
+    val query: String? = null,
 
     @ColumnInfo(name = "page_token")
     val pageToken: String? = null,
@@ -24,5 +26,8 @@ data class SearchResponseEntity(
     val content: SearchListResponse,
 
     @ColumnInfo(name = "cached_at")
-    val cachedAt: OffsetDateTime
+    val cachedAt: OffsetDateTime,
+
+    @ColumnInfo(name = "related_video_id")
+    val relatedVideoId: String? = null
 )

@@ -10,6 +10,7 @@ import io.reactivex.Single
 import timber.log.Timber
 
 class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutubeApi {
+
     override fun search(query: String, pageToken: String?): Single<SearchListResponse> = youtube
         .Search()
         .list(listOf("snippet"))
@@ -17,9 +18,21 @@ class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutu
         .setQ(query)
         .run { pageToken?.let(::setPageToken) ?: this }
         .single
-        .run {
-            if (BuildConfig.DEBUG) {
-                doOnSuccess { Timber.d(GsonFactory.getDefaultInstance().toString(it)) }
+        .logOnSuccess
+
+    override fun searchRelatedVideos(videoId: String, pageToken: String?): Single<SearchListResponse> = youtube
+        .Search()
+        .list(listOf("snippet"))
+        .setKey(key)
+        .setRelatedToVideoId(videoId)
+        .run { pageToken?.let(::setPageToken) ?: this }
+        .single
+        .logOnSuccess
+
+    private val <T> Single<T>.logOnSuccess: Single<T>
+        get() = run {
+            if (BuildConfig.DEBUG) doOnSuccess {
+                Timber.d(GsonFactory.getDefaultInstance().toString(it))
             } else {
                 this
             }
