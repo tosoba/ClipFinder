@@ -9,6 +9,5 @@ interface ISoundCloudTrack {
     val genre: String
     val tags: String
     val streamUrl: String?
-    val downloadUrl: String?
     val waveformUrl: String
 }

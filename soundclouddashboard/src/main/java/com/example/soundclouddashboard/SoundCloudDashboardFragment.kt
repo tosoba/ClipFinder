@@ -54,7 +54,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                                 playlist.clickableListItem {
                                     navHostFragment?.showFragment(
                                         fragmentFactory.newSoundCloudPlaylistFragmentWithPlaylist(playlist),
-                                        true
+                                        addToBackStack = true
                                     )
                                 }
                             })
@@ -64,7 +64,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
                 is Failed -> reloadControl {
                     id("reload-control")
-                    onReloadClicked(View.OnClickListener { viewModel.loadSelections() })
+                    onReloadClicked { _ -> viewModel.loadSelections() }
                     message("Error occurred lmao") //TODO: better error msg
                 }
             }
@@ -78,7 +78,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSoundCloudDashboardBinding.inflate(inflater, container, false)
+    ): View = FragmentSoundCloudDashboardBinding.inflate(inflater, container, false)
         .apply {
             activity?.castAs<AppCompatActivity>()?.apply {
                 setSupportActionBar(soundCloudDashboardToolbar)

@@ -1,4 +1,4 @@
-package com.clipfinder.soundcloud.api.model.front
+package com.clipfinder.soundcloud.api.model.collection
 
 import com.google.gson.annotations.SerializedName
 

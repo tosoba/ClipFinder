@@ -1,9 +1,9 @@
-package com.clipfinder.soundcloud.api.model.front
+package com.clipfinder.soundcloud.api.model.collection
 
 import com.google.gson.annotations.SerializedName
 
-data class SoundCloudFrontResponse(
-    val collection: List<SoundCloudFrontCollection>,
+data class SoundCollectionResponse(
+    val collection: List<SoundCloudCollectionItem>,
     @SerializedName("next_href")
     val nextHref: String?,
     @SerializedName("query_urn")

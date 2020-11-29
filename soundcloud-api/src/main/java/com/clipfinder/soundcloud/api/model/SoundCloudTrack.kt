@@ -88,7 +88,7 @@ class SoundCloudTrack(
     val user: SoundCloudUser,
 
     @SerializedName("download_url")
-    override val downloadUrl: String?,
+    val downloadUrl: String?,
 
     @SerializedName("stream_url")
     override val streamUrl: String?
