@@ -16,6 +16,7 @@ import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.Single
@@ -28,19 +29,23 @@ class SpotifyAccountTopViewModel(
     initialState: State,
     private val getCurrentUsersTopTracks: GetCurrentUsersTopTracks,
     private val getCurrentUsersTopArtists: GetCurrentUsersTopArtists,
+    preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<State>(initialState) {
 
     init {
         handleConnectivityChanges(context)
-        subscribe { (userLoggedIn, tracks, artists) ->
-            if (!userLoggedIn) return@subscribe
-            if (tracks is Empty) loadTracks()
-            if (artists is Empty) loadArtists()
-        }.disposeOnClear()
+        preferences.isPrivateAuthorized
+            .subscribe {
+                setState { copy(userLoggedIn = it) }
+                if (it) withState { (_, tracks, artists) ->
+                    if (tracks is Empty) loadTracks()
+                    if (artists is Empty) loadArtists()
+                }
+            }
+            .disposeOnClear()
     }
 
-    fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
     fun loadTracks() = load(State::topTracks, getCurrentUsersTopTracks::intoState) { copy(topTracks = it) }
     fun clearTracksError() = clearErrorIn(State::topTracks) { copy(topTracks = it) }
     fun loadArtists() = load(State::artists, getCurrentUsersTopArtists::intoState) { copy(artists = it) }
@@ -68,6 +73,7 @@ class SpotifyAccountTopViewModel(
             viewModelContext: ViewModelContext, state: State
         ): SpotifyAccountTopViewModel = SpotifyAccountTopViewModel(
             state,
+            viewModelContext.activity.get(),
             viewModelContext.activity.get(),
             viewModelContext.activity.get(),
             viewModelContext.app()

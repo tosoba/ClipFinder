@@ -14,6 +14,7 @@ import com.example.core.android.model.Empty
 import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.Single
@@ -25,18 +26,22 @@ private typealias State = SpotifyAccountPlaylistState
 class SpotifyAccountPlaylistsViewModel(
     initialState: State,
     private val getCurrentUsersPlaylists: GetCurrentUsersPlaylists,
+    preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<State>(initialState) {
 
     init {
         handleConnectivityChanges(context)
-        subscribe { (userLoggedIn, playlists) ->
-            if (!userLoggedIn) return@subscribe
-            if (playlists is Empty) loadPlaylists()
-        }.disposeOnClear()
+        preferences.isPrivateAuthorized
+            .subscribe {
+                setState { copy(userLoggedIn = it) }
+                if (it) withState { (_, playlists) ->
+                    if (playlists is Empty) loadPlaylists()
+                }
+            }
+            .disposeOnClear()
     }
 
-    fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
     fun loadPlaylists() = loadPagedList(State::playlists, getCurrentUsersPlaylists::intoState) { copy(playlists = it) }
     fun clearPlaylistsError() = clearErrorIn(State::playlists) { copy(playlists = it) }
 
@@ -61,6 +66,7 @@ class SpotifyAccountPlaylistsViewModel(
             viewModelContext: ViewModelContext, state: State
         ): SpotifyAccountPlaylistsViewModel = SpotifyAccountPlaylistsViewModel(
             state,
+            viewModelContext.activity.get(),
             viewModelContext.activity.get(),
             viewModelContext.app()
         )

@@ -16,6 +16,7 @@ import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Track
+import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.Single
@@ -28,19 +29,23 @@ class SpotifyAccountSavedViewModel(
     initialState: SpotifyAccountSavedState,
     private val getCurrentUsersSavedTracks: GetCurrentUsersSavedTracks,
     private val getCurrentUsersSavedAlbums: GetCurrentUsersSavedAlbums,
+    preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<SpotifyAccountSavedState>(initialState) {
 
     init {
         handleConnectivityChanges(context)
-        subscribe { (userLoggedIn, tracks, albums) ->
-            if (!userLoggedIn) return@subscribe
-            if (tracks is Empty) loadTracks()
-            if (albums is Empty) loadAlbums()
-        }.disposeOnClear()
+        preferences.isPrivateAuthorized
+            .subscribe {
+                setState { copy(userLoggedIn = it) }
+                if (it) withState { (_, tracks, albums) ->
+                    if (tracks is Empty) loadTracks()
+                    if (albums is Empty) loadAlbums()
+                }
+            }
+            .disposeOnClear()
     }
 
-    fun setUserLoggedIn(userLoggedIn: Boolean) = setState { copy(userLoggedIn = userLoggedIn) }
     fun loadTracks() = loadPagedList(State::tracks, getCurrentUsersSavedTracks::intoState) { copy(tracks = it) }
     fun clearTracksError() = clearErrorIn(State::tracks) { copy(tracks = it) }
     fun loadAlbums() = loadPagedList(State::albums, getCurrentUsersSavedAlbums::intoState) { copy(albums = it) }
@@ -68,6 +73,7 @@ class SpotifyAccountSavedViewModel(
             viewModelContext: ViewModelContext, state: SpotifyAccountSavedState
         ): SpotifyAccountSavedViewModel = SpotifyAccountSavedViewModel(
             state,
+            viewModelContext.activity.get(),
             viewModelContext.activity.get(),
             viewModelContext.activity.get(),
             viewModelContext.app()

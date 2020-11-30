@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
@@ -14,7 +13,6 @@ import com.clipfinder.spotify.account.R
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountSavedBinding
 import com.example.core.android.largeTextCenter
 import com.example.core.android.model.Empty
-import com.example.core.android.spotify.ext.spotifyAuthController
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
@@ -73,16 +71,9 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireNotNull(spotifyAuthController)
-            .isLoggedIn
-            .observe(this, Observer { userLoggedIn -> viewModel.setUserLoggedIn(userLoggedIn) })
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyAccountSavedBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyAccountSavedBinding.inflate(inflater, container, false)
         .also { binding = it }
         .root
 

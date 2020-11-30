@@ -6,9 +6,6 @@ import com.example.core.android.spotify.controller.SpotifyAuthController
 import com.example.core.android.spotify.controller.SpotifyPlayerController
 import com.example.core.android.util.ext.mainContentFragment
 
-val Fragment.spotifyAuthController: SpotifyAuthController?
-    get() = activity as? SpotifyAuthController
-
 fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> Unit) {
     mainContentFragment?.enablePlayButton {
         val playerController = activity?.castAs<SpotifyPlayerController>()

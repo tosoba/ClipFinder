@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
@@ -16,7 +15,6 @@ import com.clipfinder.spotify.account.R
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import com.example.core.android.LargeTextCenterBindingModel_
 import com.example.core.android.model.Empty
-import com.example.core.android.spotify.ext.spotifyAuthController
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show
@@ -52,16 +50,9 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireNotNull(spotifyAuthController)
-            .isLoggedIn
-            .observe(this, Observer { userLoggedIn -> viewModel.setUserLoggedIn(userLoggedIn) })
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyAccountPlaylistsBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyAccountPlaylistsBinding.inflate(inflater, container, false)
         .apply {
             spotifyAccountPlaylistsRecyclerView.layoutManager = layoutManagerFor(resources.configuration.orientation)
             binding = this
