@@ -36,15 +36,17 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    implementation project(':domain')
     implementation project(':core')
     implementation project(':core-android')
+    implementation project(':core-android-youtube')
 
     implementation rootProject.ext.rxJava
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    implementation 'com.airbnb.android:mvrx:1.0.2'
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

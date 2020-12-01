@@ -1,4 +1,4 @@
-package com.example.youtubeplayer
+package com.clipfinder.core.android.youtube.player
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener

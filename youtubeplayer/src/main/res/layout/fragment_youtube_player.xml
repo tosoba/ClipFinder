@@ -1,85 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/youtube_player_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/youtube_player_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
 
-        <import type="android.view.View" />
+    <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/youtube_player_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <variable
-            name="fragmentView"
-            type="com.example.youtubeplayer.YoutubePlayerView" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/youtube_player_layout"
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/youtube_player_collapsed_controls_group"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="close_youtube_player_when_collapsed_btn,youtube_player_play_pause_when_collapsed_btn,youtube_player_video_title_when_collapsed_txt" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/youtube_player_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
+    <ImageButton
+        android:id="@+id/close_youtube_player_when_collapsed_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/transparent_image_button_background"
+        android:foreground="@drawable/spotify_foreground_ripple"
+        android:src="@drawable/close"
+        app:layout_constraintBottom_toTopOf="@id/youtube_player_video_title_when_collapsed_txt"
+        app:layout_constraintLeft_toRightOf="@id/youtube_player_play_pause_when_collapsed_btn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-            android:id="@+id/youtube_player_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/youtube_player_guideline"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/youtube_player_play_pause_when_collapsed_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/transparent_image_button_background"
+        android:foreground="@drawable/spotify_foreground_ripple"
+        android:src="@drawable/play"
+        app:layout_constraintBottom_toTopOf="@id/youtube_player_video_title_when_collapsed_txt"
+        app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
+        app:layout_constraintRight_toLeftOf="@id/close_youtube_player_when_collapsed_btn"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/youtube_player_collapsed_controls_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:constraint_referenced_ids="close_youtube_player_when_collapsed_btn,youtube_player_play_pause_when_collapsed_btn,youtube_player_video_title_when_collapsed_txt" />
+    <TextView
+        android:id="@+id/youtube_player_video_title_when_collapsed_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/close_youtube_player_when_collapsed_btn" />
 
-        <ImageButton
-            android:id="@+id/close_youtube_player_when_collapsed_btn"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/transparent_image_button_background"
-            android:foreground="@drawable/spotify_foreground_ripple"
-            android:onClick="@{fragmentView.onYoutubePlayerCloseBtnClickListener}"
-            android:src="@drawable/close"
-            app:layout_constraintBottom_toTopOf="@id/youtube_player_video_title_when_collapsed_txt"
-            app:layout_constraintLeft_toRightOf="@id/youtube_player_play_pause_when_collapsed_btn"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/youtube_player_play_pause_when_collapsed_btn"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/transparent_image_button_background"
-            android:foreground="@drawable/spotify_foreground_ripple"
-            android:onClick="@{fragmentView.onYoutubePlayerPlayPauseBtnClickListener}"
-            android:src="@drawable/play"
-            app:layout_constraintBottom_toTopOf="@id/youtube_player_video_title_when_collapsed_txt"
-            app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
-            app:layout_constraintRight_toLeftOf="@id/close_youtube_player_when_collapsed_btn"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/youtube_player_video_title_when_collapsed_txt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/youtube_player_guideline"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/close_youtube_player_when_collapsed_btn" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
-
+</androidx.constraintlayout.widget.ConstraintLayout>
