@@ -9,75 +9,71 @@ import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 
 class SpotifyAudioTrackController : AudioController {
-    companion object {
-        private const val AUDIO_BUFFER_SIZE_SAMPLES = 4096
-        private const val AUDIO_BUFFER_CAPACITY = 81920
-    }
+    val audioBuffer = AudioRingBuffer(AUDIO_BUFFER_CAPACITY)
+    private val executorService = Executors.newSingleThreadExecutor()
+    private val playingMutex = Any()
+    private var audioTrack: AudioTrack? = null
+    private var sampleRate: Int = 0
+    private var channels: Int = 0
 
-    val mAudioBuffer = AudioRingBuffer(AUDIO_BUFFER_CAPACITY)
-    private val mExecutorService = Executors.newSingleThreadExecutor()
-    private val mPlayingMutex = Any()
-    private var mAudioTrack: AudioTrack? = null
-    private var mSampleRate: Int = 0
-    private var mChannels: Int = 0
-    private val mAudioRunnable = object : Runnable {
+    private val audioRunnable = object : Runnable {
         val pendingSamples = ShortArray(AUDIO_BUFFER_SIZE_SAMPLES)
 
         override fun run() {
-            val itemsRead = this@SpotifyAudioTrackController.mAudioBuffer.peek(pendingSamples)
+            val itemsRead = this@SpotifyAudioTrackController.audioBuffer.peek(pendingSamples)
             if (itemsRead > 0) {
                 val itemsWritten = this@SpotifyAudioTrackController.writeSamplesToAudioOutput(pendingSamples, itemsRead)
-                this@SpotifyAudioTrackController.mAudioBuffer.remove(itemsWritten)
+                this@SpotifyAudioTrackController.audioBuffer.remove(itemsWritten)
             }
         }
     }
 
     override fun onAudioDataDelivered(samples: ShortArray, sampleCount: Int, sampleRate: Int, channels: Int): Int {
-        if (mAudioTrack != null && (mSampleRate != sampleRate || mChannels != channels)) {
-            synchronized(mPlayingMutex) {
-                mAudioTrack?.release()
-                mAudioTrack = null
+        if (audioTrack != null && (this.sampleRate != sampleRate || this.channels != channels)) {
+            synchronized(playingMutex) {
+                audioTrack?.release()
+                audioTrack = null
             }
         }
 
-        mSampleRate = sampleRate
-        mChannels = channels
-        if (mAudioTrack == null) {
+        this.sampleRate = sampleRate
+        this.channels = channels
+        if (audioTrack == null) {
             createAudioTrack(sampleRate, channels)
         }
 
         try {
-            mExecutorService.execute(mAudioRunnable)
+            executorService.execute(audioRunnable)
         } catch (var7: RejectedExecutionException) {
         }
 
-        return mAudioBuffer.write(samples, sampleCount)
+        return audioBuffer.write(samples, sampleCount)
     }
 
     override fun onAudioFlush() {
-        mAudioBuffer.clear()
-        if (mAudioTrack != null) {
-            synchronized(mPlayingMutex) {
-                mAudioTrack?.pause()
-                mAudioTrack?.flush()
-                mAudioTrack?.release()
-                mAudioTrack = null
+        audioBuffer.clear()
+        if (audioTrack != null) {
+            synchronized(playingMutex) {
+                audioTrack?.pause()
+                audioTrack?.flush()
+                audioTrack?.release()
+                audioTrack = null
             }
         }
     }
 
     override fun onAudioPaused() {
-        mAudioTrack?.pause()
+        audioTrack?.pause()
     }
 
     override fun onAudioResumed() {
-        mAudioTrack?.play()
+        audioTrack?.play()
     }
 
     override fun start() {}
 
     override fun stop() {
-        mExecutorService.shutdown()
+        executorService.shutdown()
     }
 
     @TargetApi(21)
@@ -91,32 +87,35 @@ class SpotifyAudioTrackController : AudioController {
 
         val bufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig.toInt(), 2) * 2
         val maxVolume = AudioTrack.getMaxVolume()
-        synchronized(mPlayingMutex) {
-            mAudioTrack = AudioTrack(3, sampleRate, channelConfig.toInt(), 2, bufferSize, 1)
-            if (mAudioTrack?.state == 1) {
+        synchronized(playingMutex) {
+            audioTrack = AudioTrack(3, sampleRate, channelConfig.toInt(), 2, bufferSize, 1)
+            if (audioTrack?.state == 1) {
                 if (Build.VERSION.SDK_INT >= 21) {
-                    mAudioTrack?.setVolume(maxVolume)
+                    audioTrack?.setVolume(maxVolume)
                 } else {
-                    mAudioTrack?.setStereoVolume(maxVolume, maxVolume)
+                    audioTrack?.setStereoVolume(maxVolume, maxVolume)
                 }
 
-                mAudioTrack?.play()
+                audioTrack?.play()
             } else {
-                mAudioTrack?.release()
-                mAudioTrack = null
+                audioTrack?.release()
+                audioTrack = null
             }
         }
     }
 
     private fun writeSamplesToAudioOutput(samples: ShortArray, samplesCount: Int): Int {
         if (isAudioTrackPlaying()) {
-            val itemsWritten = mAudioTrack?.write(samples, 0, samplesCount)
-            if (itemsWritten != null && itemsWritten > 0) {
-                return itemsWritten
-            }
+            val itemsWritten = audioTrack?.write(samples, 0, samplesCount)
+            if (itemsWritten != null && itemsWritten > 0) return itemsWritten
         }
         return 0
     }
 
-    private fun isAudioTrackPlaying(): Boolean = mAudioTrack?.playState == 3
+    private fun isAudioTrackPlaying(): Boolean = audioTrack?.playState == 3
+
+    companion object {
+        private const val AUDIO_BUFFER_SIZE_SAMPLES = 4096
+        private const val AUDIO_BUFFER_CAPACITY = 81920
+    }
 }

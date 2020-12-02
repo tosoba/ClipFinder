@@ -6,7 +6,6 @@ import android.os.IBinder
 import com.example.core.android.util.ext.notificationManager
 
 class SpotifyPlayerCancelNotificationService : Service() {
-
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onTaskRemoved(rootIntent: Intent?) {

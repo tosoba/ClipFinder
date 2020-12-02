@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.app.NotificationCompat
-import androidx.databinding.DataBindingUtil
 import androidx.palette.graphics.Palette
 import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.activity.IntentProvider
@@ -141,11 +140,8 @@ class SpotifyPlayerFragment :
             color = Color.parseColor("#ffffff")
         }
     }
-    private val visualizerRenderer by lazy(LazyThreadSafetyMode.NONE) {
-        SpotifyColumnarVisualizerRenderer(visualizerPaint)
-    }
     private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf<IRenderer>(visualizerRenderer)
+        arrayOf<IRenderer>(SpotifyColumnarVisualizerRenderer(visualizerPaint))
     }
     private var visualizerManager: NierVisualizerManager? = null
 
@@ -160,8 +156,8 @@ class SpotifyPlayerFragment :
 
                 override fun getDataSamplingInterval() = 0L
                 override fun getDataLength() = outputBuffer.size
-                override fun fetchFftData(): ByteArray? {
-                    audioTrackController.mAudioBuffer.peek(audioRecordShortBuffer)
+                override fun fetchFftData(): ByteArray {
+                    audioTrackController.audioBuffer.peek(audioRecordShortBuffer)
                     audioRecordShortBuffer.forEachIndexed { index, sh ->
                         audioRecordByteBuffer[index] = (sh / 2.0.pow(10.0)).toByte()
                     }
@@ -180,13 +176,13 @@ class SpotifyPlayerFragment :
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSpotifyPlayerBinding>(
-        inflater, R.layout.fragment_spotify_player, container, false
-    ).apply {
-        fragmentView = spotifyPlayerView
-        visualizerSurfaceView.setZOrderOnTop(true)
-        visualizerSurfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
-    }.root
+    ): View = FragmentSpotifyPlayerBinding.inflate(inflater, container, false)
+        .apply {
+            fragmentView = spotifyPlayerView
+            visualizerSurfaceView.setZOrderOnTop(true)
+            visualizerSurfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
+        }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

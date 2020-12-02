@@ -8,6 +8,7 @@ import android.view.animation.LinearInterpolator
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import me.bogerchan.niervisualizer.util.NierAnimator
 import kotlin.math.cos
+import kotlin.math.log10
 import kotlin.math.sin
 
 class SpotifyCircularVisualizerRenderer(
@@ -18,32 +19,14 @@ class SpotifyCircularVisualizerRenderer(
     private val amplification: Float = 1f,
     private val animator: NierAnimator = getDefaultAnimator()
 ) : IRenderer {
-
-    enum class Type {
-        TYPE_A, TYPE_B, TYPE_A_AND_TYPE_B
-    }
-
-    private var mAggresive = 0.4f
-    private var mModulation = 0.0
-    private var mAngleModulation = 0f
-    private lateinit var mFFTPoints: FloatArray
-    private val mLastDrawArea = Rect()
-
-    companion object {
-        private fun getDefaultPaint() = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            strokeWidth = 3f
-            color = Color.parseColor("#e6ebfe")
-        }
-
-        private fun getDefaultAnimator() = NierAnimator(
-            interpolator = LinearInterpolator(),
-            duration = 20000,
-            values = floatArrayOf(0f, 360f)
-        )
-    }
+    private var aggresive = 0.4f
+    private var modulation = 0.0
+    private var angleModulation = 0f
+    private lateinit var fftPoints: FloatArray
+    private val lastDrawArea = Rect()
 
     override fun onStart(captureSize: Int) {
-        mFFTPoints = FloatArray(captureSize * 4)
+        fftPoints = FloatArray(captureSize * 4)
         animator.start()
     }
 
@@ -52,8 +35,8 @@ class SpotifyCircularVisualizerRenderer(
     }
 
     override fun calculate(drawArea: Rect, data: ByteArray) {
-        if (mLastDrawArea != drawArea) {
-            mLastDrawArea.set(drawArea)
+        if (lastDrawArea != drawArea) {
+            lastDrawArea.set(drawArea)
         }
         val drawHeight = drawArea.height()
 
@@ -62,7 +45,7 @@ class SpotifyCircularVisualizerRenderer(
             val rfk = data[divisions * i]
             val ifk = data[divisions * i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()
-            val dbValue = (75 * Math.log10(magnitude.toDouble()).toFloat() * amplification)
+            val dbValue = (75 * log10(magnitude.toDouble()).toFloat() * amplification)
                 .let { if (it < 20f) 20f else it }
             val cartPoint = when (type) {
                 Type.TYPE_A -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
@@ -71,8 +54,8 @@ class SpotifyCircularVisualizerRenderer(
             }
 
             val polarPoint = toPolar(cartPoint, drawArea)
-            mFFTPoints[i * 4] = polarPoint[0]
-            mFFTPoints[i * 4 + 1] = polarPoint[1]
+            fftPoints[i * 4] = polarPoint[0]
+            fftPoints[i * 4 + 1] = polarPoint[1]
 
             val cartPoint2 = when (type) {
                 Type.TYPE_A -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f + dbValue)
@@ -81,8 +64,8 @@ class SpotifyCircularVisualizerRenderer(
             }
 
             val polarPoint2 = toPolar(cartPoint2, drawArea)
-            mFFTPoints[i * 4 + 2] = polarPoint2[0]
-            mFFTPoints[i * 4 + 3] = polarPoint2[1]
+            fftPoints[i * 4 + 2] = polarPoint2[0]
+            fftPoints[i * 4 + 3] = polarPoint2[1]
         }
     }
 
@@ -90,20 +73,40 @@ class SpotifyCircularVisualizerRenderer(
         canvas.save()
         canvas.rotate(
             animator.computeCurrentValue(),
-            (mLastDrawArea.left + mLastDrawArea.right) / 2F,
-            (mLastDrawArea.top + mLastDrawArea.bottom) / 2F
+            (lastDrawArea.left + lastDrawArea.right) / 2F,
+            (lastDrawArea.top + lastDrawArea.bottom) / 2F
         )
-        canvas.drawLines(mFFTPoints, paint)
+        canvas.drawLines(fftPoints, paint)
         canvas.restore()
     }
 
-    override fun getInputDataType() = IRenderer.DataType.FFT
+    override fun getInputDataType(): IRenderer.DataType = IRenderer.DataType.FFT
 
     private fun toPolar(cartesian: FloatArray, rect: Rect): FloatArray {
         val cX = (rect.width() / 2).toDouble()
         val cY = (rect.height() / 2).toDouble()
         val angle = cartesian[0].toDouble() * 2.0 * Math.PI
-        val radius = (rect.width() / 2 * (1 - mAggresive) + mAggresive * cartesian[1] / 2) * (1 - modulationStrength + modulationStrength * (1 + sin(mModulation)) / 2)
-        return floatArrayOf((cX + radius * sin(angle + mAngleModulation)).toFloat(), (cY + radius * cos(angle + mAngleModulation)).toFloat())
+        val radius = (rect.width() / 2 * (1 - aggresive) + aggresive * cartesian[1] / 2) * (1 - modulationStrength + modulationStrength * (1 + sin(modulation)) / 2)
+        return floatArrayOf(
+            (cX + radius * sin(angle + angleModulation)).toFloat(),
+            (cY + radius * cos(angle + angleModulation)).toFloat()
+        )
+    }
+
+    companion object {
+        private fun getDefaultPaint(): Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            strokeWidth = 3f
+            color = Color.parseColor("#e6ebfe")
+        }
+
+        private fun getDefaultAnimator(): NierAnimator = NierAnimator(
+            interpolator = LinearInterpolator(),
+            duration = 20000,
+            values = floatArrayOf(0f, 360f)
+        )
+    }
+
+    enum class Type {
+        TYPE_A, TYPE_B, TYPE_A_AND_TYPE_B
     }
 }

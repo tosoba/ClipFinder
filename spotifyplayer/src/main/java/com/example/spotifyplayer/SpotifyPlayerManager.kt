@@ -7,26 +7,27 @@ import com.spotify.sdk.android.player.SpotifyPlayer
 import java.util.*
 
 object SpotifyPlayerManager {
-    private var sPlayer: SpotifyPlayer? = null
-    private val sPlayerMutex = Any()
-    private val sPlayerReferences = Collections.newSetFromMap<Any>(IdentityHashMap())
+    private var player: SpotifyPlayer? = null
+    private val playerMutex = Any()
+    private val playerReferences = Collections.newSetFromMap<Any>(IdentityHashMap())
 
     fun getPlayer(
         config: Config,
         reference: Any,
         audioController: AudioController,
         observer: SpotifyPlayer.InitializationObserver
-    ): SpotifyPlayer {
-        val builder = SpotifyPlayer.Builder(config).setAudioController(audioController)
-        return getPlayer(builder, reference, observer)
-    }
+    ): SpotifyPlayer = getPlayer(
+        SpotifyPlayer.Builder(config).setAudioController(audioController),
+        reference,
+        observer
+    )
 
     private fun getPlayer(
         builder: SpotifyPlayer.Builder,
         reference: Any,
         observer: SpotifyPlayer.InitializationObserver?
-    ): SpotifyPlayer = synchronized(sPlayerMutex) {
-        sPlayer?.let {
+    ): SpotifyPlayer = synchronized(playerMutex) {
+        player?.let {
             if (!it.isShutdown) {
                 var waitCounter = 300
                 while (!it.isInitialized && waitCounter > 0) try {
@@ -38,13 +39,13 @@ object SpotifyPlayerManager {
             }
 
             if (observer != null) when {
-                it.isInitialized -> observer.onInitialized(sPlayer)
+                it.isInitialized -> observer.onInitialized(player)
                 it.isShutdown -> observer.onError(PlayerInitializationException("Player already shut down"))
                 else -> observer.onError(PlayerInitializationException("Player initialization failed"))
             }
-        } ?: run { sPlayer = builder.build(observer) }
+        } ?: run { player = builder.build(observer) }
 
-        sPlayerReferences.add(reference)
-        return sPlayer!!
+        playerReferences.add(reference)
+        return player!!
     }
 }
