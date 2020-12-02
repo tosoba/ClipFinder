@@ -27,17 +27,18 @@ import kotlinx.android.synthetic.main.fragment_youtube_player.view.*
 
 class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     private val viewModel: YoutubePlayerViewModel by fragmentViewModel()
-    private var youTubePlayer: YouTubePlayer? = null
+    private lateinit var youTubePlayer: YouTubePlayer
 
-    override val playerView: View? get() = view
-    override val lastPlayedVideo: Video? get() = withState(viewModel, YoutubePlayerState::lastPlayedVideo)
+    override val playerView: View?
+        get() = view
+    override val lastPlayedVideo: Video?
+        get() = withState(viewModel, YoutubePlayerState::lastPlayedVideo)
 
     private val onYoutubePlayerPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        if (youTubePlayer == null) return@OnClickListener
         withState(viewModel) { state ->
             if (state.lastPlayedVideo == null && state.lastPlayedVideoPlaylist == null) return@withState
-            if (state.playbackInProgress) youTubePlayer?.pause()
-            else youTubePlayer?.play()
+            if (state.playbackInProgress) youTubePlayer.pause()
+            else youTubePlayer.play()
         }
     }
 
@@ -102,8 +103,10 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_youtube_player, container, false)
         .apply {
-            this.close_youtube_player_when_collapsed_btn.setOnClickListener(onYoutubePlayerCloseBtnClickListener)
-            this.youtube_player_play_pause_when_collapsed_btn.setOnClickListener(onYoutubePlayerPlayPauseBtnClickListener)
+            this.close_youtube_player_when_collapsed_btn
+                .setOnClickListener(onYoutubePlayerCloseBtnClickListener)
+            this.youtube_player_play_pause_when_collapsed_btn
+                .setOnClickListener(onYoutubePlayerPlayPauseBtnClickListener)
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -131,9 +134,10 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     override fun stopPlayback() = stopPlaybackAndNullifyLastPlayedItems()
 
     override fun onPlayerDimensionsChange(slideOffset: Float) {
-        val youtubePlayerGuidelinePercentage = (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
-        youtube_player_guideline.setGuidelinePercent(youtubePlayerGuidelinePercentage)
-        youtube_player_guideline?.requestLayout()
+        youtube_player_guideline.setGuidelinePercent(
+            (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
+        )
+        youtube_player_guideline.requestLayout()
     }
 
     override fun loadVideo(video: Video) {
@@ -141,7 +145,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
         viewModel.onLoadVideo(video)
 
-        youTubePlayer?.removeListener(playlistYoutubePlayerStateChangeListener)
+        youTubePlayer.removeListener(playlistYoutubePlayerStateChangeListener)
         playVideo(video)
 
         youtube_player_view?.playerUIController?.setVideoTitle(video.title)
@@ -152,7 +156,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
         viewModel.onLoadVideoPlaylist(videoPlaylist, videos)
 
-        youTubePlayer?.addListener(playlistYoutubePlayerStateChangeListener)
+        youTubePlayer.addListener(playlistYoutubePlayerStateChangeListener)
 
         val firstVideo = videos.first()
         playVideo(firstVideo)
@@ -162,7 +166,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     override fun invalidate() = Unit
 
     private fun stopPlaybackAndNullifyLastPlayedItems() {
-        youTubePlayer?.pause()
+        youTubePlayer.pause()
         viewModel.clearLastPlayed()
     }
 
@@ -189,8 +193,8 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     private fun playVideo(video: Video) {
         youtube_player_video_title_when_collapsed_txt?.text = video.title
-        if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer?.loadVideo(video.id, 0f)
-        else youTubePlayer?.cueVideo(video.id, 0f)
+        if (lifecycle.currentState == Lifecycle.State.RESUMED) youTubePlayer.loadVideo(video.id, 0f)
+        else youTubePlayer.cueVideo(video.id, 0f)
     }
 
     companion object {
