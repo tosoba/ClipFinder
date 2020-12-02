@@ -38,7 +38,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
-    implementation project(':domain')
     implementation project(':core')
     implementation project(':core-spotify')
     implementation project(':core-android')

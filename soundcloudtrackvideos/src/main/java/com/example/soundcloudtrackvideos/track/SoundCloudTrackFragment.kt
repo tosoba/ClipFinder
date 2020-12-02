@@ -29,7 +29,7 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
         loadableCollectionController(
             SoundCloudTrackViewState::similarTracks,
             headerText = "Similar tracks",
-            reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) },
+            reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) ?: Unit },
             clearFailure = viewModel::clearTracksError
         ) { track ->
             track.clickableListItem { parentViewModel.updateTrack(track) }

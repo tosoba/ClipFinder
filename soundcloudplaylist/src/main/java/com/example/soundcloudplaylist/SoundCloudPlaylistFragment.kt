@@ -54,7 +54,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSoundCloudPlaylistBinding.inflate(inflater, container, false)
+    ): View = FragmentSoundCloudPlaylistBinding.inflate(inflater, container, false)
         .apply {
             view = this@SoundCloudPlaylistFragment.view
             playlist.artworkUrl?.let { url ->

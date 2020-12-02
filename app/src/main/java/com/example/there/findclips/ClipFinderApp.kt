@@ -74,8 +74,7 @@ class ClipFinderApp : Application() {
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
-                apiModule, repoModule,
-                soundCloudModule,
+                apiModule,
                 viewModelsModule,
 
                 appModule, epoxyModule, coreAndroidNetworkingModule,

@@ -1,6 +1,7 @@
 package com.example.core.android.model.soundcloud
 
 import android.os.Parcelable
+import com.clipfinder.core.soundcloud.model.ISoundCloudTrack
 import com.example.core.android.ImageListItemBindingModel_
 import com.example.core.android.R
 import com.example.core.android.view.imageview.ImageViewSrc
@@ -9,18 +10,30 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SoundCloudTrack(
-    val id: String,
-    val title: String,
-    val artworkUrl: String?,
-    val description: String?,
-    val duration: Int,
-    val genre: String?,
-    val tags: String?,
-    val streamUrl: String?,
-    val downloadUrl: String?,
-    val waveformUrl: String?
+    override val id: Int,
+    override val title: String,
+    override val artworkUrl: String?,
+    override val description: String,
+    override val duration: Int,
+    override val genre: String,
+    override val tags: String,
+    override val streamUrl: String?,
+    override val waveformUrl: String
 ) : Parcelable,
-    NamedImageListItem {
+    NamedImageListItem,
+    ISoundCloudTrack {
+
+    constructor(other: ISoundCloudTrack) : this(
+        other.id,
+        other.title,
+        other.artworkUrl,
+        other.description,
+        other.duration,
+        other.genre,
+        other.tags,
+        other.streamUrl,
+        other.waveformUrl
+    )
 
     override val name: String
         get() = title

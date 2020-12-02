@@ -41,7 +41,6 @@ dependencies {
     implementation project(':core')
     implementation project(':core-youtube')
     implementation project(':core-android')
-    implementation project(':domain')
 
     implementation rootProject.ext.rxJava
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'

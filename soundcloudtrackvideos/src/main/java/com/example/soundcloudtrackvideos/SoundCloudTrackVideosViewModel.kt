@@ -13,6 +13,6 @@ class SoundCloudTrackVideosViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: TrackVideosViewState<SoundCloudTrack>
-        ): SoundCloudTrackVideosViewModel? = SoundCloudTrackVideosViewModel(state)
+        ): SoundCloudTrackVideosViewModel = SoundCloudTrackVideosViewModel(state)
     }
 }

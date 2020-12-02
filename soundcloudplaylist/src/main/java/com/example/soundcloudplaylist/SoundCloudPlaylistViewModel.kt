@@ -4,16 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.soundcloud.usecase.GetTracks
+import com.clipfinder.core.soundcloud.usecase.GetTracksFromPlaylist
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.soundcloud.ui
 import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.model.Ready
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
+import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
-import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
-import com.example.there.domain.usecase.soundcloud.GetTracks
-import com.example.there.domain.usecase.soundcloud.GetTracksFromPlaylist
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 import timber.log.Timber
@@ -47,7 +46,7 @@ class SoundCloudPlaylistViewModel(
         getTracks(ids, applySchedulers = false)
             .subscribeOn(Schedulers.io())
             .subscribe(
-                { setState { copy(tracks = Ready(it.map(SoundCloudTrackEntity::ui))) } },
+                { setState { copy(tracks = Ready(it.map(::SoundCloudTrack))) } },
                 Timber::e
             )
     }
@@ -57,7 +56,7 @@ class SoundCloudPlaylistViewModel(
         getTracksFromPlaylist(id, applySchedulers = false)
             .subscribeOn(Schedulers.io())
             .subscribe(
-                { setState { copy(tracks = Ready(it.map(SoundCloudTrackEntity::ui))) } },
+                { setState { copy(tracks = Ready(it.map(::SoundCloudTrack))) } },
                 Timber::e
             )
     }

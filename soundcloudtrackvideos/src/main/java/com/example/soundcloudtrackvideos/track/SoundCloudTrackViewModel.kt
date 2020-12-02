@@ -2,11 +2,10 @@ package com.example.soundcloudtrackvideos.track
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.clipfinder.core.soundcloud.usecase.GetSimilarTracks
 import com.example.core.android.base.vm.MvRxViewModel
-import com.example.core.android.mapper.soundcloud.ui
 import com.example.core.android.model.Ready
-import com.example.there.domain.entity.soundcloud.SoundCloudTrackEntity
-import com.example.there.domain.usecase.soundcloud.GetSimilarTracks
+import com.example.core.android.model.soundcloud.SoundCloudTrack
 import org.koin.android.ext.android.get
 
 class SoundCloudTrackViewModel(
@@ -14,10 +13,10 @@ class SoundCloudTrackViewModel(
     private val getSimilarTracks: GetSimilarTracks
 ) : MvRxViewModel<SoundCloudTrackViewState>(initialState) {
 
-    fun loadSimilarTracks(id: String) {
-        getSimilarTracks(args = id)
+    fun loadSimilarTracks(id: Int) {
+        getSimilarTracks(args = id.toString())
             .subscribe(
-                { setState { copy(similarTracks = Ready(it.map(SoundCloudTrackEntity::ui))) } },
+                { setState { copy(similarTracks = Ready(it.map(::SoundCloudTrack))) } },
                 { setState { copy(similarTracks = similarTracks.copyWithError(it)) } }
             )
             .disposeOnClear()
@@ -28,6 +27,9 @@ class SoundCloudTrackViewModel(
     companion object : MvRxViewModelFactory<SoundCloudTrackViewModel, SoundCloudTrackViewState> {
         override fun create(
             viewModelContext: ViewModelContext, state: SoundCloudTrackViewState
-        ): SoundCloudTrackViewModel = SoundCloudTrackViewModel(state, viewModelContext.activity.get())
+        ): SoundCloudTrackViewModel = SoundCloudTrackViewModel(
+            state,
+            viewModelContext.activity.get()
+        )
     }
 }

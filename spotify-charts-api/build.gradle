@@ -5,7 +5,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation project(':core')
-    implementation project(':domain')
 
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitGsonConverter
