@@ -315,7 +315,10 @@ class MainActivity :
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == LOGIN_REQUEST_CODE) {
-            fun onError(msg: String) = Timber.e(msg)
+            fun onError(msg: String) {
+                Timber.e(msg)
+                Toast.makeText(this, R.string.failed_to_login, Toast.LENGTH_LONG).show()
+            }
             data?.let { intent ->
                 spotifyAuth.sendTokenRequestFrom(intent).subscribe({ (accessToken) ->
                     Timber.tag("NLOG").e("SUCC")
@@ -326,7 +329,6 @@ class MainActivity :
                 })
             } ?: run {
                 onError(getString(R.string.failed_to_login))
-                Toast.makeText(this, R.string.failed_to_login, Toast.LENGTH_LONG).show()
             }
         }
     }
