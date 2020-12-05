@@ -28,7 +28,7 @@ class SpotifySearchFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifySearchBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifySearchBinding.inflate(inflater, container, false)
         .apply {
             val adapter = TitledCustomCurrentStatePagerAdapter(
                 childFragmentManager,

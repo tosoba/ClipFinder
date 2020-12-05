@@ -54,7 +54,7 @@
 
                 <data
                     android:host="com.example.there.findclips"
-                    android:path="/callaback"
+                    android:path="/oauth2callback/"
                     android:scheme="https" />
             </intent-filter>
         </activity>

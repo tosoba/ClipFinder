@@ -63,7 +63,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyAlbumBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyAlbumBinding.inflate(inflater, container, false)
         .apply {
             album = this@SpotifyAlbumFragment.album
             enableSpotifyPlayButton { loadAlbum(this@SpotifyAlbumFragment.album) }

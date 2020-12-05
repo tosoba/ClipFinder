@@ -51,7 +51,7 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyCategoryBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyCategoryBinding.inflate(inflater, container, false)
         .apply {
             mainContentFragment?.disablePlayButton()
             category = this@SpotifyCategoryFragment.category

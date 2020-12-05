@@ -73,7 +73,7 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyMainBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyMainBinding.inflate(inflater, container, false)
         .apply { fragmentView = view }
         .root
 

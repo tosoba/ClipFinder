@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.clipfinder.core.ext.castAs
 import com.example.core.android.base.IFragmentFactory
@@ -74,9 +73,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = DataBindingUtil.inflate<FragmentSoundcloudMainBinding>(
-        inflater, R.layout.fragment_soundcloud_main, container, false
-    ).apply {
-        fragmentView = view
-    }.root
+    ): View = FragmentSoundcloudMainBinding.inflate(inflater, container, false)
+        .apply { fragmentView = view }
+        .root
 }

@@ -112,7 +112,7 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
+    ): View = FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
         .apply {
             binding = this
             requireActivity().castAs<AppCompatActivity>()?.apply {
