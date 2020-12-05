@@ -2,7 +2,6 @@ package com.example.core.android.base
 
 import androidx.fragment.app.Fragment
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist
-import com.example.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 
 interface IFragmentFactory {
@@ -14,6 +13,5 @@ interface IFragmentFactory {
     val newSoundCloudDashboardNavHostFragment: Fragment
 
     fun newSoundCloudPlaylistFragmentWithPlaylist(playlist: SoundCloudPlaylist): Fragment
-    fun newSoundCloudPlaylistFragmentWithSystemPlaylist(playlist: SoundCloudSystemPlaylist): Fragment
     fun newSoundCloudTrackVideosFragment(track: SoundCloudTrack): Fragment
 }

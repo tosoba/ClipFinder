@@ -8,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val coreAndroidNetworkingModule = module {
@@ -16,6 +17,8 @@ val coreAndroidNetworkingModule = module {
     single { ConnectivityInterceptor(androidContext()) }
     single { CacheInterceptor(androidContext()) }
     single { HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC } }
+
+    single { GsonConverterFactory.create() }
 
     single { ScalarsConverterFactory.create() }
     single { RxSealedCallAdapterFactory.create() }

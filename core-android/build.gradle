@@ -95,6 +95,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:2.6.2"
     implementation "com.squareup.retrofit2:converter-scalars:2.6.2"
     implementation rootProject.ext.retrofitRxJava2Adapter
+    implementation rootProject.ext.retrofitGsonConverter
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-core-ext:$koinVersion"

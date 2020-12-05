@@ -11,6 +11,7 @@ import com.clipfinder.core.android.youtube.di.youtubeCoreAndroidModule
 import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
 import com.clipfinder.core.spotify.di.spotifyCoreModule
 import com.clipfinder.core.youtube.di.youtubeCoreModule
+import com.clipfinder.soundcloud.api.di.soundCloudApiModule
 import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
 import com.clipfinder.spotify.api.di.spotifyApiModule
 import com.example.core.android.di.coreAndroidNetworkingModule
@@ -74,14 +75,13 @@ class ClipFinderApp : Application() {
         startKoin {
             androidContext(this@ClipFinderApp)
             modules(listOf(
-                apiModule,
                 viewModelsModule,
 
                 appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyChartsApiModule, spotifyApiModule,
                 spotifyCoreAndroidModule, spotifyCoreModule,
 
-                soundCloudCoreAndroidModule, soundCloudCoreModule,
+                soundCloudApiModule, soundCloudCoreAndroidModule, soundCloudCoreModule,
 
                 youtubeCoreModule, youtubeCoreAndroidModule
             ))
