@@ -67,7 +67,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentSoundCloudTrackVideosBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, TrackVideosViewState<SoundCloudTrack>::tracks) { tracks ->

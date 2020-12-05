@@ -32,5 +32,5 @@ class SoundCloudRepo(
 
     override fun getSimilarTracks(id: String): Single<List<ISoundCloudTrack>> = apiV2
         .getRelatedTracks(id)
-        .map { it.collection ?: run { emptyList<ISoundCloudTrack>() } }
+        .map { it.collection ?: run(::emptyList) }
 }

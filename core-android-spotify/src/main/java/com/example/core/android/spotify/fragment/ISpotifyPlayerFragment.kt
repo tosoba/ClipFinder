@@ -2,8 +2,8 @@ package com.example.core.android.spotify.fragment
 
 import com.example.core.android.base.fragment.IPlayerFragment
 import com.example.core.android.spotify.model.Album
-import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.Playlist
+import com.example.core.android.spotify.model.Track
 
 interface ISpotifyPlayerFragment: IPlayerFragment {
     val isPlayerLoggedIn: Boolean
@@ -11,10 +11,6 @@ interface ISpotifyPlayerFragment: IPlayerFragment {
 
     fun onAuthenticationComplete(accessToken: String)
     fun logOutPlayer()
-
-    val lastPlayedTrack: Track?
-    val lastPlayedAlbum: Album?
-    val lastPlayedPlaylist: Playlist?
 
     fun loadTrack(track: Track)
     fun loadAlbum(album: Album)

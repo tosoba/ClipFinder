@@ -2,7 +2,6 @@ package com.example.spotifyplayer
 
 import android.Manifest
 import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.*
@@ -38,7 +37,6 @@ import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
-import org.koin.android.ext.android.inject
 import kotlin.math.pow
 
 class SpotifyPlayerFragment :
@@ -63,18 +61,9 @@ class SpotifyPlayerFragment :
     override val playerView: View? get() = this.view
 
     override val isPlayerLoggedIn: Boolean get() = spotifyPlayer?.isLoggedIn == true
-
     override val isPlayerInitialized: Boolean get() = spotifyPlayer?.isInitialized == true
 
-    private val applicationContext: Context by inject()
-
     private var spotifyPlayer: SpotifyPlayer? = null
-
-    override val lastPlayedTrack: Track? get() = viewModel.playerState.lastPlayedTrack
-
-    override val lastPlayedAlbum: Album? get() = viewModel.playerState.lastPlayedAlbum
-
-    override val lastPlayedPlaylist: Playlist? get() = viewModel.playerState.lastPlayedPlaylist
 
     private val onSpotifyPlayPauseBtnClickListener = View.OnClickListener {
         if (viewModel.playerState.currentPlaybackState?.isPlaying == true) {
@@ -149,9 +138,9 @@ class SpotifyPlayerFragment :
         visualizerManager?.release()
         visualizerManager = NierVisualizerManager().apply {
             init(object : NierVisualizerManager.NVDataSource {
-                private val mAudioBufferSize = 81920
-                private val audioRecordByteBuffer by lazy { ByteArray(mAudioBufferSize / 2) }
-                private val audioRecordShortBuffer by lazy { ShortArray(mAudioBufferSize / 2) }
+                private val audioBufferSize = 81920
+                private val audioRecordByteBuffer by lazy { ByteArray(audioBufferSize / 2) }
+                private val audioRecordShortBuffer by lazy { ShortArray(audioBufferSize / 2) }
                 private val outputBuffer: ByteArray = ByteArray(512)
 
                 override fun getDataSamplingInterval() = 0L
@@ -193,7 +182,7 @@ class SpotifyPlayerFragment :
         super.onStart()
 
         if (viewModel.playerState.backgroundPlaybackNotificationIsShowing) {
-            applicationContext.notificationManager.cancel(PlaybackNotification.ID)
+            requireContext().notificationManager.cancel(PlaybackNotification.ID)
             viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
         }
 
@@ -214,7 +203,7 @@ class SpotifyPlayerFragment :
     }
 
     override fun onDestroy() {
-        with(applicationContext) {
+        with(requireContext()) {
             notificationManager.cancelAll()
             receivers.forEach(this::unregisterReceiver)
         }
@@ -332,11 +321,11 @@ class SpotifyPlayerFragment :
 
     override fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
-            val playerConfig = Config(applicationContext, accessToken, getString(R.string.spotify_client_id))
+            val playerConfig = Config(requireContext(), accessToken, getString(R.string.spotify_client_id))
             spotifyPlayer = SpotifyPlayerManager.getPlayer(playerConfig, this,
                 audioTrackController, object : SpotifyPlayer.InitializationObserver {
                 override fun onInitialized(player: SpotifyPlayer) {
-                    spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, applicationContext.networkConnectivity)
+                    spotifyPlayer?.setConnectivityStatus(loggerSpotifyPlayerOperationCallback, requireContext().networkConnectivity)
                     spotifyPlayer?.addNotificationCallback(this@SpotifyPlayerFragment)
                     spotifyPlayer?.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
                 }
@@ -383,11 +372,11 @@ class SpotifyPlayerFragment :
     }
 
     private fun initSpotifyPlayer() {
-        with(applicationContext) {
+        with(requireContext()) {
             receivers.addAll(
                 createAndRegisterReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
                     spotifyPlayer?.setConnectivityStatus(
-                        this@SpotifyPlayerFragment, applicationContext.networkConnectivity)
+                        this@SpotifyPlayerFragment, requireContext().networkConnectivity)
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
                     viewModel.playerState.backgroundPlaybackNotificationIsShowing = false
@@ -484,11 +473,11 @@ class SpotifyPlayerFragment :
                 .getBitmapSingle(
                     url = it.albumCoverWebUrl,
                     onError = {
-                        applicationContext.notificationManager
+                        requireContext().notificationManager
                             .notify(PlaybackNotification.ID, notificationBuilder(null).build())
                     }
                 ) { bitmap ->
-                    applicationContext.notificationManager
+                    requireContext().notificationManager
                         .notify(PlaybackNotification.ID, notificationBuilder(bitmap).build())
                 }
                 .disposeOnDestroy(this)
@@ -496,7 +485,7 @@ class SpotifyPlayerFragment :
     }
 
     private fun refreshPlaybackNotification() {
-        applicationContext.notificationManager.cancel(PlaybackNotification.ID)
+        requireContext().notificationManager.cancel(PlaybackNotification.ID)
         showPlaybackNotification()
     }
 
