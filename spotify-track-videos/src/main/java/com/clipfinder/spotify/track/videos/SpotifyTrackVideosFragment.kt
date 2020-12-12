@@ -54,7 +54,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentSpotifyTrackVideosBinding.inflate(inflater, container, false)
 
         val currentTrack = MutableLiveData(argTrack)

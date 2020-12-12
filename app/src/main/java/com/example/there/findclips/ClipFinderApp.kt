@@ -16,9 +16,9 @@ import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
 import com.clipfinder.spotify.api.di.spotifyApiModule
 import com.example.core.android.di.coreAndroidNetworkingModule
 import com.example.core.android.di.epoxyModule
+import com.example.core.android.service.CancelNotificationsService
 import com.example.core.android.spotify.di.spotifyCoreAndroidModule
 import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.spotifyplayer.SpotifyPlayerCancelNotificationService
 import com.example.there.findclips.module.*
 import com.github.mikephil.charting.utils.Utils
 import com.squareup.leakcanary.LeakCanary
@@ -44,7 +44,7 @@ class ClipFinderApp : Application() {
     }
 
     override fun onTerminate() {
-        stopService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
+        stopService(Intent(this, CancelNotificationsService::class.java))
         super.onTerminate()
     }
 
@@ -57,7 +57,7 @@ class ClipFinderApp : Application() {
     }
 
     private fun initNotifications() {
-        startService(Intent(this, SpotifyPlayerCancelNotificationService::class.java))
+        startService(Intent(this, CancelNotificationsService::class.java))
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         getSystemService(NotificationManager::class.java)
             .createNotificationChannel(

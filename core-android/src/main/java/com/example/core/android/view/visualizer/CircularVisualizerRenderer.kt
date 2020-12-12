@@ -1,4 +1,4 @@
-package com.example.spotifyplayer
+package com.example.core.android.view.visualizer
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -11,7 +11,7 @@ import kotlin.math.cos
 import kotlin.math.log10
 import kotlin.math.sin
 
-class SpotifyCircularVisualizerRenderer(
+class CircularVisualizerRenderer(
     private val paint: Paint = getDefaultPaint(),
     private val divisions: Int = 4,
     private val type: Type = Type.TYPE_A,

@@ -2,22 +2,14 @@ package com.example.spotifyplayer
 
 import android.view.View
 import android.widget.SeekBar
-import androidx.databinding.ObservableField
+import com.airbnb.mvrx.MvRxState
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.spotify.sdk.android.player.Metadata
 import com.spotify.sdk.android.player.PlaybackState
 
-class SpotifyPlayerViewState(
-    val playbackSeekbarMaxValue: ObservableField<Int> = ObservableField(0),
-    val nextTrackExists: ObservableField<Boolean> = ObservableField(false),
-    val previousTrackExists: ObservableField<Boolean> = ObservableField(false),
-    val currentTrackTitle: ObservableField<String> = ObservableField("")
-)
-
 class SpotifyPlayerView(
-    val state: SpotifyPlayerViewState,
     val onSpotifyPlayPauseBtnClickListener: View.OnClickListener,
     val onCloseSpotifyPlayerBtnClickListener: View.OnClickListener,
     val onPreviousBtnClickListener: View.OnClickListener,
@@ -25,11 +17,11 @@ class SpotifyPlayerView(
     val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
 )
 
-class SpotifyPlayerState(
-    var lastPlayedTrack: Track? = null,
-    var lastPlayedAlbum: Album? = null,
-    var lastPlayedPlaylist: Playlist? = null,
-    var playerMetadata: Metadata? = null,
-    var currentPlaybackState: PlaybackState? = null,
-    var backgroundPlaybackNotificationIsShowing: Boolean = false
-)
+data class SpotifyPlayerState(
+    val lastPlayedTrack: Track? = null,
+    val lastPlayedAlbum: Album? = null,
+    val lastPlayedPlaylist: Playlist? = null,
+    val playerMetadata: Metadata? = null,
+    val playbackState: PlaybackState? = null,
+    val backgroundPlaybackNotificationIsShowing: Boolean = false
+) : MvRxState

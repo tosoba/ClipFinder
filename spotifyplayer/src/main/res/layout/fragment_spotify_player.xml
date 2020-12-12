@@ -3,11 +3,29 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
+        <import type="androidx.lifecycle.MutableLiveData" />
 
         <variable
             name="fragmentView"
             type="com.example.spotifyplayer.SpotifyPlayerView" />
+
+        <variable
+            name="playbackSeekbarMaxValue"
+            type="MutableLiveData&lt;Integer&gt;" />
+
+        <variable
+            name="nextTrackExists"
+            type="MutableLiveData&lt;Boolean&gt;" />
+
+        <variable
+            name="previousTrackExists"
+            type="MutableLiveData&lt;Boolean&gt;" />
+
+        <variable
+            name="currentTrackTitle"
+            type="MutableLiveData&lt;String&gt;" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -81,7 +99,7 @@
             android:foreground="@drawable/spotify_foreground_ripple"
             android:onClick="@{fragmentView.onNextBtnClickListener}"
             android:src="@drawable/next_track"
-            android:visibility="@{safeUnbox(fragmentView.state.nextTrackExists) ? View.VISIBLE : View.GONE }"
+            android:visibility="@{safeUnbox(nextTrackExists) ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
             app:layout_constraintLeft_toRightOf="@id/spotify_player_play_pause_image_button"
             app:layout_constraintRight_toRightOf="parent"
@@ -95,7 +113,7 @@
             android:foreground="@drawable/spotify_foreground_ripple"
             android:onClick="@{fragmentView.onPreviousBtnClickListener}"
             android:src="@drawable/previous_track"
-            android:visibility="@{safeUnbox(fragmentView.state.previousTrackExists) ? View.VISIBLE : View.GONE }"
+            android:visibility="@{safeUnbox(previousTrackExists) ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toTopOf="@id/playback_seek_bar"
             app:layout_constraintLeft_toRightOf="@id/spotify_player_guideline"
             app:layout_constraintRight_toLeftOf="@id/spotify_player_play_pause_image_button"
@@ -107,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:max="@{safeUnbox(fragmentView.state.playbackSeekbarMaxValue)}"
+            android:max="@{safeUnbox(playbackSeekbarMaxValue)}"
             android:maxHeight="2dp"
             android:minHeight="2dp"
             android:progressDrawable="@drawable/playback_seekbar_progress"
@@ -124,7 +142,7 @@
             android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{fragmentView.state.currentTrackTitle}"
+            android:text="@{currentTrackTitle}"
             android:textAlignment="center"
             android:textColor="@android:color/darker_gray"
             android:textSize="15sp"

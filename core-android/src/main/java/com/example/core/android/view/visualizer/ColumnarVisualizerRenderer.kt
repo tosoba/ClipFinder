@@ -1,4 +1,4 @@
-package com.example.spotifyplayer
+package com.example.core.android.view.visualizer
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,7 +8,7 @@ import me.bogerchan.niervisualizer.renderer.IRenderer
 import kotlin.math.log10
 import kotlin.math.min
 
-class SpotifyColumnarVisualizerRenderer(private val paint: Paint) : IRenderer {
+class ColumnarVisualizerRenderer(private val paint: Paint) : IRenderer {
     private val lastDrawArea = Rect()
     private lateinit var renderColumns: Array<RectF>
 
