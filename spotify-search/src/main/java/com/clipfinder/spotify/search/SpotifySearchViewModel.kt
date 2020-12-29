@@ -7,7 +7,7 @@ import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.usecase.SearchSpotify
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.Loadable
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Album

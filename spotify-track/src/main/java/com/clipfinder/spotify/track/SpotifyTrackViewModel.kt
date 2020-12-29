@@ -13,7 +13,7 @@ import com.clipfinder.core.spotify.usecase.GetAlbum
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetAudioFeatures
 import com.clipfinder.core.spotify.usecase.GetSimilarTracks
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist

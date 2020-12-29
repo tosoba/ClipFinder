@@ -20,8 +20,8 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.core.ext.castAs
-import com.example.core.android.base.activity.IntentProvider
 import com.example.core.android.base.handler.SlidingPanelController
+import com.example.core.android.base.provider.IntentProvider
 import com.example.core.android.spotify.controller.SpotifyTrackChangeHandler
 import com.example.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.example.core.android.spotify.model.Album

@@ -1,6 +1,5 @@
 package com.example.core.android.spotify.controller
 
-import androidx.lifecycle.LiveData
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
@@ -17,7 +16,6 @@ interface SpotifyTrackChangeHandler {
 }
 
 interface SpotifyAuthController {
-    val isLoggedIn: LiveData<Boolean>
     var onLoginSuccessful: (() -> Unit)?
     fun showLoginDialog()
     fun logOutPlayer()

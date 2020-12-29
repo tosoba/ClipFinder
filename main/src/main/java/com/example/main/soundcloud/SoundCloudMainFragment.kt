@@ -21,29 +21,25 @@ import kotlinx.android.synthetic.main.fragment_soundcloud_main.*
 import org.koin.android.ext.android.inject
 
 class SoundCloudMainFragment : Fragment(), IMainContentFragment {
-
     private val fragmentFactory: IFragmentFactory by inject()
 
-    private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard)
+    private val onNavigationItemSelectedListener = BottomNavigationView
+        .OnNavigationItemSelectedListener { item ->
+            if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId) {
+                currentNavHostFragment?.popAll()
+                return@OnNavigationItemSelectedListener true
+            }
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        if (item.itemId == sound_cloud_bottom_navigation_view.selectedItemId) {
-            currentNavHostFragment?.popAll()
+            sound_cloud_view_pager.currentItem = itemIds.indexOf(item.itemId)
+            activity?.castAs<ToolbarController>()?.toggleToolbar()
+
             return@OnNavigationItemSelectedListener true
         }
 
-        sound_cloud_view_pager.currentItem = itemIds.indexOf(item.itemId)
-        activity?.castAs<ToolbarController>()?.toggleToolbar()
-
-        return@OnNavigationItemSelectedListener true
-    }
-
-    private val pagerAdapter by lazy {
+    private val pagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CustomCurrentStatePagerAdapter(
             childFragmentManager,
-            arrayOf(
-                fragmentFactory.newSoundCloudDashboardNavHostFragment
-            )
+            arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment)
         )
     }
 
@@ -62,7 +58,7 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
 
     override val playButton: FloatingActionButton get() = sound_cloud_play_fab
 
-    private val view: SoundCloudMainView by lazy {
+    private val view: SoundCloudMainView by lazy(LazyThreadSafetyMode.NONE) {
         SoundCloudMainView(
             onNavigationItemSelectedListener = onNavigationItemSelectedListener,
             pagerAdapter = pagerAdapter,
@@ -76,4 +72,8 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     ): View = FragmentSoundcloudMainBinding.inflate(inflater, container, false)
         .apply { fragmentView = view }
         .root
+
+    companion object {
+        private val itemIds: Array<Int> = arrayOf(R.id.sound_cloud_action_dashboard)
+    }
 }

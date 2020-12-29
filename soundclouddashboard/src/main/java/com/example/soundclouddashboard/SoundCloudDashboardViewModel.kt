@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.android.soundcloud.model.SoundCloudPlaylistSelection
 import com.clipfinder.core.ext.Timeout
 import com.clipfinder.core.soundcloud.usecase.GetMixedSelections
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.android.schedulers.AndroidSchedulers

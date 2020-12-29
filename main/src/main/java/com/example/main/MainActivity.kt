@@ -13,14 +13,14 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
-import com.example.core.android.base.activity.BaseVMActivity
-import com.example.core.android.base.activity.IntentProvider
+import com.airbnb.mvrx.BaseMvRxActivity
+import com.airbnb.mvrx.viewModel
+import com.airbnb.mvrx.withState
 import com.example.core.android.base.fragment.*
 import com.example.core.android.base.handler.*
-import com.example.core.android.lifecycle.OnPropertyChangedCallbackComponent
+import com.example.core.android.base.provider.IntentProvider
+import com.example.core.android.model.WithValue
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
@@ -53,7 +53,7 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class MainActivity :
-    BaseVMActivity<MainViewModel>(MainViewModel::class),
+    BaseMvRxActivity(),
     ConnectionStateCallback,
     SlidingPanelController,
     SpotifyPlayerController,
@@ -66,10 +66,9 @@ class MainActivity :
     ToolbarController,
     IntentProvider {
 
+    private val viewModel: MainViewModel by viewModel()
     private val fragmentFactory: ISpotifyFragmentsFactory by inject()
-
-    override val slidingPanel: SlidingUpPanelLayout?
-        get() = sliding_layout
+    override val slidingPanel: SlidingUpPanelLayout? get() = sliding_layout
 
     private val spotifyMainFragment: SpotifyMainFragment?
         get() = mainContentViewPagerAdapter.currentFragment as? SpotifyMainFragment
@@ -102,7 +101,6 @@ class MainActivity :
 
     private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
         MainView(
-            state = viewModel.viewState,
             onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
             fadeOnClickListener = fadeOnClickListener,
             slideListener = slideListener,
@@ -154,7 +152,7 @@ class MainActivity :
                 spotifyMainFragment?.let { return@OnNavigationItemSelectedListener true }
                     ?: run { main_content_view_pager?.currentItem = 0 }
 
-                viewModel.viewState.mainContent.set(MainContent.SPOTIFY)
+                viewModel.setMainContent(MainContent.SPOTIFY)
 
                 if (binding.drawerNavigationView.headerCount == 0) {
                     binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
@@ -163,7 +161,7 @@ class MainActivity :
                 binding.drawerNavigationView.menu.clear()
                 binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
 
-                val isLoggedIn = viewModel.viewState.isLoggedIn.value ?: false
+                val isLoggedIn = withState(viewModel, MainState::isLoggedIn)
                 binding.drawerNavigationView.menu?.apply {
                     findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
                     findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
@@ -171,11 +169,10 @@ class MainActivity :
             }
 
             R.id.drawer_action_show_soundcloud_main -> {
-                soundCloudMainFragment?.let {
-                    return@OnNavigationItemSelectedListener true
-                } ?: run { main_content_view_pager?.currentItem = 1 }
+                soundCloudMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                    ?: run { main_content_view_pager?.currentItem = 1 }
 
-                viewModel.viewState.mainContent.set(MainContent.SOUNDCLOUD)
+                viewModel.setMainContent(MainContent.SOUNDCLOUD)
 
                 if (binding.drawerNavigationView.headerCount > 0) {
                     binding.drawerNavigationView.removeHeaderView(drawerHeaderBinding.root)
@@ -253,7 +250,6 @@ class MainActivity :
     }
 
     private val spotifyAuth: SpotifyManualAuth by inject()
-    override val isLoggedIn: LiveData<Boolean> get() = viewModel.viewState.isLoggedIn
     override val isPlayerLoggedIn: Boolean get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
     override var onLoginSuccessful: (() -> Unit)? = null
 
@@ -266,6 +262,10 @@ class MainActivity :
         addStatePropertyChangedCallbacks()
 
         checkPermissions()
+
+        viewModel.selectSubscribe(this, MainState::similarTracks) {
+            if (it is WithValue) similarTracksFragment?.resetItems(it.value.items)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -356,13 +356,6 @@ class MainActivity :
         else -> super.onOptionsItemSelected(item)
     }
 
-    override fun setupObservers() {
-        super.setupObservers()
-        viewModel.viewState.similarTracks.observe(this, Observer { tracks ->
-            tracks?.let { similarTracksFragment?.resetItems(it) }
-        })
-    }
-
     override fun openDrawer() {
         main_drawer_layout?.openDrawer(GravityCompat.START)
     }
@@ -401,11 +394,11 @@ class MainActivity :
         spotifyPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         soundCloudPlayerFragment?.loadTrack(track)
-        viewModel.viewState.playerState.set(PlayerState.SOUND_CLOUD_TRACK)
+        viewModel.setPlayerState(PlayerState.SOUND_CLOUD_TRACK)
     }
 
     override fun loadTrack(track: Track) {
-        if (viewModel.viewState.isLoggedIn.value == false) {
+        if (!withState(viewModel, MainState::isLoggedIn)) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -415,11 +408,11 @@ class MainActivity :
         soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadTrack(track)
-        viewModel.viewState.playerState.set(PlayerState.TRACK)
+        viewModel.setPlayerState(PlayerState.TRACK)
     }
 
     override fun loadAlbum(album: Album) {
-        if (viewModel.viewState.isLoggedIn.value == false) {
+        if (!withState(viewModel, MainState::isLoggedIn)) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -429,11 +422,11 @@ class MainActivity :
         soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadAlbum(album)
-        viewModel.viewState.playerState.set(PlayerState.ALBUM)
+        viewModel.setPlayerState(PlayerState.ALBUM)
     }
 
     override fun loadPlaylist(playlist: Playlist) {
-        if (viewModel.viewState.isLoggedIn.value == false) {
+        if (!withState(viewModel, MainState::isLoggedIn)) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -443,7 +436,7 @@ class MainActivity :
         soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.stopPlayback()
         spotifyPlayerFragment?.loadPlaylist(playlist)
-        viewModel.viewState.playerState.set(PlayerState.PLAYLIST)
+        viewModel.setPlayerState(PlayerState.PLAYLIST)
     }
 
     override fun onTrackChanged(trackId: String) {
@@ -453,7 +446,7 @@ class MainActivity :
     override fun loadVideo(video: Video) {
         spotifyPlayerFragment?.stopPlayback()
         soundCloudPlayerFragment?.stopPlayback()
-        viewModel.viewState.playerState.set(PlayerState.VIDEO)
+        viewModel.setPlayerState(PlayerState.VIDEO)
         youtubePlayerFragment?.loadVideo(video)
         sliding_layout?.setDragView(youtubePlayerFragment?.playerView)
         expandIfHidden()
@@ -466,7 +459,7 @@ class MainActivity :
             return
         }
 
-        viewModel.viewState.playerState.set(PlayerState.VIDEO_PLAYLIST)
+        viewModel.setPlayerState(PlayerState.VIDEO_PLAYLIST)
         spotifyPlayerFragment?.stopPlayback()
         soundCloudPlayerFragment?.stopPlayback()
         youtubePlayerFragment?.loadVideoPlaylist(videoPlaylist, videos)
@@ -478,13 +471,12 @@ class MainActivity :
     override val providedIntent: Intent get() = Intent(this, MainActivity::class.java)
 
     override fun onLoggedOut() {
-        viewModel.viewState.isLoggedIn.value = false
-        viewModel.drawerViewState.user.set(null)
+        viewModel.onLoggedOut()
         Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLoggedIn() {
-        viewModel.viewState.isLoggedIn.value = true
+        viewModel.onLoggedIn()
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
 
         //TODO: permission check
@@ -532,9 +524,8 @@ class MainActivity :
         }
     }
 
-    private fun addStatePropertyChangedCallbacks() = with(lifecycle) {
-        viewModel.viewState.isLoggedIn.observe({ this }) { isLoggedIn ->
-            if (isLoggedIn == null) throw IllegalStateException()
+    private fun addStatePropertyChangedCallbacks() {
+        viewModel.selectSubscribe(this, MainState::isLoggedIn) { isLoggedIn ->
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
         }
@@ -542,11 +533,21 @@ class MainActivity :
 
     private fun initViewBindings() {
         binding.mainActivityView = view
-        lifecycle.addObserver(OnPropertyChangedCallbackComponent(viewModel.viewState.itemFavouriteState) { _, _ ->
+        viewModel.selectSubscribe(this, MainState::itemFavouriteState) {
             binding.addToFavouritesFab.hideAndShow()
-        })
-
-        drawerHeaderBinding.viewState = viewModel.drawerViewState
+        }
+        viewModel.selectSubscribe(this, MainState::user) { user ->
+            drawerHeaderBinding.user = if (user is WithValue) user.value else null
+        }
+        viewModel.selectSubscribe(this, MainState::playerState) { playerState ->
+            binding.playerState = playerState
+        }
+        viewModel.selectSubscribe(this, MainState::mainContent) { mainContent ->
+            binding.mainContent = mainContent
+        }
+        viewModel.selectSubscribe(this, MainState::itemFavouriteState) { itemFavouriteState ->
+            binding.itemFavouriteState = itemFavouriteState
+        }
         binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
         binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = false
     }

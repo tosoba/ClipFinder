@@ -7,7 +7,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.ext.map
 import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.util.ext.offset

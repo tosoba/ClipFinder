@@ -14,7 +14,7 @@ import com.clipfinder.core.spotify.usecase.GetCategories
 import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
 import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.PagedList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
@@ -103,7 +103,7 @@ private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<
 
 private fun GetNewReleases.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
     this(applySchedulers = false, args = state.newReleases.offset)
-        .mapData { album -> album.map(::Album) }
+        .mapData { albums -> albums.map(::Album) }
 
 private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<List<TopTrack>>>> =
     this(applySchedulers = false, args = state.viralTracks.offset)

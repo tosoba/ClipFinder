@@ -1,4 +1,4 @@
-package com.example.core.android.base.activity
+package com.example.core.android.base.provider
 
 import android.content.Intent
 

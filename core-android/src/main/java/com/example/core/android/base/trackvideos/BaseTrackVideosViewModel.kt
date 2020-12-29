@@ -1,6 +1,6 @@
 package com.example.core.android.base.trackvideos
 
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 
 abstract class BaseTrackVideosViewModel<Track>(
     initialState: TrackVideosViewState<Track>

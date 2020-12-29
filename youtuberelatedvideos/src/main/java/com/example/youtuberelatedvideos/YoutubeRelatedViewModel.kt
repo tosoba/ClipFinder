@@ -10,7 +10,7 @@ import com.clipfinder.core.model.Resource
 import com.clipfinder.core.youtube.ext.highestResUrl
 import com.clipfinder.core.youtube.ext.isValid
 import com.clipfinder.core.youtube.usecase.SearchRelatedVideos
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.LoadingFirst
 import com.example.core.android.model.PageTokenList
 import com.example.core.android.model.Ready

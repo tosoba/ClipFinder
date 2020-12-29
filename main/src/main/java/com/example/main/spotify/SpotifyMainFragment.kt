@@ -23,8 +23,8 @@ import org.koin.android.ext.android.inject
 class SpotifyMainFragment : Fragment(), IMainContentFragment {
     private val fragmentFactory: IFragmentFactory by inject()
 
-    private val onNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = BottomNavigationView
+        .OnNavigationItemSelectedListener { item ->
             if (item.itemId == main_bottom_navigation_view.selectedItemId) {
                 currentNavHostFragment?.popAll()
                 return@OnNavigationItemSelectedListener true

@@ -2,7 +2,7 @@ package com.example.youtubeplayer
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.videos.Video
 import com.example.core.android.model.videos.VideoPlaylist
 

@@ -1,4 +1,4 @@
-package com.example.core.android.base.vm
+package com.example.core.android.base.viewmodel
 
 import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel

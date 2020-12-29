@@ -6,7 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.soundcloud.usecase.GetTracks
 import com.clipfinder.core.soundcloud.usecase.GetTracksFromPlaylist
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.model.LoadingInProgress
 import com.example.core.android.model.Ready
 import com.example.core.android.model.soundcloud.SoundCloudPlaylist

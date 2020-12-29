@@ -2,7 +2,7 @@ package com.example.spotifyplayer
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.android.base.vm.MvRxViewModel
+import com.example.core.android.base.viewmodel.MvRxViewModel
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
