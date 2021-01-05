@@ -17,21 +17,13 @@ class SpotifyPlayerViewModel(
         copy(backgroundPlaybackNotificationIsShowing = isShowing)
     }
 
-    fun onLoadTrack(track: Track) = setState {
-        copy(lastPlayedTrack = track, lastPlayedAlbum = null, lastPlayedPlaylist = null)
-    }
-
-    fun onLoadAlbum(album: Album) = setState {
-        copy(lastPlayedTrack = null, lastPlayedAlbum = album, lastPlayedPlaylist = null)
-    }
-
-    fun onLoadPlaylist(playlist: Playlist) = setState {
-        copy(lastPlayedTrack = null, lastPlayedAlbum = null, lastPlayedPlaylist = playlist)
-    }
-
     fun onPlaybackEvent(playerMetadata: Metadata?, playbackState: PlaybackState?) {
         setState { copy(playerMetadata = playerMetadata, playbackState = playbackState) }
     }
+
+    fun onLoadTrack(track: Track) = setState { copy(lastPlayedItem = LastPlayedTrack(track)) }
+    fun onLoadAlbum(album: Album) = setState { copy(lastPlayedItem = LastPlayedAlbum(album)) }
+    fun onLoadPlaylist(playlist: Playlist) = setState { copy(lastPlayedItem = LastPlayedPlaylist(playlist)) }
 
     companion object : MvRxViewModelFactory<SpotifyPlayerViewModel, SpotifyPlayerState> {
         override fun create(

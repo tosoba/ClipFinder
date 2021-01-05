@@ -158,14 +158,14 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     ): View = FragmentSpotifyPlayerBinding.inflate(inflater, container, false)
         .apply {
             fragmentView = spotifyPlayerView
-            val playbackSeekbarMaxValue = MutableLiveData(0)
+            val playbackSeekBarMaxValue = MutableLiveData(0)
             val nextTrackExists = MutableLiveData(false)
             val previousTrackExists = MutableLiveData(false)
             val currentTrackTitle = MutableLiveData("")
             viewModel.selectSubscribe(this@SpotifyPlayerFragment, SpotifyPlayerState::playerMetadata) { metadata ->
                 nextTrackExists.value = metadata?.nextTrack != null
                 previousTrackExists.value = metadata?.prevTrack != null
-                playbackSeekbarMaxValue
+                playbackSeekBarMaxValue
                     .value = (metadata?.currentTrack?.durationMs ?: 0).toInt() * 1000
                 metadata?.currentTrack?.let {
                     val trackName = it.name
@@ -178,7 +178,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                     currentTrackTitle.value = currentTrackLabelText
                 }
             }
-            this.playbackSeekbarMaxValue = playbackSeekbarMaxValue
+            this.playbackSeekBarMaxValue = playbackSeekBarMaxValue
             this.nextTrackExists = nextTrackExists
             this.previousTrackExists = previousTrackExists
             this.currentTrackTitle = currentTrackTitle
@@ -209,7 +209,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         withState(viewModel) { state ->
             val shouldShowPlaybackNotification = spotifyPlayer?.isInitialized == true
                 && state.playerMetadata?.currentTrack != null
-                && (state.lastPlayedAlbum != null || state.lastPlayedTrack != null || state.lastPlayedPlaylist != null)
+                && state.lastPlayedItem !is NoLastPlayedItem
                 && !state.backgroundPlaybackNotificationIsShowing
             if (shouldShowPlaybackNotification) {
                 viewModel.updatePlayerNotificationState(true)

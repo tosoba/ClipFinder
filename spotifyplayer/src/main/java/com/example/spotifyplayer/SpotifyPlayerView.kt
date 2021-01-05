@@ -18,10 +18,14 @@ class SpotifyPlayerView(
 )
 
 data class SpotifyPlayerState(
-    val lastPlayedTrack: Track? = null,
-    val lastPlayedAlbum: Album? = null,
-    val lastPlayedPlaylist: Playlist? = null,
+    val lastPlayedItem: LastPlayedItem = NoLastPlayedItem,
     val playerMetadata: Metadata? = null,
     val playbackState: PlaybackState? = null,
     val backgroundPlaybackNotificationIsShowing: Boolean = false
 ) : MvRxState
+
+sealed class LastPlayedItem
+object NoLastPlayedItem : LastPlayedItem()
+data class LastPlayedTrack(val track: Track) : LastPlayedItem()
+data class LastPlayedAlbum(val album: Album) : LastPlayedItem()
+data class LastPlayedPlaylist(val playlist: Playlist) : LastPlayedItem()

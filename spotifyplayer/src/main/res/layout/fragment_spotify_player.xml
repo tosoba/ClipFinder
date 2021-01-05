@@ -12,7 +12,7 @@
             type="com.example.spotifyplayer.SpotifyPlayerView" />
 
         <variable
-            name="playbackSeekbarMaxValue"
+            name="playbackSeekBarMaxValue"
             type="MutableLiveData&lt;Integer&gt;" />
 
         <variable
@@ -125,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:max="@{safeUnbox(playbackSeekbarMaxValue)}"
+            android:max="@{safeUnbox(playbackSeekBarMaxValue)}"
             android:maxHeight="2dp"
             android:minHeight="2dp"
             android:progressDrawable="@drawable/playback_seekbar_progress"
