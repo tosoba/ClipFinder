@@ -1,6 +1,7 @@
 package com.example.core.android.util.ext
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -93,3 +94,15 @@ inline fun <reified T : RoomDatabase> Context.buildRoom(
     if (configure != null) builder.configure()
     return builder.build()
 }
+
+fun Context.getBroadcastPendingIntent(
+    intent: Intent,
+    requestCode: Int = 0,
+    flags: Int = 0
+): PendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, flags)
+
+fun Context.getActivityPendingIntent(
+    intent: Intent,
+    requestCode: Int = 0,
+    flags: Int = 0
+): PendingIntent = PendingIntent.getActivity(this, requestCode, intent, flags)

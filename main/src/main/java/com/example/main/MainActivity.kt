@@ -68,7 +68,12 @@ class MainActivity :
 
     private val viewModel: MainViewModel by viewModel()
     private val fragmentFactory: ISpotifyFragmentsFactory by inject()
-    override val slidingPanel: SlidingUpPanelLayout? get() = sliding_layout
+
+    override val providedIntent: Intent
+        get() = Intent(this, MainActivity::class.java)
+
+    override val slidingPanel: SlidingUpPanelLayout?
+        get() = sliding_layout
 
     private val spotifyMainFragment: SpotifyMainFragment?
         get() = mainContentViewPagerAdapter.currentFragment as? SpotifyMainFragment
@@ -467,8 +472,6 @@ class MainActivity :
         expandIfHidden()
         relatedVideosFragment?.search(videos.first().id)
     }
-
-    override val providedIntent: Intent get() = Intent(this, MainActivity::class.java)
 
     override fun onLoggedOut() {
         viewModel.onLoggedOut()

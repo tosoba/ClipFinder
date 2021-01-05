@@ -1,6 +1,7 @@
 package com.example.spotifyplayer
 
 import android.Manifest
+import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
@@ -28,7 +29,6 @@ import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.notification.PlaybackNotification
-import com.example.core.android.util.PendingIntents
 import com.example.core.android.util.ext.*
 import com.example.core.android.view.onSeekBarProgressChangeListener
 import com.example.core.android.view.visualizer.ColumnarVisualizerRenderer
@@ -266,7 +266,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     }
 
     override fun onPlaybackEvent(event: PlayerEvent) {
-        Timber.tag("PLAY_EVNT").e(event.toString())
+        Timber.tag("PLAY_EVT").e(event.toString())
         viewModel.onPlaybackEvent(playerMetadata = spotifyPlayer?.metadata, playbackState = spotifyPlayer?.playbackState)
 
         when (event) {
@@ -423,14 +423,12 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         }
     }
 
-    private fun notificationBuilder(largeIcon: Bitmap?): NotificationCompat.Builder = NotificationCompat
+    private fun buildNotification(largeIcon: Bitmap?): Notification = NotificationCompat
         .Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
         .setSmallIcon(R.drawable.play)
         .apply {
             withState(viewModel) { state ->
-                val bigText = state.playerMetadata?.currentTrack?.name
-                    ?: state.lastPlayedTrack?.name
-                    ?: "Unknown track"
+                val bigText = state.playerMetadata?.currentTrack?.name ?: "Unknown track"
                 if (largeIcon != null) {
                     val style = NotificationCompat.BigPictureStyle()
                         .bigLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
@@ -447,32 +445,35 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                 }
             }
         }
-        .setContentTitle("ClipFinder")
+        .setContentTitle(getString(R.string.app_name))
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setContentIntent(PendingIntents.getActivity(context, activity?.castAs<IntentProvider>()?.providedIntent))
-        .setDeleteIntent(PendingIntents.getBroadcast(context, Intent(ACTION_DELETE_NOTIFICATION)))
+        .setContentIntent(
+            requireContext().getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
+        )
+        .setDeleteIntent(requireContext().getBroadcastPendingIntent(Intent(ACTION_DELETE_NOTIFICATION)))
         .apply {
             withState(viewModel) { state ->
                 if (state.playerMetadata?.prevTrack != null) {
-                    val prevTrackIntent = PendingIntents.getBroadcast(context, Intent(ACTION_PREV_TRACK))
+                    val prevTrackIntent = requireContext().getBroadcastPendingIntent(Intent(ACTION_PREV_TRACK))
                     addAction(R.drawable.previous_track, getString(R.string.previous_track), prevTrackIntent)
                 }
 
                 if (state.playbackState?.isPlaying == true) {
-                    val pauseIntent = PendingIntents.getBroadcast(context, Intent(ACTION_PAUSE_PLAYBACK))
+                    val pauseIntent = requireContext().getBroadcastPendingIntent(Intent(ACTION_PAUSE_PLAYBACK))
                     addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
                 } else {
-                    val resumeIntent = PendingIntents.getBroadcast(context, Intent(ACTION_RESUME_PLAYBACK))
+                    val resumeIntent = requireContext().getBroadcastPendingIntent(Intent(ACTION_RESUME_PLAYBACK))
                     addAction(R.drawable.play, getString(R.string.play), resumeIntent)
                 }
 
                 if (state.playerMetadata?.nextTrack != null) {
-                    val nextTrackIntent = PendingIntents.getBroadcast(context, Intent(ACTION_NEXT_TRACK))
+                    val nextTrackIntent = requireContext().getBroadcastPendingIntent(Intent(ACTION_NEXT_TRACK))
                     addAction(R.drawable.next_track, getString(R.string.next_track), nextTrackIntent)
                 }
             }
         }
         .setAutoCancel(true)
+        .build()
 
     private fun showPlaybackNotification() {
         withState(viewModel) { state ->
@@ -482,11 +483,11 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                         url = it.albumCoverWebUrl,
                         onError = {
                             requireContext().notificationManager
-                                .notify(PlaybackNotification.ID, notificationBuilder(null).build())
+                                .notify(PlaybackNotification.ID, buildNotification(null))
                         }
                     ) { bitmap ->
                         requireContext().notificationManager
-                            .notify(PlaybackNotification.ID, notificationBuilder(bitmap).build())
+                            .notify(PlaybackNotification.ID, buildNotification(bitmap))
                     }
                     .disposeOnDestroy(this)
             }
