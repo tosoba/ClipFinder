@@ -4,6 +4,7 @@ import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.example.core.android.interceptor.CacheInterceptor
 import com.example.core.android.interceptor.ConnectivityInterceptor
 import okhttp3.Cache
+import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -19,6 +20,14 @@ val coreAndroidNetworkingModule = module {
     single { HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC } }
 
     single { GsonConverterFactory.create() }
+
+    single {
+        OkHttpClient.Builder()
+            .addInterceptor(get<HttpLoggingInterceptor>())
+            .addInterceptor(get<CacheInterceptor>())
+            .cache(get<Cache>())
+            .build()
+    }
 
     single { ScalarsConverterFactory.create() }
     single { RxSealedCallAdapterFactory.create() }
