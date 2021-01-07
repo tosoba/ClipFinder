@@ -10,10 +10,10 @@ import io.reactivex.Single
 import timber.log.Timber
 
 class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutubeApi {
-
     override fun search(query: String, pageToken: String?): Single<SearchListResponse> = youtube
         .Search()
         .list(listOf("snippet"))
+        .setType(listOf("video"))
         .setKey(key)
         .setQ(query)
         .run { pageToken?.let(::setPageToken) ?: this }
@@ -23,6 +23,7 @@ class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutu
     override fun searchRelatedVideos(videoId: String, pageToken: String?): Single<SearchListResponse> = youtube
         .Search()
         .list(listOf("snippet"))
+        .setType(listOf("video"))
         .setKey(key)
         .setRelatedToVideoId(videoId)
         .run { pageToken?.let(::setPageToken) ?: this }
