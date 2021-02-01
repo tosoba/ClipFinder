@@ -4,8 +4,7 @@ import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.ext.castAs
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
+import com.clipfinder.core.model.*
 import com.example.core.android.model.*
 import com.example.core.android.util.ext.copyWithPaged
 import com.example.core.android.util.ext.loadingOrCompleted

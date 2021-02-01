@@ -6,9 +6,9 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.epoxy.VisibilityState
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
+import com.clipfinder.core.model.*
 import com.example.core.android.*
 import com.example.core.android.di.EpoxyHandlerType
-import com.example.core.android.model.*
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
 

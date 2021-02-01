@@ -14,7 +14,7 @@ import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.account.R
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
 import com.example.core.android.LargeTextCenterBindingModel_
-import com.example.core.android.model.Empty
+import com.clipfinder.core.model.Empty
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.show

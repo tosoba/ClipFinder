@@ -11,8 +11,8 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchBinding
 import com.example.core.android.base.fragment.ItemListFragment
-import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.example.core.android.util.ext.newMvRxFragmentWith

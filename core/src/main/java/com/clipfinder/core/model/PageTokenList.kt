@@ -1,4 +1,4 @@
-package com.example.core.android.model
+package com.clipfinder.core.model
 
 data class PageTokenList<I>(
     val items: List<I> = emptyList(),

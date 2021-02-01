@@ -1,6 +1,4 @@
-package com.example.core.android.model
-
-import com.clipfinder.core.model.Paged
+package com.clipfinder.core.model
 
 data class PagedList<I>(
     val items: List<I> = emptyList(),

@@ -16,7 +16,7 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.playlist.databinding.FragmentSpotifyPlaylistBinding
-import com.example.core.android.model.WithValue
+import com.clipfinder.core.model.WithValue
 import com.example.core.android.spotify.ext.enableSpotifyPlayButton
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.clickableListItem

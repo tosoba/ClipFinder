@@ -13,9 +13,9 @@ import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.example.core.android.headerItem
 import com.example.core.android.loadingIndicator
-import com.example.core.android.model.Failed
-import com.example.core.android.model.LoadingInProgress
-import com.example.core.android.model.Ready
+import com.clipfinder.core.model.Failed
+import com.clipfinder.core.model.LoadingInProgress
+import com.clipfinder.core.model.Ready
 import com.example.core.android.radarChart
 import com.example.core.android.reloadControl
 import com.example.core.android.spotify.controller.SpotifyTrackController

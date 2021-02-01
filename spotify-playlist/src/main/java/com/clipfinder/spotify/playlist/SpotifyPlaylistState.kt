@@ -1,9 +1,9 @@
 package com.clipfinder.spotify.playlist
 
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.Empty
-import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.Empty
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.model.Track
 

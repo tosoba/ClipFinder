@@ -1,7 +1,6 @@
 package com.example.core.android.util.ext
 
-import com.clipfinder.core.model.Paged
-import com.example.core.android.model.*
+import com.clipfinder.core.model.*
 import java.io.IOException
 
 val <T> Loadable<T>.retryLoadOnNetworkAvailable: Boolean

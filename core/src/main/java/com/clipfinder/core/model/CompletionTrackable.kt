@@ -1,4 +1,4 @@
-package com.example.core.android.model
+package com.clipfinder.core.model
 
 interface CompletionTrackable {
     val completed: Boolean

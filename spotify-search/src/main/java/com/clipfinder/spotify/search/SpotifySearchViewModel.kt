@@ -8,8 +8,8 @@ import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.usecase.SearchSpotify
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.Album
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Playlist

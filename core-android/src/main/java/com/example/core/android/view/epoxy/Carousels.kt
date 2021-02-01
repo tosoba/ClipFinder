@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.airbnb.epoxy.*
+import com.clipfinder.core.model.*
 import com.example.core.android.*
-import com.example.core.android.model.*
 
 open class NestedScrollingCarouselModel : CarouselModel_() {
     override fun buildView(parent: ViewGroup): Carousel = super.buildView(parent)

@@ -11,9 +11,9 @@ import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopArtists
 import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopTracks
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.Empty
-import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.Empty
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.preferences.SpotifyPreferences

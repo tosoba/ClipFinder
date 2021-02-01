@@ -15,7 +15,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.example.core.android.base.fragment.BackPressedHandler
-import com.example.core.android.model.WithValue
+import com.clipfinder.core.model.WithValue
 import com.example.core.android.spotify.model.Artist
 import com.example.core.android.spotify.model.clickableListItem
 import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory

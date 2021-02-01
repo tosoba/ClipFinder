@@ -4,7 +4,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.soundcloud.usecase.GetSimilarTracks
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.Ready
+import com.clipfinder.core.model.Ready
 import com.example.core.android.model.soundcloud.SoundCloudTrack
 import org.koin.android.ext.android.get
 

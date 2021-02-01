@@ -3,9 +3,9 @@ package com.example.main
 import android.view.View
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.airbnb.mvrx.MvRxState
-import com.example.core.android.model.Empty
-import com.example.core.android.model.Loadable
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.Empty
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.Track
 import com.example.core.android.spotify.model.User
 import com.google.android.material.navigation.NavigationView

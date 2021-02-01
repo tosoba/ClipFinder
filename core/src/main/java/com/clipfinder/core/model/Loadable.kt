@@ -1,4 +1,4 @@
-package com.example.core.android.model
+package com.clipfinder.core.model
 
 sealed class Loadable<out T> {
     open val copyWithLoadingInProgress: Loadable<T> get() = LoadingFirst

@@ -15,7 +15,7 @@ import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
 import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.*
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset

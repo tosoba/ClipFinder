@@ -11,10 +11,10 @@ import com.clipfinder.core.youtube.ext.highestResUrl
 import com.clipfinder.core.youtube.ext.isValid
 import com.clipfinder.core.youtube.usecase.SearchVideos
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.LoadingFirst
-import com.example.core.android.model.PageTokenList
-import com.example.core.android.model.Ready
-import com.example.core.android.model.WithValue
+import com.clipfinder.core.model.LoadingFirst
+import com.clipfinder.core.model.PageTokenList
+import com.clipfinder.core.model.Ready
+import com.clipfinder.core.model.WithValue
 import com.example.core.android.model.videos.Video
 import com.example.core.android.util.ext.completed
 import com.example.core.android.util.ext.retryLoadCollectionOnConnected

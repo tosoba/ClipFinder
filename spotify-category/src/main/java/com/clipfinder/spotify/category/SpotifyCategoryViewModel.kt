@@ -10,7 +10,7 @@ import com.clipfinder.core.model.Paged
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.example.core.android.base.viewmodel.MvRxViewModel
-import com.example.core.android.model.PagedList
+import com.clipfinder.core.model.PagedList
 import com.example.core.android.spotify.model.Playlist
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import com.example.core.android.util.ext.offset
