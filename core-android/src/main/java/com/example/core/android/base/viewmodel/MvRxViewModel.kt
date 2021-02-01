@@ -226,9 +226,9 @@ open class MvRxViewModel<S : MvRxState>(
 
     protected fun log(error: Throwable) = Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
 
-    protected fun <T, L : BaseLoadable<T, L>> clearErrorIn(
-        prop: KProperty1<S, L>,
-        reducer: S.(L) -> S
+    protected fun <T> clearErrorIn(
+        prop: KProperty1<S, Loadable<T>>,
+        reducer: S.(Loadable<T>) -> S
     ) {
         setState { reducer(valueOf(prop).copyWithClearedError) }
     }

@@ -1,9 +1,9 @@
 package com.example.core.android.model
 
-sealed class Loadable<out T> : BaseLoadable<T, Loadable<T>> {
-    override val copyWithLoadingInProgress: Loadable<T> get() = LoadingFirst
-    override val copyWithClearedError: Loadable<T> get() = Empty
-    override fun copyWithError(error: Any?): Loadable<T> = FailedFirst(error)
+sealed class Loadable<out T> {
+    open val copyWithLoadingInProgress: Loadable<T> get() = LoadingFirst
+    open val copyWithClearedError: Loadable<T> get() = Empty
+    open fun copyWithError(error: Any?): Loadable<T> = FailedFirst(error)
 }
 
 sealed class WithValue<out T> : Loadable<T>() {

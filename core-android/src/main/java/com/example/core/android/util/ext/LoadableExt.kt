@@ -4,7 +4,7 @@ import com.clipfinder.core.model.Paged
 import com.example.core.android.model.*
 import java.io.IOException
 
-val <L : BaseLoadable<T, L>, T> L.retryLoadOnNetworkAvailable: Boolean
+val <T> Loadable<T>.retryLoadOnNetworkAvailable: Boolean
     get() = this is Failed && (error == null || error is IOException)
 
 val <T : Collection<I>, I> Loadable<T>.retryLoadCollectionOnConnected: Boolean
