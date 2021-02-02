@@ -1,5 +1,7 @@
 package com.clipfinder.spotify.api.di
 
+import com.clipfinder.core.interceptor.ICacheInterceptor
+import com.clipfinder.core.interceptor.IConnectivityInterceptor
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
@@ -12,8 +14,7 @@ import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.PlaylistItemObject
 import com.clipfinder.spotify.api.model.PlaylistItemType
 import com.clipfinder.spotify.api.model.TrackObject
-import com.clipfinder.core.android.interceptor.CacheInterceptor
-import com.clipfinder.core.android.interceptor.ConnectivityInterceptor
+import com.clipfinder.core.spotify.di.spotifyAuthorizationQualifier
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
@@ -21,6 +22,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -38,9 +40,11 @@ private inline fun <reified T> Scope.clientFor(): T = Retrofit.Builder()
     .client(
         OkHttpClient.Builder()
             .addInterceptor(get<HttpLoggingInterceptor>())
-            .addInterceptor(get<CacheInterceptor>())
+            .addInterceptor(get<ICacheInterceptor>())
             .addInterceptor(get<TokenInterceptor>())
-            .authenticator(SpotifyAuthenticator(get(), get()))
+            .authenticator(
+                SpotifyAuthenticator(get(named(spotifyAuthorizationQualifier)), get(), get())
+            )
             .cache(get<Cache>())
             .build()
     )
@@ -77,7 +81,7 @@ val spotifyApiModule = module {
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(get<HttpLoggingInterceptor>())
-                    .addInterceptor(get<ConnectivityInterceptor>())
+                    .addInterceptor(get<IConnectivityInterceptor>())
                     .build()
             )
             .build()

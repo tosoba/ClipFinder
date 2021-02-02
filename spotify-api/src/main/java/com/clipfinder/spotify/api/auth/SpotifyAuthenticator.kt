@@ -1,9 +1,8 @@
 package com.clipfinder.spotify.api.auth
 
-import android.util.Base64
+import ClipFinder.BuildConfig
 import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.spotify.token.SpotifyTokensHolder
-import com.clipfinder.spotify.api.BuildConfig
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
 import okhttp3.Authenticator
@@ -12,13 +11,10 @@ import okhttp3.Response
 import okhttp3.Route
 
 class SpotifyAuthenticator(
+    private val authorization: String,
     private val tokensHolder: SpotifyTokensHolder,
     private val tokenEndpoints: TokenEndpoints
 ) : Authenticator {
-
-    private val authorization: String
-        get() = "Basic ${Base64.encodeToString("${BuildConfig.SPOTIFY_CLIENT_ID}:${BuildConfig.SPOTIFY_CLIENT_SECRET}".toByteArray(), Base64.NO_WRAP)}"
-
     override fun authenticate(route: Route?, response: Response): Request = if (tokensHolder.tokensPrivate) {
         authenticatePrivate(response)
     } else {
