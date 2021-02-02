@@ -13,6 +13,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "SPOTIFY_CLIENT_ID", project.hasProperty("spotify.clientId") ? ("\"" + project.properties["spotify.clientId"] + "\"") : System.getenv("spotify.clientId")
     }
 
     buildTypes {

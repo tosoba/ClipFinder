@@ -13,6 +13,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "SPOTIFY_CLIENT_ID", project.hasProperty("spotify.clientId") ? ("\"" + project.properties["spotify.clientId"] + "\"") : System.getenv("spotify.clientId")
+        buildConfigField "String", "SPOTIFY_CLIENT_SECRET", project.hasProperty("spotify.clientSecret") ? ("\"" + project.properties["spotify.clientSecret"] + "\"") : System.getenv("spotify.clientSecret")
     }
 
     buildTypes {

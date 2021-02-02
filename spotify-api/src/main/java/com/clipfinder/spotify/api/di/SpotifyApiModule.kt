@@ -1,7 +1,6 @@
 package com.clipfinder.spotify.api.di
 
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
-import com.clipfinder.spotify.api.R
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
 import com.clipfinder.spotify.api.adapter.OffsetDateTimeAdapter
@@ -22,7 +21,6 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -31,32 +29,23 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 
-private inline fun <reified T> Scope.clientFor(): T = with(androidContext()) {
-    Retrofit.Builder()
-        .baseUrl("https://api.spotify.com/v1/")
-        .addConverterFactory(get<ScalarsConverterFactory>())
-        .addConverterFactory(get<MoshiConverterFactory>())
-        .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
-        .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
-        .client(
-            OkHttpClient.Builder()
-                .addInterceptor(get<HttpLoggingInterceptor>())
-                .addInterceptor(get<CacheInterceptor>())
-                .addInterceptor(get<TokenInterceptor>())
-                .authenticator(
-                    SpotifyAuthenticator(
-                        getString(R.string.spotify_client_id),
-                        getString(R.string.spotify_client_secret),
-                        get(),
-                        get()
-                    )
-                )
-                .cache(get<Cache>())
-                .build()
-        )
-        .build()
-        .create(T::class.java)
-}
+private inline fun <reified T> Scope.clientFor(): T = Retrofit.Builder()
+    .baseUrl("https://api.spotify.com/v1/")
+    .addConverterFactory(get<ScalarsConverterFactory>())
+    .addConverterFactory(get<MoshiConverterFactory>())
+    .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
+    .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
+    .client(
+        OkHttpClient.Builder()
+            .addInterceptor(get<HttpLoggingInterceptor>())
+            .addInterceptor(get<CacheInterceptor>())
+            .addInterceptor(get<TokenInterceptor>())
+            .authenticator(SpotifyAuthenticator(get(), get()))
+            .cache(get<Cache>())
+            .build()
+    )
+    .build()
+    .create(T::class.java)
 
 val spotifyApiModule = module {
     single {

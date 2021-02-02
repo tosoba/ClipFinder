@@ -16,6 +16,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "SPOTIFY_CLIENT_ID", project.hasProperty("spotify.clientId") ? ("\"" + project.properties["spotify.clientId"] + "\"") : System.getenv("spotify.clientId")
+        buildConfigField "String", "SPOTIFY_CLIENT_SECRET", project.hasProperty("spotify.clientSecret") ? ("\"" + project.properties["spotify.clientSecret"] + "\"") : System.getenv("spotify.clientSecret")
+        buildConfigField "String", "SPOTIFY_REDIRECT_URI", project.hasProperty("spotify.redirectUri") ? ("\"" + project.properties["spotify.redirectUri"] + "\"") : System.getenv("spotify.redirectUri")
     }
 
     buildTypes {

@@ -2,24 +2,29 @@ package com.example.core.android.spotify.auth
 
 import android.content.Intent
 import android.net.Uri
+import com.example.core.android.spotify.BuildConfig
 import com.example.core.android.spotify.model.SpotifyAuthResponse
 import com.example.core.android.spotify.preferences.SpotifyPreferences
 import io.reactivex.Single
 import net.openid.appauth.*
 
 class SpotifyManualAuth(
-    private val clientId: String,
-    private val redirectUri: String,
-    private val scopes: Array<String>,
     private val authService: AuthorizationService,
-    private val authServiceConfig: AuthorizationServiceConfiguration,
     private val preferences: SpotifyPreferences
 ) {
     val authRequestIntent: Intent
         get() = authService.getAuthorizationRequestIntent(
             AuthorizationRequest
-                .Builder(authServiceConfig, clientId, ResponseTypeValues.CODE, Uri.parse(redirectUri))
-                .setScopes(*scopes)
+                .Builder(
+                    AuthorizationServiceConfiguration(
+                        Uri.parse(AUTHORIZATION_ENDPOINT_URL),
+                        Uri.parse(TOKEN_ENDPOINT_URL)
+                    ),
+                    BuildConfig.SPOTIFY_CLIENT_ID,
+                    ResponseTypeValues.CODE,
+                    Uri.parse(BuildConfig.SPOTIFY_REDIRECT_URI)
+                )
+                .setScopes(*SCOPES)
                 .build()
         )
 
@@ -50,4 +55,18 @@ class SpotifyManualAuth(
             }
         }
         .doOnSuccess { (accessToken, refreshToken) -> preferences.setPrivateTokens(accessToken, refreshToken) }
+
+    companion object {
+        private const val AUTHORIZATION_ENDPOINT_URL = "https://accounts.spotify.com/authorize"
+        private const val TOKEN_ENDPOINT_URL = "https://accounts.spotify.com/api/token"
+        private val SCOPES = arrayOf(
+            "user-read-email",
+            "user-read-private",
+            "user-library-read",
+            "user-top-read",
+            "playlist-read-collaborative",
+            "playlist-read-private",
+            "streaming"
+        )
+    }
 }

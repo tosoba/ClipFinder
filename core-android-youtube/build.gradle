@@ -16,6 +16,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "YOUTUBE_API_KEY", project.hasProperty("youtube.apiKey") ? ("\"" + project.properties["youtube.apiKey"] + "\"") : System.getenv("youtube.apiKey")
     }
 
     buildTypes {

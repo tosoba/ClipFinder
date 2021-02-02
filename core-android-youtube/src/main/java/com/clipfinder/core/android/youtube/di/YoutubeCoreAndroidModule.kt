@@ -1,6 +1,5 @@
 package com.clipfinder.core.android.youtube.di
 
-import com.clipfinder.core.android.youtube.R
 import com.clipfinder.core.android.youtube.api.YoutubeApi
 import com.clipfinder.core.android.youtube.db.YoutubeDb
 import com.clipfinder.core.android.youtube.db.model.SearchResponseEntity
@@ -37,7 +36,7 @@ enum class YoutubeSearchStoreType {
 
 val youtubeCoreAndroidModule = module {
     single<YouTube> { YouTube.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), null).build() }
-    single { YoutubeApi(androidContext().getString(R.string.youtube_api_key), get()) } bind IYoutubeApi::class
+    single { YoutubeApi(get()) } bind IYoutubeApi::class
     single { androidContext().buildRoom<YoutubeDb>() }
 
     single(YoutubeSearchStoreType.QUERY.qualifier) {

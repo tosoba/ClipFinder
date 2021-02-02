@@ -9,12 +9,12 @@ import com.google.api.services.youtube.model.SearchListResponse
 import io.reactivex.Single
 import timber.log.Timber
 
-class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutubeApi {
+class YoutubeApi(private val youtube: YouTube) : IYoutubeApi {
     override fun search(query: String, pageToken: String?): Single<SearchListResponse> = youtube
         .Search()
         .list(listOf("snippet"))
         .setType(listOf("video"))
-        .setKey(key)
+        .setKey(BuildConfig.YOUTUBE_API_KEY)
         .setQ(query)
         .run { pageToken?.let(::setPageToken) ?: this }
         .single
@@ -24,7 +24,7 @@ class YoutubeApi(private val key: String, private val youtube: YouTube) : IYoutu
         .Search()
         .list(listOf("snippet"))
         .setType(listOf("video"))
-        .setKey(key)
+        .setKey(BuildConfig.YOUTUBE_API_KEY)
         .setRelatedToVideoId(videoId)
         .run { pageToken?.let(::setPageToken) ?: this }
         .single
