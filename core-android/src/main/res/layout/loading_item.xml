@@ -7,7 +7,7 @@
 
         <variable
             name="viewState"
-            type="com.example.core.android.view.recyclerview.item.LoadingItemViewState" />
+            type="com.clipfinder.core.android.view.recyclerview.item.LoadingItemViewState" />
 
     </data>
 

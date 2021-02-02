@@ -7,7 +7,7 @@
 
         <variable
             name="video"
-            type="com.example.core.android.model.videos.Video" />
+            type="com.clipfinder.core.android.model.videos.Video" />
 
         <variable
             name="itemClicked"

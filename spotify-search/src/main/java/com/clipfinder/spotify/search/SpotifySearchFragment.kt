@@ -10,16 +10,16 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchBinding
-import com.example.core.android.base.fragment.ItemListFragment
+import com.clipfinder.core.android.base.fragment.ItemListFragment
 import com.clipfinder.core.model.Loadable
 import com.clipfinder.core.model.PagedList
-import com.example.core.android.spotify.model.*
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.newMvRxFragmentWith
-import com.example.core.android.util.ext.parentFragmentViewModel
-import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.loadableCollectionController
-import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.clipfinder.core.android.spotify.model.*
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.newMvRxFragmentWith
+import com.clipfinder.core.android.util.ext.parentFragmentViewModel
+import com.clipfinder.core.android.util.ext.show
+import com.clipfinder.core.android.view.epoxy.loadableCollectionController
+import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 import org.koin.android.ext.android.inject
 import kotlin.reflect.KProperty1
 

@@ -11,14 +11,14 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.account.R
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountTopBinding
-import com.example.core.android.largeTextCenter
+import com.clipfinder.core.android.largeTextCenter
 import com.clipfinder.core.model.Empty
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.Column
-import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.android.spotify.model.clickableListItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.show
+import com.clipfinder.core.android.view.epoxy.Column
+import com.clipfinder.core.android.view.epoxy.injectedTypedController
+import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountTopFragment : BaseMvRxFragment() {

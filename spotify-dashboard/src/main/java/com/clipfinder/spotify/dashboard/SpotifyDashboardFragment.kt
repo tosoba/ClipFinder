@@ -12,17 +12,17 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
-import com.example.core.android.base.fragment.HasMainToolbar
-import com.example.core.android.base.handler.NavigationDrawerController
-import com.example.core.android.spotify.TopTrackItemBindingModel_
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.mainContentFragment
-import com.example.core.android.util.ext.show
-import com.example.core.android.util.ext.showDrawerHamburger
-import com.example.core.android.view.epoxy.Column
-import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.android.base.fragment.HasMainToolbar
+import com.clipfinder.core.android.base.handler.NavigationDrawerController
+import com.clipfinder.core.android.spotify.TopTrackItemBindingModel_
+import com.clipfinder.core.android.spotify.model.clickableListItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.mainContentFragment
+import com.clipfinder.core.android.util.ext.show
+import com.clipfinder.core.android.util.ext.showDrawerHamburger
+import com.clipfinder.core.android.view.epoxy.Column
+import com.clipfinder.core.android.view.epoxy.injectedTypedController
+import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {

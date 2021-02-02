@@ -7,17 +7,17 @@
 
         <variable
             name="view"
-            type="com.example.soundcloudplaylist.SoundCloudPlaylistView" />
+            type="com.clipfinder.soundcloudplaylist.SoundCloudPlaylistView" />
     </data>
 
-    <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/sound_cloud_playlist_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
-        tools:context="com.example.soundcloudplaylist.SoundCloudPlaylistFragment">
+        tools:context="com.clipfinder.soundcloudplaylist.SoundCloudPlaylistFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/sound_cloud_playlist_app_bar"
@@ -100,7 +100,7 @@
             app:layout_anchor="@id/sound_cloud_playlist_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
-    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
+    </com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
 

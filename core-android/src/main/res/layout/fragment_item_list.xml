@@ -3,4 +3,4 @@
     android:id="@+id/item_list_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.core.android.base.fragment.ItemListFragment" />
+    tools:context="com.clipfinder.core.android.base.fragment.ItemListFragment" />

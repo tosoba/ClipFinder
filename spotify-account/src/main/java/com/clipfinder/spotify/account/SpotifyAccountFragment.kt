@@ -13,12 +13,12 @@ import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
 import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
 import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
 import com.clipfinder.spotify.account.top.SpotifyAccountTopFragment
-import com.example.core.android.base.fragment.HasMainToolbar
-import com.example.core.android.base.handler.NavigationDrawerController
-import com.example.core.android.util.ext.mainContentFragment
-import com.example.core.android.util.ext.showDrawerHamburger
-import com.example.core.android.view.binding.viewBinding
-import com.example.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.clipfinder.core.android.base.fragment.HasMainToolbar
+import com.clipfinder.core.android.base.handler.NavigationDrawerController
+import com.clipfinder.core.android.util.ext.mainContentFragment
+import com.clipfinder.core.android.util.ext.showDrawerHamburger
+import com.clipfinder.core.android.view.binding.viewBinding
+import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
     private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)

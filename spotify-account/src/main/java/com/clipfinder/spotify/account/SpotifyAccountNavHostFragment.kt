@@ -1,7 +1,7 @@
 package com.clipfinder.spotify.account
 
 import androidx.fragment.app.Fragment
-import com.example.core.android.base.fragment.BaseNavHostFragment
+import com.clipfinder.core.android.base.fragment.BaseNavHostFragment
 
 class SpotifyAccountNavHostFragment : BaseNavHostFragment() {
     override val layoutId: Int = R.layout.fragment_spotify_account_host

@@ -6,7 +6,7 @@
 
         <variable
             name="track"
-            type="com.example.core.android.spotify.model.TopTrack" />
+            type="com.clipfinder.core.android.spotify.model.TopTrack" />
 
         <variable
             name="itemClicked"

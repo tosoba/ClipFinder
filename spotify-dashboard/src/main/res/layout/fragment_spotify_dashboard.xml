@@ -1,6 +1,6 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,6 +33,6 @@
             android:descendantFocusability="blocksDescendants"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
+    </com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>

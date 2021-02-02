@@ -11,28 +11,28 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
-import com.example.core.android.headerItem
-import com.example.core.android.loadingIndicator
+import com.clipfinder.core.android.headerItem
+import com.clipfinder.core.android.loadingIndicator
 import com.clipfinder.core.model.Failed
 import com.clipfinder.core.model.LoadingInProgress
 import com.clipfinder.core.model.Ready
-import com.example.core.android.radarChart
-import com.example.core.android.reloadControl
-import com.example.core.android.spotify.controller.SpotifyTrackController
-import com.example.core.android.spotify.fragment.ISpotifyTrackFragment
-import com.example.core.android.spotify.model.Track
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.model.infoItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.findAncestorFragmentOfType
-import com.example.core.android.util.ext.newMvRxFragmentWith
-import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.Column
-import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
-import com.example.core.android.view.radarchart.RadarChartAxisView
-import com.example.core.android.view.radarchart.RadarChartView
-import com.example.core.android.view.radarchart.RadarMarkerView
+import com.clipfinder.core.android.radarChart
+import com.clipfinder.core.android.reloadControl
+import com.clipfinder.core.android.spotify.controller.SpotifyTrackController
+import com.clipfinder.core.android.spotify.fragment.ISpotifyTrackFragment
+import com.clipfinder.core.android.spotify.model.Track
+import com.clipfinder.core.android.spotify.model.clickableListItem
+import com.clipfinder.core.android.spotify.model.infoItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.findAncestorFragmentOfType
+import com.clipfinder.core.android.util.ext.newMvRxFragmentWith
+import com.clipfinder.core.android.util.ext.show
+import com.clipfinder.core.android.view.epoxy.Column
+import com.clipfinder.core.android.view.epoxy.injectedTypedController
+import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.android.view.radarchart.RadarChartAxisView
+import com.clipfinder.core.android.view.radarchart.RadarChartView
+import com.clipfinder.core.android.view.radarchart.RadarMarkerView
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
 import org.koin.android.ext.android.inject
@@ -124,7 +124,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                 axisMaximum = 1f,
                                 drawLabels = false
                             ),
-                            markerView = RadarMarkerView(context, R.layout.radar_marker_view)
+                            markerView = _root_ide_package_.com.clipfinder.core.android.view.radarchart.RadarMarkerView(context, R.layout.radar_marker_view)
                         )
                     )
                 }

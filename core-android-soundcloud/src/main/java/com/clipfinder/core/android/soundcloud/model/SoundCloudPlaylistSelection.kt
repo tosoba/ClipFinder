@@ -2,7 +2,7 @@ package com.clipfinder.core.android.soundcloud.model
 
 import android.os.Parcelable
 import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylistSelection
-import com.example.core.android.model.soundcloud.SoundCloudPlaylist
+import com.clipfinder.core.android.model.soundcloud.SoundCloudPlaylist
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

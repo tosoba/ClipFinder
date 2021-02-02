@@ -5,10 +5,10 @@
 
         <variable
             name="artist"
-            type="androidx.lifecycle.MutableLiveData&lt;com.example.core.android.spotify.model.Artist&gt;" />
+            type="androidx.lifecycle.MutableLiveData&lt;com.clipfinder.core.android.spotify.model.Artist&gt;" />
     </data>
 
-    <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/artist_root_layout"
@@ -97,7 +97,7 @@
             app:layout_anchor="@id/artist_app_bar"
             app:layout_anchorGravity="bottom|end" />
 
-    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
+    </com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout>
 </layout>
 
 

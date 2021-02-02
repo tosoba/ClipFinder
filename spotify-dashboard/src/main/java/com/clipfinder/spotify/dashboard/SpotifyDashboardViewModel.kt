@@ -14,12 +14,12 @@ import com.clipfinder.core.spotify.usecase.GetCategories
 import com.clipfinder.core.spotify.usecase.GetDailyViralTracks
 import com.clipfinder.core.spotify.usecase.GetFeaturedPlaylists
 import com.clipfinder.core.spotify.usecase.GetNewReleases
-import com.example.core.android.base.viewmodel.MvRxViewModel
+import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.PagedList
-import com.example.core.android.spotify.model.*
-import com.example.core.android.spotify.preferences.SpotifyPreferences
-import com.example.core.android.util.ext.offset
-import com.example.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.android.spotify.model.*
+import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
+import com.clipfinder.core.android.util.ext.offset
+import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.koin.android.ext.android.get

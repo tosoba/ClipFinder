@@ -9,14 +9,14 @@
 
         <import type="androidx.lifecycle.MutableLiveData" />
 
-        <import type="com.example.core.android.spotify.model.Track" />
+        <import type="com.clipfinder.core.android.spotify.model.Track" />
 
         <variable
             name="track"
             type="MutableLiveData&lt;Track&gt;" />
     </data>
 
-    <com.example.core.android.view.coordinator.NestedCoordinatorLayout
+    <com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
@@ -115,6 +115,6 @@
             android:background="@drawable/spotify_main_background_gradient"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
+    </com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>

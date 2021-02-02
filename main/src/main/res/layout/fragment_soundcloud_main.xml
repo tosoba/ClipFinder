@@ -4,7 +4,7 @@
 
         <variable
             name="fragmentView"
-            type="com.example.main.soundcloud.SoundCloudMainView" />
+            type="com.clipfinder.main.soundcloud.SoundCloudMainView" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,7 +32,7 @@
             android:visibility="gone"
             app:layout_anchor="@id/sound_cloud_bottom_navigation_view"
             app:layout_anchorGravity="top|right"
-            app:layout_behavior="com.example.core.android.view.behavior.BottomFabLayoutBehavior"
+            app:layout_behavior="com.clipfinder.core.android.view.behavior.BottomFabLayoutBehavior"
             app:useCompatPadding="true" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -44,7 +44,7 @@
             android:background="@color/colorPrimaryDark"
             app:itemIconTint="@color/sound_cloud_bottom_navigation_color"
             app:itemTextColor="@color/sound_cloud_bottom_navigation_color"
-            app:layout_behavior="com.example.core.android.view.behavior.BottomNavLayoutBehavior"
+            app:layout_behavior="com.clipfinder.core.android.view.behavior.BottomNavLayoutBehavior"
             app:menu="@menu/sound_cloud_bottom_navigation" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

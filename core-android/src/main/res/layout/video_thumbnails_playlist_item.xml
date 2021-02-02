@@ -5,7 +5,7 @@
 
         <variable
             name="view"
-            type="com.example.core.android.view.viewflipper.PlaylistThumbnailView" />
+            type="com.clipfinder.core.android.view.viewflipper.PlaylistThumbnailView" />
     </data>
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

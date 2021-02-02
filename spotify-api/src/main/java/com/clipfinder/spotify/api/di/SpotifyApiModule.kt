@@ -12,8 +12,8 @@ import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.PlaylistItemObject
 import com.clipfinder.spotify.api.model.PlaylistItemType
 import com.clipfinder.spotify.api.model.TrackObject
-import com.example.core.android.interceptor.CacheInterceptor
-import com.example.core.android.interceptor.ConnectivityInterceptor
+import com.clipfinder.core.android.interceptor.CacheInterceptor
+import com.clipfinder.core.android.interceptor.ConnectivityInterceptor
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter

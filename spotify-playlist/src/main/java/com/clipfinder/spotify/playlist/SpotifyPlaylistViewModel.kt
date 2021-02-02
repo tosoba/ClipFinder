@@ -7,11 +7,11 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.ext.map
 import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
-import com.example.core.android.base.viewmodel.MvRxViewModel
+import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.PagedList
-import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.offset
-import com.example.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.android.spotify.model.Track
+import com.clipfinder.core.android.util.ext.offset
+import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
 import org.koin.android.ext.android.get
 
 private typealias State = SpotifyPlaylistState

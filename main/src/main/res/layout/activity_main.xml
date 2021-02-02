@@ -5,13 +5,13 @@
 
         <import type="android.view.View" />
 
-        <import type="com.example.main.PlayerState" />
+        <import type="com.clipfinder.main.PlayerState" />
 
-        <import type="com.example.main.MainContent" />
+        <import type="com.clipfinder.main.MainContent" />
 
         <variable
             name="mainActivityView"
-            type="com.example.main.MainView" />
+            type="com.clipfinder.main.MainView" />
 
         <variable
             name="playerState"
@@ -49,7 +49,7 @@
             app:umanoShadowHeight="4dp"
             tools:context=".main.MainActivity">
 
-            <com.example.core.android.view.viewpager.LockableViewPager
+            <com.clipfinder.core.android.view.viewpager.LockableViewPager
                 android:id="@+id/main_content_view_pager"
                 offScreenPageLimit="@{mainActivityView.offScreenPageLimit}"
                 swipeLocked="@{true}"
@@ -75,7 +75,7 @@
 
                 <fragment
                     android:id="@+id/youtube_player_fragment"
-                    android:name="com.example.youtubeplayer.YoutubePlayerFragment"
+                    android:name="com.clipfinder.youtubeplayer.YoutubePlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -84,7 +84,7 @@
 
                 <fragment
                     android:id="@+id/related_videos_fragment"
-                    android:name="com.example.youtuberelatedvideos.YoutubeRelatedFragment"
+                    android:name="com.clipfinder.youtuberelatedvideos.YoutubeRelatedFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -113,7 +113,7 @@
 
                 <fragment
                     android:id="@+id/spotify_player_fragment"
-                    android:name="com.example.spotifyplayer.SpotifyPlayerFragment"
+                    android:name="com.clipfinder.spotifyplayer.SpotifyPlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -122,7 +122,7 @@
 
                 <fragment
                     android:id="@+id/similar_tracks_fragment"
-                    android:name="com.example.itemlist.spotify.SpotifyTracksFragment"
+                    android:name="com.clipfinder.itemlist.spotify.SpotifyTracksFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:additional_hint_text=""
@@ -142,7 +142,7 @@
 
                 <fragment
                     android:id="@+id/sound_cloud_player_fragment"
-                    android:name="com.example.soundcloudplayer.SoundCloudPlayerFragment"
+                    android:name="com.clipfinder.soundcloudplayer.SoundCloudPlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"

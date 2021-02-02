@@ -14,14 +14,14 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
-import com.example.core.android.base.fragment.BackPressedHandler
+import com.clipfinder.core.android.base.fragment.BackPressedHandler
 import com.clipfinder.core.model.WithValue
-import com.example.core.android.spotify.model.Artist
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.injectedTypedController
-import com.example.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.android.spotify.model.Artist
+import com.clipfinder.core.android.spotify.model.clickableListItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.*
+import com.clipfinder.core.android.view.epoxy.injectedTypedController
+import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 

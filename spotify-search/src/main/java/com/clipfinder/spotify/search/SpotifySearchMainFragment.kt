@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.airbnb.mvrx.args
 import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchMainBinding
-import com.example.core.android.base.IFragmentFactory
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.*
-import com.example.core.android.view.binding.viewBinding
-import com.example.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.clipfinder.core.android.base.IFragmentFactory
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.*
+import com.clipfinder.core.android.view.binding.viewBinding
+import com.clipfinder.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import org.koin.android.ext.android.get
 
 class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main) {

@@ -2,9 +2,9 @@ package com.clipfinder.spotify.track.videos
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.example.core.android.base.trackvideos.BaseTrackVideosViewModel
-import com.example.core.android.base.trackvideos.TrackVideosViewState
-import com.example.core.android.spotify.model.Track
+import com.clipfinder.core.android.base.trackvideos.BaseTrackVideosViewModel
+import com.clipfinder.core.android.base.trackvideos.TrackVideosViewState
+import com.clipfinder.core.android.spotify.model.Track
 
 class SpotifyTrackVideosViewModel(
     initialState: TrackVideosViewState<Track>

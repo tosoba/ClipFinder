@@ -5,7 +5,7 @@
 
         <variable
             name="user"
-            type="com.example.core.android.spotify.model.User" />
+            type="com.clipfinder.core.android.spotify.model.User" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

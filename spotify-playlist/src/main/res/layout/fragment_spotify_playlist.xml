@@ -7,10 +7,10 @@
 
         <variable
             name="playlist"
-            type="com.example.core.android.spotify.model.Playlist" />
+            type="com.clipfinder.core.android.spotify.model.Playlist" />
     </data>
 
-    <com.example.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/playlist_root_layout"
@@ -99,7 +99,7 @@
             app:layout_anchor="@id/playlist_app_bar"
             app:layout_anchorGravity="bottom|right" />
 
-    </com.example.core.android.view.coordinator.NestedCoordinatorLayout>
+    </com.clipfinder.core.android.view.coordinator.NestedCoordinatorLayout>
 
 </layout>
 

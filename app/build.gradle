@@ -7,9 +7,9 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.example.there.findclips"
+        applicationId "com.clipfinder.app.findclips"
         manifestPlaceholders = [
-                appAuthRedirectScheme: 'com.example.there.findclips'
+                appAuthRedirectScheme: 'com.clipfinder.app.findclips'
         ]
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

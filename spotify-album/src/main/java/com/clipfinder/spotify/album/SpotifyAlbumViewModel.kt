@@ -10,13 +10,13 @@ import com.clipfinder.core.model.Paged
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetArtists
 import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
-import com.example.core.android.base.viewmodel.MvRxViewModel
+import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.PagedList
-import com.example.core.android.spotify.model.Artist
-import com.example.core.android.spotify.model.SimplifiedArtist
-import com.example.core.android.spotify.model.Track
-import com.example.core.android.util.ext.offset
-import com.example.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.android.spotify.model.Artist
+import com.clipfinder.core.android.spotify.model.SimplifiedArtist
+import com.clipfinder.core.android.spotify.model.Track
+import com.clipfinder.core.android.util.ext.offset
+import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 

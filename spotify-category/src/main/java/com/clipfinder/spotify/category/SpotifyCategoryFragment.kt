@@ -15,11 +15,11 @@ import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.category.databinding.FragmentSpotifyCategoryBinding
-import com.example.core.android.spotify.model.Category
-import com.example.core.android.spotify.model.clickableGridListItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.*
-import com.example.core.android.view.epoxy.loadableCollectionController
+import com.clipfinder.core.android.spotify.model.Category
+import com.clipfinder.core.android.spotify.model.clickableGridListItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.*
+import com.clipfinder.core.android.view.epoxy.loadableCollectionController
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject

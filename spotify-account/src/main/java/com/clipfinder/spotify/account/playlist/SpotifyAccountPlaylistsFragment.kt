@@ -13,12 +13,12 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.spotify.account.R
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountPlaylistsBinding
-import com.example.core.android.LargeTextCenterBindingModel_
+import com.clipfinder.core.android.LargeTextCenterBindingModel_
 import com.clipfinder.core.model.Empty
-import com.example.core.android.spotify.model.clickableListItem
-import com.example.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.example.core.android.util.ext.show
-import com.example.core.android.view.epoxy.loadableCollectionController
+import com.clipfinder.core.android.spotify.model.clickableListItem
+import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
+import com.clipfinder.core.android.util.ext.show
+import com.clipfinder.core.android.view.epoxy.loadableCollectionController
 import org.koin.android.ext.android.inject
 
 class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
@@ -32,7 +32,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
             loadMore = viewModel::loadPlaylists,
             shouldOverrideBuildModels = { (userLoggedIn, playlists) -> !userLoggedIn && playlists is Empty },
             overrideBuildModels = {
-                LargeTextCenterBindingModel_()
+                _root_ide_package_.com.clipfinder.core.android.LargeTextCenterBindingModel_()
                     .id("spotify-account-playlists-user-not-logged-in")
                     .text(getString(R.string.spotify_login_required))
                     .spanSizeOverride { _, _, _ ->

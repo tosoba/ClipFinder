@@ -12,7 +12,7 @@ import com.dropbox.android.external.store4.Store
 import com.dropbox.android.external.store4.StoreBuilder
 import com.dropbox.store.rx2.ofMaybe
 import com.dropbox.store.rx2.ofSingle
-import com.example.core.android.util.ext.buildRoom
+import com.clipfinder.core.android.util.ext.buildRoom
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube

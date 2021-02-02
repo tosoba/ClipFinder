@@ -9,7 +9,7 @@
 
         <variable
             name="fragmentView"
-            type="com.example.spotifyplayer.SpotifyPlayerView" />
+            type="com.clipfinder.spotifyplayer.SpotifyPlayerView" />
 
         <variable
             name="playbackSeekBarMaxValue"
