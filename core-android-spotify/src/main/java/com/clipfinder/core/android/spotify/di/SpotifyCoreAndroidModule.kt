@@ -22,7 +22,7 @@ val spotifyCoreAndroidModule = module {
     } binds arrayOf(AccessTokenHolder::class, SpotifyTokensHolder::class)
 
     single {
-        SpotifyAutoAuth(_root_ide_package_.com.clipfinder.core.android.spotify.BuildConfig.SPOTIFY_CLIENT_ID, _root_ide_package_.com.clipfinder.core.android.spotify.BuildConfig.SPOTIFY_CLIENT_SECRET, get(), get())
+        SpotifyAutoAuth(BuildConfig.SPOTIFY_CLIENT_ID, BuildConfig.SPOTIFY_CLIENT_SECRET, get(), get())
     } bind ISpotifyAutoAuth::class
 
     single {

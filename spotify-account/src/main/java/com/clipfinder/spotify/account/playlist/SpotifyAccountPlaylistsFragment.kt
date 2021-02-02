@@ -32,7 +32,7 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
             loadMore = viewModel::loadPlaylists,
             shouldOverrideBuildModels = { (userLoggedIn, playlists) -> !userLoggedIn && playlists is Empty },
             overrideBuildModels = {
-                _root_ide_package_.com.clipfinder.core.android.LargeTextCenterBindingModel_()
+                LargeTextCenterBindingModel_()
                     .id("spotify-account-playlists-user-not-logged-in")
                     .text(getString(R.string.spotify_login_required))
                     .spanSizeOverride { _, _, _ ->

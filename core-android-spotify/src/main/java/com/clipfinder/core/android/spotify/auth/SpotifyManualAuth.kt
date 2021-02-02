@@ -20,9 +20,9 @@ class SpotifyManualAuth(
                         Uri.parse(AUTHORIZATION_ENDPOINT_URL),
                         Uri.parse(TOKEN_ENDPOINT_URL)
                     ),
-                    _root_ide_package_.com.clipfinder.core.android.spotify.BuildConfig.SPOTIFY_CLIENT_ID,
+                    BuildConfig.SPOTIFY_CLIENT_ID,
                     ResponseTypeValues.CODE,
-                    Uri.parse(_root_ide_package_.com.clipfinder.core.android.spotify.BuildConfig.SPOTIFY_REDIRECT_URI)
+                    Uri.parse(BuildConfig.SPOTIFY_REDIRECT_URI)
                 )
                 .setScopes(*SCOPES)
                 .build()

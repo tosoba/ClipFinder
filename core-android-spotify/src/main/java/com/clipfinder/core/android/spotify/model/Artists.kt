@@ -37,7 +37,7 @@ data class Artist(
 
 fun Artist.clickableListItem(
     itemClicked: () -> Unit
-): _root_ide_package_.com.clipfinder.core.android.ImageListItemBindingModel_ = _root_ide_package_.com.clipfinder.core.android.ImageListItemBindingModel_()
+): ImageListItemBindingModel_ = ImageListItemBindingModel_()
     .id(id)
     .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
     .imageUrl(iconUrl)

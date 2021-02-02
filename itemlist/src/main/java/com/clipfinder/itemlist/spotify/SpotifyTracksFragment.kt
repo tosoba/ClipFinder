@@ -18,8 +18,8 @@ class SpotifyTracksFragment : BaseListFragment<Track>() {
 
     override val listItemView: ListItemView<Track>
         get() = object : ListItemView<Track>(viewState.items) {
-            override val itemViewBinder: _root_ide_package_.com.clipfinder.core.android.view.recyclerview.binder.ItemBinder<Track>
-                get() = _root_ide_package_.com.clipfinder.core.android.view.recyclerview.binder.ItemBinderBase(BR.imageListItem, R.layout.named_image_grid_list_item)
+            override val itemViewBinder: ItemBinder<Track>
+                get() = ItemBinderBase(BR.imageListItem, R.layout.named_image_grid_list_item)
         }
 
     override fun fragmentToShowOnItemClick(item: Track): Fragment = fragmentFactory

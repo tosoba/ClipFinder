@@ -124,7 +124,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                 axisMaximum = 1f,
                                 drawLabels = false
                             ),
-                            markerView = _root_ide_package_.com.clipfinder.core.android.view.radarchart.RadarMarkerView(context, R.layout.radar_marker_view)
+                            markerView = RadarMarkerView(context, R.layout.radar_marker_view)
                         )
                     )
                 }

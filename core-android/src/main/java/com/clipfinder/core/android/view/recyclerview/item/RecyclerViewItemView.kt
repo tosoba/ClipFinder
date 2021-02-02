@@ -9,7 +9,7 @@ import com.clipfinder.core.android.view.recyclerview.listener.ClickHandler
 class RecyclerViewItemView<T>(
     val state: RecyclerViewItemViewState<T>,
     val listItemView: ListItemView<T>,
-    val onItemClickListener: _root_ide_package_.com.clipfinder.core.android.view.recyclerview.listener.ClickHandler<T>,
+    val onItemClickListener: ClickHandler<T>,
     val itemDecoration: RecyclerView.ItemDecoration? = null,
     val onScrollListener: RecyclerView.OnScrollListener? = null,
     val onReloadBtnClickListener: View.OnClickListener? = null,

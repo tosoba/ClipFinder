@@ -51,7 +51,7 @@ inline fun <S : MvRxState, I> BaseMvRxFragment.loadableCollectionController(
                 value.forEach { buildItem(it).spanSizeOverride { _, _, _ -> 1 }.addTo(this) }
 
                 if (loadable is FailedNext) {
-                    _root_ide_package_.com.clipfinder.core.android.ReloadControlBindingModel_()
+                    ReloadControlBindingModel_()
                         .id("reload-control")
                         .message(requireContext().getString(R.string.error_occurred))
                         .onVisibilityStateChanged { _, _, visibilityState ->

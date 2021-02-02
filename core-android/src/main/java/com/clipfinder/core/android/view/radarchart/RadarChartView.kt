@@ -16,7 +16,7 @@ class RadarChartView(
     val webLineWidthInner: Float = 1f,
     val webColorInner: Int = Color.LTGRAY,
     val webAlpha: Int = 100,
-    val markerView: _root_ide_package_.com.clipfinder.core.android.view.radarchart.RadarMarkerView,
+    val markerView: RadarMarkerView,
     val legendEnabled: Boolean = false,
     val nestedScrollingEnabled: Boolean = true
 )

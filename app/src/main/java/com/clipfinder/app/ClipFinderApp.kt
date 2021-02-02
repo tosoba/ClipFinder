@@ -40,7 +40,7 @@ class ClipFinderApp : Application() {
 
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
         Utils.init(this)
-        ViewTarget.setTagId(_root_ide_package_.com.clipfinder.app.R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
+        ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
     }
 
     override fun onTerminate() {
@@ -49,7 +49,7 @@ class ClipFinderApp : Application() {
     }
 
     private fun initTimber() {
-        if (com.clipfinder.app.BuildConfig.DEBUG) Timber.plant(DebugTree())
+        if (BuildConfig.DEBUG) Timber.plant(DebugTree())
     }
 
     private fun initLeakCanary() {
@@ -63,10 +63,10 @@ class ClipFinderApp : Application() {
             .createNotificationChannel(
                 NotificationChannel(
                     PlaybackNotification.CHANNEL_ID,
-                    getString(_root_ide_package_.com.clipfinder.app.R.string.channel_name),
+                    getString(R.string.channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT
                 ).apply {
-                    description = getString(_root_ide_package_.com.clipfinder.app.R.string.channel_description)
+                    description = getString(R.string.channel_description)
                 }
             )
     }

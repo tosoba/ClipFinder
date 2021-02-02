@@ -58,7 +58,7 @@ data class Video(
 
 fun Video.clickableListItem(
     itemClicked: (View) -> Unit
-): _root_ide_package_.com.clipfinder.core.android.VideoItemBindingModel_ = _root_ide_package_.com.clipfinder.core.android.VideoItemBindingModel_()
+): VideoItemBindingModel_ = VideoItemBindingModel_()
     .id(id)
     .itemClicked(itemClicked)
     .video(this)

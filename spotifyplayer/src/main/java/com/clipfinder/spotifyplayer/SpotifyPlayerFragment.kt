@@ -324,7 +324,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     override fun onAuthenticationComplete(accessToken: String) {
         if (spotifyPlayer == null) {
             spotifyPlayer = SpotifyPlayer
-                .Builder(Config(requireContext(), accessToken, _root_ide_package_.com.clipfinder.spotifyplayer.BuildConfig.SPOTIFY_CLIENT_ID))
+                .Builder(Config(requireContext(), accessToken, BuildConfig.SPOTIFY_CLIENT_ID))
                 .setAudioController(audioTrackController)
                 .build(
                     object : SpotifyPlayer.InitializationObserver {

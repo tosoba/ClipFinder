@@ -10,7 +10,7 @@ fun bindOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageCha
 }
 
 @BindingAdapter("swipeLocked")
-fun bindSwipeLocked(viewPager: _root_ide_package_.com.clipfinder.core.android.view.viewpager.LockableViewPager, swipeLocked: Boolean) {
+fun bindSwipeLocked(viewPager: LockableViewPager, swipeLocked: Boolean) {
     viewPager.swipeLocked = swipeLocked
 }
 

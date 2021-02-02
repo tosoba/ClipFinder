@@ -48,7 +48,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
                     ObservableField(false)
                 ),
                 listItemView,
-                _root_ide_package_.com.clipfinder.core.android.view.recyclerview.listener.ClickHandler { item ->
+                ClickHandler { item ->
                     onItemClick?.let { it(item) }
                         ?: run { navHostFragment?.showFragment(fragmentToShowOnItemClick(item), true) }
                 },
@@ -135,7 +135,7 @@ abstract class BaseListFragment<T : Parcelable> : Fragment() {
                 text = xmlHeaderText ?: defaultHeaderText
                 executePendingBindings()
             }
-        currentHeaderDecoration = _root_ide_package_.com.clipfinder.core.android.view.recyclerview.decoration.HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
+        currentHeaderDecoration = HeaderDecoration(binding.root, false, 1f, 0f, listColumnCount)
         return currentHeaderDecoration!!
     }
 

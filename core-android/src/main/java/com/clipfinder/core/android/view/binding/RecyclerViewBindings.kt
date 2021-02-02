@@ -27,7 +27,7 @@ private const val KEY_CLICK_HANDLER = -124
 @Suppress("UNCHECKED_CAST")
 @BindingAdapter("items")
 fun <T> setItems(recyclerView: RecyclerView, items: Collection<T>) {
-    val adapter = recyclerView.adapter as? _root_ide_package_.com.clipfinder.core.android.view.recyclerview.BindingRecyclerViewAdapter<T>?
+    val adapter = recyclerView.adapter as? BindingRecyclerViewAdapter<T>?
     if (adapter != null) {
         adapter.setItems(items)
     } else {
@@ -37,8 +37,8 @@ fun <T> setItems(recyclerView: RecyclerView, items: Collection<T>) {
 
 @Suppress("UNCHECKED_CAST")
 @BindingAdapter("clickHandler")
-fun <T> setHandler(recyclerView: RecyclerView, handler: _root_ide_package_.com.clipfinder.core.android.view.recyclerview.listener.ClickHandler<T>) {
-    val adapter = recyclerView.adapter as? _root_ide_package_.com.clipfinder.core.android.view.recyclerview.BindingRecyclerViewAdapter<T>?
+fun <T> setHandler(recyclerView: RecyclerView, handler: ClickHandler<T>) {
+    val adapter = recyclerView.adapter as? BindingRecyclerViewAdapter<T>?
     if (adapter != null) {
         adapter.setClickHandler(handler)
     } else {
@@ -48,10 +48,10 @@ fun <T> setHandler(recyclerView: RecyclerView, handler: _root_ide_package_.com.c
 
 @Suppress("UNCHECKED_CAST")
 @BindingAdapter("itemViewBinder")
-fun <T> setItemViewBinder(recyclerView: RecyclerView, itemViewMapper: _root_ide_package_.com.clipfinder.core.android.view.recyclerview.binder.ItemBinder<T>) {
+fun <T> setItemViewBinder(recyclerView: RecyclerView, itemViewMapper: ItemBinder<T>) {
     val items = recyclerView.getTag(KEY_ITEMS) as? Collection<T>
-    val clickHandler = recyclerView.getTag(KEY_CLICK_HANDLER) as? _root_ide_package_.com.clipfinder.core.android.view.recyclerview.listener.ClickHandler<T>
-    val adapter = _root_ide_package_.com.clipfinder.core.android.view.recyclerview.BindingRecyclerViewAdapter(itemViewMapper, items)
+    val clickHandler = recyclerView.getTag(KEY_CLICK_HANDLER) as? ClickHandler<T>
+    val adapter = BindingRecyclerViewAdapter(itemViewMapper, items)
     if (clickHandler != null) {
         adapter.setClickHandler(clickHandler)
     }

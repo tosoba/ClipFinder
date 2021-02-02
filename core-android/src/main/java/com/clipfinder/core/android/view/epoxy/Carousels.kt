@@ -75,7 +75,7 @@ inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
                     items = mapToItems(collection),
                     extraModels = when {
                         loadable is FailedNext -> listOf(
-                            _root_ide_package_.com.clipfinder.core.android.ReloadControlBindingModel_()
+                            ReloadControlBindingModel_()
                                 .id("reload-control-$idSuffix")
                                 .message(context.getString(R.string.error_occurred))
                                 .onVisibilityStateChanged { _, _, visibilityState ->
@@ -84,7 +84,7 @@ inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
                                 .onReloadClicked { _ -> loadItems() }
                         )
                         collection is CompletionTrackable && !collection.completed -> listOf(
-                            _root_ide_package_.com.clipfinder.core.android.LoadingIndicatorBindingModel_()
+                            LoadingIndicatorBindingModel_()
                                 .id("loading-more-$idSuffix")
                                 .onBind { _, _, _ -> loadItems() }
                         )
