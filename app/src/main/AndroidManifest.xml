@@ -53,7 +53,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.clipfinder.app.findclips"
+                    android:host="com.clipfinder.app"
                     android:path="/oauth2callback/"
                     android:scheme="app" />
             </intent-filter>
