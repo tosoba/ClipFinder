@@ -36,12 +36,12 @@ import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.OnNavigationDrawerClosedListerner
 import com.clipfinder.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
-import com.clipfinder.itemlist.spotify.SpotifyTracksFragment
 import com.clipfinder.main.databinding.ActivityMainBinding
 import com.clipfinder.main.databinding.DrawerHeaderBinding
 import com.clipfinder.main.soundcloud.SoundCloudMainFragment
 import com.clipfinder.main.spotify.SpotifyMainFragment
 import com.clipfinder.settings.SettingsActivity
+import com.clipfinder.spotify.track.SpotifyTrackFragment
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.sdk.android.player.ConnectionStateCallback
@@ -96,9 +96,9 @@ class MainActivity :
         get() = supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment)
             as? ISoundCloudPlayerFragment
 
-    private val similarTracksFragment: SpotifyTracksFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.similar_tracks_fragment)
-            as? SpotifyTracksFragment
+    private val spotifyTrackFragment: SpotifyTrackFragment?
+        get() = supportFragmentManager.findFragmentById(R.id.spotify_track_fragment)
+            as? SpotifyTrackFragment
 
     private val relatedVideosFragment: ISearchFragment?
         get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
@@ -262,15 +262,10 @@ class MainActivity :
         super.onCreate(savedInstanceState)
 
         initViewBindings()
-        setupNavigationFromSimilarTracks()
 
         addStatePropertyChangedCallbacks()
 
         checkPermissions()
-
-        viewModel.selectSubscribe(this, MainState::similarTracks) {
-            if (it is WithValue) similarTracksFragment?.resetItems(it.value.items)
-        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -445,7 +440,7 @@ class MainActivity :
     }
 
     override fun onTrackChanged(trackId: String) {
-        viewModel.loadSimilarTracks(trackId)
+        spotifyTrackFragment?.onNewTrack(trackId)
     }
 
     override fun loadVideo(video: Video) {
@@ -517,14 +512,6 @@ class MainActivity :
 
     override fun logOutPlayer() {
         spotifyPlayerFragment?.logOutPlayer()
-    }
-
-    private fun setupNavigationFromSimilarTracks() {
-        similarTracksFragment?.onItemClick = {
-            sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-            spotifyMainFragment?.currentNavHostFragment
-                ?.showFragment(fragmentFactory.newSpotifyTrackVideosFragment(it), true)
-        }
     }
 
     private fun addStatePropertyChangedCallbacks() {

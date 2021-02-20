@@ -134,6 +134,8 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
 
     override fun onNewTrack(track: Track) = viewModel.onNewTrack(track)
 
+    fun onNewTrack(id: String) = viewModel.onNewTrack(id)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_spotify_track, container, false)

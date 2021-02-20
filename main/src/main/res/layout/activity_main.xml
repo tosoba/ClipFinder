@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="@{playerState == PlayerState.VIDEO || playerState == PlayerState.VIDEO_PLAYLIST || playerState == PlayerState.SOUND_CLOUD_TRACK ? View.GONE : View.VISIBLE}"
-                    app:constraint_referenced_ids="similar_tracks_fragment,spotify_player_fragment" />
+                    app:constraint_referenced_ids="spotify_track_fragment,spotify_player_fragment" />
 
                 <fragment
                     android:id="@+id/spotify_player_fragment"
@@ -121,18 +121,14 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <fragment
-                    android:id="@+id/similar_tracks_fragment"
-                    android:name="com.clipfinder.itemlist.spotify.SpotifyTracksFragment"
+                    android:id="@+id/spotify_track_fragment"
+                    android:name="com.clipfinder.spotify.track.SpotifyTrackFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:additional_hint_text=""
-                    app:header_text="Similar tracks"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spotify_player_fragment"
-                    app:main_hint_text="@string/no_tracks_loaded_yet"
-                    app:should_show_header="true" />
+                    app:layout_constraintTop_toBottomOf="@id/spotify_player_fragment" />
 
                 <androidx.constraintlayout.widget.Group
                     android:layout_width="match_parent"

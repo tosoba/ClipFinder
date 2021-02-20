@@ -2,27 +2,19 @@ package com.clipfinder.main
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
 import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.usecase.GetCurrentUser
-import com.clipfinder.core.spotify.usecase.GetSimilarTracks
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.Empty
-import com.clipfinder.core.model.PagedList
-import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.model.User
-import com.clipfinder.core.android.util.ext.offset
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 
 class MainViewModel(
     initialState: MainState,
-    private val getSimilarTracks: GetSimilarTracks,
     private val getCurrentUser: GetCurrentUser
 ) : MvRxViewModel<MainState>(initialState) {
-    fun loadSimilarTracks(trackId: String) = loadPaged(MainState::similarTracks, getSimilarTracks::intoState, trackId, ::PagedList) { copy(similarTracks = it) }
     fun loadCurrentUser() = load(MainState::user, getCurrentUser::intoState) { copy(user = it) }
     fun setMainContent(mainContent: MainContent) = setState { copy(mainContent = mainContent) }
     fun setPlayerState(playerState: PlayerState) = setState { copy(playerState = playerState) }
@@ -34,7 +26,6 @@ class MainViewModel(
             viewModelContext: ViewModelContext, state: MainState
         ): MainViewModel = MainViewModel(
             state,
-            viewModelContext.activity.get(),
             viewModelContext.activity.get()
         )
     }
@@ -50,10 +41,3 @@ private fun GetCurrentUser.intoState(
                 ?: "https://t.scdn.co/media/derived/r-b-274x274_fd56efa72f4f63764b011b68121581d8_0_0_274_274.jpg"
         )
     }
-
-private fun GetSimilarTracks.intoState(
-    state: MainState, trackId: String
-): Single<Resource<Paged<List<Track>>>> = this(
-    applySchedulers = false,
-    args = GetSimilarTracks.Args(trackId, state.similarTracks.offset)
-).mapData { tracks -> tracks.map(::Track) }

@@ -146,6 +146,22 @@ open class MvRxViewModel<S : MvRxState>(
             .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
     }
 
+    protected fun <T, C : Collection<T>, Args> loadCollection(
+        prop: KProperty1<S, Loadable<C>>,
+        action: (S, Args) -> Single<Resource<C>>,
+        args: Args,
+        subscribeOnScheduler: Scheduler? = Schedulers.io(),
+        onError: (Throwable) -> Unit = ::log,
+        copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
+        reducer: S.(Loadable<C>) -> S
+    ) = withState { state ->
+        val loadable = state.valueOf(prop)
+        if (loadable is LoadingInProgress) return@withState
+        action(state, args)
+            .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+            .updateLoadableWithCollectionResource(prop, onError, copyWithLoading, reducer)
+    }
+
     protected fun <T, C : Collection<T>> Single<Resource<C>>.updateLoadableWithCollectionResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,

@@ -56,6 +56,7 @@ dependencies {
     implementation project(':itemlist')
     implementation project(':spotify-charts-api')
     implementation project(':spotifyplayer')
+    implementation project(':spotify-track')
     implementation project(':soundcloudplayer')
     implementation project(':settings')
     implementation project(':youtubeplayer')

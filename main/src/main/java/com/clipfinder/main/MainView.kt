@@ -25,7 +25,6 @@ data class MainState(
     val playerState: PlayerState = PlayerState.VIDEO,
     val isLoggedIn: Boolean = false,
     val itemFavouriteState: Boolean = false,
-    val similarTracks: Loadable<PagedList<Track>> = Empty,
     val mainContent: MainContent = MainContent.SPOTIFY,
     val user: Loadable<User> = Empty
 ) : MvRxState
