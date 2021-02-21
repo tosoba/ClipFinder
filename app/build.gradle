@@ -89,7 +89,6 @@ dependencies {
     implementation project(':core-android-soundcloud')
     implementation project(':core-android-spotify')
     implementation project(':core-android-youtube')
-    implementation project(':itemlist')
     implementation project(':main')
     implementation project(':settings')
     implementation project(':soundcloud-api')
