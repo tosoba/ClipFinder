@@ -44,23 +44,23 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val viewModel: SpotifyTrackViewModel by fragmentViewModel()
 
     private val epoxyController: TypedEpoxyController<SpotifyTrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<SpotifyTrackViewState> { (_, album, artists, similarTracks, audioFeaturesChartData) ->
+        injectedTypedController<SpotifyTrackViewState> { (_, track, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
             }
 
-            when (album) {
+            when (track) {
                 is LoadingInProgress -> loadingIndicator { id("loading-indicator-album") }
 
                 is Failed -> reloadControl {
                     id("albums-reload-control")
-                    onReloadClicked { _ -> viewModel.loadAlbum() }
+                    onReloadClicked { _ -> viewModel.loadTrack() }
                     message(requireContext().getString(R.string.error_occurred))
                 }
 
-                is Ready -> album.value
-                    .infoItem { show { factory.newSpotifyAlbumFragment(album.value) } }
+                is Ready -> track.value.album
+                    .infoItem { show { factory.newSpotifyAlbumFragment(track.value.album) } }
                     .addTo(this)
             }
 

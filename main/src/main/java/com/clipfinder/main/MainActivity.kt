@@ -191,9 +191,8 @@ class MainActivity :
                 //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
             }
 
-            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java).run {
-                startActivity(this)
-            }
+            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java)
+                .run { startActivity(this) }
 
             R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
 
@@ -260,11 +259,8 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initViewBindings()
-
-        addStatePropertyChangedCallbacks()
-
+        observeLoggedIn()
         checkPermissions()
     }
 
@@ -514,7 +510,7 @@ class MainActivity :
         spotifyPlayerFragment?.logOutPlayer()
     }
 
-    private fun addStatePropertyChangedCallbacks() {
+    private fun observeLoggedIn() {
         viewModel.selectSubscribe(this, MainState::isLoggedIn) { isLoggedIn ->
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
             binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn

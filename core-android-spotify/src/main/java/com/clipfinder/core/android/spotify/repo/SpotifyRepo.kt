@@ -182,6 +182,10 @@ class SpotifyRepo(
             )
         }
 
+    override fun getTrack(id: String): Single<Resource<ISpotifyTrack>> = tracksEndpoints
+        .getTrack(id = id)
+        .resource
+
     override fun getCurrentUsersTopTracks(
         offset: Int
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> = personalizationEndpoints

@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.airbnb.android:mvrx:1.0.2'
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
 
     implementation 'com.airbnb.android:epoxy:3.7.0'
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'

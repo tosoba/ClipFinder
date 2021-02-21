@@ -22,6 +22,7 @@ interface ISpotifyRepo {
     fun getTopTracksFromArtist(artistId: String): Single<Resource<List<ISpotifyTrack>>>
     fun search(query: String, offset: Int, type: String): Single<Resource<SpotifySearchResult>>
     fun getPlaylistTracks(playlistId: String, offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
+    fun getTrack(id: String): Single<Resource<ISpotifyTrack>>
     fun getCurrentUsersTopArtists(offset: Int): Single<Resource<Paged<List<ISpotifyArtist>>>>
     fun getCurrentUsersTopTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getCurrentUsersSavedTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
