@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
 import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
@@ -17,12 +18,13 @@ import com.clipfinder.core.android.base.fragment.HasMainToolbar
 import com.clipfinder.core.android.base.handler.NavigationDrawerController
 import com.clipfinder.core.android.util.ext.mainContentFragment
 import com.clipfinder.core.android.util.ext.showDrawerHamburger
-import com.clipfinder.core.android.view.binding.viewBinding
 import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
-    private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)
-    override val toolbar: Toolbar get() = binding.accountToolbar
+    private val binding: FragmentSpotifyAccountBinding
+        by viewBinding(FragmentSpotifyAccountBinding::bind)
+    override val toolbar: Toolbar
+        get() = binding.accountToolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()
