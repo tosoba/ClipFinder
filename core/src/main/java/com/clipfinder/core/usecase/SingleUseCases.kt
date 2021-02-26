@@ -7,7 +7,7 @@ abstract class SingleUseCase<Result>(private val schedulers: RxSchedulers) {
     protected abstract val result: Single<Result>
 
     operator fun invoke(
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Single<Result> = result
@@ -21,7 +21,7 @@ abstract class SingleUseCaseWithArgs<Args, Res>(private val schedulers: RxSchedu
 
     operator fun invoke(
         args: Args,
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Single<Res> = run(args)

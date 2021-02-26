@@ -7,7 +7,7 @@ abstract class ObservableUseCase<Result>(private val schedulers: RxSchedulers) {
     protected abstract val result: Observable<Result>
 
     operator fun invoke(
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Observable<Result> = result
@@ -21,7 +21,7 @@ abstract class ObservableUseCaseWithArgs<Args, Result>(private val schedulers: R
 
     operator fun invoke(
         args: Args,
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Observable<Result> = run(args)

@@ -43,7 +43,7 @@ class SoundCloudPlaylistViewModel(
 
         setState { copy(tracks = state.tracks.copyWithLoadingInProgress) }
         //TODO: SoundCloud api needs to be reworked to return Resource objects
-        getTracks(ids, applySchedulers = false)
+        getTracks(ids)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { setState { copy(tracks = Ready(it.map(::SoundCloudTrack))) } },
@@ -53,7 +53,7 @@ class SoundCloudPlaylistViewModel(
 
     private fun loadTracksFromPlaylist(id: String) = withState { state ->
         if (state.tracks is LoadingInProgress) return@withState
-        getTracksFromPlaylist(id, applySchedulers = false)
+        getTracksFromPlaylist(id)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { setState { copy(tracks = Ready(it.map(::SoundCloudTrack))) } },

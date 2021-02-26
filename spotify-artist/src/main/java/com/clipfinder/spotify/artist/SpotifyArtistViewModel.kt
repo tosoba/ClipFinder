@@ -85,7 +85,7 @@ class SpotifyArtistViewModel(
                 artistId = artists.last().id,
                 offset = if (shouldClear) 0 else currentAlbums.offset
             )
-            getAlbumsFromArtist(args = args, applySchedulers = false)
+            getAlbumsFromArtist(args = args)
                 .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
                 .mapData { albums -> albums.map(::Album) }
                 .subscribeOn(Schedulers.io())
@@ -156,10 +156,10 @@ class SpotifyArtistViewModel(
 
 private fun GetTopTracksFromArtist.intoState(
     state: State
-): Single<Resource<List<Track>>> = this(applySchedulers = false, args = state.artists.last().id)
+): Single<Resource<List<Track>>> = this(args = state.artists.last().id)
     .mapData { tracks -> tracks.map(::Track).sortedBy(Track::name) }
 
 private fun GetRelatedArtists.intoState(
     state: State
-): Single<Resource<List<Artist>>> = this(applySchedulers = false, args = state.artists.last().id)
+): Single<Resource<List<Artist>>> = this(args = state.artists.last().id)
     .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }

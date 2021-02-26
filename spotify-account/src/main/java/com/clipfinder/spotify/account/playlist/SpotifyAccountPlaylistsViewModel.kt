@@ -75,5 +75,5 @@ class SpotifyAccountPlaylistsViewModel(
 
 internal fun GetCurrentUsersPlaylists.intoState(
     state: State
-): Single<Resource<Paged<List<Playlist>>>> = this(applySchedulers = false, args = state.playlists.offset)
+): Single<Resource<Paged<List<Playlist>>>> = this(args = state.playlists.offset)
     .mapData { newPlaylists -> newPlaylists.map(::Playlist) }

@@ -7,7 +7,7 @@ abstract class FlowableUseCase<Result>(private val schedulers: RxSchedulers) {
     protected abstract val result: Flowable<Result>
 
     operator fun invoke(
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Flowable<Result> = result
@@ -21,7 +21,7 @@ abstract class FlowableUseCaseWithArgs<Args, Result>(private val schedulers: RxS
 
     operator fun invoke(
         args: Args,
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Flowable<Result> = run(args)

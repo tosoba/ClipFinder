@@ -94,19 +94,19 @@ class SpotifyDashboardViewModel(
 }
 
 private fun GetCategories.intoState(state: State): Single<Resource<Paged<List<Category>>>> =
-    this(applySchedulers = false, args = state.categories.offset)
+    this(args = state.categories.offset)
         .mapData { categories -> categories.map(::Category) }
 
 private fun GetFeaturedPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
-    this(applySchedulers = false, args = state.featuredPlaylists.offset)
+    this(args = state.featuredPlaylists.offset)
         .mapData { playlists -> playlists.map(::Playlist) }
 
 private fun GetNewReleases.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
-    this(applySchedulers = false, args = state.newReleases.offset)
+    this(args = state.newReleases.offset)
         .mapData { albums -> albums.map(::Album) }
 
 private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<List<TopTrack>>>> =
-    this(applySchedulers = false, args = state.viralTracks.offset)
+    this(args = state.viralTracks.offset)
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->
                 TopTrack(

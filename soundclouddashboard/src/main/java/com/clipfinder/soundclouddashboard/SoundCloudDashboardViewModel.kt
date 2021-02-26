@@ -27,7 +27,7 @@ class SoundCloudDashboardViewModel(
 
     fun loadSelections() = withState { (currentSelections) ->
         if (currentSelections is LoadingInProgress) return@withState
-        getMixedSelections(applySchedulers = false, timeout = Timeout(25L, TimeUnit.SECONDS))
+        getMixedSelections(timeout = Timeout(25L, TimeUnit.SECONDS))
             .observeOn(AndroidSchedulers.mainThread())
             .map { resource -> resource.map { selections -> selections.map(::SoundCloudPlaylistSelection) } }
             .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) {

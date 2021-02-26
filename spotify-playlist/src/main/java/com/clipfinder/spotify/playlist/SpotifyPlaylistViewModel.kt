@@ -50,5 +50,5 @@ class SpotifyPlaylistViewModel(
 
 internal fun GetPlaylistTracks.intoState(
     state: State
-) = this(args = GetPlaylistTracks.Args(state.playlist.id, state.tracks.offset), applySchedulers = false)
+) = this(args = GetPlaylistTracks.Args(state.playlist.id, state.tracks.offset))
     .mapData { tracksPage -> tracksPage.map(::Track) }

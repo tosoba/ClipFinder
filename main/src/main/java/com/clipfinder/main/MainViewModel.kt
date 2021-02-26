@@ -33,7 +33,7 @@ class MainViewModel(
 
 private fun GetCurrentUser.intoState(
     state: MainState
-): Single<Resource<User>> = this(applySchedulers = false)
+): Single<Resource<User>> = this()
     .mapData {
         User(
             it.displayName ?: "Unknown user",

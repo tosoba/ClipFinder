@@ -73,7 +73,7 @@ class SpotifyCategoryViewModel(
             categoryId = state.category.id,
             offset = if (shouldClear) 0 else state.playlists.offset
         )
-        return this(applySchedulers = false, args = args)
+        return this(args = args)
             .mapData { playlistsPage -> playlistsPage.map(::Playlist) }
             .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
     }

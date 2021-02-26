@@ -84,7 +84,7 @@ class SpotifySearchViewModel(
             }
         }
 
-        searchSpotify(args = args, applySchedulers = false)
+        searchSpotify(args = args)
             .subscribeOn(Schedulers.io())
             .subscribe({ resource ->
                 when (resource) {

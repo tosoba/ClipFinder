@@ -7,7 +7,7 @@ abstract class CompletableUseCase(private val schedulers: RxSchedulers) {
     protected abstract val result: Completable
 
     operator fun invoke(
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Completable = result
@@ -21,7 +21,7 @@ abstract class CompletableUseCaseWithArgs<Args>(private val schedulers: RxSchedu
 
     operator fun invoke(
         args: Args,
-        applySchedulers: Boolean = true,
+        applySchedulers: Boolean = false,
         timeout: Timeout = Timeout.DEFAULT,
         strategy: RetryStrategy? = null
     ): Completable = run(args)

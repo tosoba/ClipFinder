@@ -141,23 +141,23 @@ class SpotifyTrackViewModel(
 
 private fun GetTrack.with(
     id: String
-): Single<Resource<Track>> = this(applySchedulers = false, args = id)
+): Single<Resource<Track>> = this(args = id)
     .mapData(::Track)
 
 private fun GetArtists.with(
     state: State, track: Track
 ): Single<Resource<List<Artist>>> =
-    this(applySchedulers = false, args = track.artists.map(SimplifiedArtist::id))
+    this(args = track.artists.map(SimplifiedArtist::id))
         .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
 private fun GetSimilarTracks.with(
     state: State, trackId: String
 ): Single<Resource<Paged<List<Track>>>> =
-    this(applySchedulers = false, args = GetSimilarTracks.Args(trackId, state.similarTracks.offset))
+    this(args = GetSimilarTracks.Args(trackId, state.similarTracks.offset))
         .mapData { tracks -> tracks.map(::Track) }
 
 private fun GetAudioFeatures.with(trackId: String): Single<Resource<RadarData>> =
-    this(applySchedulers = false, args = trackId)
+    this(args = trackId)
         .mapData {
             RadarData(
                 RadarDataSet(

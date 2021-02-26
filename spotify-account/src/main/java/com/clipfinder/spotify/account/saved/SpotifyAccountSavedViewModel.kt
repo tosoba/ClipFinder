@@ -83,10 +83,10 @@ class SpotifyAccountSavedViewModel(
 
 internal fun GetCurrentUsersSavedTracks.intoState(
     state: State
-): Single<Resource<Paged<List<Track>>>> = this(applySchedulers = false, args = state.tracks.offset)
+): Single<Resource<Paged<List<Track>>>> = this(args = state.tracks.offset)
     .mapData { newTracks -> newTracks.map(::Track) }
 
 internal fun GetCurrentUsersSavedAlbums.intoState(
     state: State
-): Single<Resource<Paged<List<Album>>>> = this(applySchedulers = false, args = state.albums.offset)
+): Single<Resource<Paged<List<Album>>>> = this(args = state.albums.offset)
     .mapData { newAlbums -> newAlbums.map(::Album) }

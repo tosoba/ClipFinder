@@ -108,7 +108,7 @@ class YoutubeSearchViewModel(
 
 private fun SearchVideos.with(
     query: String, pageToken: String?
-): Single<Resource<Pair<List<Video>, String>>> = this(applySchedulers = false, args = SearchVideos.Args(query, pageToken))
+): Single<Resource<Pair<List<Video>, String>>> = this(args = SearchVideos.Args(query, pageToken))
     .mapData { response ->
         Pair(
             response.items
