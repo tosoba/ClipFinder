@@ -17,6 +17,7 @@ import com.clipfinder.core.android.spotify.model.SimplifiedArtist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 

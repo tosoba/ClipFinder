@@ -7,6 +7,6 @@ import org.koin.dsl.module
 
 val youtubeCoreModule = module {
     single { SearchVideos(get(), get()) }
-    single { SearchRelatedVideos(get(), get()) }
-    single { ClearExpiredVideosSearchCache(get(), get()) }
+    single { SearchRelatedVideos(get()) }
+    single { ClearExpiredVideosSearchCache(get()) }
 }

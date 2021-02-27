@@ -4,21 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopArtists
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopTracks
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.Empty
-import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Artist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.*
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopArtists
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopTracks
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -81,12 +78,10 @@ class SpotifyAccountTopViewModel(
     }
 }
 
-internal fun GetCurrentUsersTopTracks.intoState(
-    state: State
-): Single<Resource<Paged<List<Track>>>> = this(args = state.topTracks.offset)
-    .mapData { newTracks -> newTracks.map(::Track) }
+internal fun GetCurrentUsersTopTracks.intoState(state: State): Single<Resource<Paged<List<Track>>>> =
+    this(args = state.topTracks.offset)
+        .mapData { newTracks -> newTracks.map(::Track) }
 
-internal fun GetCurrentUsersTopArtists.intoState(
-    state: State
-): Single<Resource<Paged<List<Artist>>>> = this(args = state.artists.offset)
-    .mapData { newArtists -> newArtists.map(::Artist) }
+internal fun GetCurrentUsersTopArtists.intoState(state: State): Single<Resource<Paged<List<Artist>>>> =
+    this(args = state.artists.offset)
+        .mapData { newArtists -> newArtists.map(::Artist) }

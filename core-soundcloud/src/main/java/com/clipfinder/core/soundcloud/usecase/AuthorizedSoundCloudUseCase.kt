@@ -3,7 +3,8 @@ package com.clipfinder.core.soundcloud.usecase
 import com.clipfinder.core.ext.RxSchedulers
 import com.clipfinder.core.ext.Timeout
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
-import com.clipfinder.core.usecase.SingleUseCase
+import com.clipfinder.core.model.UseCase
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
@@ -12,7 +13,7 @@ abstract class AuthorizedSoundCloudUseCase<T>(
     private val getClientId: GetClientId,
     private val preferences: ISoundCloudPreferences,
     private val rxSchedulers: RxSchedulers
-) : SingleUseCase<T>(rxSchedulers) {
+) : UseCase<Single<T>> {
 
     override val result: Single<T>
         get() {

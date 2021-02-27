@@ -24,6 +24,7 @@ import com.clipfinder.core.android.util.ext.copyWithPaged
 import com.clipfinder.core.android.util.ext.loadingOrCompleted
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single

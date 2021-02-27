@@ -4,20 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.castAs
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.youtube.ext.highestResUrl
-import com.clipfinder.core.youtube.ext.isValid
-import com.clipfinder.core.youtube.usecase.SearchRelatedVideos
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.LoadingFirst
-import com.clipfinder.core.model.PageTokenList
-import com.clipfinder.core.model.Ready
-import com.clipfinder.core.model.WithValue
 import com.clipfinder.core.android.model.videos.Video
 import com.clipfinder.core.android.util.ext.completed
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.*
+import com.clipfinder.core.model.invoke
+import com.clipfinder.core.youtube.ext.highestResUrl
+import com.clipfinder.core.youtube.ext.isValid
+import com.clipfinder.core.youtube.usecase.SearchRelatedVideos
 import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
@@ -105,25 +102,24 @@ class YoutubeRelatedViewModel(
     }
 }
 
-private fun SearchRelatedVideos.with(
-    videoId: String, pageToken: String?
-): Single<Resource<Pair<List<Video>, String>>> = this(args = SearchRelatedVideos.Args(videoId, pageToken))
-    .mapData { response ->
-        Pair(
-            response.items
-                ?.filter(SearchResult::isValid)
-                ?.map { result ->
-                    Video(
-                        id = result.id.videoId,
-                        title = result.snippet.title,
-                        description = result.snippet.description,
-                        publishedAt = result.snippet.publishedAt,
-                        thumbnailUrl = result.snippet.thumbnails.highestResUrl,
-                        duration = "",
-                        viewCount = BigInteger.ZERO
-                    )
-                }
-                ?: emptyList(),
-            response.nextPageToken
-        )
-    }
+private fun SearchRelatedVideos.with(videoId: String, pageToken: String?): Single<Resource<Pair<List<Video>, String>>> =
+    this(args = SearchRelatedVideos.Args(videoId, pageToken))
+        .mapData { response ->
+            Pair(
+                response.items
+                    ?.filter(SearchResult::isValid)
+                    ?.map { result ->
+                        Video(
+                            id = result.id.videoId,
+                            title = result.snippet.title,
+                            description = result.snippet.description,
+                            publishedAt = result.snippet.publishedAt,
+                            thumbnailUrl = result.snippet.thumbnails.highestResUrl,
+                            duration = "",
+                            viewCount = BigInteger.ZERO
+                        )
+                    }
+                    ?: emptyList(),
+                response.nextPageToken
+            )
+        }

@@ -8,6 +8,7 @@ import com.clipfinder.core.spotify.usecase.GetCurrentUser
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.Empty
 import com.clipfinder.core.android.spotify.model.User
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 
@@ -31,9 +32,7 @@ class MainViewModel(
     }
 }
 
-private fun GetCurrentUser.intoState(
-    state: MainState
-): Single<Resource<User>> = this()
+private fun GetCurrentUser.intoState(state: MainState): Single<Resource<User>> = this()
     .mapData {
         User(
             it.displayName ?: "Unknown user",

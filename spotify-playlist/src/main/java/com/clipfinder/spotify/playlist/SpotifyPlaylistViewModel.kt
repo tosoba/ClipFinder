@@ -4,14 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.PagedList
+import com.clipfinder.core.spotify.usecase.GetPlaylistTracks
+import com.clipfinder.core.model.invoke
 import org.koin.android.ext.android.get
 
 private typealias State = SpotifyPlaylistState
@@ -48,7 +49,6 @@ class SpotifyPlaylistViewModel(
     }
 }
 
-internal fun GetPlaylistTracks.intoState(
-    state: State
-) = this(args = GetPlaylistTracks.Args(state.playlist.id, state.tracks.offset))
-    .mapData { tracksPage -> tracksPage.map(::Track) }
+internal fun GetPlaylistTracks.intoState(state: State) =
+    this(args = GetPlaylistTracks.Args(state.playlist.id, state.tracks.offset))
+        .mapData { tracksPage -> tracksPage.map(::Track) }

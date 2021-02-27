@@ -1,19 +1,17 @@
 package com.clipfinder.core.spotify.usecase
 
-import com.clipfinder.core.ext.RxSchedulers
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
 import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
-import com.clipfinder.core.usecase.SingleUseCaseWithArgs
+import com.clipfinder.core.model.UseCaseWithArgs
 import io.reactivex.Single
 
 class SearchSpotify(
-    schedulers: RxSchedulers,
     private val auth: ISpotifyAutoAuth,
     private val repo: ISpotifyRepo
-) : SingleUseCaseWithArgs<SearchSpotify.Args, Resource<SpotifySearchResult>>(schedulers) {
+) : UseCaseWithArgs<SearchSpotify.Args, Single<Resource<SpotifySearchResult>>> {
     override fun run(args: Args): Single<Resource<SpotifySearchResult>> = auth
         .authorize()
         .andThen(when (args) {

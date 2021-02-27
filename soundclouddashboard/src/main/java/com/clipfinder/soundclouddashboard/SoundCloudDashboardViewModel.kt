@@ -10,6 +10,7 @@ import com.clipfinder.core.soundcloud.usecase.GetMixedSelections
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.model.LoadingInProgress
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.koin.android.ext.android.get
 import java.util.concurrent.TimeUnit
@@ -30,9 +31,7 @@ class SoundCloudDashboardViewModel(
         getMixedSelections(timeout = Timeout(25L, TimeUnit.SECONDS))
             .observeOn(AndroidSchedulers.mainThread())
             .map { resource -> resource.map { selections -> selections.map(::SoundCloudPlaylistSelection) } }
-            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) {
-                copy(selections = it)
-            }
+            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) { copy(selections = it) }
     }
 
     @SuppressLint("MissingPermission")

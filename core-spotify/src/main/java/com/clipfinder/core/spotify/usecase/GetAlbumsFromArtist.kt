@@ -1,19 +1,17 @@
 package com.clipfinder.core.spotify.usecase
 
-import com.clipfinder.core.ext.RxSchedulers
 import com.clipfinder.core.model.Paged
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
 import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
-import com.clipfinder.core.usecase.SingleUseCaseWithArgs
+import com.clipfinder.core.model.UseCaseWithArgs
 import io.reactivex.Single
 
 class GetAlbumsFromArtist(
-    schedulers: RxSchedulers,
     private val auth: ISpotifyAutoAuth,
     private val repo: ISpotifyRepo
-) : SingleUseCaseWithArgs<GetAlbumsFromArtist.Args, Resource<Paged<List<ISpotifySimplifiedAlbum>>>>(schedulers) {
+) : UseCaseWithArgs<GetAlbumsFromArtist.Args, Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>> {
 
     override fun run(args: Args): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = auth
         .authorize()

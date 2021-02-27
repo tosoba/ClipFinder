@@ -20,6 +20,7 @@ import com.clipfinder.core.android.spotify.model.*
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.koin.android.ext.android.get

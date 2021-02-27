@@ -1,4 +1,4 @@
-package com.clipfinder.core.usecase
+package com.clipfinder.core.model
 
 import com.clipfinder.core.ext.*
 import io.reactivex.Completable

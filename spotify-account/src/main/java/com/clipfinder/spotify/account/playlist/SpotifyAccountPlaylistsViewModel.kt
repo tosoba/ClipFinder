@@ -17,6 +17,7 @@ import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -73,7 +74,6 @@ class SpotifyAccountPlaylistsViewModel(
     }
 }
 
-internal fun GetCurrentUsersPlaylists.intoState(
-    state: State
-): Single<Resource<Paged<List<Playlist>>>> = this(args = state.playlists.offset)
-    .mapData { newPlaylists -> newPlaylists.map(::Playlist) }
+internal fun GetCurrentUsersPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
+    this(args = state.playlists.offset)
+        .mapData { newPlaylists -> newPlaylists.map(::Playlist) }

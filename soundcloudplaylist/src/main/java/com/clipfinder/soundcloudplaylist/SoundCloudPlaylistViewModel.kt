@@ -13,6 +13,7 @@ import com.clipfinder.core.android.model.soundcloud.SoundCloudPlaylist
 import com.clipfinder.core.android.model.soundcloud.SoundCloudSystemPlaylist
 import com.clipfinder.core.android.model.soundcloud.SoundCloudTrack
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 import timber.log.Timber

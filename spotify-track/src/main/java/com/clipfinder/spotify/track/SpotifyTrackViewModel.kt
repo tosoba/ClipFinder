@@ -21,6 +21,7 @@ import com.clipfinder.core.model.Paged
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.model.WithValue
 import com.clipfinder.core.spotify.usecase.*
+import com.clipfinder.core.model.invoke
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -139,20 +140,14 @@ class SpotifyTrackViewModel(
     }
 }
 
-private fun GetTrack.with(
-    id: String
-): Single<Resource<Track>> = this(args = id)
+private fun GetTrack.with(id: String): Single<Resource<Track>> = this(args = id)
     .mapData(::Track)
 
-private fun GetArtists.with(
-    state: State, track: Track
-): Single<Resource<List<Artist>>> =
+private fun GetArtists.with(state: State, track: Track): Single<Resource<List<Artist>>> =
     this(args = track.artists.map(SimplifiedArtist::id))
         .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
 
-private fun GetSimilarTracks.with(
-    state: State, trackId: String
-): Single<Resource<Paged<List<Track>>>> =
+private fun GetSimilarTracks.with(state: State, trackId: String): Single<Resource<Paged<List<Track>>>> =
     this(args = GetSimilarTracks.Args(trackId, state.similarTracks.offset))
         .mapData { tracks -> tracks.map(::Track) }
 

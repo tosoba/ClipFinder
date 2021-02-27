@@ -16,6 +16,7 @@ import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.util.ext.completed
 import com.clipfinder.core.android.util.ext.offset
+import com.clipfinder.core.model.invoke
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 import timber.log.Timber

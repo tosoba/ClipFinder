@@ -19,6 +19,7 @@ import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -81,12 +82,10 @@ class SpotifyAccountSavedViewModel(
     }
 }
 
-internal fun GetCurrentUsersSavedTracks.intoState(
-    state: State
-): Single<Resource<Paged<List<Track>>>> = this(args = state.tracks.offset)
-    .mapData { newTracks -> newTracks.map(::Track) }
+internal fun GetCurrentUsersSavedTracks.intoState(state: State): Single<Resource<Paged<List<Track>>>> =
+    this(args = state.tracks.offset)
+        .mapData { newTracks -> newTracks.map(::Track) }
 
-internal fun GetCurrentUsersSavedAlbums.intoState(
-    state: State
-): Single<Resource<Paged<List<Album>>>> = this(args = state.albums.offset)
-    .mapData { newAlbums -> newAlbums.map(::Album) }
+internal fun GetCurrentUsersSavedAlbums.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
+    this(args = state.albums.offset)
+        .mapData { newAlbums -> newAlbums.map(::Album) }

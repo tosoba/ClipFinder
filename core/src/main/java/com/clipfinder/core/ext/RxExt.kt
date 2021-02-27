@@ -5,10 +5,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
-fun Disposable.disposeIfNeeded() {
-    if (!isDisposed) dispose()
-}
-
 interface RxSchedulers {
     val io: Scheduler
     val main: Scheduler
