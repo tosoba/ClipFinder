@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.SpotifyDefaults
+import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.ext.map
 import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.ext.mapIndexed
@@ -111,7 +111,7 @@ private fun GetDailyViralTracks.intoState(state: State): Single<Resource<Paged<L
         .mapData { tracks ->
             tracks.mapIndexed { index, track ->
                 TopTrack(
-                    position = SpotifyDefaults.LIMIT * state.viralTracks.offset + index + 1,
+                    position = PagingDefaults.SPOTIFY_LIMIT * state.viralTracks.offset + index + 1,
                     track = Track(track)
                 )
             }

@@ -1,6 +1,6 @@
 package com.clipfinder.core.android.spotify.repo
 
-import com.clipfinder.core.SpotifyDefaults
+import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.ext.mapToResource
@@ -45,7 +45,7 @@ class SpotifyRepo(
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> = browseEndpoints
         .getRecommendations(seedTracks = id, limit = 100)
         .mapSuccess {
-            tracks.chunked(SpotifyDefaults.LIMIT)
+            tracks.chunked(PagingDefaults.SPOTIFY_LIMIT)
                 .map { it.joinToString(",", transform = SimplifiedTrackObject::id) }
         }
         .flatMap { chunks ->
@@ -86,7 +86,7 @@ class SpotifyRepo(
             csv.split('\n')
                 .filter { line -> line.isNotBlank() && line.first().isDigit() }
                 .map { line -> line.substring(line.lastIndexOf('/') + 1) }
-                .chunked(SpotifyDefaults.LIMIT)
+                .chunked(PagingDefaults.SPOTIFY_LIMIT)
         }
         .flatMap { chunks ->
             val chunk = chunks[offset]
@@ -133,7 +133,7 @@ class SpotifyRepo(
                 .mapToResource {
                     Paged<List<ISpotifyTrack>>(
                         contents = tracks,
-                        offset = idsPage.offset + SpotifyDefaults.LIMIT,
+                        offset = idsPage.offset + PagingDefaults.SPOTIFY_LIMIT,
                         total = idsPage.total
                     )
                 }
@@ -177,7 +177,7 @@ class SpotifyRepo(
         .mapToResource {
             Paged<List<ISpotifyTrack>>(
                 contents = items.map(PlaylistItemObjectWrapper::track).filterIsInstance<TrackObject>(),
-                offset = offset + SpotifyDefaults.LIMIT,
+                offset = offset + PagingDefaults.SPOTIFY_LIMIT,
                 total = total
             )
         }
