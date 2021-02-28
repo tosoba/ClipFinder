@@ -12,10 +12,6 @@
             type="com.clipfinder.spotifyplayer.SpotifyPlayerView" />
 
         <variable
-            name="playbackSeekBarMaxValue"
-            type="MutableLiveData&lt;Integer&gt;" />
-
-        <variable
             name="nextTrackExists"
             type="MutableLiveData&lt;Boolean&gt;" />
 
@@ -72,8 +68,8 @@
             android:layout_marginLeft="3dp"
             app:civ_border_color="#fff"
             app:civ_border_width="2dp"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintBottom_toTopOf="@id/visualizer_surface_view"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/spotify_player_guideline"
             app:layout_constraintTop_toTopOf="parent" />
@@ -125,7 +121,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:max="@{safeUnbox(playbackSeekBarMaxValue)}"
             android:maxHeight="2dp"
             android:minHeight="2dp"
             android:progressDrawable="@drawable/playback_seekbar_progress"

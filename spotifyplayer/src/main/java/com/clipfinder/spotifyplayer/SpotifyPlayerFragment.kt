@@ -20,7 +20,6 @@ import androidx.palette.graphics.Palette
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.core.ext.castAs
 import com.clipfinder.core.android.base.handler.SlidingPanelController
 import com.clipfinder.core.android.base.provider.IntentProvider
 import com.clipfinder.core.android.spotify.controller.SpotifyTrackChangeHandler
@@ -32,6 +31,7 @@ import com.clipfinder.core.android.spotify.notification.PlaybackNotification
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.onSeekBarProgressChangeListener
 import com.clipfinder.core.android.view.visualizer.ColumnarVisualizerRenderer
+import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -158,15 +158,12 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     ): View = FragmentSpotifyPlayerBinding.inflate(inflater, container, false)
         .apply {
             fragmentView = spotifyPlayerView
-            val playbackSeekBarMaxValue = MutableLiveData(0)
             val nextTrackExists = MutableLiveData(false)
             val previousTrackExists = MutableLiveData(false)
             val currentTrackTitle = MutableLiveData("")
             viewModel.selectSubscribe(this@SpotifyPlayerFragment, SpotifyPlayerState::playerMetadata) { metadata ->
                 nextTrackExists.value = metadata?.nextTrack != null
                 previousTrackExists.value = metadata?.prevTrack != null
-                playbackSeekBarMaxValue
-                    .value = (metadata?.currentTrack?.durationMs ?: 0).toInt() * 1000
                 metadata?.currentTrack?.let {
                     val trackName = it.name
                     val artistName = it.artistName
@@ -178,7 +175,6 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                     currentTrackTitle.value = currentTrackLabelText
                 }
             }
-            this.playbackSeekBarMaxValue = playbackSeekBarMaxValue
             this.nextTrackExists = nextTrackExists
             this.previousTrackExists = previousTrackExists
             this.currentTrackTitle = currentTrackTitle
@@ -369,6 +365,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         trackDuration: Long, positionMs: Long
     ): CountDownTimer = tickingTimer(trackDuration - positionMs, 1000) { millisUntilFinished ->
         val seconds = (trackDuration - millisUntilFinished) / 1000
+        if (playback_seek_bar?.max == 0) playback_seek_bar?.max = (trackDuration / 1000).toInt()
         playback_seek_bar?.progress = seconds.toInt()
     }
 
