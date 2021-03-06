@@ -10,6 +10,5 @@ data class TokensResponse(
     @Json(name = "token_type")
     val tokenType: String,
     @Json(name = "expires_in")
-    val expiresIn: Int,
-    val scope: String
+    val expiresIn: Int
 )
