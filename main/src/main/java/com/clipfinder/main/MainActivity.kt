@@ -20,7 +20,6 @@ import com.airbnb.mvrx.withState
 import com.clipfinder.core.android.base.fragment.*
 import com.clipfinder.core.android.base.handler.*
 import com.clipfinder.core.android.base.provider.IntentProvider
-import com.clipfinder.core.model.WithValue
 import com.clipfinder.core.android.model.soundcloud.SoundCloudTrack
 import com.clipfinder.core.android.model.videos.Video
 import com.clipfinder.core.android.model.videos.VideoPlaylist
@@ -36,6 +35,7 @@ import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.OnNavigationDrawerClosedListerner
 import com.clipfinder.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
+import com.clipfinder.core.model.WithValue
 import com.clipfinder.main.databinding.ActivityMainBinding
 import com.clipfinder.main.databinding.DrawerHeaderBinding
 import com.clipfinder.main.soundcloud.SoundCloudMainFragment
@@ -316,13 +316,14 @@ class MainActivity :
                 Toast.makeText(this, R.string.failed_to_login, Toast.LENGTH_LONG).show()
             }
             data?.let { intent ->
-                spotifyAuth.sendTokenRequestFrom(intent).subscribe({ (accessToken) ->
-                    Timber.tag("NLOG").e("SUCC")
-                    viewModel.loadCurrentUser()
-                    spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
-                }, {
-                    onError(it.message ?: "Unknown error.")
-                })
+                spotifyAuth.sendTokenRequestFrom(intent)
+                    .subscribe({ (accessToken) ->
+                        Timber.tag("NLOG").e("SUCC")
+                        viewModel.loadCurrentUser()
+                        spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
+                    }, {
+                        onError(it.message ?: "Unknown error.")
+                    })
             } ?: run {
                 onError(getString(R.string.failed_to_login))
             }
