@@ -1,10 +1,7 @@
 package com.clipfinder.spotify.api.endpoint
 
 import com.clipfinder.core.model.NetworkResponse
-import com.clipfinder.spotify.api.model.AlbumObject
-import com.clipfinder.spotify.api.model.AlbumsObject
-import com.clipfinder.spotify.api.model.ErrorResponse
-import com.clipfinder.spotify.api.model.TracksPagingObject
+import com.clipfinder.spotify.api.model.*
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
@@ -43,7 +40,7 @@ interface AlbumEndpoints {
      * @return [Call]<[TracksPagingObject]>
      */
     @GET("albums/{id}/tracks")
-    fun getAnAlbumsTracks(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<TracksPagingObject, ErrorResponse>>
+    fun getAnAlbumsTracks(@Header("Authorization") authorization: String? = null, @Path("id") id: String, @Query("limit") limit: Int? = null, @Query("offset") offset: Int? = null, @Query("market") market: String? = null): Single<NetworkResponse<SimplifiedTracksPagingObject, ErrorResponse>>
 
     /**
      * Get Multiple Albums

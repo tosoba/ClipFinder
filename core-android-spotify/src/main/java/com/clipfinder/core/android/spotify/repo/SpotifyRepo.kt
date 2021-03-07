@@ -1,12 +1,12 @@
 package com.clipfinder.core.android.spotify.repo
 
-import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.ext.mapToResource
 import com.clipfinder.core.ext.resource
 import com.clipfinder.core.ext.toPaged
 import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
@@ -122,7 +122,7 @@ class SpotifyRepo(
         .getAnAlbumsTracks(id = albumId, offset = offset)
         .mapSuccess {
             Paged(
-                contents = items.joinToString(separator = ",", transform = TrackObject::id),
+                contents = items.joinToString(separator = ",", transform = SimplifiedTrackObject::id),
                 offset = offset,
                 total = total
             )
