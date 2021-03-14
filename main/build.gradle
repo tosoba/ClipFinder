@@ -92,6 +92,8 @@ dependencies {
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
+    implementation 'net.openid:appauth:0.7.1'
+
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-core-ext:$koinVersion"
     testImplementation "org.koin:koin-test:$koinVersion"
