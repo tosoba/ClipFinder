@@ -58,9 +58,12 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     }
 
     private var spotifyPlayer: SpotifyPlayer? = null
-    override val isPlayerLoggedIn: Boolean get() = spotifyPlayer?.isLoggedIn == true
-    override val isPlayerInitialized: Boolean get() = spotifyPlayer?.isInitialized == true
-    override val playerView: View? get() = this.view
+    override val isPlayerLoggedIn: Boolean
+        get() = spotifyPlayer?.isLoggedIn == true
+    override val isPlayerInitialized: Boolean
+        get() = spotifyPlayer?.isInitialized == true
+    override val playerView: View?
+        get() = this.view
 
     private val onSpotifyPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
         withState(viewModel) {
@@ -335,7 +338,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                         }
                     }
                 )
-        } else if (spotifyPlayer?.isLoggedIn == false) {
+        } else {
             spotifyPlayer?.login(accessToken)
         }
     }

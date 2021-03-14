@@ -74,6 +74,8 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
     val privateAccessTokenObservable: Observable<String>
         get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
             .asObservable()
+            .map { if (it.isNotBlank()) AuthState.jsonDeserialize(it)?.accessToken ?: "" else "" }
+            .onErrorReturnItem("")
 
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,
