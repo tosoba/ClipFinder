@@ -32,7 +32,7 @@ class SpotifyAccountTopViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences.isPrivateAuthorized
+        preferences.isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
                 if (it) withState { (_, tracks, artists) ->

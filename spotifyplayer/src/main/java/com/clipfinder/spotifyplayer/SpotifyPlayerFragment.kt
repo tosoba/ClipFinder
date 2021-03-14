@@ -335,7 +335,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                         }
                     }
                 )
-        } else {
+        } else if (spotifyPlayer?.isLoggedIn == false) {
             spotifyPlayer?.login(accessToken)
         }
     }

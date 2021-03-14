@@ -23,10 +23,10 @@ class MainView(
 
 data class MainState(
     val playerState: PlayerState = PlayerState.VIDEO,
-    val isLoggedIn: Boolean = false,
     val itemFavouriteState: Boolean = false,
     val mainContent: MainContent = MainContent.SPOTIFY,
-    val user: Loadable<User> = Empty
+    val user: Loadable<User> = Empty,
+    val accessToken: String? = null
 ) : MvRxState
 
 enum class PlayerState {

@@ -64,12 +64,16 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
     val hasTokens: Boolean
         get() = preferences.contains(Keys.PREF_KEY_PUBLIC_TOKEN.name)
 
-    val isPrivateAuthorized: Observable<Boolean>
+    val isPrivateAuthorizedObservable: Observable<Boolean>
         get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
             .asObservable()
             .filter(CharSequence::isNotBlank)
             .map { AuthState.jsonDeserialize(it)?.accessToken != null }
             .onErrorReturnItem(false)
+
+    val privateAccessTokenObservable: Observable<String>
+        get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
+            .asObservable()
 
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,

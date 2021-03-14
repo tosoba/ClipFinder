@@ -65,7 +65,6 @@ class MainActivity :
     NavigationDrawerController,
     ToolbarController,
     IntentProvider {
-
     private val viewModel: MainViewModel by viewModel()
     private val fragmentFactory: ISpotifyFragmentsFactory by inject()
 
@@ -145,64 +144,68 @@ class MainActivity :
     private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(LazyThreadSafetyMode.NONE) {
         object : OnNavigationDrawerClosedListerner {
             override fun onDrawerClosed(drawerView: View) {
-                if (isPlayerLoggedIn) logOutPlayer()
+                if (isPlayerLoggedIn) {
+                    viewModel.onLoggedOut()
+                    logOutPlayer()
+                }
                 main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
             }
         }
     }
 
-    private val onDrawerNavigationItemSelectedListener = NavigationView.OnNavigationItemSelectedListener {
-        when (it.itemId) {
-            R.id.drawer_action_show_spotify_main -> {
-                spotifyMainFragment?.let { return@OnNavigationItemSelectedListener true }
-                    ?: run { main_content_view_pager?.currentItem = 0 }
+    private val onDrawerNavigationItemSelectedListener = NavigationView
+        .OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.drawer_action_show_spotify_main -> {
+                    spotifyMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                        ?: run { main_content_view_pager?.currentItem = 0 }
 
-                viewModel.setMainContent(MainContent.SPOTIFY)
+                    viewModel.setMainContent(MainContent.SPOTIFY)
 
-                if (binding.drawerNavigationView.headerCount == 0) {
-                    binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
+                    if (binding.drawerNavigationView.headerCount == 0) {
+                        binding.drawerNavigationView.addHeaderView(drawerHeaderBinding.root)
+                    }
+
+                    binding.drawerNavigationView.menu.clear()
+                    binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
+
+                    val isLoggedIn = withState(viewModel, { it.accessToken != null })
+                    binding.drawerNavigationView.menu?.apply {
+                        findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
+                        findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+                    }
                 }
 
-                binding.drawerNavigationView.menu.clear()
-                binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
+                R.id.drawer_action_show_soundcloud_main -> {
+                    soundCloudMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                        ?: run { main_content_view_pager?.currentItem = 1 }
 
-                val isLoggedIn = withState(viewModel, MainState::isLoggedIn)
-                binding.drawerNavigationView.menu?.apply {
-                    findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
-                    findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
-                }
-            }
+                    viewModel.setMainContent(MainContent.SOUNDCLOUD)
 
-            R.id.drawer_action_show_soundcloud_main -> {
-                soundCloudMainFragment?.let { return@OnNavigationItemSelectedListener true }
-                    ?: run { main_content_view_pager?.currentItem = 1 }
+                    if (binding.drawerNavigationView.headerCount > 0) {
+                        binding.drawerNavigationView.removeHeaderView(drawerHeaderBinding.root)
+                    }
 
-                viewModel.setMainContent(MainContent.SOUNDCLOUD)
-
-                if (binding.drawerNavigationView.headerCount > 0) {
-                    binding.drawerNavigationView.removeHeaderView(drawerHeaderBinding.root)
+                    binding.drawerNavigationView.menu.clear()
+                    binding.drawerNavigationView.inflateMenu(R.menu.sound_cloud_drawer_menu)
                 }
 
-                binding.drawerNavigationView.menu.clear()
-                binding.drawerNavigationView.inflateMenu(R.menu.sound_cloud_drawer_menu)
+                R.id.drawer_action_about -> {
+                    //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
+                }
+
+                R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java)
+                    .run { startActivity(this) }
+
+                R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
+
+                R.id.drawer_action_logout -> main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
             }
 
-            R.id.drawer_action_about -> {
-                //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
-            }
-
-            R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java)
-                .run { startActivity(this) }
-
-            R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
-
-            R.id.drawer_action_logout -> main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
+            item.isChecked = false
+            main_drawer_layout?.closeDrawer(Gravity.LEFT)
+            true
         }
-
-        it.isChecked = false
-        main_drawer_layout?.closeDrawer(Gravity.LEFT)
-        true
-    }
 
     private val onFavouriteBtnClickListener: View.OnClickListener = View.OnClickListener {}
 
@@ -254,7 +257,8 @@ class MainActivity :
     }
 
     private val spotifyAuth: SpotifyManualAuth by inject()
-    override val isPlayerLoggedIn: Boolean get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
+    override val isPlayerLoggedIn: Boolean
+        get() = spotifyPlayerFragment?.isPlayerLoggedIn == true
     override var onLoginSuccessful: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -262,6 +266,10 @@ class MainActivity :
         initViewBindings()
         observeLoggedIn()
         checkPermissions()
+
+        viewModel.selectSubscribe(this, MainState::accessToken) { accessToken ->
+            if (accessToken != null) spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -316,14 +324,9 @@ class MainActivity :
                 Toast.makeText(this, R.string.failed_to_login, Toast.LENGTH_LONG).show()
             }
             data?.let { intent ->
-                spotifyAuth.sendTokenRequestFrom(intent)
-                    .subscribe({ (accessToken) ->
-                        Timber.tag("NLOG").e("SUCC")
-                        viewModel.loadCurrentUser()
-                        spotifyPlayerFragment?.onAuthenticationComplete(accessToken)
-                    }, {
-                        onError(it.message ?: "Unknown error.")
-                    })
+                viewModel.onLoginActivityResult(intent) {
+                    onError(it.message ?: "Unknown error.")
+                }
             } ?: run {
                 onError(getString(R.string.failed_to_login))
             }
@@ -372,7 +375,6 @@ class MainActivity :
 
     //TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission is granted show visualization or not
     // or keep it here and just check if permission is granted in SpotifyPlayerFragment
-    //TODO: check what happens on rotation when permission dialog is showing
     private fun checkPermissions() {
         rxPermissions.request(Manifest.permission.RECORD_AUDIO)
             .subscribe()
@@ -395,7 +397,7 @@ class MainActivity :
     }
 
     override fun loadTrack(track: Track) {
-        if (!withState(viewModel, MainState::isLoggedIn)) {
+        if (withState(viewModel, { it.accessToken == null })) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -409,7 +411,7 @@ class MainActivity :
     }
 
     override fun loadAlbum(album: Album) {
-        if (!withState(viewModel, MainState::isLoggedIn)) {
+        if (withState(viewModel, { it.accessToken == null })) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -423,7 +425,7 @@ class MainActivity :
     }
 
     override fun loadPlaylist(playlist: Playlist) {
-        if (!withState(viewModel, MainState::isLoggedIn)) {
+        if (withState(viewModel, { it.accessToken == null })) {
             Toast.makeText(this, "You need to login to use spotify playback", Toast.LENGTH_SHORT).show()
             return
         }
@@ -466,16 +468,15 @@ class MainActivity :
     }
 
     override fun onLoggedOut() {
-        viewModel.onLoggedOut()
         Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLoggedIn() {
-        viewModel.onLoggedIn()
         Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
 
         //TODO: permission check
 
+        //TODO: move this into VM
         if (spotifyPlayerFragment?.isPlayerInitialized == true) onLoginSuccessful?.invoke()
         onLoginSuccessful = null
     }
@@ -512,9 +513,9 @@ class MainActivity :
     }
 
     private fun observeLoggedIn() {
-        viewModel.selectSubscribe(this, MainState::isLoggedIn) { isLoggedIn ->
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
-            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
+        viewModel.selectSubscribe(this, MainState::accessToken) { accessToken ->
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_login)?.isVisible = accessToken == null
+            binding.drawerNavigationView.menu.findItem(R.id.drawer_action_logout)?.isVisible = accessToken != null
         }
     }
 
