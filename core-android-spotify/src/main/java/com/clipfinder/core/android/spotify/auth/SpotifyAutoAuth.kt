@@ -17,6 +17,8 @@ class SpotifyAutoAuth(
     private val preferences: SpotifyPreferences,
     private val tokenEndpoints: TokenEndpoints
 ) : ISpotifyAutoAuth {
+    private val authorizePrivateLock: Any = Any()
+
     override fun authorizePublic(): Completable = Single.just(preferences.hasTokens)
         .flatMapCompletable { hasTokens ->
             if (hasTokens) Completable.complete()
@@ -27,26 +29,28 @@ class SpotifyAutoAuth(
                 .toCompletable()
         }
 
-    override fun authorizePrivate(): Completable = Completable.create { emitter ->
-        val authState = preferences.authState
-        if (authState == null) {
-            emitter.onError(NullAuthStateException)
-            return@create
-        }
+    override fun authorizePrivate(): Completable = synchronized(authorizePrivateLock) {
+        Completable.create { emitter ->
+            val authState = preferences.authState
+            if (authState == null) {
+                emitter.onError(NullAuthStateException)
+                return@create
+            }
 
-        try {
-            authState.performActionWithFreshTokens(
-                authService,
-                AuthState.AuthStateAction { accessToken, _, ex ->
-                    when {
-                        ex != null -> emitter.onError(ex)
-                        accessToken != null -> emitter.onComplete()
-                        else -> emitter.onError(UnknownRefreshTokenRequestException)
+            try {
+                authState.performActionWithFreshTokens(
+                    authService,
+                    AuthState.AuthStateAction { accessToken, _, ex ->
+                        when {
+                            ex != null -> emitter.onError(ex)
+                            accessToken != null -> emitter.onComplete()
+                            else -> emitter.onError(UnknownRefreshTokenRequestException)
+                        }
                     }
-                }
-            )
-        } catch (ex: Exception) {
-            emitter.onError(ex)
+                )
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
         }
     }
 
