@@ -29,7 +29,6 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 
 class ClipFinderApp : Application() {
-
     override fun onCreate() {
         super.onCreate()
 

@@ -10,16 +10,12 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 
-class SpotifyAuthenticator(
+class SpotifyPublicAuthenticator(
     private val authorization: String,
     private val tokensHolder: SpotifyTokensHolder,
     private val tokenEndpoints: TokenEndpoints
 ) : Authenticator {
-    override fun authenticate(route: Route?, response: Response): Request = if (tokensHolder.tokensPrivate) {
-        authenticatePrivate(response)
-    } else {
-        authenticatePublic(response)
-    }
+    override fun authenticate(route: Route?, response: Response): Request = authenticatePublic(response)
 
     private fun authenticatePrivate(response: Response): Request {
         val tokenResponse = tokenEndpoints

@@ -3,18 +3,18 @@ package com.clipfinder.spotify.api.di
 import com.clipfinder.core.interceptor.ICacheInterceptor
 import com.clipfinder.core.interceptor.IConnectivityInterceptor
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
+import com.clipfinder.core.spotify.di.spotifyAuthorizationQualifier
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
 import com.clipfinder.spotify.api.adapter.OffsetDateTimeAdapter
 import com.clipfinder.spotify.api.adapter.UUIDAdapter
-import com.clipfinder.spotify.api.auth.SpotifyAuthenticator
+import com.clipfinder.spotify.api.auth.SpotifyPublicAuthenticator
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
 import com.clipfinder.spotify.api.model.PlaylistItemObject
 import com.clipfinder.spotify.api.model.PlaylistItemType
 import com.clipfinder.spotify.api.model.TrackObject
-import com.clipfinder.core.spotify.di.spotifyAuthorizationQualifier
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
@@ -31,27 +31,35 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.*
 
-private inline fun <reified T> Scope.clientFor(): T = Retrofit.Builder()
+private const val PRIVATE_HTTP_CLIENT = "PRIVATE_HTTP_CLIENT"
+private const val PUBLIC_HTTP_CLIENT = "PUBLIC_HTTP_CLIENT"
+
+private fun Scope.httpClient(isPrivate: Boolean): OkHttpClient = OkHttpClient.Builder()
+    .addInterceptor(get<HttpLoggingInterceptor>())
+    .addInterceptor(get<ICacheInterceptor>())
+    .addInterceptor(get<TokenInterceptor>())
+    .run {
+        if (!isPrivate) authenticator(
+            SpotifyPublicAuthenticator(get(named(spotifyAuthorizationQualifier)), get(), get())
+        ) else this
+    }
+    .cache(get<Cache>())
+    .build()
+
+private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T = Retrofit.Builder()
     .baseUrl("https://api.spotify.com/v1/")
     .addConverterFactory(get<ScalarsConverterFactory>())
     .addConverterFactory(get<MoshiConverterFactory>())
     .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
     .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
-    .client(
-        OkHttpClient.Builder()
-            .addInterceptor(get<HttpLoggingInterceptor>())
-            .addInterceptor(get<ICacheInterceptor>())
-            .addInterceptor(get<TokenInterceptor>())
-            .authenticator(
-                SpotifyAuthenticator(get(named(spotifyAuthorizationQualifier)), get(), get())
-            )
-            .cache(get<Cache>())
-            .build()
-    )
+    .client(get<OkHttpClient>(named(if (isPrivate) PRIVATE_HTTP_CLIENT else PUBLIC_HTTP_CLIENT)))
     .build()
     .create(T::class.java)
 
 val spotifyApiModule = module {
+    single(named(PRIVATE_HTTP_CLIENT)) { httpClient(true) }
+    single(named(PUBLIC_HTTP_CLIENT)) { httpClient(false) }
+
     single {
         MoshiConverterFactory.create(
             Moshi.Builder()
@@ -90,16 +98,16 @@ val spotifyApiModule = module {
 
     single { TokenInterceptor(get()) }
 
-    single { clientFor<AlbumEndpoints>() }
-    single { clientFor<ArtistEndpoints>() }
-    single { clientFor<BrowseEndpoints>() }
-    single { clientFor<EpisodeEndpoints>() }
-    single { clientFor<FollowEndpoints>() }
-    single { clientFor<LibraryEndpoints>() }
-    single { clientFor<PersonalizationEndpoints>() }
-    single { clientFor<PlaylistsEndpoints>() }
-    single { clientFor<SearchEndpoints>() }
-    single { clientFor<ShowsEndpoints>() }
-    single { clientFor<TracksEndpoints>() }
-    single { clientFor<UserProfileEndpoints>() }
+    single { retrofitFor<AlbumEndpoints>() }
+    single { retrofitFor<ArtistEndpoints>() }
+    single { retrofitFor<BrowseEndpoints>() }
+    single { retrofitFor<EpisodeEndpoints>() }
+    single { retrofitFor<FollowEndpoints>(true) }
+    single { retrofitFor<LibraryEndpoints>() }
+    single { retrofitFor<PersonalizationEndpoints>(true) }
+    single { retrofitFor<PlaylistsEndpoints>() }
+    single { retrofitFor<SearchEndpoints>() }
+    single { retrofitFor<ShowsEndpoints>() }
+    single { retrofitFor<TracksEndpoints>() }
+    single { retrofitFor<UserProfileEndpoints>(true) }
 }
