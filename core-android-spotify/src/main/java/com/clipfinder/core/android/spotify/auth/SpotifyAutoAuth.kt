@@ -8,29 +8,48 @@ import com.clipfinder.spotify.api.model.GrantType
 import com.clipfinder.spotify.api.model.TokensResponse
 import io.reactivex.Completable
 import io.reactivex.Single
+import net.openid.appauth.AuthState
+import net.openid.appauth.AuthorizationService
 
 class SpotifyAutoAuth(
     private val authorization: String,
+    private val authService: AuthorizationService,
     private val preferences: SpotifyPreferences,
     private val tokenEndpoints: TokenEndpoints
 ) : ISpotifyAutoAuth {
-
-    override fun authorize(): Completable = Single.just(preferences.hasTokens)
+    override fun authorizePublic(): Completable = Single.just(preferences.hasTokens)
         .flatMapCompletable { hasTokens ->
             if (hasTokens) Completable.complete()
             else tokenEndpoints
                 .getTokens(authorization = authorization, grantType = GrantType.CLIENT_CREDENTIALS)
                 .mapSuccess(TokensResponse::accessToken)
-                .doOnSuccess(preferences::setToken)
+                .doOnSuccess { preferences.publicAccessToken = it }
                 .toCompletable()
         }
 
-    override fun requirePrivateAuthorized(): Completable = Single
-        .just(preferences.hasTokens && preferences.tokensPrivate)
-        .flatMapCompletable { privateAuthorized ->
-            if (privateAuthorized) Completable.complete()
-            else Completable.error(UnauthorizedException())
+    override fun authorizePrivate(): Completable = Completable.create { emitter ->
+        val authState = preferences.authState
+        if (authState == null) {
+            emitter.onError(NullAuthStateException)
+            return@create
         }
 
-    class UnauthorizedException : Throwable("Private authorization is required.")
+        try {
+            authState.performActionWithFreshTokens(
+                authService,
+                AuthState.AuthStateAction { accessToken, _, ex ->
+                    when {
+                        ex != null -> emitter.onError(ex)
+                        accessToken != null -> emitter.onComplete()
+                        else -> emitter.onError(UnknownRefreshTokenRequestException)
+                    }
+                }
+            )
+        } catch (ex: Exception) {
+            emitter.onError(ex)
+        }
+    }
+
+    object NullAuthStateException : Throwable()
+    object UnknownRefreshTokenRequestException : Throwable()
 }

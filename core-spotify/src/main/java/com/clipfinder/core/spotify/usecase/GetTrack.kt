@@ -12,6 +12,6 @@ class GetTrack(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<String, Single<Resource<ISpotifyTrack>>> {
     override fun run(args: String): Single<Resource<ISpotifyTrack>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getTrack(id = args))
 }

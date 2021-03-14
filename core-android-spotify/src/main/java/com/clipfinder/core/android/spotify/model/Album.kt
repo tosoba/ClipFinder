@@ -1,13 +1,13 @@
 package com.clipfinder.core.android.spotify.model
 
 import android.os.Parcelable
-import com.clipfinder.core.spotify.ext.firstImageUrl
-import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.clipfinder.core.android.ImageListItemBindingModel_
 import com.clipfinder.core.android.R
 import com.clipfinder.core.android.spotify.AlbumInfoItemBindingModel_
 import com.clipfinder.core.android.view.imageview.ImageViewSrc
 import com.clipfinder.core.android.view.recyclerview.item.NamedImageListItem
+import com.clipfinder.core.spotify.ext.firstImageUrl
+import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

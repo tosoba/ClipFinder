@@ -14,7 +14,7 @@ class GetPlaylistsForCategory(
 ) : UseCaseWithArgs<GetPlaylistsForCategory.Args, Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>> {
 
     override fun run(args: Args): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getPlaylistsForCategory(args.categoryId, args.offset))
 
     class Args(val categoryId: String, val offset: Int)

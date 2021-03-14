@@ -14,7 +14,7 @@ class GetAlbumsFromArtist(
 ) : UseCaseWithArgs<GetAlbumsFromArtist.Args, Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>> {
 
     override fun run(args: Args): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getAlbumsFromArtist(artistId = args.artistId, offset = args.offset))
 
     class Args(val artistId: String, val offset: Int)

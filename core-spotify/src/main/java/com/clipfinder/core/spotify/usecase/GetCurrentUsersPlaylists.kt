@@ -13,6 +13,6 @@ class GetCurrentUsersPlaylists(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<Int, Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>> {
     override fun run(args: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = auth
-        .requirePrivateAuthorized()
+        .authorizePrivate()
         .andThen(repo.getCurrentUsersPlaylists(offset = args))
 }

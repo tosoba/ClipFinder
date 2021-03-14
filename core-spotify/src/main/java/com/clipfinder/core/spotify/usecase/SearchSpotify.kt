@@ -13,7 +13,7 @@ class SearchSpotify(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<SearchSpotify.Args, Single<Resource<SpotifySearchResult>>> {
     override fun run(args: Args): Single<Resource<SpotifySearchResult>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(when (args) {
             is Args.Initial -> repo.search(args.query, offset = 0, type = SpotifySearchType.ALL)
             is Args.More -> repo.search(args.query, offset = args.offset, type = args.type.value)

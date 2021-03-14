@@ -28,17 +28,6 @@ private val <T : R, E : Any, R : Any> NetworkResponse<T, E>.toResource: Resource
         is NetworkResponse.DifferentError -> Resource.Error(error)
     }
 
-fun <T : Any, E : Any, R> Observable<NetworkResponse<T, E>>.mapSuccess(
-    finisher: T.() -> R
-): Observable<R> = flatMap { response ->
-    when (response) {
-        is NetworkResponse.Success -> Observable.just(response.body.finisher())
-        is NetworkResponse.NetworkError -> Observable.error(response.error)
-        is NetworkResponse.ServerError -> Observable.error(ThrowableServerError(response))
-        is NetworkResponse.DifferentError -> Observable.error(response.error)
-    }
-}
-
 fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccess(
     finisher: T.() -> R
 ): Single<R> = flatMap { response ->

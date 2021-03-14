@@ -13,6 +13,6 @@ class GetFeaturedPlaylists(
     private val remote: ISpotifyRepo
 ) : UseCaseWithArgs<Int, Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>> {
     override fun run(args: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(remote.getFeaturedPlaylists(offset = args))
 }

@@ -13,6 +13,6 @@ class GetCategories(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<Int, Single<Resource<Paged<List<ISpotifyCategory>>>>> {
     override fun run(args: Int): Single<Resource<Paged<List<ISpotifyCategory>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getCategories(offset = args))
 }

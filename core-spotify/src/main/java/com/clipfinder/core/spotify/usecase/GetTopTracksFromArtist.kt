@@ -12,6 +12,6 @@ class GetTopTracksFromArtist(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<String, Single<Resource<List<ISpotifyTrack>>>> {
     override fun run(args: String): Single<Resource<List<ISpotifyTrack>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getTopTracksFromArtist(args))
 }

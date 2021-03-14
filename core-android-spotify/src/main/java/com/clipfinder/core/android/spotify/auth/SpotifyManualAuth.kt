@@ -69,7 +69,6 @@ class SpotifyManualAuth(
                 else -> emitter.onError(IllegalStateException("Auth response and exception are both null."))
             }
         }
-        .doOnSuccess { (accessToken, refreshToken) -> preferences.setPrivateTokens(accessToken, refreshToken) }
 
     companion object {
         private const val AUTHORIZATION_ENDPOINT_URL = "https://accounts.spotify.com/authorize"

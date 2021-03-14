@@ -13,6 +13,6 @@ class GetNewReleases(
     private val remote: ISpotifyRepo
 ) : UseCaseWithArgs<Int, Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>> {
     override fun run(args: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(remote.getNewReleases(offset = args))
 }

@@ -13,6 +13,6 @@ class GetCurrentUsersSavedTracks(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<Int, Single<Resource<Paged<List<ISpotifyTrack>>>>> {
     override fun run(args: Int): Single<Resource<Paged<List<ISpotifyTrack>>>> = auth
-        .requirePrivateAuthorized()
+        .authorizePrivate()
         .andThen(repo.getCurrentUsersSavedTracks(offset = args))
 }

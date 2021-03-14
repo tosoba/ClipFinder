@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.clipfinder.core.spotify.token.SpotifyTokensHolder
+import com.clipfinder.core.spotify.auth.ISpotifyTokensHolder
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
-import io.reactivex.functions.Function3
 import net.openid.appauth.AuthState
 
-class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
+class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
     private val preferences: SharedPreferences = PreferenceManager
         .getDefaultSharedPreferences(context)
         .apply {
@@ -25,6 +24,7 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
                 }
             }
         }
+
     private val rxPreferences: RxSharedPreferences = RxSharedPreferences.create(preferences)
 
     val countryObservable: Observable<String>
@@ -47,56 +47,32 @@ class SpotifyPreferences(context: Context) : SpotifyTokensHolder {
         get() = preferences.getString(Keys.PREF_KEY_AUTH_STATE.name, null)
             ?.let(AuthState::jsonDeserialize)
         set(value) = preferences.edit {
-            putString(Keys.PREF_KEY_AUTH_STATE.name, value?.jsonSerializeString())
+            value?.let { putString(Keys.PREF_KEY_AUTH_STATE.name, it.jsonSerializeString()) }
+                ?: remove(Keys.PREF_KEY_AUTH_STATE.name)
         }
 
-    override val token: String
-        get() = requireNotNull(preferences.getString(Keys.PREF_KEY_TOKEN.name, null)) {
-            "AccessToken is null."
-        }
+    override val privateAccessToken: String?
+        get() = authState?.accessToken
 
-    override val refreshToken: String
-        get() = requireNotNull(preferences.getString(Keys.PREF_KEY_REFRESH_TOKEN.name, null)) {
-            "RefreshToken is null."
+    override var publicAccessToken: String?
+        get() = preferences.getString(Keys.PREF_KEY_PUBLIC_TOKEN.name, null)
+        set(value) = preferences.edit {
+            value?.let { putString(Keys.PREF_KEY_PUBLIC_TOKEN.name, it) }
+                ?: remove(Keys.PREF_KEY_PUBLIC_TOKEN.name)
         }
-
-    override val tokensPrivate: Boolean
-        get() = preferences.getBoolean(Keys.PREF_KEY_ARE_TOKENS_PRIVATE.name, false)
 
     val hasTokens: Boolean
-        get() = preferences.contains(Keys.PREF_KEY_TOKEN.name)
+        get() = preferences.contains(Keys.PREF_KEY_PUBLIC_TOKEN.name)
 
     val isPrivateAuthorized: Observable<Boolean>
-        get() = Observable.combineLatest(
-            rxPreferences.getString(Keys.PREF_KEY_TOKEN.name).asObservable(),
-            rxPreferences.getString(Keys.PREF_KEY_REFRESH_TOKEN.name).asObservable(),
-            rxPreferences.getBoolean(Keys.PREF_KEY_ARE_TOKENS_PRIVATE.name).asObservable(),
-            Function3 { token, refreshToken, private ->
-                token.isNotEmpty() && refreshToken.isNotEmpty() && private
-            }
-        )
-
-    override fun setPrivateTokens(accessToken: String, refreshToken: String) = preferences.edit {
-        putString(Keys.PREF_KEY_TOKEN.name, accessToken)
-        putString(Keys.PREF_KEY_REFRESH_TOKEN.name, refreshToken)
-        putBoolean(Keys.PREF_KEY_ARE_TOKENS_PRIVATE.name, true)
-    }
-
-    override fun setToken(accessToken: String) = preferences.edit {
-        putString(Keys.PREF_KEY_TOKEN.name, accessToken)
-        putBoolean(Keys.PREF_KEY_ARE_TOKENS_PRIVATE.name, false)
-    }
-
-    override fun clearTokens() = preferences.edit {
-        remove(Keys.PREF_KEY_TOKEN.name)
-        remove(Keys.PREF_KEY_REFRESH_TOKEN.name)
-        putBoolean(Keys.PREF_KEY_ARE_TOKENS_PRIVATE.name, false)
-    }
+        get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
+            .asObservable()
+            .filter(CharSequence::isNotBlank)
+            .map { AuthState.jsonDeserialize(it)?.accessToken != null }
+            .onErrorReturnItem(false)
 
     private enum class Keys {
-        PREF_KEY_TOKEN,
-        PREF_KEY_REFRESH_TOKEN,
-        PREF_KEY_ARE_TOKENS_PRIVATE,
+        PREF_KEY_PUBLIC_TOKEN,
         PREF_KEY_AUTH_STATE,
         PREF_KEY_COUNTRY,
         PREF_KEY_LANGUAGE

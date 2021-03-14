@@ -14,7 +14,7 @@ class GetSimilarTracks(
 ) : UseCaseWithArgs<GetSimilarTracks.Args, Single<Resource<Paged<List<ISpotifyTrack>>>>> {
 
     override fun run(args: Args): Single<Resource<Paged<List<ISpotifyTrack>>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getSimilarTracks(args.trackId, args.offset))
 
     class Args(val trackId: String, val offset: Int)

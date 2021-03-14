@@ -3,12 +3,10 @@ package com.clipfinder.spotify.api.di
 import com.clipfinder.core.interceptor.ICacheInterceptor
 import com.clipfinder.core.interceptor.IConnectivityInterceptor
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
-import com.clipfinder.core.spotify.di.spotifyAuthorizationQualifier
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
 import com.clipfinder.spotify.api.adapter.OffsetDateTimeAdapter
 import com.clipfinder.spotify.api.adapter.UUIDAdapter
-import com.clipfinder.spotify.api.auth.SpotifyPublicAuthenticator
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.interceptor.TokenInterceptor
 import com.clipfinder.spotify.api.model.EpisodeObject
@@ -34,15 +32,17 @@ import java.util.*
 private const val PRIVATE_HTTP_CLIENT = "PRIVATE_HTTP_CLIENT"
 private const val PUBLIC_HTTP_CLIENT = "PUBLIC_HTTP_CLIENT"
 
-private fun Scope.httpClient(isPrivate: Boolean): OkHttpClient = OkHttpClient.Builder()
+private const val PRIVATE_TOKEN_INTERCEPTOR = "PRIVATE_TOKEN_INTERCEPTOR"
+private const val PUBLIC_TOKEN_INTERCEPTOR = "PUBLIC_TOKEN_INTERCEPTOR"
+
+private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(get<HttpLoggingInterceptor>())
     .addInterceptor(get<ICacheInterceptor>())
-    .addInterceptor(get<TokenInterceptor>())
-    .run {
-        if (!isPrivate) authenticator(
-            SpotifyPublicAuthenticator(get(named(spotifyAuthorizationQualifier)), get(), get())
-        ) else this
-    }
+    .addInterceptor(
+        get<TokenInterceptor>(
+            named(if (isPrivate) PRIVATE_TOKEN_INTERCEPTOR else PUBLIC_TOKEN_INTERCEPTOR)
+        )
+    )
     .cache(get<Cache>())
     .build()
 
@@ -58,7 +58,7 @@ private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T 
 
 val spotifyApiModule = module {
     single(named(PRIVATE_HTTP_CLIENT)) { httpClient(true) }
-    single(named(PUBLIC_HTTP_CLIENT)) { httpClient(false) }
+    single(named(PUBLIC_HTTP_CLIENT)) { httpClient() }
 
     single {
         MoshiConverterFactory.create(
@@ -96,7 +96,8 @@ val spotifyApiModule = module {
             .create(TokenEndpoints::class.java)
     }
 
-    single { TokenInterceptor(get()) }
+    single(named(PRIVATE_TOKEN_INTERCEPTOR)) { TokenInterceptor(true, get()) }
+    single(named(PUBLIC_TOKEN_INTERCEPTOR)) { TokenInterceptor(false, get()) }
 
     single { retrofitFor<AlbumEndpoints>() }
     single { retrofitFor<ArtistEndpoints>() }

@@ -12,6 +12,6 @@ class GetArtists(
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<List<String>, Single<Resource<List<ISpotifyArtist>>>> {
     override fun run(args: List<String>): Single<Resource<List<ISpotifyArtist>>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(repo.getArtists(ids = args))
 }

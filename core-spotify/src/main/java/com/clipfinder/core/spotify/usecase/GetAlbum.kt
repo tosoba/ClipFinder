@@ -12,6 +12,6 @@ class GetAlbum(
     private val remote: ISpotifyRepo
 ) : UseCaseWithArgs<String, Single<Resource<ISpotifySimplifiedAlbum>>> {
     override fun run(args: String): Single<Resource<ISpotifySimplifiedAlbum>> = auth
-        .authorize()
+        .authorizePublic()
         .andThen(remote.getAlbum(id = args))
 }

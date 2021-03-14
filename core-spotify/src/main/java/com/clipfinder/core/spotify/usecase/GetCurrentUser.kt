@@ -12,5 +12,5 @@ class GetCurrentUser(
     private val repo: ISpotifyRepo
 ) : UseCase<Single<Resource<ISpotifyPrivateUser>>> {
     override val result: Single<Resource<ISpotifyPrivateUser>>
-        get() = auth.requirePrivateAuthorized().andThen(repo.authorizedUser)
+        get() = auth.authorizePrivate().andThen(repo.authorizedUser)
 }
