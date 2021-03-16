@@ -3,12 +3,12 @@ package com.clipfinder.core.android.base.viewmodel
 import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
-import com.clipfinder.core.ext.castAs
-import com.clipfinder.core.model.*
 import com.clipfinder.core.android.model.*
 import com.clipfinder.core.android.util.ext.copyWithPaged
 import com.clipfinder.core.android.util.ext.loadingOrCompleted
 import com.clipfinder.core.android.util.ext.observeNetworkConnectivity
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.core.model.*
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -67,7 +67,7 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
                     is Resource.Error -> {
                         resource.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
+                            ?: run { logResourceError(resource) }
                         reducer(valueOf(prop).copyWithError(resource.error))
                     }
                 }
@@ -120,7 +120,7 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
                     is Resource.Error -> {
                         resource.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
+                            ?: run { logResourceError(resource) }
                         reducer(valueOf(prop).copyWithError(resource.error))
                     }
                 }
@@ -129,6 +129,14 @@ open class MvRxViewModel<S : MvRxState>(
             setState { reducer(valueOf(prop).copyWithError(it)) }
             onError(it)
         }).disposeOnClear()
+    }
+
+    private fun logResourceError(resource: Resource.Error<*>) {
+        resource.error?.let { Timber.e(it.toString()) }
+        resource.data?.let { Timber.e(it.toString()) }
+        if (resource.error == null && resource.data == null) {
+            Timber.wtf("Unknown error")
+        }
     }
 
     protected fun <T, C : Collection<T>> loadCollection(
@@ -175,7 +183,7 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> reducer(Ready(it.data))
                     is Resource.Error -> {
                         it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
+                            ?: run { logResourceError(it) }
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
                 }
@@ -226,7 +234,7 @@ open class MvRxViewModel<S : MvRxState>(
                     is Resource.Success -> reducer(Ready(it.data))
                     is Resource.Error -> {
                         it.error?.castAs<Throwable>()?.let(onError)
-                            ?: Timber.wtf("Unknown error")
+                            ?: run { logResourceError(it) }
                         reducer(valueOf(prop).copyWithError(it.error))
                     }
                 }
