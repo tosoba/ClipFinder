@@ -1,6 +1,7 @@
 package com.clipfinder.core.android.util.ext
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,6 +10,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -106,3 +108,14 @@ fun Context.getActivityPendingIntent(
     requestCode: Int = 0,
     flags: Int = 0
 ): PendingIntent = PendingIntent.getActivity(this, requestCode, intent, flags)
+
+fun Context.scheduleSingleAlarm(timestampMillis: Long, pendingIntent: PendingIntent) {
+    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> alarmManager
+            .setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager
+            .setExact(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
+        else -> alarmManager.set(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
+    }
+}

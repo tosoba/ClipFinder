@@ -25,7 +25,7 @@ val spotifyCoreAndroidModule = module {
     }
 
     single {
-        SpotifyAutoAuth(get(named(spotifyAuthorizationQualifier)), get(), get(), get())
+        SpotifyAutoAuth(androidContext(), get(named(spotifyAuthorizationQualifier)), get(), get(), get())
     } bind ISpotifyAutoAuth::class
 
     single {
