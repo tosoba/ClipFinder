@@ -4,26 +4,26 @@ import com.clipfinder.core.spotify.usecase.*
 import org.koin.dsl.module
 
 val spotifyCoreModule = module {
-    single { GetAlbum(get(), get()) }
-    single { GetArtists(get(), get()) }
-    single { GetSimilarTracks(get(), get()) }
-    single { GetAudioFeatures(get(), get()) }
-    single { GetCurrentUser(get(), get()) }
-    single { GetCategories(get(), get()) }
-    single { GetFeaturedPlaylists(get(), get()) }
-    single { GetNewReleases(get(), get()) }
-    single { GetDailyViralTracks(get(), get()) }
-    single { GetPlaylistsForCategory(get(), get()) }
-    single { GetTracksFromAlbum(get(), get()) }
-    single { GetAlbumsFromArtist(get(), get()) }
-    single { GetRelatedArtists(get(), get()) }
-    single { GetTopTracksFromArtist(get(), get()) }
-    single { SearchSpotify(get(), get()) }
-    single { GetPlaylistTracks(get(), get()) }
-    single { GetTrack(get(), get()) }
-    single { GetCurrentUsersTopArtists(get(), get()) }
-    single { GetCurrentUsersTopTracks(get(), get()) }
-    single { GetCurrentUsersSavedAlbums(get(), get()) }
-    single { GetCurrentUsersSavedTracks(get(), get()) }
-    single { GetCurrentUsersPlaylists(get(), get()) }
+    single { GetAlbum(get()) }
+    single { GetArtists(get()) }
+    single { GetSimilarTracks(get()) }
+    single { GetAudioFeatures(get()) }
+    single { GetCurrentUser(get()) }
+    single { GetCategories(get()) }
+    single { GetFeaturedPlaylists(get()) }
+    single { GetNewReleases(get()) }
+    single { GetDailyViralTracks(get()) }
+    single { GetPlaylistsForCategory(get()) }
+    single { GetTracksFromAlbum(get()) }
+    single { GetAlbumsFromArtist(get()) }
+    single { GetRelatedArtists(get()) }
+    single { GetTopTracksFromArtist(get()) }
+    single { SearchSpotify(get()) }
+    single { GetPlaylistTracks(get()) }
+    single { GetTrack(get()) }
+    single { GetCurrentUsersTopArtists(get()) }
+    single { GetCurrentUsersTopTracks(get()) }
+    single { GetCurrentUsersSavedAlbums(get()) }
+    single { GetCurrentUsersSavedTracks(get()) }
+    single { GetCurrentUsersPlaylists(get()) }
 }

@@ -38,7 +38,7 @@ class MainViewModel(
 
     fun onLoginActivityResult(intent: Intent, onError: (Throwable) -> Unit) {
         spotifyManualAuth.sendTokenRequestFrom(intent)
-            .subscribe({ setState { copy(accessToken = it.accessToken) } }, onError)
+            .subscribe({}, onError)
             .disposeOnClear()
     }
 

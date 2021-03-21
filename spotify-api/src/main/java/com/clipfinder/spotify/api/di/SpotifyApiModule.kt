@@ -3,6 +3,8 @@ package com.clipfinder.spotify.api.di
 import com.clipfinder.core.interceptor.ICacheInterceptor
 import com.clipfinder.core.interceptor.IConnectivityInterceptor
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
+import com.clipfinder.core.spotify.auth.ISpotifyPrivateAuthenticator
+import com.clipfinder.core.spotify.auth.ISpotifyPublicAuthenticator
 import com.clipfinder.spotify.api.adapter.BigDecimalAdapter
 import com.clipfinder.spotify.api.adapter.ByteArrayAdapter
 import com.clipfinder.spotify.api.adapter.OffsetDateTimeAdapter
@@ -42,6 +44,9 @@ private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpC
         get<TokenInterceptor>(
             named(if (isPrivate) PRIVATE_TOKEN_INTERCEPTOR else PUBLIC_TOKEN_INTERCEPTOR)
         )
+    )
+    .authenticator(
+        if (isPrivate) get<ISpotifyPrivateAuthenticator>() else get<ISpotifyPublicAuthenticator>()
     )
     .cache(get<Cache>())
     .build()

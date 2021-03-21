@@ -1,23 +1,19 @@
 package com.clipfinder.core.spotify.usecase
 
 import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
+import com.clipfinder.core.model.UseCaseWithArgs
 import com.clipfinder.core.spotify.model.SpotifySearchResult
 import com.clipfinder.core.spotify.model.SpotifySearchType
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
-import com.clipfinder.core.model.UseCaseWithArgs
 import io.reactivex.Single
 
 class SearchSpotify(
-    private val auth: ISpotifyAutoAuth,
     private val repo: ISpotifyRepo
 ) : UseCaseWithArgs<SearchSpotify.Args, Single<Resource<SpotifySearchResult>>> {
-    override fun run(args: Args): Single<Resource<SpotifySearchResult>> = auth
-        .authorizePublic()
-        .andThen(when (args) {
-            is Args.Initial -> repo.search(args.query, offset = 0, type = SpotifySearchType.ALL)
-            is Args.More -> repo.search(args.query, offset = args.offset, type = args.type.value)
-        })
+    override fun run(args: Args): Single<Resource<SpotifySearchResult>> = when (args) {
+        is Args.Initial -> repo.search(args.query, offset = 0, type = SpotifySearchType.ALL)
+        is Args.More -> repo.search(args.query, offset = args.offset, type = args.type.value)
+    }
 
     sealed class Args {
         abstract val query: String

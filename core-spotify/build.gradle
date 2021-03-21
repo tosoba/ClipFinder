@@ -11,6 +11,8 @@ dependencies {
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-core-ext:$koinVersion"
 
+    implementation "com.squareup.retrofit2:retrofit:2.6.2"
+
     implementation rootProject.ext.rxJava
 }
 
