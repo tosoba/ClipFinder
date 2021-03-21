@@ -9,9 +9,8 @@ class TokenInterceptor(
     private val holder: ISpotifyTokensHolder
 ) : Interceptor {
     private val accessToken: String
-        get() = requireNotNull(if (isPrivate) holder.privateAccessToken else holder.publicAccessToken) {
-            "${if (isPrivate) "Private" else "Public"} access token is null."
-        }
+        get() = (if (isPrivate) holder.privateAccessToken else holder.publicAccessToken)
+            ?: "NO_TOKEN"
 
     override fun intercept(chain: Interceptor.Chain): Response = chain
         .proceed(

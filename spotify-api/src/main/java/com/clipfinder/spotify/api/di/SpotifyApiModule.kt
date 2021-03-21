@@ -37,7 +37,10 @@ private const val PUBLIC_HTTP_CLIENT = "PUBLIC_HTTP_CLIENT"
 private const val PRIVATE_TOKEN_INTERCEPTOR = "PRIVATE_TOKEN_INTERCEPTOR"
 private const val PUBLIC_TOKEN_INTERCEPTOR = "PUBLIC_TOKEN_INTERCEPTOR"
 
-private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpClient.Builder()
+private fun Scope.httpClient(
+    isPrivate: Boolean = false,
+    useCache: Boolean = true
+): OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(get<HttpLoggingInterceptor>())
     .addInterceptor(get<ICacheInterceptor>())
     .addInterceptor(
@@ -45,10 +48,8 @@ private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpC
             named(if (isPrivate) PRIVATE_TOKEN_INTERCEPTOR else PUBLIC_TOKEN_INTERCEPTOR)
         )
     )
-    .authenticator(
-        if (isPrivate) get<ISpotifyPrivateAuthenticator>() else get<ISpotifyPublicAuthenticator>()
-    )
-    .cache(get<Cache>())
+    .authenticator(if (isPrivate) get<ISpotifyPrivateAuthenticator>() else get<ISpotifyPublicAuthenticator>())
+    .run { if (useCache) cache(get<Cache>()) else this }
     .build()
 
 private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T = Retrofit.Builder()

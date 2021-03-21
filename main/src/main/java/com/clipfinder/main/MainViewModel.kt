@@ -18,6 +18,7 @@ import com.clipfinder.core.model.invoke
 import com.clipfinder.core.spotify.usecase.GetCurrentUser
 import io.reactivex.Single
 import org.koin.android.ext.android.get
+import timber.log.Timber
 
 class MainViewModel(
     initialState: MainState,
@@ -55,10 +56,10 @@ class MainViewModel(
                     .distinctUntilChanged()
                     .filter(CharSequence::isNotBlank)
             )
-            .subscribe {
+            .subscribe({
                 setState { copy(accessToken = it) }
                 loadCurrentUser()
-            }
+            }, Timber::e)
             .disposeOnClear()
     }
 

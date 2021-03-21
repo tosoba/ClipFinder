@@ -1,5 +1,7 @@
 package com.clipfinder.core.android.spotify.auth
 
+import com.clipfinder.core.android.spotify.exception.NullAuthStateException
+import com.clipfinder.core.android.spotify.exception.UnknownRefreshTokenRequestException
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.spotify.auth.ISpotifyAutoAuth
 import io.reactivex.Completable
@@ -10,31 +12,27 @@ class SpotifyAutoAuth(
     private val authService: AuthorizationService,
     private val preferences: SpotifyPreferences
 ) : ISpotifyAutoAuth {
-    override fun authorizePrivate(): Completable =
-        Completable.create { emitter ->
-            val authState = preferences.authState
-            if (authState == null) {
-                emitter.onError(NullAuthStateException)
-                return@create
-            }
-
-            try {
-                authState.performActionWithFreshTokens(
-                    authService,
-                    AuthState.AuthStateAction { accessToken, _, ex ->
-                        when {
-                            ex != null -> emitter.onError(ex)
-                            accessToken != null -> emitter.onComplete()
-                            else -> emitter.onError(UnknownRefreshTokenRequestException)
-                        }
-                    }
-                )
-                preferences.authState = authState
-            } catch (ex: Exception) {
-                emitter.onError(ex)
-            }
+    override fun authorizePrivate(): Completable = Completable.create { emitter ->
+        val authState = preferences.authState
+        if (authState == null) {
+            emitter.onError(NullAuthStateException)
+            return@create
         }
 
-    object NullAuthStateException : Throwable()
-    object UnknownRefreshTokenRequestException : Throwable()
+        try {
+            authState.performActionWithFreshTokens(
+                authService,
+                AuthState.AuthStateAction { accessToken, _, ex ->
+                    when {
+                        ex != null -> emitter.onError(ex)
+                        accessToken != null -> emitter.onComplete()
+                        else -> emitter.onError(UnknownRefreshTokenRequestException)
+                    }
+                }
+            )
+            preferences.authState = authState
+        } catch (ex: Exception) {
+            emitter.onError(ex)
+        }
+    }
 }

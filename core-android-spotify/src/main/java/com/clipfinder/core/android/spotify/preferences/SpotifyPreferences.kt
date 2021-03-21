@@ -61,9 +61,6 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
                 ?: remove(Keys.PREF_KEY_PUBLIC_TOKEN.name)
         }
 
-    val containPublicAccessToken: Boolean
-        get() = preferences.contains(Keys.PREF_KEY_PUBLIC_TOKEN.name)
-
     val isPrivateAuthorizedObservable: Observable<Boolean>
         get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
             .asObservable()
