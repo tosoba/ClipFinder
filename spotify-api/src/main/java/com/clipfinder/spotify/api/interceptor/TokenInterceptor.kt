@@ -16,7 +16,7 @@ class TokenInterceptor(
         .proceed(
             chain.request()
                 .newBuilder()
-                .addHeader("Authorization", "Bearer $accessToken")
+                .header("Authorization", "Bearer $accessToken")
                 .build()
         )
 }
