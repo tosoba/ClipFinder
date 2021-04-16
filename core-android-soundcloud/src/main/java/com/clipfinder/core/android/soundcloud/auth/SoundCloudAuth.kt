@@ -1,31 +1,47 @@
 package com.clipfinder.core.android.soundcloud.auth
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.util.Log
 import com.clipfinder.core.soundcloud.auth.ISoundCloudAuth
 import io.reactivex.Single
+import org.jsoup.Jsoup
+import java.lang.Exception
+import java.net.URL
 
-class SoundCloudAuth(private val context: Context) : ISoundCloudAuth {
+object SoundCloudAuth : ISoundCloudAuth {
     override val clientId: Single<String>
         @SuppressLint("SetJavaScriptEnabled")
-        get() = Single.create {
-            WebView(context).apply {
-                settings.javaScriptEnabled = true
-                webViewClient = object : WebViewClient() {
-                    override fun onLoadResource(view: WebView?, url: String?) {
-                        super.onLoadResource(view, url)
-                        if (url == null || !url.contains("client_id")) return
-                        val clientIdStartIndex = url.indexOf('=', url.indexOf("client_id")) + 1
-                        val clientIdEndIndex = url.indexOf('&', clientIdStartIndex)
-                        it.onSuccess(url.run {
-                            if (clientIdEndIndex == -1) substring(clientIdStartIndex)
-                            else substring(clientIdStartIndex, clientIdEndIndex)
-                        })
+        get() = Single.create { emitter ->
+            try {
+                Jsoup.connect("https://soundcloud.com")
+                    .get()
+                    .select("script")
+                    .filter { scriptElement ->
+                        scriptElement.hasAttr("src")
+                            && scriptElement.attr("src").contains(".js")
                     }
-                }
-                loadUrl("https://soundcloud.com/")
+                    .forEach { scriptElement ->
+                        URL(scriptElement.attr("src"))
+                            .openStream()
+                            .reader()
+                            .useLines { lines ->
+                                lines.forEach forEachLine@{ line ->
+                                    val clientIdIndex = line.indexOf("client_id=")
+                                    if (clientIdIndex == -1) return@forEachLine
+                                    emitter.onSuccess(
+                                        line.substring(
+                                            line.indexOf("=", clientIdIndex) + 1,
+                                            line.indexOf("&", clientIdIndex)
+                                        )
+                                    )
+                                }
+                            }
+                    }
+                emitter.onError(ClientIdNotFoundException)
+            } catch (ex: Exception) {
+                emitter.onError(ex)
             }
         }
+
+    object ClientIdNotFoundException : Throwable()
 }

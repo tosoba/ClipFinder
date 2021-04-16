@@ -31,8 +31,6 @@ abstract class AuthorizedSoundCloudUseCase<T>(
 
     private val resourceWithNewClientId: Single<T>
         get() = getClientId(timeout = Timeout(25L, TimeUnit.SECONDS))
-            .subscribeOn(rxSchedulers.main)
-            .observeOn(rxSchedulers.io)
             .flatMap(::getResourceWithClientId)
 
     protected abstract fun getResourceWithClientId(clientId: String): Single<T>

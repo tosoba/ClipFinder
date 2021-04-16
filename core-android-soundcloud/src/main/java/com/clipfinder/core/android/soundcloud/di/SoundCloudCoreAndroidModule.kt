@@ -12,6 +12,6 @@ import org.koin.dsl.module
 
 val soundCloudCoreAndroidModule = module {
     single { SoundCloudPreferences(androidContext()) } bind ISoundCloudPreferences::class
-    single { SoundCloudAuth(androidContext()) } bind ISoundCloudAuth::class
+    single { SoundCloudAuth } bind ISoundCloudAuth::class
     single { SoundCloudRepo(get(), get()) } bind ISoundCloudRepo::class
 }
