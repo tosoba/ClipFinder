@@ -39,7 +39,7 @@ val spotifyCoreAndroidModule = module {
     single { SpotifyManualAuth(get(), get()) }
 
     single {
-        SpotifyPublicAuthenticator(get(named(spotifyAuthorizationQualifier)), androidContext(), get(), get())
+        SpotifyPublicAuthenticator(get(named(spotifyAuthorizationQualifier)), get(), get())
     } bind ISpotifyPublicAuthenticator::class
 
     single { SpotifyPrivateAuthenticator(get(), get()) } bind ISpotifyPrivateAuthenticator::class

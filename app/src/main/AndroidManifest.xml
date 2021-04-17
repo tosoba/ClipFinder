@@ -68,10 +68,5 @@
             android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:parentActivityName="com.clipfinder.main.MainActivity"
             android:theme="@style/PreferenceScreen" />
-
-        <receiver
-            android:name="com.clipfinder.core.android.spotify.receiver.PublicAccessTokenExpiredBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true" />
     </application>
 </manifest>

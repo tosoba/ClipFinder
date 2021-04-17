@@ -55,10 +55,20 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
         get() = authState?.accessToken
 
     override var publicAccessToken: String?
-        get() = preferences.getString(Keys.PREF_KEY_PUBLIC_TOKEN.name, null)
+        get() {
+            val token = preferences.getString(Keys.PREF_KEY_PUBLIC_TOKEN.name, null)
+            return if (System.currentTimeMillis() >= publicAccessTokenExpiryTimestamp) null
+            else token
+        }
         set(value) = preferences.edit {
             value?.let { putString(Keys.PREF_KEY_PUBLIC_TOKEN.name, it) }
                 ?: remove(Keys.PREF_KEY_PUBLIC_TOKEN.name)
+        }
+
+    var publicAccessTokenExpiryTimestamp: Long
+        get() = preferences.getLong(Keys.PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP.name, -1L)
+        set(value) = preferences.edit {
+            putLong(Keys.PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP.name, value)
         }
 
     val isPrivateAuthorizedObservable: Observable<Boolean>
@@ -76,6 +86,7 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
 
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,
+        PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP,
         PREF_KEY_AUTH_STATE,
         PREF_KEY_COUNTRY,
         PREF_KEY_LANGUAGE

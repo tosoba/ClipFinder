@@ -16,11 +16,8 @@ class CacheInterceptor(
         .newBuilder()
         .header(
             "Cache-Control",
-            if (context.isConnected) {
-                "public, max-age=$maxAge"
-            } else {
-                "public, only-if-cached, max-stale=$maxStale"
-            }
+            if (context.isConnected) "public, max-age=$maxAge"
+            else "public, only-if-cached, max-stale=$maxStale"
         )
         .removeHeader("Pragma")
         .build()

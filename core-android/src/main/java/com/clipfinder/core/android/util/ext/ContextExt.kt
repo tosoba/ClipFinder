@@ -108,14 +108,3 @@ fun Context.getActivityPendingIntent(
     requestCode: Int = 0,
     flags: Int = 0
 ): PendingIntent = PendingIntent.getActivity(this, requestCode, intent, flags)
-
-fun Context.scheduleSingleAlarm(timestampMillis: Long, pendingIntent: PendingIntent) {
-    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> alarmManager
-            .setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT -> alarmManager
-            .setExact(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
-        else -> alarmManager.set(AlarmManager.RTC_WAKEUP, timestampMillis, pendingIntent)
-    }
-}
