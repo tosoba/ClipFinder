@@ -23,7 +23,8 @@ class SpotifyRepo(
     private val chartsEndpoints: ChartsEndpoints,
     private val libraryEndpoints: LibraryEndpoints,
     private val personalizationEndpoints: PersonalizationEndpoints,
-    private val playlistsEndpoints: PlaylistsEndpoints,
+    private val publicPlaylistsEndpoints: PlaylistsEndpoints,
+    private val privatePlaylistsEndpoints: PlaylistsEndpoints,
     private val searchEndpoints: SearchEndpoints,
     private val tracksEndpoints: TracksEndpoints,
     private val userProfileEndpoints: UserProfileEndpoints
@@ -172,7 +173,7 @@ class SpotifyRepo(
 
     override fun getPlaylistTracks(
         playlistId: String, offset: Int
-    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = playlistsEndpoints
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>> = publicPlaylistsEndpoints
         .getPlaylistsTracks(playlistId = playlistId, offset = offset)
         .mapToResource {
             Paged<List<ISpotifyTrack>>(
@@ -212,7 +213,7 @@ class SpotifyRepo(
 
     override fun getCurrentUsersPlaylists(
         offset: Int
-    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = playlistsEndpoints
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> = privatePlaylistsEndpoints
         .getAListOfCurrentUsersPlaylists(offset = offset)
         .mapToResource { toPaged() }
 }

@@ -52,7 +52,12 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
         }
 
     override val privateAccessToken: String?
-        get() = authState?.accessToken
+        get() {
+            val privateAuthState = authState
+            val expirationTime = privateAuthState?.accessTokenExpirationTime
+            return if (expirationTime != null && System.currentTimeMillis() >= expirationTime) null
+            else privateAuthState?.accessToken
+        }
 
     override var publicAccessToken: String?
         get() {
@@ -75,14 +80,30 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
         get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
             .asObservable()
             .filter(CharSequence::isNotBlank)
-            .map { AuthState.jsonDeserialize(it)?.accessToken != null }
+            .map { serializedAuthState ->
+                val authState = AuthState.jsonDeserialize(serializedAuthState)
+                val expirationTime = authState.accessTokenExpirationTime
+                val accessToken = authState.accessToken
+                accessToken != null && expirationTime != null && System.currentTimeMillis() < expirationTime
+            }
             .onErrorReturnItem(false)
+            .distinctUntilChanged()
 
     val privateAccessTokenObservable: Observable<String>
         get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
             .asObservable()
-            .map { if (it.isNotBlank()) AuthState.jsonDeserialize(it)?.accessToken ?: "" else "" }
+            .map { serializedAuthState ->
+                val authState = AuthState.jsonDeserialize(serializedAuthState)
+                val expirationTime = authState.accessTokenExpirationTime
+                val accessToken = authState.accessToken
+                if (expirationTime != null && System.currentTimeMillis() < expirationTime) {
+                    accessToken ?: ""
+                } else {
+                    ""
+                }
+            }
             .onErrorReturnItem("")
+            .distinctUntilChanged()
 
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,

@@ -1,5 +1,6 @@
 package com.clipfinder.core.android.di
 
+import com.clipfinder.core.android.BuildConfig
 import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.clipfinder.core.android.interceptor.CacheInterceptor
 import com.clipfinder.core.android.interceptor.ConnectivityInterceptor
@@ -20,7 +21,15 @@ val coreAndroidNetworkingModule = module {
 
     single { ConnectivityInterceptor(androidContext()) } bind IConnectivityInterceptor::class
     single { CacheInterceptor(androidContext()) } bind ICacheInterceptor::class
-    single { HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC } }
+    single {
+        HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.BASIC
+            }
+        }
+    }
 
     single { GsonConverterFactory.create() }
 

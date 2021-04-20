@@ -13,6 +13,7 @@ import com.clipfinder.core.spotify.auth.ISpotifyPrivateAuthenticator
 import com.clipfinder.core.spotify.auth.ISpotifyPublicAuthenticator
 import com.clipfinder.core.spotify.auth.ISpotifyTokensHolder
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
+import com.clipfinder.spotify.api.di.PlaylistsEndpointsType
 import net.openid.appauth.AuthorizationService
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -31,7 +32,7 @@ val spotifyCoreAndroidModule = module {
     single { SpotifyAutoAuth(get(), get()) } bind ISpotifyAutoAuth::class
 
     single {
-        SpotifyRepo(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get())
+        SpotifyRepo(get(), get(), get(), get(), get(), get(), get(), get(named(PlaylistsEndpointsType.PUBLIC.name)), get(named(PlaylistsEndpointsType.PRIVATE.name)), get(), get(), get())
     } bind ISpotifyRepo::class
 
     single { AuthorizationService(androidContext()) }

@@ -37,10 +37,7 @@ private const val PUBLIC_HTTP_CLIENT = "PUBLIC_HTTP_CLIENT"
 private const val PRIVATE_TOKEN_INTERCEPTOR = "PRIVATE_TOKEN_INTERCEPTOR"
 private const val PUBLIC_TOKEN_INTERCEPTOR = "PUBLIC_TOKEN_INTERCEPTOR"
 
-private fun Scope.httpClient(
-    isPrivate: Boolean = false,
-    useCache: Boolean = true
-): OkHttpClient = OkHttpClient.Builder()
+private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(get<HttpLoggingInterceptor>())
     .addInterceptor(get<ICacheInterceptor>())
     .addInterceptor(
@@ -49,7 +46,7 @@ private fun Scope.httpClient(
         )
     )
     .authenticator(if (isPrivate) get<ISpotifyPrivateAuthenticator>() else get<ISpotifyPublicAuthenticator>())
-    .run { if (useCache) cache(get<Cache>()) else this }
+    .cache(get<Cache>())
     .build()
 
 private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T = Retrofit.Builder()
@@ -110,11 +107,16 @@ val spotifyApiModule = module {
     single { retrofitFor<BrowseEndpoints>() }
     single { retrofitFor<EpisodeEndpoints>() }
     single { retrofitFor<FollowEndpoints>(true) }
-    single { retrofitFor<LibraryEndpoints>() }
+    single { retrofitFor<LibraryEndpoints>(true) }
     single { retrofitFor<PersonalizationEndpoints>(true) }
-    single { retrofitFor<PlaylistsEndpoints>() }
+    single(named(PlaylistsEndpointsType.PRIVATE.name)) { retrofitFor<PlaylistsEndpoints>(true) }
+    single(named(PlaylistsEndpointsType.PUBLIC.name)) { retrofitFor<PlaylistsEndpoints>() }
     single { retrofitFor<SearchEndpoints>() }
     single { retrofitFor<ShowsEndpoints>() }
     single { retrofitFor<TracksEndpoints>() }
     single { retrofitFor<UserProfileEndpoints>(true) }
+}
+
+enum class PlaylistsEndpointsType {
+    PRIVATE, PUBLIC
 }
