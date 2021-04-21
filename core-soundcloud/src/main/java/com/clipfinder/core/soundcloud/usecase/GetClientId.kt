@@ -10,5 +10,5 @@ class GetClientId(
     private val preferences: ISoundCloudPreferences
 ) : UseCase<Single<String>> {
     override val result: Single<String>
-        get() = auth.clientId.doOnSuccess { preferences.clientId = it }
+        get() = auth.clientId.doOnSuccess(preferences::clientId::set)
 }

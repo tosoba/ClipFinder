@@ -74,7 +74,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = FragmentSpotifyAccountTopBinding.inflate(inflater, container, false)
-        .also { binding = it }
+        .also(::binding::set)
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
