@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.PagerAdapter
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.clipfinder.core.ext.castAs
 import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
@@ -21,10 +22,20 @@ import com.clipfinder.core.android.util.ext.showDrawerHamburger
 import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
-    private val binding: FragmentSpotifyAccountBinding
-        by viewBinding(FragmentSpotifyAccountBinding::bind)
+    private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)
     override val toolbar: Toolbar
         get() = binding.accountToolbar
+
+    private val accountViewPagerAdapter: PagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        TitledCustomCurrentStatePagerAdapter(
+            childFragmentManager,
+            arrayOf(
+                getString(R.string.playlists) to SpotifyAccountPlaylistsFragment(),
+                getString(R.string.saved) to SpotifyAccountSavedFragment(),
+                getString(R.string.top) to SpotifyAccountTopFragment()
+            )
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()
@@ -33,15 +44,8 @@ class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasM
                 setSupportActionBar(accountToolbar)
                 showDrawerHamburger()
             }
-            val titledFragments: Array<Pair<String, Fragment>> = arrayOf(
-                getString(R.string.playlists) to SpotifyAccountPlaylistsFragment(),
-                getString(R.string.saved) to SpotifyAccountSavedFragment(),
-                getString(R.string.top) to SpotifyAccountTopFragment()
-            )
-            accountViewPager.adapter = TitledCustomCurrentStatePagerAdapter(
-                childFragmentManager, titledFragments
-            )
-            accountViewPager.offscreenPageLimit = titledFragments.size - 1
+            accountViewPager.adapter = accountViewPagerAdapter
+            accountViewPager.offscreenPageLimit = accountViewPagerAdapter.count - 1
             accountTabLayout.setupWithViewPager(accountViewPager)
         }
     }
@@ -62,5 +66,7 @@ class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasM
     ) {
         activity?.castAs<NavigationDrawerController>()?.openDrawer()
         true
-    } else false
+    } else {
+        false
+    }
 }
