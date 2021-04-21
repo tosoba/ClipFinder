@@ -34,7 +34,7 @@ class ClipFinderApp : Application() {
 
         initTimber()
 //        initLeakCanary()
-//        initNotifications()
+        initNotifications()
         initKoin()
 
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
@@ -56,18 +56,22 @@ class ClipFinderApp : Application() {
     }
 
     private fun initNotifications() {
-        startService(Intent(this, CancelNotificationsService::class.java))
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(
-                NotificationChannel(
-                    PlaybackNotification.CHANNEL_ID,
-                    getString(R.string.channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT
-                ).apply {
-                    description = getString(R.string.channel_description)
-                }
-            )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, CancelNotificationsService::class.java))
+            getSystemService(NotificationManager::class.java)
+                .createNotificationChannel(
+                    NotificationChannel(
+                        PlaybackNotification.CHANNEL_ID,
+                        getString(R.string.channel_name),
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    ).apply {
+                        description = getString(R.string.channel_description)
+                    }
+                )
+        } else {
+            startService(Intent(this, CancelNotificationsService::class.java))
+            return
+        }
     }
 
     private fun initKoin() {
@@ -77,9 +81,7 @@ class ClipFinderApp : Application() {
                 appModule, epoxyModule, coreAndroidNetworkingModule,
                 spotifyChartsApiModule, spotifyApiModule,
                 spotifyCoreAndroidModule, spotifyCoreModule,
-
                 soundCloudApiModule, soundCloudCoreAndroidModule, soundCloudCoreModule,
-
                 youtubeCoreModule, youtubeCoreAndroidModule
             ))
         }
