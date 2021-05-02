@@ -1,6 +1,8 @@
 package com.clipfinder.core.android.util.ext
 
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import com.squareup.picasso.Picasso
 import io.reactivex.disposables.Disposable
 
@@ -18,4 +20,20 @@ fun View.showIfHidden() {
 
 fun View.hideIfShowing() {
     if (visibility == View.VISIBLE) visibility = View.GONE
+}
+
+fun View.updateLayoutParams(
+    width: Int = ViewGroup.LayoutParams.MATCH_PARENT,
+    height: Int = ViewGroup.LayoutParams.MATCH_PARENT
+) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            layoutParams.also {
+                it.width = width
+                it.height = height
+            }
+            requestLayout()
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
+        }
+    })
 }

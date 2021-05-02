@@ -320,24 +320,26 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         player?.pause(spotifyPlayerOperationCallback)
     }
 
-    override fun onAuthenticationComplete(accessToken: String) {
+    override fun onAuthenticationComplete(accessToken: String, onInitialized: () -> Unit) {
         if (player == null) {
             player = SpotifyPlayer
                 .Builder(Config(requireContext(), accessToken, BuildConfig.SPOTIFY_CLIENT_ID))
                 .setAudioController(audioTrackController)
-                .build(
-                    object : SpotifyPlayer.InitializationObserver {
-                        override fun onInitialized(player: SpotifyPlayer) {
-                            player.setConnectivityStatus(spotifyPlayerOperationCallback, requireContext().networkConnectivity)
-                            player.addNotificationCallback(this@SpotifyPlayerFragment)
-                            player.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
-                        }
-
-                        override fun onError(error: Throwable) {
-                            Timber.tag("PLAYER").e("Error: ${error.message ?: "unknown"}")
-                        }
+                .build(object : SpotifyPlayer.InitializationObserver {
+                    override fun onInitialized(player: SpotifyPlayer) {
+                        player.setConnectivityStatus(
+                            spotifyPlayerOperationCallback,
+                            requireContext().networkConnectivity
+                        )
+                        player.addNotificationCallback(this@SpotifyPlayerFragment)
+                        player.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
+                        onInitialized()
                     }
-                )
+
+                    override fun onError(error: Throwable) {
+                        Timber.tag("PLAYER").e("Error: ${error.message ?: "unknown"}")
+                    }
+                })
         } else {
             player?.login(accessToken)
         }
@@ -365,7 +367,8 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     override fun invalidate() = Unit
 
     private fun playbackTimer(
-        trackDuration: Long, positionMs: Long
+        trackDuration: Long,
+        positionMs: Long
     ): CountDownTimer = tickingTimer(trackDuration - positionMs, 1000) { millisUntilFinished ->
         val seconds = (trackDuration - millisUntilFinished) / 1000
         if (playback_seek_bar?.max == 0) playback_seek_bar?.max = (trackDuration / 1000).toInt()

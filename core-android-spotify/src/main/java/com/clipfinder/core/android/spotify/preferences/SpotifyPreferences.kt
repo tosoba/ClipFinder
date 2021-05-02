@@ -89,22 +89,6 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
             .onErrorReturnItem(false)
             .distinctUntilChanged()
 
-    val privateAccessTokenObservable: Observable<String>
-        get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
-            .asObservable()
-            .map { serializedAuthState ->
-                val authState = AuthState.jsonDeserialize(serializedAuthState)
-                val expirationTime = authState.accessTokenExpirationTime
-                val accessToken = authState.accessToken
-                if (expirationTime != null && System.currentTimeMillis() < expirationTime) {
-                    accessToken ?: ""
-                } else {
-                    ""
-                }
-            }
-            .onErrorReturnItem("")
-            .distinctUntilChanged()
-
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,
         PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP,

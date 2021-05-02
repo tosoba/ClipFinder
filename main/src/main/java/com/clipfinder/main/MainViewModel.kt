@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.airbnb.mvrx.withState
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.android.spotify.auth.SpotifyAutoAuth
 import com.clipfinder.core.android.spotify.auth.SpotifyManualAuth
@@ -33,6 +34,14 @@ class MainViewModel(
         observePrivateAccessToken()
     }
 
+    internal val privateAccessToken: String?
+        get() = spotifyPreferences.privateAccessToken
+
+    internal val isPrivateAuthorized: Boolean
+        get() = withState(this, MainState::isPrivateAuthorized)
+
+    internal var onLoginSuccessful: (() -> Unit)? = null
+
     private fun loadCurrentUser() = load(MainState::user, getCurrentUser::intoState) { copy(user = it) }
     fun setMainContent(mainContent: MainContent) = setState { copy(mainContent = mainContent) }
     fun setPlayerState(playerState: PlayerState) = setState { copy(playerState = playerState) }
@@ -44,29 +53,28 @@ class MainViewModel(
     }
 
     fun onLoggedOut() {
-        setState { copy(user = Empty, accessToken = null) }
+        setState { copy(user = Empty, isPrivateAuthorized = false) }
         spotifyPreferences.authState = null
     }
 
     private fun observePrivateAccessToken() {
         spotifyAutoAuth.authorizePrivate()
             .onErrorComplete()
-            .andThen(
-                spotifyPreferences.privateAccessTokenObservable
-                    .distinctUntilChanged()
-                    .filter(CharSequence::isNotBlank)
+            .andThen(spotifyPreferences.isPrivateAuthorizedObservable)
+            .subscribe(
+                {
+                    setState { copy(isPrivateAuthorized = it) }
+                    if (isPrivateAuthorized) loadCurrentUser()
+                },
+                Timber::e
             )
-            .subscribe({
-                setState { copy(accessToken = it) }
-                loadCurrentUser()
-            }, Timber::e)
             .disposeOnClear()
     }
 
     @SuppressLint("MissingPermission")
     private fun handleConnectivityChanges(context: Context) {
-        context.handleConnectivityChanges { (_, _, _, user, accessToken) ->
-            if (accessToken != null && user.retryLoadOnNetworkAvailable) loadCurrentUser()
+        context.handleConnectivityChanges { (_, _, _, user, isPrivateAuthorized) ->
+            if (isPrivateAuthorized && user.retryLoadOnNetworkAvailable) loadCurrentUser()
         }
     }
 

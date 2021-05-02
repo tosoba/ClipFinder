@@ -26,7 +26,7 @@ data class MainState(
     val itemFavouriteState: Boolean = false,
     val mainContent: MainContent = MainContent.SPOTIFY,
     val user: Loadable<User> = Empty,
-    val accessToken: String? = null
+    val isPrivateAuthorized: Boolean = false
 ) : MvRxState
 
 enum class PlayerState {
