@@ -115,6 +115,11 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         initPlayerViewControls(view)
     }
 
+    override fun onDestroyView() {
+        youtube_player_view?.release()
+        super.onDestroyView()
+    }
+
     override fun onDragging() {
         youtube_player_collapsed_controls_group?.visibility = View.GONE
     }
@@ -180,7 +185,6 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     }
 
     private fun initYouTubePlayerView() {
-        lifecycle.addObserver(youtube_player_view)
         youtube_player_view?.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 this@YoutubePlayerFragment.youTubePlayer = youTubePlayer
@@ -189,6 +193,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                 youtube_player_view?.getPlayerUiController()?.showVideoTitle(true)
             }
         })
+        youtube_player_view?.enableBackgroundPlayback(true)
     }
 
     private fun playVideo(video: Video) {
