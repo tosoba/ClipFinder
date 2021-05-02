@@ -57,7 +57,6 @@ class ClipFinderApp : Application() {
 
     private fun initNotifications() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(Intent(this, CancelNotificationsService::class.java))
             getSystemService(NotificationManager::class.java)
                 .createNotificationChannel(
                     NotificationChannel(
@@ -68,10 +67,8 @@ class ClipFinderApp : Application() {
                         description = getString(R.string.channel_description)
                     }
                 )
-        } else {
-            startService(Intent(this, CancelNotificationsService::class.java))
-            return
         }
+        startService(Intent(this, CancelNotificationsService::class.java))
     }
 
     private fun initKoin() {
