@@ -34,6 +34,7 @@ object SoundCloudAuth : ISoundCloudAuth {
                                             line.indexOf("&", clientIdIndex)
                                         )
                                     )
+                                    return@create
                                 }
                             }
                     }
