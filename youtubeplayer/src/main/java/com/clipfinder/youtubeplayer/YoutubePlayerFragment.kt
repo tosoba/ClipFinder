@@ -13,15 +13,15 @@ import androidx.lifecycle.Lifecycle
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.core.android.youtube.player.OnYoutubePlayerStateChangeListener
 import com.clipfinder.core.ext.castAs
 import com.clipfinder.core.android.base.fragment.IYoutubePlayerFragment
 import com.clipfinder.core.android.base.handler.SlidingPanelController
 import com.clipfinder.core.android.model.videos.Video
 import com.clipfinder.core.android.model.videos.VideoPlaylist
 import com.clipfinder.core.android.util.ext.dpToPx
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import kotlinx.android.synthetic.main.fragment_youtube_player.*
 import kotlinx.android.synthetic.main.fragment_youtube_player.view.*
 
@@ -62,16 +62,16 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         }
     }
 
-    private val playlistYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
-        override fun onStateChange(playerState: PlayerConstants.PlayerState) {
-            when (playerState) {
-                PlayerConstants.PlayerState.ENDED -> withState(viewModel) { state ->
-                    if (state.playlistVideos.size > state.currentPlaylistVideoIndex + 1) {
-                        playVideo(state.playlistVideos[state.currentPlaylistVideoIndex + 1])
+    private val playlistYoutubePlayerStateChangeListener = object : AbstractYouTubePlayerListener() {
+        override fun onStateChange(youTubePlayer: YouTubePlayer, state: PlayerConstants.PlayerState) {
+            when (state) {
+                PlayerConstants.PlayerState.ENDED -> withState(viewModel) { fragmentState ->
+                    if (fragmentState.playlistVideos.size > fragmentState.currentPlaylistVideoIndex + 1) {
+                        playVideo(fragmentState.playlistVideos[fragmentState.currentPlaylistVideoIndex + 1])
                         viewModel.onNextVideoFromPlaylistStarted()
                     } else {
                         Toast.makeText(context, "${
-                            state.lastPlayedVideoPlaylist?.name ?: "Unknown playlist"
+                            fragmentState.lastPlayedVideoPlaylist?.name ?: "Unknown playlist"
                         } has ended.", Toast.LENGTH_SHORT).show()
                         activity?.castAs<SlidingPanelController>()?.hideIfVisible()
                     }
@@ -81,8 +81,8 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         }
     }
 
-    private val singleVideoYoutubePlayerStateChangeListener = object : OnYoutubePlayerStateChangeListener {
-        override fun onStateChange(state: PlayerConstants.PlayerState) {
+    private val singleVideoYoutubePlayerStateChangeListener = object : AbstractYouTubePlayerListener() {
+        override fun onStateChange(youTubePlayer: YouTubePlayer, state: PlayerConstants.PlayerState) {
             when (state) {
                 PlayerConstants.PlayerState.PLAYING -> {
                     viewModel.updatePlaybackState(inProgress = true)
@@ -121,12 +121,12 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     override fun onExpanded() {
         youtube_player_collapsed_controls_group?.visibility = View.GONE
-        youtube_player_view?.playerUIController?.showUI(true)
+        youtube_player_view?.getPlayerUiController()?.showUi(true)
     }
 
     override fun onCollapsed() {
         youtube_player_collapsed_controls_group?.visibility = View.VISIBLE
-        youtube_player_view?.playerUIController?.showUI(false)
+        youtube_player_view?.getPlayerUiController()?.showUi(false)
     }
 
     override fun onHidden() = stopPlaybackAndNullifyLastPlayedItems()
@@ -148,7 +148,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         youTubePlayer.removeListener(playlistYoutubePlayerStateChangeListener)
         playVideo(video)
 
-        youtube_player_view?.playerUIController?.setVideoTitle(video.title)
+        youtube_player_view?.getPlayerUiController()?.setVideoTitle(video.title)
     }
 
     override fun loadVideoPlaylist(videoPlaylist: VideoPlaylist, videos: List<Video>) {
@@ -160,7 +160,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
         val firstVideo = videos.first()
         playVideo(firstVideo)
-        youtube_player_view?.playerUIController?.setVideoTitle(firstVideo.title)
+        youtube_player_view?.getPlayerUiController()?.setVideoTitle(firstVideo.title)
     }
 
     override fun invalidate() = Unit
@@ -171,24 +171,24 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     }
 
     private fun initPlayerViewControls(view: View) {
-        view.findViewById<RelativeLayout>(R.id.controls_root).apply {
+        view.findViewById<RelativeLayout>(R.id.controls_container).apply {
             addView(closeBtn)
-            val titleParams = findViewById<TextView>(R.id.video_title)?.layoutParams as RelativeLayout.LayoutParams
-            val margin20 = view.context.dpToPx(20f).toInt()
-            titleParams.setMargins(margin20, 0, margin20, 0)
+            val titleParams = findViewById<TextView>(R.id.video_title).layoutParams as RelativeLayout.LayoutParams
+            val margin20Px = view.context.dpToPx(20f).toInt()
+            titleParams.setMargins(margin20Px, 0, margin20Px, 0)
         }
     }
 
     private fun initYouTubePlayerView() {
-        with(youtube_player_view) {
-            lifecycle.addObserver(this)
-            initialize({
-                youTubePlayer = it
-                it.addListener(singleVideoYoutubePlayerStateChangeListener)
-            }, true)
-            playerUIController.showFullscreenButton(false)
-            playerUIController.showVideoTitle(true)
-        }
+        lifecycle.addObserver(youtube_player_view)
+        youtube_player_view?.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                this@YoutubePlayerFragment.youTubePlayer = youTubePlayer
+                youTubePlayer.addListener(singleVideoYoutubePlayerStateChangeListener)
+                youtube_player_view?.getPlayerUiController()?.showFullscreenButton(false)
+                youtube_player_view?.getPlayerUiController()?.showVideoTitle(true)
+            }
+        })
     }
 
     private fun playVideo(video: Video) {

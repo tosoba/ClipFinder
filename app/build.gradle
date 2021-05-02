@@ -56,7 +56,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
-        exclude 'META-INF/core.kotlin_module'
+        exclude("META-INF/*.kotlin_module")
     }
 }
 
@@ -151,7 +151,7 @@ dependencies {
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'
     kapt 'com.airbnb.android:epoxy-processor:3.7.0'
 
-    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1"
+    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5"
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 

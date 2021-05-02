@@ -12,7 +12,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent=".5" />
 
-    <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/youtube_player_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
