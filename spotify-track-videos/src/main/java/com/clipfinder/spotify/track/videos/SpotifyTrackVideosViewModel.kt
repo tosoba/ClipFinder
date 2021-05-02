@@ -13,6 +13,6 @@ class SpotifyTrackVideosViewModel(
         override fun create(
             viewModelContext: ViewModelContext,
             state: TrackVideosViewState<Track>
-        ): SpotifyTrackVideosViewModel? = SpotifyTrackVideosViewModel(state)
+        ): SpotifyTrackVideosViewModel = SpotifyTrackVideosViewModel(state)
     }
 }

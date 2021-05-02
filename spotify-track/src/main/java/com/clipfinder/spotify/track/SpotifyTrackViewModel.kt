@@ -40,7 +40,6 @@ class SpotifyTrackViewModel(
     private val getAudioFeatures: GetAudioFeatures,
     context: Context
 ) : MvRxViewModel<State>(initialState) {
-
     private val clearLoadableTrackSubscription: PublishRelay<Unit> = PublishRelay.create()
 
     init {
