@@ -71,7 +71,6 @@ class SpotifyPlaylistFragment : BaseMvRxFragment() {
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         viewModel.selectSubscribe(this, SpotifyPlaylistState::isSavedAsFavourite) {
             if (it !is WithValue) return@selectSubscribe
             playlist_favourite_fab?.setImageDrawable(

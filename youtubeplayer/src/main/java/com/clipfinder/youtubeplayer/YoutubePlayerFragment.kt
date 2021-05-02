@@ -114,7 +114,6 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         initYouTubePlayerView()
         initPlayerViewControls(view)
     }
@@ -156,9 +155,13 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         youtube_player_view?.getPlayerUiController()?.showUi(false)
     }
 
-    override fun onHidden() = stopPlaybackAndNullifyLastPlayedItems()
+    override fun onHidden() {
+        stopPlaybackAndNullifyLastPlayedItems()
+    }
 
-    override fun stopPlayback() = stopPlaybackAndNullifyLastPlayedItems()
+    override fun stopPlayback() {
+        stopPlaybackAndNullifyLastPlayedItems()
+    }
 
     override fun onPlayerDimensionsChange(slideOffset: Float) {
         youtube_player_guideline.setGuidelinePercent(

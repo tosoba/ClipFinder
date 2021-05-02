@@ -47,7 +47,6 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         view.sound_cloud_exo_player_view?.player = exoPlayer
     }
 
