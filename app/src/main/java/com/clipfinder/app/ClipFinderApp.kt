@@ -12,7 +12,7 @@ import com.clipfinder.core.android.di.epoxyModule
 import com.clipfinder.core.android.service.CancelNotificationsService
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.clipfinder.core.android.spotify.di.spotifyCoreAndroidModule
-import com.clipfinder.core.android.spotify.notification.PlaybackNotification
+import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.core.android.youtube.di.youtubeCoreAndroidModule
 import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
 import com.clipfinder.core.spotify.di.spotifyCoreModule

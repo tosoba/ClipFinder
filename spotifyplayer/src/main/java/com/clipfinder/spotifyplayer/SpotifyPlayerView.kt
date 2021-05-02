@@ -21,7 +21,7 @@ data class SpotifyPlayerState(
     val lastPlayedItem: LastPlayedItem = NoLastPlayedItem,
     val playerMetadata: Metadata? = null,
     val playbackState: PlaybackState? = null,
-    val backgroundPlaybackNotificationIsShowing: Boolean = false
+    val showingPlaybackNotification: Boolean = false
 ) : MvRxState
 
 sealed class LastPlayedItem

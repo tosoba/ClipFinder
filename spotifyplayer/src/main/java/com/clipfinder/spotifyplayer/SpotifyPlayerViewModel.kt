@@ -12,9 +12,8 @@ import com.spotify.sdk.android.player.PlaybackState
 class SpotifyPlayerViewModel(
     initialState: SpotifyPlayerState
 ) : MvRxViewModel<SpotifyPlayerState>(initialState) {
-
     fun updatePlayerNotificationState(isShowing: Boolean) = setState {
-        copy(backgroundPlaybackNotificationIsShowing = isShowing)
+        copy(showingPlaybackNotification = isShowing)
     }
 
     fun onPlaybackEvent(playerMetadata: Metadata?, playbackState: PlaybackState?) {

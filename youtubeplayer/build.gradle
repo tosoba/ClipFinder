@@ -43,6 +43,7 @@ dependencies {
     implementation rootProject.ext.rxJava
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'com.github.wada811:LifecycleDispose:2.0.3'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
 

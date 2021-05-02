@@ -2,12 +2,17 @@ package com.clipfinder.youtubeplayer
 
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.model.videos.Video
-import com.clipfinder.core.android.model.videos.VideoPlaylist
 
 data class YoutubePlayerState(
-    val lastPlayedVideo: Video? = null,
-    val lastPlayedVideoPlaylist: VideoPlaylist? = null,
     val playbackInProgress: Boolean = false,
-    val playlistVideos: List<Video> = emptyList(),
-    val currentPlaylistVideoIndex: Int = 0
-) : MvRxState
+    val mode: YoutubePlayerMode = YoutubePlayerMode.Idle,
+    val showingPlaybackNotification: Boolean = false
+) : MvRxState {
+    val currentVideo: Video?
+        get() = when (mode) {
+            is YoutubePlayerMode.Playlist -> mode.videos[mode.currentVideoIndex]
+            is YoutubePlayerMode.SingleVideo -> mode.video
+            else -> null
+        }
+}
+
