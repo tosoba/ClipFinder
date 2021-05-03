@@ -64,7 +64,7 @@ class MainViewModel(
             .subscribe(
                 {
                     setState { copy(isPrivateAuthorized = it) }
-                    if (isPrivateAuthorized) loadCurrentUser()
+                    if (it) loadCurrentUser()
                 },
                 Timber::e
             )
