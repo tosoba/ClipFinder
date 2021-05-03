@@ -41,11 +41,11 @@ import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.wada811.lifecycledispose.disposeOnDestroy
+import kotlin.math.pow
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
 import timber.log.Timber
-import kotlin.math.pow
 
 class SpotifyPlayerFragment :
     BaseMvRxFragment(),
@@ -449,7 +449,9 @@ class SpotifyPlayerFragment :
                         requireContext().networkConnectivity
                     )
                 },
-                createAndRegisterReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
+                createAndRegisterReceiverFor(
+                    IntentFilter(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
+                ) { _, _ ->
                     viewModel.updatePlayerNotificationState(false)
                     stopPlayback()
                 },
@@ -560,7 +562,10 @@ class SpotifyPlayerFragment :
                     .getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
             )
             .setDeleteIntent(
-                requireContext().getBroadcastPendingIntent(Intent(ACTION_DELETE_NOTIFICATION))
+                requireContext()
+                    .getBroadcastPendingIntent(
+                        Intent(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
+                    )
             )
             .apply {
                 withState(viewModel) { state ->
@@ -603,7 +608,6 @@ class SpotifyPlayerFragment :
     companion object {
         private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"
         private const val ACTION_RESUME_PLAYBACK = "ACTION_RESUME_PLAYBACK"
-        private const val ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION"
         private const val ACTION_PREV_TRACK = "ACTION_PREV_TRACK"
         private const val ACTION_NEXT_TRACK = "ACTION_NEXT_TRACK"
     }

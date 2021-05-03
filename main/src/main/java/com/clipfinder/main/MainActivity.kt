@@ -2,8 +2,10 @@ package com.clipfinder.main
 
 import android.Manifest
 import android.app.SearchManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
@@ -35,6 +37,7 @@ import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.OnNavigationDrawerClosedListener
 import com.clipfinder.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.clipfinder.core.model.WithValue
+import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.main.databinding.ActivityMainBinding
 import com.clipfinder.main.databinding.DrawerHeaderBinding
 import com.clipfinder.main.soundcloud.SoundCloudMainFragment
@@ -276,19 +279,23 @@ class MainActivity :
             viewModel.onLoginSuccessful = value
         }
 
+    private lateinit var deleteNotificationReceiver: BroadcastReceiver
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewBindings()
         observeLoggedIn()
         checkPermissions()
-        viewModel.selectSubscribe(this, MainState::isPrivateAuthorized) { isPrivateAuthorized ->
-            if (!isPrivateAuthorized) return@selectSubscribe
-            val privateAccessToken = viewModel.privateAccessToken ?: return@selectSubscribe
-            spotifyPlayerFragment?.initializePlayer(privateAccessToken) {
-                onLoginSuccessful?.invoke()
-                onLoginSuccessful = null
-            }
-        }
+        observePrivateAuthorization()
+        deleteNotificationReceiver =
+            createAndRegisterReceiverFor(
+                IntentFilter(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
+            ) { _, _ -> sliding_layout?.panelState = SlidingUpPanelLayout.PanelState.HIDDEN }
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(deleteNotificationReceiver)
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -402,6 +409,17 @@ class MainActivity :
             .request(Manifest.permission.RECORD_AUDIO)
             .subscribe()
             .disposeOnDestroy(this)
+    }
+
+    private fun observePrivateAuthorization() {
+        viewModel.selectSubscribe(this, MainState::isPrivateAuthorized) { isPrivateAuthorized ->
+            if (!isPrivateAuthorized) return@selectSubscribe
+            val privateAccessToken = viewModel.privateAccessToken ?: return@selectSubscribe
+            spotifyPlayerFragment?.initializePlayer(privateAccessToken) {
+                onLoginSuccessful?.invoke()
+                onLoginSuccessful = null
+            }
+        }
     }
 
     override fun loadTrack(track: SoundCloudTrack) {

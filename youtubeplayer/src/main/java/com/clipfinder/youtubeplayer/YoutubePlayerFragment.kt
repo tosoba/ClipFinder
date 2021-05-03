@@ -242,9 +242,9 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         youtube_player_view?.enableBackgroundPlayback(true)
         with(requireContext()) {
             broadcastReceivers.addAll(
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_DELETE_NOTIFICATION)) {
-                    _,
-                    _ ->
+                createAndRegisterReceiverFor(
+                    IntentFilter(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
+                ) { _, _ ->
                     viewModel.updatePlayerNotificationState(false)
                     stopPlayback()
                 },
@@ -358,7 +358,9 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
             )
             .setDeleteIntent(
                 requireContext()
-                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_DELETE_NOTIFICATION))
+                    .getBroadcastPendingIntent(
+                        Intent(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
+                    )
             )
             .apply {
                 val (isPlaying, mode) = state
@@ -406,7 +408,6 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
         private const val YOUTUBE_ACTION_PAUSE_PLAYBACK = "YOUTUBE_ACTION_PAUSE_PLAYBACK"
         private const val YOUTUBE_ACTION_RESUME_PLAYBACK = "YOUTUBE_ACTION_RESUME_PLAYBACK"
-        private const val YOUTUBE_ACTION_DELETE_NOTIFICATION = "YOUTUBE_ACTION_DELETE_NOTIFICATION"
         private const val YOUTUBE_ACTION_PREV_VIDEO = "YOUTUBE_ACTION_PREV_VIDEO"
         private const val YOUTUBE_ACTION_NEXT_VIDEO = "YOUTUBE_ACTION_NEXT_VIDEO"
     }
