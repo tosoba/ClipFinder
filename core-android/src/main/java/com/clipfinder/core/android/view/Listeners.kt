@@ -32,7 +32,7 @@ fun onSeekBarProgressChangeListener(
         }
     }
 
-interface OnNavigationDrawerClosedListerner : DrawerLayout.DrawerListener {
+interface OnNavigationDrawerClosedListener : DrawerLayout.DrawerListener {
     override fun onDrawerOpened(p0: View) = Unit
     override fun onDrawerSlide(p0: View, p1: Float) = Unit
     override fun onDrawerStateChanged(p0: Int) = Unit

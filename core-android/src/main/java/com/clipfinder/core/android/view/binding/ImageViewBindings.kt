@@ -1,6 +1,5 @@
 package com.clipfinder.core.android.view.binding
 
-import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -51,10 +50,6 @@ fun bindUserImageUrl(view: ImageView, url: String?) =
                 .error(R.drawable.user_placeholder)
         )
         .into(view)
-
-@BindingAdapter("onClickIfNotNull")
-fun bindOnClick(view: ImageView, onClickListener: View.OnClickListener?) =
-    onClickListener?.let { view.setOnClickListener(it) } ?: Unit
 
 @BindingAdapter(
     "glideImage",

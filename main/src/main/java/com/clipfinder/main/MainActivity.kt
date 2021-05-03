@@ -32,7 +32,7 @@ import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.clipfinder.core.android.util.ext.*
-import com.clipfinder.core.android.view.OnNavigationDrawerClosedListerner
+import com.clipfinder.core.android.view.OnNavigationDrawerClosedListener
 import com.clipfinder.core.android.view.viewpager.adapter.CustomCurrentStatePagerAdapter
 import com.clipfinder.core.model.WithValue
 import com.clipfinder.main.databinding.ActivityMainBinding
@@ -135,10 +135,10 @@ class MainActivity :
         DrawerHeaderBinding.inflate(LayoutInflater.from(this), binding.drawerNavigationView, false)
     }
 
-    private val loginDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(
+    private val loginDrawerClosedListener: OnNavigationDrawerClosedListener by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        object : OnNavigationDrawerClosedListerner {
+        object : OnNavigationDrawerClosedListener {
             override fun onDrawerClosed(drawerView: View) {
                 if (!isPlayerLoggedIn) startLoginActivity()
                 main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
@@ -146,10 +146,10 @@ class MainActivity :
         }
     }
 
-    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(
+    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListener by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        object : OnNavigationDrawerClosedListerner {
+        object : OnNavigationDrawerClosedListener {
             override fun onDrawerClosed(drawerView: View) {
                 if (isPlayerLoggedIn) {
                     viewModel.onLoggedOut()

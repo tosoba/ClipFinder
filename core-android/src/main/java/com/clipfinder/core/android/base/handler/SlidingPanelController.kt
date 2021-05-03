@@ -20,11 +20,3 @@ interface SlidingPanelController {
         slidingPanel?.showCollapsedIfHidden()
     }
 }
-
-interface NavigationDrawerController {
-    fun openDrawer()
-}
-
-interface ToolbarController {
-    fun toggleToolbar()
-}

@@ -34,10 +34,10 @@ import com.clipfinder.core.model.Ready
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
-import org.koin.android.ext.android.inject
 import java.math.BigDecimal
 import kotlin.reflect.KCallable
+import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
+import org.koin.android.ext.android.inject
 
 class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
@@ -134,7 +134,8 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                         axisMaximum = 1f,
                                         drawLabels = false
                                     ),
-                                markerView = RadarMarkerView(context, R.layout.radar_marker_view)
+                                markerView =
+                                    RadarMarkerView(requireContext(), R.layout.radar_marker_view)
                             )
                         )
                     }

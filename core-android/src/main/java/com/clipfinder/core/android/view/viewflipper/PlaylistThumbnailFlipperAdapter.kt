@@ -10,7 +10,6 @@ import com.clipfinder.core.android.databinding.ImageViewListItemBinding
 import com.clipfinder.core.android.view.imageview.ImageViewSrc
 
 class PlaylistThumbnailFlipperAdapter(val thumbnailUrls: List<String>) : BaseAdapter() {
-
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val inflater = LayoutInflater.from(parent?.context)
         val src =

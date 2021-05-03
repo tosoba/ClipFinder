@@ -31,7 +31,6 @@ data class SoundCloudPlaylist(
     override val trackCount: Int,
     override val userId: Int
 ) : ISoundCloudPlaylist, BaseSoundCloudPlaylist() {
-
     constructor(
         other: ISoundCloudPlaylist
     ) : this(

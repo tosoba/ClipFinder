@@ -20,7 +20,6 @@ data class SoundCloudTrack(
     override val streamUrl: String?,
     override val waveformUrl: String
 ) : Parcelable, NamedImageListItem, ISoundCloudTrack {
-
     constructor(
         other: ISoundCloudTrack
     ) : this(

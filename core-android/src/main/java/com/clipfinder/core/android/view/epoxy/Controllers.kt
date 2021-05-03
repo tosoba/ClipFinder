@@ -1,21 +1,12 @@
 package com.clipfinder.core.android.view.epoxy
 
 import android.os.Handler
-import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyController
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.di.EpoxyHandlerType
 import org.koin.android.ext.android.get
-
-inline fun BaseMvRxFragment.asyncController(crossinline build: EpoxyController.() -> Unit) =
-    object : AsyncEpoxyController() {
-        override fun buildModels() {
-            if (view == null || isRemoving) return
-            build()
-        }
-    }
 
 inline fun <S : MvRxState> BaseMvRxFragment.injectedTypedController(
     crossinline build: EpoxyController.(S) -> Unit

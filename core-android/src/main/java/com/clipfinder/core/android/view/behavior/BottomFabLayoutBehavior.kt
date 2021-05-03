@@ -37,5 +37,7 @@ class BottomFabLayoutBehavior(context: Context?, attrs: AttributeSet?) :
             val newTranslation = dependency.getTranslationY() - height
             child.translationY = newTranslation
             oldTranslation != newTranslation
-        } else false
+        } else {
+            false
+        }
 }

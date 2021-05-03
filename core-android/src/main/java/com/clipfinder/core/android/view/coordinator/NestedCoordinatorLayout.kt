@@ -8,8 +8,7 @@ import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 
 class NestedCoordinatorLayout : CoordinatorLayout, NestedScrollingChild {
-
-    private val mChildHelper = NestedScrollingChildHelper(this)
+    private val childHelper = NestedScrollingChildHelper(this)
 
     constructor(context: Context) : super(context) {
         isNestedScrollingEnabled = true
@@ -114,19 +113,19 @@ class NestedCoordinatorLayout : CoordinatorLayout, NestedScrollingChild {
         return dispatchNestedFling(velocityX, velocityY, consumed) || tHandled
     }
 
-    override fun isNestedScrollingEnabled(): Boolean = mChildHelper.isNestedScrollingEnabled
+    override fun isNestedScrollingEnabled(): Boolean = childHelper.isNestedScrollingEnabled
 
     override fun setNestedScrollingEnabled(enabled: Boolean) {
-        mChildHelper.isNestedScrollingEnabled = enabled
+        childHelper.isNestedScrollingEnabled = enabled
     }
 
-    override fun startNestedScroll(axes: Int): Boolean = mChildHelper.startNestedScroll(axes)
+    override fun startNestedScroll(axes: Int): Boolean = childHelper.startNestedScroll(axes)
 
     override fun stopNestedScroll() {
-        mChildHelper.stopNestedScroll()
+        childHelper.stopNestedScroll()
     }
 
-    override fun hasNestedScrollingParent(): Boolean = mChildHelper.hasNestedScrollingParent()
+    override fun hasNestedScrollingParent(): Boolean = childHelper.hasNestedScrollingParent()
 
     override fun dispatchNestedScroll(
         dxConsumed: Int,
@@ -135,7 +134,7 @@ class NestedCoordinatorLayout : CoordinatorLayout, NestedScrollingChild {
         dyUnconsumed: Int,
         offsetInWindow: IntArray?
     ): Boolean =
-        mChildHelper.dispatchNestedScroll(
+        childHelper.dispatchNestedScroll(
             dxConsumed,
             dyConsumed,
             dxUnconsumed,
@@ -148,14 +147,14 @@ class NestedCoordinatorLayout : CoordinatorLayout, NestedScrollingChild {
         dy: Int,
         consumed: IntArray?,
         offsetInWindow: IntArray?
-    ): Boolean = mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+    ): Boolean = childHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
     override fun dispatchNestedFling(
         velocityX: Float,
         velocityY: Float,
         consumed: Boolean
-    ): Boolean = mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed)
+    ): Boolean = childHelper.dispatchNestedFling(velocityX, velocityY, consumed)
 
     override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean =
-        mChildHelper.dispatchNestedPreFling(velocityX, velocityY)
+        childHelper.dispatchNestedPreFling(velocityX, velocityY)
 }
