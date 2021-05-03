@@ -455,18 +455,18 @@ class SpotifyPlayerFragment :
                     viewModel.updatePlayerNotificationState(false)
                     stopPlayback()
                 },
-                createAndRegisterReceiverFor(IntentFilter(ACTION_PAUSE_PLAYBACK)) { _, _ ->
-                    player?.pause(SpotifyPlayerOperationLogCallback)
-                },
-                createAndRegisterReceiverFor(IntentFilter(ACTION_RESUME_PLAYBACK)) { _, _ ->
-                    player?.resume(SpotifyPlayerOperationLogCallback)
-                },
-                createAndRegisterReceiverFor(IntentFilter(ACTION_PREV_TRACK)) { _, _ ->
-                    player?.skipToPrevious(SpotifyPlayerOperationLogCallback)
-                },
-                createAndRegisterReceiverFor(IntentFilter(ACTION_NEXT_TRACK)) { _, _ ->
-                    player?.skipToNext(SpotifyPlayerOperationLogCallback)
-                }
+                createAndRegisterReceiverFor(
+                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_PAUSE_PLAYBACK.filter
+                ) { _, _ -> player?.pause(SpotifyPlayerOperationLogCallback) },
+                createAndRegisterReceiverFor(
+                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_RESUME_PLAYBACK.filter
+                ) { _, _ -> player?.resume(SpotifyPlayerOperationLogCallback) },
+                createAndRegisterReceiverFor(
+                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_PREV_TRACK.filter
+                ) { _, _ -> player?.skipToPrevious(SpotifyPlayerOperationLogCallback) },
+                createAndRegisterReceiverFor(
+                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_NEXT_TRACK.filter
+                ) { _, _ -> player?.skipToNext(SpotifyPlayerOperationLogCallback) }
             )
         }
     }
@@ -571,7 +571,10 @@ class SpotifyPlayerFragment :
                 withState(viewModel) { state ->
                     if (state.playerMetadata?.prevTrack != null) {
                         val prevTrackIntent =
-                            requireContext().getBroadcastPendingIntent(Intent(ACTION_PREV_TRACK))
+                            requireContext()
+                                .getBroadcastPendingIntent(
+                                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_PREV_TRACK.intent
+                                )
                         addAction(
                             R.drawable.previous_track,
                             getString(R.string.previous_track),
@@ -582,18 +585,27 @@ class SpotifyPlayerFragment :
                     if (state.playbackState?.isPlaying == true) {
                         val pauseIntent =
                             requireContext()
-                                .getBroadcastPendingIntent(Intent(ACTION_PAUSE_PLAYBACK))
+                                .getBroadcastPendingIntent(
+                                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_PAUSE_PLAYBACK
+                                        .intent
+                                )
                         addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
                     } else {
                         val resumeIntent =
                             requireContext()
-                                .getBroadcastPendingIntent(Intent(ACTION_RESUME_PLAYBACK))
+                                .getBroadcastPendingIntent(
+                                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_RESUME_PLAYBACK
+                                        .intent
+                                )
                         addAction(R.drawable.play, getString(R.string.play), resumeIntent)
                     }
 
                     if (state.playerMetadata?.nextTrack != null) {
                         val nextTrackIntent =
-                            requireContext().getBroadcastPendingIntent(Intent(ACTION_NEXT_TRACK))
+                            requireContext()
+                                .getBroadcastPendingIntent(
+                                    SpotifyPlayerNotificationAction.SPOTIFY_ACTION_NEXT_TRACK.intent
+                                )
                         addAction(
                             R.drawable.next_track,
                             getString(R.string.next_track),
@@ -604,11 +616,4 @@ class SpotifyPlayerFragment :
             }
             .setAutoCancel(true)
             .build()
-
-    companion object {
-        private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"
-        private const val ACTION_RESUME_PLAYBACK = "ACTION_RESUME_PLAYBACK"
-        private const val ACTION_PREV_TRACK = "ACTION_PREV_TRACK"
-        private const val ACTION_NEXT_TRACK = "ACTION_NEXT_TRACK"
-    }
 }

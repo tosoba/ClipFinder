@@ -248,18 +248,22 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                     viewModel.updatePlayerNotificationState(false)
                     stopPlayback()
                 },
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_PAUSE_PLAYBACK)) { _, _ ->
-                    youTubePlayer.pause()
-                },
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_RESUME_PLAYBACK)) { _, _ ->
-                    youTubePlayer.play()
-                },
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_PREV_VIDEO)) { _, _ ->
+                createAndRegisterReceiverFor(
+                    YoutubePlayerNotificationAction.YOUTUBE_ACTION_PAUSE_PLAYBACK.filter
+                ) { _, _ -> youTubePlayer.pause() },
+                createAndRegisterReceiverFor(
+                    YoutubePlayerNotificationAction.YOUTUBE_ACTION_RESUME_PLAYBACK.filter
+                ) { _, _ -> youTubePlayer.play() },
+                createAndRegisterReceiverFor(
+                    YoutubePlayerNotificationAction.YOUTUBE_ACTION_PREV_VIDEO.filter
+                ) { _, _ ->
                     playPrevVideo(
                         withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist }
                     )
                 },
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_NEXT_VIDEO)) { _, _ ->
+                createAndRegisterReceiverFor(
+                    YoutubePlayerNotificationAction.YOUTUBE_ACTION_NEXT_VIDEO.filter
+                ) { _, _ ->
                     playNextVideo(
                         withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist }
                     )
@@ -367,7 +371,9 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                 if (mode is YoutubePlayerMode.Playlist && mode.currentVideoIndex > 0) {
                     val prevTrackIntent =
                         requireContext()
-                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PREV_VIDEO))
+                            .getBroadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_PREV_VIDEO.intent
+                            )
                     addAction(
                         R.drawable.previous_track,
                         getString(R.string.previous_track),
@@ -378,12 +384,17 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                 if (isPlaying) {
                     val pauseIntent =
                         requireContext()
-                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PAUSE_PLAYBACK))
+                            .getBroadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_PAUSE_PLAYBACK.intent
+                            )
                     addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
                 } else {
                     val resumeIntent =
                         requireContext()
-                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_RESUME_PLAYBACK))
+                            .getBroadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_RESUME_PLAYBACK
+                                    .intent
+                            )
                     addAction(R.drawable.play, getString(R.string.play), resumeIntent)
                 }
 
@@ -392,7 +403,9 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                 ) {
                     val nextTrackIntent =
                         requireContext()
-                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_NEXT_VIDEO))
+                            .getBroadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_NEXT_VIDEO.intent
+                            )
                     addAction(
                         R.drawable.next_track,
                         getString(R.string.next_track),
@@ -405,10 +418,5 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     companion object {
         private const val minimumYoutubePlayerGuidelinePercent = .45f
-
-        private const val YOUTUBE_ACTION_PAUSE_PLAYBACK = "YOUTUBE_ACTION_PAUSE_PLAYBACK"
-        private const val YOUTUBE_ACTION_RESUME_PLAYBACK = "YOUTUBE_ACTION_RESUME_PLAYBACK"
-        private const val YOUTUBE_ACTION_PREV_VIDEO = "YOUTUBE_ACTION_PREV_VIDEO"
-        private const val YOUTUBE_ACTION_NEXT_VIDEO = "YOUTUBE_ACTION_NEXT_VIDEO"
     }
 }
