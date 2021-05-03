@@ -22,6 +22,7 @@ import com.clipfinder.core.android.util.ext.setupWithBackNavigation
 import com.clipfinder.core.android.util.ext.show
 import com.clipfinder.core.android.view.epoxy.injectedTypedController
 import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.android.view.epoxy.loadableCollection
 import com.clipfinder.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
@@ -46,17 +47,23 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
                 artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
             }
 
-            loadableCarouselWithHeader(
+            loadableCollection(
                 requireContext(),
                 tracks,
-                R.string.tracks,
+                getString(R.string.tracks),
                 "tracks",
+                viewModel::loadTracksFromAlbum,
                 viewModel::loadTracksFromAlbum,
                 viewModel::clearTracksError
             ) { track ->
                 TrackPopularityItemBindingModel_()
                     .id(track.id)
-                    .track(track) // TODO: navigation + a nicer layout
+                    .track(track)
+                    .onClickListener(
+                        View.OnClickListener {
+                            show { factory.newSpotifyTrackVideosFragment(track) }
+                        }
+                    )
             }
         }
     }

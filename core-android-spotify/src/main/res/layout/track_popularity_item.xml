@@ -2,15 +2,22 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="track"
             type="com.clipfinder.core.android.spotify.model.Track" />
+
+        <variable
+            name="onClickListener"
+            type="View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="@drawable/spotify_foreground_ripple"
+        android:onClick="@{onClickListener}"
         android:padding="5dp">
 
         <View
