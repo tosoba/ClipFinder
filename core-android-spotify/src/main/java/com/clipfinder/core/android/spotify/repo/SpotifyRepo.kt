@@ -44,15 +44,11 @@ class SpotifyRepo(
     override fun getSimilarTracks(
         id: String, offset: Int
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> = browseEndpoints
-        .getRecommendations(seedTracks = id, limit = 100)
-        .mapSuccess {
-            tracks.chunked(PagingDefaults.SPOTIFY_LIMIT)
-                .map { it.joinToString(",", transform = SimplifiedTrackObject::id) }
-        }
-        .flatMap { chunks ->
-            val chunk = chunks[offset]
-            tracksEndpoints.getSeveralTracks(ids = chunk)
-                .mapToResource { Paged<List<ISpotifyTrack>>(tracks, offset + 1, chunks.size) }
+        .getRecommendations(seedTracks = id, limit = 50)
+        .mapSuccess { tracks.joinToString(",", transform = SimplifiedTrackObject::id) }
+        .flatMap { ids ->
+            tracksEndpoints.getSeveralTracks(ids = ids)
+                .mapToResource { Paged<List<ISpotifyTrack>>(tracks, offset + 1, 1) }
         }
 
     override fun getAudioFeatures(id: String): Single<Resource<ISpotifyAudioFeatures>> = tracksEndpoints

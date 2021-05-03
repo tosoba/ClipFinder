@@ -9,7 +9,7 @@
 
         <variable
             name="fragmentView"
-            type="com.clipfinder.spotifyplayer.SpotifyPlayerView" />
+            type="com.clipfinder.spotify.player.SpotifyPlayerView" />
 
         <variable
             name="nextTrackExists"

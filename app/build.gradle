@@ -102,7 +102,7 @@ dependencies {
     implementation project(':spotify-artist')
     implementation project(':spotify-category')
     implementation project(':spotify-dashboard')
-    implementation project(':spotifyplayer')
+    implementation project(':spotify-player')
     implementation project(':spotify-playlist')
     implementation project(':spotify-search')
     implementation project(':spotify-track-videos')

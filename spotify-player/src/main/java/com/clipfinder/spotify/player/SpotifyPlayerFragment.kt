@@ -1,4 +1,4 @@
-package com.clipfinder.spotifyplayer
+package com.clipfinder.spotify.player
 
 import android.Manifest
 import android.app.Notification
@@ -24,6 +24,7 @@ import com.airbnb.mvrx.withState
 import com.clipfinder.core.android.base.handler.SlidingPanelController
 import com.clipfinder.core.android.base.provider.IntentProvider
 import com.clipfinder.core.android.spotify.base.SpotifyPlayerConnectionStateCallback
+import com.clipfinder.core.android.spotify.base.SpotifyPlayerOperationLogCallback
 import com.clipfinder.core.android.spotify.base.SpotifyTrackChangeHandler
 import com.clipfinder.core.android.spotify.ext.id
 import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
@@ -35,7 +36,7 @@ import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.onSeekBarProgressChangeListener
 import com.clipfinder.core.android.view.visualizer.ColumnarVisualizerRenderer
 import com.clipfinder.core.ext.castAs
-import com.clipfinder.spotifyplayer.databinding.FragmentSpotifyPlayerBinding
+import com.clipfinder.spotify.player.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -73,21 +74,21 @@ class SpotifyPlayerFragment :
     private val onPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
         withState(viewModel) {
             if (it.playbackState?.isPlaying == true) {
-                player?.pause(spotifyPlayerOperationCallback)
+                player?.pause(SpotifyPlayerOperationLogCallback)
                 visualizerManager?.pause()
             } else {
-                player?.resume(spotifyPlayerOperationCallback)
+                player?.resume(SpotifyPlayerOperationLogCallback)
                 visualizerManager?.resume()
             }
         }
     }
 
     private val onNextBtnClickListener = View.OnClickListener {
-        player?.skipToNext(spotifyPlayerOperationCallback)
+        player?.skipToNext(SpotifyPlayerOperationLogCallback)
     }
 
     private val onPreviousBtnClickListener = View.OnClickListener {
-        player?.skipToPrevious(spotifyPlayerOperationCallback)
+        player?.skipToPrevious(SpotifyPlayerOperationLogCallback)
     }
 
     private val onClosePlayerBtnClickListener = View.OnClickListener {
@@ -103,7 +104,7 @@ class SpotifyPlayerFragment :
                 if (!fromUser) return@onSeekBarProgressChangeListener
                 val positionInMs = progress * 1000
                 spotifyPlaybackTimer?.cancel()
-                player?.seekToPosition(spotifyPlayerOperationCallback, positionInMs)
+                player?.seekToPosition(SpotifyPlayerOperationLogCallback, positionInMs)
                 spotifyPlaybackTimer = playbackTimer(
                     trackDuration = withState(viewModel) {
                         requireNotNull(it.playerMetadata).currentTrack.durationMs
@@ -112,16 +113,6 @@ class SpotifyPlayerFragment :
                 ).apply { start() }
             }
         }
-
-    private val spotifyPlayerOperationCallback = object : Player.OperationCallback {
-        override fun onSuccess() {
-            Timber.tag("PLAY_OP").e("Success")
-        }
-
-        override fun onError(error: Error?) {
-            Timber.tag("PLAY_OP").e("Error: ${error?.name ?: "unknown"}")
-        }
-    }
 
     private val audioTrackController by lazy(LazyThreadSafetyMode.NONE) {
         SpotifyAudioTrackController()
@@ -229,7 +220,7 @@ class SpotifyPlayerFragment :
         }
 
         player?.removeNotificationCallback(this)
-        player?.removeConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
+        player?.removeConnectionStateCallback(this)
         Spotify.destroyPlayer(this)
 
         visualizerManager?.release()
@@ -322,7 +313,7 @@ class SpotifyPlayerFragment :
     }
 
     override fun stopPlayback() {
-        player?.pause(spotifyPlayerOperationCallback)
+        player?.pause(SpotifyPlayerOperationLogCallback)
     }
 
     override fun initializePlayer(accessToken: String, callback: () -> Unit) {
@@ -333,7 +324,7 @@ class SpotifyPlayerFragment :
                 .build(object : SpotifyPlayer.InitializationObserver {
                     override fun onInitialized(player: SpotifyPlayer) {
                         player.setConnectivityStatus(
-                            spotifyPlayerOperationCallback,
+                            SpotifyPlayerOperationLogCallback,
                             requireContext().networkConnectivity
                         )
                         player.addNotificationCallback(this@SpotifyPlayerFragment)
@@ -420,7 +411,7 @@ class SpotifyPlayerFragment :
             broadcastReceivers.addAll(
                 createAndRegisterReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
                     player?.setConnectivityStatus(
-                        spotifyPlayerOperationCallback, requireContext().networkConnectivity
+                        SpotifyPlayerOperationLogCallback, requireContext().networkConnectivity
                     )
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
@@ -428,16 +419,16 @@ class SpotifyPlayerFragment :
                     stopPlayback()
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_PAUSE_PLAYBACK)) { _, _ ->
-                    player?.pause(spotifyPlayerOperationCallback)
+                    player?.pause(SpotifyPlayerOperationLogCallback)
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_RESUME_PLAYBACK)) { _, _ ->
-                    player?.resume(spotifyPlayerOperationCallback)
+                    player?.resume(SpotifyPlayerOperationLogCallback)
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_PREV_TRACK)) { _, _ ->
-                    player?.skipToPrevious(spotifyPlayerOperationCallback)
+                    player?.skipToPrevious(SpotifyPlayerOperationLogCallback)
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_NEXT_TRACK)) { _, _ ->
-                    player?.skipToNext(spotifyPlayerOperationCallback)
+                    player?.skipToNext(SpotifyPlayerOperationLogCallback)
                 }
             )
         }
@@ -446,7 +437,7 @@ class SpotifyPlayerFragment :
     private fun resetProgressAndPlay(uri: String) {
         activity?.castAs<SlidingPanelController>()?.expandIfHidden()
         playback_seek_bar?.progress = 0
-        player?.playUri(spotifyPlayerOperationCallback, uri, 0, 0)
+        player?.playUri(SpotifyPlayerOperationLogCallback, uri, 0, 0)
 
         if (context?.isGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()

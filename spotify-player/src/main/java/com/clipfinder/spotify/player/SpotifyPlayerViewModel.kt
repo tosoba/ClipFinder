@@ -1,4 +1,4 @@
-package com.clipfinder.spotifyplayer
+package com.clipfinder.spotify.player
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -12,17 +12,25 @@ import com.spotify.sdk.android.player.PlaybackState
 class SpotifyPlayerViewModel(
     initialState: SpotifyPlayerState
 ) : MvRxViewModel<SpotifyPlayerState>(initialState) {
-    fun updatePlayerNotificationState(isShowing: Boolean) = setState {
-        copy(showingPlaybackNotification = isShowing)
+    fun updatePlayerNotificationState(isShowing: Boolean) {
+        setState { copy(showingPlaybackNotification = isShowing) }
     }
 
     fun onPlaybackEvent(playerMetadata: Metadata?, playbackState: PlaybackState?) {
         setState { copy(playerMetadata = playerMetadata, playbackState = playbackState) }
     }
 
-    fun onLoadTrack(track: Track) = setState { copy(lastPlayedItem = LastPlayedTrack(track)) }
-    fun onLoadAlbum(album: Album) = setState { copy(lastPlayedItem = LastPlayedAlbum(album)) }
-    fun onLoadPlaylist(playlist: Playlist) = setState { copy(lastPlayedItem = LastPlayedPlaylist(playlist)) }
+    fun onLoadTrack(track: Track) {
+        setState { copy(lastPlayedItem = LastPlayedTrack(track)) }
+    }
+
+    fun onLoadAlbum(album: Album) {
+        setState { copy(lastPlayedItem = LastPlayedAlbum(album)) }
+    }
+
+    fun onLoadPlaylist(playlist: Playlist) {
+        setState { copy(lastPlayedItem = LastPlayedPlaylist(playlist)) }
+    }
 
     companion object : MvRxViewModelFactory<SpotifyPlayerViewModel, SpotifyPlayerState> {
         override fun create(

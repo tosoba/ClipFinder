@@ -1,34 +1,38 @@
-package com.clipfinder.spotifyplayer
+package com.clipfinder.spotify.player
 
 import android.annotation.TargetApi
 import android.media.AudioTrack
 import android.os.Build
 import com.spotify.sdk.android.player.AudioController
 import com.spotify.sdk.android.player.AudioRingBuffer
+import timber.log.Timber
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 
 class SpotifyAudioTrackController : AudioController {
     val audioBuffer = AudioRingBuffer(AUDIO_BUFFER_CAPACITY)
-    private val executorService = Executors.newSingleThreadExecutor()
     private val playingMutex = Any()
+    private val executorService = Executors.newSingleThreadExecutor()
     private var audioTrack: AudioTrack? = null
     private var sampleRate: Int = 0
     private var channels: Int = 0
 
-    private val audioRunnable = object : Runnable {
+    private val audioRunnable = Runnable {
         val pendingSamples = ShortArray(AUDIO_BUFFER_SIZE_SAMPLES)
-
-        override fun run() {
-            val itemsRead = this@SpotifyAudioTrackController.audioBuffer.peek(pendingSamples)
-            if (itemsRead > 0) {
-                val itemsWritten = this@SpotifyAudioTrackController.writeSamplesToAudioOutput(pendingSamples, itemsRead)
-                this@SpotifyAudioTrackController.audioBuffer.remove(itemsWritten)
-            }
+        val itemsRead = this@SpotifyAudioTrackController.audioBuffer.peek(pendingSamples)
+        if (itemsRead > 0) {
+            val itemsWritten = this@SpotifyAudioTrackController
+                .writeSamplesToAudioOutput(pendingSamples, itemsRead)
+            this@SpotifyAudioTrackController.audioBuffer.remove(itemsWritten)
         }
     }
 
-    override fun onAudioDataDelivered(samples: ShortArray, sampleCount: Int, sampleRate: Int, channels: Int): Int {
+    override fun onAudioDataDelivered(
+        samples: ShortArray,
+        sampleCount: Int,
+        sampleRate: Int,
+        channels: Int
+    ): Int {
         if (audioTrack != null && (this.sampleRate != sampleRate || this.channels != channels)) {
             synchronized(playingMutex) {
                 audioTrack?.release()
@@ -38,13 +42,12 @@ class SpotifyAudioTrackController : AudioController {
 
         this.sampleRate = sampleRate
         this.channels = channels
-        if (audioTrack == null) {
-            createAudioTrack(sampleRate, channels)
-        }
+        if (audioTrack == null) createAudioTrack(sampleRate, channels)
 
         try {
             executorService.execute(audioRunnable)
-        } catch (var7: RejectedExecutionException) {
+        } catch (ex: RejectedExecutionException) {
+            Timber.tag("AUDIO").e(ex)
         }
 
         return audioBuffer.write(samples, sampleCount)
@@ -52,11 +55,11 @@ class SpotifyAudioTrackController : AudioController {
 
     override fun onAudioFlush() {
         audioBuffer.clear()
-        if (audioTrack != null) {
+        audioTrack?.apply {
             synchronized(playingMutex) {
-                audioTrack?.pause()
-                audioTrack?.flush()
-                audioTrack?.release()
+                pause()
+                flush()
+                release()
                 audioTrack = null
             }
         }
@@ -70,7 +73,7 @@ class SpotifyAudioTrackController : AudioController {
         audioTrack?.play()
     }
 
-    override fun start() {}
+    override fun start() = Unit
 
     override fun stop() {
         executorService.shutdown()

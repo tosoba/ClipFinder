@@ -113,7 +113,7 @@
 
                 <fragment
                     android:id="@+id/spotify_player_fragment"
-                    android:name="com.clipfinder.spotifyplayer.SpotifyPlayerFragment"
+                    android:name="com.clipfinder.spotify.player.SpotifyPlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
