@@ -6,9 +6,9 @@ import com.clipfinder.core.android.model.soundcloud.SoundCloudPlaylist
 import com.clipfinder.core.android.model.soundcloud.SoundCloudTrack
 import com.clipfinder.core.android.spotify.model.*
 import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
-import com.clipfinder.soundclouddashboard.SoundCloudDashboardNavHostFragment
-import com.clipfinder.soundcloudplaylist.SoundCloudPlaylistFragment
-import com.clipfinder.soundcloudtrackvideos.SoundCloudTrackVideosFragment
+import com.clipfinder.soundcloud.dashboard.SoundCloudDashboardNavHostFragment
+import com.clipfinder.soundcloud.playlist.SoundCloudPlaylistFragment
+import com.clipfinder.soundcloud.videos.SoundCloudTrackVideosFragment
 import com.clipfinder.spotify.account.SpotifyAccountNavHostFragment
 import com.clipfinder.spotify.album.SpotifyAlbumFragment
 import com.clipfinder.spotify.artist.SpotifyArtistFragment

@@ -92,9 +92,9 @@ dependencies {
     implementation project(':main')
     implementation project(':settings')
     implementation project(':soundcloud-api')
-    implementation project(':soundclouddashboard')
-    implementation project(':soundcloudplaylist')
-    implementation project(':soundcloudtrackvideos')
+    implementation project(':soundcloud-dashboard')
+    implementation project(':soundcloud-playlist')
+    implementation project(':soundcloud-track-videos')
     implementation project(':spotify-account')
     implementation project(':spotify-album')
     implementation project(':spotify-charts-api')
@@ -107,8 +107,8 @@ dependencies {
     implementation project(':spotify-search')
     implementation project(':spotify-track-videos')
     implementation project(':spotify-track')
-    implementation project(':youtubeplayer')
-    implementation project(':youtuberelatedvideos')
+    implementation project(':youtube-player')
+    implementation project(':youtube-related-videos')
     implementation project(':youtube-search')
 
     implementation rootProject.ext.rxJava

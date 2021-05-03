@@ -75,7 +75,7 @@
 
                 <fragment
                     android:id="@+id/youtube_player_fragment"
-                    android:name="com.clipfinder.youtubeplayer.YoutubePlayerFragment"
+                    android:name="com.clipfinder.youtube.player.YoutubePlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -84,7 +84,7 @@
 
                 <fragment
                     android:id="@+id/related_videos_fragment"
-                    android:name="com.clipfinder.youtuberelatedvideos.YoutubeRelatedFragment"
+                    android:name="com.clipfinder.youtube.related.videos.YoutubeRelatedFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -138,7 +138,7 @@
 
                 <fragment
                     android:id="@+id/sound_cloud_player_fragment"
-                    android:name="com.clipfinder.soundcloudplayer.SoundCloudPlayerFragment"
+                    android:name="com.clipfinder.soundcloud.player.SoundCloudPlayerFragment"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     app:layout_constraintLeft_toLeftOf="parent"
