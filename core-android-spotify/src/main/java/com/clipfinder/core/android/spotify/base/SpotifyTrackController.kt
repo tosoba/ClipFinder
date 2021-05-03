@@ -1,4 +1,4 @@
-package com.clipfinder.core.android.spotify.controller
+package com.clipfinder.core.android.spotify.base
 
 import com.clipfinder.core.android.spotify.model.Track
 

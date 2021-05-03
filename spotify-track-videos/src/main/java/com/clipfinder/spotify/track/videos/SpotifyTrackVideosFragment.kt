@@ -16,7 +16,7 @@ import com.clipfinder.core.android.base.IFragmentFactory
 import com.clipfinder.core.android.base.fragment.BackPressedHandler
 import com.clipfinder.core.android.base.fragment.ISearchFragment
 import com.clipfinder.core.android.base.trackvideos.TrackVideosViewState
-import com.clipfinder.core.android.spotify.controller.SpotifyTrackController
+import com.clipfinder.core.android.spotify.base.SpotifyTrackController
 import com.clipfinder.core.android.spotify.ext.enableSpotifyPlayButton
 import com.clipfinder.core.android.spotify.fragment.ISpotifyTrackFragment
 import com.clipfinder.core.android.spotify.model.Track

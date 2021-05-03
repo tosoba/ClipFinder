@@ -18,7 +18,7 @@ import com.clipfinder.core.model.LoadingInProgress
 import com.clipfinder.core.model.Ready
 import com.clipfinder.core.android.radarChart
 import com.clipfinder.core.android.reloadControl
-import com.clipfinder.core.android.spotify.controller.SpotifyTrackController
+import com.clipfinder.core.android.spotify.base.SpotifyTrackController
 import com.clipfinder.core.android.spotify.fragment.ISpotifyTrackFragment
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.model.clickableListItem

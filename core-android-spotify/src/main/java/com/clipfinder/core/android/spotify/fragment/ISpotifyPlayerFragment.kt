@@ -7,9 +7,7 @@ import com.clipfinder.core.android.spotify.model.Track
 
 interface ISpotifyPlayerFragment : IPlayerFragment {
     val isPlayerLoggedIn: Boolean
-    val isPlayerInitialized: Boolean
-
-    fun onAuthenticationComplete(accessToken: String, onInitialized: () -> Unit)
+    fun initializePlayer(accessToken: String, callback: () -> Unit)
     fun logOutPlayer()
 
     fun loadTrack(track: Track)

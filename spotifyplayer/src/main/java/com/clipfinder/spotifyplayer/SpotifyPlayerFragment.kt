@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.palette.graphics.Palette
@@ -22,7 +23,9 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.clipfinder.core.android.base.handler.SlidingPanelController
 import com.clipfinder.core.android.base.provider.IntentProvider
-import com.clipfinder.core.android.spotify.controller.SpotifyTrackChangeHandler
+import com.clipfinder.core.android.spotify.base.SpotifyPlayerConnectionStateCallback
+import com.clipfinder.core.android.spotify.base.SpotifyTrackChangeHandler
+import com.clipfinder.core.android.spotify.ext.id
 import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Playlist
@@ -43,7 +46,11 @@ import me.bogerchan.niervisualizer.renderer.IRenderer
 import timber.log.Timber
 import kotlin.math.pow
 
-class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player.NotificationCallback {
+class SpotifyPlayerFragment :
+    BaseMvRxFragment(),
+    ISpotifyPlayerFragment,
+    Player.NotificationCallback,
+    ConnectionStateCallback {
     private val viewModel: SpotifyPlayerViewModel by fragmentViewModel()
     private val broadcastReceivers: ArrayList<BroadcastReceiver> = ArrayList(6)
 
@@ -60,8 +67,6 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
     private var player: SpotifyPlayer? = null
     override val isPlayerLoggedIn: Boolean
         get() = player?.isLoggedIn == true
-    override val isPlayerInitialized: Boolean
-        get() = player?.isInitialized == true
     override val playerView: View?
         get() = this.view
 
@@ -194,7 +199,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initSpotifyPlayer()
+        initIntentReceivers()
     }
 
     override fun onStart() {
@@ -320,7 +325,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         player?.pause(spotifyPlayerOperationCallback)
     }
 
-    override fun onAuthenticationComplete(accessToken: String, onInitialized: () -> Unit) {
+    override fun initializePlayer(accessToken: String, callback: () -> Unit) {
         if (player == null) {
             player = SpotifyPlayer
                 .Builder(Config(requireContext(), accessToken, BuildConfig.SPOTIFY_CLIENT_ID))
@@ -332,8 +337,8 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                             requireContext().networkConnectivity
                         )
                         player.addNotificationCallback(this@SpotifyPlayerFragment)
-                        player.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
-                        onInitialized()
+                        player.addConnectionStateCallback(this@SpotifyPlayerFragment)
+                        callback()
                     }
 
                     override fun onError(error: Throwable) {
@@ -341,6 +346,18 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                     }
                 })
         } else {
+            var connectionStateCallback: ConnectionStateCallback? = null
+            connectionStateCallback = object : SpotifyPlayerConnectionStateCallback {
+                override fun onLoggedIn() {
+                    callback()
+                    player?.removeConnectionStateCallback(connectionStateCallback)
+                }
+
+                override fun onLoginFailed(error: Error?) {
+                    player?.removeConnectionStateCallback(connectionStateCallback)
+                }
+            }
+            player?.addConnectionStateCallback(connectionStateCallback)
             player?.login(accessToken)
         }
     }
@@ -364,6 +381,29 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         resetProgressAndPlay(playlist.uri)
     }
 
+    override fun onLoggedOut() {
+        Toast.makeText(requireContext(), "You logged out", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onLoggedIn() {
+        Toast.makeText(requireContext(), "You successfully logged in.", Toast.LENGTH_SHORT).show()
+        //TODO: permission check
+    }
+
+    override fun onConnectionMessage(message: String?) {
+        Timber.tag("onConnectionMessage: ").e(message ?: "Unknown connection message.")
+    }
+
+    override fun onLoginFailed(error: Error?) {
+        Timber.e("onLoginFailed")
+        Toast.makeText(requireContext(), "Login failed: ${error?.name ?: "error unknown"}", Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    override fun onTemporaryError() {
+        Timber.tag("ERR").e("onTemporaryError")
+    }
+
     override fun invalidate() = Unit
 
     private fun playbackTimer(
@@ -375,7 +415,7 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
         playback_seek_bar?.progress = seconds.toInt()
     }
 
-    private fun initSpotifyPlayer() {
+    private fun initIntentReceivers() {
         with(requireContext()) {
             broadcastReceivers.addAll(
                 createAndRegisterReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
@@ -401,9 +441,6 @@ class SpotifyPlayerFragment : BaseMvRxFragment(), ISpotifyPlayerFragment, Player
                 }
             )
         }
-
-        player?.addNotificationCallback(this)
-        player?.addConnectionStateCallback(activity?.castAs<ConnectionStateCallback>())
     }
 
     private fun resetProgressAndPlay(uri: String) {

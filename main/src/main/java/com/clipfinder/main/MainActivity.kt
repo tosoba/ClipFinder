@@ -23,9 +23,9 @@ import com.clipfinder.core.android.model.soundcloud.SoundCloudTrack
 import com.clipfinder.core.android.model.videos.Video
 import com.clipfinder.core.android.model.videos.VideoPlaylist
 import com.clipfinder.core.android.spotify.auth.SpotifyManualAuth
-import com.clipfinder.core.android.spotify.controller.SpotifyAuthController
-import com.clipfinder.core.android.spotify.controller.SpotifyPlayerController
-import com.clipfinder.core.android.spotify.controller.SpotifyTrackChangeHandler
+import com.clipfinder.core.android.spotify.base.SpotifyAuthController
+import com.clipfinder.core.android.spotify.base.SpotifyPlayerController
+import com.clipfinder.core.android.spotify.base.SpotifyTrackChangeHandler
 import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Playlist
@@ -43,8 +43,6 @@ import com.clipfinder.settings.SettingsActivity
 import com.clipfinder.spotify.track.SpotifyTrackFragment
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.spotify.sdk.android.player.ConnectionStateCallback
-import com.spotify.sdk.android.player.Error
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.activity_main.*
@@ -53,7 +51,6 @@ import timber.log.Timber
 
 class MainActivity :
     BaseMvRxActivity(),
-    ConnectionStateCallback,
     SlidingPanelController,
     SpotifyPlayerController,
     SoundCloudPlayerController,
@@ -110,7 +107,7 @@ class MainActivity :
             initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
             onFavouriteBtnClickListener = View.OnClickListener {},
             pagerAdapter = mainContentViewPagerAdapter,
-            offScreenPageLimit = 1 //TODO: change to 2 after adding AboutFragment to ViewPager
+            offScreenPageLimit = mainContentViewPagerAdapter.count - 1
         )
     }
 
@@ -276,7 +273,7 @@ class MainActivity :
         viewModel.selectSubscribe(this, MainState::isPrivateAuthorized) { isPrivateAuthorized ->
             if (!isPrivateAuthorized) return@selectSubscribe
             val privateAccessToken = viewModel.privateAccessToken ?: return@selectSubscribe
-            spotifyPlayerFragment?.onAuthenticationComplete(privateAccessToken) {
+            spotifyPlayerFragment?.initializePlayer(privateAccessToken) {
                 onLoginSuccessful?.invoke()
                 onLoginSuccessful = null
             }
@@ -461,29 +458,6 @@ class MainActivity :
         relatedVideosFragment?.search(videos.first().id)
     }
 
-    override fun onLoggedOut() {
-        Toast.makeText(this, "You logged out", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onLoggedIn() {
-        Toast.makeText(this, "You successfully logged in.", Toast.LENGTH_SHORT).show()
-        //TODO: permission check
-    }
-
-    override fun onConnectionMessage(message: String?) {
-        Timber.tag("onConnectionMessage: ").e(message ?: "Unknown connection message.")
-    }
-
-    override fun onLoginFailed(error: Error?) {
-        Timber.e("onLoginFailed")
-        Toast.makeText(this, "Login failed: ${error?.name ?: "error unknown"}", Toast.LENGTH_SHORT)
-            .show()
-    }
-
-    override fun onTemporaryError() {
-        Timber.tag("ERR").e("onTemporaryError")
-    }
-
     override fun showLoginDialog() {
         if (isPlayerLoggedIn) return
         MaterialDialog.Builder(this)
@@ -500,7 +474,7 @@ class MainActivity :
         startActivityForResult(spotifyAuth.authRequestIntent, LOGIN_REQUEST_CODE)
     }
 
-    override fun logOutPlayer() {
+    private fun logOutPlayer() {
         spotifyPlayerFragment?.logOutPlayer()
     }
 

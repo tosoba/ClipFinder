@@ -1,4 +1,4 @@
-package com.clipfinder.core.android.spotify.controller
+package com.clipfinder.core.android.spotify.base
 
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Playlist
@@ -9,14 +9,4 @@ interface SpotifyPlayerController {
     fun loadTrack(track: Track)
     fun loadAlbum(album: Album)
     fun loadPlaylist(playlist: Playlist)
-}
-
-interface SpotifyTrackChangeHandler {
-    fun onTrackChanged(trackId: String)
-}
-
-interface SpotifyAuthController {
-    var onLoginSuccessful: (() -> Unit)?
-    fun showLoginDialog()
-    fun logOutPlayer()
 }

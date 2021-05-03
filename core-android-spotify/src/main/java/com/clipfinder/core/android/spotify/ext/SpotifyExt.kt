@@ -1,4 +1,4 @@
-package com.clipfinder.spotifyplayer
+package com.clipfinder.core.android.spotify.ext
 
 import com.spotify.sdk.android.player.Metadata
 
