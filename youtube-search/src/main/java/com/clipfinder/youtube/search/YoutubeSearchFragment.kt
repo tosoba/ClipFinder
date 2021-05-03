@@ -12,20 +12,22 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.core.ext.castAs
 import com.clipfinder.core.android.base.fragment.ISearchFragment
 import com.clipfinder.core.android.base.handler.YoutubePlayerController
 import com.clipfinder.core.android.model.videos.clickableListItem
 import com.clipfinder.core.android.util.ext.newMvRxFragmentWith
 import com.clipfinder.core.android.util.ext.screenOrientation
 import com.clipfinder.core.android.view.epoxy.loadableCollectionController
+import com.clipfinder.core.ext.castAs
 import kotlinx.android.synthetic.main.fragment_youtube_search.*
 import kotlinx.android.synthetic.main.fragment_youtube_search.view.*
 
 class YoutubeSearchFragment : BaseMvRxFragment(), ISearchFragment {
     private val viewModel: YoutubeSearchViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<YoutubeSearchState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<YoutubeSearchState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         loadableCollectionController(
             YoutubeSearchState::videos,
             headerText = getString(R.string.videos),
@@ -40,11 +42,14 @@ class YoutubeSearchFragment : BaseMvRxFragment(), ISearchFragment {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_youtube_search, container, false)
-        .apply {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.fragment_youtube_search, container, false).apply {
             this.youtube_search_recycler_view.setController(epoxyController)
-            this.youtube_search_recycler_view.layoutManager = layoutManagerFor(requireContext().screenOrientation)
+            this.youtube_search_recycler_view.layoutManager =
+                layoutManagerFor(requireContext().screenOrientation)
         }
 
     override fun search(input: String) = viewModel.search(input)
@@ -56,13 +61,12 @@ class YoutubeSearchFragment : BaseMvRxFragment(), ISearchFragment {
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
-    private fun layoutManagerFor(
-        orientation: Int
-    ): RecyclerView.LayoutManager = if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
-    } else {
-        LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-    }
+    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager =
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+        } else {
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        }
 
     companion object {
         fun newInstanceWithQuery(query: String): YoutubeSearchFragment = newMvRxFragmentWith(query)

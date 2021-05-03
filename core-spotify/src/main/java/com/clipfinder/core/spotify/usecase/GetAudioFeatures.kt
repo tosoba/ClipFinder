@@ -6,8 +6,8 @@ import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import io.reactivex.Single
 
-class GetAudioFeatures(
-    private val repo: ISpotifyRepo
-) : UseCaseWithArgs<String, Single<Resource<ISpotifyAudioFeatures>>> {
-    override fun run(args: String): Single<Resource<ISpotifyAudioFeatures>> = repo.getAudioFeatures(args)
+class GetAudioFeatures(private val repo: ISpotifyRepo) :
+    UseCaseWithArgs<String, Single<Resource<ISpotifyAudioFeatures>>> {
+    override fun run(args: String): Single<Resource<ISpotifyAudioFeatures>> =
+        repo.getAudioFeatures(args)
 }

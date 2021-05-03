@@ -11,14 +11,15 @@ class CacheInterceptor(
     private val maxAge: Long = 300,
     private val maxStale: Long = 60 * 60 * 24 * 7
 ) : ICacheInterceptor {
-    override fun intercept(chain: Interceptor.Chain): Response = chain
-        .proceed(chain.request())
-        .newBuilder()
-        .header(
-            "Cache-Control",
-            if (context.isConnected) "public, max-age=$maxAge"
-            else "public, only-if-cached, max-stale=$maxStale"
-        )
-        .removeHeader("Pragma")
-        .build()
+    override fun intercept(chain: Interceptor.Chain): Response =
+        chain
+            .proceed(chain.request())
+            .newBuilder()
+            .header(
+                "Cache-Control",
+                if (context.isConnected) "public, max-age=$maxAge"
+                else "public, only-if-cached, max-stale=$maxStale"
+            )
+            .removeHeader("Pragma")
+            .build()
 }

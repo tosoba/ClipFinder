@@ -13,15 +13,15 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.clipfinder.core.android.base.fragment.BackPressedHandler
-import com.clipfinder.core.model.WithValue
 import com.clipfinder.core.android.spotify.model.Artist
 import com.clipfinder.core.android.spotify.model.clickableListItem
 import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.epoxy.injectedTypedController
 import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.model.WithValue
+import com.clipfinder.spotify.artist.databinding.FragmentSpotifyArtistBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -30,7 +30,9 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
     private val viewModel: SpotifyArtistViewModel by fragmentViewModel()
     private val factory: ISpotifyFragmentsFactory by inject()
 
-    private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
             loadableCarouselWithHeader(
                 requireContext(),
@@ -40,9 +42,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 { viewModel.loadAlbumsFromArtist() },
                 viewModel::clearAlbumsError
             ) { album ->
-                album.clickableListItem {
-                    show { factory.newSpotifyAlbumFragment(album) }
-                }
+                album.clickableListItem { show { factory.newSpotifyAlbumFragment(album) } }
             }
 
             loadableCarouselWithHeader(
@@ -52,9 +52,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
                 "related-artists",
                 viewModel::loadRelatedArtists,
                 viewModel::clearTopTracksError
-            ) { artist ->
-                artist.clickableListItem { viewModel.updateArtist(artist) }
-            }
+            ) { artist -> artist.clickableListItem { viewModel.updateArtist(artist) } }
 
             loadableCarouselWithHeader(
                 requireContext(),
@@ -71,7 +69,11 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val binding = FragmentSpotifyArtistBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {
@@ -89,22 +91,29 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
             artists.lastOrNull()?.let {
                 artist.value = it
-                binding.artistToolbarGradientBackgroundView
+                binding
+                    .artistToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()
-            } ?: backPressedController?.onBackPressedWithNoPreviousState()
+            }
+                ?: backPressedController?.onBackPressedWithNoPreviousState()
         }
 
         mainContentFragment?.disablePlayButton()
 
-        return binding.apply {
-            lifecycleOwner = this@SpotifyArtistFragment
-            this.artist = artist
-            artistFavouriteFab.setOnClickListener { }
-            artistToolbar.setupWithBackNavigation(requireActivity() as AppCompatActivity, ::onBackPressed)
-            artistRecyclerView.setController(epoxyController)
-        }.root
+        return binding
+            .apply {
+                lifecycleOwner = this@SpotifyArtistFragment
+                this.artist = artist
+                artistFavouriteFab.setOnClickListener {}
+                artistToolbar.setupWithBackNavigation(
+                    requireActivity() as AppCompatActivity,
+                    ::onBackPressed
+                )
+                artistRecyclerView.setController(epoxyController)
+            }
+            .root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

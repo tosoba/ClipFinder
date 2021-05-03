@@ -12,7 +12,8 @@ object YoutubeDbConverters {
 
     @TypeConverter
     @JvmStatic
-    fun toOffsetDateTime(value: String?) = value?.let { formatter.parse(value, OffsetDateTime::from) }
+    fun toOffsetDateTime(value: String?) =
+        value?.let { formatter.parse(value, OffsetDateTime::from) }
 
     @TypeConverter
     @JvmStatic
@@ -20,11 +21,11 @@ object YoutubeDbConverters {
 
     @TypeConverter
     @JvmStatic
-    fun fromSearchListResponse(response: SearchListResponse?): String = gsonFactory.toString(response)
+    fun fromSearchListResponse(response: SearchListResponse?): String =
+        gsonFactory.toString(response)
 
     @TypeConverter
     @JvmStatic
-    fun toSearchListResponse(response: String?): SearchListResponse? = response?.let {
-        gsonFactory.fromString(it, SearchListResponse::class.java)
-    }
+    fun toSearchListResponse(response: String?): SearchListResponse? =
+        response?.let { gsonFactory.fromString(it, SearchListResponse::class.java) }
 }

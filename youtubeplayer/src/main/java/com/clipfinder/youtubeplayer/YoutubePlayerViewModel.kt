@@ -7,7 +7,8 @@ import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.android.model.videos.Video
 import com.clipfinder.core.android.model.videos.VideoPlaylist
 
-class YoutubePlayerViewModel(initialState: YoutubePlayerState) : MvRxViewModel<YoutubePlayerState>(initialState) {
+class YoutubePlayerViewModel(initialState: YoutubePlayerState) :
+    MvRxViewModel<YoutubePlayerState>(initialState) {
     fun updatePlayerNotificationState(isShowing: Boolean) = setState {
         copy(showingPlaybackNotification = isShowing)
     }
@@ -35,13 +36,15 @@ class YoutubePlayerViewModel(initialState: YoutubePlayerState) : MvRxViewModel<Y
         setState { copy(mode = YoutubePlayerMode.Playlist(videoPlaylist, videos, 0)) }
     }
 
-    fun isAlreadyPlaying(video: Video): Boolean = withState(this) { state ->
-        state.mode is YoutubePlayerMode.SingleVideo && video == state.mode.video
-    }
+    fun isAlreadyPlaying(video: Video): Boolean =
+        withState(this) { state ->
+            state.mode is YoutubePlayerMode.SingleVideo && video == state.mode.video
+        }
 
-    fun isAlreadyPlaying(playlist: VideoPlaylist): Boolean = withState(this) { state ->
-        state.mode is YoutubePlayerMode.Playlist && playlist == state.mode.playlist
-    }
+    fun isAlreadyPlaying(playlist: VideoPlaylist): Boolean =
+        withState(this) { state ->
+            state.mode is YoutubePlayerMode.Playlist && playlist == state.mode.playlist
+        }
 
     companion object : MvRxViewModelFactory<YoutubePlayerViewModel, YoutubePlayerState> {
         override fun create(viewModelContext: ViewModelContext, state: YoutubePlayerState) =

@@ -44,73 +44,91 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     override val playerView: View?
         get() = view
 
-    private val onPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        withState(viewModel) { state ->
-            if (state.mode is YoutubePlayerMode.Idle) return@withState
-            if (state.playbackInProgress) youTubePlayer.pause()
-            else youTubePlayer.play()
+    private val onPlayPauseBtnClickListener: View.OnClickListener =
+        View.OnClickListener {
+            withState(viewModel) { state ->
+                if (state.mode is YoutubePlayerMode.Idle) return@withState
+                if (state.playbackInProgress) youTubePlayer.pause() else youTubePlayer.play()
+            }
         }
-    }
 
-    private val onCloseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        activity?.castAs<SlidingPanelController>()?.hideIfVisible()
-        stopPlaybackAndNullifyLastPlayedItems()
-    }
+    private val onCloseBtnClickListener: View.OnClickListener =
+        View.OnClickListener {
+            activity?.castAs<SlidingPanelController>()?.hideIfVisible()
+            stopPlaybackAndNullifyLastPlayedItems()
+        }
 
     private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
         ImageButton(context).apply {
             setImageResource(R.drawable.close)
-            layoutParams = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(10, 10, 10, 10)
-                addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-            }
+            layoutParams =
+                RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    .apply {
+                        setMargins(10, 10, 10, 10)
+                        addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                    }
             setOnClickListener(onCloseBtnClickListener)
             setBackgroundColor(Color.TRANSPARENT)
         }
     }
 
-    private val playlistYoutubePlayerStateChangeListener = object : AbstractYouTubePlayerListener() {
-        override fun onStateChange(youTubePlayer: YouTubePlayer, state: PlayerConstants.PlayerState) {
-            when (state) {
-                PlayerConstants.PlayerState.ENDED -> withState(viewModel) { (_, mode) ->
-                    require(mode is YoutubePlayerMode.Playlist)
-                    playNextVideo(mode)
-                    refreshBackgroundPlaybackNotificationIfShowing()
+    private val playlistYoutubePlayerStateChangeListener =
+        object : AbstractYouTubePlayerListener() {
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState
+            ) {
+                when (state) {
+                    PlayerConstants.PlayerState.ENDED ->
+                        withState(viewModel) { (_, mode) ->
+                            require(mode is YoutubePlayerMode.Playlist)
+                            playNextVideo(mode)
+                            refreshBackgroundPlaybackNotificationIfShowing()
+                        }
+                    else -> return
                 }
-                else -> return
             }
         }
-    }
 
-    private val singleVideoYoutubePlayerStateChangeListener = object : AbstractYouTubePlayerListener() {
-        override fun onStateChange(youTubePlayer: YouTubePlayer, state: PlayerConstants.PlayerState) {
-            when (state) {
-                PlayerConstants.PlayerState.PLAYING -> {
-                    viewModel.updatePlaybackState(inProgress = true)
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.pause)
-                    refreshBackgroundPlaybackNotificationIfShowing()
+    private val singleVideoYoutubePlayerStateChangeListener =
+        object : AbstractYouTubePlayerListener() {
+            override fun onStateChange(
+                youTubePlayer: YouTubePlayer,
+                state: PlayerConstants.PlayerState
+            ) {
+                when (state) {
+                    PlayerConstants.PlayerState.PLAYING -> {
+                        viewModel.updatePlaybackState(inProgress = true)
+                        youtube_player_play_pause_when_collapsed_btn?.setImageResource(
+                            R.drawable.pause
+                        )
+                        refreshBackgroundPlaybackNotificationIfShowing()
+                    }
+                    PlayerConstants.PlayerState.PAUSED, PlayerConstants.PlayerState.ENDED -> {
+                        viewModel.updatePlaybackState(inProgress = false)
+                        youtube_player_play_pause_when_collapsed_btn?.setImageResource(
+                            R.drawable.play
+                        )
+                        refreshBackgroundPlaybackNotificationIfShowing()
+                    }
+                    else -> return
                 }
-                PlayerConstants.PlayerState.PAUSED, PlayerConstants.PlayerState.ENDED -> {
-                    viewModel.updatePlaybackState(inProgress = false)
-                    youtube_player_play_pause_when_collapsed_btn?.setImageResource(R.drawable.play)
-                    refreshBackgroundPlaybackNotificationIfShowing()
-                }
-                else -> return
             }
         }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_youtube_player, container, false)
-        .apply {
-            this.close_youtube_player_when_collapsed_btn
-                .setOnClickListener(onCloseBtnClickListener)
-            this.youtube_player_play_pause_when_collapsed_btn
-                .setOnClickListener(onPlayPauseBtnClickListener)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        inflater.inflate(R.layout.fragment_youtube_player, container, false).apply {
+            this.close_youtube_player_when_collapsed_btn.setOnClickListener(onCloseBtnClickListener)
+            this.youtube_player_play_pause_when_collapsed_btn.setOnClickListener(
+                onPlayPauseBtnClickListener
+            )
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -165,7 +183,8 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     override fun onPlayerDimensionsChange(slideOffset: Float) {
         youtube_player_guideline.setGuidelinePercent(
-            (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset + minimumYoutubePlayerGuidelinePercent
+            (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset +
+                minimumYoutubePlayerGuidelinePercent
         )
         youtube_player_guideline.requestLayout()
     }
@@ -202,26 +221,30 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
     private fun initPlayerViewControls(view: View) {
         view.findViewById<RelativeLayout>(R.id.controls_container).apply {
             addView(closeBtn)
-            val titleParams = findViewById<TextView>(R.id.video_title)
-                .layoutParams as RelativeLayout.LayoutParams
+            val titleParams =
+                findViewById<TextView>(R.id.video_title).layoutParams as RelativeLayout.LayoutParams
             val margin20Px = view.context.dpToPx(20f).toInt()
             titleParams.setMargins(margin20Px, 0, margin20Px, 0)
         }
     }
 
     private fun initYouTubePlayerView() {
-        youtube_player_view?.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-            override fun onReady(youTubePlayer: YouTubePlayer) {
-                this@YoutubePlayerFragment.youTubePlayer = youTubePlayer
-                youTubePlayer.addListener(singleVideoYoutubePlayerStateChangeListener)
-                youtube_player_view?.getPlayerUiController()?.showFullscreenButton(false)
-                youtube_player_view?.getPlayerUiController()?.showVideoTitle(true)
+        youtube_player_view?.addYouTubePlayerListener(
+            object : AbstractYouTubePlayerListener() {
+                override fun onReady(youTubePlayer: YouTubePlayer) {
+                    this@YoutubePlayerFragment.youTubePlayer = youTubePlayer
+                    youTubePlayer.addListener(singleVideoYoutubePlayerStateChangeListener)
+                    youtube_player_view?.getPlayerUiController()?.showFullscreenButton(false)
+                    youtube_player_view?.getPlayerUiController()?.showVideoTitle(true)
+                }
             }
-        })
+        )
         youtube_player_view?.enableBackgroundPlayback(true)
         with(requireContext()) {
             broadcastReceivers.addAll(
-                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_DELETE_NOTIFICATION)) { _, _ ->
+                createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_DELETE_NOTIFICATION)) {
+                    _,
+                    _ ->
                     viewModel.updatePlayerNotificationState(false)
                     stopPlayback()
                 },
@@ -232,10 +255,14 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                     youTubePlayer.play()
                 },
                 createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_PREV_VIDEO)) { _, _ ->
-                    playPrevVideo(withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist })
+                    playPrevVideo(
+                        withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist }
+                    )
                 },
                 createAndRegisterReceiverFor(IntentFilter(YOUTUBE_ACTION_NEXT_VIDEO)) { _, _ ->
-                    playNextVideo(withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist })
+                    playNextVideo(
+                        withState(viewModel) { state -> state.mode as YoutubePlayerMode.Playlist }
+                    )
                 }
             )
         }
@@ -252,8 +279,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
             playVideo(mode.videos[mode.currentVideoIndex + 1])
             viewModel.onNextVideoFromPlaylistStarted()
         } else {
-            Toast.makeText(context, "${mode.playlist.name} has ended.", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(context, "${mode.playlist.name} has ended.", Toast.LENGTH_SHORT).show()
             activity?.castAs<SlidingPanelController>()?.hideIfVisible()
         }
     }
@@ -305,65 +331,75 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         showPlaybackNotification()
     }
 
-    private fun buildNotification(
-        state: YoutubePlayerState,
-        largeIcon: Bitmap?
-    ): Notification = NotificationCompat
-        .Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
-        .setSmallIcon(R.drawable.play)
-        .apply {
-            val bigText = requireNotNull(state.currentVideo).title
-            if (largeIcon != null) {
-                setLargeIcon(largeIcon)
-                    .setStyle(
-                        NotificationCompat.BigPictureStyle()
-                            .bigLargeIcon(
-                                BitmapFactory.decodeResource(resources, R.drawable.ic_launcher)
-                            )
-                            .bigPicture(largeIcon)
-                            .setBigContentTitle(bigText)
+    private fun buildNotification(state: YoutubePlayerState, largeIcon: Bitmap?): Notification =
+        NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
+            .setSmallIcon(R.drawable.play)
+            .apply {
+                val bigText = requireNotNull(state.currentVideo).title
+                if (largeIcon != null) {
+                    setLargeIcon(largeIcon)
+                        .setStyle(
+                            NotificationCompat.BigPictureStyle()
+                                .bigLargeIcon(
+                                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher)
+                                )
+                                .bigPicture(largeIcon)
+                                .setBigContentTitle(bigText)
+                        )
+                } else {
+                    setContentText(bigText)
+                }
+            }
+            .setContentTitle(getString(R.string.app_name))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                requireContext()
+                    .getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
+            )
+            .setDeleteIntent(
+                requireContext()
+                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_DELETE_NOTIFICATION))
+            )
+            .apply {
+                val (isPlaying, mode) = state
+                if (mode is YoutubePlayerMode.Playlist && mode.currentVideoIndex > 0) {
+                    val prevTrackIntent =
+                        requireContext()
+                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PREV_VIDEO))
+                    addAction(
+                        R.drawable.previous_track,
+                        getString(R.string.previous_track),
+                        prevTrackIntent
                     )
-            } else {
-                setContentText(bigText)
-            }
-        }
-        .setContentTitle(getString(R.string.app_name))
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setContentIntent(
-            requireContext()
-                .getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
-        )
-        .setDeleteIntent(
-            requireContext()
-                .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_DELETE_NOTIFICATION))
-        )
-        .apply {
-            val (isPlaying, mode) = state
-            if (mode is YoutubePlayerMode.Playlist && mode.currentVideoIndex > 0) {
-                val prevTrackIntent = requireContext()
-                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PREV_VIDEO))
-                addAction(R.drawable.previous_track, getString(R.string.previous_track), prevTrackIntent)
-            }
+                }
 
-            if (isPlaying) {
-                val pauseIntent = requireContext()
-                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PAUSE_PLAYBACK))
-                addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
-            } else {
-                val resumeIntent = requireContext()
-                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_RESUME_PLAYBACK))
-                addAction(R.drawable.play, getString(R.string.play), resumeIntent)
-            }
+                if (isPlaying) {
+                    val pauseIntent =
+                        requireContext()
+                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_PAUSE_PLAYBACK))
+                    addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
+                } else {
+                    val resumeIntent =
+                        requireContext()
+                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_RESUME_PLAYBACK))
+                    addAction(R.drawable.play, getString(R.string.play), resumeIntent)
+                }
 
-            if (mode is YoutubePlayerMode.Playlist && mode.currentVideoIndex < mode.videos.size - 1) {
-                val nextTrackIntent = requireContext()
-                    .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_NEXT_VIDEO))
-                addAction(R.drawable.next_track, getString(R.string.next_track), nextTrackIntent)
+                if (mode is YoutubePlayerMode.Playlist &&
+                        mode.currentVideoIndex < mode.videos.size - 1
+                ) {
+                    val nextTrackIntent =
+                        requireContext()
+                            .getBroadcastPendingIntent(Intent(YOUTUBE_ACTION_NEXT_VIDEO))
+                    addAction(
+                        R.drawable.next_track,
+                        getString(R.string.next_track),
+                        nextTrackIntent
+                    )
+                }
             }
-        }
-        .setAutoCancel(true)
-        .build()
-
+            .setAutoCancel(true)
+            .build()
 
     companion object {
         private const val minimumYoutubePlayerGuidelinePercent = .45f

@@ -5,9 +5,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-abstract class CurrentFragmentStatePagerAdapter(
-    manager: FragmentManager
-) : FragmentStatePagerAdapter(manager) {
+abstract class CurrentFragmentStatePagerAdapter(manager: FragmentManager) :
+    FragmentStatePagerAdapter(manager) {
 
     var currentFragment: Fragment? = null
         private set

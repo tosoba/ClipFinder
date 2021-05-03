@@ -11,12 +11,15 @@ import org.koin.dsl.binds
 import org.koin.dsl.module
 
 val appModule = module {
-    factory { FragmentFactory } binds arrayOf(IFragmentFactory::class, ISpotifyFragmentsFactory::class)
+    factory { FragmentFactory } binds
+        arrayOf(IFragmentFactory::class, ISpotifyFragmentsFactory::class)
 
     factory<RxSchedulers> {
         object : RxSchedulers {
-            override val io: Scheduler get() = Schedulers.io()
-            override val main: Scheduler get() = AndroidSchedulers.mainThread()
+            override val io: Scheduler
+                get() = Schedulers.io()
+            override val main: Scheduler
+                get() = AndroidSchedulers.mainThread()
         }
     }
 }

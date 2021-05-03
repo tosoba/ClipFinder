@@ -4,6 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 class SoundCloudRelatedTracksResponse(
     val collection: List<SoundCloudTrack>?,
-    @SerializedName("next_href")
-    val nextHref: String
+    @SerializedName("next_href") val nextHref: String
 )

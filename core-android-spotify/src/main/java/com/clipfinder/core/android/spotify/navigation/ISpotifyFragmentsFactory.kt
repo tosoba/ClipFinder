@@ -1,11 +1,7 @@
 package com.clipfinder.core.android.spotify.navigation
 
 import androidx.fragment.app.Fragment
-import com.clipfinder.core.android.spotify.model.Album
-import com.clipfinder.core.android.spotify.model.Artist
-import com.clipfinder.core.android.spotify.model.Track
-import com.clipfinder.core.android.spotify.model.Category
-import com.clipfinder.core.android.spotify.model.Playlist
+import com.clipfinder.core.android.spotify.model.*
 
 interface ISpotifyFragmentsFactory {
     fun newSpotifyAlbumFragment(album: Album): Fragment

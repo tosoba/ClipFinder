@@ -8,8 +8,9 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 
 val KClass<ISpotifyAudioFeatures>.decimalProps: List<KProperty1<ISpotifyAudioFeatures, BigDecimal>>
-    get() = declaredMemberProperties.filterIsInstance<KProperty1<ISpotifyAudioFeatures, BigDecimal>>()
-        .filter {
-            it.name.toLowerCase(Locale.getDefault()) != "tempo"
-                && it.name.toLowerCase(Locale.getDefault()) != "loudness"
-        }
+    get() =
+        declaredMemberProperties.filterIsInstance<KProperty1<ISpotifyAudioFeatures, BigDecimal>>()
+            .filter {
+                it.name.toLowerCase(Locale.getDefault()) != "tempo" &&
+                    it.name.toLowerCase(Locale.getDefault()) != "loudness"
+            }

@@ -10,25 +10,17 @@ interface RxSchedulers {
     val main: Scheduler
 }
 
-fun <T> Flowable<T>.applySchedulers(
-    schedulers: RxSchedulers
-): Flowable<T> = subscribeOn(schedulers.io)
-    .observeOn(schedulers.main)
+fun <T> Flowable<T>.applySchedulers(schedulers: RxSchedulers): Flowable<T> =
+    subscribeOn(schedulers.io).observeOn(schedulers.main)
 
-fun <T> Single<T>.applySchedulers(
-    schedulers: RxSchedulers
-): Single<T> = subscribeOn(schedulers.io)
-    .observeOn(schedulers.main)
+fun <T> Single<T>.applySchedulers(schedulers: RxSchedulers): Single<T> =
+    subscribeOn(schedulers.io).observeOn(schedulers.main)
 
-fun <T> Observable<T>.applySchedulers(
-    schedulers: RxSchedulers
-): Observable<T> = subscribeOn(schedulers.io)
-    .observeOn(schedulers.main)
+fun <T> Observable<T>.applySchedulers(schedulers: RxSchedulers): Observable<T> =
+    subscribeOn(schedulers.io).observeOn(schedulers.main)
 
-fun Completable.applySchedulers(
-    schedulers: RxSchedulers
-): Completable = subscribeOn(schedulers.io)
-    .observeOn(schedulers.main)
+fun Completable.applySchedulers(schedulers: RxSchedulers): Completable =
+    subscribeOn(schedulers.io).observeOn(schedulers.main)
 
 class Timeout(val limit: Long, val unit: TimeUnit) {
     companion object {
@@ -36,4 +28,5 @@ class Timeout(val limit: Long, val unit: TimeUnit) {
     }
 }
 
-fun Disposable.addTo(compositeDisposable: CompositeDisposable): Boolean = compositeDisposable.add(this)
+fun Disposable.addTo(compositeDisposable: CompositeDisposable): Boolean =
+    compositeDisposable.add(this)

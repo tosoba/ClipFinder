@@ -4,22 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedAlbums
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedTracks
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.Empty
-import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
-import com.clipfinder.core.model.invoke
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.*
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedAlbums
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersSavedTracks
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -36,20 +31,24 @@ class SpotifyAccountSavedViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences.isPrivateAuthorizedObservable
+        preferences
+            .isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
-                if (it) withState { (_, tracks, albums) ->
-                    if (tracks is Empty) loadTracks()
-                    if (albums is Empty) loadAlbums()
-                }
+                if (it)
+                    withState { (_, tracks, albums) ->
+                        if (tracks is Empty) loadTracks()
+                        if (albums is Empty) loadAlbums()
+                    }
             }
             .disposeOnClear()
     }
 
-    fun loadTracks() = loadPagedList(State::tracks, getCurrentUsersSavedTracks::intoState) { copy(tracks = it) }
+    fun loadTracks() =
+        loadPagedList(State::tracks, getCurrentUsersSavedTracks::intoState) { copy(tracks = it) }
     fun clearTracksError() = clearErrorIn(State::tracks) { copy(tracks = it) }
-    fun loadAlbums() = loadPagedList(State::albums, getCurrentUsersSavedAlbums::intoState) { copy(albums = it) }
+    fun loadAlbums() =
+        loadPagedList(State::albums, getCurrentUsersSavedAlbums::intoState) { copy(albums = it) }
     fun clearAlbumsError() = clearErrorIn(State::albums) { copy(albums = it) }
 
     private fun <I> loadPagedList(
@@ -69,23 +68,28 @@ class SpotifyAccountSavedViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SpotifyAccountSavedViewModel, SpotifyAccountSavedState> {
+    companion object :
+        MvRxViewModelFactory<SpotifyAccountSavedViewModel, SpotifyAccountSavedState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifyAccountSavedState
-        ): SpotifyAccountSavedViewModel = SpotifyAccountSavedViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: SpotifyAccountSavedState
+        ): SpotifyAccountSavedViewModel =
+            SpotifyAccountSavedViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-internal fun GetCurrentUsersSavedTracks.intoState(state: State): Single<Resource<Paged<List<Track>>>> =
-    this(args = state.tracks.offset)
-        .mapData { newTracks -> newTracks.map(::Track) }
+internal fun GetCurrentUsersSavedTracks.intoState(
+    state: State
+): Single<Resource<Paged<List<Track>>>> =
+    this(args = state.tracks.offset).mapData { newTracks -> newTracks.map(::Track) }
 
-internal fun GetCurrentUsersSavedAlbums.intoState(state: State): Single<Resource<Paged<List<Album>>>> =
-    this(args = state.albums.offset)
-        .mapData { newAlbums -> newAlbums.map(::Album) }
+internal fun GetCurrentUsersSavedAlbums.intoState(
+    state: State
+): Single<Resource<Paged<List<Album>>>> =
+    this(args = state.albums.offset).mapData { newAlbums -> newAlbums.map(::Album) }

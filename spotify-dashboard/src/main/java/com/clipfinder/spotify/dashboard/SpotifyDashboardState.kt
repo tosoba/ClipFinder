@@ -1,13 +1,13 @@
 package com.clipfinder.spotify.dashboard
 
 import com.airbnb.mvrx.MvRxState
-import com.clipfinder.core.model.Empty
-import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Category
 import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.model.TopTrack
+import com.clipfinder.core.model.Empty
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
 
 data class SpotifyDashboardState(
     val categories: Loadable<PagedList<Category>> = Empty,

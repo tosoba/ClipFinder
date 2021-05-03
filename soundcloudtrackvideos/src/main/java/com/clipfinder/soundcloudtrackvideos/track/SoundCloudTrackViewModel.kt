@@ -5,8 +5,8 @@ import com.airbnb.mvrx.ViewModelContext
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
 import com.clipfinder.core.android.model.soundcloud.SoundCloudTrack
 import com.clipfinder.core.model.Ready
-import com.clipfinder.core.soundcloud.usecase.GetSimilarTracks
 import com.clipfinder.core.model.invoke
+import com.clipfinder.core.soundcloud.usecase.GetSimilarTracks
 import io.reactivex.schedulers.Schedulers
 import org.koin.android.ext.android.get
 
@@ -25,14 +25,14 @@ class SoundCloudTrackViewModel(
             .disposeOnClear()
     }
 
-    fun clearTracksError() = clearErrorIn(SoundCloudTrackViewState::similarTracks) { copy(similarTracks = it) }
+    fun clearTracksError() =
+        clearErrorIn(SoundCloudTrackViewState::similarTracks) { copy(similarTracks = it) }
 
     companion object : MvRxViewModelFactory<SoundCloudTrackViewModel, SoundCloudTrackViewState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SoundCloudTrackViewState
-        ): SoundCloudTrackViewModel = SoundCloudTrackViewModel(
-            state,
-            viewModelContext.activity.get()
-        )
+            viewModelContext: ViewModelContext,
+            state: SoundCloudTrackViewState
+        ): SoundCloudTrackViewModel =
+            SoundCloudTrackViewModel(state, viewModelContext.activity.get())
     }
 }

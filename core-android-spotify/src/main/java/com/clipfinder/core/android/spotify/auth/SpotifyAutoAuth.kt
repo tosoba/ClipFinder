@@ -12,27 +12,28 @@ class SpotifyAutoAuth(
     private val authService: AuthorizationService,
     private val preferences: SpotifyPreferences
 ) : ISpotifyAutoAuth {
-    override fun authorizePrivate(): Completable = Completable.create { emitter ->
-        val authState = preferences.authState
-        if (authState == null) {
-            emitter.onError(NullAuthStateException)
-            return@create
-        }
+    override fun authorizePrivate(): Completable =
+        Completable.create { emitter ->
+            val authState = preferences.authState
+            if (authState == null) {
+                emitter.onError(NullAuthStateException)
+                return@create
+            }
 
-        try {
-            authState.performActionWithFreshTokens(
-                authService,
-                AuthState.AuthStateAction { accessToken, _, ex ->
-                    when {
-                        ex != null -> emitter.onError(ex)
-                        accessToken != null -> emitter.onComplete()
-                        else -> emitter.onError(UnknownRefreshTokenRequestException)
+            try {
+                authState.performActionWithFreshTokens(
+                    authService,
+                    AuthState.AuthStateAction { accessToken, _, ex ->
+                        when {
+                            ex != null -> emitter.onError(ex)
+                            accessToken != null -> emitter.onComplete()
+                            else -> emitter.onError(UnknownRefreshTokenRequestException)
+                        }
                     }
-                }
-            )
-            preferences.authState = authState
-        } catch (ex: Exception) {
-            emitter.onError(ex)
+                )
+                preferences.authState = authState
+            } catch (ex: Exception) {
+                emitter.onError(ex)
+            }
         }
-    }
 }

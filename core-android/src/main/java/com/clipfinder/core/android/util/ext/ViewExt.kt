@@ -6,8 +6,8 @@ import android.view.ViewTreeObserver
 import com.squareup.picasso.Picasso
 import io.reactivex.disposables.Disposable
 
-fun View.loadBackgroundGradient(url: String): Disposable = Picasso.with(context)
-    .getBitmapSingle(url) { bitmap ->
+fun View.loadBackgroundGradient(url: String): Disposable =
+    Picasso.with(context).getBitmapSingle(url) { bitmap ->
         bitmap.generateColorGradient {
             background = it
             invalidate()
@@ -26,14 +26,16 @@ fun View.updateLayoutParams(
     width: Int = ViewGroup.LayoutParams.MATCH_PARENT,
     height: Int = ViewGroup.LayoutParams.MATCH_PARENT
 ) {
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            layoutParams.also {
-                it.width = width
-                it.height = height
+    viewTreeObserver.addOnGlobalLayoutListener(
+        object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                layoutParams.also {
+                    it.width = width
+                    it.height = height
+                }
+                requestLayout()
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
-            requestLayout()
-            viewTreeObserver.removeOnGlobalLayoutListener(this)
         }
-    })
+    )
 }

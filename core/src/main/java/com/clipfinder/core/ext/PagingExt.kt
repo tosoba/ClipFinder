@@ -1,8 +1,8 @@
 package com.clipfinder.core.ext
 
-import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.model.IPagingObject
 import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.PagingDefaults
 
 fun <T : Any> IPagingObject<T>.toPaged(
     extraOffset: Int = PagingDefaults.SPOTIFY_LIMIT

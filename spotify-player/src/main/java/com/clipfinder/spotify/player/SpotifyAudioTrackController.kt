@@ -21,8 +21,11 @@ class SpotifyAudioTrackController : AudioController {
         val pendingSamples = ShortArray(AUDIO_BUFFER_SIZE_SAMPLES)
         val itemsRead = this@SpotifyAudioTrackController.audioBuffer.peek(pendingSamples)
         if (itemsRead > 0) {
-            val itemsWritten = this@SpotifyAudioTrackController
-                .writeSamplesToAudioOutput(pendingSamples, itemsRead)
+            val itemsWritten =
+                this@SpotifyAudioTrackController.writeSamplesToAudioOutput(
+                    pendingSamples,
+                    itemsRead
+                )
             this@SpotifyAudioTrackController.audioBuffer.remove(itemsWritten)
         }
     }
@@ -81,12 +84,16 @@ class SpotifyAudioTrackController : AudioController {
 
     @TargetApi(21)
     private fun createAudioTrack(sampleRate: Int, channels: Int) {
-        val channelConfig: Byte = when (channels) {
-            0 -> throw IllegalStateException("Input source has 0 channels")
-            1 -> 4
-            2 -> 12
-            else -> throw IllegalArgumentException("Unsupported input source has $channels channels")
-        }
+        val channelConfig: Byte =
+            when (channels) {
+                0 -> throw IllegalStateException("Input source has 0 channels")
+                1 -> 4
+                2 -> 12
+                else ->
+                    throw IllegalArgumentException(
+                        "Unsupported input source has $channels channels"
+                    )
+            }
 
         val bufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig.toInt(), 2) * 2
         val maxVolume = AudioTrack.getMaxVolume()

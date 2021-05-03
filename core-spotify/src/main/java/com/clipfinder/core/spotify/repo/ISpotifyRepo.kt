@@ -15,17 +15,33 @@ interface ISpotifyRepo {
     fun getFeaturedPlaylists(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
     fun getDailyViralTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getNewReleases(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
-    fun getPlaylistsForCategory(categoryId: String, offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
-    fun getTracksFromAlbum(albumId: String, offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
-    fun getAlbumsFromArtist(artistId: String, offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
+    fun getPlaylistsForCategory(
+        categoryId: String,
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
+    fun getTracksFromAlbum(
+        albumId: String,
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>>
+    fun getAlbumsFromArtist(
+        artistId: String,
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
     fun getRelatedArtists(artistId: String): Single<Resource<List<ISpotifyArtist>>>
     fun getTopTracksFromArtist(artistId: String): Single<Resource<List<ISpotifyTrack>>>
     fun search(query: String, offset: Int, type: String): Single<Resource<SpotifySearchResult>>
-    fun getPlaylistTracks(playlistId: String, offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
+    fun getPlaylistTracks(
+        playlistId: String,
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getTrack(id: String): Single<Resource<ISpotifyTrack>>
     fun getCurrentUsersTopArtists(offset: Int): Single<Resource<Paged<List<ISpotifyArtist>>>>
     fun getCurrentUsersTopTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
     fun getCurrentUsersSavedTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>>
-    fun getCurrentUsersSavedAlbums(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
-    fun getCurrentUsersPlaylists(offset: Int): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
+    fun getCurrentUsersSavedAlbums(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedAlbum>>>>
+    fun getCurrentUsersPlaylists(
+        offset: Int
+    ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>>
 }

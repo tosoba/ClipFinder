@@ -1,12 +1,12 @@
 package com.clipfinder.spotify.artist
 
 import com.airbnb.mvrx.MvRxState
-import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
-import com.clipfinder.core.model.Ready
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Artist
 import com.clipfinder.core.android.spotify.model.Track
+import com.clipfinder.core.model.Loadable
+import com.clipfinder.core.model.PagedList
+import com.clipfinder.core.model.Ready
 
 data class SpotifyArtistViewState(
     val artists: List<Artist> = emptyList(),

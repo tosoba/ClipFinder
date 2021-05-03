@@ -42,14 +42,13 @@ class MainViewModel(
 
     internal var onLoginSuccessful: (() -> Unit)? = null
 
-    private fun loadCurrentUser() = load(MainState::user, getCurrentUser::intoState) { copy(user = it) }
+    private fun loadCurrentUser() =
+        load(MainState::user, getCurrentUser::intoState) { copy(user = it) }
     fun setMainContent(mainContent: MainContent) = setState { copy(mainContent = mainContent) }
     fun setPlayerState(playerState: PlayerState) = setState { copy(playerState = playerState) }
 
     fun onLoginActivityResult(intent: Intent, onError: (Throwable) -> Unit) {
-        spotifyManualAuth.sendTokenRequestFrom(intent)
-            .subscribe({}, onError)
-            .disposeOnClear()
+        spotifyManualAuth.sendTokenRequestFrom(intent).subscribe({}, onError).disposeOnClear()
     }
 
     fun onLoggedOut() {
@@ -58,7 +57,8 @@ class MainViewModel(
     }
 
     private fun observePrivateAccessToken() {
-        spotifyAutoAuth.authorizePrivate()
+        spotifyAutoAuth
+            .authorizePrivate()
             .onErrorComplete()
             .andThen(spotifyPreferences.isPrivateAuthorizedObservable)
             .subscribe(
@@ -79,21 +79,20 @@ class MainViewModel(
     }
 
     companion object : MvRxViewModelFactory<MainViewModel, MainState> {
-        override fun create(
-            viewModelContext: ViewModelContext, state: MainState
-        ): MainViewModel = MainViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+        override fun create(viewModelContext: ViewModelContext, state: MainState): MainViewModel =
+            MainViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-private fun GetCurrentUser.intoState(state: MainState): Single<Resource<User>> = this()
-    .mapData {
+private fun GetCurrentUser.intoState(state: MainState): Single<Resource<User>> =
+    this().mapData {
         User(
             it.displayName ?: "Unknown user",
             it.images?.firstOrNull()?.url

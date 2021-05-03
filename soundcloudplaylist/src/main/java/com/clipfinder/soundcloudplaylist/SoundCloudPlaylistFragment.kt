@@ -27,16 +27,16 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     private val viewModel: SoundCloudPlaylistViewModel by fragmentViewModel()
     private val factory: IFragmentFactory by inject()
 
-    private val epoxyController: TypedEpoxyController<SoundCloudPlaylistState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SoundCloudPlaylistState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         loadableCollectionController(
             SoundCloudPlaylistState::tracks,
             headerText = "Tracks",
             reloadClicked = viewModel::loadData,
             clearFailure = viewModel::clearTracksError
         ) { track ->
-            track.clickableListItem {
-                show { factory.newSoundCloudTrackVideosFragment(track) }
-            }
+            track.clickableListItem { show { factory.newSoundCloudTrackVideosFragment(track) } }
         }
     }
 
@@ -53,33 +53,44 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = FragmentSoundCloudPlaylistBinding.inflate(inflater, container, false)
-        .apply {
-            view = this@SoundCloudPlaylistFragment.view
-            playlist.artworkUrl?.let { url ->
-                soundCloudPlaylistToolbarGradientBackgroundView
-                    .loadBackgroundGradient(url)
-                    .disposeOnDestroy(this@SoundCloudPlaylistFragment)
-            }
-            soundCloudPlaylistRecyclerView.apply {
-                setController(epoxyController)
-                layoutManager = GridLayoutManager(
-                    context,
-                    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentSoundCloudPlaylistBinding.inflate(inflater, container, false)
+            .apply {
+                view = this@SoundCloudPlaylistFragment.view
+                playlist.artworkUrl?.let { url ->
+                    soundCloudPlaylistToolbarGradientBackgroundView
+                        .loadBackgroundGradient(url)
+                        .disposeOnDestroy(this@SoundCloudPlaylistFragment)
+                }
+                soundCloudPlaylistRecyclerView.apply {
+                    setController(epoxyController)
+                    layoutManager =
+                        GridLayoutManager(
+                            context,
+                            if (resources.configuration.orientation ==
+                                    Configuration.ORIENTATION_LANDSCAPE
+                            )
+                                4
+                            else 3
+                        )
+                    setItemSpacingDp(5)
+                }
+                soundCloudPlaylistToolbar.setupWithBackNavigation(
+                    requireActivity() as? AppCompatActivity
                 )
-                setItemSpacingDp(5)
+                mainContentFragment?.enablePlayButton {}
             }
-            soundCloudPlaylistToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-            mainContentFragment?.enablePlayButton {}
-        }
-        .root
+            .root
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
     companion object {
-        fun new(playlist: BaseSoundCloudPlaylist): SoundCloudPlaylistFragment = newMvRxFragmentWith(playlist)
+        fun new(playlist: BaseSoundCloudPlaylist): SoundCloudPlaylistFragment =
+            newMvRxFragmentWith(playlist)
     }
 }

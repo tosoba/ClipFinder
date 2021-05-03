@@ -6,8 +6,8 @@ import androidx.preference.PreferenceManager
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
 
 class SoundCloudPreferences(context: Context) : ISoundCloudPreferences {
-    private val preferences: SharedPreferences = PreferenceManager
-        .getDefaultSharedPreferences(context)
+    private val preferences: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 
     override var clientId: String?
         get() = preferences.getString(PREF_KEY_SOUND_CLOUD_CLIENT_ID, null)

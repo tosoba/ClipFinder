@@ -10,8 +10,6 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.core.ext.castAs
-import com.clipfinder.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import com.clipfinder.core.android.base.fragment.HasMainToolbar
 import com.clipfinder.core.android.base.handler.NavigationDrawerController
 import com.clipfinder.core.android.spotify.TopTrackItemBindingModel_
@@ -23,6 +21,8 @@ import com.clipfinder.core.android.util.ext.showDrawerHamburger
 import com.clipfinder.core.android.view.epoxy.Column
 import com.clipfinder.core.android.view.epoxy.injectedTypedController
 import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.spotify.dashboard.databinding.FragmentSpotifyDashboardBinding
 import org.koin.android.ext.android.inject
 
 class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
@@ -30,11 +30,16 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     private val viewModel: SpotifyDashboardViewModel by fragmentViewModel()
 
     private lateinit var binding: FragmentSpotifyDashboardBinding
-    override val toolbar: Toolbar get() = binding.dashboardToolbar
+    override val toolbar: Toolbar
+        get() = binding.dashboardToolbar
 
-    private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(LazyThreadSafetyMode.NONE) {
-        injectedTypedController<SpotifyDashboardState> { (categories, playlists, topTracks, newReleases) ->
-            fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column = Column(map(buildItem))
+    private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
+        injectedTypedController<SpotifyDashboardState> {
+            (categories, playlists, topTracks, newReleases) ->
+            fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column =
+                Column(map(buildItem))
 
             loadableCarouselWithHeader(
                 requireContext(),
@@ -94,12 +99,10 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                 { it.chunked(2) }
             ) { chunk ->
                 chunk.column { topTrack ->
-                    TopTrackItemBindingModel_()
-                        .id(topTrack.track.id)
-                        .track(topTrack)
-                        .itemClicked { _ ->
-                            show { navDestinations.newSpotifyTrackVideosFragment(topTrack.track) }
-                        }
+                    TopTrackItemBindingModel_().id(topTrack.track.id).track(topTrack).itemClicked {
+                        _ ->
+                        show { navDestinations.newSpotifyTrackVideosFragment(topTrack.track) }
+                    }
                 }
             }
         }
@@ -111,19 +114,22 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
-        .apply {
-            binding = this
-            requireActivity().castAs<AppCompatActivity>()?.apply {
-                setSupportActionBar(dashboardToolbar)
-                showDrawerHamburger()
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentSpotifyDashboardBinding.inflate(inflater, container, false)
+            .apply {
+                binding = this
+                requireActivity().castAs<AppCompatActivity>()?.apply {
+                    setSupportActionBar(dashboardToolbar)
+                    showDrawerHamburger()
+                }
+                mainContentFragment?.disablePlayButton()
+                dashboardRecyclerView.setController(epoxyController)
+                EpoxyVisibilityTracker().attach(dashboardRecyclerView)
             }
-            mainContentFragment?.disablePlayButton()
-            dashboardRecyclerView.setController(epoxyController)
-            EpoxyVisibilityTracker().attach(dashboardRecyclerView)
-        }
-        .root
+            .root
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (toolbar.menu.size() == 0) {
@@ -131,12 +137,13 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (
-        item.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0
-    ) {
-        activity?.castAs<NavigationDrawerController>()?.openDrawer()
-        true
-    } else false
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == android.R.id.home &&
+                parentFragment?.childFragmentManager?.backStackEntryCount == 0
+        ) {
+            activity?.castAs<NavigationDrawerController>()?.openDrawer()
+            true
+        } else false
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 }

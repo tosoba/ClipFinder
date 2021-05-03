@@ -23,17 +23,17 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
 
-    //TODO: connectivityComponent
+    // TODO: connectivityComponent
 
-    private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         loadableCollectionController(
             SoundCloudTrackViewState::similarTracks,
             headerText = "Similar tracks",
             reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) ?: Unit },
             clearFailure = viewModel::clearTracksError
-        ) { track ->
-            track.clickableListItem { parentViewModel.updateTrack(track) }
-        }
+        ) { track -> track.clickableListItem { parentViewModel.updateTrack(track) } }
     }
 
     var track: SoundCloudTrack? = null
@@ -49,9 +49,13 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_sound_cloud_track, container, false)
-        .apply { this.sound_cloud_track_recycler_view?.setController(epoxyController) }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.fragment_sound_cloud_track, container, false).apply {
+            this.sound_cloud_track_recycler_view?.setController(epoxyController)
+        }
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 

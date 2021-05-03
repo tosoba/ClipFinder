@@ -28,8 +28,12 @@ class SoundCloudDashboardViewModel(
     fun loadSelections() = withState { (currentSelections) ->
         if (currentSelections is LoadingInProgress) return@withState
         getMixedSelections(timeout = Timeout(25L, TimeUnit.SECONDS))
-            .map { resource -> resource.map { selections -> selections.map(::SoundCloudPlaylistSelection) } }
-            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) { copy(selections = it) }
+            .map { resource ->
+                resource.map { selections -> selections.map(::SoundCloudPlaylistSelection) }
+            }
+            .updateLoadableWithCollectionResource(SoundCloudDashboardState::selections) {
+                copy(selections = it)
+            }
     }
 
     @SuppressLint("MissingPermission")
@@ -39,11 +43,16 @@ class SoundCloudDashboardViewModel(
         }
     }
 
-    companion object : MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardState> {
+    companion object :
+        MvRxViewModelFactory<SoundCloudDashboardViewModel, SoundCloudDashboardState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SoundCloudDashboardState
-        ): SoundCloudDashboardViewModel = SoundCloudDashboardViewModel(
-            state, viewModelContext.activity.get(), viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: SoundCloudDashboardState
+        ): SoundCloudDashboardViewModel =
+            SoundCloudDashboardViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }

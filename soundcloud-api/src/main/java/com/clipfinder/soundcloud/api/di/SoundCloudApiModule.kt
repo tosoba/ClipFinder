@@ -9,14 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-private inline fun <reified T> Scope.clientFor(baseUrl: String): T = Retrofit
-    .Builder()
-    .client(get<OkHttpClient>())
-    .addConverterFactory(get<GsonConverterFactory>())
-    .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
-    .baseUrl(baseUrl)
-    .build()
-    .create(T::class.java)
+private inline fun <reified T> Scope.clientFor(baseUrl: String): T =
+    Retrofit.Builder()
+        .client(get<OkHttpClient>())
+        .addConverterFactory(get<GsonConverterFactory>())
+        .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
+        .baseUrl(baseUrl)
+        .build()
+        .create(T::class.java)
 
 val soundCloudApiModule = module {
     single { clientFor<SoundCloudApi>("https://api.soundcloud.com/") }

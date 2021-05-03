@@ -10,9 +10,8 @@ import io.reactivex.Observable
 import net.openid.appauth.AuthState
 
 class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
-    private val preferences: SharedPreferences = PreferenceManager
-        .getDefaultSharedPreferences(context)
-        .apply {
+    private val preferences: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context).apply {
             if (!contains(Keys.PREF_KEY_COUNTRY.name) || !contains(Keys.PREF_KEY_LANGUAGE.name)) {
                 edit {
                     if (!contains(Keys.PREF_KEY_COUNTRY.name)) {
@@ -34,22 +33,24 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
         get() = rxPreferences.getString(Keys.PREF_KEY_LANGUAGE.name).asObservable()
 
     var country: String
-        get() = preferences.getString(Keys.PREF_KEY_COUNTRY.name, DEFAULT_COUNTRY)
-            ?: DEFAULT_COUNTRY
+        get() =
+            preferences.getString(Keys.PREF_KEY_COUNTRY.name, DEFAULT_COUNTRY) ?: DEFAULT_COUNTRY
         set(value) = preferences.edit { putString(Keys.PREF_KEY_COUNTRY.name, value) }
 
     var locale: String
-        get() = preferences.getString(Keys.PREF_KEY_LANGUAGE.name, DEFAULT_LOCALE)
-            ?: DEFAULT_LOCALE
+        get() = preferences.getString(Keys.PREF_KEY_LANGUAGE.name, DEFAULT_LOCALE) ?: DEFAULT_LOCALE
         set(value) = preferences.edit { putString(Keys.PREF_KEY_LANGUAGE.name, value) }
 
     var authState: AuthState?
-        get() = preferences.getString(Keys.PREF_KEY_AUTH_STATE.name, null)
-            ?.let(AuthState::jsonDeserialize)
-        set(value) = preferences.edit {
-            value?.let { putString(Keys.PREF_KEY_AUTH_STATE.name, it.jsonSerializeString()) }
-                ?: remove(Keys.PREF_KEY_AUTH_STATE.name)
-        }
+        get() =
+            preferences
+                .getString(Keys.PREF_KEY_AUTH_STATE.name, null)
+                ?.let(AuthState::jsonDeserialize)
+        set(value) =
+            preferences.edit {
+                value?.let { putString(Keys.PREF_KEY_AUTH_STATE.name, it.jsonSerializeString()) }
+                    ?: remove(Keys.PREF_KEY_AUTH_STATE.name)
+            }
 
     override val privateAccessToken: String?
         get() {
@@ -65,29 +66,33 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
             return if (System.currentTimeMillis() >= publicAccessTokenExpiryTimestamp) null
             else token
         }
-        set(value) = preferences.edit {
-            value?.let { putString(Keys.PREF_KEY_PUBLIC_TOKEN.name, it) }
-                ?: remove(Keys.PREF_KEY_PUBLIC_TOKEN.name)
-        }
+        set(value) =
+            preferences.edit {
+                value?.let { putString(Keys.PREF_KEY_PUBLIC_TOKEN.name, it) }
+                    ?: remove(Keys.PREF_KEY_PUBLIC_TOKEN.name)
+            }
 
     var publicAccessTokenExpiryTimestamp: Long
         get() = preferences.getLong(Keys.PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP.name, -1L)
-        set(value) = preferences.edit {
-            putLong(Keys.PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP.name, value)
-        }
+        set(value) =
+            preferences.edit { putLong(Keys.PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP.name, value) }
 
     val isPrivateAuthorizedObservable: Observable<Boolean>
-        get() = rxPreferences.getString(Keys.PREF_KEY_AUTH_STATE.name, "")
-            .asObservable()
-            .filter(CharSequence::isNotBlank)
-            .map { serializedAuthState ->
-                val authState = AuthState.jsonDeserialize(serializedAuthState)
-                val expirationTime = authState.accessTokenExpirationTime
-                val accessToken = authState.accessToken
-                accessToken != null && expirationTime != null && System.currentTimeMillis() < expirationTime
-            }
-            .onErrorReturnItem(false)
-            .distinctUntilChanged()
+        get() =
+            rxPreferences
+                .getString(Keys.PREF_KEY_AUTH_STATE.name, "")
+                .asObservable()
+                .filter(CharSequence::isNotBlank)
+                .map { serializedAuthState ->
+                    val authState = AuthState.jsonDeserialize(serializedAuthState)
+                    val expirationTime = authState.accessTokenExpirationTime
+                    val accessToken = authState.accessToken
+                    accessToken != null &&
+                        expirationTime != null &&
+                        System.currentTimeMillis() < expirationTime
+                }
+                .onErrorReturnItem(false)
+                .distinctUntilChanged()
 
     private enum class Keys {
         PREF_KEY_PUBLIC_TOKEN,

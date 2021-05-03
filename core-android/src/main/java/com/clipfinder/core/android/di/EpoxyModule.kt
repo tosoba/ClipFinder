@@ -16,7 +16,8 @@ val epoxyModule = module {
 }
 
 enum class EpoxyHandlerType {
-    DIFFER, BUILDER;
+    DIFFER,
+    BUILDER;
 
     val qualifier: Qualifier
         get() = named(name)

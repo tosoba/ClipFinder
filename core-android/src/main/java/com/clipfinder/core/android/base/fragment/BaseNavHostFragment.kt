@@ -16,17 +16,24 @@ abstract class BaseNavHostFragment : Fragment() {
         get() = childFragmentManager.findFragmentById(backStackLayoutId)
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? = inflater.inflate(layoutId, container, false).apply {
-        showFragment(mainFragment, false)
-    }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(layoutId, container, false).apply { showFragment(mainFragment, false) }
 
-    fun showFragment(fragment: Fragment, addToBackStack: Boolean = true) = with(childFragmentManager.beginTransaction()) {
-        setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
-        replace(backStackLayoutId, fragment)
-        if (addToBackStack) addToBackStack(null)
-        commit()
-    }
+    fun showFragment(fragment: Fragment, addToBackStack: Boolean = true) =
+        with(childFragmentManager.beginTransaction()) {
+            setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out,
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
+            replace(backStackLayoutId, fragment)
+            if (addToBackStack) addToBackStack(null)
+            commit()
+        }
 
     fun popAll() {
         childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

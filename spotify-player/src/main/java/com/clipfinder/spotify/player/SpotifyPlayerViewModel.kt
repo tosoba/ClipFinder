@@ -9,9 +9,8 @@ import com.clipfinder.core.android.spotify.model.Track
 import com.spotify.sdk.android.player.Metadata
 import com.spotify.sdk.android.player.PlaybackState
 
-class SpotifyPlayerViewModel(
-    initialState: SpotifyPlayerState
-) : MvRxViewModel<SpotifyPlayerState>(initialState) {
+class SpotifyPlayerViewModel(initialState: SpotifyPlayerState) :
+    MvRxViewModel<SpotifyPlayerState>(initialState) {
     fun updatePlayerNotificationState(isShowing: Boolean) {
         setState { copy(showingPlaybackNotification = isShowing) }
     }
@@ -34,7 +33,8 @@ class SpotifyPlayerViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyPlayerViewModel, SpotifyPlayerState> {
         override fun create(
-            viewModelContext: ViewModelContext, state: SpotifyPlayerState
+            viewModelContext: ViewModelContext,
+            state: SpotifyPlayerState
         ): SpotifyPlayerViewModel = SpotifyPlayerViewModel(state)
     }
 }

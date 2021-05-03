@@ -80,24 +80,29 @@ class MainActivity :
         get() = mainContentViewPagerAdapter.currentFragment as? IMainContentFragment
 
     private val youtubePlayerFragment: IYoutubePlayerFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
-            as? IYoutubePlayerFragment
+        get() =
+            supportFragmentManager.findFragmentById(R.id.youtube_player_fragment) as?
+                IYoutubePlayerFragment
 
     private val spotifyPlayerFragment: ISpotifyPlayerFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.spotify_player_fragment)
-            as? ISpotifyPlayerFragment
+        get() =
+            supportFragmentManager.findFragmentById(R.id.spotify_player_fragment) as?
+                ISpotifyPlayerFragment
 
     private val soundCloudPlayerFragment: ISoundCloudPlayerFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment)
-            as? ISoundCloudPlayerFragment
+        get() =
+            supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment) as?
+                ISoundCloudPlayerFragment
 
     private val spotifyTrackFragment: SpotifyTrackFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.spotify_track_fragment)
-            as? SpotifyTrackFragment
+        get() =
+            supportFragmentManager.findFragmentById(R.id.spotify_track_fragment) as?
+                SpotifyTrackFragment
 
     private val relatedVideosFragment: ISearchFragment?
-        get() = supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
-            as? ISearchFragment
+        get() =
+            supportFragmentManager.findFragmentById(R.id.related_videos_fragment) as?
+                ISearchFragment
 
     private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
         MainView(
@@ -113,53 +118,55 @@ class MainActivity :
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter
-        by lazy(LazyThreadSafetyMode.NONE) {
-            CustomCurrentStatePagerAdapter(
-                supportFragmentManager,
-                arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
-            )
-        }
+    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
+        CustomCurrentStatePagerAdapter(
+            supportFragmentManager,
+            arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
+        )
+    }
 
     private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 
     private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DrawerHeaderBinding.inflate(
-            LayoutInflater.from(this), binding.drawerNavigationView,
-            false
-        )
+        DrawerHeaderBinding.inflate(LayoutInflater.from(this), binding.drawerNavigationView, false)
     }
 
-    private val loginDrawerClosedListener: OnNavigationDrawerClosedListerner
-        by lazy(LazyThreadSafetyMode.NONE) {
-            object : OnNavigationDrawerClosedListerner {
-                override fun onDrawerClosed(drawerView: View) {
-                    if (!isPlayerLoggedIn) startLoginActivity()
-                    main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
-                }
+    private val loginDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
+        object : OnNavigationDrawerClosedListerner {
+            override fun onDrawerClosed(drawerView: View) {
+                if (!isPlayerLoggedIn) startLoginActivity()
+                main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
             }
         }
+    }
 
-    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner
-        by lazy(LazyThreadSafetyMode.NONE) {
-            object : OnNavigationDrawerClosedListerner {
-                override fun onDrawerClosed(drawerView: View) {
-                    if (isPlayerLoggedIn) {
-                        viewModel.onLoggedOut()
-                        logOutPlayer()
-                    }
-                    main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
+    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListerner by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
+        object : OnNavigationDrawerClosedListerner {
+            override fun onDrawerClosed(drawerView: View) {
+                if (isPlayerLoggedIn) {
+                    viewModel.onLoggedOut()
+                    logOutPlayer()
                 }
+                main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
             }
         }
+    }
 
-    private val onDrawerNavigationItemSelectedListener = NavigationView
-        .OnNavigationItemSelectedListener { item ->
+    private val onDrawerNavigationItemSelectedListener =
+        NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.drawer_action_show_spotify_main -> {
-                    spotifyMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                    spotifyMainFragment?.let {
+                        return@OnNavigationItemSelectedListener true
+                    }
                         ?: run { main_content_view_pager?.currentItem = 0 }
 
                     viewModel.setMainContent(MainContent.SPOTIFY)
@@ -177,9 +184,10 @@ class MainActivity :
                         findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
                     }
                 }
-
                 R.id.drawer_action_show_soundcloud_main -> {
-                    soundCloudMainFragment?.let { return@OnNavigationItemSelectedListener true }
+                    soundCloudMainFragment?.let {
+                        return@OnNavigationItemSelectedListener true
+                    }
                         ?: run { main_content_view_pager?.currentItem = 1 }
 
                     viewModel.setMainContent(MainContent.SOUNDCLOUD)
@@ -191,17 +199,16 @@ class MainActivity :
                     binding.drawerNavigationView.menu.clear()
                     binding.drawerNavigationView.inflateMenu(R.menu.sound_cloud_drawer_menu)
                 }
-
                 R.id.drawer_action_about -> {
-                    //TODO: AboutActivity or (probably better) AboutFragment in the same container as Spotify and SoundCloud main fragments
+                    // TODO: AboutActivity or (probably better) AboutFragment in the same container
+                    // as Spotify and SoundCloud main fragments
                 }
-
-                R.id.drawer_action_settings -> Intent(this, SettingsActivity::class.java)
-                    .run { startActivity(this) }
-
-                R.id.drawer_action_login -> main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
-
-                R.id.drawer_action_logout -> main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
+                R.id.drawer_action_settings ->
+                    Intent(this, SettingsActivity::class.java).run { startActivity(this) }
+                R.id.drawer_action_login ->
+                    main_drawer_layout?.addDrawerListener(loginDrawerClosedListener)
+                R.id.drawer_action_logout ->
+                    main_drawer_layout?.addDrawerListener(logoutDrawerClosedListener)
             }
 
             item.isChecked = false
@@ -209,39 +216,43 @@ class MainActivity :
             true
         }
 
-    private val fadeOnClickListener: View.OnClickListener = View.OnClickListener {
-        sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
-    }
+    private val fadeOnClickListener: View.OnClickListener =
+        View.OnClickListener {
+            sliding_layout.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+        }
 
-    private val slideListener = object : SlidingUpPanelLayout.PanelSlideListener {
-        override fun onPanelSlide(panel: View?, slideOffset: Float) = updatePlayersDimensions(slideOffset)
+    private val slideListener =
+        object : SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide(panel: View?, slideOffset: Float) =
+                updatePlayersDimensions(slideOffset)
 
-        override fun onPanelStateChanged(
-            panel: View?,
-            previousState: SlidingUpPanelLayout.PanelState?,
-            newState: SlidingUpPanelLayout.PanelState?
-        ) {
-            if (previousState == newState) return
-            when (newState) {
-                SlidingUpPanelLayout.PanelState.DRAGGING -> {
-                    youtubePlayerFragment?.onDragging()
-                    if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                        spotifyPlayerFragment?.onDragging()
+            override fun onPanelStateChanged(
+                panel: View?,
+                previousState: SlidingUpPanelLayout.PanelState?,
+                newState: SlidingUpPanelLayout.PanelState?
+            ) {
+                if (previousState == newState) return
+                when (newState) {
+                    SlidingUpPanelLayout.PanelState.DRAGGING -> {
+                        youtubePlayerFragment?.onDragging()
+                        if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                            spotifyPlayerFragment?.onDragging()
+                        }
                     }
-                }
-                SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                    youtubePlayerFragment?.onExpanded()
-                    spotifyPlayerFragment?.onExpanded()
-                }
-                SlidingUpPanelLayout.PanelState.COLLAPSED -> youtubePlayerFragment?.onCollapsed()
-                SlidingUpPanelLayout.PanelState.HIDDEN -> {
-                    youtubePlayerFragment?.onHidden()
-                    spotifyPlayerFragment?.onHidden()
-                    soundCloudPlayerFragment?.onHidden()
+                    SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                        youtubePlayerFragment?.onExpanded()
+                        spotifyPlayerFragment?.onExpanded()
+                    }
+                    SlidingUpPanelLayout.PanelState.COLLAPSED ->
+                        youtubePlayerFragment?.onCollapsed()
+                    SlidingUpPanelLayout.PanelState.HIDDEN -> {
+                        youtubePlayerFragment?.onHidden()
+                        spotifyPlayerFragment?.onHidden()
+                        soundCloudPlayerFragment?.onHidden()
+                    }
                 }
             }
         }
-    }
 
     private var currentSlideOffset: Float = 0.0f
 
@@ -295,7 +306,9 @@ class MainActivity :
             }
 
             val currentNavHost = it.currentNavHostFragment
-            if (currentNavHost != null && currentNavHost.childFragmentManager.backStackEntryCount > 0) {
+            if (currentNavHost != null &&
+                    currentNavHost.childFragmentManager.backStackEntryCount > 0
+            ) {
                 when (val topFragment = currentNavHost.topFragment) {
                     is BackPressedHandler -> {
                         topFragment.onBackPressed()
@@ -308,15 +321,16 @@ class MainActivity :
             } else {
                 super.onBackPressed()
             }
-        } ?: run {
-            super.onBackPressed()
         }
+            ?: run { super.onBackPressed() }
     }
 
     override fun onBackPressedWithNoPreviousState() {
         mainContentFragment?.let {
             val currentFragment = it.currentFragment
-            if (currentFragment != null && currentFragment.childFragmentManager.backStackEntryCount > 0) {
+            if (currentFragment != null &&
+                    currentFragment.childFragmentManager.backStackEntryCount > 0
+            ) {
                 showMainToolbarOnBackPressed(currentFragment)
                 currentFragment.childFragmentManager.popBackStackImmediate()
             } else {
@@ -337,9 +351,8 @@ class MainActivity :
                     viewModel.onLoginActivityResult(intent) {
                         onError(it.message ?: "Unknown error.")
                     }
-                } ?: run {
-                    onError(getString(R.string.failed_to_login))
                 }
+                    ?: run { onError(getString(R.string.failed_to_login)) }
             }
         }
     }
@@ -360,10 +373,11 @@ class MainActivity :
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.search_view_menu_item -> true
-        else -> super.onOptionsItemSelected(item)
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.search_view_menu_item -> true
+            else -> super.onOptionsItemSelected(item)
+        }
 
     override fun openDrawer() {
         main_drawer_layout?.openDrawer(GravityCompat.START)
@@ -380,7 +394,8 @@ class MainActivity :
         }
     }
 
-    //TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission is granted show visualization or not
+    // TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission
+    // is granted show visualization or not
     // or keep it here and just check if permission is granted in SpotifyPlayerFragment
     private fun checkPermissions() {
         RxPermissions(this)
@@ -390,7 +405,8 @@ class MainActivity :
     }
 
     override fun loadTrack(track: SoundCloudTrack) {
-        //TODO: use databinding to make play button invisible in SoundCloudTrackVideosFragment if track's streamUrl == null
+        // TODO: use databinding to make play button invisible in SoundCloudTrackVideosFragment if
+        // track's streamUrl == null
         if (track.streamUrl == null) {
             Toast.makeText(this, "Track is not streamable.", Toast.LENGTH_SHORT).show()
             return
@@ -512,7 +528,11 @@ class MainActivity :
         val query = intent.getStringExtra(SearchManager.QUERY)
         if (query.isNullOrBlank()) return
 
-        SearchRecentSuggestions(this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE)
+        SearchRecentSuggestions(
+                this,
+                SearchSuggestionProvider.AUTHORITY,
+                SearchSuggestionProvider.MODE
+            )
             .run { saveRecentQuery(query, null) }
 
         searchViewMenuItem?.collapseActionView()
@@ -522,7 +542,7 @@ class MainActivity :
             currentFragment?.showFragment(fragmentFactory.newSpotifySearchMainFragment(query), true)
         }
 
-        //TODO: handle soundcloud search here
+        // TODO: handle soundcloud search here
     }
 
     private fun showMainToolbarOnBackPressed(currentFragment: Fragment) {
@@ -533,17 +553,22 @@ class MainActivity :
     }
 
     private fun updatePlayersDimensions(slideOffset: Float) {
-        if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN || slideOffset < 0) return
+        if (sliding_layout.panelState == SlidingUpPanelLayout.PanelState.HIDDEN || slideOffset < 0)
+            return
         currentSlideOffset = slideOffset
 
         val youtubePlayerLayoutParams = youtube_player_fragment?.view?.layoutParams
         val spotifyPlayerLayoutParams = spotify_player_fragment?.view?.layoutParams
-        val youtubePlayerHeight = if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
-            (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
-        } else {
-            (youtubePlayerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
-        }
-        val spotifyPlayerHeight = ((dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+        val youtubePlayerHeight =
+            if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                (playerMaxVerticalHeight - minimumPlayerHeight) * slideOffset + minimumPlayerHeight
+            } else {
+                (youtubePlayerMaxHorizontalHeight - minimumPlayerHeight) * slideOffset +
+                    minimumPlayerHeight
+            }
+        val spotifyPlayerHeight =
+            ((dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() - minimumPlayerHeight) * slideOffset +
+                minimumPlayerHeight
 
         youtubePlayerLayoutParams?.height = youtubePlayerHeight.toInt()
         spotifyPlayerLayoutParams?.height = spotifyPlayerHeight.toInt()

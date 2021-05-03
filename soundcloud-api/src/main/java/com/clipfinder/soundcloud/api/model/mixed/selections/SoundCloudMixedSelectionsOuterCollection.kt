@@ -9,11 +9,9 @@ data class SoundCloudMixedSelectionsOuterCollection(
     override val id: String,
     val items: SoundCloudMixedSelectionsItems,
     val kind: String,
-    @SerializedName("query_urn")
-    val queryUrn: String,
+    @SerializedName("query_urn") val queryUrn: String,
     override val title: String,
-    @SerializedName("tracking_feature_name")
-    val trackingFeatureName: String,
+    @SerializedName("tracking_feature_name") val trackingFeatureName: String,
     val urn: String
 ) : ISoundCloudPlaylistSelection {
     override val playlists: List<ISoundCloudPlaylist>

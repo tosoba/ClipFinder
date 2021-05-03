@@ -14,12 +14,12 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.spotify.category.databinding.FragmentSpotifyCategoryBinding
 import com.clipfinder.core.android.spotify.model.Category
 import com.clipfinder.core.android.spotify.model.clickableGridListItem
 import com.clipfinder.core.android.spotify.navigation.ISpotifyFragmentsFactory
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.epoxy.loadableCollectionController
+import com.clipfinder.spotify.category.databinding.FragmentSpotifyCategoryBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import kotlinx.android.synthetic.main.fragment_spotify_category.*
 import org.koin.android.ext.android.inject
@@ -29,7 +29,9 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         val loadPlaylists = { viewModel.loadPlaylists() }
         loadableCollectionController(
             SpotifyCategoryState::playlists,
@@ -38,9 +40,7 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
             clearFailure = viewModel::clearPlaylistsError,
             reloadClicked = loadPlaylists
         ) { playlist ->
-            playlist.clickableGridListItem {
-                show { factory.newSpotifyPlaylistFragment(playlist) }
-            }
+            playlist.clickableGridListItem { show { factory.newSpotifyPlaylistFragment(playlist) } }
         }
     }
 
@@ -50,22 +50,25 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = FragmentSpotifyCategoryBinding.inflate(inflater, container, false)
-        .apply {
-            mainContentFragment?.disablePlayButton()
-            category = this@SpotifyCategoryFragment.category
-            categoryToolbarGradientBackgroundView
-                .loadBackgroundGradient(this@SpotifyCategoryFragment.category.iconUrl)
-                .disposeOnDestroy(this@SpotifyCategoryFragment)
-            categoryRecyclerView.apply {
-                setController(epoxyController)
-                layoutManager = layoutManagerFor(resources.configuration.orientation)
-                setItemSpacingDp(5)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentSpotifyCategoryBinding.inflate(inflater, container, false)
+            .apply {
+                mainContentFragment?.disablePlayButton()
+                category = this@SpotifyCategoryFragment.category
+                categoryToolbarGradientBackgroundView
+                    .loadBackgroundGradient(this@SpotifyCategoryFragment.category.iconUrl)
+                    .disposeOnDestroy(this@SpotifyCategoryFragment)
+                categoryRecyclerView.apply {
+                    setController(epoxyController)
+                    layoutManager = layoutManagerFor(resources.configuration.orientation)
+                    setItemSpacingDp(5)
+                }
+                categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
             }
-            categoryToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-        }
-        .root
+            .root
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -76,10 +79,8 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
 
     override fun invalidate() = withState(viewModel, epoxyController::setData)
 
-    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager = GridLayoutManager(
-        context,
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
-    )
+    private fun layoutManagerFor(orientation: Int): RecyclerView.LayoutManager =
+        GridLayoutManager(context, if (orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
 
     companion object {
         fun new(category: Category): SpotifyCategoryFragment = newMvRxFragmentWith(category)

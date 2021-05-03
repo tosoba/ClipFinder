@@ -4,20 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.usecase.GetArtists
-import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Artist
 import com.clipfinder.core.android.spotify.model.SimplifiedArtist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.PagedList
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.model.invoke
+import com.clipfinder.core.spotify.usecase.GetArtists
+import com.clipfinder.core.spotify.usecase.GetTracksFromAlbum
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 
@@ -41,9 +41,7 @@ class SpotifyAlbumViewModel(
     }
 
     fun loadTracksFromAlbum() {
-        loadPaged(State::tracks, getTracksFromAlbum::intoState, ::PagedList) {
-            copy(tracks = it)
-        }
+        loadPaged(State::tracks, getTracksFromAlbum::intoState, ::PagedList) { copy(tracks = it) }
     }
 
     fun clearArtistsError() = clearErrorIn(State::artists) { copy(artists = it) }
@@ -59,22 +57,25 @@ class SpotifyAlbumViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyAlbumViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: State
-        ): SpotifyAlbumViewModel = SpotifyAlbumViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: State
+        ): SpotifyAlbumViewModel =
+            SpotifyAlbumViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-private fun GetArtists.intoState(
-    state: State
-): Single<Resource<List<Artist>>> = this(args = state.album.artists.map(SimplifiedArtist::id))
-    .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
+private fun GetArtists.intoState(state: State): Single<Resource<List<Artist>>> =
+    this(args = state.album.artists.map(SimplifiedArtist::id)).mapData { artists ->
+        artists.map(::Artist).sortedBy(Artist::name)
+    }
 
-private fun GetTracksFromAlbum.intoState(
-    state: State
-): Single<Resource<Paged<List<Track>>>> = this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.offset))
-    .mapData { tracksPage -> tracksPage.map(::Track) }
+private fun GetTracksFromAlbum.intoState(state: State): Single<Resource<Paged<List<Track>>>> =
+    this(args = GetTracksFromAlbum.Args(state.album.id, state.tracks.offset)).mapData { tracksPage
+        ->
+        tracksPage.map(::Track)
+    }

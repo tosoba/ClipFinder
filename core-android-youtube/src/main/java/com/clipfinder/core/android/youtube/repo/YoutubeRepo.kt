@@ -15,15 +15,19 @@ class YoutubeRepo(
     private val searchDao: SearchDao
 ) : IYoutubeRepo {
 
-    override fun search(query: String, pageToken: String?): Single<Resource<SearchListResponse>> = querySearchStore
-        .getSingle(query to pageToken)
-        .map { Resource.success(it) }
-        .onErrorReturn { Resource.error(it) }
+    override fun search(query: String, pageToken: String?): Single<Resource<SearchListResponse>> =
+        querySearchStore.getSingle(query to pageToken).map { Resource.success(it) }.onErrorReturn {
+            Resource.error(it)
+        }
 
-    override fun searchRelated(videoId: String, pageToken: String?): Single<Resource<SearchListResponse>> = relatedSearchStore
-        .getSingle(videoId to pageToken)
-        .map { Resource.success(it) }
-        .onErrorReturn { Resource.error(it) }
+    override fun searchRelated(
+        videoId: String,
+        pageToken: String?
+    ): Single<Resource<SearchListResponse>> =
+        relatedSearchStore
+            .getSingle(videoId to pageToken)
+            .map { Resource.success(it) }
+            .onErrorReturn { Resource.error(it) }
 
     override fun clearExpired(): Completable = Completable.fromAction(searchDao::deleteExpired)
 }

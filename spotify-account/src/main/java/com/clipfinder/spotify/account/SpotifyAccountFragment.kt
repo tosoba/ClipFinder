@@ -10,19 +10,21 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.PagerAdapter
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.clipfinder.core.ext.castAs
-import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
-import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
-import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
-import com.clipfinder.spotify.account.top.SpotifyAccountTopFragment
 import com.clipfinder.core.android.base.fragment.HasMainToolbar
 import com.clipfinder.core.android.base.handler.NavigationDrawerController
 import com.clipfinder.core.android.util.ext.mainContentFragment
 import com.clipfinder.core.android.util.ext.showDrawerHamburger
 import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.clipfinder.core.ext.castAs
+import com.clipfinder.spotify.account.databinding.FragmentSpotifyAccountBinding
+import com.clipfinder.spotify.account.playlist.SpotifyAccountPlaylistsFragment
+import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
+import com.clipfinder.spotify.account.top.SpotifyAccountTopFragment
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
-    private val binding: FragmentSpotifyAccountBinding by viewBinding(FragmentSpotifyAccountBinding::bind)
+    private val binding: FragmentSpotifyAccountBinding by viewBinding(
+        FragmentSpotifyAccountBinding::bind
+    )
     override val toolbar: Toolbar
         get() = binding.accountToolbar
 
@@ -61,12 +63,13 @@ class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasM
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = if (
-        item.itemId == android.R.id.home && parentFragment?.childFragmentManager?.backStackEntryCount == 0
-    ) {
-        activity?.castAs<NavigationDrawerController>()?.openDrawer()
-        true
-    } else {
-        false
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == android.R.id.home &&
+                parentFragment?.childFragmentManager?.backStackEntryCount == 0
+        ) {
+            activity?.castAs<NavigationDrawerController>()?.openDrawer()
+            true
+        } else {
+            false
+        }
 }

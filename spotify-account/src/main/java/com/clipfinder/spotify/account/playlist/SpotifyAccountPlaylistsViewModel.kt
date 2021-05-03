@@ -4,20 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.usecase.GetCurrentUsersPlaylists
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.Empty
-import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
-import com.clipfinder.core.model.invoke
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.*
+import com.clipfinder.core.spotify.usecase.GetCurrentUsersPlaylists
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -33,17 +28,19 @@ class SpotifyAccountPlaylistsViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences.isPrivateAuthorizedObservable
+        preferences
+            .isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
-                if (it) withState { (_, playlists) ->
-                    if (playlists is Empty) loadPlaylists()
-                }
+                if (it) withState { (_, playlists) -> if (playlists is Empty) loadPlaylists() }
             }
             .disposeOnClear()
     }
 
-    fun loadPlaylists() = loadPagedList(State::playlists, getCurrentUsersPlaylists::intoState) { copy(playlists = it) }
+    fun loadPlaylists() =
+        loadPagedList(State::playlists, getCurrentUsersPlaylists::intoState) {
+            copy(playlists = it)
+        }
     fun clearPlaylistsError() = clearErrorIn(State::playlists) { copy(playlists = it) }
 
     private fun <I> loadPagedList(
@@ -64,16 +61,19 @@ class SpotifyAccountPlaylistsViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyAccountPlaylistsViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: State
-        ): SpotifyAccountPlaylistsViewModel = SpotifyAccountPlaylistsViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: State
+        ): SpotifyAccountPlaylistsViewModel =
+            SpotifyAccountPlaylistsViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-internal fun GetCurrentUsersPlaylists.intoState(state: State): Single<Resource<Paged<List<Playlist>>>> =
-    this(args = state.playlists.offset)
-        .mapData { newPlaylists -> newPlaylists.map(::Playlist) }
+internal fun GetCurrentUsersPlaylists.intoState(
+    state: State
+): Single<Resource<Paged<List<Playlist>>>> =
+    this(args = state.playlists.offset).mapData { newPlaylists -> newPlaylists.map(::Playlist) }

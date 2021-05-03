@@ -5,23 +5,19 @@ import android.content.Context
 import android.graphics.Color
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.spotify.ext.decimalProps
-import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Artist
 import com.clipfinder.core.android.spotify.model.SimplifiedArtist
 import com.clipfinder.core.android.spotify.model.Track
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
 import com.clipfinder.core.android.util.ext.retryLoadOnNetworkAvailable
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.model.WithValue
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.*
+import com.clipfinder.core.spotify.ext.decimalProps
+import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
 import com.clipfinder.core.spotify.usecase.*
-import com.clipfinder.core.model.invoke
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -55,12 +51,13 @@ class SpotifyTrackViewModel(
         loadAudioFeaturesFor(id)
 
         var trackDisposable: Disposable? = null
-        trackDisposable = selectSubscribe(State::track) { track ->
-            if (track is WithValue) {
-                loadArtistsFor(track.value)
-                trackDisposable?.dispose()
+        trackDisposable =
+            selectSubscribe(State::track) { track ->
+                if (track is WithValue) {
+                    loadArtistsFor(track.value)
+                    trackDisposable?.dispose()
+                }
             }
-        }
         clearLoadableTrackSubscription
             .take(1)
             .subscribe { trackDisposable.dispose() }
@@ -127,42 +124,48 @@ class SpotifyTrackViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyTrackViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: State
-        ): SpotifyTrackViewModel = SpotifyTrackViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: State
+        ): SpotifyTrackViewModel =
+            SpotifyTrackViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-private fun GetTrack.with(id: String): Single<Resource<Track>> = this(args = id)
-    .mapData(::Track)
+private fun GetTrack.with(id: String): Single<Resource<Track>> = this(args = id).mapData(::Track)
 
 private fun GetArtists.with(state: State, track: Track): Single<Resource<List<Artist>>> =
-    this(args = track.artists.map(SimplifiedArtist::id))
-        .mapData { artists -> artists.map(::Artist).sortedBy(Artist::name) }
+    this(args = track.artists.map(SimplifiedArtist::id)).mapData { artists ->
+        artists.map(::Artist).sortedBy(Artist::name)
+    }
 
-private fun GetSimilarTracks.with(state: State, trackId: String): Single<Resource<Paged<List<Track>>>> =
-    this(args = GetSimilarTracks.Args(trackId, state.similarTracks.offset))
-        .mapData { tracks -> tracks.map(::Track) }
+private fun GetSimilarTracks.with(
+    state: State,
+    trackId: String
+): Single<Resource<Paged<List<Track>>>> =
+    this(args = GetSimilarTracks.Args(trackId, state.similarTracks.offset)).mapData { tracks ->
+        tracks.map(::Track)
+    }
 
 private fun GetAudioFeatures.with(trackId: String): Single<Resource<RadarData>> =
-    this(args = trackId)
-        .mapData {
-            RadarData(
+    this(args = trackId).mapData {
+        RadarData(
                 RadarDataSet(
-                    ISpotifyAudioFeatures::class
-                        .decimalProps
-                        .map { prop -> RadarEntry(prop.get(it).toFloat()) },
+                    ISpotifyAudioFeatures::class.decimalProps.map { prop ->
+                        RadarEntry(prop.get(it).toFloat())
+                    },
                     "Audio features"
                 )
-            ).apply {
+            )
+            .apply {
                 setValueTextSize(12f)
                 setDrawValues(false)
                 setValueTextColor(Color.WHITE)
             }
-        }
+    }

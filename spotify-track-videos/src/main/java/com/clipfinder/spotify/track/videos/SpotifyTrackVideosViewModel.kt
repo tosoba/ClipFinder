@@ -6,10 +6,10 @@ import com.clipfinder.core.android.base.trackvideos.BaseTrackVideosViewModel
 import com.clipfinder.core.android.base.trackvideos.TrackVideosViewState
 import com.clipfinder.core.android.spotify.model.Track
 
-class SpotifyTrackVideosViewModel(
-    initialState: TrackVideosViewState<Track>
-) : BaseTrackVideosViewModel<Track>(initialState) {
-    companion object : MvRxViewModelFactory<SpotifyTrackVideosViewModel, TrackVideosViewState<Track>> {
+class SpotifyTrackVideosViewModel(initialState: TrackVideosViewState<Track>) :
+    BaseTrackVideosViewModel<Track>(initialState) {
+    companion object :
+        MvRxViewModelFactory<SpotifyTrackVideosViewModel, TrackVideosViewState<Track>> {
         override fun create(
             viewModelContext: ViewModelContext,
             state: TrackVideosViewState<Track>

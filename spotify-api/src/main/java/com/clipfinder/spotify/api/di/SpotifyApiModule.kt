@@ -37,27 +37,34 @@ private const val PUBLIC_HTTP_CLIENT = "PUBLIC_HTTP_CLIENT"
 private const val PRIVATE_TOKEN_INTERCEPTOR = "PRIVATE_TOKEN_INTERCEPTOR"
 private const val PUBLIC_TOKEN_INTERCEPTOR = "PUBLIC_TOKEN_INTERCEPTOR"
 
-private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient = OkHttpClient.Builder()
-    .addInterceptor(get<HttpLoggingInterceptor>())
-    .addInterceptor(get<ICacheInterceptor>())
-    .addInterceptor(
-        get<TokenInterceptor>(
-            named(if (isPrivate) PRIVATE_TOKEN_INTERCEPTOR else PUBLIC_TOKEN_INTERCEPTOR)
+private fun Scope.httpClient(isPrivate: Boolean = false): OkHttpClient =
+    OkHttpClient.Builder()
+        .addInterceptor(get<HttpLoggingInterceptor>())
+        .addInterceptor(get<ICacheInterceptor>())
+        .addInterceptor(
+            get<TokenInterceptor>(
+                named(if (isPrivate) PRIVATE_TOKEN_INTERCEPTOR else PUBLIC_TOKEN_INTERCEPTOR)
+            )
         )
-    )
-    .authenticator(if (isPrivate) get<ISpotifyPrivateAuthenticator>() else get<ISpotifyPublicAuthenticator>())
-    .cache(get<Cache>())
-    .build()
+        .authenticator(
+            if (isPrivate) get<ISpotifyPrivateAuthenticator>()
+            else get<ISpotifyPublicAuthenticator>()
+        )
+        .cache(get<Cache>())
+        .build()
 
-private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T = Retrofit.Builder()
-    .baseUrl("https://api.spotify.com/v1/")
-    .addConverterFactory(get<ScalarsConverterFactory>())
-    .addConverterFactory(get<MoshiConverterFactory>())
-    .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
-    .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
-    .client(get<OkHttpClient>(named(if (isPrivate) PRIVATE_HTTP_CLIENT else PUBLIC_HTTP_CLIENT)))
-    .build()
-    .create(T::class.java)
+private inline fun <reified T> Scope.retrofitFor(isPrivate: Boolean = false): T =
+    Retrofit.Builder()
+        .baseUrl("https://api.spotify.com/v1/")
+        .addConverterFactory(get<ScalarsConverterFactory>())
+        .addConverterFactory(get<MoshiConverterFactory>())
+        .addCallAdapterFactory(get<RxSealedCallAdapterFactory>())
+        .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
+        .client(
+            get<OkHttpClient>(named(if (isPrivate) PRIVATE_HTTP_CLIENT else PUBLIC_HTTP_CLIENT))
+        )
+        .build()
+        .create(T::class.java)
 
 val spotifyApiModule = module {
     single(named(PRIVATE_HTTP_CLIENT)) { httpClient(true) }
@@ -72,8 +79,7 @@ val spotifyApiModule = module {
                 .add(ByteArrayAdapter)
                 .add(BigDecimalAdapter)
                 .add(
-                    PolymorphicJsonAdapterFactory
-                        .of(PlaylistItemObject::class.java, "type")
+                    PolymorphicJsonAdapterFactory.of(PlaylistItemObject::class.java, "type")
                         .withSubtype(TrackObject::class.java, PlaylistItemType.track.name)
                         .withSubtype(EpisodeObject::class.java, PlaylistItemType.episode.name)
                 )
@@ -118,5 +124,6 @@ val spotifyApiModule = module {
 }
 
 enum class PlaylistsEndpointsType {
-    PRIVATE, PUBLIC
+    PRIVATE,
+    PUBLIC
 }

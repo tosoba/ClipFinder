@@ -112,7 +112,7 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="NavigationView" >
+    <style name="NavigationView">
         <item name="android:listDivider">@android:color/darker_gray</item>
     </style>
 </resources>

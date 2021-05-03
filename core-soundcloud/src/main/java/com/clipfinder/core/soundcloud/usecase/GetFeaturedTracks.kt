@@ -12,8 +12,16 @@ class GetFeaturedTracks(
     private val repo: ISoundCloudRepo,
     preferences: ISoundCloudPreferences,
     rxSchedulers: RxSchedulers
-) : AuthorizedSoundCloudUseCase<Resource<List<ISoundCloudTrack>>>(getClientId, preferences, rxSchedulers) {
-    override fun getResourceWithClientId(clientId: String): Single<Resource<List<ISoundCloudTrack>>> = repo
-        .featuredTracks(kind = "top", genre = "all-music", clientId = clientId)
-        .map { Resource.success(it) }
+) :
+    AuthorizedSoundCloudUseCase<Resource<List<ISoundCloudTrack>>>(
+        getClientId,
+        preferences,
+        rxSchedulers
+    ) {
+    override fun getResourceWithClientId(
+        clientId: String
+    ): Single<Resource<List<ISoundCloudTrack>>> =
+        repo.featuredTracks(kind = "top", genre = "all-music", clientId = clientId).map {
+            Resource.success(it)
+        }
 }

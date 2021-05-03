@@ -1,11 +1,11 @@
 package com.clipfinder.core.android.di
 
 import com.clipfinder.core.android.BuildConfig
-import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import com.clipfinder.core.android.interceptor.CacheInterceptor
 import com.clipfinder.core.android.interceptor.ConnectivityInterceptor
 import com.clipfinder.core.interceptor.ICacheInterceptor
 import com.clipfinder.core.interceptor.IConnectivityInterceptor
+import com.clipfinder.core.retrofit.RxSealedCallAdapterFactory
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,11 +23,12 @@ val coreAndroidNetworkingModule = module {
     single { CacheInterceptor(androidContext()) } bind ICacheInterceptor::class
     single {
         HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.BASIC
-            }
+            level =
+                if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.BASIC
+                }
         }
     }
 

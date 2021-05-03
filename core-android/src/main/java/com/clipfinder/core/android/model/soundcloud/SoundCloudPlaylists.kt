@@ -1,11 +1,11 @@
 package com.clipfinder.core.android.model.soundcloud
 
 import android.os.Parcelable
-import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylist
 import com.clipfinder.core.android.ImageListItemBindingModel_
 import com.clipfinder.core.android.R
 import com.clipfinder.core.android.view.imageview.ImageViewSrc
 import com.clipfinder.core.android.view.recyclerview.item.NamedImageListItem
+import com.clipfinder.core.soundcloud.model.ISoundCloudPlaylist
 import kotlinx.android.parcel.Parcelize
 
 sealed class BaseSoundCloudPlaylist : Parcelable, NamedImageListItem {
@@ -30,10 +30,11 @@ data class SoundCloudPlaylist(
     override val title: String,
     override val trackCount: Int,
     override val userId: Int
-) : ISoundCloudPlaylist,
-    BaseSoundCloudPlaylist() {
+) : ISoundCloudPlaylist, BaseSoundCloudPlaylist() {
 
-    constructor(other: ISoundCloudPlaylist) : this(
+    constructor(
+        other: ISoundCloudPlaylist
+    ) : this(
         other.artworkUrl,
         other.createdAt,
         other.duration,
@@ -45,20 +46,20 @@ data class SoundCloudPlaylist(
         other.userId
     )
 
-    override val name: String get() = super.name
+    override val name: String
+        get() = super.name
 }
 
-fun SoundCloudPlaylist.clickableListItem(
-    itemClicked: () -> Unit
-): ImageListItemBindingModel_ = ImageListItemBindingModel_()
-    .id(id)
-    .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
-    .imageUrl(artworkUrl)
-    .errorDrawableId(R.drawable.error_placeholder)
-    .fallbackDrawableId(R.drawable.playlist_placeholder)
-    .loadingDrawableId(R.drawable.playlist_placeholder)
-    .label(name)
-    .itemClicked { _ -> itemClicked() }
+fun SoundCloudPlaylist.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_ =
+    ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+        .imageUrl(artworkUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.playlist_placeholder)
+        .loadingDrawableId(R.drawable.playlist_placeholder)
+        .label(name)
+        .itemClicked { _ -> itemClicked() }
 
 @Parcelize
 data class SoundCloudSystemPlaylist(
@@ -75,12 +76,13 @@ data class SoundCloudSystemPlaylist(
 
 fun SoundCloudSystemPlaylist.clickableListItem(
     itemClicked: () -> Unit
-): ImageListItemBindingModel_ = ImageListItemBindingModel_()
-    .id(id)
-    .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
-    .imageUrl(artworkUrl)
-    .errorDrawableId(R.drawable.error_placeholder)
-    .fallbackDrawableId(R.drawable.playlist_placeholder)
-    .loadingDrawableId(R.drawable.playlist_placeholder)
-    .label(name)
-    .itemClicked { _ -> itemClicked() }
+): ImageListItemBindingModel_ =
+    ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.sound_cloud_foreground_ripple)
+        .imageUrl(artworkUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.playlist_placeholder)
+        .loadingDrawableId(R.drawable.playlist_placeholder)
+        .label(name)
+        .itemClicked { _ -> itemClicked() }

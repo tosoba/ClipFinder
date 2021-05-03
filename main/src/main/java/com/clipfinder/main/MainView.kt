@@ -3,11 +3,9 @@ package com.clipfinder.main
 import android.view.View
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.airbnb.mvrx.MvRxState
+import com.clipfinder.core.android.spotify.model.User
 import com.clipfinder.core.model.Empty
 import com.clipfinder.core.model.Loadable
-import com.clipfinder.core.model.PagedList
-import com.clipfinder.core.android.spotify.model.Track
-import com.clipfinder.core.android.spotify.model.User
 import com.google.android.material.navigation.NavigationView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
@@ -30,9 +28,15 @@ data class MainState(
 ) : MvRxState
 
 enum class PlayerState {
-    VIDEO, TRACK, ALBUM, PLAYLIST, VIDEO_PLAYLIST, SOUND_CLOUD_TRACK
+    VIDEO,
+    TRACK,
+    ALBUM,
+    PLAYLIST,
+    VIDEO_PLAYLIST,
+    SOUND_CLOUD_TRACK
 }
 
 enum class MainContent {
-    SPOTIFY, SOUNDCLOUD
+    SPOTIFY,
+    SOUNDCLOUD
 }

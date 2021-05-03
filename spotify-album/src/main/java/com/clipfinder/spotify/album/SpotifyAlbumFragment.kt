@@ -11,7 +11,6 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.clipfinder.core.android.spotify.TrackPopularityItemBindingModel_
 import com.clipfinder.core.android.spotify.ext.enableSpotifyPlayButton
 import com.clipfinder.core.android.spotify.model.Album
@@ -23,6 +22,7 @@ import com.clipfinder.core.android.util.ext.setupWithBackNavigation
 import com.clipfinder.core.android.util.ext.show
 import com.clipfinder.core.android.view.epoxy.injectedTypedController
 import com.clipfinder.core.android.view.epoxy.loadableCarouselWithHeader
+import com.clipfinder.spotify.album.databinding.FragmentSpotifyAlbumBinding
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
 
@@ -31,7 +31,9 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
     private val album: Album by args()
 
-    private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(LazyThreadSafetyMode.NONE) {
+    private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         injectedTypedController<SpotifyAlbumViewState> { (_, artists, tracks) ->
             loadableCarouselWithHeader(
                 requireContext(),
@@ -41,9 +43,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
                 viewModel::loadAlbumsArtists,
                 viewModel::clearArtistsError
             ) { artist ->
-                artist.clickableListItem {
-                    show { factory.newSpotifyArtistFragment(artist) }
-                }
+                artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
             }
 
             loadableCarouselWithHeader(
@@ -56,25 +56,28 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
             ) { track ->
                 TrackPopularityItemBindingModel_()
                     .id(track.id)
-                    .track(track) //TODO: navigation + a nicer layout
+                    .track(track) // TODO: navigation + a nicer layout
             }
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = FragmentSpotifyAlbumBinding.inflate(inflater, container, false)
-        .apply {
-            album = this@SpotifyAlbumFragment.album
-            enableSpotifyPlayButton { loadAlbum(this@SpotifyAlbumFragment.album) }
-            albumFavouriteFab.setOnClickListener { }
-            albumToolbarGradientBackgroundView
-                .loadBackgroundGradient(this@SpotifyAlbumFragment.album.iconUrl)
-                .disposeOnDestroy(this@SpotifyAlbumFragment)
-            albumRecyclerView.setController(epoxyController)
-            albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
-        }
-        .root
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentSpotifyAlbumBinding.inflate(inflater, container, false)
+            .apply {
+                album = this@SpotifyAlbumFragment.album
+                enableSpotifyPlayButton { loadAlbum(this@SpotifyAlbumFragment.album) }
+                albumFavouriteFab.setOnClickListener {}
+                albumToolbarGradientBackgroundView
+                    .loadBackgroundGradient(this@SpotifyAlbumFragment.album.iconUrl)
+                    .disposeOnDestroy(this@SpotifyAlbumFragment)
+                albumRecyclerView.setController(epoxyController)
+                albumToolbar.setupWithBackNavigation(requireActivity() as? AppCompatActivity)
+            }
+            .root
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

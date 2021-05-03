@@ -9,8 +9,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val spotifyChartsApiModule = module {
     single {
-        Retrofit
-            .Builder()
+        Retrofit.Builder()
             .client(get<OkHttpClient>())
             .addConverterFactory(get<ScalarsConverterFactory>())
             .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())

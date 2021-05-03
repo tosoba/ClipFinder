@@ -28,36 +28,38 @@ val Fragment.navHostFragment: BaseNavHostFragment?
 val Fragment.mainContentFragment: IMainContentFragment?
     get() = findAncestorFragmentOfType()
 
-inline fun <T> T.show(addToBackStack: Boolean = true, getFragment: () -> Fragment) where T : Fragment {
+inline fun <T> T.show(addToBackStack: Boolean = true, getFragment: () -> Fragment) where
+T : Fragment {
     navHostFragment?.showFragment(getFragment(), addToBackStack)
 }
 
 inline fun <T, reified VM : BaseMvRxViewModel<S>, S : MvRxState> T.parentFragmentViewModel(
     viewModelClass: KClass<VM> = VM::class,
     crossinline keyFactory: () -> String = { viewModelClass.java.name }
-) where T : Fragment, T : MvRxView = lifecycleAwareLazy(this) {
-    val parent = requireNotNull(parentFragment)
-    val factory = MvRxFactory {
-        throw IllegalStateException("ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!")
-    }
-    ViewModelProviders.of(parent, factory)
-        .get(keyFactory(), viewModelClass.java)
-        .apply {
+) where T : Fragment, T : MvRxView =
+    lifecycleAwareLazy(this) {
+        val parent = requireNotNull(parentFragment)
+        val factory = MvRxFactory {
+            throw IllegalStateException(
+                "ViewModel for ${requireActivity()}[${keyFactory()}] does not exist yet!"
+            )
+        }
+        ViewModelProviders.of(parent, factory).get(keyFactory(), viewModelClass.java).apply {
             subscribe(this@parentFragmentViewModel, subscriber = { postInvalidate() })
         }
-}
+    }
 
-inline fun <reified F : Fragment> newMvRxFragmentWith(arg: Any): F = F::class.java
-    .newInstance()
-    .apply {
-        arguments = Bundle().apply {
-            when (arg) {
-                is Parcelable -> putParcelable(MvRx.KEY_ARG, arg)
-                is String -> putString(MvRx.KEY_ARG, arg)
-                is Int -> putInt(MvRx.KEY_ARG, arg)
-                is Double -> putDouble(MvRx.KEY_ARG, arg)
-                is Float -> putFloat(MvRx.KEY_ARG, arg)
-                else -> throw IllegalArgumentException("Invalid arg type.")
+inline fun <reified F : Fragment> newMvRxFragmentWith(arg: Any): F =
+    F::class.java.newInstance().apply {
+        arguments =
+            Bundle().apply {
+                when (arg) {
+                    is Parcelable -> putParcelable(MvRx.KEY_ARG, arg)
+                    is String -> putString(MvRx.KEY_ARG, arg)
+                    is Int -> putInt(MvRx.KEY_ARG, arg)
+                    is Double -> putDouble(MvRx.KEY_ARG, arg)
+                    is Float -> putFloat(MvRx.KEY_ARG, arg)
+                    else -> throw IllegalArgumentException("Invalid arg type.")
+                }
             }
-        }
     }

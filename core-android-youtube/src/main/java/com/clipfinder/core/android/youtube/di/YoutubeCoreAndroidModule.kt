@@ -1,5 +1,6 @@
 package com.clipfinder.core.android.youtube.di
 
+import com.clipfinder.core.android.util.ext.buildRoom
 import com.clipfinder.core.android.youtube.api.YoutubeApi
 import com.clipfinder.core.android.youtube.db.YoutubeDb
 import com.clipfinder.core.android.youtube.db.model.SearchResponseEntity
@@ -12,7 +13,6 @@ import com.dropbox.android.external.store4.Store
 import com.dropbox.android.external.store4.StoreBuilder
 import com.dropbox.store.rx2.ofMaybe
 import com.dropbox.store.rx2.ofSingle
-import com.clipfinder.core.android.util.ext.buildRoom
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
@@ -28,79 +28,92 @@ import org.threeten.bp.OffsetDateTime
 typealias YoutubeSearchStore = Store<Pair<String, String?>, SearchListResponse>
 
 enum class YoutubeSearchStoreType {
-    QUERY, RELATED;
+    QUERY,
+    RELATED;
 
     val qualifier: Qualifier
         get() = named(name)
 }
 
 val youtubeCoreAndroidModule = module {
-    single<YouTube> { YouTube.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), null).build() }
+    single<YouTube> {
+        YouTube.Builder(NetHttpTransport(), GsonFactory.getDefaultInstance(), null).build()
+    }
     single { YoutubeApi(get()) } bind IYoutubeApi::class
     single { androidContext().buildRoom<YoutubeDb>() }
 
     single(YoutubeSearchStoreType.QUERY.qualifier) {
         val dao = get<YoutubeDb>().searchDao()
-        StoreBuilder
-            .from(
-                fetcher = Fetcher.ofSingle { key: Pair<String, String?> ->
-                    val (query, pageToken) = key
-                    get<IYoutubeApi>().search(query, pageToken)
-                },
-                sourceOfTruth = SourceOfTruth.ofMaybe<Pair<String, String?>, SearchListResponse, SearchListResponse>(
-                    reader = { (query, pageToken) ->
-                        dao.selectByQueryAndPageToken(query, pageToken).map(SearchResponseEntity::content)
+        StoreBuilder.from(
+                fetcher =
+                    Fetcher.ofSingle { key: Pair<String, String?> ->
+                        val (query, pageToken) = key
+                        get<IYoutubeApi>().search(query, pageToken)
                     },
-                    writer = { (query, pageToken), content ->
-                        Completable.fromAction {
-                            dao.insert(
-                                SearchResponseEntity(
-                                    query = query,
-                                    pageToken = pageToken,
-                                    content = content,
-                                    cachedAt = OffsetDateTime.now()
+                sourceOfTruth =
+                    SourceOfTruth.ofMaybe<
+                        Pair<String, String?>, SearchListResponse, SearchListResponse>(
+                        reader = { (query, pageToken) ->
+                            dao.selectByQueryAndPageToken(query, pageToken)
+                                .map(SearchResponseEntity::content)
+                        },
+                        writer = { (query, pageToken), content ->
+                            Completable.fromAction {
+                                dao.insert(
+                                    SearchResponseEntity(
+                                        query = query,
+                                        pageToken = pageToken,
+                                        content = content,
+                                        cachedAt = OffsetDateTime.now()
+                                    )
                                 )
-                            )
-                        }
-                    },
-                    delete = { (query, pageToken) ->
-                        Completable.fromAction { dao.deleteByQueryAndPageToken(query, pageToken) }
-                    },
-                    deleteAll = { Completable.fromAction(dao::deleteAll) }
-                )
+                            }
+                        },
+                        delete = { (query, pageToken) ->
+                            Completable.fromAction {
+                                dao.deleteByQueryAndPageToken(query, pageToken)
+                            }
+                        },
+                        deleteAll = { Completable.fromAction(dao::deleteAll) }
+                    )
             )
             .build()
     }
 
     single(YoutubeSearchStoreType.RELATED.qualifier) {
         val dao = get<YoutubeDb>().searchDao()
-        StoreBuilder
-            .from(
-                fetcher = Fetcher.ofSingle { key: Pair<String, String?> ->
-                    val (videoId, pageToken) = key
-                    get<IYoutubeApi>().searchRelatedVideos(videoId, pageToken)
-                },
-                sourceOfTruth = SourceOfTruth.ofMaybe<Pair<String, String?>, SearchListResponse, SearchListResponse>(
-                    reader = { (videoId, pageToken) ->
-                        dao.selectByRelatedVideoIdAndPageToken(videoId, pageToken).map(SearchResponseEntity::content)
+        StoreBuilder.from(
+                fetcher =
+                    Fetcher.ofSingle { key: Pair<String, String?> ->
+                        val (videoId, pageToken) = key
+                        get<IYoutubeApi>().searchRelatedVideos(videoId, pageToken)
                     },
-                    writer = { (relatedVideoId, pageToken), content ->
-                        Completable.fromAction {
-                            dao.insert(
-                                SearchResponseEntity(
-                                    pageToken = pageToken,
-                                    content = content,
-                                    cachedAt = OffsetDateTime.now(),
-                                    relatedVideoId = relatedVideoId
+                sourceOfTruth =
+                    SourceOfTruth.ofMaybe<
+                        Pair<String, String?>, SearchListResponse, SearchListResponse>(
+                        reader = { (videoId, pageToken) ->
+                            dao.selectByRelatedVideoIdAndPageToken(videoId, pageToken)
+                                .map(SearchResponseEntity::content)
+                        },
+                        writer = { (relatedVideoId, pageToken), content ->
+                            Completable.fromAction {
+                                dao.insert(
+                                    SearchResponseEntity(
+                                        pageToken = pageToken,
+                                        content = content,
+                                        cachedAt = OffsetDateTime.now(),
+                                        relatedVideoId = relatedVideoId
+                                    )
                                 )
-                            )
-                        }
-                    },
-                    delete = { (relatedVideoId, pageToken) ->
-                        Completable.fromAction { dao.deleteByRelatedVideoIdAndPageToken(relatedVideoId, pageToken) }
-                    },
-                    deleteAll = { Completable.fromAction(dao::deleteAll) }
-                )
+                            }
+                        },
+                        delete = { (relatedVideoId, pageToken) ->
+                            Completable.fromAction {
+                                dao.deleteByRelatedVideoIdAndPageToken(relatedVideoId, pageToken)
+                            }
+                        },
+                        deleteAll = { Completable.fromAction(dao::deleteAll) }
+                    )
             )
             .build()
     }

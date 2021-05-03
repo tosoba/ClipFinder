@@ -18,4 +18,3 @@ class CancelNotificationsService : Service() {
         notificationManager.cancelAll()
     }
 }
-

@@ -23,38 +23,38 @@ fun bindImageUrl(view: ImageView, url: String?) {
 }
 
 @BindingAdapter("imageSrc")
-fun bindImageSrc(view: ImageView, src: ImageViewSrc?) = src?.let {
-    if (it.iconUrl != null) {
-        Glide.with(view.context)
-            .load(it.iconUrl)
-            .apply(
-                RequestOptions()
-                    .fitCenter()
-                    .placeholder(it.loadingPlaceholder)
-                    .error(it.errorPlaceholder)
-            )
-            .into(view)
-    } else {
-        view.setImageResource(it.errorPlaceholder)
+fun bindImageSrc(view: ImageView, src: ImageViewSrc?) =
+    src?.let {
+        if (it.iconUrl != null) {
+            Glide.with(view.context)
+                .load(it.iconUrl)
+                .apply(
+                    RequestOptions()
+                        .fitCenter()
+                        .placeholder(it.loadingPlaceholder)
+                        .error(it.errorPlaceholder)
+                )
+                .into(view)
+        } else {
+            view.setImageResource(it.errorPlaceholder)
+        }
     }
-}
 
 @BindingAdapter("userThumbnailUrl")
-fun bindUserImageUrl(view: ImageView, url: String?) = Glide.with(view.context)
-    .load(url)
-    .apply(
-        RequestOptions()
-            .fitCenter()
-            .placeholder(R.drawable.user_placeholder)
-            .error(R.drawable.user_placeholder)
-    )
-    .into(view)
+fun bindUserImageUrl(view: ImageView, url: String?) =
+    Glide.with(view.context)
+        .load(url)
+        .apply(
+            RequestOptions()
+                .fitCenter()
+                .placeholder(R.drawable.user_placeholder)
+                .error(R.drawable.user_placeholder)
+        )
+        .into(view)
 
 @BindingAdapter("onClickIfNotNull")
-fun bindOnClick(
-    view: ImageView,
-    onClickListener: View.OnClickListener?
-) = onClickListener?.let { view.setOnClickListener(it) } ?: Unit
+fun bindOnClick(view: ImageView, onClickListener: View.OnClickListener?) =
+    onClickListener?.let { view.setOnClickListener(it) } ?: Unit
 
 @BindingAdapter(
     "glideImage",
@@ -75,18 +75,11 @@ fun loadImage(
     Glide.with(view)
         .load(glideImage)
         .transition(withCrossFade())
-        .run {
-            glideImageError?.let { error(it) } ?: this
-        }
+        .run { glideImageError?.let { error(it) } ?: this }
         .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .run {
-            glideImageFallback?.let { fallback(it) } ?: this
-        }
-        .apply(RequestOptions()
-            .fitCenter()
-            .run {
-                glideImageLoading?.let { placeholder(it) } ?: this
-            }
+        .run { glideImageFallback?.let { fallback(it) } ?: this }
+        .apply(
+            RequestOptions().fitCenter().run { glideImageLoading?.let { placeholder(it) } ?: this }
         )
         .apply {
             if (glideCircleCrop == true) circleCrop()

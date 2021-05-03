@@ -45,23 +45,45 @@ class CircularVisualizerRenderer(
             val rfk = data[divisions * i]
             val ifk = data[divisions * i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()
-            val dbValue = (75 * log10(magnitude.toDouble()).toFloat() * amplification)
-                .let { if (it < 20f) 20f else it }
-            val cartPoint = when (type) {
-                Type.TYPE_A -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
-                Type.TYPE_B -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f - dbValue)
-                Type.TYPE_A_AND_TYPE_B -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f - dbValue)
-            }
+            val dbValue =
+                (75 * log10(magnitude.toDouble()).toFloat() * amplification).let {
+                    if (it < 20f) 20f else it
+                }
+            val cartPoint =
+                when (type) {
+                    Type.TYPE_A ->
+                        floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
+                    Type.TYPE_B ->
+                        floatArrayOf(
+                            (i * divisions).toFloat() / (data.size - 1),
+                            drawHeight / 2f - dbValue
+                        )
+                    Type.TYPE_A_AND_TYPE_B ->
+                        floatArrayOf(
+                            (i * divisions).toFloat() / (data.size - 1),
+                            drawHeight / 2f - dbValue
+                        )
+                }
 
             val polarPoint = toPolar(cartPoint, drawArea)
             fftPoints[i * 4] = polarPoint[0]
             fftPoints[i * 4 + 1] = polarPoint[1]
 
-            val cartPoint2 = when (type) {
-                Type.TYPE_A -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f + dbValue)
-                Type.TYPE_B -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
-                Type.TYPE_A_AND_TYPE_B -> floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f + dbValue)
-            }
+            val cartPoint2 =
+                when (type) {
+                    Type.TYPE_A ->
+                        floatArrayOf(
+                            (i * divisions).toFloat() / (data.size - 1),
+                            drawHeight / 2f + dbValue
+                        )
+                    Type.TYPE_B ->
+                        floatArrayOf((i * divisions).toFloat() / (data.size - 1), drawHeight / 2f)
+                    Type.TYPE_A_AND_TYPE_B ->
+                        floatArrayOf(
+                            (i * divisions).toFloat() / (data.size - 1),
+                            drawHeight / 2f + dbValue
+                        )
+                }
 
             val polarPoint2 = toPolar(cartPoint2, drawArea)
             fftPoints[i * 4 + 2] = polarPoint2[0]
@@ -86,7 +108,9 @@ class CircularVisualizerRenderer(
         val cX = (rect.width() / 2).toDouble()
         val cY = (rect.height() / 2).toDouble()
         val angle = cartesian[0].toDouble() * 2.0 * Math.PI
-        val radius = (rect.width() / 2 * (1 - aggresive) + aggresive * cartesian[1] / 2) * (1 - modulationStrength + modulationStrength * (1 + sin(modulation)) / 2)
+        val radius =
+            (rect.width() / 2 * (1 - aggresive) + aggresive * cartesian[1] / 2) *
+                (1 - modulationStrength + modulationStrength * (1 + sin(modulation)) / 2)
         return floatArrayOf(
             (cX + radius * sin(angle + angleModulation)).toFloat(),
             (cY + radius * cos(angle + angleModulation)).toFloat()
@@ -94,19 +118,23 @@ class CircularVisualizerRenderer(
     }
 
     companion object {
-        private fun getDefaultPaint(): Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            strokeWidth = 3f
-            color = Color.parseColor("#e6ebfe")
-        }
+        private fun getDefaultPaint(): Paint =
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                strokeWidth = 3f
+                color = Color.parseColor("#e6ebfe")
+            }
 
-        private fun getDefaultAnimator(): NierAnimator = NierAnimator(
-            interpolator = LinearInterpolator(),
-            duration = 20000,
-            values = floatArrayOf(0f, 360f)
-        )
+        private fun getDefaultAnimator(): NierAnimator =
+            NierAnimator(
+                interpolator = LinearInterpolator(),
+                duration = 20000,
+                values = floatArrayOf(0f, 360f)
+            )
     }
 
     enum class Type {
-        TYPE_A, TYPE_B, TYPE_A_AND_TYPE_B
+        TYPE_A,
+        TYPE_B,
+        TYPE_A_AND_TYPE_B
     }
 }

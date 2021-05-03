@@ -1,8 +1,8 @@
 package com.clipfinder.core.soundcloud.usecase
 
+import com.clipfinder.core.model.UseCase
 import com.clipfinder.core.soundcloud.auth.ISoundCloudAuth
 import com.clipfinder.core.soundcloud.preferences.ISoundCloudPreferences
-import com.clipfinder.core.model.UseCase
 import io.reactivex.Single
 
 class GetClientId(

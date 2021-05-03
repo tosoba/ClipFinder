@@ -18,17 +18,16 @@ class CollageViewState(
 )
 
 @BindingAdapter("collageViewState")
-fun bindCollageViewState(
-    collageView: CollageView,
-    viewState: CollageViewState
-) = with(viewState) {
-    collageView.photoMargin(photoMargin)
-        .photoPadding(photoPadding)
-        .backgroundColor(backgroundColor)
-        .photoFrameColor(photoFrameColor)
-        .useFirstAsHeader(useFirstAsHeader)
-        .defaultPhotosForLine(defaultPhotosForLine)
-        .placeHolder(placeholderResource)
-        .useCards(useCards)
-        .loadPhotos(urls)
-}
+fun bindCollageViewState(collageView: CollageView, viewState: CollageViewState) =
+    with(viewState) {
+        collageView
+            .photoMargin(photoMargin)
+            .photoPadding(photoPadding)
+            .backgroundColor(backgroundColor)
+            .photoFrameColor(photoFrameColor)
+            .useFirstAsHeader(useFirstAsHeader)
+            .defaultPhotosForLine(defaultPhotosForLine)
+            .placeHolder(placeholderResource)
+            .useCards(useCards)
+            .loadPhotos(urls)
+    }

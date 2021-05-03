@@ -12,8 +12,14 @@ class GetMixedSelections(
     private val repo: ISoundCloudRepo,
     preferences: ISoundCloudPreferences,
     rxSchedulers: RxSchedulers
-) : AuthorizedSoundCloudUseCase<Resource<List<ISoundCloudPlaylistSelection>>>(getClientId, preferences, rxSchedulers) {
-    override fun getResourceWithClientId(clientId: String): Single<Resource<List<ISoundCloudPlaylistSelection>>> = repo
-        .mixedSelections(clientId)
-        .map { Resource.success(it) }
+) :
+    AuthorizedSoundCloudUseCase<Resource<List<ISoundCloudPlaylistSelection>>>(
+        getClientId,
+        preferences,
+        rxSchedulers
+    ) {
+    override fun getResourceWithClientId(
+        clientId: String
+    ): Single<Resource<List<ISoundCloudPlaylistSelection>>> =
+        repo.mixedSelections(clientId).map { Resource.success(it) }
 }

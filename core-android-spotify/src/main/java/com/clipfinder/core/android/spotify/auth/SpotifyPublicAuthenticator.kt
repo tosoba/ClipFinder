@@ -7,7 +7,6 @@ import com.clipfinder.core.spotify.auth.ISpotifyPublicAuthenticator
 import com.clipfinder.core.spotify.ext.authorizedWith
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
 import com.clipfinder.spotify.api.model.GrantType
-import com.google.gson.Gson
 import net.openid.appauth.AuthState
 import okhttp3.Request
 import okhttp3.Response
@@ -18,7 +17,8 @@ class SpotifyPublicAuthenticator(
     private val preferences: SpotifyPreferences,
     private val tokenEndpoints: TokenEndpoints
 ) : ISpotifyPublicAuthenticator {
-    override fun authenticate(route: Route?, response: Response): Request = authenticatePublic(response)
+    override fun authenticate(route: Route?, response: Response): Request =
+        authenticatePublic(response)
 
     @Synchronized
     private fun authenticatePublic(response: Response): Request {
@@ -27,17 +27,16 @@ class SpotifyPublicAuthenticator(
         val accessToken = preferences.publicAccessToken
         if (accessToken != null) return response.request.authorizedWith(accessToken)
 
-        val tokenResponse = tokenEndpoints
-            .getTokens(
-                authorization = authorization,
-                grantType = GrantType.CLIENT_CREDENTIALS
-            )
-            .mapSuccess()
-            .blockingGet()
+        val tokenResponse =
+            tokenEndpoints
+                .getTokens(authorization = authorization, grantType = GrantType.CLIENT_CREDENTIALS)
+                .mapSuccess()
+                .blockingGet()
 
         preferences.publicAccessToken = tokenResponse.accessToken
         preferences.publicAccessTokenExpiryTimestamp =
-            System.currentTimeMillis() + tokenResponse.expiresIn * 1000 - AuthState.EXPIRY_TIME_TOLERANCE_MS
+            System.currentTimeMillis() + tokenResponse.expiresIn * 1000 -
+                AuthState.EXPIRY_TIME_TOLERANCE_MS
 
         return response.request.authorizedWith(tokenResponse.accessToken)
     }

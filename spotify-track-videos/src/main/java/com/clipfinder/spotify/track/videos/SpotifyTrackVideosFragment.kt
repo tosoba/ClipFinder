@@ -11,7 +11,6 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.clipfinder.spotify.track.videos.databinding.FragmentSpotifyTrackVideosBinding
 import com.clipfinder.core.android.base.IFragmentFactory
 import com.clipfinder.core.android.base.fragment.BackPressedHandler
 import com.clipfinder.core.android.base.fragment.ISearchFragment
@@ -26,6 +25,7 @@ import com.clipfinder.core.android.util.ext.loadBackgroundGradient
 import com.clipfinder.core.android.util.ext.newMvRxFragmentWith
 import com.clipfinder.core.android.util.ext.setupWithBackNavigation
 import com.clipfinder.core.android.view.viewpager.adapter.TitledCustomCurrentStatePagerAdapter
+import com.clipfinder.spotify.track.videos.databinding.FragmentSpotifyTrackVideosBinding
 import com.jakewharton.rxbinding2.support.v4.view.RxViewPager
 import com.wada811.lifecycledispose.disposeOnDestroy
 import org.koin.android.ext.android.inject
@@ -37,13 +37,18 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
     private val fragmentFactory: IFragmentFactory by inject()
     private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
 
-    private val pagerAdapter: TitledCustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
+    private val pagerAdapter: TitledCustomCurrentStatePagerAdapter by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         TitledCustomCurrentStatePagerAdapter(
             fragmentManager = childFragmentManager,
-            titledFragments = arrayOf(
-                getString(R.string.clips) to fragmentFactory.newVideosSearchFragment(argTrack.query),
-                getString(R.string.info) to spotifyFragmentFactory.newSpotifyTrackFragment(argTrack)
-            )
+            titledFragments =
+                arrayOf(
+                    getString(R.string.clips) to
+                        fragmentFactory.newVideosSearchFragment(argTrack.query),
+                    getString(R.string.info) to
+                        spotifyFragmentFactory.newSpotifyTrackFragment(argTrack)
+                )
         )
     }
 
@@ -53,7 +58,9 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         val binding = FragmentSpotifyTrackVideosBinding.inflate(inflater, container, false)
 
@@ -61,38 +68,41 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
             tracks.lastOrNull()?.let {
                 currentTrack.value = it
-                binding.trackVideosToolbarGradientBackgroundView
+                binding
+                    .trackVideosToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()
                 updateCurrentFragment(it)
-            } ?: backPressedController?.onBackPressedWithNoPreviousState()
+            }
+                ?: backPressedController?.onBackPressedWithNoPreviousState()
         }
 
-        fun withCurrentTrack(block: (Track) -> Unit) = withState(viewModel) { (tracks) ->
-            tracks.lastOrNull()?.let(block)
-        }
+        fun withCurrentTrack(block: (Track) -> Unit) =
+            withState(viewModel) { (tracks) -> tracks.lastOrNull()?.let(block) }
 
         enableSpotifyPlayButton { withCurrentTrack(::loadTrack) }
 
-        return binding.apply {
-            lifecycleOwner = this@SpotifyTrackVideosFragment
-            track = currentTrack
+        return binding
+            .apply {
+                lifecycleOwner = this@SpotifyTrackVideosFragment
+                track = currentTrack
 
-            trackVideosViewpager.adapter = pagerAdapter
-            trackVideosViewpager.offscreenPageLimit = pagerAdapter.count - 1
-            RxViewPager.pageSelections(trackVideosViewpager)
-                .skipInitialValue()
-                .subscribe { withCurrentTrack(::updateCurrentFragment) }
-                .disposeOnDestroy(this@SpotifyTrackVideosFragment)
-            trackVideosTabLayout.setupWithViewPager(trackVideosViewpager)
+                trackVideosViewpager.adapter = pagerAdapter
+                trackVideosViewpager.offscreenPageLimit = pagerAdapter.count - 1
+                RxViewPager.pageSelections(trackVideosViewpager)
+                    .skipInitialValue()
+                    .subscribe { withCurrentTrack(::updateCurrentFragment) }
+                    .disposeOnDestroy(this@SpotifyTrackVideosFragment)
+                trackVideosTabLayout.setupWithViewPager(trackVideosViewpager)
 
-            trackVideosToolbar.setupWithBackNavigation(
-                requireActivity() as? AppCompatActivity,
-                ::onBackPressed
-            )
-            trackFavouriteFab.setOnClickListener { }
-        }.root
+                trackVideosToolbar.setupWithBackNavigation(
+                    requireActivity() as? AppCompatActivity,
+                    ::onBackPressed
+                )
+                trackFavouriteFab.setOnClickListener {}
+            }
+            .root
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false

@@ -6,6 +6,8 @@ import com.clipfinder.core.spotify.model.ISpotifySimplifiedAlbum
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
 import io.reactivex.Single
 
-class GetAlbum(private val remote: ISpotifyRepo) : UseCaseWithArgs<String, Single<Resource<ISpotifySimplifiedAlbum>>> {
-    override fun run(args: String): Single<Resource<ISpotifySimplifiedAlbum>> = remote.getAlbum(id = args)
+class GetAlbum(private val remote: ISpotifyRepo) :
+    UseCaseWithArgs<String, Single<Resource<ISpotifySimplifiedAlbum>>> {
+    override fun run(args: String): Single<Resource<ISpotifySimplifiedAlbum>> =
+        remote.getAlbum(id = args)
 }

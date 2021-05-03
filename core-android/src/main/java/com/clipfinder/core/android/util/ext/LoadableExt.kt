@@ -7,9 +7,10 @@ val <T> Loadable<T>.retryLoadOnNetworkAvailable: Boolean
     get() = this is Failed && (error == null || error is IOException)
 
 val <T : Collection<I>, I> Loadable<T>.retryLoadCollectionOnConnected: Boolean
-    get() = (if (this is WithValue) value.isEmpty() else true)
-        && this is Failed
-        && (error == null || error is IOException)
+    get() =
+        (if (this is WithValue) value.isEmpty() else true) &&
+            this is Failed &&
+            (error == null || error is IOException)
 
 val <T : PagedList<I>, I> Loadable<T>.offset: Int
     get() = if (this is WithValue) value.offset else 0

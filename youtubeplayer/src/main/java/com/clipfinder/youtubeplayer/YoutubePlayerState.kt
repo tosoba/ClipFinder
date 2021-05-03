@@ -9,10 +9,10 @@ data class YoutubePlayerState(
     val showingPlaybackNotification: Boolean = false
 ) : MvRxState {
     val currentVideo: Video?
-        get() = when (mode) {
-            is YoutubePlayerMode.Playlist -> mode.videos[mode.currentVideoIndex]
-            is YoutubePlayerMode.SingleVideo -> mode.video
-            else -> null
-        }
+        get() =
+            when (mode) {
+                is YoutubePlayerMode.Playlist -> mode.videos[mode.currentVideoIndex]
+                is YoutubePlayerMode.SingleVideo -> mode.video
+                else -> null
+            }
 }
-

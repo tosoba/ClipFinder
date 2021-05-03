@@ -19,11 +19,11 @@ data class Album(
     override val uri: String,
     override val href: String,
     override val images: List<Image>
-) : Parcelable,
-    ISpotifySimplifiedAlbum,
-    NamedImageListItem {
+) : Parcelable, ISpotifySimplifiedAlbum, NamedImageListItem {
 
-    constructor(other: ISpotifySimplifiedAlbum) : this(
+    constructor(
+        other: ISpotifySimplifiedAlbum
+    ) : this(
         other.id,
         other.name,
         other.artists.map(::SimplifiedArtist),
@@ -37,31 +37,30 @@ data class Album(
         get() = images.firstImageUrl()
 
     override val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc.with(iconUrl, R.drawable.album_placeholder, R.drawable.error_placeholder)
+        get() =
+            ImageViewSrc.with(iconUrl, R.drawable.album_placeholder, R.drawable.error_placeholder)
 
     override val foregroundDrawableId: Int
         get() = R.drawable.spotify_foreground_ripple
 }
 
-fun Album.infoItem(
-    itemClicked: () -> Unit
-): AlbumInfoItemBindingModel_ = AlbumInfoItemBindingModel_()
-    .id(id)
-    .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
-    .imageUrl(iconUrl)
-    .errorDrawableId(R.drawable.error_placeholder)
-    .fallbackDrawableId(R.drawable.album_placeholder)
-    .loadingDrawableId(R.drawable.album_placeholder)
-    .itemClicked { _ -> itemClicked() }
+fun Album.infoItem(itemClicked: () -> Unit): AlbumInfoItemBindingModel_ =
+    AlbumInfoItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+        .imageUrl(iconUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.album_placeholder)
+        .loadingDrawableId(R.drawable.album_placeholder)
+        .itemClicked { _ -> itemClicked() }
 
-fun Album.clickableListItem(
-    itemClicked: () -> Unit
-): ImageListItemBindingModel_ = ImageListItemBindingModel_()
-    .id(id)
-    .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
-    .imageUrl(iconUrl)
-    .errorDrawableId(R.drawable.error_placeholder)
-    .fallbackDrawableId(R.drawable.album_placeholder)
-    .loadingDrawableId(R.drawable.album_placeholder)
-    .label(name)
-    .itemClicked { _ -> itemClicked() }
+fun Album.clickableListItem(itemClicked: () -> Unit): ImageListItemBindingModel_ =
+    ImageListItemBindingModel_()
+        .id(id)
+        .foregroundDrawableId(R.drawable.spotify_foreground_ripple)
+        .imageUrl(iconUrl)
+        .errorDrawableId(R.drawable.error_placeholder)
+        .fallbackDrawableId(R.drawable.album_placeholder)
+        .loadingDrawableId(R.drawable.album_placeholder)
+        .label(name)
+        .itemClicked { _ -> itemClicked() }

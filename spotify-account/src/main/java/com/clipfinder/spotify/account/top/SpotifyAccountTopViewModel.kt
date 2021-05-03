@@ -15,7 +15,6 @@ import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.model.*
 import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopArtists
 import com.clipfinder.core.spotify.usecase.GetCurrentUsersTopTracks
-import com.clipfinder.core.model.invoke
 import io.reactivex.Single
 import org.koin.android.ext.android.get
 import kotlin.reflect.KProperty1
@@ -32,20 +31,24 @@ class SpotifyAccountTopViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences.isPrivateAuthorizedObservable
+        preferences
+            .isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
-                if (it) withState { (_, tracks, artists) ->
-                    if (tracks is Empty) loadTracks()
-                    if (artists is Empty) loadArtists()
-                }
+                if (it)
+                    withState { (_, tracks, artists) ->
+                        if (tracks is Empty) loadTracks()
+                        if (artists is Empty) loadArtists()
+                    }
             }
             .disposeOnClear()
     }
 
-    fun loadTracks() = load(State::topTracks, getCurrentUsersTopTracks::intoState) { copy(topTracks = it) }
+    fun loadTracks() =
+        load(State::topTracks, getCurrentUsersTopTracks::intoState) { copy(topTracks = it) }
     fun clearTracksError() = clearErrorIn(State::topTracks) { copy(topTracks = it) }
-    fun loadArtists() = load(State::artists, getCurrentUsersTopArtists::intoState) { copy(artists = it) }
+    fun loadArtists() =
+        load(State::artists, getCurrentUsersTopArtists::intoState) { copy(artists = it) }
     fun clearArtistsError() = clearErrorIn(State::artists) { copy(artists = it) }
 
     private fun <I> load(
@@ -67,21 +70,25 @@ class SpotifyAccountTopViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyAccountTopViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: State
-        ): SpotifyAccountTopViewModel = SpotifyAccountTopViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: State
+        ): SpotifyAccountTopViewModel =
+            SpotifyAccountTopViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }
 
-internal fun GetCurrentUsersTopTracks.intoState(state: State): Single<Resource<Paged<List<Track>>>> =
-    this(args = state.topTracks.offset)
-        .mapData { newTracks -> newTracks.map(::Track) }
+internal fun GetCurrentUsersTopTracks.intoState(
+    state: State
+): Single<Resource<Paged<List<Track>>>> =
+    this(args = state.topTracks.offset).mapData { newTracks -> newTracks.map(::Track) }
 
-internal fun GetCurrentUsersTopArtists.intoState(state: State): Single<Resource<Paged<List<Artist>>>> =
-    this(args = state.artists.offset)
-        .mapData { newArtists -> newArtists.map(::Artist) }
+internal fun GetCurrentUsersTopArtists.intoState(
+    state: State
+): Single<Resource<Paged<List<Artist>>>> =
+    this(args = state.artists.offset).mapData { newArtists -> newArtists.map(::Artist) }

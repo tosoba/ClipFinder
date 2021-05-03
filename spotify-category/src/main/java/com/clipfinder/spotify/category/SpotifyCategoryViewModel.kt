@@ -4,18 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.clipfinder.core.ext.map
-import com.clipfinder.core.ext.mapData
-import com.clipfinder.core.model.Paged
-import com.clipfinder.core.model.Resource
-import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.clipfinder.core.android.base.viewmodel.MvRxViewModel
-import com.clipfinder.core.model.PagedList
 import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.android.util.ext.offset
 import com.clipfinder.core.android.util.ext.retryLoadCollectionOnConnected
+import com.clipfinder.core.ext.map
+import com.clipfinder.core.ext.mapData
+import com.clipfinder.core.model.Paged
+import com.clipfinder.core.model.PagedList
+import com.clipfinder.core.model.Resource
 import com.clipfinder.core.model.invoke
+import com.clipfinder.core.spotify.usecase.GetPlaylistsForCategory
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
@@ -52,7 +52,8 @@ class SpotifyCategoryViewModel(
     }
 
     private fun handlePreferencesChanges() {
-        preferences.countryObservable
+        preferences
+            .countryObservable
             .skip(1)
             .distinctUntilChanged()
             .doOnNext { clear.accept(Unit) }
@@ -68,12 +69,14 @@ class SpotifyCategoryViewModel(
     }
 
     private fun GetPlaylistsForCategory.intoState(
-        state: State, shouldClear: Boolean
+        state: State,
+        shouldClear: Boolean
     ): Single<Resource<Paged<List<Playlist>>>> {
-        val args = GetPlaylistsForCategory.Args(
-            categoryId = state.category.id,
-            offset = if (shouldClear) 0 else state.playlists.offset
-        )
+        val args =
+            GetPlaylistsForCategory.Args(
+                categoryId = state.category.id,
+                offset = if (shouldClear) 0 else state.playlists.offset
+            )
         return this(args = args)
             .mapData { playlistsPage -> playlistsPage.map(::Playlist) }
             .takeUntil(clear.toFlowable(BackpressureStrategy.LATEST))
@@ -81,12 +84,14 @@ class SpotifyCategoryViewModel(
 
     companion object : MvRxViewModelFactory<SpotifyCategoryViewModel, State> {
         override fun create(
-            viewModelContext: ViewModelContext, state: State
-        ): SpotifyCategoryViewModel = SpotifyCategoryViewModel(
-            state,
-            viewModelContext.activity.get(),
-            viewModelContext.activity.get(),
-            viewModelContext.app()
-        )
+            viewModelContext: ViewModelContext,
+            state: State
+        ): SpotifyCategoryViewModel =
+            SpotifyCategoryViewModel(
+                state,
+                viewModelContext.activity.get(),
+                viewModelContext.activity.get(),
+                viewModelContext.app()
+            )
     }
 }

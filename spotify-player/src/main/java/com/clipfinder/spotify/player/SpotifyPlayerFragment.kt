@@ -31,11 +31,11 @@ import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.model.Track
-import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.onSeekBarProgressChangeListener
 import com.clipfinder.core.android.view.visualizer.ColumnarVisualizerRenderer
 import com.clipfinder.core.ext.castAs
+import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.spotify.player.databinding.FragmentSpotifyPlayerBinding
 import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
@@ -71,48 +71,52 @@ class SpotifyPlayerFragment :
     override val playerView: View?
         get() = this.view
 
-    private val onPlayPauseBtnClickListener: View.OnClickListener = View.OnClickListener {
-        withState(viewModel) {
-            if (it.playbackState?.isPlaying == true) {
-                player?.pause(SpotifyPlayerOperationLogCallback)
-                visualizerManager?.pause()
-            } else {
-                player?.resume(SpotifyPlayerOperationLogCallback)
-                visualizerManager?.resume()
+    private val onPlayPauseBtnClickListener: View.OnClickListener =
+        View.OnClickListener {
+            withState(viewModel) {
+                if (it.playbackState?.isPlaying == true) {
+                    player?.pause(SpotifyPlayerOperationLogCallback)
+                    visualizerManager?.pause()
+                } else {
+                    player?.resume(SpotifyPlayerOperationLogCallback)
+                    visualizerManager?.resume()
+                }
             }
         }
-    }
 
-    private val onNextBtnClickListener = View.OnClickListener {
-        player?.skipToNext(SpotifyPlayerOperationLogCallback)
-    }
+    private val onNextBtnClickListener =
+        View.OnClickListener { player?.skipToNext(SpotifyPlayerOperationLogCallback) }
 
-    private val onPreviousBtnClickListener = View.OnClickListener {
-        player?.skipToPrevious(SpotifyPlayerOperationLogCallback)
-    }
+    private val onPreviousBtnClickListener =
+        View.OnClickListener { player?.skipToPrevious(SpotifyPlayerOperationLogCallback) }
 
-    private val onClosePlayerBtnClickListener = View.OnClickListener {
-        activity?.castAs<SlidingPanelController>()?.hideIfVisible()
-        stopPlayback()
-    }
+    private val onClosePlayerBtnClickListener =
+        View.OnClickListener {
+            activity?.castAs<SlidingPanelController>()?.hideIfVisible()
+            stopPlayback()
+        }
 
     private var spotifyPlaybackTimer: CountDownTimer? = null
 
-    private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener
-        by lazy(LazyThreadSafetyMode.NONE) {
-            onSeekBarProgressChangeListener { _: SeekBar?, progress: Int, fromUser: Boolean ->
-                if (!fromUser) return@onSeekBarProgressChangeListener
-                val positionInMs = progress * 1000
-                spotifyPlaybackTimer?.cancel()
-                player?.seekToPosition(SpotifyPlayerOperationLogCallback, positionInMs)
-                spotifyPlaybackTimer = playbackTimer(
-                    trackDuration = withState(viewModel) {
-                        requireNotNull(it.playerMetadata).currentTrack.durationMs
-                    },
+    private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
+        onSeekBarProgressChangeListener { _: SeekBar?, progress: Int, fromUser: Boolean ->
+            if (!fromUser) return@onSeekBarProgressChangeListener
+            val positionInMs = progress * 1000
+            spotifyPlaybackTimer?.cancel()
+            player?.seekToPosition(SpotifyPlayerOperationLogCallback, positionInMs)
+            spotifyPlaybackTimer =
+                playbackTimer(
+                    trackDuration =
+                        withState(viewModel) {
+                            requireNotNull(it.playerMetadata).currentTrack.durationMs
+                        },
                     positionMs = positionInMs.toLong()
-                ).apply { start() }
-            }
+                )
+                    .apply { start() }
         }
+    }
 
     private val audioTrackController by lazy(LazyThreadSafetyMode.NONE) {
         SpotifyAudioTrackController()
@@ -132,62 +136,76 @@ class SpotifyPlayerFragment :
 
     private fun createNewVisualizerManager() {
         visualizerManager?.release()
-        visualizerManager = NierVisualizerManager().apply {
-            init(object : NierVisualizerManager.NVDataSource {
-                private val audioBufferSize = 81920
-                private val audioRecordByteBuffer by lazy { ByteArray(audioBufferSize / 2) }
-                private val audioRecordShortBuffer by lazy { ShortArray(audioBufferSize / 2) }
-                private val outputBuffer: ByteArray = ByteArray(512)
+        visualizerManager =
+            NierVisualizerManager().apply {
+                init(
+                    object : NierVisualizerManager.NVDataSource {
+                        private val audioBufferSize = 81920
+                        private val audioRecordByteBuffer by lazy { ByteArray(audioBufferSize / 2) }
+                        private val audioRecordShortBuffer by lazy {
+                            ShortArray(audioBufferSize / 2)
+                        }
+                        private val outputBuffer: ByteArray = ByteArray(512)
 
-                override fun getDataSamplingInterval() = 0L
-                override fun getDataLength() = outputBuffer.size
-                override fun fetchFftData(): ByteArray {
-                    audioTrackController.audioBuffer.peek(audioRecordShortBuffer)
-                    audioRecordShortBuffer.forEachIndexed { index, sh ->
-                        audioRecordByteBuffer[index] = (sh / 2.0.pow(10.0)).toInt().toByte()
-                    }
-                    var bufferIndex = 0
-                    for (idx in audioRecordByteBuffer.indices step (audioRecordByteBuffer.size / (outputBuffer.size))) {
-                        if (bufferIndex >= outputBuffer.size) break
-                        outputBuffer[bufferIndex++] = audioRecordByteBuffer[idx]
-                    }
-                    return outputBuffer
-                }
+                        override fun getDataSamplingInterval() = 0L
+                        override fun getDataLength() = outputBuffer.size
+                        override fun fetchFftData(): ByteArray {
+                            audioTrackController.audioBuffer.peek(audioRecordShortBuffer)
+                            audioRecordShortBuffer.forEachIndexed { index, sh ->
+                                audioRecordByteBuffer[index] = (sh / 2.0.pow(10.0)).toInt().toByte()
+                            }
+                            var bufferIndex = 0
+                            for (idx in
+                                audioRecordByteBuffer.indices step
+                                    (audioRecordByteBuffer.size / (outputBuffer.size))) {
+                                if (bufferIndex >= outputBuffer.size) break
+                                outputBuffer[bufferIndex++] = audioRecordByteBuffer[idx]
+                            }
+                            return outputBuffer
+                        }
 
-                override fun fetchWaveData(): ByteArray? = null
-            })
-        }
+                        override fun fetchWaveData(): ByteArray? = null
+                    }
+                )
+            }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = FragmentSpotifyPlayerBinding.inflate(inflater, container, false)
-        .apply {
-            fragmentView = spotifyPlayerView
-            val nextTrackExists = MutableLiveData(false)
-            val previousTrackExists = MutableLiveData(false)
-            val currentTrackTitle = MutableLiveData("")
-            viewModel.selectSubscribe(this@SpotifyPlayerFragment, SpotifyPlayerState::playerMetadata) { metadata ->
-                nextTrackExists.value = metadata?.nextTrack != null
-                previousTrackExists.value = metadata?.prevTrack != null
-                metadata?.currentTrack?.let {
-                    val trackName = it.name
-                    val artistName = it.artistName
-                    val currentTrackLabelText = if (trackName != null && artistName != null) {
-                        "$artistName - $trackName"
-                    } else {
-                        ""
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        FragmentSpotifyPlayerBinding.inflate(inflater, container, false)
+            .apply {
+                fragmentView = spotifyPlayerView
+                val nextTrackExists = MutableLiveData(false)
+                val previousTrackExists = MutableLiveData(false)
+                val currentTrackTitle = MutableLiveData("")
+                viewModel.selectSubscribe(
+                    this@SpotifyPlayerFragment,
+                    SpotifyPlayerState::playerMetadata
+                ) { metadata ->
+                    nextTrackExists.value = metadata?.nextTrack != null
+                    previousTrackExists.value = metadata?.prevTrack != null
+                    metadata?.currentTrack?.let {
+                        val trackName = it.name
+                        val artistName = it.artistName
+                        val currentTrackLabelText =
+                            if (trackName != null && artistName != null) {
+                                "$artistName - $trackName"
+                            } else {
+                                ""
+                            }
+                        currentTrackTitle.value = currentTrackLabelText
                     }
-                    currentTrackTitle.value = currentTrackLabelText
                 }
+                this.nextTrackExists = nextTrackExists
+                this.previousTrackExists = previousTrackExists
+                this.currentTrackTitle = currentTrackTitle
+                visualizerSurfaceView.setZOrderOnTop(true)
+                visualizerSurfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
             }
-            this.nextTrackExists = nextTrackExists
-            this.previousTrackExists = previousTrackExists
-            this.currentTrackTitle = currentTrackTitle
-            visualizerSurfaceView.setZOrderOnTop(true)
-            visualizerSurfaceView.holder.setFormat(PixelFormat.TRANSLUCENT)
-        }
-        .root
+            .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initIntentReceivers()
@@ -201,10 +219,11 @@ class SpotifyPlayerFragment :
 
     override fun onStop() {
         withState(viewModel) { state ->
-            val shouldShowPlaybackNotification = player?.isInitialized == true
-                && state.playerMetadata?.currentTrack != null
-                && state.lastPlayedItem !is NoLastPlayedItem
-                && !state.showingPlaybackNotification
+            val shouldShowPlaybackNotification =
+                player?.isInitialized == true &&
+                    state.playerMetadata?.currentTrack != null &&
+                    state.lastPlayedItem !is NoLastPlayedItem &&
+                    !state.showingPlaybackNotification
             if (!shouldShowPlaybackNotification) return@withState
             viewModel.updatePlayerNotificationState(true)
             showPlaybackNotification()
@@ -270,44 +289,50 @@ class SpotifyPlayerFragment :
                 updatePlayback()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.pause)
                 refreshBackgroundPlaybackNotificationIfShowing()
-//                visualizer_surface_view?.showIfHidden()
+                //                visualizer_surface_view?.showIfHidden()
             }
-
             PlayerEvent.kSpPlaybackNotifyPause -> {
                 spotifyPlaybackTimer?.cancel()
                 spotify_player_play_pause_image_button?.setImageResource(R.drawable.play)
                 refreshBackgroundPlaybackNotificationIfShowing()
-//                visualizer_surface_view?.hideIfShowing()
+                //                visualizer_surface_view?.hideIfShowing()
             }
-
-            PlayerEvent.kSpPlaybackNotifyTrackChanged -> withState(viewModel) { state ->
-                state.playerMetadata?.currentTrack?.let { track ->
-                    track.id?.let { id ->
-                        activity?.castAs<SpotifyTrackChangeHandler>()?.onTrackChanged(id)
-                    }
-
-                    albumCoverImageTarget = object : Target {
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                            current_track_image_view?.setImageDrawable(placeHolderDrawable)
+            PlayerEvent.kSpPlaybackNotifyTrackChanged ->
+                withState(viewModel) { state ->
+                    state.playerMetadata?.currentTrack?.let { track ->
+                        track.id?.let { id ->
+                            activity?.castAs<SpotifyTrackChangeHandler>()?.onTrackChanged(id)
                         }
 
-                        override fun onBitmapFailed(errorDrawable: Drawable?) {
-                            current_track_image_view?.setImageDrawable(errorDrawable)
-                        }
+                        albumCoverImageTarget =
+                            object : Target {
+                                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                                    current_track_image_view?.setImageDrawable(placeHolderDrawable)
+                                }
 
-                        override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                            Palette.from(bitmap).generate { palette ->
-                                palette?.dominantColor?.let { color -> visualizerPaint.color = color }
+                                override fun onBitmapFailed(errorDrawable: Drawable?) {
+                                    current_track_image_view?.setImageDrawable(errorDrawable)
+                                }
+
+                                override fun onBitmapLoaded(
+                                    bitmap: Bitmap,
+                                    from: Picasso.LoadedFrom?
+                                ) {
+                                    Palette.from(bitmap).generate { palette ->
+                                        palette?.dominantColor?.let { color ->
+                                            visualizerPaint.color = color
+                                        }
+                                    }
+                                    current_track_image_view?.setImageBitmap(bitmap)
+                                }
                             }
-                            current_track_image_view?.setImageBitmap(bitmap)
-                        }
+
+                        Picasso.with(context)
+                            .load(track.albumCoverWebUrl)
+                            .into(albumCoverImageTarget)
+                        refreshBackgroundPlaybackNotificationIfShowing()
                     }
-
-                    Picasso.with(context).load(track.albumCoverWebUrl).into(albumCoverImageTarget)
-                    refreshBackgroundPlaybackNotificationIfShowing()
                 }
-            }
-
             else -> return
         }
     }
@@ -318,36 +343,41 @@ class SpotifyPlayerFragment :
 
     override fun initializePlayer(accessToken: String, callback: () -> Unit) {
         if (player == null) {
-            player = SpotifyPlayer
-                .Builder(Config(requireContext(), accessToken, BuildConfig.SPOTIFY_CLIENT_ID))
-                .setAudioController(audioTrackController)
-                .build(object : SpotifyPlayer.InitializationObserver {
-                    override fun onInitialized(player: SpotifyPlayer) {
-                        player.setConnectivityStatus(
-                            SpotifyPlayerOperationLogCallback,
-                            requireContext().networkConnectivity
-                        )
-                        player.addNotificationCallback(this@SpotifyPlayerFragment)
-                        player.addConnectionStateCallback(this@SpotifyPlayerFragment)
-                        callback()
-                    }
+            player =
+                SpotifyPlayer.Builder(
+                        Config(requireContext(), accessToken, BuildConfig.SPOTIFY_CLIENT_ID)
+                    )
+                    .setAudioController(audioTrackController)
+                    .build(
+                        object : SpotifyPlayer.InitializationObserver {
+                            override fun onInitialized(player: SpotifyPlayer) {
+                                player.setConnectivityStatus(
+                                    SpotifyPlayerOperationLogCallback,
+                                    requireContext().networkConnectivity
+                                )
+                                player.addNotificationCallback(this@SpotifyPlayerFragment)
+                                player.addConnectionStateCallback(this@SpotifyPlayerFragment)
+                                callback()
+                            }
 
-                    override fun onError(error: Throwable) {
-                        Timber.tag("PLAYER").e("Error: ${error.message ?: "unknown"}")
-                    }
-                })
+                            override fun onError(error: Throwable) {
+                                Timber.tag("PLAYER").e("Error: ${error.message ?: "unknown"}")
+                            }
+                        }
+                    )
         } else {
             var connectionStateCallback: ConnectionStateCallback? = null
-            connectionStateCallback = object : SpotifyPlayerConnectionStateCallback {
-                override fun onLoggedIn() {
-                    callback()
-                    player?.removeConnectionStateCallback(connectionStateCallback)
-                }
+            connectionStateCallback =
+                object : SpotifyPlayerConnectionStateCallback {
+                    override fun onLoggedIn() {
+                        callback()
+                        player?.removeConnectionStateCallback(connectionStateCallback)
+                    }
 
-                override fun onLoginFailed(error: Error?) {
-                    player?.removeConnectionStateCallback(connectionStateCallback)
+                    override fun onLoginFailed(error: Error?) {
+                        player?.removeConnectionStateCallback(connectionStateCallback)
+                    }
                 }
-            }
             player?.addConnectionStateCallback(connectionStateCallback)
             player?.login(accessToken)
         }
@@ -378,7 +408,7 @@ class SpotifyPlayerFragment :
 
     override fun onLoggedIn() {
         Toast.makeText(requireContext(), "You successfully logged in.", Toast.LENGTH_SHORT).show()
-        //TODO: permission check
+        // TODO: permission check
     }
 
     override fun onConnectionMessage(message: String?) {
@@ -387,7 +417,11 @@ class SpotifyPlayerFragment :
 
     override fun onLoginFailed(error: Error?) {
         Timber.e("onLoginFailed")
-        Toast.makeText(requireContext(), "Login failed: ${error?.name ?: "error unknown"}", Toast.LENGTH_SHORT)
+        Toast.makeText(
+                requireContext(),
+                "Login failed: ${error?.name ?: "error unknown"}",
+                Toast.LENGTH_SHORT
+            )
             .show()
     }
 
@@ -397,21 +431,22 @@ class SpotifyPlayerFragment :
 
     override fun invalidate() = Unit
 
-    private fun playbackTimer(
-        trackDuration: Long,
-        positionMs: Long
-    ): CountDownTimer = tickingTimer(trackDuration - positionMs, 1000) { millisUntilFinished ->
-        val seconds = (trackDuration - millisUntilFinished) / 1000
-        if (playback_seek_bar?.max == 0) playback_seek_bar?.max = (trackDuration / 1000).toInt()
-        playback_seek_bar?.progress = seconds.toInt()
-    }
+    private fun playbackTimer(trackDuration: Long, positionMs: Long): CountDownTimer =
+        tickingTimer(trackDuration - positionMs, 1000) { millisUntilFinished ->
+            val seconds = (trackDuration - millisUntilFinished) / 1000
+            if (playback_seek_bar?.max == 0) playback_seek_bar?.max = (trackDuration / 1000).toInt()
+            playback_seek_bar?.progress = seconds.toInt()
+        }
 
     private fun initIntentReceivers() {
         with(requireContext()) {
             broadcastReceivers.addAll(
-                createAndRegisterReceiverFor(IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)) { _, _ ->
+                createAndRegisterReceiverFor(
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                ) { _, _ ->
                     player?.setConnectivityStatus(
-                        SpotifyPlayerOperationLogCallback, requireContext().networkConnectivity
+                        SpotifyPlayerOperationLogCallback,
+                        requireContext().networkConnectivity
                     )
                 },
                 createAndRegisterReceiverFor(IntentFilter(ACTION_DELETE_NOTIFICATION)) { _, _ ->
@@ -442,8 +477,10 @@ class SpotifyPlayerFragment :
         if (context?.isGranted(Manifest.permission.RECORD_AUDIO) == true) {
             createNewVisualizerManager()
 
-            //TODO: implement a mechanism which will return the surface views surrounding circular image views in fragments like the playlist fragment etc
-            //use a subject within MainActivity (or SpotifyMainFragment) and change visualizers accordingly
+            // TODO: implement a mechanism which will return the surface views surrounding circular
+            // image views in fragments like the playlist fragment etc
+            // use a subject within MainActivity (or SpotifyMainFragment) and change visualizers
+            // accordingly
             visualizerManager?.start(visualizer_surface_view, visualizerRenderers)
         }
     }
@@ -455,11 +492,13 @@ class SpotifyPlayerFragment :
                     .getBitmapSingle(
                         url = it.albumCoverWebUrl,
                         onError = {
-                            requireContext().notificationManager
+                            requireContext()
+                                .notificationManager
                                 .notify(PlaybackNotification.ID, buildNotification(null))
                         }
                     ) { bitmap ->
-                        requireContext().notificationManager
+                        requireContext()
+                            .notificationManager
                             .notify(PlaybackNotification.ID, buildNotification(bitmap))
                     }
                     .disposeOnDestroy(this)
@@ -487,61 +526,79 @@ class SpotifyPlayerFragment :
         showPlaybackNotification()
     }
 
-    private fun buildNotification(largeIcon: Bitmap?): Notification = NotificationCompat
-        .Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
-        .setSmallIcon(R.drawable.play)
-        .apply {
-            withState(viewModel) { state ->
-                val bigText = state.playerMetadata?.currentTrack?.name ?: "Unknown track"
-                if (largeIcon != null) {
-                    val style = NotificationCompat.BigPictureStyle()
-                        .bigLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
-                        .bigPicture(largeIcon)
-                        .setBigContentTitle(bigText)
-                        .setSummaryText("${
+    private fun buildNotification(largeIcon: Bitmap?): Notification =
+        NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
+            .setSmallIcon(R.drawable.play)
+            .apply {
+                withState(viewModel) { state ->
+                    val bigText = state.playerMetadata?.currentTrack?.name ?: "Unknown track"
+                    if (largeIcon != null) {
+                        val style =
+                            NotificationCompat.BigPictureStyle()
+                                .bigLargeIcon(
+                                    BitmapFactory.decodeResource(resources, R.drawable.ic_launcher)
+                                )
+                                .bigPicture(largeIcon)
+                                .setBigContentTitle(bigText)
+                                .setSummaryText(
+                                    "${
                             state.playerMetadata?.currentTrack?.artistName ?: "Unknown artist"
                         } - ${
                             state.playerMetadata?.currentTrack?.albumName ?: "Unknown album"
-                        }")
-                    setLargeIcon(largeIcon).setStyle(style)
-                } else {
-                    setContentText(bigText)
+                        }"
+                                )
+                        setLargeIcon(largeIcon).setStyle(style)
+                    } else {
+                        setContentText(bigText)
+                    }
                 }
             }
-        }
-        .setContentTitle(getString(R.string.app_name))
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        .setContentIntent(
-            requireContext().getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
-        )
-        .setDeleteIntent(requireContext().getBroadcastPendingIntent(Intent(ACTION_DELETE_NOTIFICATION)))
-        .apply {
-            withState(viewModel) { state ->
-                if (state.playerMetadata?.prevTrack != null) {
-                    val prevTrackIntent = requireContext()
-                        .getBroadcastPendingIntent(Intent(ACTION_PREV_TRACK))
-                    addAction(R.drawable.previous_track, getString(R.string.previous_track), prevTrackIntent)
-                }
+            .setContentTitle(getString(R.string.app_name))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                requireContext()
+                    .getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
+            )
+            .setDeleteIntent(
+                requireContext().getBroadcastPendingIntent(Intent(ACTION_DELETE_NOTIFICATION))
+            )
+            .apply {
+                withState(viewModel) { state ->
+                    if (state.playerMetadata?.prevTrack != null) {
+                        val prevTrackIntent =
+                            requireContext().getBroadcastPendingIntent(Intent(ACTION_PREV_TRACK))
+                        addAction(
+                            R.drawable.previous_track,
+                            getString(R.string.previous_track),
+                            prevTrackIntent
+                        )
+                    }
 
-                if (state.playbackState?.isPlaying == true) {
-                    val pauseIntent = requireContext()
-                        .getBroadcastPendingIntent(Intent(ACTION_PAUSE_PLAYBACK))
-                    addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
-                } else {
-                    val resumeIntent = requireContext()
-                        .getBroadcastPendingIntent(Intent(ACTION_RESUME_PLAYBACK))
-                    addAction(R.drawable.play, getString(R.string.play), resumeIntent)
-                }
+                    if (state.playbackState?.isPlaying == true) {
+                        val pauseIntent =
+                            requireContext()
+                                .getBroadcastPendingIntent(Intent(ACTION_PAUSE_PLAYBACK))
+                        addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
+                    } else {
+                        val resumeIntent =
+                            requireContext()
+                                .getBroadcastPendingIntent(Intent(ACTION_RESUME_PLAYBACK))
+                        addAction(R.drawable.play, getString(R.string.play), resumeIntent)
+                    }
 
-                if (state.playerMetadata?.nextTrack != null) {
-                    val nextTrackIntent = requireContext()
-                        .getBroadcastPendingIntent(Intent(ACTION_NEXT_TRACK))
-                    addAction(R.drawable.next_track, getString(R.string.next_track), nextTrackIntent)
+                    if (state.playerMetadata?.nextTrack != null) {
+                        val nextTrackIntent =
+                            requireContext().getBroadcastPendingIntent(Intent(ACTION_NEXT_TRACK))
+                        addAction(
+                            R.drawable.next_track,
+                            getString(R.string.next_track),
+                            nextTrackIntent
+                        )
+                    }
                 }
             }
-        }
-        .setAutoCancel(true)
-        .build()
+            .setAutoCancel(true)
+            .build()
 
     companion object {
         private const val ACTION_PAUSE_PLAYBACK = "ACTION_PAUSE_PLAYBACK"

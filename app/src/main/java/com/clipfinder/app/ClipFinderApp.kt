@@ -12,8 +12,8 @@ import com.clipfinder.core.android.di.epoxyModule
 import com.clipfinder.core.android.service.CancelNotificationsService
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.clipfinder.core.android.spotify.di.spotifyCoreAndroidModule
-import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.core.android.youtube.di.youtubeCoreAndroidModule
+import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
 import com.clipfinder.core.spotify.di.spotifyCoreModule
 import com.clipfinder.core.youtube.di.youtubeCoreModule
@@ -33,13 +33,15 @@ class ClipFinderApp : Application() {
         super.onCreate()
 
         initTimber()
-//        initLeakCanary()
+        //        initLeakCanary()
         initNotifications()
         initKoin()
 
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
         Utils.init(this)
-        ViewTarget.setTagId(R.id.glide_tag) //TODO: workaround for crashes caused by Glide - maybe try to remove this later
+        ViewTarget.setTagId(
+            R.id.glide_tag
+        ) // TODO: workaround for crashes caused by Glide - maybe try to remove this later
     }
 
     override fun onTerminate() {
@@ -60,12 +62,11 @@ class ClipFinderApp : Application() {
             getSystemService(NotificationManager::class.java)
                 .createNotificationChannel(
                     NotificationChannel(
-                        PlaybackNotification.CHANNEL_ID,
-                        getString(R.string.channel_name),
-                        NotificationManager.IMPORTANCE_DEFAULT
-                    ).apply {
-                        description = getString(R.string.channel_description)
-                    }
+                            PlaybackNotification.CHANNEL_ID,
+                            getString(R.string.channel_name),
+                            NotificationManager.IMPORTANCE_DEFAULT
+                        )
+                        .apply { description = getString(R.string.channel_description) }
                 )
         }
         startService(Intent(this, CancelNotificationsService::class.java))
@@ -74,13 +75,22 @@ class ClipFinderApp : Application() {
     private fun initKoin() {
         startKoin {
             androidContext(this@ClipFinderApp)
-            modules(listOf(
-                appModule, epoxyModule, coreAndroidNetworkingModule,
-                spotifyChartsApiModule, spotifyApiModule,
-                spotifyCoreAndroidModule, spotifyCoreModule,
-                soundCloudApiModule, soundCloudCoreAndroidModule, soundCloudCoreModule,
-                youtubeCoreModule, youtubeCoreAndroidModule
-            ))
+            modules(
+                listOf(
+                    appModule,
+                    epoxyModule,
+                    coreAndroidNetworkingModule,
+                    spotifyChartsApiModule,
+                    spotifyApiModule,
+                    spotifyCoreAndroidModule,
+                    spotifyCoreModule,
+                    soundCloudApiModule,
+                    soundCloudCoreAndroidModule,
+                    soundCloudCoreModule,
+                    youtubeCoreModule,
+                    youtubeCoreAndroidModule
+                )
+            )
         }
     }
 }

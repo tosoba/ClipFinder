@@ -7,6 +7,9 @@ import io.reactivex.Single
 
 interface IYoutubeRepo {
     fun search(query: String, pageToken: String? = null): Single<Resource<SearchListResponse>>
-    fun searchRelated(videoId: String, pageToken: String? = null): Single<Resource<SearchListResponse>>
+    fun searchRelated(
+        videoId: String,
+        pageToken: String? = null
+    ): Single<Resource<SearchListResponse>>
     fun clearExpired(): Completable
 }

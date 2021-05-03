@@ -9,28 +9,25 @@ import com.clipfinder.soundcloud.api.model.collection.SoundCollectionResponse
 import com.clipfinder.soundcloud.api.model.mixed.selections.SoundCloudMixedSelectionsResponse
 import io.reactivex.Single
 
-class SoundCloudRepo(
-    private val apiV2: SoundCloudApiV2,
-    private val api: SoundCloudApi
-) : ISoundCloudRepo {
+class SoundCloudRepo(private val apiV2: SoundCloudApiV2, private val api: SoundCloudApi) :
+    ISoundCloudRepo {
 
-    override fun mixedSelections(clientId: String): Single<List<ISoundCloudPlaylistSelection>> = apiV2
-        .mixedSelections(clientId)
-        .map(SoundCloudMixedSelectionsResponse::collection)
+    override fun mixedSelections(clientId: String): Single<List<ISoundCloudPlaylistSelection>> =
+        apiV2.mixedSelections(clientId).map(SoundCloudMixedSelectionsResponse::collection)
 
-    override fun featuredTracks(kind: String, genre: String, clientId: String): Single<List<ISoundCloudTrack>> = apiV2
-        .featuredTracks(kind, genre, clientId)
-        .map(SoundCollectionResponse::collection)
+    override fun featuredTracks(
+        kind: String,
+        genre: String,
+        clientId: String
+    ): Single<List<ISoundCloudTrack>> =
+        apiV2.featuredTracks(kind, genre, clientId).map(SoundCollectionResponse::collection)
 
-    override fun getTracksFromPlaylist(id: String): Single<List<ISoundCloudTrack>> = api
-        .getTracksFromPlaylist(id)
-        .map { it }
+    override fun getTracksFromPlaylist(id: String): Single<List<ISoundCloudTrack>> =
+        api.getTracksFromPlaylist(id).map { it }
 
-    override fun getTracks(ids: List<String>): Single<List<ISoundCloudTrack>> = apiV2
-        .getTracks(ids.joinToString(separator = ","))
-        .map { it }
+    override fun getTracks(ids: List<String>): Single<List<ISoundCloudTrack>> =
+        apiV2.getTracks(ids.joinToString(separator = ",")).map { it }
 
-    override fun getSimilarTracks(id: String): Single<List<ISoundCloudTrack>> = apiV2
-        .getRelatedTracks(id)
-        .map { it.collection ?: run(::emptyList) }
+    override fun getSimilarTracks(id: String): Single<List<ISoundCloudTrack>> =
+        apiV2.getRelatedTracks(id).map { it.collection ?: run(::emptyList) }
 }

@@ -8,7 +8,9 @@ fun SlidingUpPanelLayout.expandIfHidden() {
 }
 
 fun SlidingUpPanelLayout.hideIfVisible() {
-    if (panelState == SlidingUpPanelLayout.PanelState.EXPANDED || panelState == SlidingUpPanelLayout.PanelState.COLLAPSED)
+    if (panelState == SlidingUpPanelLayout.PanelState.EXPANDED ||
+            panelState == SlidingUpPanelLayout.PanelState.COLLAPSED
+    )
         panelState = SlidingUpPanelLayout.PanelState.HIDDEN
 }
 

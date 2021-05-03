@@ -1,7 +1,10 @@
 package com.clipfinder.core.spotify.model
 
 enum class SpotifySearchType(val value: String) {
-    ALBUM("album"), ARTIST("artist"), PLAYLIST("playlist"), TRACK("track");
+    ALBUM("album"),
+    ARTIST("artist"),
+    PLAYLIST("playlist"),
+    TRACK("track");
 
     override fun toString(): String = value
 

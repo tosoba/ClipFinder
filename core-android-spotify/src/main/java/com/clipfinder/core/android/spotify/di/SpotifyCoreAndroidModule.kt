@@ -32,7 +32,20 @@ val spotifyCoreAndroidModule = module {
     single { SpotifyAutoAuth(get(), get()) } bind ISpotifyAutoAuth::class
 
     single {
-        SpotifyRepo(get(), get(), get(), get(), get(), get(), get(), get(named(PlaylistsEndpointsType.PUBLIC.name)), get(named(PlaylistsEndpointsType.PRIVATE.name)), get(), get(), get())
+        SpotifyRepo(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(named(PlaylistsEndpointsType.PUBLIC.name)),
+            get(named(PlaylistsEndpointsType.PRIVATE.name)),
+            get(),
+            get(),
+            get()
+        )
     } bind ISpotifyRepo::class
 
     single { AuthorizationService(androidContext()) }

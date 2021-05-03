@@ -9,6 +9,5 @@ object OffsetDateTimeAdapter {
     @ToJson
     fun toJson(value: OffsetDateTime): String = value.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
-    @FromJson
-    fun fromJson(value: String): OffsetDateTime = OffsetDateTime.parse(value)
+    @FromJson fun fromJson(value: String): OffsetDateTime = OffsetDateTime.parse(value)
 }

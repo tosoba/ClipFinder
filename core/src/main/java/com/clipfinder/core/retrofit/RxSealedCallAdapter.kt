@@ -21,44 +21,50 @@ internal class RxSealedCallAdapter<T : Any, U : Any>(
     private val isMaybe: Boolean
 ) : CallAdapter<T, Any> {
 
-    override fun adapt(call: Call<T>): Any = delegateAdapter.adapt(call)
-        .flatMap { Observable.just<NetworkResponse<T, U>>(NetworkResponse.Success(it)) }
-        .onErrorResumeNext(Function<Throwable, Observable<NetworkResponse<T, U>>> { throwable ->
-            when (throwable) {
-                is HttpException -> {
-                    val error = throwable.response().errorBody()
-                    val errorBody = when {
-                        error == null -> null
-                        error.contentLength() == 0L -> null
-                        else -> try {
-                            errorConverter.convert(error)
-                        } catch (e: Exception) {
-                            return@Function Observable.just(
-                                NetworkResponse.NetworkError(
-                                    IOException("Couldn't deserialize error body: ${error.string()}", e)
-                                )
-                            )
+    override fun adapt(call: Call<T>): Any =
+        delegateAdapter
+            .adapt(call)
+            .flatMap { Observable.just<NetworkResponse<T, U>>(NetworkResponse.Success(it)) }
+            .onErrorResumeNext(
+                Function<Throwable, Observable<NetworkResponse<T, U>>> { throwable ->
+                    when (throwable) {
+                        is HttpException -> {
+                            val error = throwable.response().errorBody()
+                            val errorBody =
+                                when {
+                                    error == null -> null
+                                    error.contentLength() == 0L -> null
+                                    else ->
+                                        try {
+                                            errorConverter.convert(error)
+                                        } catch (e: Exception) {
+                                            return@Function Observable.just(
+                                                NetworkResponse.NetworkError(
+                                                    IOException(
+                                                        "Couldn't deserialize error body: ${error.string()}",
+                                                        e
+                                                    )
+                                                )
+                                            )
+                                        }
+                                }
+                            val serverError =
+                                NetworkResponse.ServerError(errorBody, throwable.response().code())
+                            Observable.just(serverError)
                         }
-
+                        is IOException -> Observable.just(NetworkResponse.NetworkError(throwable))
+                        else -> throw throwable
                     }
-                    val serverError = NetworkResponse.ServerError(
-                        errorBody,
-                        throwable.response().code()
-                    )
-                    Observable.just(serverError)
                 }
-                is IOException -> Observable.just(NetworkResponse.NetworkError(throwable))
-                else -> throw throwable
+            )
+            .run {
+                when {
+                    isFlowable -> toFlowable(BackpressureStrategy.LATEST)
+                    isSingle -> singleOrError()
+                    isMaybe -> singleElement()
+                    else -> this
+                }
             }
-        })
-        .run {
-            when {
-                isFlowable -> toFlowable(BackpressureStrategy.LATEST)
-                isSingle -> singleOrError()
-                isMaybe -> singleElement()
-                else -> this
-            }
-        }
 
     override fun responseType(): Type = successBodyType
 }

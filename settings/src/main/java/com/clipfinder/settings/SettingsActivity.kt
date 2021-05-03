@@ -11,7 +11,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentManager.beginTransaction()
+        fragmentManager
+            .beginTransaction()
             .replace(android.R.id.content, SettingsFragment())
             .commit()
 
@@ -28,13 +29,14 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupActionBar() = supportActionBar?.apply {
-        setDisplayShowHomeEnabled(true)
-        setDisplayHomeAsUpEnabled(true)
-        setBackgroundDrawable(
-            ColorDrawable(
-                ContextCompat.getColor(this@SettingsActivity, R.color.colorPrimaryDark)
+    private fun setupActionBar() =
+        supportActionBar?.apply {
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+            setBackgroundDrawable(
+                ColorDrawable(
+                    ContextCompat.getColor(this@SettingsActivity, R.color.colorPrimaryDark)
+                )
             )
-        )
-    }
+        }
 }

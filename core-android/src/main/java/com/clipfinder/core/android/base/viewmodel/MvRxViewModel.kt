@@ -16,9 +16,8 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import kotlin.reflect.KProperty1
 
-open class MvRxViewModel<S : MvRxState>(
-    initialState: S, debugMode: Boolean = false
-) : BaseMvRxViewModel<S>(initialState, debugMode) {
+open class MvRxViewModel<S : MvRxState>(initialState: S, debugMode: Boolean = false) :
+    BaseMvRxViewModel<S>(initialState, debugMode) {
 
     protected fun <C, T, I> loadPaged(
         prop: KProperty1<S, Loadable<C>>,
@@ -28,10 +27,18 @@ open class MvRxViewModel<S : MvRxState>(
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
         reducer: S.(Loadable<C>) -> S
-    ) where C : CopyableWithPaged<T, C>,
-            C : CompletionTrackable,
-            I : Iterable<T> = withState { state ->
-        loadPagedWith(state, prop, action, newCopyableWithPaged, subscribeOnScheduler, onError, copyWithLoading, reducer)
+    ) where C : CopyableWithPaged<T, C>, C : CompletionTrackable, I : Iterable<T> =
+            withState { state ->
+        loadPagedWith(
+            state,
+            prop,
+            action,
+            newCopyableWithPaged,
+            subscribeOnScheduler,
+            onError,
+            copyWithLoading,
+            reducer
+        )
     }
 
     protected fun <C, I, T> loadPagedWith(
@@ -43,17 +50,22 @@ open class MvRxViewModel<S : MvRxState>(
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
         reducer: S.(Loadable<C>) -> S
-    ) where C : CopyableWithPaged<T, C>,
-            C : CompletionTrackable,
-            I : Iterable<T> {
+    ) where C : CopyableWithPaged<T, C>, C : CompletionTrackable, I : Iterable<T> {
         val loadable = state.valueOf(prop)
         if (loadable.loadingOrCompleted) return
         action(state)
             .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-            .updateLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
+            .updateLoadableWithPagedResource(
+                prop,
+                onError,
+                copyWithLoading,
+                newCopyableWithPaged,
+                reducer
+            )
     }
 
-    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateLoadableWithPagedResource(
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<
+        Resource<Paged<I>>>.updateLoadableWithPagedResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
@@ -61,31 +73,37 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
-        return subscribe({ resource ->
-            setState {
-                when (resource) {
-                    is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
-                    is Resource.Error -> {
-                        resource.error?.castAs<Throwable>()?.let(onError)
-                            ?: run { logResourceError(resource) }
-                        reducer(valueOf(prop).copyWithError(resource.error))
+        return subscribe(
+                { resource ->
+                    setState {
+                        when (resource) {
+                            is Resource.Success ->
+                                reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
+                            is Resource.Error -> {
+                                resource.error?.castAs<Throwable>()?.let(onError)
+                                    ?: run { logResourceError(resource) }
+                                reducer(valueOf(prop).copyWithError(resource.error))
+                            }
+                        }
                     }
+                },
+                {
+                    setState { reducer(valueOf(prop).copyWithError(it)) }
+                    onError(it)
                 }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
+            )
+            .disposeOnClear()
     }
 
     protected fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> S.copyWithPaged(
         paged: Paged<I>,
         prop: KProperty1<S, Loadable<C>>,
         newCopyableWithPaged: (Paged<I>) -> C
-    ): Loadable<C> = when (val loadable = valueOf(prop)) {
-        is WithValue -> loadable.copyWithPaged(paged)
-        else -> Ready(newCopyableWithPaged(paged))
-    }
+    ): Loadable<C> =
+        when (val loadable = valueOf(prop)) {
+            is WithValue -> loadable.copyWithPaged(paged)
+            else -> Ready(newCopyableWithPaged(paged))
+        }
 
     protected fun <C, T, I, Args> loadPaged(
         prop: KProperty1<S, Loadable<C>>,
@@ -96,17 +114,23 @@ open class MvRxViewModel<S : MvRxState>(
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
         reducer: S.(Loadable<C>) -> S
-    ) where C : CopyableWithPaged<T, C>,
-            C : CompletionTrackable,
-            I : Iterable<T> = withState { state ->
+    ) where C : CopyableWithPaged<T, C>, C : CompletionTrackable, I : Iterable<T> =
+            withState { state ->
         val loadable = state.valueOf(prop)
         if (loadable.loadingOrCompleted) return@withState
         action(state, args)
             .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-            .updateDefaultLoadableWithPagedResource(prop, onError, copyWithLoading, newCopyableWithPaged, reducer)
+            .updateDefaultLoadableWithPagedResource(
+                prop,
+                onError,
+                copyWithLoading,
+                newCopyableWithPaged,
+                reducer
+            )
     }
 
-    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>.updateDefaultLoadableWithPagedResource(
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<
+        Resource<Paged<I>>>.updateDefaultLoadableWithPagedResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
@@ -114,21 +138,26 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
-        return subscribe({ resource ->
-            setState {
-                when (resource) {
-                    is Resource.Success -> reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
-                    is Resource.Error -> {
-                        resource.error?.castAs<Throwable>()?.let(onError)
-                            ?: run { logResourceError(resource) }
-                        reducer(valueOf(prop).copyWithError(resource.error))
+        return subscribe(
+                { resource ->
+                    setState {
+                        when (resource) {
+                            is Resource.Success ->
+                                reducer(copyWithPaged(resource.data, prop, newCopyableWithPaged))
+                            is Resource.Error -> {
+                                resource.error?.castAs<Throwable>()?.let(onError)
+                                    ?: run { logResourceError(resource) }
+                                reducer(valueOf(prop).copyWithError(resource.error))
+                            }
+                        }
                     }
+                },
+                {
+                    setState { reducer(valueOf(prop).copyWithError(it)) }
+                    onError(it)
                 }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
+            )
+            .disposeOnClear()
     }
 
     private fun logResourceError(resource: Resource.Error<*>) {
@@ -177,21 +206,25 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<C>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoading()) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(Ready(it.data))
-                    is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: run { logResourceError(it) }
-                        reducer(valueOf(prop).copyWithError(it.error))
+        return subscribe(
+                {
+                    setState {
+                        when (it) {
+                            is Resource.Success -> reducer(Ready(it.data))
+                            is Resource.Error -> {
+                                it.error?.castAs<Throwable>()?.let(onError)
+                                    ?: run { logResourceError(it) }
+                                reducer(valueOf(prop).copyWithError(it.error))
+                            }
+                        }
                     }
+                },
+                {
+                    setState { reducer(valueOf(prop).copyWithError(it)) }
+                    onError(it)
                 }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
+            )
+            .disposeOnClear()
     }
 
     protected fun <T> load(
@@ -199,7 +232,8 @@ open class MvRxViewModel<S : MvRxState>(
         action: (S) -> Single<Resource<T>>,
         subscribeOnScheduler: Scheduler? = Schedulers.io(),
         onError: (Throwable) -> Unit = ::log,
-        reducer: S.(Loadable<T>) -> S) = withState { state ->
+        reducer: S.(Loadable<T>) -> S
+    ) = withState { state ->
         if (state.valueOf(prop) !is LoadingInProgress) {
             action(state)
                 .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
@@ -228,26 +262,31 @@ open class MvRxViewModel<S : MvRxState>(
         reducer: S.(Loadable<T>) -> S
     ): Disposable {
         setState { reducer(valueOf(prop).copyWithLoadingInProgress) }
-        return subscribe({
-            setState {
-                when (it) {
-                    is Resource.Success -> reducer(Ready(it.data))
-                    is Resource.Error -> {
-                        it.error?.castAs<Throwable>()?.let(onError)
-                            ?: run { logResourceError(it) }
-                        reducer(valueOf(prop).copyWithError(it.error))
+        return subscribe(
+                {
+                    setState {
+                        when (it) {
+                            is Resource.Success -> reducer(Ready(it.data))
+                            is Resource.Error -> {
+                                it.error?.castAs<Throwable>()?.let(onError)
+                                    ?: run { logResourceError(it) }
+                                reducer(valueOf(prop).copyWithError(it.error))
+                            }
+                        }
                     }
+                },
+                {
+                    setState { reducer(valueOf(prop).copyWithError(it)) }
+                    onError(it)
                 }
-            }
-        }, {
-            setState { reducer(valueOf(prop).copyWithError(it)) }
-            onError(it)
-        }).disposeOnClear()
+            )
+            .disposeOnClear()
     }
 
     private fun <T> S.valueOf(prop: KProperty1<S, T>): T = prop.get(this)
 
-    protected fun log(error: Throwable) = Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
+    protected fun log(error: Throwable) =
+        Timber.e(error, this@MvRxViewModel.javaClass.simpleName.toString())
 
     protected fun <T> clearErrorIn(
         prop: KProperty1<S, Loadable<T>>,
@@ -256,7 +295,10 @@ open class MvRxViewModel<S : MvRxState>(
         setState { reducer(valueOf(prop).copyWithClearedError) }
     }
 
-    protected fun Context.handleConnectivityChanges(connectedOnly: Boolean = true, block: (state: S) -> Unit) {
+    protected fun Context.handleConnectivityChanges(
+        connectedOnly: Boolean = true,
+        block: (state: S) -> Unit
+    ) {
         observeNetworkConnectivity(connectedOnly) { withState(block) }.disposeOnClear()
     }
 }

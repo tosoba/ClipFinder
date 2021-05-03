@@ -14,7 +14,8 @@ interface OnTabSelectedListener : TabLayout.OnTabSelectedListener {
 @FunctionalInterface
 interface OnPageChangeListener : ViewPager.OnPageChangeListener {
     override fun onPageScrollStateChanged(state: Int) = Unit
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) =
+        Unit
 }
 
 interface OnSeekBarProgressChangeListener : SeekBar.OnSeekBarChangeListener {
@@ -24,11 +25,12 @@ interface OnSeekBarProgressChangeListener : SeekBar.OnSeekBarChangeListener {
 
 fun onSeekBarProgressChangeListener(
     callback: (seekBar: SeekBar?, progress: Int, fromUser: Boolean) -> Unit
-) = object : OnSeekBarProgressChangeListener {
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        callback(seekBar, progress, fromUser)
+) =
+    object : OnSeekBarProgressChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            callback(seekBar, progress, fromUser)
+        }
     }
-}
 
 interface OnNavigationDrawerClosedListerner : DrawerLayout.DrawerListener {
     override fun onDrawerOpened(p0: View) = Unit

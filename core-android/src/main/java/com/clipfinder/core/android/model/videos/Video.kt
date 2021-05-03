@@ -3,14 +3,14 @@ package com.clipfinder.core.android.model.videos
 import android.os.Parcelable
 import android.view.View
 import androidx.databinding.ObservableField
-import com.clipfinder.core.ext.formattedString
-import com.clipfinder.core.ext.getPublishedAgoString
 import com.clipfinder.core.android.R
 import com.clipfinder.core.android.VideoItemBindingModel_
 import com.clipfinder.core.android.util.ext.standardMonths
 import com.clipfinder.core.android.util.ext.standardWeeks
 import com.clipfinder.core.android.util.ext.standardYears
 import com.clipfinder.core.android.view.imageview.ImageViewSrc
+import com.clipfinder.core.ext.formattedString
+import com.clipfinder.core.ext.getPublishedAgoString
 import kotlinx.android.parcel.Parcelize
 import org.joda.time.Duration
 import org.joda.time.Instant
@@ -33,7 +33,12 @@ data class Video(
 ) : Parcelable {
 
     val imageViewSrc: ImageViewSrc
-        get() = ImageViewSrc.with(thumbnailUrl, R.drawable.video_placeholder, R.drawable.error_placeholder)
+        get() =
+            ImageViewSrc.with(
+                thumbnailUrl,
+                R.drawable.video_placeholder,
+                R.drawable.error_placeholder
+            )
 
     val details: String
         get() = "$publishedAgo • ${viewCount.formattedString} views"
@@ -56,9 +61,5 @@ data class Video(
         }
 }
 
-fun Video.clickableListItem(
-    itemClicked: (View) -> Unit
-): VideoItemBindingModel_ = VideoItemBindingModel_()
-    .id(id)
-    .itemClicked(itemClicked)
-    .video(this)
+fun Video.clickableListItem(itemClicked: (View) -> Unit): VideoItemBindingModel_ =
+    VideoItemBindingModel_().id(id).itemClicked(itemClicked).video(this)
