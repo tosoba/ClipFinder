@@ -336,6 +336,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     private fun buildNotification(state: YoutubePlayerState, largeIcon: Bitmap?): Notification =
         NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
+            .setOngoing(true)
             .setSmallIcon(R.drawable.play)
             .apply {
                 val bigText = requireNotNull(state.currentVideo).title

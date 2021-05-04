@@ -526,6 +526,7 @@ class SpotifyPlayerFragment :
 
     private fun buildNotification(track: Metadata.Track, largeIcon: Bitmap?): Notification =
         NotificationCompat.Builder(requireContext(), PlaybackNotification.CHANNEL_ID)
+            .setOngoing(true)
             .setSmallIcon(R.drawable.play)
             .apply {
                 val bigText = track.name ?: "Unknown track"
