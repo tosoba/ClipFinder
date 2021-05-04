@@ -183,8 +183,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     override fun onPlayerDimensionsChange(slideOffset: Float) {
         youtube_player_guideline.setGuidelinePercent(
-            (1 - minimumYoutubePlayerGuidelinePercent) * slideOffset +
-                minimumYoutubePlayerGuidelinePercent
+            (1 - minYoutubePlayerGuidelinePercent) * slideOffset + minYoutubePlayerGuidelinePercent
         )
         youtube_player_guideline.requestLayout()
     }
@@ -358,58 +357,54 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(
                 requireContext()
-                    .getActivityPendingIntent((requireActivity() as IntentProvider).providedIntent)
+                    .activityPendingIntent((requireActivity() as IntentProvider).providedIntent)
             )
             .setDeleteIntent(
                 requireContext()
-                    .getBroadcastPendingIntent(
-                        Intent(PlaybackNotification.ACTION_DELETE_NOTIFICATION)
-                    )
+                    .broadcastPendingIntent(Intent(PlaybackNotification.ACTION_DELETE_NOTIFICATION))
             )
             .apply {
                 val (isPlaying, mode) = state
-                if (mode is YoutubePlayerMode.Playlist && mode.currentVideoIndex > 0) {
-                    val prevTrackIntent =
-                        requireContext()
-                            .getBroadcastPendingIntent(
-                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_PREV_VIDEO.intent
-                            )
+                if (mode.prevTrackAvailable) {
                     addAction(
                         R.drawable.previous_track,
                         getString(R.string.previous_track),
-                        prevTrackIntent
+                        requireContext()
+                            .broadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_PREV_VIDEO.intent
+                            )
                     )
                 }
 
                 if (isPlaying) {
-                    val pauseIntent =
+                    addAction(
+                        R.drawable.pause,
+                        getString(R.string.pause),
                         requireContext()
-                            .getBroadcastPendingIntent(
+                            .broadcastPendingIntent(
                                 YoutubePlayerNotificationAction.YOUTUBE_ACTION_PAUSE_PLAYBACK.intent
                             )
-                    addAction(R.drawable.pause, getString(R.string.pause), pauseIntent)
+                    )
                 } else {
-                    val resumeIntent =
+                    addAction(
+                        R.drawable.play,
+                        getString(R.string.play),
                         requireContext()
-                            .getBroadcastPendingIntent(
+                            .broadcastPendingIntent(
                                 YoutubePlayerNotificationAction.YOUTUBE_ACTION_RESUME_PLAYBACK
                                     .intent
                             )
-                    addAction(R.drawable.play, getString(R.string.play), resumeIntent)
+                    )
                 }
 
-                if (mode is YoutubePlayerMode.Playlist &&
-                        mode.currentVideoIndex < mode.videos.size - 1
-                ) {
-                    val nextTrackIntent =
-                        requireContext()
-                            .getBroadcastPendingIntent(
-                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_NEXT_VIDEO.intent
-                            )
+                if (mode.nextTrackAvailable) {
                     addAction(
                         R.drawable.next_track,
                         getString(R.string.next_track),
-                        nextTrackIntent
+                        requireContext()
+                            .broadcastPendingIntent(
+                                YoutubePlayerNotificationAction.YOUTUBE_ACTION_NEXT_VIDEO.intent
+                            )
                     )
                 }
             }
@@ -417,6 +412,6 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
             .build()
 
     companion object {
-        private const val minimumYoutubePlayerGuidelinePercent = .45f
+        private const val minYoutubePlayerGuidelinePercent = .45f
     }
 }

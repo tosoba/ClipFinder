@@ -11,4 +11,10 @@ sealed class YoutubePlayerMode {
         val videos: List<Video>,
         val currentVideoIndex: Int
     ) : YoutubePlayerMode()
+
+    val prevTrackAvailable: Boolean
+        get() = this is Playlist && currentVideoIndex > 0
+
+    val nextTrackAvailable: Boolean
+        get() = this is Playlist && currentVideoIndex < videos.size - 1
 }

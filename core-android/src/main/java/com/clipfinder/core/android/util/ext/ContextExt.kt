@@ -96,13 +96,13 @@ inline fun <reified T : RoomDatabase> Context.buildRoom(
     return builder.build()
 }
 
-fun Context.getBroadcastPendingIntent(
+fun Context.broadcastPendingIntent(
     intent: Intent,
     requestCode: Int = 0,
     flags: Int = 0
 ): PendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, flags)
 
-fun Context.getActivityPendingIntent(
+fun Context.activityPendingIntent(
     intent: Intent,
     requestCode: Int = 0,
     flags: Int = 0
