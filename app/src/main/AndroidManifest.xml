@@ -16,8 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name="com.clipfinder.core.android.service.CancelNotificationsService" />
-
         <provider
             android:name="com.clipfinder.main.SearchSuggestionProvider"
             android:authorities="com.clipfinder.main.SearchSuggestionProvider" />

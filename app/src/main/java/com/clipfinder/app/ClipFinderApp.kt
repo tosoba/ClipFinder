@@ -3,15 +3,14 @@ package com.clipfinder.app
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
 import com.clipfinder.app.module.*
 import com.clipfinder.core.android.di.coreAndroidNetworkingModule
 import com.clipfinder.core.android.di.epoxyModule
-import com.clipfinder.core.android.service.CancelNotificationsService
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule
 import com.clipfinder.core.android.spotify.di.spotifyCoreAndroidModule
+import com.clipfinder.core.android.util.ext.notificationManager
 import com.clipfinder.core.android.youtube.di.youtubeCoreAndroidModule
 import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
@@ -39,13 +38,13 @@ class ClipFinderApp : Application() {
 
         RxJavaPlugins.setErrorHandler { Timber.e(it, "RX") }
         Utils.init(this)
-        ViewTarget.setTagId(
-            R.id.glide_tag
-        ) // TODO: workaround for crashes caused by Glide - maybe try to remove this later
+
+        // TODO: workaround for crashes caused by Glide - maybe try to remove this later
+        ViewTarget.setTagId(R.id.glide_tag)
     }
 
     override fun onTerminate() {
-        stopService(Intent(this, CancelNotificationsService::class.java))
+        notificationManager.cancelAll()
         super.onTerminate()
     }
 
@@ -58,18 +57,16 @@ class ClipFinderApp : Application() {
     }
 
     private fun initNotifications() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getSystemService(NotificationManager::class.java)
-                .createNotificationChannel(
-                    NotificationChannel(
-                            PlaybackNotification.CHANNEL_ID,
-                            getString(R.string.channel_name),
-                            NotificationManager.IMPORTANCE_DEFAULT
-                        )
-                        .apply { description = getString(R.string.channel_description) }
-                )
-        }
-        startService(Intent(this, CancelNotificationsService::class.java))
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        getSystemService(NotificationManager::class.java)
+            .createNotificationChannel(
+                NotificationChannel(
+                        PlaybackNotification.CHANNEL_ID,
+                        getString(R.string.channel_name),
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    )
+                    .apply { description = getString(R.string.channel_description) }
+            )
     }
 
     private fun initKoin() {
