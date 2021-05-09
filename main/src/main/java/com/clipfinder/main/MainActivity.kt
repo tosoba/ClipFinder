@@ -285,7 +285,6 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         initViewBindings()
         observeLoggedIn()
-        checkPermissions()
         observePrivateAuthorization()
         deleteNotificationReceiver =
             createAndRegisterReceiverFor(
@@ -401,13 +400,26 @@ class MainActivity :
         }
     }
 
-    // TODO: maybe move this to SpotifyPlayerFragment load methods and based on whether permission
-    // is granted show visualization or not
-    // or keep it here and just check if permission is granted in SpotifyPlayerFragment
-    private fun checkPermissions() {
+    private fun checkPlaybackPermission(onGranted: () -> Unit) {
         RxPermissions(this)
             .request(Manifest.permission.RECORD_AUDIO)
-            .subscribe()
+            .subscribe(
+                { granted ->
+                    if (granted) {
+                        onGranted()
+                    } else {
+                        MaterialDialog.Builder(this)
+                            .title(R.string.permission_required)
+                            .content(R.string.playback_requires_permission)
+                            .positiveText(R.string.retry)
+                            .negativeText(R.string.cancel)
+                            .onPositive { _, _ -> checkPlaybackPermission(onGranted) }
+                            .build()
+                            .apply(MaterialDialog::show)
+                    }
+                },
+                Timber::e
+            )
             .disposeOnDestroy(this)
     }
 
@@ -439,21 +451,27 @@ class MainActivity :
     }
 
     override fun loadTrack(track: Track) {
-        setupSpotifyPlayback()
-        spotifyPlayerFragment?.loadTrack(track)
-        viewModel.setPlayerState(PlayerState.TRACK)
+        checkPlaybackPermission {
+            setupSpotifyPlayback()
+            spotifyPlayerFragment?.loadTrack(track)
+            viewModel.setPlayerState(PlayerState.TRACK)
+        }
     }
 
     override fun loadAlbum(album: Album) {
-        setupSpotifyPlayback()
-        spotifyPlayerFragment?.loadAlbum(album)
-        viewModel.setPlayerState(PlayerState.ALBUM)
+        checkPlaybackPermission {
+            setupSpotifyPlayback()
+            spotifyPlayerFragment?.loadAlbum(album)
+            viewModel.setPlayerState(PlayerState.ALBUM)
+        }
     }
 
     override fun loadPlaylist(playlist: Playlist) {
-        setupSpotifyPlayback()
-        spotifyPlayerFragment?.loadPlaylist(playlist)
-        viewModel.setPlayerState(PlayerState.PLAYLIST)
+        checkPlaybackPermission {
+            setupSpotifyPlayback()
+            spotifyPlayerFragment?.loadPlaylist(playlist)
+            viewModel.setPlayerState(PlayerState.PLAYLIST)
+        }
     }
 
     private fun setupSpotifyPlayback() {

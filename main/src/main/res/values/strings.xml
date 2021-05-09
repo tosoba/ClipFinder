@@ -91,4 +91,7 @@
     <string name="playlist">Playlist</string>
     <string name="video_playlist">Video playlist</string>
     <string name="soundcloud">SoundCloud</string>
+    <string name="permission_required">Permission required</string>
+    <string name="playback_requires_permission">Spotify playback requires a permission to record audio.</string>
+    <string name="retry">retry</string>
 </resources>
