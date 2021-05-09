@@ -1,6 +1,5 @@
 package com.clipfinder.core.android.spotify.auth
 
-import android.util.Log
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.ext.mapSuccess
 import com.clipfinder.core.spotify.auth.ISpotifyPublicAuthenticator
@@ -11,6 +10,7 @@ import net.openid.appauth.AuthState
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import timber.log.Timber
 
 class SpotifyPublicAuthenticator(
     private val authorization: String,
@@ -22,7 +22,7 @@ class SpotifyPublicAuthenticator(
 
     @Synchronized
     private fun authenticatePublic(response: Response): Request {
-        Log.e("AUTH_PUB", "${response.code}: ${response.message}")
+        Timber.tag("AUTH_PUB").d("${response.code}: ${response.message}")
 
         val accessToken = preferences.publicAccessToken
         if (accessToken != null) return response.request.authorizedWith(accessToken)

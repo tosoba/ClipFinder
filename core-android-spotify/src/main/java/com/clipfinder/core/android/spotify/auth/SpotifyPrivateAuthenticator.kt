@@ -1,16 +1,16 @@
 package com.clipfinder.core.android.spotify.auth
 
-import android.util.Log
 import com.clipfinder.core.android.spotify.exception.NullAuthStateException
 import com.clipfinder.core.android.spotify.exception.UnknownRefreshTokenRequestException
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.spotify.auth.ISpotifyPrivateAuthenticator
 import com.clipfinder.core.spotify.ext.authorizedWith
+import java.util.concurrent.CountDownLatch
 import net.openid.appauth.AuthorizationService
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import java.util.concurrent.CountDownLatch
+import timber.log.Timber
 
 class SpotifyPrivateAuthenticator(
     private val preferences: SpotifyPreferences,
@@ -21,7 +21,7 @@ class SpotifyPrivateAuthenticator(
 
     @Synchronized
     private fun authorizePrivate(response: Response): Request {
-        Log.e("AUTH_PRIV", "${response.code}: ${response.message}")
+        Timber.tag("AUTH_PRIV").d("${response.code}: ${response.message}")
 
         val authState = preferences.authState ?: throw NullAuthStateException
         if (authState.accessToken != null && !authState.needsTokenRefresh) {
