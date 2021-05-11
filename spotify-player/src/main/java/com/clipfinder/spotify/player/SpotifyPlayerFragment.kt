@@ -514,14 +514,9 @@ class SpotifyPlayerFragment :
     private fun refreshBackgroundPlaybackNotificationIfShowing() {
         withState(viewModel) { state ->
             if (state.showingPlaybackNotification && state.playerMetadata?.currentTrack != null) {
-                refreshPlaybackNotification(state.playerMetadata.currentTrack)
+                showPlaybackNotification(state.playerMetadata.currentTrack)
             }
         }
-    }
-
-    private fun refreshPlaybackNotification(track: Metadata.Track) {
-        requireContext().notificationManager.cancel(PlaybackNotification.ID)
-        showPlaybackNotification(track)
     }
 
     private fun buildNotification(track: Metadata.Track, largeIcon: Bitmap?): Notification =

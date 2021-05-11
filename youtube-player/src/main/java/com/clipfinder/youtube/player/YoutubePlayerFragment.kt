@@ -325,13 +325,8 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
 
     private fun refreshBackgroundPlaybackNotificationIfShowing() {
         withState(viewModel) { state ->
-            if (state.showingPlaybackNotification) refreshPlaybackNotification()
+            if (state.showingPlaybackNotification) showPlaybackNotification()
         }
-    }
-
-    private fun refreshPlaybackNotification() {
-        requireContext().notificationManager.cancel(PlaybackNotification.ID)
-        showPlaybackNotification()
     }
 
     private fun buildNotification(state: YoutubePlayerState, largeIcon: Bitmap?): Notification =

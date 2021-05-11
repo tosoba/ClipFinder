@@ -65,7 +65,10 @@ class ClipFinderApp : Application() {
                         getString(R.string.channel_name),
                         NotificationManager.IMPORTANCE_DEFAULT
                     )
-                    .apply { description = getString(R.string.channel_description) }
+                    .apply {
+                        description = getString(R.string.channel_description)
+                        setSound(null, null)
+                    }
             )
     }
 
