@@ -48,6 +48,7 @@ kapt {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
     implementation 'androidx.core:core-ktx:1.3.2'
 
     implementation project(':core')
@@ -56,23 +57,22 @@ dependencies {
 
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-core-ext:$koinVersion"
+    implementation "org.koin:koin-androidx-ext:$koinVersion"
     implementation("org.koin:koin-androidx-scope:$koinVersion") {
         exclude group: 'org.jetbrains.kotlinx'
     }
-    implementation "org.koin:koin-androidx-ext:$koinVersion"
 
     implementation 'org.threeten:threetenbp:1.4.5'
 
+    implementation rootProject.ext.room
+    kapt "android.arch.persistence.room:compiler:2.0.0"
+    implementation 'androidx.room:room-rxjava2:2.3.0'
     implementation rootProject.ext.rxJava
 
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
     implementation 'com.google.http-client:google-http-client-gson:1.36.0'
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
-
-    implementation rootProject.ext.room
-    kapt "android.arch.persistence.room:compiler:2.0.0"
-    implementation 'androidx.room:room-rxjava2:2.2.5'
 
     implementation "com.squareup.moshi:moshi-kotlin:1.9.2"
     implementation "com.squareup.moshi:moshi-adapters:1.9.2"
@@ -81,7 +81,7 @@ dependencies {
     implementation "com.dropbox.mobile.store:store-rx2:$storeVersion"
     implementation "com.dropbox.mobile.store:store4:$storeVersion"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

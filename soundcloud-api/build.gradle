@@ -14,10 +14,9 @@ dependencies {
     implementation rootProject.ext.rxJava
 
     implementation 'com.neovisionaries:nv-i18n:1.25'
-
-    implementation 'com.squareup.retrofit2:converter-moshi:2.6.1'
-    implementation "com.squareup.okhttp3:logging-interceptor:4.4.0"
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.6.2'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation "org.koin:koin-core:$koinVersion"
     implementation "org.koin:koin-core-ext:$koinVersion"

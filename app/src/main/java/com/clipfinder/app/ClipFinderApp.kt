@@ -20,8 +20,8 @@ import com.clipfinder.soundcloud.api.di.soundCloudApiModule
 import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
 import com.clipfinder.spotify.api.di.spotifyApiModule
 import com.github.mikephil.charting.utils.Utils
-import com.squareup.leakcanary.LeakCanary
 import io.reactivex.plugins.RxJavaPlugins
+import leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -32,7 +32,6 @@ class ClipFinderApp : Application() {
         super.onCreate()
 
         initTimber()
-        //        initLeakCanary()
         initNotifications()
         initKoin()
 
@@ -50,10 +49,6 @@ class ClipFinderApp : Application() {
 
     private fun initTimber() {
         if (BuildConfig.DEBUG) Timber.plant(DebugTree())
-    }
-
-    private fun initLeakCanary() {
-        if (!LeakCanary.isInAnalyzerProcess(this)) LeakCanary.install(this)
     }
 
     private fun initNotifications() {
