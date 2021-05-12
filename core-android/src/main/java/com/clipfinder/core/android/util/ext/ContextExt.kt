@@ -8,7 +8,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.NetworkInfo
+import android.os.Build
 import android.util.DisplayMetrics
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -16,7 +18,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
-import com.spotify.sdk.android.player.Connectivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -45,21 +46,22 @@ inline fun Context.createAndRegisterReceiverFor(
         }
         .also { registerReceiver(it, filter) }
 
-@get:SuppressLint("MissingPermission")
-val Context.networkConnectivity: Connectivity
+val Context.isConnected: Boolean
     get() {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetworkInfo
-        return if (activeNetwork != null && activeNetwork.isConnected) {
-            Connectivity.fromNetworkType(activeNetwork.type)
+        @SuppressLint("MissingPermission")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
         } else {
-            Connectivity.OFFLINE
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnected
         }
     }
-
-val Context.isConnected: Boolean
-    get() = networkConnectivity != Connectivity.OFFLINE
 
 fun Context.isGranted(permission: String) =
     ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED

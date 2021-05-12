@@ -27,6 +27,7 @@ import com.clipfinder.core.android.spotify.base.SpotifyPlayerConnectionStateCall
 import com.clipfinder.core.android.spotify.base.SpotifyPlayerOperationLogCallback
 import com.clipfinder.core.android.spotify.base.SpotifyTrackChangeHandler
 import com.clipfinder.core.android.spotify.ext.id
+import com.clipfinder.core.android.spotify.ext.networkConnectivity
 import com.clipfinder.core.android.spotify.ext.summaryText
 import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.clipfinder.core.android.spotify.model.Album
