@@ -11,7 +11,7 @@ interface ISoundCloudRepo {
         genre: String,
         clientId: String
     ): Single<List<ISoundCloudTrack>>
-    fun getTracksFromPlaylist(id: String): Single<List<ISoundCloudTrack>>
-    fun getTracks(ids: List<String>): Single<List<ISoundCloudTrack>>
-    fun getSimilarTracks(id: String): Single<List<ISoundCloudTrack>>
+    fun getTracksFromPlaylist(id: String, clientId: String): Single<List<ISoundCloudTrack>>
+    fun getTracks(ids: List<String>, clientId: String): Single<List<ISoundCloudTrack>>
+    fun getSimilarTracks(id: String, clientId: String): Single<List<ISoundCloudTrack>>
 }

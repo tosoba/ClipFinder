@@ -22,12 +22,12 @@ class SoundCloudRepo(private val apiV2: SoundCloudApiV2, private val api: SoundC
     ): Single<List<ISoundCloudTrack>> =
         apiV2.featuredTracks(kind, genre, clientId).map(SoundCollectionResponse::collection)
 
-    override fun getTracksFromPlaylist(id: String): Single<List<ISoundCloudTrack>> =
-        api.getTracksFromPlaylist(id).map { it }
+    override fun getTracksFromPlaylist(id: String, clientId: String): Single<List<ISoundCloudTrack>> =
+        api.getTracksFromPlaylist(id, clientId = clientId).map { it }
 
-    override fun getTracks(ids: List<String>): Single<List<ISoundCloudTrack>> =
-        apiV2.getTracks(ids.joinToString(separator = ",")).map { it }
+    override fun getTracks(ids: List<String>, clientId: String): Single<List<ISoundCloudTrack>> =
+        apiV2.getTracks(ids.joinToString(separator = ","), clientId = clientId).map { it }
 
-    override fun getSimilarTracks(id: String): Single<List<ISoundCloudTrack>> =
-        apiV2.getRelatedTracks(id).map { it.collection ?: run(::emptyList) }
+    override fun getSimilarTracks(id: String, clientId: String): Single<List<ISoundCloudTrack>> =
+        apiV2.getRelatedTracks(id, clientId = clientId).map { it.collection ?: run(::emptyList) }
 }

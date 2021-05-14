@@ -10,6 +10,6 @@ interface SoundCloudApi {
     @GET("playlists/{id}/tracks")
     fun getTracksFromPlaylist(
         @Path("id") id: String,
-        @Query("client_id") clientId: String = SoundCloudAuth.key
+        @Query("client_id") clientId: String
     ): Single<List<SoundCloudTrack>>
 }

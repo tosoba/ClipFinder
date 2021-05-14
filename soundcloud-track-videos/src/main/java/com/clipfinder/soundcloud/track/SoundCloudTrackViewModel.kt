@@ -14,7 +14,6 @@ class SoundCloudTrackViewModel(
     initialState: SoundCloudTrackViewState,
     private val getSimilarTracks: GetSimilarTracks
 ) : MvRxViewModel<SoundCloudTrackViewState>(initialState) {
-
     fun loadSimilarTracks(id: Int) {
         getSimilarTracks(args = id.toString())
             .subscribeOn(Schedulers.io())

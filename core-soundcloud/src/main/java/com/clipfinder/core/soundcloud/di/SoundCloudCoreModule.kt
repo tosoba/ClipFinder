@@ -7,7 +7,7 @@ val soundCloudCoreModule = module {
     single { GetClientId(get(), get()) }
     single { GetMixedSelections(get(), get(), get(), get()) }
     single { GetFeaturedTracks(get(), get(), get(), get()) }
-    single { GetSimilarTracks(get()) }
-    single { GetTracks(get()) }
-    single { GetTracksFromPlaylist(get()) }
+    single { GetSimilarTracks(get(), get(), get(), get()) }
+    single { GetTracks(get(), get(), get(), get()) }
+    single { GetTracksFromPlaylist(get(), get(), get(), get()) }
 }

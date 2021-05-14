@@ -24,7 +24,6 @@ class SoundCloudPlaylistViewModel(
     private val getTracks: GetTracks,
     context: Context
 ) : MvRxViewModel<SoundCloudPlaylistState>(initialState) {
-
     init {
         loadData()
         handleConnectivityChanges(context)

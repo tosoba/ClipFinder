@@ -14,26 +14,26 @@ interface SoundCloudApiV2 {
     fun featuredTracks(
         @Path("kind") kind: String = "top",
         @Path("genre") genre: String = "all-music",
-        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("client_id") clientId: String,
         @Query("app_locale") locale: String = "us"
     ): Single<SoundCollectionResponse>
 
     @GET("mixed-selections")
     fun mixedSelections(
-        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("client_id") clientId: String,
         @Query("app_locale") locale: String = "us"
     ): Single<SoundCloudMixedSelectionsResponse>
 
     @GET("tracks")
     fun getTracks(
         @Query("ids") ids: String,
-        @Query("client_id") clientId: String = SoundCloudAuth.key,
+        @Query("client_id") clientId: String,
         @Query("app_locale") locale: String = "us"
     ): Single<List<SoundCloudTrack>>
 
     @GET("tracks/{id}/related")
     fun getRelatedTracks(
         @Path("id") id: String,
-        @Query("client_id") clientId: String = SoundCloudAuth.key
+        @Query("client_id") clientId: String
     ): Single<SoundCloudRelatedTracksResponse>
 }
