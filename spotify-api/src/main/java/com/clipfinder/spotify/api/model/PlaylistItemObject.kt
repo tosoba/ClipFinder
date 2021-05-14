@@ -54,7 +54,6 @@ enum class PlaylistItemType {
  * \"market\"}
  * @param trackNumber The number of the track. If an album has several discs, the track number is
  * the number on the specified disc.
- * @param type The object type: “track”.
  * @param uri The Spotify URI for the track.
  */
 data class TrackObject(
@@ -116,7 +115,6 @@ data class TrackObject(
  * \"month\", or \"day\".
  * @param resumePoint
  * @param show
- * @param type The object type: “episode”.
  * @param uri The Spotify URI for the episode.
  */
 data class EpisodeObject(

@@ -11,5 +11,5 @@ class TitledCustomCurrentStatePagerAdapter(
         fragmentManager,
         titledFragments.map { (_, fragment) -> fragment }.toTypedArray()
     ) {
-    override fun getPageTitle(position: Int): CharSequence? = titledFragments[position].first
+    override fun getPageTitle(position: Int): CharSequence = titledFragments[position].first
 }

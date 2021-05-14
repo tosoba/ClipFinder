@@ -181,8 +181,8 @@ class MainActivity :
                     binding.drawerNavigationView.menu.clear()
                     binding.drawerNavigationView.inflateMenu(R.menu.spotify_drawer_menu)
 
-                    val isLoggedIn = viewModel.isPrivateAuthorized
-                    binding.drawerNavigationView.menu?.apply {
+                    binding.drawerNavigationView.menu.apply {
+                        val isLoggedIn = viewModel.isPrivateAuthorized
                         findItem(R.id.drawer_action_login)?.isVisible = !isLoggedIn
                         findItem(R.id.drawer_action_logout)?.isVisible = isLoggedIn
                     }

@@ -73,7 +73,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentSpotifyArtistBinding.inflate(inflater, container, false)
 
         viewModel.selectSubscribe(this, SpotifyArtistViewState::isSavedAsFavourite) {

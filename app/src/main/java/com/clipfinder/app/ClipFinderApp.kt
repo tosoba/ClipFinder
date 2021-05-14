@@ -21,7 +21,6 @@ import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
 import com.clipfinder.spotify.api.di.spotifyApiModule
 import com.github.mikephil.charting.utils.Utils
 import io.reactivex.plugins.RxJavaPlugins
-import leakcanary.LeakCanary
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber

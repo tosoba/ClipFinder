@@ -19,7 +19,7 @@ class CircularVisualizerRenderer(
     private val amplification: Float = 1f,
     private val animator: NierAnimator = getDefaultAnimator()
 ) : IRenderer {
-    private var aggresive = 0.4f
+    private var aggressive = 0.4f
     private var modulation = 0.0
     private var angleModulation = 0f
     private lateinit var fftPoints: FloatArray
@@ -109,7 +109,7 @@ class CircularVisualizerRenderer(
         val cY = (rect.height() / 2).toDouble()
         val angle = cartesian[0].toDouble() * 2.0 * Math.PI
         val radius =
-            (rect.width() / 2 * (1 - aggresive) + aggresive * cartesian[1] / 2) *
+            (rect.width() / 2 * (1 - aggressive) + aggressive * cartesian[1] / 2) *
                 (1 - modulationStrength + modulationStrength * (1 + sin(modulation)) / 2)
         return floatArrayOf(
             (cX + radius * sin(angle + angleModulation)).toFloat(),
