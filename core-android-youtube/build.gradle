@@ -65,7 +65,7 @@ dependencies {
     implementation 'org.threeten:threetenbp:1.4.5'
 
     implementation rootProject.ext.room
-    kapt "android.arch.persistence.room:compiler:2.0.0"
+    kapt "androidx.room:room-compiler:2.3.0"
     implementation 'androidx.room:room-rxjava2:2.3.0'
     implementation rootProject.ext.rxJava
 
@@ -77,9 +77,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:1.9.2"
     implementation "com.squareup.moshi:moshi-adapters:1.9.2"
 
-    def storeVersion = "4.0.0-beta01"
-    implementation "com.dropbox.mobile.store:store-rx2:$storeVersion"
-    implementation "com.dropbox.mobile.store:store4:$storeVersion"
+    implementation "com.dropbox.mobile.store:store-rx2:4.0.1"
+    implementation "com.dropbox.mobile.store:store4:4.0.1"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

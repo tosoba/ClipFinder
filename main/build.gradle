@@ -41,7 +41,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation 'com.spotify.android:auth:1.0.0-alpha'
     implementation 'net.openid:appauth:0.7.1'

@@ -43,7 +43,6 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation project(':core')
     implementation project(':core-soundcloud')
@@ -74,7 +73,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
     implementation 'androidx.room:room-rxjava2:2.3.0'
     implementation rootProject.ext.room
-    kapt "android.arch.persistence.room:compiler:2.0.0"
+    kapt "androidx.room:room-compiler:2.3.0"
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "com.github.bumptech.glide:glide:4.11.0"

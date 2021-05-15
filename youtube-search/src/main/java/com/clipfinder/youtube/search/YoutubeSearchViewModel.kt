@@ -18,9 +18,9 @@ import com.google.api.services.youtube.model.SearchResult
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Single
+import java.math.BigInteger
 import org.koin.android.ext.android.get
 import timber.log.Timber
-import java.math.BigInteger
 
 private typealias State = YoutubeSearchState
 
@@ -68,9 +68,11 @@ class YoutubeSearchViewModel(
                                     copy(
                                         videos =
                                             Ready(
-                                                if (videos is WithValue)
+                                                if (videos is WithValue) {
                                                     videos.value.copyWith(newVideos, nextPageToken)
-                                                else PageTokenList(newVideos, nextPageToken)
+                                                } else {
+                                                    PageTokenList(newVideos, nextPageToken)
+                                                }
                                             )
                                     )
                                 }
