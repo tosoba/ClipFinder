@@ -101,14 +101,18 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/darker_gray</item>
         <item name="android:textColorTertiary">@android:color/darker_gray</item>
-        <item name="android:alertDialogTheme">@style/PreferenceDialogStyle</item>
+        <item name="alertDialogTheme">@style/PreferenceDialogStyle</item>
         <item name="android:actionBarSize">48dp</item>
-
         <item name="actionBarSize">48dp</item>
     </style>
 
-    <style name="PreferenceDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="android:background">@color/colorPrimaryDark</item>
+    <style name="PreferenceDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+        <item name="android:windowTitleStyle">@style/PreferenceDialogTitleStyle</item>
+        <item name="textColorAlertDialogListItem">@android:color/white</item>
+    </style>
+
+    <style name="PreferenceDialogTitleStyle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@android:color/white</item>
     </style>
 

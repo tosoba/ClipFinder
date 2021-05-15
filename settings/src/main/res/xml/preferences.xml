@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <ListPreference
         android:defaultValue="US"
         android:dialogIcon="@drawable/country"
         android:entries="@array/country_names"
         android:entryValues="@array/country_values"
         android:icon="@drawable/country"
-        android:key="@string/country"
+        android:key="@string/country_pref_key"
         android:summary="Select a country"
         android:title="@string/country" />
 
@@ -17,8 +16,7 @@
         android:entries="@array/language_names"
         android:entryValues="@array/language_values"
         android:icon="@drawable/language"
-        android:key="@string/language"
+        android:key="@string/language_pref_key"
         android:summary="Select a language"
         android:title="@string/language" />
-
 </PreferenceScreen>

@@ -75,7 +75,9 @@
     <string name="need_to_login_to_see_top_tracks_and_artists">You need to login to Spotify (with a premium account) to see your top tracks and artists.</string>
     <string name="no_video_playlists_created_yet">No video playlists created yet.</string>
     <string name="about">About</string>
+    <string name="country_pref_key">Country</string>
     <string name="country">Country</string>
+    <string name="language_pref_key">Language</string>
     <string name="language">Language</string>
     <string name="channel_name">Playback Notification Channel</string>
     <string name="channel_description">Playback channel</string>

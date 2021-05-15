@@ -4,22 +4,22 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.clipfinder.core.android.spotify.R
 import com.clipfinder.core.spotify.auth.ISpotifyTokensHolder
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import io.reactivex.Observable
 import net.openid.appauth.AuthState
 
 class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
+    private val countryPrefKey = context.getString(R.string.country_pref_key)
+    private val languagePrefKey = context.getString(R.string.language_pref_key)
+
     private val preferences: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context).apply {
-            if (!contains(Keys.PREF_KEY_COUNTRY.name) || !contains(Keys.PREF_KEY_LANGUAGE.name)) {
+            if (!contains(countryPrefKey) || !contains(languagePrefKey)) {
                 edit {
-                    if (!contains(Keys.PREF_KEY_COUNTRY.name)) {
-                        putString(Keys.PREF_KEY_COUNTRY.name, DEFAULT_COUNTRY)
-                    }
-                    if (!contains(Keys.PREF_KEY_LANGUAGE.name)) {
-                        putString(Keys.PREF_KEY_LANGUAGE.name, DEFAULT_LOCALE)
-                    }
+                    if (!contains(countryPrefKey)) putString(countryPrefKey, DEFAULT_COUNTRY)
+                    if (!contains(languagePrefKey)) putString(languagePrefKey, DEFAULT_LOCALE)
                 }
             }
         }
@@ -27,19 +27,18 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
     private val rxPreferences: RxSharedPreferences = RxSharedPreferences.create(preferences)
 
     val countryObservable: Observable<String>
-        get() = rxPreferences.getString(Keys.PREF_KEY_COUNTRY.name).asObservable()
+        get() = rxPreferences.getString(countryPrefKey).asObservable()
 
     val localeObservable: Observable<String>
-        get() = rxPreferences.getString(Keys.PREF_KEY_LANGUAGE.name).asObservable()
+        get() = rxPreferences.getString(languagePrefKey).asObservable()
 
     var country: String
-        get() =
-            preferences.getString(Keys.PREF_KEY_COUNTRY.name, DEFAULT_COUNTRY) ?: DEFAULT_COUNTRY
-        set(value) = preferences.edit { putString(Keys.PREF_KEY_COUNTRY.name, value) }
+        get() = preferences.getString(countryPrefKey, DEFAULT_COUNTRY) ?: DEFAULT_COUNTRY
+        set(value) = preferences.edit { putString(countryPrefKey, value) }
 
     var locale: String
-        get() = preferences.getString(Keys.PREF_KEY_LANGUAGE.name, DEFAULT_LOCALE) ?: DEFAULT_LOCALE
-        set(value) = preferences.edit { putString(Keys.PREF_KEY_LANGUAGE.name, value) }
+        get() = preferences.getString(languagePrefKey, DEFAULT_LOCALE) ?: DEFAULT_LOCALE
+        set(value) = preferences.edit { putString(languagePrefKey, value) }
 
     var authState: AuthState?
         get() =
@@ -98,8 +97,6 @@ class SpotifyPreferences(context: Context) : ISpotifyTokensHolder {
         PREF_KEY_PUBLIC_TOKEN,
         PREF_KEY_PUBLIC_TOKEN_EXPIRY_TIMESTAMP,
         PREF_KEY_AUTH_STATE,
-        PREF_KEY_COUNTRY,
-        PREF_KEY_LANGUAGE
     }
 
     companion object {

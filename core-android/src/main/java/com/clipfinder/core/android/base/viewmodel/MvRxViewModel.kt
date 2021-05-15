@@ -13,12 +13,13 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import kotlin.reflect.KProperty1
+import timber.log.Timber
 
-open class MvRxViewModel<S : MvRxState>(initialState: S, debugMode: Boolean = false) :
-    BaseMvRxViewModel<S>(initialState, debugMode) {
-
+abstract class MvRxViewModel<S : MvRxState>(
+    initialState: S,
+    debugMode: Boolean = false,
+) : BaseMvRxViewModel<S>(initialState, debugMode) {
     protected fun <C, T, I> loadPaged(
         prop: KProperty1<S, Loadable<C>>,
         action: (S) -> Single<Resource<Paged<I>>>,

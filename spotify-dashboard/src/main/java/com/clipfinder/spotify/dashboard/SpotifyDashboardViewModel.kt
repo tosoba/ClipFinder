@@ -32,7 +32,6 @@ class SpotifyDashboardViewModel(
     private val preferences: SpotifyPreferences,
     context: Context
 ) : MvRxViewModel<SpotifyDashboardState>(initialState) {
-
     init {
         loadCategories()
         loadFeaturedPlaylists()
@@ -70,6 +69,7 @@ class SpotifyDashboardViewModel(
                 preferences.localeObservable.skip(1).distinctUntilChanged()
             )
             .doOnNext {
+                setState { copy(categories = Empty, featuredPlaylists = Empty) }
                 loadCategories()
                 loadFeaturedPlaylists()
             }
