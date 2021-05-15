@@ -24,8 +24,8 @@ import com.clipfinder.soundcloud.databinding.FragmentSoundCloudTrackVideosBindin
 import com.clipfinder.soundcloud.track.SoundCloudTrackFragment
 import com.clipfinder.youtube.search.YoutubeSearchFragment
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 import com.wada811.lifecycledispose.disposeOnDestroy
+import kotlinx.android.synthetic.main.fragment_sound_cloud_track_videos.*
 
 class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
     private val argTrack: SoundCloudTrack by args()
@@ -64,7 +64,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
             pagerAdapter = pagerAdapter,
             onPageChangeListener = onPageChangeListener,
             onTabSelectedListener = onTabSelectedListener,
-            onFavouriteBtnClickListener = View.OnClickListener {}
+            onFavouriteBtnClickListener = {}
         )
     }
 

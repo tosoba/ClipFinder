@@ -29,7 +29,7 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
     private val epoxyController: TypedEpoxyController<SpotifyAccountTopState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedTypedController<SpotifyAccountTopState> { (userLoggedIn, tracks, artists) ->
+        injectedTypedController { (userLoggedIn, tracks, artists) ->
             fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column =
                 Column(map(buildItem))
 

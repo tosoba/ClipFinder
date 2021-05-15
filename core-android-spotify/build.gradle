@@ -51,7 +51,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     implementation project(':core')
     implementation project(':core-spotify')

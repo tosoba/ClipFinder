@@ -40,7 +40,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     private val epoxyController: TypedEpoxyController<SoundCloudDashboardState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedTypedController<SoundCloudDashboardState> { (selections) ->
+        injectedTypedController { (selections) ->
             when (selections) {
                 is LoadingInProgress -> loadingIndicator { id("loading-indicator") }
                 is Ready ->

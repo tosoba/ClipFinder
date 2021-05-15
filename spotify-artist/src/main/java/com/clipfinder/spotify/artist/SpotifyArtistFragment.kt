@@ -33,7 +33,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
     private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedTypedController<SpotifyArtistViewState> { (_, albums, topTracks, relatedArtists) ->
+        injectedTypedController { (_, albums, topTracks, relatedArtists) ->
             loadableCarouselWithHeader(
                 requireContext(),
                 albums,
@@ -87,7 +87,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
             binding.artistFavouriteFab.hideAndShow()
         }
 
-        val artist = MutableLiveData<Artist>(argArtist)
+        val artist = MutableLiveData(argArtist)
         viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
             artists.lastOrNull()?.let {
                 artist.value = it

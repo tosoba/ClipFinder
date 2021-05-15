@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.functions.BiFunction
 import java.util.concurrent.TimeUnit
 
 sealed class RetryStrategy(val attempts: Long)
@@ -23,7 +22,7 @@ fun <T> Single<T>.retry(strategy: RetryStrategy): Single<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
@@ -31,7 +30,7 @@ fun <T> Single<T>.retry(strategy: RetryStrategy): Single<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)
@@ -46,7 +45,7 @@ fun <T> Flowable<T>.retry(strategy: RetryStrategy): Flowable<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
@@ -54,7 +53,7 @@ fun <T> Flowable<T>.retry(strategy: RetryStrategy): Flowable<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)
@@ -69,7 +68,7 @@ fun <T> Observable<T>.retry(strategy: RetryStrategy): Observable<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Observable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { Observable.timer(strategy.delay, strategy.unit) }
             }
@@ -77,7 +76,7 @@ fun <T> Observable<T>.retry(strategy: RetryStrategy): Observable<T> =
             retryWhen { errors ->
                 errors.zipWith(
                         Observable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { attempt ->
                         Observable.timer(strategy.getDelay(attempt), strategy.unit)
@@ -92,7 +91,7 @@ fun Completable.retry(strategy: RetryStrategy): Completable =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
@@ -100,7 +99,7 @@ fun Completable.retry(strategy: RetryStrategy): Completable =
             retryWhen { errors ->
                 errors.zipWith(
                         Flowable.range(1, strategy.attempts.toInt()),
-                        BiFunction<Throwable, Int, Int> { _, attempt -> attempt }
+                        { _, attempt -> attempt }
                     )
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)

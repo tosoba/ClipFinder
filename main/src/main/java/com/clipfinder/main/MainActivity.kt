@@ -113,7 +113,7 @@ class MainActivity :
             fadeOnClickListener = fadeOnClickListener,
             slideListener = slideListener,
             initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-            onFavouriteBtnClickListener = View.OnClickListener {},
+            onFavouriteBtnClickListener = {},
             pagerAdapter = mainContentViewPagerAdapter,
             offScreenPageLimit = mainContentViewPagerAdapter.count - 1
         )
@@ -131,7 +131,7 @@ class MainActivity :
     }
 
     private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        DataBindingUtil.setContentView(this, R.layout.activity_main)
     }
 
     private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {

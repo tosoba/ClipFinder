@@ -132,7 +132,7 @@ class SpotifyPlayerFragment :
         }
     }
     private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf<IRenderer>(ColumnarVisualizerRenderer(visualizerPaint))
+        arrayOf(ColumnarVisualizerRenderer(visualizerPaint))
     }
     private var visualizerManager: NierVisualizerManager? = null
 

@@ -35,7 +35,7 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedTypedController<SpotifyAlbumViewState> { (_, artists, tracks) ->
+        injectedTypedController { (_, artists, tracks) ->
             loadableCarouselWithHeader(
                 requireContext(),
                 artists,

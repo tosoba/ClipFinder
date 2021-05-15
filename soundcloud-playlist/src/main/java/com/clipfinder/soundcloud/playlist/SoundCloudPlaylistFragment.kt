@@ -41,10 +41,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     }
 
     private val view: SoundCloudPlaylistView by lazy(LazyThreadSafetyMode.NONE) {
-        SoundCloudPlaylistView(
-            playlist = playlist,
-            onFavouriteBtnClickListener = View.OnClickListener {}
-        )
+        SoundCloudPlaylistView(playlist = playlist, onFavouriteBtnClickListener = {})
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

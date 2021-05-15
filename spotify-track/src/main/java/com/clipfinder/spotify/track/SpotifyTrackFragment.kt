@@ -33,7 +33,6 @@ import com.clipfinder.core.model.LoadingInProgress
 import com.clipfinder.core.model.Ready
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import java.math.BigDecimal
 import kotlin.reflect.KCallable
 import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
@@ -46,8 +45,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val epoxyController: TypedEpoxyController<SpotifyTrackViewState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {
-        injectedTypedController<SpotifyTrackViewState> {
-            (_, track, artists, similarTracks, audioFeaturesChartData) ->
+        injectedTypedController { (_, track, artists, similarTracks, audioFeaturesChartData) ->
             headerItem {
                 id("album-header")
                 text("Album")
@@ -122,11 +120,10 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                 xAxisView =
                                     RadarChartAxisView(
                                         typeface = typeface,
-                                        valueFormatter =
-                                            IAxisValueFormatter { value, _ ->
-                                                audioFeaturesChartLabels[
-                                                    value.toInt() % audioFeaturesChartLabels.size]
-                                            }
+                                        valueFormatter = { value, _ ->
+                                            audioFeaturesChartLabels[
+                                                value.toInt() % audioFeaturesChartLabels.size]
+                                        }
                                     ),
                                 yAxisView =
                                     RadarChartAxisView(

@@ -34,7 +34,7 @@ class SpotifyManualAuth(
             )
 
     fun sendTokenRequestFrom(dataIntent: Intent): Single<SpotifyAuthResponse> =
-        Single.create<SpotifyAuthResponse> { emitter ->
+        Single.create { emitter ->
             val authResponse = AuthorizationResponse.fromIntent(dataIntent)
             val authException = AuthorizationException.fromIntent(dataIntent)
 

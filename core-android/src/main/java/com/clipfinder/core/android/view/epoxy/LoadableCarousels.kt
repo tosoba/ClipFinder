@@ -79,7 +79,7 @@ inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
             val collection = loadable.value
             carousel {
                 id(idSuffix)
-                withModelsFrom<I>(
+                withModelsFrom(
                     items = mapToItems(collection),
                     extraModels =
                         when {
