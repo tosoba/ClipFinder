@@ -5,12 +5,15 @@ import com.clipfinder.core.android.youtube.api.YoutubeApi
 import com.clipfinder.core.android.youtube.db.YoutubeDb
 import com.clipfinder.core.android.youtube.db.model.SearchResponseEntity
 import com.clipfinder.core.android.youtube.repo.YoutubeRepo
+import com.clipfinder.core.ext.qualifier
 import com.clipfinder.core.youtube.api.IYoutubeApi
+import com.clipfinder.core.youtube.model.SearchType
 import com.clipfinder.core.youtube.repo.IYoutubeRepo
 import com.dropbox.android.external.store4.Fetcher
 import com.dropbox.android.external.store4.SourceOfTruth
 import com.dropbox.android.external.store4.Store
 import com.dropbox.android.external.store4.StoreBuilder
+import com.dropbox.store.rx2.getSingle
 import com.dropbox.store.rx2.ofMaybe
 import com.dropbox.store.rx2.ofSingle
 import com.google.api.client.http.javanet.NetHttpTransport
@@ -18,21 +21,51 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
 import io.reactivex.Completable
+import io.reactivex.Single
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.qualifier.Qualifier
-import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import org.threeten.bp.OffsetDateTime
 
-typealias YoutubeSearchStore = Store<Pair<String, String?>, SearchListResponse>
+typealias YoutubeRelatedVideosSearchStore =
+    Store<YoutubeRelatedVideosSearchStoreArgs, SearchListResponse>
+
+typealias YoutubeQuerySearchStore = Store<YoutubeQuerySearchStoreArgs, SearchListResponse>
+
+fun YoutubeQuerySearchStore.searchVideos(
+    query: String,
+    pageToken: String?
+): Single<SearchListResponse> =
+    getSingle(YoutubeQuerySearchStoreArgs(query, SearchType.video, pageToken))
+
+fun YoutubeRelatedVideosSearchStore.searchRelatedVideos(
+    videoId: String,
+    pageToken: String?
+): Single<SearchListResponse> = getSingle(YoutubeRelatedVideosSearchStoreArgs(videoId, pageToken))
+
+fun YoutubeQuerySearchStore.searchPlaylists(
+    query: String,
+    pageToken: String?
+): Single<SearchListResponse> =
+    getSingle(YoutubeQuerySearchStoreArgs(query, SearchType.playlist, pageToken))
+
+fun YoutubeQuerySearchStore.searchChannels(
+    query: String,
+    pageToken: String?
+): Single<SearchListResponse> =
+    getSingle(YoutubeQuerySearchStoreArgs(query, SearchType.channel, pageToken))
+
+data class YoutubeQuerySearchStoreArgs(
+    val query: String,
+    val type: SearchType,
+    val pageToken: String? = null
+)
+
+data class YoutubeRelatedVideosSearchStoreArgs(val query: String, val pageToken: String? = null)
 
 enum class YoutubeSearchStoreType {
     QUERY,
-    RELATED;
-
-    val qualifier: Qualifier
-        get() = named(name)
+    RELATED
 }
 
 val youtubeCoreAndroidModule = module {
@@ -44,34 +77,37 @@ val youtubeCoreAndroidModule = module {
 
     single(YoutubeSearchStoreType.QUERY.qualifier) {
         val dao = get<YoutubeDb>().searchDao()
-        StoreBuilder.from(
+        StoreBuilder.from<YoutubeQuerySearchStoreArgs, SearchListResponse, SearchListResponse>(
                 fetcher =
-                    Fetcher.ofSingle { key: Pair<String, String?> ->
-                        val (query, pageToken) = key
-                        get<IYoutubeApi>().search(query, pageToken)
+                    Fetcher.ofSingle { (query, searchType, pageToken) ->
+                        get<IYoutubeApi>().search(query, searchType, pageToken)
                     },
                 sourceOfTruth =
-                    SourceOfTruth.ofMaybe<
-                        Pair<String, String?>, SearchListResponse, SearchListResponse>(
-                        reader = { (query, pageToken) ->
-                            dao.selectByQueryAndPageToken(query, pageToken)
+                    SourceOfTruth.ofMaybe(
+                        reader = { (query, searchType, pageToken) ->
+                            dao.selectByQuerySearchTypeAndPageToken(query, searchType, pageToken)
                                 .map(SearchResponseEntity::content)
                         },
-                        writer = { (query, pageToken), content ->
+                        writer = { (query, searchType, pageToken), content ->
                             Completable.fromAction {
                                 dao.insert(
                                     SearchResponseEntity(
                                         query = query,
                                         pageToken = pageToken,
+                                        searchType = searchType,
                                         content = content,
                                         cachedAt = OffsetDateTime.now()
                                     )
                                 )
                             }
                         },
-                        delete = { (query, pageToken) ->
+                        delete = { (query, searchType, pageToken) ->
                             Completable.fromAction {
-                                dao.deleteByQueryAndPageToken(query, pageToken)
+                                dao.deleteByQuerySearchTypeAndPageToken(
+                                    query = query,
+                                    searchType = searchType,
+                                    pageToken = pageToken
+                                )
                             }
                         },
                         deleteAll = { Completable.fromAction(dao::deleteAll) }
@@ -82,15 +118,14 @@ val youtubeCoreAndroidModule = module {
 
     single(YoutubeSearchStoreType.RELATED.qualifier) {
         val dao = get<YoutubeDb>().searchDao()
-        StoreBuilder.from(
+        StoreBuilder.from<
+                YoutubeRelatedVideosSearchStoreArgs, SearchListResponse, SearchListResponse>(
                 fetcher =
-                    Fetcher.ofSingle { key: Pair<String, String?> ->
-                        val (videoId, pageToken) = key
+                    Fetcher.ofSingle { (videoId, pageToken) ->
                         get<IYoutubeApi>().searchRelatedVideos(videoId, pageToken)
                     },
                 sourceOfTruth =
-                    SourceOfTruth.ofMaybe<
-                        Pair<String, String?>, SearchListResponse, SearchListResponse>(
+                    SourceOfTruth.ofMaybe(
                         reader = { (videoId, pageToken) ->
                             dao.selectByRelatedVideoIdAndPageToken(videoId, pageToken)
                                 .map(SearchResponseEntity::content)
@@ -101,6 +136,7 @@ val youtubeCoreAndroidModule = module {
                                     SearchResponseEntity(
                                         pageToken = pageToken,
                                         content = content,
+                                        searchType = SearchType.video,
                                         cachedAt = OffsetDateTime.now(),
                                         relatedVideoId = relatedVideoId
                                     )
@@ -121,7 +157,7 @@ val youtubeCoreAndroidModule = module {
     single {
         YoutubeRepo(
             querySearchStore = get(YoutubeSearchStoreType.QUERY.qualifier),
-            relatedSearchStore = get(YoutubeSearchStoreType.RELATED.qualifier),
+            relatedVideosSearchStore = get(YoutubeSearchStoreType.RELATED.qualifier),
             searchDao = get<YoutubeDb>().searchDao()
         )
     } bind IYoutubeRepo::class

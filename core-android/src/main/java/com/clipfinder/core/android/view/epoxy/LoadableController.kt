@@ -10,6 +10,7 @@ import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.*
 import com.clipfinder.core.android.di.EpoxyHandlerType
+import com.clipfinder.core.ext.qualifier
 import com.clipfinder.core.model.*
 import kotlin.reflect.KProperty1
 import org.koin.android.ext.android.get
@@ -60,12 +61,13 @@ inline fun <I> EpoxyController.loadableCollection(
     crossinline clearFailure: () -> Unit,
     crossinline buildItem: (I) -> EpoxyModel<*>
 ) {
-    if (headerText != null)
+    if (headerText != null) {
         headerItem {
             id("items-header-$idSuffix")
             text(headerText)
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
+    }
 
     when (loadable) {
         is LoadingFirst -> loadingIndicator { id("loading-indicator-items-$idSuffix") }

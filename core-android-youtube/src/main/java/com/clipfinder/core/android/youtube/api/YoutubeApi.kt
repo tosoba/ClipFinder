@@ -3,6 +3,7 @@ package com.clipfinder.core.android.youtube.api
 import com.clipfinder.core.android.youtube.BuildConfig
 import com.clipfinder.core.android.youtube.ext.single
 import com.clipfinder.core.youtube.api.IYoutubeApi
+import com.clipfinder.core.youtube.model.SearchType
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
@@ -10,10 +11,14 @@ import io.reactivex.Single
 import timber.log.Timber
 
 class YoutubeApi(private val youtube: YouTube) : IYoutubeApi {
-    override fun search(query: String, pageToken: String?): Single<SearchListResponse> =
+    override fun search(
+        query: String,
+        searchType: SearchType,
+        pageToken: String?
+    ): Single<SearchListResponse> =
         youtube.Search()
             .list(listOf("snippet"))
-            .setType(listOf("video"))
+            .setType(listOf(searchType.name))
             .setKey(BuildConfig.YOUTUBE_API_KEY)
             .setQ(query)
             .run { pageToken?.let(::setPageToken) ?: this }
@@ -26,7 +31,7 @@ class YoutubeApi(private val youtube: YouTube) : IYoutubeApi {
     ): Single<SearchListResponse> =
         youtube.Search()
             .list(listOf("snippet"))
-            .setType(listOf("video"))
+            .setType(listOf(SearchType.video.name))
             .setKey(BuildConfig.YOUTUBE_API_KEY)
             .setRelatedToVideoId(videoId)
             .run { pageToken?.let(::setPageToken) ?: this }

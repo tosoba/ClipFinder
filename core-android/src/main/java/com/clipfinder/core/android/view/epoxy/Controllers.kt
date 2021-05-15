@@ -6,6 +6,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.MvRxState
 import com.clipfinder.core.android.di.EpoxyHandlerType
+import com.clipfinder.core.ext.qualifier
 import org.koin.android.ext.android.get
 
 inline fun <S : MvRxState> BaseMvRxFragment.injectedTypedController(

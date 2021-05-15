@@ -2,8 +2,7 @@ package com.clipfinder.core.android.di
 
 import android.os.Handler
 import android.os.HandlerThread
-import org.koin.core.qualifier.Qualifier
-import org.koin.core.qualifier.named
+import com.clipfinder.core.ext.qualifier
 import org.koin.dsl.module
 
 val epoxyModule = module {
@@ -17,8 +16,5 @@ val epoxyModule = module {
 
 enum class EpoxyHandlerType {
     DIFFER,
-    BUILDER;
-
-    val qualifier: Qualifier
-        get() = named(name)
+    BUILDER
 }

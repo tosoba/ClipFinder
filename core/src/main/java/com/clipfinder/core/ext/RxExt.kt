@@ -1,5 +1,6 @@
 package com.clipfinder.core.ext
 
+import com.clipfinder.core.model.Resource
 import io.reactivex.*
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -30,3 +31,6 @@ class Timeout(val limit: Long, val unit: TimeUnit) {
 
 fun Disposable.addTo(compositeDisposable: CompositeDisposable): Boolean =
     compositeDisposable.add(this)
+
+val <T : Any> Single<T>.resource: Single<Resource<T>>
+    get() = map { Resource.success(it) }.onErrorReturn { Resource.error(it) }

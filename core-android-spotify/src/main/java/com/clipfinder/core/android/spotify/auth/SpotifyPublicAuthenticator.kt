@@ -1,7 +1,7 @@
 package com.clipfinder.core.android.spotify.auth
 
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
-import com.clipfinder.core.ext.mapSuccess
+import com.clipfinder.core.ext.success
 import com.clipfinder.core.spotify.auth.ISpotifyPublicAuthenticator
 import com.clipfinder.core.spotify.ext.authorizedWith
 import com.clipfinder.spotify.api.endpoint.TokenEndpoints
@@ -30,7 +30,7 @@ class SpotifyPublicAuthenticator(
         val tokenResponse =
             tokenEndpoints
                 .getTokens(authorization = authorization, grantType = GrantType.CLIENT_CREDENTIALS)
-                .mapSuccess()
+                .success
                 .blockingGet()
 
         preferences.publicAccessToken = tokenResponse.accessToken

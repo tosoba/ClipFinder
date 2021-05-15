@@ -6,7 +6,7 @@ import com.clipfinder.core.youtube.usecase.SearchVideos
 import org.koin.dsl.module
 
 val youtubeCoreModule = module {
-    single { SearchVideos(get(), get()) }
+    single { SearchVideos(get()) }
     single { SearchRelatedVideos(get()) }
     single { ClearExpiredVideosSearchCache(get()) }
 }
