@@ -43,7 +43,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.spotify.android:auth:1.0.0-alpha'
-    implementation 'net.openid:appauth:0.7.1'
+    implementation 'net.openid:appauth:0.8.0'
     implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
     implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
 

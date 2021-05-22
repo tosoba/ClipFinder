@@ -84,7 +84,7 @@ dependencies {
     implementation rootProject.ext.retrofitScalarsConverter
     implementation rootProject.ext.retrofitRxJava2Adapter
 
-    implementation 'net.openid:appauth:0.7.1'
+    implementation 'net.openid:appauth:0.8.0'
     implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
 
     implementation "org.koin:koin-core:$koinVersion"
