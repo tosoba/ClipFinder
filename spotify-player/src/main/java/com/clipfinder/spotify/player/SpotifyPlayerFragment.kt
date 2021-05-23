@@ -1,6 +1,5 @@
 package com.clipfinder.spotify.player
 
-import android.Manifest
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Intent
@@ -33,9 +32,11 @@ import com.clipfinder.core.android.spotify.fragment.ISpotifyPlayerFragment
 import com.clipfinder.core.android.spotify.model.Album
 import com.clipfinder.core.android.spotify.model.Playlist
 import com.clipfinder.core.android.spotify.model.Track
+import com.clipfinder.core.android.spotify.player.SpotifyAudioTrackController
+import com.clipfinder.core.android.spotify.visualizer.datasource.SpotifyPlayerNVDataSource
+import com.clipfinder.core.android.spotify.visualizer.renderer.ColumnarVisualizerRenderer
 import com.clipfinder.core.android.util.ext.*
 import com.clipfinder.core.android.view.onSeekBarProgressChangeListener
-import com.clipfinder.core.android.view.visualizer.ColumnarVisualizerRenderer
 import com.clipfinder.core.ext.castAs
 import com.clipfinder.core.notification.PlaybackNotification
 import com.clipfinder.spotify.player.databinding.FragmentSpotifyPlayerBinding
@@ -43,7 +44,6 @@ import com.spotify.sdk.android.player.*
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.wada811.lifecycledispose.disposeOnDestroy
-import kotlin.math.pow
 import kotlinx.android.synthetic.main.fragment_spotify_player.*
 import me.bogerchan.niervisualizer.NierVisualizerManager
 import me.bogerchan.niervisualizer.renderer.IRenderer
@@ -139,37 +139,7 @@ class SpotifyPlayerFragment :
     private fun createNewVisualizerManager() {
         visualizerManager?.release()
         visualizerManager =
-            NierVisualizerManager().apply {
-                init(
-                    object : NierVisualizerManager.NVDataSource {
-                        private val audioBufferSize = 81920
-                        private val audioRecordByteBuffer by lazy { ByteArray(audioBufferSize / 2) }
-                        private val audioRecordShortBuffer by lazy {
-                            ShortArray(audioBufferSize / 2)
-                        }
-                        private val outputBuffer: ByteArray = ByteArray(512)
-
-                        override fun getDataSamplingInterval() = 0L
-                        override fun getDataLength() = outputBuffer.size
-                        override fun fetchFftData(): ByteArray {
-                            audioTrackController.audioBuffer.peek(audioRecordShortBuffer)
-                            audioRecordShortBuffer.forEachIndexed { index, sh ->
-                                audioRecordByteBuffer[index] = (sh / 2.0.pow(10.0)).toInt().toByte()
-                            }
-                            var bufferIndex = 0
-                            for (idx in
-                                audioRecordByteBuffer.indices step
-                                    (audioRecordByteBuffer.size / (outputBuffer.size))) {
-                                if (bufferIndex >= outputBuffer.size) break
-                                outputBuffer[bufferIndex++] = audioRecordByteBuffer[idx]
-                            }
-                            return outputBuffer
-                        }
-
-                        override fun fetchWaveData(): ByteArray? = null
-                    }
-                )
-            }
+            NierVisualizerManager().apply { init(SpotifyPlayerNVDataSource(audioTrackController)) }
     }
 
     override fun onCreateView(
@@ -476,15 +446,12 @@ class SpotifyPlayerFragment :
         playback_seek_bar?.progress = 0
         player?.playUri(SpotifyPlayerOperationLogCallback, uri, 0, 0)
 
-        if (context?.isGranted(Manifest.permission.RECORD_AUDIO) == true) {
-            createNewVisualizerManager()
-
-            // TODO: implement a mechanism which will return the surface views surrounding circular
-            // image views in fragments like the playlist fragment etc
-            // use a subject within MainActivity (or SpotifyMainFragment) and change visualizers
-            // accordingly
-            visualizerManager?.start(visualizer_surface_view, visualizerRenderers)
-        }
+        createNewVisualizerManager()
+        // TODO: implement a mechanism which will return the surface views surrounding circular
+        // image views in fragments like the playlist fragment etc
+        // use a subject within MainActivity (or SpotifyMainFragment) and change visualizers
+        // accordingly
+        visualizerManager?.start(visualizer_surface_view, visualizerRenderers)
     }
 
     private fun showPlaybackNotification(track: Metadata.Track) {

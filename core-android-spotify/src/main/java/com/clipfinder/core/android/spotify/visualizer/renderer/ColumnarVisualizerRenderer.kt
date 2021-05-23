@@ -1,18 +1,17 @@
-package com.clipfinder.core.android.view.visualizer
+package com.clipfinder.core.android.spotify.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
-import me.bogerchan.niervisualizer.renderer.IRenderer
 import kotlin.math.log10
 import kotlin.math.min
+import me.bogerchan.niervisualizer.renderer.IRenderer
 
 class ColumnarVisualizerRenderer(private val paint: Paint) : IRenderer {
     private val lastDrawArea = Rect()
     private lateinit var renderColumns: Array<RectF>
 
-    // per column' width equals to twice of gap
     private val gapRatio = 0.7F
     private val radius = 10F
 
@@ -35,7 +34,6 @@ class ColumnarVisualizerRenderer(private val paint: Paint) : IRenderer {
 
     private fun updateWave(data: ByteArray) {
         for (i in 0 until min(data.size / 2, renderColumns.size)) {
-            // Calculate dbValue
             val rfk = data[i]
             val ifk = data[i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()

@@ -1,4 +1,4 @@
-package com.clipfinder.spotify.player
+package com.clipfinder.core.android.spotify.player
 
 import android.annotation.TargetApi
 import android.media.AudioTrack

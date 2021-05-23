@@ -1,4 +1,4 @@
-package com.clipfinder.core.android.view.visualizer
+package com.clipfinder.core.android.spotify.visualizer.renderer
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -41,7 +41,6 @@ class CircularVisualizerRenderer(
         val drawHeight = drawArea.height()
 
         for (i in 0 until data.size / divisions) {
-            // Calculate dbValue
             val rfk = data[divisions * i]
             val ifk = data[divisions * i + 1]
             val magnitude = (rfk * rfk + ifk * ifk).toFloat()
