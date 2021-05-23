@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.args
@@ -64,15 +65,7 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
                 }
                 soundCloudPlaylistRecyclerView.apply {
                     setController(epoxyController)
-                    layoutManager =
-                        GridLayoutManager(
-                            context,
-                            if (resources.configuration.orientation ==
-                                    Configuration.ORIENTATION_LANDSCAPE
-                            )
-                                4
-                            else 3
-                        )
+                    layoutManager = this@SoundCloudPlaylistFragment.getLayoutManager()
                     setItemSpacingDp(5)
                 }
                 soundCloudPlaylistToolbar.setupWithBackNavigation(
@@ -81,6 +74,12 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
                 mainContentFragment?.enablePlayButton {}
             }
             .root
+
+    private fun getLayoutManager(): RecyclerView.LayoutManager =
+        GridLayoutManager(
+            context,
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+        )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = false
 

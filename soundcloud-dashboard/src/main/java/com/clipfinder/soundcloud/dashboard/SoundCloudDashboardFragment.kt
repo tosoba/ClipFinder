@@ -73,7 +73,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                     reloadControl {
                         id("reload-control")
                         onReloadClicked { _ -> viewModel.loadSelections() }
-                        message("Error occurred lmao") // TODO: better error msg
+                        message(requireContext().getString(R.string.error_occurred))
                     }
             }
         }

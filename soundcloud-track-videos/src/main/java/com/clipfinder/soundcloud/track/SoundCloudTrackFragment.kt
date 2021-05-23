@@ -23,8 +23,6 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
 
-    // TODO: connectivityComponent
-
     private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by lazy(
         LazyThreadSafetyMode.NONE
     ) {

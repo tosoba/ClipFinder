@@ -438,11 +438,6 @@ class SpotifyPlayerFragment :
         activity?.castAs<SlidingPanelController>()?.expandIfHidden()
         playback_seek_bar?.progress = 0
         player?.playUri(SpotifyPlayerOperationLogCallback, uri, 0, 0)
-
-        // TODO: implement a mechanism which will return the surface views surrounding circular
-        // image views in fragments like the playlist fragment etc
-        // use a subject within MainActivity (or SpotifyMainFragment) and change visualizers
-        // accordingly
         visualizerManager.start(visualizer_surface_view, visualizerRenderers)
     }
 
