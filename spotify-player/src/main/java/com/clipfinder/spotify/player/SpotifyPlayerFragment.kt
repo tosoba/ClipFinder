@@ -78,10 +78,10 @@ class SpotifyPlayerFragment :
             withState(viewModel) {
                 if (it.playbackState?.isPlaying == true) {
                     player?.pause(SpotifyPlayerOperationLogCallback)
-                    visualizerManager?.pause()
+                    visualizerManager.pause()
                 } else {
                     player?.resume(SpotifyPlayerOperationLogCallback)
-                    visualizerManager?.resume()
+                    visualizerManager.resume()
                 }
             }
         }
@@ -134,12 +134,8 @@ class SpotifyPlayerFragment :
     private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
         arrayOf(ColumnarVisualizerRenderer(visualizerPaint))
     }
-    private var visualizerManager: NierVisualizerManager? = null
-
-    private fun createNewVisualizerManager() {
-        visualizerManager?.release()
-        visualizerManager =
-            NierVisualizerManager().apply { init(SpotifyPlayerNVDataSource(audioTrackController)) }
+    private val visualizerManager: NierVisualizerManager by lazy(LazyThreadSafetyMode.NONE) {
+        NierVisualizerManager().apply { init(SpotifyPlayerNVDataSource(audioTrackController)) }
     }
 
     override fun onCreateView(
@@ -186,7 +182,7 @@ class SpotifyPlayerFragment :
     override fun onStart() {
         super.onStart()
         cancelPlaybackNotification()
-        if (player?.playbackState?.isPlaying == true) visualizerManager?.resume()
+        if (player?.playbackState?.isPlaying == true) visualizerManager.resume()
     }
 
     override fun onStop() {
@@ -201,7 +197,7 @@ class SpotifyPlayerFragment :
             viewModel.updatePlayerNotificationState(true)
             showPlaybackNotification(currentTrack!!)
         }
-        visualizerManager?.pause()
+        visualizerManager.pause()
         super.onStop()
     }
 
@@ -215,19 +211,19 @@ class SpotifyPlayerFragment :
         player?.removeConnectionStateCallback(this)
         Spotify.destroyPlayer(this)
 
-        visualizerManager?.release()
+        visualizerManager.release()
 
         super.onDestroy()
     }
 
     override fun onDragging() {
         visualizer_surface_view?.hideIfShowing()
-        visualizerManager?.pause()
+        visualizerManager.pause()
     }
 
     override fun onExpanded() {
         visualizer_surface_view?.showIfHidden()
-        visualizerManager?.resume()
+        visualizerManager.resume()
     }
 
     override fun onHidden() {
@@ -446,12 +442,11 @@ class SpotifyPlayerFragment :
         playback_seek_bar?.progress = 0
         player?.playUri(SpotifyPlayerOperationLogCallback, uri, 0, 0)
 
-        createNewVisualizerManager()
         // TODO: implement a mechanism which will return the surface views surrounding circular
         // image views in fragments like the playlist fragment etc
         // use a subject within MainActivity (or SpotifyMainFragment) and change visualizers
         // accordingly
-        visualizerManager?.start(visualizer_surface_view, visualizerRenderers)
+        visualizerManager.start(visualizer_surface_view, visualizerRenderers)
     }
 
     private fun showPlaybackNotification(track: Metadata.Track) {
