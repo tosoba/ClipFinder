@@ -231,7 +231,7 @@ class SpotifyPlayerFragment :
     }
 
     override fun onPlaybackError(error: Error?) {
-        Timber.tag("PLAY_ERR").e("onPlaybackError: ${error?.name ?: "error unknown"}")
+        Timber.tag("PLAYBACK_ERROR").e(error?.name ?: "Unknown error")
     }
 
     private fun updatePlayback() {
@@ -328,7 +328,7 @@ class SpotifyPlayerFragment :
                             }
 
                             override fun onError(error: Throwable) {
-                                Timber.tag("PLAYER").e("Error: ${error.message ?: "unknown"}")
+                                Timber.tag("PLAYER_ERROR").e(error.message ?: "Unknown error")
                             }
                         }
                     )
@@ -370,7 +370,7 @@ class SpotifyPlayerFragment :
     }
 
     override fun onLoggedOut() {
-        Toast.makeText(requireContext(), "You logged out", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "You logged out.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onLoggedIn() {
@@ -378,21 +378,18 @@ class SpotifyPlayerFragment :
     }
 
     override fun onConnectionMessage(message: String?) {
-        Timber.tag("onConnectionMessage: ").e(message ?: "Unknown connection message.")
+        Timber.tag("CONNECTION_MSG").e(message ?: "Unknown connection message.")
     }
 
     override fun onLoginFailed(error: Error?) {
-        Timber.e("onLoginFailed")
-        Toast.makeText(
-                requireContext(),
-                "Login failed: ${error?.name ?: "error unknown"}",
-                Toast.LENGTH_SHORT
-            )
+        val errorDescription = error?.name ?: "unknown error"
+        Timber.tag("LOGIN_FAILED").e(errorDescription)
+        Toast.makeText(requireContext(), "Login failed: $errorDescription", Toast.LENGTH_SHORT)
             .show()
     }
 
     override fun onTemporaryError() {
-        Timber.tag("ERR").e("onTemporaryError")
+        Timber.tag("TEMP_ERROR").e("Temporary error occurred")
     }
 
     override fun invalidate() = Unit
