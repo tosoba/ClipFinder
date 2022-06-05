@@ -32,41 +32,40 @@ class SpotifyAlbumFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAlbumViewModel by fragmentViewModel()
     private val album: Album by args()
 
-    private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (_, artists, tracks) ->
-            loadableCarouselWithHeader(
-                requireContext(),
-                artists,
-                R.string.artists,
-                "artists",
-                viewModel::loadAlbumsArtists,
-                viewModel::clearArtistsError
-            ) { artist ->
-                artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
-            }
+    private val epoxyController: TypedEpoxyController<SpotifyAlbumViewState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (_, artists, tracks) ->
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    artists,
+                    R.string.artists,
+                    "artists",
+                    viewModel::loadAlbumsArtists,
+                    viewModel::clearArtistsError
+                ) { artist ->
+                    artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
+                }
 
-            loadableCollection(
-                requireContext(),
-                tracks,
-                getString(R.string.tracks),
-                "tracks",
-                viewModel::loadTracksFromAlbum,
-                viewModel::loadTracksFromAlbum,
-                viewModel::clearTracksError
-            ) { track ->
-                TrackPopularityItemBindingModel_()
-                    .id(track.id)
-                    .track(track)
-                    .onClickListener(
-                        View.OnClickListener {
-                            show { factory.newSpotifyTrackVideosFragment(track) }
-                        }
-                    )
+                loadableCollection(
+                    requireContext(),
+                    tracks,
+                    getString(R.string.tracks),
+                    "tracks",
+                    viewModel::loadTracksFromAlbum,
+                    viewModel::loadTracksFromAlbum,
+                    viewModel::clearTracksError
+                ) { track ->
+                    TrackPopularityItemBindingModel_()
+                        .id(track.id)
+                        .track(track)
+                        .onClickListener(
+                            View.OnClickListener {
+                                show { factory.newSpotifyTrackVideosFragment(track) }
+                            }
+                        )
+                }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

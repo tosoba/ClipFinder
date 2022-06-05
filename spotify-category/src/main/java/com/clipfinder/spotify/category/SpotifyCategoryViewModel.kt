@@ -52,8 +52,7 @@ class SpotifyCategoryViewModel(
     }
 
     private fun handlePreferencesChanges() {
-        preferences
-            .countryObservable
+        preferences.countryObservable
             .skip(1)
             .distinctUntilChanged()
             .doOnNext { clear.accept(Unit) }

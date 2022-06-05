@@ -16,27 +16,27 @@ class YoutubeApi(private val youtube: YouTube) : IYoutubeApi {
         searchType: SearchType,
         pageToken: String?
     ): Single<SearchListResponse> =
-        youtube.Search()
+        youtube
+            .Search()
             .list(listOf("snippet"))
             .setType(listOf(searchType.name))
             .setKey(BuildConfig.YOUTUBE_API_KEY)
             .setQ(query)
             .run { pageToken?.let(::setPageToken) ?: this }
-            .single
-            .logOnSuccess
+            .single.logOnSuccess
 
     override fun searchRelatedVideos(
         videoId: String,
         pageToken: String?
     ): Single<SearchListResponse> =
-        youtube.Search()
+        youtube
+            .Search()
             .list(listOf("snippet"))
             .setType(listOf(SearchType.video.name))
             .setKey(BuildConfig.YOUTUBE_API_KEY)
             .setRelatedToVideoId(videoId)
             .run { pageToken?.let(::setPageToken) ?: this }
-            .single
-            .logOnSuccess
+            .single.logOnSuccess
 
     private val <T> Single<T>.logOnSuccess: Single<T>
         get() = run {

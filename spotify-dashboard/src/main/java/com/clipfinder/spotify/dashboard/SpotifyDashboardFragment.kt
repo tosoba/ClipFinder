@@ -33,79 +33,82 @@ class SpotifyDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     override val toolbar: Toolbar
         get() = binding.dashboardToolbar
 
-    private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (categories, playlists, topTracks, newReleases) ->
-            fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column =
-                Column(map(buildItem))
+    private val epoxyController: TypedEpoxyController<SpotifyDashboardState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (categories, playlists, topTracks, newReleases) ->
+                fun <I> Collection<I>.column(buildItem: (I) -> EpoxyModel<*>): Column =
+                    Column(map(buildItem))
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                categories,
-                R.string.categories,
-                "categories",
-                viewModel::loadCategories,
-                viewModel::clearCategoriesError,
-                { it.chunked(2) }
-            ) { chunk ->
-                chunk.column { category ->
-                    category.clickableListItem {
-                        show { navDestinations.newSpotifyCategoryFragment(category) }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    categories,
+                    R.string.categories,
+                    "categories",
+                    viewModel::loadCategories,
+                    viewModel::clearCategoriesError,
+                    { it.chunked(2) }
+                ) { chunk ->
+                    chunk.column { category ->
+                        category.clickableListItem {
+                            show { navDestinations.newSpotifyCategoryFragment(category) }
+                        }
                     }
                 }
-            }
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                playlists,
-                R.string.featured_playlists,
-                "playlists",
-                viewModel::loadFeaturedPlaylists,
-                viewModel::clearFeaturedPlaylistsError,
-                { it.chunked(2) }
-            ) { chunk ->
-                chunk.column { playlist ->
-                    playlist.clickableListItem {
-                        show { navDestinations.newSpotifyPlaylistFragment(playlist) }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    playlists,
+                    R.string.featured_playlists,
+                    "playlists",
+                    viewModel::loadFeaturedPlaylists,
+                    viewModel::clearFeaturedPlaylistsError,
+                    { it.chunked(2) }
+                ) { chunk ->
+                    chunk.column { playlist ->
+                        playlist.clickableListItem {
+                            show { navDestinations.newSpotifyPlaylistFragment(playlist) }
+                        }
                     }
                 }
-            }
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                newReleases,
-                R.string.new_releases,
-                "releases",
-                viewModel::loadNewReleases,
-                viewModel::clearNewReleasesError,
-                { it.chunked(2) }
-            ) { chunk ->
-                chunk.column { album ->
-                    album.clickableListItem {
-                        show { navDestinations.newSpotifyAlbumFragment(album) }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    newReleases,
+                    R.string.new_releases,
+                    "releases",
+                    viewModel::loadNewReleases,
+                    viewModel::clearNewReleasesError,
+                    { it.chunked(2) }
+                ) { chunk ->
+                    chunk.column { album ->
+                        album.clickableListItem {
+                            show { navDestinations.newSpotifyAlbumFragment(album) }
+                        }
                     }
                 }
-            }
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                topTracks,
-                R.string.top_tracks,
-                "top-tracks",
-                viewModel::loadViralTracks,
-                viewModel::clearViralTracksError,
-                { it.chunked(2) }
-            ) { chunk ->
-                chunk.column { topTrack ->
-                    TopTrackItemBindingModel_().id(topTrack.track.id).track(topTrack).itemClicked {
-                        _ ->
-                        show { navDestinations.newSpotifyTrackVideosFragment(topTrack.track) }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    topTracks,
+                    R.string.top_tracks,
+                    "top-tracks",
+                    viewModel::loadViralTracks,
+                    viewModel::clearViralTracksError,
+                    { it.chunked(2) }
+                ) { chunk ->
+                    chunk.column { topTrack ->
+                        TopTrackItemBindingModel_()
+                            .id(topTrack.track.id)
+                            .track(topTrack)
+                            .itemClicked { _ ->
+                                show {
+                                    navDestinations.newSpotifyTrackVideosFragment(topTrack.track)
+                                }
+                            }
                     }
                 }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -58,22 +58,23 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
             stopPlaybackAndNullifyLastPlayedItems()
         }
 
-    private val closeBtn: ImageButton by lazy(LazyThreadSafetyMode.NONE) {
-        ImageButton(context).apply {
-            setImageResource(R.drawable.close)
-            layoutParams =
-                RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    .apply {
-                        setMargins(10, 10, 10, 10)
-                        addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-                    }
-            setOnClickListener(onCloseBtnClickListener)
-            setBackgroundColor(Color.TRANSPARENT)
+    private val closeBtn: ImageButton by
+        lazy(LazyThreadSafetyMode.NONE) {
+            ImageButton(context).apply {
+                setImageResource(R.drawable.close)
+                layoutParams =
+                    RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                        )
+                        .apply {
+                            setMargins(10, 10, 10, 10)
+                            addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                        }
+                setOnClickListener(onCloseBtnClickListener)
+                setBackgroundColor(Color.TRANSPARENT)
+            }
         }
-    }
 
     private val playlistYoutubePlayerStateChangeListener =
         object : AbstractYouTubePlayerListener() {
@@ -107,7 +108,8 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                         )
                         refreshBackgroundPlaybackNotificationIfShowing()
                     }
-                    PlayerConstants.PlayerState.PAUSED, PlayerConstants.PlayerState.ENDED -> {
+                    PlayerConstants.PlayerState.PAUSED,
+                    PlayerConstants.PlayerState.ENDED -> {
                         viewModel.updatePlaybackState(inProgress = false)
                         youtube_player_play_pause_when_collapsed_btn?.setImageResource(
                             R.drawable.play
@@ -302,13 +304,17 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
                     url = currentVideo.thumbnailUrl,
                     onError = {
                         requireContext()
-                            .notificationManager
-                            .notify(PlaybackNotification.ID, buildNotification(state, null))
+                            .notificationManager.notify(
+                                PlaybackNotification.ID,
+                                buildNotification(state, null)
+                            )
                     },
                     onSuccess = { bitmap ->
                         requireContext()
-                            .notificationManager
-                            .notify(PlaybackNotification.ID, buildNotification(state, bitmap))
+                            .notificationManager.notify(
+                                PlaybackNotification.ID,
+                                buildNotification(state, bitmap)
+                            )
                     }
                 )
                 .disposeOnDestroy(this)

@@ -30,8 +30,7 @@ class SpotifyPublicAuthenticator(
         val tokenResponse =
             tokenEndpoints
                 .getTokens(authorization = authorization, grantType = GrantType.CLIENT_CREDENTIALS)
-                .success
-                .blockingGet()
+                .success.blockingGet()
 
         preferences.publicAccessToken = tokenResponse.accessToken
         preferences.publicAccessTokenExpiryTimestamp =

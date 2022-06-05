@@ -46,27 +46,29 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
             }
         }
 
-    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CustomCurrentStatePagerAdapter(
-            fragmentManager = childFragmentManager,
-            fragments =
-                arrayOf(
-                    YoutubeSearchFragment.newInstanceWithQuery(argTrack.title),
-                    SoundCloudTrackFragment.new(argTrack)
-                )
-        )
-    }
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            CustomCurrentStatePagerAdapter(
+                fragmentManager = childFragmentManager,
+                fragments =
+                    arrayOf(
+                        YoutubeSearchFragment.newInstanceWithQuery(argTrack.title),
+                        SoundCloudTrackFragment.new(argTrack)
+                    )
+            )
+        }
 
-    private val view: TrackVideosViewBinding<SoundCloudTrack> by lazy(LazyThreadSafetyMode.NONE) {
-        TrackVideosViewBinding(
-            fragmentTabs = arrayOf("Clips", "Similar"),
-            track = MutableLiveData(argTrack),
-            pagerAdapter = pagerAdapter,
-            onPageChangeListener = onPageChangeListener,
-            onTabSelectedListener = onTabSelectedListener,
-            onFavouriteBtnClickListener = {}
-        )
-    }
+    private val view: TrackVideosViewBinding<SoundCloudTrack> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            TrackVideosViewBinding(
+                fragmentTabs = arrayOf("Clips", "Similar"),
+                track = MutableLiveData(argTrack),
+                pagerAdapter = pagerAdapter,
+                onPageChangeListener = onPageChangeListener,
+                onTabSelectedListener = onTabSelectedListener,
+                onFavouriteBtnClickListener = {}
+            )
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,8 +81,7 @@ class SoundCloudTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler {
             tracks.lastOrNull()?.let { track ->
                 view.track.value = track
                 track.artworkUrl?.let {
-                    binding
-                        .soundCloudTrackVideosToolbarGradientBackgroundView
+                    binding.soundCloudTrackVideosToolbarGradientBackgroundView
                         .loadBackgroundGradient(it)
                         .disposeOnDestroy(this)
                 }

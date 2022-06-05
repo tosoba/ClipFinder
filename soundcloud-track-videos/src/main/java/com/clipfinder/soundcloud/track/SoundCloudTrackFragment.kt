@@ -23,16 +23,15 @@ class SoundCloudTrackFragment : BaseMvRxFragment() {
     private val viewModel: SoundCloudTrackViewModel by fragmentViewModel()
     private val parentViewModel: SoundCloudTrackVideosViewModel by parentFragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        loadableCollectionController(
-            SoundCloudTrackViewState::similarTracks,
-            headerText = "Similar tracks",
-            reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) ?: Unit },
-            clearFailure = viewModel::clearTracksError
-        ) { track -> track.clickableListItem { parentViewModel.updateTrack(track) } }
-    }
+    private val epoxyController: TypedEpoxyController<SoundCloudTrackViewState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            loadableCollectionController(
+                SoundCloudTrackViewState::similarTracks,
+                headerText = "Similar tracks",
+                reloadClicked = { track?.id?.let(viewModel::loadSimilarTracks) ?: Unit },
+                clearFailure = viewModel::clearTracksError
+            ) { track -> track.clickableListItem { parentViewModel.updateTrack(track) } }
+        }
 
     var track: SoundCloudTrack? = null
         set(value) {

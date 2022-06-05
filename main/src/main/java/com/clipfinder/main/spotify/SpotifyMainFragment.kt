@@ -36,15 +36,16 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
             return@OnNavigationItemSelectedListener true
         }
 
-    private val pagerAdapter: CustomCurrentStatePagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CustomCurrentStatePagerAdapter(
-            childFragmentManager,
-            arrayOf(
-                fragmentFactory.newSpotifyDashboardNavHostFragment,
-                fragmentFactory.newSpotifyAccountNavHostFragment
+    private val pagerAdapter: CustomCurrentStatePagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            CustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(
+                    fragmentFactory.newSpotifyDashboardNavHostFragment,
+                    fragmentFactory.newSpotifyAccountNavHostFragment
+                )
             )
-        )
-    }
+        }
 
     private val onPageChangeListener: OnPageChangeListener =
         object : OnPageChangeListener {
@@ -63,14 +64,15 @@ class SpotifyMainFragment : Fragment(), IMainContentFragment {
     override val playButton: FloatingActionButton
         get() = spotify_play_fab
 
-    private val view: SpotifyMainView by lazy(LazyThreadSafetyMode.NONE) {
-        SpotifyMainView(
-            onNavigationItemSelectedListener = onNavigationItemSelectedListener,
-            pagerAdapter = pagerAdapter,
-            onPageChangeListener = onPageChangeListener,
-            offScreenPageLimit = 2
-        )
-    }
+    private val view: SpotifyMainView by
+        lazy(LazyThreadSafetyMode.NONE) {
+            SpotifyMainView(
+                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+                pagerAdapter = pagerAdapter,
+                onPageChangeListener = onPageChangeListener,
+                offScreenPageLimit = 2
+            )
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,

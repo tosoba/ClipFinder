@@ -26,35 +26,36 @@ class SpotifyAccountPlaylistsFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAccountPlaylistsViewModel by fragmentViewModel()
     private lateinit var binding: FragmentSpotifyAccountPlaylistsBinding
 
-    private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        loadableCollectionController(
-            SpotifyAccountPlaylistState::playlists,
-            loadMore = viewModel::loadPlaylists,
-            shouldOverrideBuildModels = { (userLoggedIn, playlists) ->
-                !userLoggedIn && playlists is Empty
-            },
-            overrideBuildModels = {
-                LargeTextCenterBindingModel_()
-                    .id("spotify-account-playlists-user-not-logged-in")
-                    .text(getString(R.string.spotify_login_required))
-                    .spanSizeOverride { _, _, _ ->
-                        if (resources.configuration.orientation ==
-                                Configuration.ORIENTATION_LANDSCAPE
-                        )
-                            4
-                        else 3
+    private val epoxyController: TypedEpoxyController<SpotifyAccountPlaylistState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            loadableCollectionController(
+                SpotifyAccountPlaylistState::playlists,
+                loadMore = viewModel::loadPlaylists,
+                shouldOverrideBuildModels = { (userLoggedIn, playlists) ->
+                    !userLoggedIn && playlists is Empty
+                },
+                overrideBuildModels = {
+                    LargeTextCenterBindingModel_()
+                        .id("spotify-account-playlists-user-not-logged-in")
+                        .text(getString(R.string.spotify_login_required))
+                        .spanSizeOverride { _, _, _ ->
+                            if (resources.configuration.orientation ==
+                                    Configuration.ORIENTATION_LANDSCAPE
+                            )
+                                4
+                            else 3
+                        }
+                        .addTo(this)
+                },
+                reloadClicked = viewModel::loadPlaylists,
+                clearFailure = viewModel::clearPlaylistsError,
+                buildItem = { playlist ->
+                    playlist.clickableListItem {
+                        show { factory.newSpotifyPlaylistFragment(playlist) }
                     }
-                    .addTo(this)
-            },
-            reloadClicked = viewModel::loadPlaylists,
-            clearFailure = viewModel::clearPlaylistsError,
-            buildItem = { playlist ->
-                playlist.clickableListItem { show { factory.newSpotifyPlaylistFragment(playlist) } }
-            }
-        )
-    }
+                }
+            )
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,

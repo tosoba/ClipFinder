@@ -30,44 +30,43 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
     private val viewModel: SpotifyArtistViewModel by fragmentViewModel()
     private val factory: ISpotifyFragmentsFactory by inject()
 
-    private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (_, albums, topTracks, relatedArtists) ->
-            loadableCarouselWithHeader(
-                requireContext(),
-                albums,
-                R.string.albums,
-                "albums",
-                { viewModel.loadAlbumsFromArtist() },
-                viewModel::clearAlbumsError
-            ) { album ->
-                album.clickableListItem { show { factory.newSpotifyAlbumFragment(album) } }
-            }
+    private val epoxyController: TypedEpoxyController<SpotifyArtistViewState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (_, albums, topTracks, relatedArtists) ->
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    albums,
+                    R.string.albums,
+                    "albums",
+                    { viewModel.loadAlbumsFromArtist() },
+                    viewModel::clearAlbumsError
+                ) { album ->
+                    album.clickableListItem { show { factory.newSpotifyAlbumFragment(album) } }
+                }
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                relatedArtists,
-                R.string.related_artists,
-                "related-artists",
-                viewModel::loadRelatedArtists,
-                viewModel::clearTopTracksError
-            ) { artist -> artist.clickableListItem { viewModel.updateArtist(artist) } }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    relatedArtists,
+                    R.string.related_artists,
+                    "related-artists",
+                    viewModel::loadRelatedArtists,
+                    viewModel::clearTopTracksError
+                ) { artist -> artist.clickableListItem { viewModel.updateArtist(artist) } }
 
-            loadableCarouselWithHeader(
-                requireContext(),
-                topTracks,
-                R.string.top_tracks,
-                "top-tracks",
-                viewModel::loadTopTracksFromArtist,
-                viewModel::clearRelatedArtistsError
-            ) { topTrack ->
-                topTrack.clickableListItem {
-                    show { factory.newSpotifyTrackVideosFragment(topTrack) }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    topTracks,
+                    R.string.top_tracks,
+                    "top-tracks",
+                    viewModel::loadTopTracksFromArtist,
+                    viewModel::clearRelatedArtistsError
+                ) { topTrack ->
+                    topTrack.clickableListItem {
+                        show { factory.newSpotifyTrackVideosFragment(topTrack) }
+                    }
                 }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,8 +90,7 @@ class SpotifyArtistFragment : BaseMvRxFragment(), BackPressedHandler {
         viewModel.selectSubscribe(this, SpotifyArtistViewState::artists) { artists ->
             artists.lastOrNull()?.let {
                 artist.value = it
-                binding
-                    .artistToolbarGradientBackgroundView
+                binding.artistToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()

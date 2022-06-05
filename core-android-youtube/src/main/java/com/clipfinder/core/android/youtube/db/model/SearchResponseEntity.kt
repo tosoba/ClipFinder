@@ -13,7 +13,8 @@ import org.threeten.bp.OffsetDateTime
     indices =
         [
             Index(value = ["query", "page_token"], unique = true),
-            Index(value = ["related_video_id", "page_token"], unique = true)]
+            Index(value = ["related_video_id", "page_token"], unique = true)
+        ]
 )
 data class SearchResponseEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

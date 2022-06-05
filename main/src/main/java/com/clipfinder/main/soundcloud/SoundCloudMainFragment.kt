@@ -36,12 +36,13 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
             return@OnNavigationItemSelectedListener true
         }
 
-    private val pagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        CustomCurrentStatePagerAdapter(
-            childFragmentManager,
-            arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment)
-        )
-    }
+    private val pagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            CustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(fragmentFactory.newSoundCloudDashboardNavHostFragment)
+            )
+        }
 
     private val onPageChangeListener =
         object : OnPageChangeListener {
@@ -60,14 +61,15 @@ class SoundCloudMainFragment : Fragment(), IMainContentFragment {
     override val playButton: FloatingActionButton
         get() = sound_cloud_play_fab
 
-    private val view: SoundCloudMainView by lazy(LazyThreadSafetyMode.NONE) {
-        SoundCloudMainView(
-            onNavigationItemSelectedListener = onNavigationItemSelectedListener,
-            pagerAdapter = pagerAdapter,
-            onPageChangeListener = onPageChangeListener,
-            offScreenPageLimit = 1
-        )
-    }
+    private val view: SoundCloudMainView by
+        lazy(LazyThreadSafetyMode.NONE) {
+            SoundCloudMainView(
+                onNavigationItemSelectedListener = onNavigationItemSelectedListener,
+                pagerAdapter = pagerAdapter,
+                onPageChangeListener = onPageChangeListener,
+                offScreenPageLimit = 1
+            )
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,

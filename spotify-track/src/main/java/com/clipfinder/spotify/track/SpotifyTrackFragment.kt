@@ -33,112 +33,116 @@ import com.clipfinder.core.model.LoadingInProgress
 import com.clipfinder.core.model.Ready
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
-import java.math.BigDecimal
-import kotlin.reflect.KCallable
 import kotlinx.android.synthetic.main.fragment_spotify_track.view.*
 import org.koin.android.ext.android.inject
+import java.math.BigDecimal
+import kotlin.reflect.KCallable
 
 class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyTrackViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<SpotifyTrackViewState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (_, track, artists, similarTracks, audioFeaturesChartData) ->
-            headerItem {
-                id("album-header")
-                text("Album")
-            }
+    private val epoxyController: TypedEpoxyController<SpotifyTrackViewState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (_, track, artists, similarTracks, audioFeaturesChartData) ->
+                headerItem {
+                    id("album-header")
+                    text("Album")
+                }
 
-            when (track) {
-                is LoadingInProgress -> loadingIndicator { id("loading-indicator-album") }
-                is Failed ->
-                    reloadControl {
-                        id("albums-reload-control")
-                        onReloadClicked { _ -> viewModel.loadTrack() }
-                        message(requireContext().getString(R.string.error_occurred))
-                    }
-                is Ready ->
-                    track
-                        .value
-                        .album
-                        .infoItem { show { factory.newSpotifyAlbumFragment(track.value.album) } }
-                        .addTo(this)
-            }
-
-            loadableCarouselWithHeader(
-                requireContext(),
-                artists,
-                R.string.artists,
-                "track-artists",
-                viewModel::loadArtists,
-                viewModel::clearArtistsError
-            ) { artist ->
-                artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
-            }
-
-            loadableCarouselWithHeader(
-                requireContext(),
-                similarTracks,
-                R.string.similar_tracks,
-                "similar-tracks",
-                viewModel::loadSimilarTracks,
-                viewModel::clearSimilarTracksError,
-                { it.chunked(2) }
-            ) { chunk ->
-                Column(
-                    chunk.map { track ->
-                        track.clickableListItem {
-                            findAncestorFragmentOfType<SpotifyTrackController>()?.updateTrack(track)
+                when (track) {
+                    is LoadingInProgress -> loadingIndicator { id("loading-indicator-album") }
+                    is Failed ->
+                        reloadControl {
+                            id("albums-reload-control")
+                            onReloadClicked { _ -> viewModel.loadTrack() }
+                            message(requireContext().getString(R.string.error_occurred))
                         }
-                    }
-                )
-            }
+                    is Ready ->
+                        track.value.album
+                            .infoItem {
+                                show { factory.newSpotifyAlbumFragment(track.value.album) }
+                            }
+                            .addTo(this)
+                }
 
-            headerItem {
-                id("audio-features-header")
-                text("Audio features")
-            }
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    artists,
+                    R.string.artists,
+                    "track-artists",
+                    viewModel::loadArtists,
+                    viewModel::clearArtistsError
+                ) { artist ->
+                    artist.clickableListItem { show { factory.newSpotifyArtistFragment(artist) } }
+                }
 
-            when (audioFeaturesChartData) {
-                is LoadingInProgress -> loadingIndicator { id("loading-indicator-audio-features") }
-                is Failed ->
-                    reloadControl {
-                        id("audio-features-reload-control")
-                        onReloadClicked { _ -> viewModel.loadAudioFeatures() }
-                        message(requireContext().getString(R.string.error_occurred))
-                    }
-                is Ready ->
-                    radarChart {
-                        val typeface =
-                            Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf")
-                        id("audio-features-radar-chart")
-                        view(
-                            RadarChartView(
-                                audioFeaturesChartData.value,
-                                xAxisView =
-                                    RadarChartAxisView(
-                                        typeface = typeface,
-                                        valueFormatter = { value, _ ->
-                                            audioFeaturesChartLabels[
-                                                value.toInt() % audioFeaturesChartLabels.size]
-                                        }
-                                    ),
-                                yAxisView =
-                                    RadarChartAxisView(
-                                        typeface = typeface,
-                                        axisMaximum = 1f,
-                                        drawLabels = false
-                                    ),
-                                markerView =
-                                    RadarMarkerView(requireContext(), R.layout.radar_marker_view)
+                loadableCarouselWithHeader(
+                    requireContext(),
+                    similarTracks,
+                    R.string.similar_tracks,
+                    "similar-tracks",
+                    viewModel::loadSimilarTracks,
+                    viewModel::clearSimilarTracksError,
+                    { it.chunked(2) }
+                ) { chunk ->
+                    Column(
+                        chunk.map { track ->
+                            track.clickableListItem {
+                                findAncestorFragmentOfType<SpotifyTrackController>()
+                                    ?.updateTrack(track)
+                            }
+                        }
+                    )
+                }
+
+                headerItem {
+                    id("audio-features-header")
+                    text("Audio features")
+                }
+
+                when (audioFeaturesChartData) {
+                    is LoadingInProgress ->
+                        loadingIndicator { id("loading-indicator-audio-features") }
+                    is Failed ->
+                        reloadControl {
+                            id("audio-features-reload-control")
+                            onReloadClicked { _ -> viewModel.loadAudioFeatures() }
+                            message(requireContext().getString(R.string.error_occurred))
+                        }
+                    is Ready ->
+                        radarChart {
+                            val typeface =
+                                Typeface.createFromAsset(activity?.assets, "OpenSans-Regular.ttf")
+                            id("audio-features-radar-chart")
+                            view(
+                                RadarChartView(
+                                    audioFeaturesChartData.value,
+                                    xAxisView =
+                                        RadarChartAxisView(
+                                            typeface = typeface,
+                                            valueFormatter = { value, _ ->
+                                                audioFeaturesChartLabels[
+                                                    value.toInt() % audioFeaturesChartLabels.size]
+                                            }
+                                        ),
+                                    yAxisView =
+                                        RadarChartAxisView(
+                                            typeface = typeface,
+                                            axisMaximum = 1f,
+                                            drawLabels = false
+                                        ),
+                                    markerView =
+                                        RadarMarkerView(
+                                            requireContext(),
+                                            R.layout.radar_marker_view
+                                        )
+                                )
                             )
-                        )
-                    }
+                        }
+                }
             }
         }
-    }
 
     override fun onNewTrack(track: Track) = viewModel.onNewTrack(track)
 

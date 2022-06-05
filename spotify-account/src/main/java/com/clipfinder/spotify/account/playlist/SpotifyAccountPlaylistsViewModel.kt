@@ -28,8 +28,7 @@ class SpotifyAccountPlaylistsViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences
-            .isPrivateAuthorizedObservable
+        preferences.isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
                 if (it) withState { (_, playlists) -> if (playlists is Empty) loadPlaylists() }

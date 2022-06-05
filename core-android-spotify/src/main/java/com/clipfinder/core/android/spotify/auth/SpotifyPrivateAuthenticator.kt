@@ -5,12 +5,12 @@ import com.clipfinder.core.android.spotify.exception.UnknownRefreshTokenRequestE
 import com.clipfinder.core.android.spotify.preferences.SpotifyPreferences
 import com.clipfinder.core.spotify.auth.ISpotifyPrivateAuthenticator
 import com.clipfinder.core.spotify.ext.authorizedWith
-import java.util.concurrent.CountDownLatch
 import net.openid.appauth.AuthorizationService
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
 import timber.log.Timber
+import java.util.concurrent.CountDownLatch
 
 class SpotifyPrivateAuthenticator(
     private val preferences: SpotifyPreferences,

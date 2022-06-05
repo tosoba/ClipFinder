@@ -25,11 +25,12 @@ import kotlinx.android.synthetic.main.fragment_sound_cloud_player.*
 import kotlinx.android.synthetic.main.fragment_sound_cloud_player.view.*
 
 class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
-    private val exoPlayer: SimpleExoPlayer by lazy(LazyThreadSafetyMode.NONE) {
-        ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector()).apply {
-            playWhenReady = true
+    private val exoPlayer: SimpleExoPlayer by
+        lazy(LazyThreadSafetyMode.NONE) {
+            ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector()).apply {
+                playWhenReady = true
+            }
         }
-    }
 
     private var lastTrack: SoundCloudTrack? = null
 

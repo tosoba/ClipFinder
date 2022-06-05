@@ -84,84 +84,88 @@ class MainActivity :
 
     private val youtubePlayerFragment: IYoutubePlayerFragment?
         get() =
-            supportFragmentManager.findFragmentById(R.id.youtube_player_fragment) as?
-                IYoutubePlayerFragment
+            supportFragmentManager.findFragmentById(R.id.youtube_player_fragment)
+                as? IYoutubePlayerFragment
 
     private val spotifyPlayerFragment: ISpotifyPlayerFragment?
         get() =
-            supportFragmentManager.findFragmentById(R.id.spotify_player_fragment) as?
-                ISpotifyPlayerFragment
+            supportFragmentManager.findFragmentById(R.id.spotify_player_fragment)
+                as? ISpotifyPlayerFragment
 
     private val soundCloudPlayerFragment: ISoundCloudPlayerFragment?
         get() =
-            supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment) as?
-                ISoundCloudPlayerFragment
+            supportFragmentManager.findFragmentById(R.id.sound_cloud_player_fragment)
+                as? ISoundCloudPlayerFragment
 
     private val spotifyTrackFragment: SpotifyTrackFragment?
         get() =
-            supportFragmentManager.findFragmentById(R.id.spotify_track_fragment) as?
-                SpotifyTrackFragment
+            supportFragmentManager.findFragmentById(R.id.spotify_track_fragment)
+                as? SpotifyTrackFragment
 
     private val relatedVideosFragment: ISearchFragment?
         get() =
-            supportFragmentManager.findFragmentById(R.id.related_videos_fragment) as?
-                ISearchFragment
+            supportFragmentManager.findFragmentById(R.id.related_videos_fragment)
+                as? ISearchFragment
 
-    private val view: MainView by lazy(LazyThreadSafetyMode.NONE) {
-        MainView(
-            onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
-            fadeOnClickListener = fadeOnClickListener,
-            slideListener = slideListener,
-            initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
-            onFavouriteBtnClickListener = {},
-            pagerAdapter = mainContentViewPagerAdapter,
-            offScreenPageLimit = mainContentViewPagerAdapter.count - 1
-        )
-    }
+    private val view: MainView by
+        lazy(LazyThreadSafetyMode.NONE) {
+            MainView(
+                onDrawerNavigationItemSelectedListener = onDrawerNavigationItemSelectedListener,
+                fadeOnClickListener = fadeOnClickListener,
+                slideListener = slideListener,
+                initialSlidePanelState = SlidingUpPanelLayout.PanelState.HIDDEN,
+                onFavouriteBtnClickListener = {},
+                pagerAdapter = mainContentViewPagerAdapter,
+                offScreenPageLimit = mainContentViewPagerAdapter.count - 1
+            )
+        }
 
     private var searchViewMenuItem: MenuItem? = null
 
-    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        CustomCurrentStatePagerAdapter(
-            supportFragmentManager,
-            arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
-        )
-    }
-
-    private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DataBindingUtil.setContentView(this, R.layout.activity_main)
-    }
-
-    private val drawerHeaderBinding: DrawerHeaderBinding by lazy(LazyThreadSafetyMode.NONE) {
-        DrawerHeaderBinding.inflate(LayoutInflater.from(this), binding.drawerNavigationView, false)
-    }
-
-    private val loginDrawerClosedListener: OnNavigationDrawerClosedListener by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        object : OnNavigationDrawerClosedListener {
-            override fun onDrawerClosed(drawerView: View) {
-                if (!isPlayerLoggedIn) startLoginActivity()
-                main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
-            }
+    private val mainContentViewPagerAdapter: CustomCurrentStatePagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            CustomCurrentStatePagerAdapter(
+                supportFragmentManager,
+                arrayOf(SpotifyMainFragment(), SoundCloudMainFragment())
+            )
         }
-    }
 
-    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListener by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        object : OnNavigationDrawerClosedListener {
-            override fun onDrawerClosed(drawerView: View) {
-                if (isPlayerLoggedIn) {
-                    viewModel.onLoggedOut()
-                    logOutPlayer()
+    private val binding: ActivityMainBinding by
+        lazy(LazyThreadSafetyMode.NONE) {
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
+        }
+
+    private val drawerHeaderBinding: DrawerHeaderBinding by
+        lazy(LazyThreadSafetyMode.NONE) {
+            DrawerHeaderBinding.inflate(
+                LayoutInflater.from(this),
+                binding.drawerNavigationView,
+                false
+            )
+        }
+
+    private val loginDrawerClosedListener: OnNavigationDrawerClosedListener by
+        lazy(LazyThreadSafetyMode.NONE) {
+            object : OnNavigationDrawerClosedListener {
+                override fun onDrawerClosed(drawerView: View) {
+                    if (!isPlayerLoggedIn) startLoginActivity()
+                    main_drawer_layout?.removeDrawerListener(loginDrawerClosedListener)
                 }
-                main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
             }
         }
-    }
+
+    private val logoutDrawerClosedListener: OnNavigationDrawerClosedListener by
+        lazy(LazyThreadSafetyMode.NONE) {
+            object : OnNavigationDrawerClosedListener {
+                override fun onDrawerClosed(drawerView: View) {
+                    if (isPlayerLoggedIn) {
+                        viewModel.onLoggedOut()
+                        logOutPlayer()
+                    }
+                    main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
+                }
+            }
+        }
 
     private val onDrawerNavigationItemSelectedListener =
         NavigationView.OnNavigationItemSelectedListener { item ->
@@ -259,16 +263,13 @@ class MainActivity :
 
     private var currentSlideOffset: Float = 0.0f
 
-    private val playerMaxVerticalHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
-        (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt()
-    }
-    private val minimumPlayerHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
-        dpToPx(minimumPlayerHeightDp.toFloat()).toInt()
-    }
+    private val playerMaxVerticalHeight: Int by
+        lazy(LazyThreadSafetyMode.NONE) { (dpToPx(screenHeight.toFloat()) / 5 * 2).toInt() }
+    private val minimumPlayerHeight: Int by
+        lazy(LazyThreadSafetyMode.NONE) { dpToPx(minimumPlayerHeightDp.toFloat()).toInt() }
 
-    private val youtubePlayerMaxHorizontalHeight: Int by lazy(LazyThreadSafetyMode.NONE) {
-        dpToPx(screenHeight.toFloat()).toInt()
-    }
+    private val youtubePlayerMaxHorizontalHeight: Int by
+        lazy(LazyThreadSafetyMode.NONE) { dpToPx(screenHeight.toFloat()).toInt() }
 
     private val spotifyAuth: SpotifyManualAuth by inject()
     override val isPlayerLoggedIn: Boolean

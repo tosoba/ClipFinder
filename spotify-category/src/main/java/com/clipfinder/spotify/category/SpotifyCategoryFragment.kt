@@ -29,20 +29,21 @@ class SpotifyCategoryFragment : BaseMvRxFragment() {
     private val factory: ISpotifyFragmentsFactory by inject()
     private val viewModel: SpotifyCategoryViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        val loadPlaylists = { viewModel.loadPlaylists() }
-        loadableCollectionController(
-            SpotifyCategoryState::playlists,
-            headerText = getString(R.string.playlists),
-            loadMore = loadPlaylists,
-            clearFailure = viewModel::clearPlaylistsError,
-            reloadClicked = loadPlaylists
-        ) { playlist ->
-            playlist.clickableGridListItem { show { factory.newSpotifyPlaylistFragment(playlist) } }
+    private val epoxyController: TypedEpoxyController<SpotifyCategoryState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            val loadPlaylists = { viewModel.loadPlaylists() }
+            loadableCollectionController(
+                SpotifyCategoryState::playlists,
+                headerText = getString(R.string.playlists),
+                loadMore = loadPlaylists,
+                clearFailure = viewModel::clearPlaylistsError,
+                reloadClicked = loadPlaylists
+            ) { playlist ->
+                playlist.clickableGridListItem {
+                    show { factory.newSpotifyPlaylistFragment(playlist) }
+                }
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

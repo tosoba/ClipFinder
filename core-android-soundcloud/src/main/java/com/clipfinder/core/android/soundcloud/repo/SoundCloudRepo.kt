@@ -9,9 +9,10 @@ import com.clipfinder.soundcloud.api.model.collection.SoundCollectionResponse
 import com.clipfinder.soundcloud.api.model.mixed.selections.SoundCloudMixedSelectionsResponse
 import io.reactivex.Single
 
-class SoundCloudRepo(private val apiV2: SoundCloudApiV2, private val api: SoundCloudApi) :
-    ISoundCloudRepo {
-
+class SoundCloudRepo(
+    private val apiV2: SoundCloudApiV2,
+    private val api: SoundCloudApi,
+) : ISoundCloudRepo {
     override fun mixedSelections(clientId: String): Single<List<ISoundCloudPlaylistSelection>> =
         apiV2.mixedSelections(clientId).map(SoundCloudMixedSelectionsResponse::collection)
 
@@ -22,7 +23,10 @@ class SoundCloudRepo(private val apiV2: SoundCloudApiV2, private val api: SoundC
     ): Single<List<ISoundCloudTrack>> =
         apiV2.featuredTracks(kind, genre, clientId).map(SoundCollectionResponse::collection)
 
-    override fun getTracksFromPlaylist(id: String, clientId: String): Single<List<ISoundCloudTrack>> =
+    override fun getTracksFromPlaylist(
+        id: String,
+        clientId: String
+    ): Single<List<ISoundCloudTrack>> =
         api.getTracksFromPlaylist(id, clientId = clientId).map { it }
 
     override fun getTracks(ids: List<String>, clientId: String): Single<List<ISoundCloudTrack>> =

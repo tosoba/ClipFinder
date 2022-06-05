@@ -32,14 +32,14 @@ private val <T : R, E : Any, R : Any> NetworkResponse<T, E>.resource: Resource<R
         }
 
 fun <T : Any, E : Any, R> Single<NetworkResponse<T, E>>.mapSuccess(finisher: T.() -> R): Single<R> =
-        flatMap { response ->
-    when (response) {
-        is NetworkResponse.Success -> Single.just(response.body.finisher())
-        is NetworkResponse.NetworkError -> Single.error(response.error)
-        is NetworkResponse.ServerError -> Single.error(ThrowableServerError(response))
-        is NetworkResponse.DifferentError -> Single.error(response.error)
+    flatMap { response ->
+        when (response) {
+            is NetworkResponse.Success -> Single.just(response.body.finisher())
+            is NetworkResponse.NetworkError -> Single.error(response.error)
+            is NetworkResponse.ServerError -> Single.error(ThrowableServerError(response))
+            is NetworkResponse.DifferentError -> Single.error(response.error)
+        }
     }
-}
 
 val <T : Any, E : Any> Single<NetworkResponse<T, E>>.success: Single<T>
     get() = flatMap { response ->

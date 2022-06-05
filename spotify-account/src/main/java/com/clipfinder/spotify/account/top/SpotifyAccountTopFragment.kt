@@ -26,56 +26,55 @@ class SpotifyAccountTopFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAccountTopViewModel by fragmentViewModel()
     private lateinit var binding: FragmentSpotifyAccountTopBinding
 
-    private val epoxyController: TypedEpoxyController<SpotifyAccountTopState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (userLoggedIn, tracks, artists) ->
-            fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column =
-                Column(map(buildItem))
+    private val epoxyController: TypedEpoxyController<SpotifyAccountTopState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (userLoggedIn, tracks, artists) ->
+                fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column =
+                    Column(map(buildItem))
 
-            if (!userLoggedIn && tracks is Empty && artists is Empty)
-                largeTextCenter {
-                    id("spotify-account-top-user-not-logged-in")
-                    text(getString(R.string.spotify_login_required))
-                }
-            else {
-                fun <T> chunkedIntoColumns(collection: Collection<T>): List<List<T>> =
-                    collection.chunked(2)
+                if (!userLoggedIn && tracks is Empty && artists is Empty)
+                    largeTextCenter {
+                        id("spotify-account-top-user-not-logged-in")
+                        text(getString(R.string.spotify_login_required))
+                    }
+                else {
+                    fun <T> chunkedIntoColumns(collection: Collection<T>): List<List<T>> =
+                        collection.chunked(2)
 
-                loadableCarouselWithHeader(
-                    requireContext(),
-                    artists,
-                    R.string.artists,
-                    "top-artists",
-                    viewModel::loadArtists,
-                    viewModel::clearArtistsError,
-                    ::chunkedIntoColumns
-                ) { chunk ->
-                    chunk.column { artist ->
-                        artist.clickableListItem {
-                            show { factory.newSpotifyArtistFragment(artist) }
+                    loadableCarouselWithHeader(
+                        requireContext(),
+                        artists,
+                        R.string.artists,
+                        "top-artists",
+                        viewModel::loadArtists,
+                        viewModel::clearArtistsError,
+                        ::chunkedIntoColumns
+                    ) { chunk ->
+                        chunk.column { artist ->
+                            artist.clickableListItem {
+                                show { factory.newSpotifyArtistFragment(artist) }
+                            }
                         }
                     }
-                }
 
-                loadableCarouselWithHeader(
-                    requireContext(),
-                    tracks,
-                    R.string.track_videos,
-                    "top-tracks",
-                    viewModel::loadTracks,
-                    viewModel::clearTracksError,
-                    ::chunkedIntoColumns
-                ) { chunk ->
-                    chunk.column { track ->
-                        track.clickableListItem {
-                            show { factory.newSpotifyTrackVideosFragment(track) }
+                    loadableCarouselWithHeader(
+                        requireContext(),
+                        tracks,
+                        R.string.track_videos,
+                        "top-tracks",
+                        viewModel::loadTracks,
+                        viewModel::clearTracksError,
+                        ::chunkedIntoColumns
+                    ) { chunk ->
+                        chunk.column { track ->
+                            track.clickableListItem {
+                                show { factory.newSpotifyTrackVideosFragment(track) }
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

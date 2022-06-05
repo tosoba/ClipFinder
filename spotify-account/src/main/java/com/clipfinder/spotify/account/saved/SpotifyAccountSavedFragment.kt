@@ -26,54 +26,55 @@ class SpotifyAccountSavedFragment : BaseMvRxFragment() {
     private val viewModel: SpotifyAccountSavedViewModel by fragmentViewModel()
     private lateinit var binding: FragmentSpotifyAccountSavedBinding
 
-    private val epoxyController: TypedEpoxyController<SpotifyAccountSavedState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (userLoggedIn, tracks, albums) ->
-            fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column =
-                Column(map(buildItem))
+    private val epoxyController: TypedEpoxyController<SpotifyAccountSavedState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (userLoggedIn, tracks, albums) ->
+                fun <Item> Collection<Item>.column(buildItem: (Item) -> EpoxyModel<*>): Column =
+                    Column(map(buildItem))
 
-            if (!userLoggedIn && tracks is Empty && albums is Empty)
-                largeTextCenter {
-                    id("spotify-account-saved-user-not-logged-in")
-                    text(getString(R.string.spotify_login_required))
-                }
-            else {
-                fun <T> chunkedIntoColumns(collection: Collection<T>): List<List<T>> =
-                    collection.chunked(2)
-
-                loadableCarouselWithHeader(
-                    requireContext(),
-                    albums,
-                    R.string.albums,
-                    "saved-albums",
-                    viewModel::loadAlbums,
-                    viewModel::clearAlbumsError,
-                    ::chunkedIntoColumns
-                ) { chunk ->
-                    chunk.column { album ->
-                        album.clickableListItem { show { factory.newSpotifyAlbumFragment(album) } }
+                if (!userLoggedIn && tracks is Empty && albums is Empty)
+                    largeTextCenter {
+                        id("spotify-account-saved-user-not-logged-in")
+                        text(getString(R.string.spotify_login_required))
                     }
-                }
+                else {
+                    fun <T> chunkedIntoColumns(collection: Collection<T>): List<List<T>> =
+                        collection.chunked(2)
 
-                loadableCarouselWithHeader(
-                    requireContext(),
-                    tracks,
-                    R.string.tracks,
-                    "saved-tracks",
-                    viewModel::loadTracks,
-                    viewModel::clearTracksError,
-                    ::chunkedIntoColumns
-                ) { chunk ->
-                    chunk.column { track ->
-                        track.clickableListItem {
-                            show { factory.newSpotifyTrackVideosFragment(track) }
+                    loadableCarouselWithHeader(
+                        requireContext(),
+                        albums,
+                        R.string.albums,
+                        "saved-albums",
+                        viewModel::loadAlbums,
+                        viewModel::clearAlbumsError,
+                        ::chunkedIntoColumns
+                    ) { chunk ->
+                        chunk.column { album ->
+                            album.clickableListItem {
+                                show { factory.newSpotifyAlbumFragment(album) }
+                            }
+                        }
+                    }
+
+                    loadableCarouselWithHeader(
+                        requireContext(),
+                        tracks,
+                        R.string.tracks,
+                        "saved-tracks",
+                        viewModel::loadTracks,
+                        viewModel::clearTracksError,
+                        ::chunkedIntoColumns
+                    ) { chunk ->
+                        chunk.column { track ->
+                            track.clickableListItem {
+                                show { factory.newSpotifyTrackVideosFragment(track) }
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

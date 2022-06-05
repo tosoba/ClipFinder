@@ -17,7 +17,10 @@ import com.clipfinder.core.ext.mapData
 import com.clipfinder.core.model.*
 import com.clipfinder.core.spotify.ext.decimalProps
 import com.clipfinder.core.spotify.model.ISpotifyAudioFeatures
-import com.clipfinder.core.spotify.usecase.*
+import com.clipfinder.core.spotify.usecase.GetArtists
+import com.clipfinder.core.spotify.usecase.GetAudioFeatures
+import com.clipfinder.core.spotify.usecase.GetSimilarTracks
+import com.clipfinder.core.spotify.usecase.GetTrack
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry

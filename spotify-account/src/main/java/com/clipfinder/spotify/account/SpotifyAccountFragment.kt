@@ -22,22 +22,22 @@ import com.clipfinder.spotify.account.saved.SpotifyAccountSavedFragment
 import com.clipfinder.spotify.account.top.SpotifyAccountTopFragment
 
 class SpotifyAccountFragment : Fragment(R.layout.fragment_spotify_account), HasMainToolbar {
-    private val binding: FragmentSpotifyAccountBinding by viewBinding(
-        FragmentSpotifyAccountBinding::bind
-    )
+    private val binding: FragmentSpotifyAccountBinding by
+        viewBinding(FragmentSpotifyAccountBinding::bind)
     override val toolbar: Toolbar
         get() = binding.accountToolbar
 
-    private val accountViewPagerAdapter: PagerAdapter by lazy(LazyThreadSafetyMode.NONE) {
-        TitledCustomCurrentStatePagerAdapter(
-            childFragmentManager,
-            arrayOf(
-                getString(R.string.playlists) to SpotifyAccountPlaylistsFragment(),
-                getString(R.string.saved) to SpotifyAccountSavedFragment(),
-                getString(R.string.top) to SpotifyAccountTopFragment()
+    private val accountViewPagerAdapter: PagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            TitledCustomCurrentStatePagerAdapter(
+                childFragmentManager,
+                arrayOf(
+                    getString(R.string.playlists) to SpotifyAccountPlaylistsFragment(),
+                    getString(R.string.saved) to SpotifyAccountSavedFragment(),
+                    getString(R.string.top) to SpotifyAccountTopFragment()
+                )
             )
-        )
-    }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainContentFragment?.disablePlayButton()

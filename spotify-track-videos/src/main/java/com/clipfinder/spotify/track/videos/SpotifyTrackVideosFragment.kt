@@ -37,20 +37,19 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
     private val fragmentFactory: IFragmentFactory by inject()
     private val spotifyFragmentFactory: ISpotifyFragmentsFactory by inject()
 
-    private val pagerAdapter: TitledCustomCurrentStatePagerAdapter by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        TitledCustomCurrentStatePagerAdapter(
-            fragmentManager = childFragmentManager,
-            titledFragments =
-                arrayOf(
-                    getString(R.string.clips) to
-                        fragmentFactory.newVideosSearchFragment(argTrack.query),
-                    getString(R.string.info) to
-                        spotifyFragmentFactory.newSpotifyTrackFragment(argTrack)
-                )
-        )
-    }
+    private val pagerAdapter: TitledCustomCurrentStatePagerAdapter by
+        lazy(LazyThreadSafetyMode.NONE) {
+            TitledCustomCurrentStatePagerAdapter(
+                fragmentManager = childFragmentManager,
+                titledFragments =
+                    arrayOf(
+                        getString(R.string.clips) to
+                            fragmentFactory.newVideosSearchFragment(argTrack.query),
+                        getString(R.string.info) to
+                            spotifyFragmentFactory.newSpotifyTrackFragment(argTrack)
+                    )
+            )
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +67,7 @@ class SpotifyTrackVideosFragment : BaseMvRxFragment(), BackPressedHandler, Spoti
         viewModel.selectSubscribe(this, TrackVideosViewState<Track>::tracks) { tracks ->
             tracks.lastOrNull()?.let {
                 currentTrack.value = it
-                binding
-                    .trackVideosToolbarGradientBackgroundView
+                binding.trackVideosToolbarGradientBackgroundView
                     .loadBackgroundGradient(it.iconUrl)
                     .disposeOnDestroy(this)
                 binding.executePendingBindings()

@@ -57,15 +57,16 @@ class SpotifyPlayerFragment :
     private val viewModel: SpotifyPlayerViewModel by fragmentViewModel()
     private val broadcastReceivers: ArrayList<BroadcastReceiver> = ArrayList(6)
 
-    private val spotifyPlayerView: SpotifyPlayerView by lazy(LazyThreadSafetyMode.NONE) {
-        SpotifyPlayerView(
-            onSpotifyPlayPauseBtnClickListener = onPlayPauseBtnClickListener,
-            onCloseSpotifyPlayerBtnClickListener = onClosePlayerBtnClickListener,
-            onPreviousBtnClickListener = onPreviousBtnClickListener,
-            onNextBtnClickListener = onNextBtnClickListener,
-            onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
-        )
-    }
+    private val spotifyPlayerView: SpotifyPlayerView by
+        lazy(LazyThreadSafetyMode.NONE) {
+            SpotifyPlayerView(
+                onSpotifyPlayPauseBtnClickListener = onPlayPauseBtnClickListener,
+                onCloseSpotifyPlayerBtnClickListener = onClosePlayerBtnClickListener,
+                onPreviousBtnClickListener = onPreviousBtnClickListener,
+                onNextBtnClickListener = onNextBtnClickListener,
+                onPlaybackSeekBarProgressChangeListener = onPlaybackSeekBarProgressChangeListener
+            )
+        }
 
     private var player: SpotifyPlayer? = null
     override val isPlayerLoggedIn: Boolean
@@ -100,43 +101,42 @@ class SpotifyPlayerFragment :
 
     private var spotifyPlaybackTimer: CountDownTimer? = null
 
-    private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        onSeekBarProgressChangeListener { _: SeekBar?, progress: Int, fromUser: Boolean ->
-            if (!fromUser) return@onSeekBarProgressChangeListener
-            val positionInMs = progress * 1000
-            spotifyPlaybackTimer?.cancel()
-            player?.seekToPosition(SpotifyPlayerOperationLogCallback, positionInMs)
-            spotifyPlaybackTimer =
-                playbackTimer(
-                    trackDuration =
-                        withState(viewModel) {
-                            requireNotNull(it.playerMetadata).currentTrack.durationMs
-                        },
-                    positionMs = positionInMs.toLong()
-                )
-                    .apply { start() }
+    private val onPlaybackSeekBarProgressChangeListener: SeekBar.OnSeekBarChangeListener by
+        lazy(LazyThreadSafetyMode.NONE) {
+            onSeekBarProgressChangeListener { _: SeekBar?, progress: Int, fromUser: Boolean ->
+                if (!fromUser) return@onSeekBarProgressChangeListener
+                val positionInMs = progress * 1000
+                spotifyPlaybackTimer?.cancel()
+                player?.seekToPosition(SpotifyPlayerOperationLogCallback, positionInMs)
+                spotifyPlaybackTimer =
+                    playbackTimer(
+                            trackDuration =
+                                withState(viewModel) {
+                                    requireNotNull(it.playerMetadata).currentTrack.durationMs
+                                },
+                            positionMs = positionInMs.toLong()
+                        )
+                        .apply { start() }
+            }
         }
-    }
 
-    private val audioTrackController by lazy(LazyThreadSafetyMode.NONE) {
-        SpotifyAudioTrackController()
-    }
+    private val audioTrackController by
+        lazy(LazyThreadSafetyMode.NONE, ::SpotifyAudioTrackController)
 
     private lateinit var albumCoverImageTarget: Target
-    private val visualizerPaint: Paint by lazy(LazyThreadSafetyMode.NONE) {
-        Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            strokeWidth = 8f
-            color = Color.parseColor("#ffffff")
+    private val visualizerPaint: Paint by
+        lazy(LazyThreadSafetyMode.NONE) {
+            Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                strokeWidth = 8f
+                color = Color.parseColor("#ffffff")
+            }
         }
-    }
-    private val visualizerRenderers: Array<IRenderer> by lazy(LazyThreadSafetyMode.NONE) {
-        arrayOf(ColumnarVisualizerRenderer(visualizerPaint))
-    }
-    private val visualizerManager: NierVisualizerManager by lazy(LazyThreadSafetyMode.NONE) {
-        NierVisualizerManager().apply { init(SpotifyPlayerNVDataSource(audioTrackController)) }
-    }
+    private val visualizerRenderers: Array<IRenderer> by
+        lazy(LazyThreadSafetyMode.NONE) { arrayOf(ColumnarVisualizerRenderer(visualizerPaint)) }
+    private val visualizerManager: NierVisualizerManager by
+        lazy(LazyThreadSafetyMode.NONE) {
+            NierVisualizerManager().apply { init(SpotifyPlayerNVDataSource(audioTrackController)) }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -447,13 +447,17 @@ class SpotifyPlayerFragment :
                 url = track.albumCoverWebUrl,
                 onError = {
                     requireContext()
-                        .notificationManager
-                        .notify(PlaybackNotification.ID, buildNotification(track, null))
+                        .notificationManager.notify(
+                            PlaybackNotification.ID,
+                            buildNotification(track, null)
+                        )
                 }
             ) { bitmap ->
                 requireContext()
-                    .notificationManager
-                    .notify(PlaybackNotification.ID, buildNotification(track, bitmap))
+                    .notificationManager.notify(
+                        PlaybackNotification.ID,
+                        buildNotification(track, bitmap)
+                    )
             }
             .disposeOnDestroy(this)
     }

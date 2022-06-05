@@ -37,47 +37,46 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
     override val toolbar: Toolbar
         get() = binding.soundCloudDashboardToolbar
 
-    private val epoxyController: TypedEpoxyController<SoundCloudDashboardState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        injectedTypedController { (selections) ->
-            when (selections) {
-                is LoadingInProgress -> loadingIndicator { id("loading-indicator") }
-                is Ready ->
-                    selections.value.forEach { selection ->
-                        headerItem {
-                            id("${selection.id}-header")
-                            text(selection.title)
-                        }
+    private val epoxyController: TypedEpoxyController<SoundCloudDashboardState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            injectedTypedController { (selections) ->
+                when (selections) {
+                    is LoadingInProgress -> loadingIndicator { id("loading-indicator") }
+                    is Ready ->
+                        selections.value.forEach { selection ->
+                            headerItem {
+                                id("${selection.id}-header")
+                                text(selection.title)
+                            }
 
-                        carousel {
-                            id("${selection.id}-playlists")
-                            withModelsFrom(selection.playlists.chunked(2)) { chunk ->
-                                Column(
-                                    chunk.map { playlist ->
-                                        playlist.clickableListItem {
-                                            navHostFragment?.showFragment(
-                                                fragmentFactory
-                                                    .newSoundCloudPlaylistFragmentWithPlaylist(
-                                                        playlist
-                                                    ),
-                                                addToBackStack = true
-                                            )
+                            carousel {
+                                id("${selection.id}-playlists")
+                                withModelsFrom(selection.playlists.chunked(2)) { chunk ->
+                                    Column(
+                                        chunk.map { playlist ->
+                                            playlist.clickableListItem {
+                                                navHostFragment?.showFragment(
+                                                    fragmentFactory
+                                                        .newSoundCloudPlaylistFragmentWithPlaylist(
+                                                            playlist
+                                                        ),
+                                                    addToBackStack = true
+                                                )
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
-                    }
-                is Failed ->
-                    reloadControl {
-                        id("reload-control")
-                        onReloadClicked { _ -> viewModel.loadSelections() }
-                        message(requireContext().getString(R.string.error_occurred))
-                    }
+                    is Failed ->
+                        reloadControl {
+                            id("reload-control")
+                            onReloadClicked { _ -> viewModel.loadSelections() }
+                            message(requireContext().getString(R.string.error_occurred))
+                        }
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

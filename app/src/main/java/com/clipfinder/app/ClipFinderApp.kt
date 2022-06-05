@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import com.bumptech.glide.request.target.ViewTarget
-import com.clipfinder.app.module.*
+import com.clipfinder.app.module.appModule
 import com.clipfinder.core.android.di.coreAndroidNetworkingModule
 import com.clipfinder.core.android.di.epoxyModule
 import com.clipfinder.core.android.soundcloud.di.soundCloudCoreAndroidModule

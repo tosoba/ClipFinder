@@ -20,18 +20,14 @@ fun <T> Single<T>.retry(strategy: RetryStrategy): Single<T> =
         is Times -> retry(strategy.attempts)
         is WithDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
         is WithVariableDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)
                     }
@@ -43,18 +39,14 @@ fun <T> Flowable<T>.retry(strategy: RetryStrategy): Flowable<T> =
         is Times -> retry(strategy.attempts)
         is WithDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
         is WithVariableDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)
                     }
@@ -66,18 +58,18 @@ fun <T> Observable<T>.retry(strategy: RetryStrategy): Observable<T> =
         is Times -> retry(strategy.attempts)
         is WithDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Observable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Observable.range(1, strategy.attempts.toInt())) { _, attempt ->
+                        attempt
+                    }
                     .flatMap { Observable.timer(strategy.delay, strategy.unit) }
             }
         is WithVariableDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Observable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Observable.range(1, strategy.attempts.toInt())) { _, attempt ->
+                        attempt
+                    }
                     .flatMap { attempt ->
                         Observable.timer(strategy.getDelay(attempt), strategy.unit)
                     }
@@ -89,18 +81,14 @@ fun Completable.retry(strategy: RetryStrategy): Completable =
         is Times -> retry(strategy.attempts)
         is WithDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { Flowable.timer(strategy.delay, strategy.unit) }
             }
         is WithVariableDelay ->
             retryWhen { errors ->
-                errors.zipWith(
-                        Flowable.range(1, strategy.attempts.toInt()),
-                        { _, attempt -> attempt }
-                    )
+                errors
+                    .zipWith(Flowable.range(1, strategy.attempts.toInt())) { _, attempt -> attempt }
                     .flatMap { attempt ->
                         Flowable.timer(strategy.getDelay(attempt), strategy.unit)
                     }

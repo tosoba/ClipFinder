@@ -19,36 +19,40 @@ operator fun UseCase<Completable>.invoke(
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Completable =
-    result.timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    result
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Result> UseCase<Single<Result>>.invoke(
     timeout: Timeout = Timeout.DEFAULT,
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Single<Result> =
-    result.timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    result
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Result> UseCase<Observable<Result>>.invoke(
     timeout: Timeout = Timeout.DEFAULT,
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Observable<Result> =
-    result.timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    result
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Result> UseCase<Flowable<Result>>.invoke(
     timeout: Timeout = Timeout.DEFAULT,
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Flowable<Result> =
-    result.timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    result
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Args> UseCaseWithArgs<Args, Completable>.invoke(
     args: Args,
@@ -56,9 +60,10 @@ operator fun <Args> UseCaseWithArgs<Args, Completable>.invoke(
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Completable =
-    run(args).timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    run(args)
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Args, Result> UseCaseWithArgs<Args, Single<Result>>.invoke(
     args: Args,
@@ -66,9 +71,10 @@ operator fun <Args, Result> UseCaseWithArgs<Args, Single<Result>>.invoke(
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Single<Result> =
-    run(args).timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    run(args)
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Args, Result> UseCaseWithArgs<Args, Observable<Result>>.invoke(
     args: Args,
@@ -76,9 +82,10 @@ operator fun <Args, Result> UseCaseWithArgs<Args, Observable<Result>>.invoke(
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Observable<Result> =
-    run(args).timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    run(args)
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }
 
 operator fun <Args, Result> UseCaseWithArgs<Args, Flowable<Result>>.invoke(
     args: Args,
@@ -86,6 +93,7 @@ operator fun <Args, Result> UseCaseWithArgs<Args, Flowable<Result>>.invoke(
     strategy: RetryStrategy? = null,
     schedulers: RxSchedulers? = null
 ): Flowable<Result> =
-    run(args).timeout(timeout.limit, timeout.unit).run { strategy?.let(::retry) ?: this }.run {
-        schedulers?.let(::applySchedulers) ?: this
-    }
+    run(args)
+        .timeout(timeout.limit, timeout.unit)
+        .run { strategy?.let(::retry) ?: this }
+        .run { schedulers?.let(::applySchedulers) ?: this }

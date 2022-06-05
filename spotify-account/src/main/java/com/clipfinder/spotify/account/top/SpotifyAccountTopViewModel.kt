@@ -31,8 +31,7 @@ class SpotifyAccountTopViewModel(
 
     init {
         handleConnectivityChanges(context)
-        preferences
-            .isPrivateAuthorizedObservable
+        preferences.isPrivateAuthorizedObservable
             .subscribe {
                 setState { copy(userLoggedIn = it) }
                 if (it)

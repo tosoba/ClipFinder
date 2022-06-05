@@ -131,8 +131,7 @@ class SpotifyArtistViewModel(
         clearErrorIn(State::relatedArtists) { copy(relatedArtists = it) }
 
     private fun handlePreferencesChanges() {
-        preferences
-            .countryObservable
+        preferences.countryObservable
             .skip(1)
             .distinctUntilChanged()
             .subscribe { loadAlbumsFromArtist() }

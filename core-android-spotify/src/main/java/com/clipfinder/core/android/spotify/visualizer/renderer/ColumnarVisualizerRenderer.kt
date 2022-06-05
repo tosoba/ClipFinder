@@ -4,9 +4,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import me.bogerchan.niervisualizer.renderer.IRenderer
 import kotlin.math.log10
 import kotlin.math.min
-import me.bogerchan.niervisualizer.renderer.IRenderer
 
 class ColumnarVisualizerRenderer(private val paint: Paint) : IRenderer {
     private val lastDrawArea = Rect()

@@ -29,7 +29,6 @@ class SpotifyRepo(
     private val tracksEndpoints: TracksEndpoints,
     private val userProfileEndpoints: UserProfileEndpoints
 ) : ISpotifyRepo {
-
     override val authorizedUser: Single<Resource<ISpotifyPrivateUser>>
         get() = userProfileEndpoints.getCurrentUsersProfile().resource
 
@@ -58,7 +57,8 @@ class SpotifyRepo(
         tracksEndpoints.getAudioFeatures(id = id).resource
 
     override fun getCategories(offset: Int): Single<Resource<Paged<List<ISpotifyCategory>>>> =
-        browseEndpoints.getCategories(
+        browseEndpoints
+            .getCategories(
                 offset = offset,
                 country = preferences.country,
                 locale = preferences.locale
@@ -68,7 +68,8 @@ class SpotifyRepo(
     override fun getFeaturedPlaylists(
         offset: Int
     ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> =
-        browseEndpoints.getFeaturedPlaylists(
+        browseEndpoints
+            .getFeaturedPlaylists(
                 offset = offset,
                 country = preferences.country,
                 locale = preferences.locale
@@ -104,7 +105,8 @@ class SpotifyRepo(
         categoryId: String,
         offset: Int
     ): Single<Resource<Paged<List<ISpotifySimplifiedPlaylist>>>> =
-        browseEndpoints.getACategoriesPlaylists(
+        browseEndpoints
+            .getACategoriesPlaylists(
                 categoryId = categoryId,
                 offset = offset,
                 country = preferences.country
@@ -171,7 +173,8 @@ class SpotifyRepo(
         playlistId: String,
         offset: Int
     ): Single<Resource<Paged<List<ISpotifyTrack>>>> =
-        publicPlaylistsEndpoints.getPlaylistsTracks(playlistId = playlistId, offset = offset)
+        publicPlaylistsEndpoints
+            .getPlaylistsTracks(playlistId = playlistId, offset = offset)
             .mapToResource {
                 Paged<List<ISpotifyTrack>>(
                     contents =

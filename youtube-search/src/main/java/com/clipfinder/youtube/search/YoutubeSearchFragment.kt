@@ -25,21 +25,20 @@ import kotlinx.android.synthetic.main.fragment_youtube_search.view.*
 class YoutubeSearchFragment : BaseMvRxFragment(), ISearchFragment {
     private val viewModel: YoutubeSearchViewModel by fragmentViewModel()
 
-    private val epoxyController: TypedEpoxyController<YoutubeSearchState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        loadableCollectionController(
-            YoutubeSearchState::videos,
-            headerText = getString(R.string.videos),
-            loadMore = viewModel::search,
-            reloadClicked = viewModel::search,
-            clearFailure = viewModel::clearVideosError
-        ) { video ->
-            video.clickableListItem {
-                activity?.castAs<YoutubePlayerController>()?.loadVideo(video)
+    private val epoxyController: TypedEpoxyController<YoutubeSearchState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            loadableCollectionController(
+                YoutubeSearchState::videos,
+                headerText = getString(R.string.videos),
+                loadMore = viewModel::search,
+                reloadClicked = viewModel::search,
+                clearFailure = viewModel::clearVideosError
+            ) { video ->
+                video.clickableListItem {
+                    activity?.castAs<YoutubePlayerController>()?.loadVideo(video)
+                }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

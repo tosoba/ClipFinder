@@ -66,17 +66,16 @@ class SpotifySearchFragment : BaseMvRxFragment() {
             protected abstract val search: () -> Unit
             protected abstract val clearError: () -> Unit
 
-            override val epoxyController: TypedEpoxyController<SpotifySearchState> by lazy(
-                LazyThreadSafetyMode.NONE
-            ) {
-                loadableCollectionController(
-                    prop,
-                    loadMore = search,
-                    reloadClicked = search,
-                    clearFailure = clearError,
-                    buildItem = ::buildItem
-                )
-            }
+            override val epoxyController: TypedEpoxyController<SpotifySearchState> by
+                lazy(LazyThreadSafetyMode.NONE) {
+                    loadableCollectionController(
+                        prop,
+                        loadMore = search,
+                        reloadClicked = search,
+                        clearFailure = clearError,
+                        buildItem = ::buildItem
+                    )
+                }
 
             protected abstract fun buildItem(item: I): EpoxyModel<*>
             override fun invalidate() = withState(viewModel, epoxyController::setData)

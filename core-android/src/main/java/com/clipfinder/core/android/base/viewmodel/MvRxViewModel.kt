@@ -3,7 +3,6 @@ package com.clipfinder.core.android.base.viewmodel
 import android.content.Context
 import com.airbnb.mvrx.BaseMvRxViewModel
 import com.airbnb.mvrx.MvRxState
-import com.clipfinder.core.android.model.*
 import com.clipfinder.core.android.util.ext.copyWithPaged
 import com.clipfinder.core.android.util.ext.loadingOrCompleted
 import com.clipfinder.core.android.util.ext.observeNetworkConnectivity
@@ -13,8 +12,8 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlin.reflect.KProperty1
 import timber.log.Timber
+import kotlin.reflect.KProperty1
 
 abstract class MvRxViewModel<S : MvRxState>(
     initialState: S,
@@ -29,18 +28,18 @@ abstract class MvRxViewModel<S : MvRxState>(
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
         reducer: S.(Loadable<C>) -> S
     ) where C : CopyableWithPaged<T, C>, C : CompletionTrackable, I : Iterable<T> =
-            withState { state ->
-        loadPagedWith(
-            state,
-            prop,
-            action,
-            newCopyableWithPaged,
-            subscribeOnScheduler,
-            onError,
-            copyWithLoading,
-            reducer
-        )
-    }
+        withState { state ->
+            loadPagedWith(
+                state,
+                prop,
+                action,
+                newCopyableWithPaged,
+                subscribeOnScheduler,
+                onError,
+                copyWithLoading,
+                reducer
+            )
+        }
 
     protected fun <C, I, T> loadPagedWith(
         state: S,
@@ -65,8 +64,8 @@ abstract class MvRxViewModel<S : MvRxState>(
             )
     }
 
-    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<
-        Resource<Paged<I>>>.updateLoadableWithPagedResource(
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>
+        .updateLoadableWithPagedResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
@@ -116,22 +115,22 @@ abstract class MvRxViewModel<S : MvRxState>(
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },
         reducer: S.(Loadable<C>) -> S
     ) where C : CopyableWithPaged<T, C>, C : CompletionTrackable, I : Iterable<T> =
-            withState { state ->
-        val loadable = state.valueOf(prop)
-        if (loadable.loadingOrCompleted) return@withState
-        action(state, args)
-            .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
-            .updateDefaultLoadableWithPagedResource(
-                prop,
-                onError,
-                copyWithLoading,
-                newCopyableWithPaged,
-                reducer
-            )
-    }
+        withState { state ->
+            val loadable = state.valueOf(prop)
+            if (loadable.loadingOrCompleted) return@withState
+            action(state, args)
+                .run { subscribeOnScheduler?.let(::subscribeOn) ?: this }
+                .updateDefaultLoadableWithPagedResource(
+                    prop,
+                    onError,
+                    copyWithLoading,
+                    newCopyableWithPaged,
+                    reducer
+                )
+        }
 
-    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<
-        Resource<Paged<I>>>.updateDefaultLoadableWithPagedResource(
+    private fun <C : CopyableWithPaged<T, C>, T, I : Iterable<T>> Single<Resource<Paged<I>>>
+        .updateDefaultLoadableWithPagedResource(
         prop: KProperty1<S, Loadable<C>>,
         onError: (Throwable) -> Unit = ::log,
         copyWithLoading: Loadable<C>.() -> Loadable<C> = { copyWithLoadingInProgress },

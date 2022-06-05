@@ -15,9 +15,8 @@ import com.clipfinder.spotify.search.databinding.FragmentSpotifySearchMainBindin
 import org.koin.android.ext.android.get
 
 class SpotifySearchMainFragment : Fragment(R.layout.fragment_spotify_search_main) {
-    private val binding: FragmentSpotifySearchMainBinding by viewBinding(
-        FragmentSpotifySearchMainBinding::bind
-    )
+    private val binding: FragmentSpotifySearchMainBinding by
+        viewBinding(FragmentSpotifySearchMainBinding::bind)
     private val query: String by args()
 
     override fun onCreate(savedInstanceState: Bundle?) {

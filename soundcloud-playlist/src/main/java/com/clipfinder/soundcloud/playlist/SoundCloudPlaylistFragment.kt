@@ -28,22 +28,22 @@ class SoundCloudPlaylistFragment : BaseMvRxFragment() {
     private val viewModel: SoundCloudPlaylistViewModel by fragmentViewModel()
     private val factory: IFragmentFactory by inject()
 
-    private val epoxyController: TypedEpoxyController<SoundCloudPlaylistState> by lazy(
-        LazyThreadSafetyMode.NONE
-    ) {
-        loadableCollectionController(
-            SoundCloudPlaylistState::tracks,
-            headerText = "Tracks",
-            reloadClicked = viewModel::loadData,
-            clearFailure = viewModel::clearTracksError
-        ) { track ->
-            track.clickableListItem { show { factory.newSoundCloudTrackVideosFragment(track) } }
+    private val epoxyController: TypedEpoxyController<SoundCloudPlaylistState> by
+        lazy(LazyThreadSafetyMode.NONE) {
+            loadableCollectionController(
+                SoundCloudPlaylistState::tracks,
+                headerText = "Tracks",
+                reloadClicked = viewModel::loadData,
+                clearFailure = viewModel::clearTracksError
+            ) { track ->
+                track.clickableListItem { show { factory.newSoundCloudTrackVideosFragment(track) } }
+            }
         }
-    }
 
-    private val view: SoundCloudPlaylistView by lazy(LazyThreadSafetyMode.NONE) {
-        SoundCloudPlaylistView(playlist = playlist, onFavouriteBtnClickListener = {})
-    }
+    private val view: SoundCloudPlaylistView by
+        lazy(LazyThreadSafetyMode.NONE) {
+            SoundCloudPlaylistView(playlist = playlist, onFavouriteBtnClickListener = {})
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

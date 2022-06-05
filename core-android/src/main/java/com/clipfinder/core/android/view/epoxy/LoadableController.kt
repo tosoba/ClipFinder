@@ -12,8 +12,8 @@ import com.clipfinder.core.android.*
 import com.clipfinder.core.android.di.EpoxyHandlerType
 import com.clipfinder.core.ext.qualifier
 import com.clipfinder.core.model.*
-import kotlin.reflect.KProperty1
 import org.koin.android.ext.android.get
+import kotlin.reflect.KProperty1
 
 inline fun <S : MvRxState, I> BaseMvRxFragment.loadableCollectionController(
     prop: KProperty1<S, Loadable<Collection<I>>>,
