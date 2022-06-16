@@ -39,7 +39,6 @@ val spotifyCoreAndroidModule = module {
             get(),
             get(),
             get(),
-            get(),
             get(named(PlaylistsEndpointsType.PUBLIC.name)),
             get(named(PlaylistsEndpointsType.PRIVATE.name)),
             get(),

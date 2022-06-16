@@ -33,7 +33,6 @@ dependencies {
     implementation project(':core')
     implementation project(':core-android')
     implementation project(':core-soundcloud')
-    implementation project(':spotify-charts-api')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

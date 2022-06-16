@@ -17,7 +17,6 @@ import com.clipfinder.core.soundcloud.di.soundCloudCoreModule
 import com.clipfinder.core.spotify.di.spotifyCoreModule
 import com.clipfinder.core.youtube.di.youtubeCoreModule
 import com.clipfinder.soundcloud.api.di.soundCloudApiModule
-import com.clipfinder.spotify.api.charts.di.spotifyChartsApiModule
 import com.clipfinder.spotify.api.di.spotifyApiModule
 import com.github.mikephil.charting.utils.Utils
 import io.reactivex.plugins.RxJavaPlugins
@@ -74,7 +73,6 @@ class ClipFinderApp : Application() {
                     appModule,
                     epoxyModule,
                     coreAndroidNetworkingModule,
-                    spotifyChartsApiModule,
                     spotifyApiModule,
                     spotifyCoreAndroidModule,
                     spotifyCoreModule,

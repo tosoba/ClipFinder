@@ -9,11 +9,13 @@ import com.clipfinder.core.ext.castAs
 fun Fragment.enableSpotifyPlayButton(playClicked: SpotifyPlayerController.() -> Unit) {
     mainContentFragment?.enablePlayButton {
         val playerController = activity?.castAs<SpotifyPlayerController>()
-        if (playerController?.isPlayerLoggedIn == true) playerController.playClicked()
-        else
+        if (playerController?.isPlayerLoggedIn == true) {
+            playerController.playClicked()
+        } else {
             activity?.castAs<SpotifyAuthController>()?.let {
                 it.showLoginDialog()
                 it.onLoginSuccessful = { playerController?.playClicked() }
             }
+        }
     }
 }

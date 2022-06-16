@@ -56,7 +56,6 @@ dependencies {
     implementation project(':core-spotify')
     implementation project(':core-android')
     implementation project(':spotify-api')
-    implementation project(':spotify-charts-api')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

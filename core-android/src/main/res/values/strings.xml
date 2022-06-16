@@ -10,7 +10,6 @@
 
     <string name="spotify_base_url">https://api.spotify.com/v1/</string>
     <string name="access_token_base_url">https://accounts.spotify.com/api/</string>
-    <string name="spotify_charts_base_url">https://spotifycharts.com/</string>
     <string name="youtube_base_url">https://www.googleapis.com/youtube/v3/</string>
 
     <string name="genres">Genres</string>

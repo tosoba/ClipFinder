@@ -77,7 +77,6 @@ dependencies {
     implementation project(':soundcloud-track-videos')
     implementation project(':spotify-account')
     implementation project(':spotify-album')
-    implementation project(':spotify-charts-api')
     implementation project(':spotify-api')
     implementation project(':spotify-artist')
     implementation project(':spotify-category')

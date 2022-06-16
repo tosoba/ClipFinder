@@ -10,7 +10,6 @@ import com.clipfinder.core.model.PagingDefaults
 import com.clipfinder.core.model.Resource
 import com.clipfinder.core.spotify.model.*
 import com.clipfinder.core.spotify.repo.ISpotifyRepo
-import com.clipfinder.spotify.api.charts.ChartsEndpoints
 import com.clipfinder.spotify.api.endpoint.*
 import com.clipfinder.spotify.api.model.*
 import io.reactivex.Single
@@ -20,7 +19,6 @@ class SpotifyRepo(
     private val albumEndpoints: AlbumEndpoints,
     private val artistEndpoints: ArtistEndpoints,
     private val browseEndpoints: BrowseEndpoints,
-    private val chartsEndpoints: ChartsEndpoints,
     private val libraryEndpoints: LibraryEndpoints,
     private val personalizationEndpoints: PersonalizationEndpoints,
     private val publicPlaylistsEndpoints: PlaylistsEndpoints,
@@ -77,24 +75,7 @@ class SpotifyRepo(
             .mapToResource { playlists.toPaged() }
 
     override fun getDailyViralTracks(offset: Int): Single<Resource<Paged<List<ISpotifyTrack>>>> =
-        chartsEndpoints
-            .getDailyViralTracks()
-            .map { csv ->
-                csv.split('\n')
-                    .filter { line -> line.isNotBlank() && line.first().isDigit() }
-                    .map { line -> line.substring(line.lastIndexOf('/') + 1) }
-                    .chunked(PagingDefaults.SPOTIFY_LIMIT)
-            }
-            .flatMap { chunks ->
-                val chunk = chunks[offset]
-                tracksEndpoints.getSeveralTracks(ids = chunk.joinToString(",")).mapToResource {
-                    Paged<List<ISpotifyTrack>>(
-                        contents = tracks,
-                        offset = offset + 1,
-                        total = chunks.size
-                    )
-                }
-            }
+        getPlaylistTracks(GLOBAL_CHART_PLAYLIST_ID, offset)
 
     override fun getNewReleases(
         offset: Int
@@ -217,4 +198,8 @@ class SpotifyRepo(
         privatePlaylistsEndpoints.getAListOfCurrentUsersPlaylists(offset = offset).mapToResource {
             toPaged()
         }
+
+    companion object {
+        private const val GLOBAL_CHART_PLAYLIST_ID = "37i9dQZEVXbMDoHDwVN2tF"
+    }
 }
