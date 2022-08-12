@@ -65,7 +65,7 @@ class SoundCloudPlayerFragment : Fragment(), ISoundCloudPlayerFragment {
     override fun loadTrack(track: SoundCloudTrack) {
         lastTrack = track
 
-        Picasso.with(context)
+        Picasso.get()
             .load(track.artworkUrl)
             .placeholder(com.clipfinder.core.android.R.drawable.track_placeholder)
             .error(com.clipfinder.core.android.R.drawable.track_placeholder)

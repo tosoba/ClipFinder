@@ -299,7 +299,7 @@ class YoutubePlayerFragment : BaseMvRxFragment(), IYoutubePlayerFragment {
         withState(viewModel) { state ->
             val currentVideo = state.currentVideo ?: return@withState
             viewModel.updatePlayerNotificationState(true)
-            Picasso.with(context)
+            Picasso.get()
                 .getBitmapSingle(
                     url = currentVideo.thumbnailUrl,
                     onError = {

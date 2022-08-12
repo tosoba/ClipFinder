@@ -106,5 +106,6 @@ inline fun <T, I> EpoxyController.loadableCarouselWithHeader(
                 )
             }
         }
+        else -> {}
     }
 }

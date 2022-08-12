@@ -10,7 +10,7 @@ import timber.log.Timber
 
 fun Picasso.getBitmapSingle(
     url: String,
-    onError: (Throwable) -> Unit = Timber::e,
+    onError: (Throwable) -> Unit = { Timber.e(it) },
     onSuccess: (Bitmap) -> Unit
 ): Disposable =
     Single.create<Bitmap> {

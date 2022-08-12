@@ -74,6 +74,7 @@ class SoundCloudDashboardFragment : BaseMvRxFragment(), HasMainToolbar {
                             onReloadClicked { _ -> viewModel.loadSelections() }
                             message(requireContext().getString(R.string.error_occurred))
                         }
+                    else -> {}
                 }
             }
         }

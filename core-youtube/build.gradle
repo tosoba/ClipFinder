@@ -6,10 +6,10 @@ dependencies {
 
     implementation project(':core')
 
-    implementation "org.koin:koin-core:$koinVersion"
-    implementation "org.koin:koin-core-ext:$koinVersion"
+    implementation "org.koin:koin-core:2.0.1"
+    implementation "org.koin:koin-core-ext:2.0.1"
 
-    implementation rootProject.ext.rxJava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 
     implementation 'com.google.apis:google-api-services-youtube:v3-rev20200618-1.30.9'
 }

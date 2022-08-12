@@ -96,5 +96,6 @@ inline fun <I> EpoxyController.loadableCollection(
                 }
             }
         }
+        else -> {}
     }
 }

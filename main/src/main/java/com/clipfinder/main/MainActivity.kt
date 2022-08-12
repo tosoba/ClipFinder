@@ -257,6 +257,7 @@ class MainActivity :
                         spotifyPlayerFragment?.onHidden()
                         soundCloudPlayerFragment?.onHidden()
                     }
+                    else -> {}
                 }
             }
         }

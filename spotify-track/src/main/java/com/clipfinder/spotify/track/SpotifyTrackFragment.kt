@@ -64,6 +64,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                 show { factory.newSpotifyAlbumFragment(track.value.album) }
                             }
                             .addTo(this)
+                    else -> {}
                 }
 
                 loadableCarouselWithHeader(
@@ -140,6 +141,7 @@ class SpotifyTrackFragment : BaseMvRxFragment(), ISpotifyTrackFragment {
                                 )
                             )
                         }
+                    else -> {}
                 }
             }
         }

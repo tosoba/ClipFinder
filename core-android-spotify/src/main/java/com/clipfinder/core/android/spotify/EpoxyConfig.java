@@ -1,3 +1,7 @@
+package com.clipfinder.core.android.spotify;
+
+import com.airbnb.epoxy.EpoxyDataBindingLayouts;
+
 @EpoxyDataBindingLayouts(
         {
                 com.clipfinder.core.android.spotify.R2.layout.album_info_item,
@@ -7,6 +11,5 @@
                 com.clipfinder.core.android.spotify.R2.layout.track_popularity_item,
         }
 )
-package com.clipfinder.core.android.spotify;
-
-import com.airbnb.epoxy.EpoxyDataBindingLayouts;
+interface EpoxyConfig {
+}

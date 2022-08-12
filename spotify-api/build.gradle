@@ -15,20 +15,20 @@ dependencies {
     implementation "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.0"
 
     implementation "com.squareup.moshi:moshi-kotlin:1.9.2"
-    implementation "com.squareup.moshi:moshi-adapters:1.9.2"
+    implementation "com.squareup.moshi:moshi-adapters:1.13.0"
 
-    implementation 'org.threeten:threetenbp:1.4.5'
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation 'org.threeten:threetenbp:1.6.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.6.2"
-    implementation "com.squareup.retrofit2:converter-scalars:2.6.2"
-    implementation rootProject.ext.retrofitRxJava2Adapter
-    implementation rootProject.ext.rxJava
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.9.0"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 
-    implementation "org.koin:koin-core:$koinVersion"
-    implementation "org.koin:koin-core-ext:$koinVersion"
-    implementation "org.koin:koin-androidx-scope:$koinVersion"
-    implementation "org.koin:koin-androidx-ext:$koinVersion"
+    implementation "org.koin:koin-core:2.0.1"
+    implementation "org.koin:koin-core-ext:2.0.1"
+    implementation "org.koin:koin-androidx-scope:2.0.1"
+    implementation "org.koin:koin-androidx-ext:2.0.1"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.1.0"
 }
 

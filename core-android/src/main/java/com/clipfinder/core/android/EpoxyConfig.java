@@ -1,3 +1,7 @@
+package com.clipfinder.core.android;
+
+import com.airbnb.epoxy.EpoxyDataBindingLayouts;
+
 @EpoxyDataBindingLayouts(
         {
                 R2.layout.header_item,
@@ -16,6 +20,5 @@
                 R2.layout.radar_chart
         }
 )
-package com.clipfinder.core.android;
-
-import com.airbnb.epoxy.EpoxyDataBindingLayouts;
+interface EpoxyConfig {
+}

@@ -29,7 +29,7 @@ internal class RxSealedCallAdapter<T : Any, U : Any>(
                 Function<Throwable, Observable<NetworkResponse<T, U>>> { throwable ->
                     when (throwable) {
                         is HttpException -> {
-                            val error = throwable.response().errorBody()
+                            val error = throwable.response()?.errorBody()
                             val errorBody =
                                 when {
                                     error == null -> null
@@ -49,7 +49,7 @@ internal class RxSealedCallAdapter<T : Any, U : Any>(
                                         }
                                 }
                             val serverError =
-                                NetworkResponse.ServerError(errorBody, throwable.response().code())
+                                NetworkResponse.ServerError(errorBody, throwable.response()?.code())
                             Observable.just(serverError)
                         }
                         is IOException -> Observable.just(NetworkResponse.NetworkError(throwable))

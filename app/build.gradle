@@ -7,14 +7,14 @@ android {
     compileSdkVersion 32
 
     defaultConfig {
-        applicationId "com.clipfinder.app.findclips"
+        applicationId 'com.clipfinder.app.findclips'
         manifestPlaceholders = [
                 appAuthRedirectScheme: 'com.clipfinder.app.findclips'
         ]
         minSdkVersion 19
         targetSdkVersion 32
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
         testInstrumentationRunner rootProject.ext.testInstrumentationRunner
         multiDexEnabled = true
     }
@@ -28,7 +28,7 @@ android {
 
     kapt {
         javacOptions {
-            option("-Xmaxerrs", 500)
+            option('-Xmaxerrs', 500)
         }
     }
 
@@ -54,7 +54,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
-        exclude("META-INF/*.kotlin_module")
+        exclude('META-INF/*.kotlin_module')
     }
 }
 
@@ -96,67 +96,68 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.palette:palette-ktx:1.0.0'
-    implementation 'androidx.browser:browser:1.3.0'
+    implementation 'androidx.browser:browser:1.4.0'
     implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'co.lujun:androidtagview:1.1.4'
 
     implementation 'net.openid:appauth:0.8.0'
     implementation 'com.spotify.android:auth:1.0.0-alpha'
 
-    implementation 'com.sothree.slidinguppanel.library:sliding-up-panel@aar'
     implementation 'com.spotify.sdk:spotify-player-24-noconnect-2.20b@aar'
-    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5"
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 
-    implementation "com.squareup.moshi:moshi:1.9.2"
-    implementation "com.squareup.moshi:moshi-kotlin:1.9.2"
+    implementation 'com.squareup.moshi:moshi:1.13.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.2'
     implementation group: 'com.google.http-client', name: 'google-http-client', version: '1.36.0'
 
-    implementation rootProject.ext.retrofit
-    implementation rootProject.ext.retrofitGsonConverter
-    implementation rootProject.ext.retrofitRxJava2Adapter
-    implementation rootProject.ext.room
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 
-    implementation rootProject.ext.rxJava
-    implementation 'androidx.room:room-rxjava2:2.3.0'
+    implementation 'androidx.room:room-runtime:2.4.3'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'androidx.room:room-rxjava2:2.4.3'
+
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
-    implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'co.lujun:androidtagview:1.1.4'
-    implementation "com.github.bumptech.glide:glide:4.11.0"
-    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
 
     implementation 'joda-time:joda-time:2.10.6'
     implementation 'com.github.vpaliy:SoundCloud-API:1.3.2'
 
     implementation 'com.airbnb.android:mvrx:1.0.2'
-    implementation 'com.airbnb.android:epoxy:3.7.0'
+    implementation 'com.airbnb.android:epoxy:4.0.0'
     implementation 'com.airbnb.android:epoxy-databinding:3.7.0'
-    kapt 'com.airbnb.android:epoxy-processor:3.7.0'
+    kapt 'com.airbnb.android:epoxy-processor:4.0.0'
 
-    implementation "org.koin:koin-core:$koinVersion"
-    implementation "org.koin:koin-core-ext:$koinVersion"
-    implementation("org.koin:koin-androidx-scope:$koinVersion") {
+    implementation 'org.koin:koin-core:2.0.1'
+    implementation 'org.koin:koin-core-ext:2.0.1'
+    implementation('org.koin:koin-androidx-scope:2.0.1') {
         exclude group: 'org.jetbrains.kotlinx'
     }
-    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
-    implementation "org.koin:koin-androidx-ext:$koinVersion"
-    testImplementation "org.koin:koin-test:$koinVersion"
+    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    implementation 'org.koin:koin-androidx-ext:2.0.1'
+    testImplementation 'org.koin:koin-test:2.0.1'
 
-    testImplementation rootProject.ext.junit
-    testImplementation rootProject.ext.mockito
-    androidTestImplementation rootProject.ext.androidTestRunner
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.2.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'org.mockito:mockito-android:2.8.47'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
 repositories {

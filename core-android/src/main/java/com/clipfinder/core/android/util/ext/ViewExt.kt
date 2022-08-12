@@ -7,7 +7,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.disposables.Disposable
 
 fun View.loadBackgroundGradient(url: String): Disposable =
-    Picasso.with(context).getBitmapSingle(url) { bitmap ->
+    Picasso.get().getBitmapSingle(url) { bitmap ->
         bitmap.generateColorGradient {
             background = it
             invalidate()

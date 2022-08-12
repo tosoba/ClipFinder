@@ -16,8 +16,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        super.onCreateView(inflater, container, savedInstanceState)?.apply {
+    ): View =
+        super.onCreateView(inflater, container, savedInstanceState).apply {
             background =
                 ContextCompat.getDrawable(
                     requireContext(),

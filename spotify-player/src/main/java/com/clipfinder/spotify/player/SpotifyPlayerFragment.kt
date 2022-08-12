@@ -277,10 +277,6 @@ class SpotifyPlayerFragment :
                                     current_track_image_view?.setImageDrawable(placeHolderDrawable)
                                 }
 
-                                override fun onBitmapFailed(errorDrawable: Drawable?) {
-                                    current_track_image_view?.setImageDrawable(errorDrawable)
-                                }
-
                                 override fun onBitmapLoaded(
                                     bitmap: Bitmap,
                                     from: Picasso.LoadedFrom?
@@ -292,11 +288,16 @@ class SpotifyPlayerFragment :
                                     }
                                     current_track_image_view?.setImageBitmap(bitmap)
                                 }
+
+                                override fun onBitmapFailed(
+                                    e: Exception?,
+                                    errorDrawable: Drawable?
+                                ) {
+                                    current_track_image_view?.setImageDrawable(errorDrawable)
+                                }
                             }
 
-                        Picasso.with(context)
-                            .load(track.albumCoverWebUrl)
-                            .into(albumCoverImageTarget)
+                        Picasso.get().load(track.albumCoverWebUrl).into(albumCoverImageTarget)
                         refreshBackgroundPlaybackNotificationIfShowing()
                     }
                 }
@@ -442,7 +443,7 @@ class SpotifyPlayerFragment :
     }
 
     private fun showPlaybackNotification(track: Metadata.Track) {
-        Picasso.with(context)
+        Picasso.get()
             .getBitmapSingle(
                 url = track.albumCoverWebUrl,
                 onError = {

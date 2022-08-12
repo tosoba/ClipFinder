@@ -12,6 +12,6 @@ val KClass<ISpotifyAudioFeatures>.decimalProps: List<KProperty1<ISpotifyAudioFea
         declaredMemberProperties
             .filterIsInstance<KProperty1<ISpotifyAudioFeatures, BigDecimal>>()
             .filter {
-                it.name.toLowerCase(Locale.getDefault()) != "tempo" &&
-                    it.name.toLowerCase(Locale.getDefault()) != "loudness"
+                it.name.lowercase(Locale.getDefault()) != "tempo" &&
+                    it.name.lowercase(Locale.getDefault()) != "loudness"
             }
