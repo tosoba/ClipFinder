@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
@@ -37,14 +37,14 @@ dependencies {
     implementation project(':core-android')
     implementation project(':core-android-spotify')
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.palette:palette-ktx:1.0.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.bogerchan:Nier-Visualizer:v0.1.3'
 
     implementation 'com.spotify.android:auth:1.0.0-alpha'
