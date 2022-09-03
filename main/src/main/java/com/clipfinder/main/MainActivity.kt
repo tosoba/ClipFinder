@@ -158,10 +158,8 @@ class MainActivity :
         lazy(LazyThreadSafetyMode.NONE) {
             object : OnNavigationDrawerClosedListener {
                 override fun onDrawerClosed(drawerView: View) {
-                    if (isPlayerLoggedIn) {
-                        viewModel.onLoggedOut()
-                        logOutPlayer()
-                    }
+                    viewModel.onLoggedOut()
+                    if (isPlayerLoggedIn) logOutPlayer()
                     main_drawer_layout?.removeDrawerListener(logoutDrawerClosedListener)
                 }
             }
@@ -314,7 +312,8 @@ class MainActivity :
             }
 
             val currentNavHost = it.currentNavHostFragment
-            if (currentNavHost != null &&
+            if (
+                currentNavHost != null &&
                     currentNavHost.childFragmentManager.backStackEntryCount > 0
             ) {
                 when (val topFragment = currentNavHost.topFragment) {
@@ -336,7 +335,8 @@ class MainActivity :
     override fun onBackPressedWithNoPreviousState() {
         mainContentFragment?.let {
             val currentFragment = it.currentFragment
-            if (currentFragment != null &&
+            if (
+                currentFragment != null &&
                     currentFragment.childFragmentManager.backStackEntryCount > 0
             ) {
                 showMainToolbarOnBackPressed(currentFragment)
@@ -429,10 +429,14 @@ class MainActivity :
         viewModel.selectSubscribe(this, MainState::isPrivateAuthorized) { isPrivateAuthorized ->
             if (!isPrivateAuthorized) return@selectSubscribe
             val privateAccessToken = viewModel.privateAccessToken ?: return@selectSubscribe
-            spotifyPlayerFragment?.initializePlayer(privateAccessToken) {
-                onLoginSuccessful?.invoke()
-                onLoginSuccessful = null
-            }
+            spotifyPlayerFragment?.initializePlayer(
+                privateAccessToken,
+                onInitialized = {
+                    onLoginSuccessful?.invoke()
+                    onLoginSuccessful = null
+                },
+                onError = viewModel::onLoggedOut
+            )
         }
     }
 

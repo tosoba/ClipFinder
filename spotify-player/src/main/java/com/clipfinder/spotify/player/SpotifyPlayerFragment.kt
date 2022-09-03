@@ -73,6 +73,7 @@ class SpotifyPlayerFragment :
         get() = player?.isLoggedIn == true
     override val playerView: View?
         get() = this.view
+    private var onLoginError: (() -> Unit)? = null
 
     private val onPlayPauseBtnClickListener: View.OnClickListener =
         View.OnClickListener {
@@ -231,7 +232,7 @@ class SpotifyPlayerFragment :
     }
 
     override fun onPlaybackError(error: Error?) {
-        Timber.tag("PLAYBACK_ERROR").e(error?.name ?: "Unknown error")
+        Timber.tag("SPOT_PLAYER").e("PLAYBACK_ERROR: ${error?.name ?: "Unknown error"}")
     }
 
     private fun updatePlayback() {
@@ -309,7 +310,11 @@ class SpotifyPlayerFragment :
         player?.pause(SpotifyPlayerOperationLogCallback)
     }
 
-    override fun initializePlayer(accessToken: String, callback: () -> Unit) {
+    override fun initializePlayer(
+        accessToken: String,
+        onInitialized: () -> Unit,
+        onError: () -> Unit
+    ) {
         if (player == null) {
             player =
                 SpotifyPlayer.Builder(
@@ -325,20 +330,22 @@ class SpotifyPlayerFragment :
                                 )
                                 player.addNotificationCallback(this@SpotifyPlayerFragment)
                                 player.addConnectionStateCallback(this@SpotifyPlayerFragment)
-                                callback()
+                                onInitialized()
                             }
 
                             override fun onError(error: Throwable) {
-                                Timber.tag("PLAYER_ERROR").e(error.message ?: "Unknown error")
+                                Timber.tag("SPOT_PLAYER")
+                                    .e("PLAYER_ERROR: ${error.message ?: "Unknown error"}")
                             }
                         }
                     )
+            onLoginError = onError
         } else {
             var connectionStateCallback: ConnectionStateCallback? = null
             connectionStateCallback =
                 object : SpotifyPlayerConnectionStateCallback {
                     override fun onLoggedIn() {
-                        callback()
+                        onInitialized()
                         player?.removeConnectionStateCallback(connectionStateCallback)
                     }
 
@@ -379,18 +386,28 @@ class SpotifyPlayerFragment :
     }
 
     override fun onConnectionMessage(message: String?) {
-        Timber.tag("CONNECTION_MSG").e(message ?: "Unknown connection message.")
+        Timber.tag("SPOT_PLAYER").e("CONNECTION_MSG: ${message ?: "Unknown connection message"}")
     }
 
     override fun onLoginFailed(error: Error?) {
-        val errorDescription = error?.name ?: "unknown error"
-        Timber.tag("LOGIN_FAILED").e(errorDescription)
-        Toast.makeText(requireContext(), "Login failed: $errorDescription", Toast.LENGTH_SHORT)
-            .show()
+        onLoginError?.invoke()
+
+        if (error == Error.kSpErrorNeedsPremium) {
+            Toast.makeText(
+                    requireContext(),
+                    "Spotify login failed. You need a Spotify premium account to enable music playback.",
+                    Toast.LENGTH_LONG
+                )
+                .show()
+        } else {
+            Toast.makeText(requireContext(), "Spotify login failed.", Toast.LENGTH_LONG).show()
+        }
+
+        Timber.tag("SPOT_PLAYER").e("LOGIN_FAILED: ${error?.name ?: "Unknown error"}")
     }
 
     override fun onTemporaryError() {
-        Timber.tag("TEMP_ERROR").e("Temporary error occurred")
+        Timber.tag("SPOT_PLAYER").e("TEMP_ERROR: Temporary error occurred")
     }
 
     override fun invalidate() = Unit
@@ -448,17 +465,13 @@ class SpotifyPlayerFragment :
                 url = track.albumCoverWebUrl,
                 onError = {
                     requireContext()
-                        .notificationManager.notify(
-                            PlaybackNotification.ID,
-                            buildNotification(track, null)
-                        )
+                        .notificationManager
+                        .notify(PlaybackNotification.ID, buildNotification(track, null))
                 }
             ) { bitmap ->
                 requireContext()
-                    .notificationManager.notify(
-                        PlaybackNotification.ID,
-                        buildNotification(track, bitmap)
-                    )
+                    .notificationManager
+                    .notify(PlaybackNotification.ID, buildNotification(track, bitmap))
             }
             .disposeOnDestroy(this)
     }
